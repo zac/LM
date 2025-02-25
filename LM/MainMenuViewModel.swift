@@ -1,5 +1,5 @@
 //
-//  AppModel.swift
+//  MainMenuViewModel.swift
 //  LM
 //
 //  Created by Zac White on 1/25/25.
@@ -10,7 +10,7 @@ import SwiftUI
 /// Maintains app-wide state
 @MainActor
 @Observable
-class AppModel {
+class MainMenuViewModel {
     let immersiveSpaceID = "ImmersiveSpace"
     enum ImmersiveSpaceState {
         case closed

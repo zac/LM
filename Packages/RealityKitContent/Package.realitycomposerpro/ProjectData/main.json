@@ -1,5 +1,9 @@
 {
   "pathsToIds" : {
-    "RealityKitContent\/Sources\/RealityKitContent\/RealityKitContent.rkassets\/Immersive.usda" : "C6A7F375-BFE9-46E0-9EA6-1A6B150F43FD"
+    "RealityKitContent\/Sources\/RealityKitContent\/RealityKitContent.rkassets\/FDAI.usda" : "36954B16-3E81-41E3-9F7D-6BCA1377BB5D",
+    "RealityKitContent\/Sources\/RealityKitContent\/RealityKitContent.rkassets\/Immersive.usda" : "C6A7F375-BFE9-46E0-9EA6-1A6B150F43FD",
+    "RealityKitContent\/Sources\/RealityKitContent\/RealityKitContent.rkassets\/Untitled%20Scene%201.usda" : "72C7021D-C887-41A8-87FB-F7161FA325E6",
+    "RealityKitContent\/Sources\/RealityKitContent\/RealityKitContent.rkassets\/Untitled%20Scene.usda" : "8F56F663-008B-4C73-90B9-4AAF3BCCD2B5",
+    "RealityKitContent\/Sources\/RealityKitContent\/RealityKitContent.rkassets\/lm.usda" : "AD442EB1-BAA3-4D7B-AAD5-8D3E1C5B9C9C"
   }
 }

@@ -9,30 +9,28 @@ import SwiftUI
 
 @main
 struct LMApp: App {
-    
-    @State private var appModel = AppModel()
-    @State private var avPlayerViewModel = AVPlayerViewModel()
-    
+    @State private var viewModel = MainMenuViewModel()
+
     var body: some Scene {
         WindowGroup {
-            if avPlayerViewModel.isPlaying {
-                AVPlayerView(viewModel: avPlayerViewModel)
-            } else {
-                ContentView()
-                    .environment(appModel)
-            }
+            LunarLanderSimulationView()
         }
-        
-        ImmersiveSpace(id: appModel.immersiveSpaceID) {
+
+        WindowGroup {
+            MainMenuView()
+                .environment(viewModel)
+        }
+        .defaultSize(width: 400, height: 400)
+
+
+        ImmersiveSpace(id: viewModel.immersiveSpaceID) {
             ImmersiveView()
-                .environment(appModel)
+                .environment(viewModel)
                 .onAppear {
-                    appModel.immersiveSpaceState = .open
-                    avPlayerViewModel.play()
+                    viewModel.immersiveSpaceState = .open
                 }
                 .onDisappear {
-                    appModel.immersiveSpaceState = .closed
-                    avPlayerViewModel.reset()
+                    viewModel.immersiveSpaceState = .closed
                 }
         }
         .immersionStyle(selection: .constant(.full), in: .full)

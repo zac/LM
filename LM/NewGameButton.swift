@@ -1,5 +1,5 @@
 //
-//  ToggleImmersiveSpaceButton.swift
+//  NewGameButton.swift
 //  LM
 //
 //  Created by Zac White on 1/25/25.
@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct ToggleImmersiveSpaceButton: View {
+struct NewGameButton: View {
 
-    @Environment(AppModel.self) private var appModel
+    @Environment(MainMenuViewModel.self) private var appModel
 
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
     @Environment(\.openImmersiveSpace) private var openImmersiveSpace
@@ -49,7 +49,7 @@ struct ToggleImmersiveSpaceButton: View {
                 }
             }
         } label: {
-            Text(appModel.immersiveSpaceState == .open ? "Hide Immersive Space" : "Show Immersive Space")
+            Text(appModel.immersiveSpaceState == .open ? "Quit" : "New Game")
         }
         .disabled(appModel.immersiveSpaceState == .inTransition)
         .animation(.none, value: 0)

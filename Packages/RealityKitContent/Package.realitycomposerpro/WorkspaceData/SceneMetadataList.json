@@ -1,4 +1,110 @@
 {
+  "72C7021D-C887-41A8-87FB-F7161FA325E6" : {
+    "objectMetadataList" : [
+      [
+        "72C7021D-C887-41A8-87FB-F7161FA325E6",
+        "Root"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "72C7021D-C887-41A8-87FB-F7161FA325E6",
+        "Root",
+        "Sphere",
+        "DefaultMaterial"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "72C7021D-C887-41A8-87FB-F7161FA325E6",
+        "Root",
+        "Sphere"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      }
+    ]
+  },
+  "8F56F663-008B-4C73-90B9-4AAF3BCCD2B5" : {
+    "objectMetadataList" : [
+      [
+        "8F56F663-008B-4C73-90B9-4AAF3BCCD2B5",
+        "Root"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "8F56F663-008B-4C73-90B9-4AAF3BCCD2B5",
+        "Root",
+        "moon"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      }
+    ]
+  },
+  "AD442EB1-BAA3-4D7B-AAD5-8D3E1C5B9C9C" : {
+    "objectMetadataList" : [
+      [
+        "AD442EB1-BAA3-4D7B-AAD5-8D3E1C5B9C9C",
+        "Root",
+        "lunar_module",
+        "Geom"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "AD442EB1-BAA3-4D7B-AAD5-8D3E1C5B9C9C",
+        "Root",
+        "lunar_module",
+        "Physics"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "AD442EB1-BAA3-4D7B-AAD5-8D3E1C5B9C9C",
+        "Root",
+        "lunar_module",
+        "Geom",
+        "lunarlande",
+        "group13_10"
+      ],
+      {
+        "disallowsFraming" : false,
+        "isExpanded" : false,
+        "isLocked" : false
+      },
+      [
+        "AD442EB1-BAA3-4D7B-AAD5-8D3E1C5B9C9C",
+        "Root"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "AD442EB1-BAA3-4D7B-AAD5-8D3E1C5B9C9C",
+        "Root",
+        "lunar_module"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      }
+    ]
+  },
   "C6A7F375-BFE9-46E0-9EA6-1A6B150F43FD" : {
     "objectMetadataList" : [
       [
@@ -7,6 +113,93 @@
       ],
       {
         "disallowsFraming" : false,
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "C6A7F375-BFE9-46E0-9EA6-1A6B150F43FD",
+        "Root",
+        "Slow_Rotation",
+        "Track"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "C6A7F375-BFE9-46E0-9EA6-1A6B150F43FD",
+        "Root",
+        "moon"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "C6A7F375-BFE9-46E0-9EA6-1A6B150F43FD",
+        "Root",
+        "SkyDome"
+      ],
+      {
+        "disallowsFraming" : true,
+        "isExpanded" : false,
+        "isLocked" : false
+      },
+      [
+        "C6A7F375-BFE9-46E0-9EA6-1A6B150F43FD",
+        "Root",
+        "Slow_Rotation"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "C6A7F375-BFE9-46E0-9EA6-1A6B150F43FD",
+        "Root",
+        "Main",
+        "Track"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "C6A7F375-BFE9-46E0-9EA6-1A6B150F43FD",
+        "Root",
+        "moon",
+        "Materials"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "C6A7F375-BFE9-46E0-9EA6-1A6B150F43FD",
+        "Root",
+        "Main"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "C6A7F375-BFE9-46E0-9EA6-1A6B150F43FD",
+        "Root",
+        "moon",
+        "Looks"
+      ],
+      {
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "C6A7F375-BFE9-46E0-9EA6-1A6B150F43FD",
+        "Root",
+        "SkySphere"
+      ],
+      {
+        "disallowsFraming" : true,
         "isExpanded" : true,
         "isLocked" : false
       },
@@ -23,11 +216,21 @@
       [
         "C6A7F375-BFE9-46E0-9EA6-1A6B150F43FD",
         "Root",
-        "SkyDome"
+        "Timeline",
+        "Track"
       ],
       {
-        "disallowsFraming" : true,
-        "isExpanded" : false,
+        "isExpanded" : true,
+        "isLocked" : false
+      },
+      [
+        "C6A7F375-BFE9-46E0-9EA6-1A6B150F43FD",
+        "Root",
+        "SkySphere",
+        "SkySphere_mat"
+      ],
+      {
+        "isExpanded" : true,
         "isLocked" : false
       }
     ]
