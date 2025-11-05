@@ -53,11 +53,17 @@ struct LunarLanderSimulationView: View {
             RealityView { content in
                 if let displayModel = simulation.displayModel {
                     content.add(displayModel)
+                    print("Added display model to RealityView")
                 }
             } update: { content in
                 if let physics = simulation.modulePhysicsBody,
                    let display = simulation.displayModel {
-                    display.orientation = physics.orientation
+                    // Update the display model's position and orientation based on physics
+                    display.transform.rotation = physics.transform.rotation
+                    display.transform.translation = physics.transform.translation
+                    
+                    // Update telemetry
+                    simulation.updateTelemetry()
                 }
             }
             .frame(width: 800, height: 800)
@@ -309,7 +315,7 @@ class LunarLanderSimulation {
         }
     }
     
-    private func updateTelemetry() {
+    func updateTelemetry() {
         guard let physics = modulePhysicsBody else { return }
         DispatchQueue.main.async {
             // Update telemetry from physics calculations
@@ -332,6 +338,25 @@ class LunarLanderSimulation {
                 // Clone and set up the display model with proper scaling and zero translation
                 displayModel = landerGeometry.clone(recursive: true)
                 displayModel?.scale = SIMD3<Float>(repeating: 0.05)
+                
+                // Add physics component directly to the display model if it doesn't exist
+                if let displayEntity = displayModel, displayEntity.components[PhysicsBodyComponent.self] == nil {
+                    print("Adding physics body to display model")
+                    var physicsBody = PhysicsBodyComponent()
+                    
+                    // Configure with more appropriate mass and inertia for a lunar lander
+                    physicsBody.massProperties = .init(mass: 100.0)  // Increased mass for better stability
+                    physicsBody.material = .generate(friction: 0.5, restitution: 0.2)
+                    physicsBody.mode = .dynamic
+                    physicsBody.isAffectedByGravity = true  // Make sure gravity affects the lander
+                    physicsBody.linearDamping = 0.1  // Add some damping to prevent excessive movement
+                    physicsBody.angularDamping = 0.2  // Add some angular damping
+                    
+                    displayEntity.components[PhysicsBodyComponent.self] = physicsBody
+                    modulePhysicsBody = displayEntity as? HasPhysicsBody
+                    
+                    print("Configured physics body with mass: \(physicsBody.massProperties.mass)")
+                }
             }
 
             // Define the thruster mapping (using the same group names as before)
@@ -354,28 +379,51 @@ class LunarLanderSimulation {
                 "group13_p1": .B4F
             ]
 
-            // Set up the physics model and compute each thruster's relative position
+            // First try to find the physics entity
             if let physicsEntity = sceneEntity?.findEntity(named: "Physics") as? Entity {
-                modulePhysicsBody = physicsEntity as? HasPhysicsBody
+                if let hasPhysics = physicsEntity as? HasPhysicsBody {
+                    modulePhysicsBody = hasPhysics
+                } else {
+                    // If the physics entity doesn't have a physics body, add one
+                    print("Physics entity found but no physics body component, adding one")
+                    var physicsBody = PhysicsBodyComponent()
+                    physicsBody.massProperties = .init(mass: 10.0)
+                    physicsBody.material = .generate(friction: 0.5, restitution: 0.2)
+                    physicsBody.mode = .dynamic
+                    physicsEntity.components[PhysicsBodyComponent.self] = physicsBody
+                    modulePhysicsBody = physicsEntity as? HasPhysicsBody
+                }
+            } else if modulePhysicsBody == nil, let displayEntity = displayModel as? HasPhysicsBody {
+                // If no physics entity was found and we haven't set modulePhysicsBody yet,
+                // use the display model as the physics body
+                print("No Physics entity found, using display model for physics")
+                modulePhysicsBody = displayEntity
+            }
+            
+            // Print physics body status
+            if let physicsBody = modulePhysicsBody {
+                print("Physics body configured: \(physicsBody)")
+            } else {
+                print("WARNING: No physics body found or created!")
+            }
 
-                // Now set up thrusters
-                for (groupName, thruster) in thrusterMapping {
-                    if let thrusterEntity = displayModel?.findEntity(named: groupName) {
-                        // Get world transform of thruster
-                        let worldTransform = thrusterEntity.transform
-                        
-                        // Convert to physics entity's local space
-                        let physicsTransform = physicsEntity.transform
-                        let relativePosition = worldTransform.translation - physicsTransform.translation
-                        
-                        // Create a simple visual marker
-                        let marker = ModelEntity(mesh: .generateSphere(radius: 0.05), materials: [UnlitMaterial(color: .red)])
-                        thrusterEntity.addChild(marker)
-                        
-                        // Store the thruster data
-                        thrusters[thruster] = RCSThrusterData(thruster: thruster, entity: thrusterEntity, relativePosition: relativePosition)
-                        print("Stored thruster \(thruster) with relative position \(relativePosition)")
-                    }
+            // Now set up thrusters
+            for (groupName, thruster) in thrusterMapping {
+                if let thrusterEntity = displayModel?.findEntity(named: groupName) {
+                    // Get world transform of thruster
+                    let worldTransform = thrusterEntity.transform
+                    
+                    // Convert to physics entity's local space
+                    let physicsTransform = (modulePhysicsBody as? Entity)?.transform ?? .identity
+                    let relativePosition = worldTransform.translation - physicsTransform.translation
+                    
+                    // Create a simple visual marker
+                    let marker = ModelEntity(mesh: .generateSphere(radius: 0.05), materials: [UnlitMaterial(color: .red)])
+                    thrusterEntity.addChild(marker)
+                    
+                    // Store the thruster data
+                    thrusters[thruster] = RCSThrusterData(thruster: thruster, entity: thrusterEntity, relativePosition: relativePosition)
+                    print("Stored thruster \(thruster) with relative position \(relativePosition)")
                 }
             }
         } catch {
@@ -387,13 +435,18 @@ class LunarLanderSimulation {
     
     /// Fires a specific RCS thruster
     private func fireThruster(_ thruster: RCSThruster) {
-        guard let module = modulePhysicsBody else { return }
-        let thrusterForce: Float = 500.0  // Reduced force for better control
-        guard let thrusterData = thrusters[thruster], let direction = thrusterDirections[thruster] else { return }
+        guard let module = modulePhysicsBody else { 
+            print("No physics body available")
+            return 
+        }
         
-        // Convert force direction from world space to physics body's local space
-        let rotation = module.transform.rotation
-        let localForce = rotation.act(direction) * thrusterForce
+        let thrusterForce: Float = 10000.0  // Significantly increased force for more noticeable effect
+        
+        guard let thrusterData = thrusters[thruster], 
+              let direction = thrusterDirections[thruster] else {
+            print("Missing thruster data or direction for \(thruster)")
+            return
+        }
         
         // Create a visual effect for the thruster
         let thrusterEffect = ModelEntity(
@@ -410,9 +463,18 @@ class LunarLanderSimulation {
             thrusterEffect.removeFromParent()
         }
 
-        // Apply the force at the thruster's relative position
+        // Convert force direction from world space to physics body's local space
+        let rotation = module.transform.rotation
+        let localForce = rotation.act(direction) * thrusterForce
+        
+        // Apply the force using the HasPhysicsBody protocol
         module.addForce(localForce, at: thrusterData.relativePosition, relativeTo: sceneEntity)
-        print("Applied force \(localForce) at relative position \(thrusterData.relativePosition) for thruster \(thruster)")
+        
+        // Also apply a direct impulse for immediate effect
+        let impulseForce = localForce * 0.1
+        module.addForce(impulseForce, at: thrusterData.relativePosition, relativeTo: sceneEntity)
+        
+        print("Applied force \(localForce) and impulse \(impulseForce) for thruster \(thruster)")
     }
     
     /// Updated RCS control function that fires appropriate thrusters
