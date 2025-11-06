@@ -271,6 +271,7 @@ class LunarLanderSimulation {
     private var moduleMass: Float = 120.0
     private var collisionExtents: SIMD3<Float> = SIMD3<Float>(repeating: 0.5)
     private var inertiaTensor: SIMD3<Float> = SIMD3<Float>(repeating: 1.0)
+    private var centerOfMassOffset: SIMD3<Float> = .zero
 
     // Define thruster force directions
     private let thrusterDirections: [RCSThruster: SIMD3<Float>] = [
@@ -402,59 +403,70 @@ class LunarLanderSimulation {
                 return
             }
 
-            // Clone and scale the lander mesh so we can attach physics without mutating the source asset.
-            let landerVisual = landerGeometry.clone(recursive: true)
-            landerVisual.name = "LunarModuleMesh"
-            landerVisual.transform = Transform(
-                scale: SIMD3<Float>(repeating: 0.05),
-                rotation: simd_quatf(angle: 0, axis: SIMD3<Float>(0, 1, 0)),
-                translation: .zero
-            )
+            let scaleFactor: Float = 0.05
+            guard let sceneRoot = sceneEntity else { return }
 
-            let physicsWrapper = ModelEntity()
-            physicsWrapper.name = "LunarModuleRoot"
-            physicsWrapper.addChild(landerVisual)  // Keep wrapper at origin so the model renders in the window
+            let physicsGeometry = sceneRoot.findEntity(named: "Physics")
+            let physicsBounds: BoundingBox
+            if let physicsGeometry {
+                physicsBounds = physicsGeometry.visualBounds(relativeTo: sceneRoot)
+            } else {
+                print("WARNING: Physics geometry not found; using lunarlander bounds for COM estimate")
+                physicsBounds = landerGeometry.visualBounds(relativeTo: sceneRoot)
+            }
 
-            physicsRoot = physicsWrapper
-            displayModel = physicsWrapper
+            let centerOfMass = physicsBounds.center
+            centerOfMassOffset = centerOfMass * scaleFactor
+
+            let landerClone = landerGeometry.clone(recursive: true)
+            landerClone.name = "LunarModuleMesh"
+            let landerTransformMatrix = landerGeometry.transformMatrix(relativeTo: sceneRoot)
+            var landerTransform = Transform(matrix: landerTransformMatrix)
+            landerTransform.translation -= centerOfMass
+            landerTransform.translation *= scaleFactor
+            landerTransform.scale *= SIMD3<Float>(repeating: scaleFactor)
+            landerClone.transform = landerTransform
+
+            let physicsRootEntity = ModelEntity()
+            physicsRootEntity.name = "LunarModuleRoot"
+            physicsRootEntity.addChild(landerClone)
+
+            physicsRoot = physicsRootEntity
+            displayModel = physicsRootEntity
 
             rootEntity.children.removeAll()
-            rootEntity.addChild(physicsWrapper)
+            rootEntity.addChild(physicsRootEntity)
 
-            // Generate collision shapes so RealityKit can compute realistic inertia tensors.
-            landerVisual.generateCollisionShapes(recursive: true)
-
-            let bounds = physicsWrapper.visualBounds(relativeTo: physicsWrapper)
-            let extents = SIMD3<Float>(
-                max(bounds.extents.x, 0.4),
-                max(bounds.extents.y, 0.4),
-                max(bounds.extents.z, 0.4)
+            let scaledExtents = physicsBounds.extents * scaleFactor
+            collisionExtents = SIMD3<Float>(
+                max(scaledExtents.x, 0.1),
+                max(scaledExtents.y, 0.1),
+                max(scaledExtents.z, 0.1)
             )
-            let collisionShape = ShapeResource.generateBox(size: extents)
-            physicsWrapper.components[CollisionComponent.self] = CollisionComponent(shapes: [collisionShape])
+            let collisionShape = ShapeResource.generateBox(size: collisionExtents)
+            physicsRootEntity.components[CollisionComponent.self] = CollisionComponent(shapes: [collisionShape])
 
-            var physicsBody = PhysicsBodyComponent()
-            moduleMass = 120.0
-            collisionExtents = extents
-            let width = max(extents.x, 1e-3)
-            let height = max(extents.y, 1e-3)
-            let depth = max(extents.z, 1e-3)
+            moduleMass = 2150.0
+            let width = max(collisionExtents.x, 1e-3)
+            let height = max(collisionExtents.y, 1e-3)
+            let depth = max(collisionExtents.z, 1e-3)
             let oneTwelfthMass = moduleMass / 12.0
             inertiaTensor = SIMD3<Float>(
                 oneTwelfthMass * (height * height + depth * depth),
                 oneTwelfthMass * (width * width + depth * depth),
                 oneTwelfthMass * (width * width + height * height)
             )
-            
+
+            var physicsBody = PhysicsBodyComponent()
             physicsBody.massProperties = .init(shape: collisionShape, mass: moduleMass)
             physicsBody.material = .generate(friction: 0.0, restitution: 0.0)
             physicsBody.mode = .dynamic
             physicsBody.isAffectedByGravity = false
             physicsBody.linearDamping = 0.0
             physicsBody.angularDamping = 0.0
-            physicsWrapper.components[PhysicsBodyComponent.self] = physicsBody
-            physicsWrapper.components[PhysicsMotionComponent.self] = PhysicsMotionComponent()
-            print("Configured physics wrapper with extents: \(extents)")
+            physicsRootEntity.components[PhysicsBodyComponent.self] = physicsBody
+            physicsRootEntity.components[PhysicsMotionComponent.self] = PhysicsMotionComponent()
+            print("Configured physics root with COM offset \(centerOfMassOffset) and extents: \(collisionExtents)")
 
             // Define the thruster mapping (using the same group names as before)
             let thrusterMapping: [String: RCSThruster] = [
@@ -482,27 +494,27 @@ class LunarLanderSimulation {
             thrusters.removeAll()
             for (groupName, thruster) in thrusterMapping {
                 guard
-                    let thrusterEntity = physicsWrapper.findEntity(named: groupName),
+                    let thrusterEntity = physicsRootEntity.findEntity(named: groupName),
                     let direction = thrusterDirections[thruster]
                 else {
                     print("Missing thruster entity or direction for \(groupName)")
                     continue
                 }
 
-                let localPosition = thrusterEntity.position(relativeTo: physicsWrapper)
+                let localPosition = thrusterEntity.position(relativeTo: physicsRootEntity)
                 let approximateDirection = simd_normalize(direction)
-                let thrusterOrientation = thrusterEntity.orientation(relativeTo: physicsWrapper)
+                let thrusterOrientation = thrusterEntity.orientation(relativeTo: physicsRootEntity)
                 let localDirection = resolvedThrusterDirection(approximate: approximateDirection, orientation: thrusterOrientation)
 
                 let coneName = "thruster-debug-\(thruster.rawValue)"
                 let coneDirection = simd_normalize(localDirection)
-                let coneHeight: Float = 0.04
-                let coneRadius: Float = 0.015
-                if let existingCone = physicsWrapper.findEntity(named: coneName) as? ModelEntity {
+                let coneHeight: Float = 0.02
+                let coneRadius: Float = 0.0075
+                if let existingCone = thrusterEntity.findEntity(named: coneName) as? ModelEntity {
                     existingCone.model?.materials = [UnlitMaterial(color: UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 0.8))]
                     existingCone.transform = Transform(
                         rotation: rotationAligningPositiveY(to: coneDirection),
-                        translation: localPosition + coneDirection * (-coneHeight * 0.5)
+                        translation: coneDirection * (-coneHeight * 0.5)
                     )
                 } else {
                     let coneMesh = MeshResource.generateCone(height: coneHeight, radius: coneRadius)
@@ -513,9 +525,9 @@ class LunarLanderSimulation {
                     marker.name = coneName
                     marker.transform = Transform(
                         rotation: rotationAligningPositiveY(to: coneDirection),
-                        translation: localPosition + coneDirection * (-coneHeight * 0.5)
+                        translation: coneDirection * (-coneHeight * 0.5)
                     )
-                    physicsWrapper.addChild(marker)
+                    thrusterEntity.addChild(marker)
                 }
 
                 thrusters[thruster] = RCSThrusterData(
