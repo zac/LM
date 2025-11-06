@@ -265,6 +265,12 @@ class LunarLanderSimulation {
     let rootEntity = Entity()
 
     var thrusters: [RCSThruster: RCSThrusterData] = [:]
+    
+    private let thrusterForceMagnitude: Float = 445.0  // Approximate 100 lbf in Newtons
+    private let minimumPulseDuration: Float = 0.05     // Seconds, minimum DAP pulse
+    private var moduleMass: Float = 120.0
+    private var collisionExtents: SIMD3<Float> = SIMD3<Float>(repeating: 0.5)
+    private var inertiaTensor: SIMD3<Float> = SIMD3<Float>(repeating: 1.0)
 
     // Define thruster force directions
     private let thrusterDirections: [RCSThruster: SIMD3<Float>] = [
@@ -275,19 +281,19 @@ class LunarLanderSimulation {
         .B1D: SIMD3<Float>(0, -1, 0),  // Down
 
         // Quad 2
-            .A2A: SIMD3<Float>(0, 0, 1),  // Aft
+        .A2A: SIMD3<Float>(0, 0, 1),  // Aft
         .A2D: SIMD3<Float>(0, -1, 0),  // Down
         .B2U: SIMD3<Float>(0, 1, 0),   // Up
         .B2L: SIMD3<Float>(-1, 0, 0),  // Left
 
         // Quad 3
-            .A3U: SIMD3<Float>(0, 1, 0),   // Up
+        .A3U: SIMD3<Float>(0, 1, 0),   // Up
         .A3R: SIMD3<Float>(1, 0, 0),   // Right
         .B3A: SIMD3<Float>(0, 0, 1),  // Aft
         .B3D: SIMD3<Float>(0, -1, 0),  // Down
 
         // Quad 4
-            .A4R: SIMD3<Float>(1, 0, 0),   // Right
+        .A4R: SIMD3<Float>(1, 0, 0),   // Right
         .A4D: SIMD3<Float>(0, -1, 0),  // Down
         .B4U: SIMD3<Float>(0, 1, 0),   // Up
         .B4F: SIMD3<Float>(0, 0, -1)    // Forward
@@ -332,9 +338,40 @@ class LunarLanderSimulation {
         let angle = acos(dot)
         return simd_quatf(angle: angle, axis: axis)
     }
-
+    
     private func rotationAligningPositiveY(to direction: SIMD3<Float>) -> simd_quatf {
         rotationAligningReferenceAxis(SIMD3<Float>(0, 1, 0), to: direction)
+    }
+    
+    private func resolvedThrusterDirection(approximate: SIMD3<Float>, orientation: simd_quatf) -> SIMD3<Float> {
+        let approx = simd_length(approximate) > 0 ? simd_normalize(approximate) : SIMD3<Float>(0, 1, 0)
+        let candidateAxes: [SIMD3<Float>] = [
+            SIMD3<Float>(1, 0, 0),
+            SIMD3<Float>(-1, 0, 0),
+            SIMD3<Float>(0, 1, 0),
+            SIMD3<Float>(0, -1, 0),
+            SIMD3<Float>(0, 0, 1),
+            SIMD3<Float>(0, 0, -1)
+        ]
+        
+        var bestDirection = approx
+        var bestDot: Float = -Float.greatestFiniteMagnitude
+        
+        for axis in candidateAxes {
+            let rotated = orientation.act(axis)
+            let normalized = simd_length(rotated) > 0 ? simd_normalize(rotated) : rotated
+            let dot = simd_dot(normalized, approx)
+            if dot > bestDot {
+                bestDot = dot
+                bestDirection = normalized
+            }
+        }
+        
+        if bestDot < 0 {
+            return -bestDirection
+        }
+        
+        return simd_normalize(bestDirection)
     }
 
     func updateTelemetry() {
@@ -397,12 +434,24 @@ class LunarLanderSimulation {
             physicsWrapper.components[CollisionComponent.self] = CollisionComponent(shapes: [collisionShape])
 
             var physicsBody = PhysicsBodyComponent()
-            physicsBody.massProperties = .init(shape: collisionShape, mass: 120.0)
-            physicsBody.material = .generate(friction: 0.4, restitution: 0.1)
+            moduleMass = 120.0
+            collisionExtents = extents
+            let width = max(extents.x, 1e-3)
+            let height = max(extents.y, 1e-3)
+            let depth = max(extents.z, 1e-3)
+            let oneTwelfthMass = moduleMass / 12.0
+            inertiaTensor = SIMD3<Float>(
+                oneTwelfthMass * (height * height + depth * depth),
+                oneTwelfthMass * (width * width + depth * depth),
+                oneTwelfthMass * (width * width + height * height)
+            )
+            
+            physicsBody.massProperties = .init(shape: collisionShape, mass: moduleMass)
+            physicsBody.material = .generate(friction: 0.0, restitution: 0.0)
             physicsBody.mode = .dynamic
             physicsBody.isAffectedByGravity = false
-            physicsBody.linearDamping = 0.2
-            physicsBody.angularDamping = 0.1
+            physicsBody.linearDamping = 0.0
+            physicsBody.angularDamping = 0.0
             physicsWrapper.components[PhysicsBodyComponent.self] = physicsBody
             physicsWrapper.components[PhysicsMotionComponent.self] = PhysicsMotionComponent()
             print("Configured physics wrapper with extents: \(extents)")
@@ -441,12 +490,14 @@ class LunarLanderSimulation {
                 }
 
                 let localPosition = thrusterEntity.position(relativeTo: physicsWrapper)
-                let localDirection = simd_normalize(direction)
+                let approximateDirection = simd_normalize(direction)
+                let thrusterOrientation = thrusterEntity.orientation(relativeTo: physicsWrapper)
+                let localDirection = resolvedThrusterDirection(approximate: approximateDirection, orientation: thrusterOrientation)
 
                 let coneName = "thruster-debug-\(thruster.rawValue)"
                 let coneDirection = simd_normalize(localDirection)
-                let coneHeight: Float = 0.08
-                let coneRadius: Float = 0.035
+                let coneHeight: Float = 0.04
+                let coneRadius: Float = 0.015
                 if let existingCone = physicsWrapper.findEntity(named: coneName) as? ModelEntity {
                     existingCone.model?.materials = [UnlitMaterial(color: UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 0.8))]
                     existingCone.transform = Transform(
@@ -505,7 +556,8 @@ class LunarLanderSimulation {
     private func fireThruster(_ thruster: RCSThruster) {
         guard
             let thrusterData = thrusters[thruster],
-            physicsRoot != nil
+            let module = physicsRoot,
+            var motion = module.components[PhysicsMotionComponent.self]
         else {
             print("Missing thruster data or physics root for \(thruster)")
             return
@@ -513,13 +565,35 @@ class LunarLanderSimulation {
 
         print("Thruster \(thruster.rawValue) fired at position \(thrusterData.localPosition), direction \(thrusterData.localDirection)")
 
+        let length = simd_length(thrusterData.localDirection)
+        let normalizedDirection = length > 0 ? thrusterData.localDirection / length : SIMD3<Float>(0, 1, 0)
+        let force = normalizedDirection * thrusterForceMagnitude
+        let impulse = force * minimumPulseDuration
+
+        // Linear impulse contribution
+        let deltaLinearVelocity = impulse / moduleMass
+        motion.linearVelocity += deltaLinearVelocity
+
+        // Angular impulse contribution (torque = r x F)
+        let torque = simd_cross(thrusterData.localPosition, force)
+        let angularImpulse = torque * minimumPulseDuration
+        let deltaAngularVelocity = SIMD3<Float>(
+            inertiaTensor.x > 0 ? angularImpulse.x / inertiaTensor.x : 0,
+            inertiaTensor.y > 0 ? angularImpulse.y / inertiaTensor.y : 0,
+            inertiaTensor.z > 0 ? angularImpulse.z / inertiaTensor.z : 0
+        )
+        motion.angularVelocity += deltaAngularVelocity
+
+        module.components[PhysicsMotionComponent.self] = motion
+
         // Highlight the thruster's debug cone in red while firing.
         let coneName = thrusterData.debugConeName
-        if let debugCone = physicsRoot?.findEntity(named: coneName) as? ModelEntity {
+        if let debugCone = module.findEntity(named: coneName) as? ModelEntity {
             let onMaterial = UnlitMaterial(color: UIColor(red: 1.0, green: 0.15, blue: 0.1, alpha: 0.95))
             let offMaterial = UnlitMaterial(color: UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 0.8))
             debugCone.model?.materials = [onMaterial]
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+            let highlightDurationMilliseconds = max(1, Int(minimumPulseDuration * 6_000))
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(highlightDurationMilliseconds)) {
                 debugCone.model?.materials = [offMaterial]
             }
         }
