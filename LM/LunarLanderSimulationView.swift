@@ -31,7 +31,7 @@ enum RCSThruster: String {
 // Add a new struct for telemetry data
 struct LMTelemetry {
     var position: SIMD3<Float> = .zero
-    var quaternion: simd_quatf = .init(angle: 0, axis: .zero)  // Store raw quaternion
+    var quaternion: simd_quatf = simd_quatf()
     var angularVelocity: SIMD3<Float> = .zero
 }
 
@@ -40,31 +40,27 @@ struct LMTelemetry {
 struct RCSThrusterData {
     let thruster: RCSThruster
     let entity: Entity
-    let relativePosition: SIMD3<Float>
+    let localPosition: SIMD3<Float>
+    let localDirection: SIMD3<Float>
+    let debugConeName: String
 }
 
 // MARK: - Main Simulation View
 
 struct LunarLanderSimulationView: View {
     @State private var simulation = LunarLanderSimulation()
+    @State private var hasAttachedRoot = false
 
     var body: some View {
         VStack {
             RealityView { content in
-                if let displayModel = simulation.displayModel {
-                    content.add(displayModel)
-                    print("Added display model to RealityView")
+                if hasAttachedRoot == false {
+                    content.add(simulation.rootEntity)
+                    hasAttachedRoot = true
+                    print("Attached simulation root to RealityView")
                 }
-            } update: { content in
-                if let physics = simulation.modulePhysicsBody,
-                   let display = simulation.displayModel {
-                    // Update the display model's position and orientation based on physics
-                    display.transform.rotation = physics.transform.rotation
-                    display.transform.translation = physics.transform.translation
-                    
-                    // Update telemetry
-                    simulation.updateTelemetry()
-                }
+            } update: { _ in
+                simulation.updateTelemetry()
             }
             .frame(width: 800, height: 800)
             .ornament(attachmentAnchor: .scene(.bottom)) {
@@ -185,6 +181,10 @@ struct LunarLanderSimulationView: View {
                     }
                 }
             }
+            
+            Divider()
+            
+            resetButton
         }
         .padding()
         .glassBackgroundEffect()
@@ -212,22 +212,43 @@ struct LunarLanderSimulationView: View {
         }
     }
     
+    private var resetButton: some View {
+        VStack {
+            Button {
+                simulation.resetSimulation()
+            } label: {
+                Label("Reset", systemImage: "arrow.counterclockwise")
+                    .labelStyle(.titleAndIcon)
+                    .frame(minWidth: 120)
+            }
+            .buttonStyle(.borderedProminent)
+        }
+    }
+    
     private func formatVector(_ vector: SIMD3<Float>) -> String {
         String(format: "%.1f, %.1f, %.1f", vector.x, vector.y, vector.z)
     }
     
     private func formatQuaternion(_ quat: simd_quatf) -> String {
         // Format as axis-angle for more intuitive reading
-        let angle = 2 * acos(quat.real)
+        let normalized = simd_normalize(quat)
+        let realPart = max(-1.0, min(1.0, normalized.real))
+        let angle = 2 * acos(realPart)
+        let halfAngle = angle * 0.5
+        let divisor = sin(halfAngle)
         let axis: SIMD3<Float>
-        if angle == 0 {
-            axis = .init(0, 1, 0)  // Default up vector when no rotation
+
+        if divisor.magnitude > 1e-4 {
+            axis = normalized.imag / divisor
         } else {
-            axis = quat.imag / sin(angle/2)
+            axis = SIMD3<Float>(0, 1, 0)  // Default up vector when rotation is tiny
         }
-        return String(format: "%.1f° [%.1f,%.1f,%.1f]", 
-                     angle * (180 / .pi),  // Convert to degrees
-                     axis.x, axis.y, axis.z)
+
+        return String(
+            format: "%.1f° [%.1f,%.1f,%.1f]",
+            angle * (180 / .pi),
+            axis.x, axis.y, axis.z
+        )
     }
 }
 
@@ -239,40 +260,12 @@ struct LunarLanderSimulationView: View {
 @Observable
 class LunarLanderSimulation {
     var sceneEntity: Entity?
-
-    var modulePhysicsBody: HasPhysicsBody?
     var displayModel: Entity?
-    
-    // In class LunarLanderSimulation, remove the old thrusterEntities dictionary and add a new one:
+    private var physicsRoot: ModelEntity?
+    let rootEntity = Entity()
+
     var thrusters: [RCSThruster: RCSThrusterData] = [:]
-    
-    // Define thruster positions relative to center (in meters)
-    private let thrusterPositions: [RCSThruster: SIMD3<Float>] = [
-        // Quad 1 (front right, +Z)
-        .A1U: SIMD3<Float>(0.5, 0.5, 1.0),
-        .A1F: SIMD3<Float>(0.5, -0.5, 1.0),
-        .B1L: SIMD3<Float>(0.5, 0.5, 1.0),
-        .B1D: SIMD3<Float>(0.5, -0.5, 1.0),
-        
-        // Quad 2 (front left, +X)
-        .A2A: SIMD3<Float>(1.0, 0.5, 0.5),
-        .A2D: SIMD3<Float>(1.0, -0.5, 0.5),
-        .B2U: SIMD3<Float>(1.0, 0.5, 0.5),
-        .B2L: SIMD3<Float>(1.0, -0.5, 0.5),
-        
-        // Quad 3 (rear left, -Z)
-        .A3U: SIMD3<Float>(-0.5, 0.5, -1.0),
-        .A3R: SIMD3<Float>(-0.5, -0.5, -1.0),
-        .B3A: SIMD3<Float>(-0.5, 0.5, -1.0),
-        .B3D: SIMD3<Float>(-0.5, -0.5, -1.0),
-        
-        // Quad 4 (rear right, -X)
-        .A4R: SIMD3<Float>(-1.0, 0.5, -0.5),
-        .A4D: SIMD3<Float>(-1.0, -0.5, -0.5),
-        .B4U: SIMD3<Float>(-1.0, 0.5, -0.5),
-        .B4F: SIMD3<Float>(-1.0, -0.5, -0.5)
-    ]
-    
+
     // Define thruster force directions
     private let thrusterDirections: [RCSThruster: SIMD3<Float>] = [
         // Quad 1
@@ -280,242 +273,325 @@ class LunarLanderSimulation {
         .A1F: SIMD3<Float>(0, 0, -1),  // Forward
         .B1L: SIMD3<Float>(-1, 0, 0),  // Left
         .B1D: SIMD3<Float>(0, -1, 0),  // Down
-        
+
         // Quad 2
-        .A2A: SIMD3<Float>(0, 0, -1),  // Aft
+            .A2A: SIMD3<Float>(0, 0, 1),  // Aft
         .A2D: SIMD3<Float>(0, -1, 0),  // Down
         .B2U: SIMD3<Float>(0, 1, 0),   // Up
         .B2L: SIMD3<Float>(-1, 0, 0),  // Left
-        
+
         // Quad 3
-        .A3U: SIMD3<Float>(0, 1, 0),   // Up
+            .A3U: SIMD3<Float>(0, 1, 0),   // Up
         .A3R: SIMD3<Float>(1, 0, 0),   // Right
-        .B3A: SIMD3<Float>(0, 0, -1),  // Aft
+        .B3A: SIMD3<Float>(0, 0, 1),  // Aft
         .B3D: SIMD3<Float>(0, -1, 0),  // Down
-        
+
         // Quad 4
-        .A4R: SIMD3<Float>(1, 0, 0),   // Right
+            .A4R: SIMD3<Float>(1, 0, 0),   // Right
         .A4D: SIMD3<Float>(0, -1, 0),  // Down
         .B4U: SIMD3<Float>(0, 1, 0),   // Up
-        .B4F: SIMD3<Float>(0, 0, 1)    // Forward
+        .B4F: SIMD3<Float>(0, 0, -1)    // Forward
     ]
-    
+
     var telemetry = LMTelemetry()
     @ObservationIgnored
     private var updateTimer: Timer?
-    
+
     init() {
         loadLunarModule()
         startTelemetryUpdates()
     }
-    
+
     private func startTelemetryUpdates() {
         updateTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
             self?.updateTelemetry()
         }
     }
-    
+
+    private func rotationAligningReferenceAxis(_ reference: SIMD3<Float>, to direction: SIMD3<Float>) -> simd_quatf {
+        let epsilon: Float = 1e-4
+        let target = simd_normalize(direction)
+        if simd_length(target) < epsilon {
+            return simd_quatf()
+        }
+
+        let base = simd_normalize(reference)
+        let dot = simd_dot(base, target)
+
+        if dot > 1 - epsilon {
+            return simd_quatf()
+        }
+
+        if dot < -1 + epsilon {
+            let orthogonal = abs(base.x) < 0.9 ? SIMD3<Float>(1, 0, 0) : SIMD3<Float>(0, 0, 1)
+            let axis = simd_normalize(simd_cross(base, orthogonal))
+            return simd_quatf(angle: .pi, axis: axis)
+        }
+
+        let axis = simd_normalize(simd_cross(base, target))
+        let angle = acos(dot)
+        return simd_quatf(angle: angle, axis: axis)
+    }
+
+    private func rotationAligningPositiveY(to direction: SIMD3<Float>) -> simd_quatf {
+        rotationAligningReferenceAxis(SIMD3<Float>(0, 1, 0), to: direction)
+    }
+
     func updateTelemetry() {
-        guard let physics = modulePhysicsBody else { return }
+        guard let moduleEntity = physicsRoot else { return }
+
+        let position = moduleEntity.position(relativeTo: nil)
+        let orientation = moduleEntity.orientation(relativeTo: nil)
+        let angularVelocity = moduleEntity.components[PhysicsMotionComponent.self]?.angularVelocity ?? .zero
+
         DispatchQueue.main.async {
-            // Update telemetry from physics calculations
-            self.telemetry.position = physics.transform.translation
-            self.telemetry.quaternion = physics.transform.rotation
+            self.telemetry.position = position
+            self.telemetry.quaternion = orientation
+            self.telemetry.angularVelocity = angularVelocity
         }
     }
-    
+
     deinit {
         updateTimer?.invalidate()
     }
-    
+
     /// Loads the "lm" scene from the realityKitContentBundle
     func loadLunarModule() {
         do {
             sceneEntity = try Entity.load(named: "lm", in: realityKitContentBundle)
 
-            // Get the lander geometry and its bounds
-            if let landerGeometry = sceneEntity?.findEntity(named: "lunarlander") {
-                // Clone and set up the display model with proper scaling and zero translation
-                displayModel = landerGeometry.clone(recursive: true)
-                displayModel?.scale = SIMD3<Float>(repeating: 0.05)
-                
-                // Add physics component directly to the display model if it doesn't exist
-                if let displayEntity = displayModel, displayEntity.components[PhysicsBodyComponent.self] == nil {
-                    print("Adding physics body to display model")
-                    var physicsBody = PhysicsBodyComponent()
-                    
-                    // Configure with more appropriate mass and inertia for a lunar lander
-                    physicsBody.massProperties = .init(mass: 100.0)  // Increased mass for better stability
-                    physicsBody.material = .generate(friction: 0.5, restitution: 0.2)
-                    physicsBody.mode = .dynamic
-                    physicsBody.isAffectedByGravity = true  // Make sure gravity affects the lander
-                    physicsBody.linearDamping = 0.1  // Add some damping to prevent excessive movement
-                    physicsBody.angularDamping = 0.2  // Add some angular damping
-                    
-                    displayEntity.components[PhysicsBodyComponent.self] = physicsBody
-                    modulePhysicsBody = displayEntity as? HasPhysicsBody
-                    
-                    print("Configured physics body with mass: \(physicsBody.massProperties.mass)")
-                }
+            guard let landerGeometry = sceneEntity?.findEntity(named: "lunarlander") else {
+                print("Unable to locate lunar lander entity in loaded scene")
+                return
             }
+
+            // Clone and scale the lander mesh so we can attach physics without mutating the source asset.
+            let landerVisual = landerGeometry.clone(recursive: true)
+            landerVisual.name = "LunarModuleMesh"
+            landerVisual.transform = Transform(
+                scale: SIMD3<Float>(repeating: 0.05),
+                rotation: simd_quatf(angle: 0, axis: SIMD3<Float>(0, 1, 0)),
+                translation: .zero
+            )
+
+            let physicsWrapper = ModelEntity()
+            physicsWrapper.name = "LunarModuleRoot"
+            physicsWrapper.addChild(landerVisual)  // Keep wrapper at origin so the model renders in the window
+
+            physicsRoot = physicsWrapper
+            displayModel = physicsWrapper
+
+            rootEntity.children.removeAll()
+            rootEntity.addChild(physicsWrapper)
+
+            // Generate collision shapes so RealityKit can compute realistic inertia tensors.
+            landerVisual.generateCollisionShapes(recursive: true)
+
+            let bounds = physicsWrapper.visualBounds(relativeTo: physicsWrapper)
+            let extents = SIMD3<Float>(
+                max(bounds.extents.x, 0.4),
+                max(bounds.extents.y, 0.4),
+                max(bounds.extents.z, 0.4)
+            )
+            let collisionShape = ShapeResource.generateBox(size: extents)
+            physicsWrapper.components[CollisionComponent.self] = CollisionComponent(shapes: [collisionShape])
+
+            var physicsBody = PhysicsBodyComponent()
+            physicsBody.massProperties = .init(shape: collisionShape, mass: 120.0)
+            physicsBody.material = .generate(friction: 0.4, restitution: 0.1)
+            physicsBody.mode = .dynamic
+            physicsBody.isAffectedByGravity = false
+            physicsBody.linearDamping = 0.2
+            physicsBody.angularDamping = 0.1
+            physicsWrapper.components[PhysicsBodyComponent.self] = physicsBody
+            physicsWrapper.components[PhysicsMotionComponent.self] = PhysicsMotionComponent()
+            print("Configured physics wrapper with extents: \(extents)")
 
             // Define the thruster mapping (using the same group names as before)
             let thrusterMapping: [String: RCSThruster] = [
-                "group13_10": .A1U,
-                "group13_11": .A1F,
-                "group13_12": .B1L,
-                "group13_13": .B1D,
-                "group13_14": .A2A,
-                "group13_g1": .A2D,
-                "group13_g2": .B2U,
-                "group13_g3": .B2L,
-                "group13_g4": .A3U,
-                "group13_g5": .A3R,
-                "group13_g6": .B3A,
-                "group13_g7": .B3D,
-                "group13_g8": .A4R,
-                "group13_g9": .A4D,
+                "group13_g5": .A1U,
+                "group13_g7": .A1F,
+                "group13_g6": .B1L,
+                "group13_g4": .B1D,
+
+                "group13_10": .A2A,
+                "group13_g8": .A2D,
+                "group13_g9": .B2U,
+                "group13_11": .B2L,
+
+                "group13_12": .A3U,
+                "group13_13": .A3R,
+                "group13_14": .B3A,
+                "group13_p1": .B3D,
+
+                "group13_g2": .A4R,
+                "group13_g1": .A4D,
                 "group13_gr": .B4U,
-                "group13_p1": .B4F
+                "group13_g3": .B4F
             ]
 
-            // First try to find the physics entity
-            if let physicsEntity = sceneEntity?.findEntity(named: "Physics") as? Entity {
-                if let hasPhysics = physicsEntity as? HasPhysicsBody {
-                    modulePhysicsBody = hasPhysics
-                } else {
-                    // If the physics entity doesn't have a physics body, add one
-                    print("Physics entity found but no physics body component, adding one")
-                    var physicsBody = PhysicsBodyComponent()
-                    physicsBody.massProperties = .init(mass: 10.0)
-                    physicsBody.material = .generate(friction: 0.5, restitution: 0.2)
-                    physicsBody.mode = .dynamic
-                    physicsEntity.components[PhysicsBodyComponent.self] = physicsBody
-                    modulePhysicsBody = physicsEntity as? HasPhysicsBody
-                }
-            } else if modulePhysicsBody == nil, let displayEntity = displayModel as? HasPhysicsBody {
-                // If no physics entity was found and we haven't set modulePhysicsBody yet,
-                // use the display model as the physics body
-                print("No Physics entity found, using display model for physics")
-                modulePhysicsBody = displayEntity
-            }
-            
-            // Print physics body status
-            if let physicsBody = modulePhysicsBody {
-                print("Physics body configured: \(physicsBody)")
-            } else {
-                print("WARNING: No physics body found or created!")
-            }
-
-            // Now set up thrusters
+            thrusters.removeAll()
             for (groupName, thruster) in thrusterMapping {
-                if let thrusterEntity = displayModel?.findEntity(named: groupName) {
-                    // Get world transform of thruster
-                    let worldTransform = thrusterEntity.transform
-                    
-                    // Convert to physics entity's local space
-                    let physicsTransform = (modulePhysicsBody as? Entity)?.transform ?? .identity
-                    let relativePosition = worldTransform.translation - physicsTransform.translation
-                    
-                    // Create a simple visual marker
-                    let marker = ModelEntity(mesh: .generateSphere(radius: 0.05), materials: [UnlitMaterial(color: .red)])
-                    thrusterEntity.addChild(marker)
-                    
-                    // Store the thruster data
-                    thrusters[thruster] = RCSThrusterData(thruster: thruster, entity: thrusterEntity, relativePosition: relativePosition)
-                    print("Stored thruster \(thruster) with relative position \(relativePosition)")
+                guard
+                    let thrusterEntity = physicsWrapper.findEntity(named: groupName),
+                    let direction = thrusterDirections[thruster]
+                else {
+                    print("Missing thruster entity or direction for \(groupName)")
+                    continue
                 }
+
+                let localPosition = thrusterEntity.position(relativeTo: physicsWrapper)
+                let localDirection = simd_normalize(direction)
+
+                let coneName = "thruster-debug-\(thruster.rawValue)"
+                let coneDirection = simd_normalize(localDirection)
+                let coneHeight: Float = 0.08
+                let coneRadius: Float = 0.035
+                if let existingCone = physicsWrapper.findEntity(named: coneName) as? ModelEntity {
+                    existingCone.model?.materials = [UnlitMaterial(color: UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 0.8))]
+                    existingCone.transform = Transform(
+                        rotation: rotationAligningPositiveY(to: coneDirection),
+                        translation: localPosition + coneDirection * (-coneHeight * 0.5)
+                    )
+                } else {
+                    let coneMesh = MeshResource.generateCone(height: coneHeight, radius: coneRadius)
+                    let marker = ModelEntity(
+                        mesh: coneMesh,
+                        materials: [UnlitMaterial(color: UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 0.8))]
+                    )
+                    marker.name = coneName
+                    marker.transform = Transform(
+                        rotation: rotationAligningPositiveY(to: coneDirection),
+                        translation: localPosition + coneDirection * (-coneHeight * 0.5)
+                    )
+                    physicsWrapper.addChild(marker)
+                }
+
+                thrusters[thruster] = RCSThrusterData(
+                    thruster: thruster,
+                    entity: thrusterEntity,
+                    localPosition: localPosition,
+                    localDirection: localDirection,
+                    debugConeName: coneName
+                )
+                print("Stored thruster \(thruster) at \(localPosition) dir \(localDirection)")
             }
         } catch {
             print("Failed to load lunar-module scene: \(error)")
         }
     }
-    
-    // MARK: - Thruster Functions
-    
-    /// Fires a specific RCS thruster
-    private func fireThruster(_ thruster: RCSThruster) {
-        guard let module = modulePhysicsBody else { 
-            print("No physics body available")
-            return 
-        }
-        
-        let thrusterForce: Float = 10000.0  // Significantly increased force for more noticeable effect
-        
-        guard let thrusterData = thrusters[thruster], 
-              let direction = thrusterDirections[thruster] else {
-            print("Missing thruster data or direction for \(thruster)")
-            return
-        }
-        
-        // Create a visual effect for the thruster
-        let thrusterEffect = ModelEntity(
-            mesh: .generateBox(size: 0.1),
-            materials: [UnlitMaterial(color: .orange.withAlphaComponent(0.7))]
-        )
-        thrusterData.entity.addChild(thrusterEffect)
-        
-        thrusterEffect.scale = .zero
-        withAnimation(.easeOut(duration: 0.2)) {
-            thrusterEffect.scale = .init(repeating: 1.0)
-            thrusterEffect.model?.materials = [UnlitMaterial(color: .orange.withAlphaComponent(0))]
-        } completion: {
-            thrusterEffect.removeFromParent()
+
+    func resetSimulation() {
+        guard let moduleEntity = physicsRoot else { return }
+
+        var transform = moduleEntity.transform
+        transform.translation = .zero
+        transform.rotation = simd_quatf()
+        moduleEntity.transform = transform
+
+        if var motion = moduleEntity.components[PhysicsMotionComponent.self] {
+            motion.linearVelocity = .zero
+            motion.angularVelocity = .zero
+            moduleEntity.components[PhysicsMotionComponent.self] = motion
         }
 
-        // Convert force direction from world space to physics body's local space
-        let rotation = module.transform.rotation
-        let localForce = rotation.act(direction) * thrusterForce
-        
-        // Apply the force using the HasPhysicsBody protocol
-        module.addForce(localForce, at: thrusterData.relativePosition, relativeTo: sceneEntity)
-        
-        // Also apply a direct impulse for immediate effect
-        let impulseForce = localForce * 0.1
-        module.addForce(impulseForce, at: thrusterData.relativePosition, relativeTo: sceneEntity)
-        
-        print("Applied force \(localForce) and impulse \(impulseForce) for thruster \(thruster)")
+        print("Simulation reset to origin with zeroed velocities")
+        updateTelemetry()
     }
-    
+
+    // MARK: - Thruster Functions
+
+    /// Fires a specific RCS thruster
+    private func fireThruster(_ thruster: RCSThruster) {
+        guard
+            let thrusterData = thrusters[thruster],
+            physicsRoot != nil
+        else {
+            print("Missing thruster data or physics root for \(thruster)")
+            return
+        }
+
+        print("Thruster \(thruster.rawValue) fired at position \(thrusterData.localPosition), direction \(thrusterData.localDirection)")
+
+        // Highlight the thruster's debug cone in red while firing.
+        let coneName = thrusterData.debugConeName
+        if let debugCone = physicsRoot?.findEntity(named: coneName) as? ModelEntity {
+            let onMaterial = UnlitMaterial(color: UIColor(red: 1.0, green: 0.15, blue: 0.1, alpha: 0.95))
+            let offMaterial = UnlitMaterial(color: UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 0.8))
+            debugCone.model?.materials = [onMaterial]
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                debugCone.model?.materials = [offMaterial]
+            }
+        }
+
+    }
+
     /// Updated RCS control function that fires appropriate thrusters
     func fireRCSThruster(_ direction: RCSDirection) {
         switch direction {
+        // ---------- ROTATION ----------
         case .pitchUp:
-            fireThruster(.A2D)
-            fireThruster(.B4U)
+            // front-left aft + rear-right forward
+            fireThruster(.A2A)
+            fireThruster(.B4F)
+
         case .pitchDown:
-            fireThruster(.A2A)
-            fireThruster(.B4F)
+            // front-right forward + rear-left aft
+            fireThruster(.A1F)
+            fireThruster(.B3A)
+
         case .yawLeft:
-            fireThruster(.B2U)
-            fireThruster(.A4D)
-        case .yawRight:
-            fireThruster(.B2L)
-            fireThruster(.A4R)
-        case .rollLeft:
-            fireThruster(.A1F)
-            fireThruster(.B3A)
-        case .rollRight:
-            fireThruster(.A1U)
-            fireThruster(.B3D)
-        case .translateForward:
-            fireThruster(.A1F)
-            fireThruster(.B4F)
-        case .translateBackward:
-            fireThruster(.A1U)
-            fireThruster(.B4U)
-        case .translateLeft:
-            fireThruster(.A2A)
-            fireThruster(.B3A)
-        case .translateRight:
-            fireThruster(.A2D)
-            fireThruster(.B3D)
-        case .translateUp:
-            fireThruster(.B1D)
-            fireThruster(.A3U)
-        case .translateDown:
+            // front-right left + rear-left right
             fireThruster(.B1L)
             fireThruster(.A3R)
+
+        case .yawRight:
+            // front-left left + rear-right right
+            fireThruster(.B2L)
+            fireThruster(.A4R)
+
+        case .rollLeft:
+            // right side up + left side down
+            fireThruster(.B4U)   // rear-right up
+            fireThruster(.A2D)   // front-left down
+
+        case .rollRight:
+            // right side down + left side up
+            fireThruster(.A4D)   // rear-right down
+            fireThruster(.A3U)   // rear-left up
+
+        // ---------- TRANSLATION ----------
+        case .translateForward:   // +Z
+            fireThruster(.A1F)
+            fireThruster(.B4F)
+
+        case .translateBackward:  // –Z
+            fireThruster(.A2A)
+            fireThruster(.B3A)
+
+        case .translateLeft:      // –Y
+            fireThruster(.B1L)
+            fireThruster(.B2L)   // (both front; expect small pitch torque)
+
+        case .translateRight:     // +Y
+            fireThruster(.A3R)
+            fireThruster(.A4R)   // (both rear; expect small pitch torque)
+
+        case .translateUp:        // +X (clean)
+            fireThruster(.A1U)
+            fireThruster(.B2U)
+            fireThruster(.A3U)
+            fireThruster(.B4U)
+
+        case .translateDown:      // –X (clean)
+            fireThruster(.B1D)
+            fireThruster(.A2D)
+            fireThruster(.B3D)
+            fireThruster(.A4D)
         }
     }
+}
+
+#Preview {
+    LunarLanderSimulationView()
 }
