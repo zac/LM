@@ -508,8 +508,8 @@ class LunarLanderSimulation {
 
                 let coneName = "thruster-debug-\(thruster.rawValue)"
                 let coneDirection = simd_normalize(localDirection)
-                let coneHeight: Float = 0.02
-                let coneRadius: Float = 0.0075
+                let coneHeight: Float = 0.2
+                let coneRadius: Float = 0.05
                 if let existingCone = thrusterEntity.findEntity(named: coneName) as? ModelEntity {
                     existingCone.model?.materials = [UnlitMaterial(color: UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 0.8))]
                     existingCone.transform = Transform(
