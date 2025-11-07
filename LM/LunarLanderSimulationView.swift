@@ -259,359 +259,45 @@ struct LunarLanderSimulationView: View {
 /// methods to apply thruster impulses for realistic RCS control.
 @Observable
 class LunarLanderSimulation {
-    var sceneEntity: Entity?
-    var displayModel: Entity?
-    private var physicsRoot: ModelEntity?
-    let rootEntity = Entity()
-
-    var thrusters: [RCSThruster: RCSThrusterData] = [:]
+    private let module = LunarModuleModel()
     
-    private let thrusterForceMagnitude: Float = 445.0  // Approximate 100 lbf in Newtons
-    private let minimumPulseDuration: Float = 0.05     // Seconds, minimum DAP pulse
-    private var moduleMass: Float = 120.0
-    private var collisionExtents: SIMD3<Float> = SIMD3<Float>(repeating: 0.5)
-    private var inertiaTensor: SIMD3<Float> = SIMD3<Float>(repeating: 1.0)
-    private var centerOfMassOffset: SIMD3<Float> = .zero
-
-    // Define thruster force directions
-    private let thrusterDirections: [RCSThruster: SIMD3<Float>] = [
-        // Quad 1
-        .A1U: SIMD3<Float>(0, 1, 0),   // Up
-        .A1F: SIMD3<Float>(0, 0, -1),  // Forward
-        .B1L: SIMD3<Float>(-1, 0, 0),  // Left
-        .B1D: SIMD3<Float>(0, -1, 0),  // Down
-
-        // Quad 2
-        .A2A: SIMD3<Float>(0, 0, 1),  // Aft
-        .A2D: SIMD3<Float>(0, -1, 0),  // Down
-        .B2U: SIMD3<Float>(0, 1, 0),   // Up
-        .B2L: SIMD3<Float>(-1, 0, 0),  // Left
-
-        // Quad 3
-        .A3U: SIMD3<Float>(0, 1, 0),   // Up
-        .A3R: SIMD3<Float>(1, 0, 0),   // Right
-        .B3A: SIMD3<Float>(0, 0, 1),  // Aft
-        .B3D: SIMD3<Float>(0, -1, 0),  // Down
-
-        // Quad 4
-        .A4R: SIMD3<Float>(1, 0, 0),   // Right
-        .A4D: SIMD3<Float>(0, -1, 0),  // Down
-        .B4U: SIMD3<Float>(0, 1, 0),   // Up
-        .B4F: SIMD3<Float>(0, 0, -1)    // Forward
-    ]
-
     var telemetry = LMTelemetry()
+    var rootEntity: Entity { module.rootEntity }
+    
     @ObservationIgnored
     private var updateTimer: Timer?
-
+    
     init() {
-        loadLunarModule()
         startTelemetryUpdates()
+        updateTelemetry()
     }
-
+    
     private func startTelemetryUpdates() {
         updateTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
             self?.updateTelemetry()
         }
     }
-
-    private func rotationAligningReferenceAxis(_ reference: SIMD3<Float>, to direction: SIMD3<Float>) -> simd_quatf {
-        let epsilon: Float = 1e-4
-        let target = simd_normalize(direction)
-        if simd_length(target) < epsilon {
-            return simd_quatf()
-        }
-
-        let base = simd_normalize(reference)
-        let dot = simd_dot(base, target)
-
-        if dot > 1 - epsilon {
-            return simd_quatf()
-        }
-
-        if dot < -1 + epsilon {
-            let orthogonal = abs(base.x) < 0.9 ? SIMD3<Float>(1, 0, 0) : SIMD3<Float>(0, 0, 1)
-            let axis = simd_normalize(simd_cross(base, orthogonal))
-            return simd_quatf(angle: .pi, axis: axis)
-        }
-
-        let axis = simd_normalize(simd_cross(base, target))
-        let angle = acos(dot)
-        return simd_quatf(angle: angle, axis: axis)
-    }
     
-    private func rotationAligningPositiveY(to direction: SIMD3<Float>) -> simd_quatf {
-        rotationAligningReferenceAxis(SIMD3<Float>(0, 1, 0), to: direction)
-    }
-    
-    private func resolvedThrusterDirection(approximate: SIMD3<Float>, orientation: simd_quatf) -> SIMD3<Float> {
-        let approx = simd_length(approximate) > 0 ? simd_normalize(approximate) : SIMD3<Float>(0, 1, 0)
-        let candidateAxes: [SIMD3<Float>] = [
-            SIMD3<Float>(1, 0, 0),
-            SIMD3<Float>(-1, 0, 0),
-            SIMD3<Float>(0, 1, 0),
-            SIMD3<Float>(0, -1, 0),
-            SIMD3<Float>(0, 0, 1),
-            SIMD3<Float>(0, 0, -1)
-        ]
-        
-        var bestDirection = approx
-        var bestDot: Float = -Float.greatestFiniteMagnitude
-        
-        for axis in candidateAxes {
-            let rotated = orientation.act(axis)
-            let normalized = simd_length(rotated) > 0 ? simd_normalize(rotated) : rotated
-            let dot = simd_dot(normalized, approx)
-            if dot > bestDot {
-                bestDot = dot
-                bestDirection = normalized
-            }
-        }
-        
-        if bestDot < 0 {
-            return -bestDirection
-        }
-        
-        return simd_normalize(bestDirection)
-    }
-
     func updateTelemetry() {
-        guard let moduleEntity = physicsRoot else { return }
-
-        let position = moduleEntity.position(relativeTo: nil)
-        let orientation = moduleEntity.orientation(relativeTo: nil)
-        let angularVelocity = moduleEntity.components[PhysicsMotionComponent.self]?.angularVelocity ?? .zero
-
+        guard let snapshot = module.currentTelemetry() else { return }
         DispatchQueue.main.async {
-            self.telemetry.position = position
-            self.telemetry.quaternion = orientation
-            self.telemetry.angularVelocity = angularVelocity
+            self.telemetry = snapshot
         }
     }
-
+    
     deinit {
         updateTimer?.invalidate()
     }
-
-    /// Loads the "lm" scene from the realityKitContentBundle
-    func loadLunarModule() {
-        do {
-            sceneEntity = try Entity.load(named: "lm", in: realityKitContentBundle)
-
-            guard let landerGeometry = sceneEntity?.findEntity(named: "lunarlander") else {
-                print("Unable to locate lunar lander entity in loaded scene")
-                return
-            }
-
-            let scaleFactor: Float = 0.05
-            guard let sceneRoot = sceneEntity else { return }
-
-            let physicsGeometry = sceneRoot.findEntity(named: "Physics")
-            let physicsBounds: BoundingBox
-            if let physicsGeometry {
-                physicsBounds = physicsGeometry.visualBounds(relativeTo: sceneRoot)
-            } else {
-                print("WARNING: Physics geometry not found; using lunarlander bounds for COM estimate")
-                physicsBounds = landerGeometry.visualBounds(relativeTo: sceneRoot)
-            }
-
-            let centerOfMass = physicsBounds.center
-            centerOfMassOffset = centerOfMass * scaleFactor
-
-            let landerClone = landerGeometry.clone(recursive: true)
-            landerClone.name = "LunarModuleMesh"
-            let landerTransformMatrix = landerGeometry.transformMatrix(relativeTo: sceneRoot)
-            var landerTransform = Transform(matrix: landerTransformMatrix)
-            landerTransform.translation -= centerOfMass
-            landerTransform.translation *= scaleFactor
-            landerTransform.scale *= SIMD3<Float>(repeating: scaleFactor)
-            landerClone.transform = landerTransform
-
-            let physicsRootEntity = ModelEntity()
-            physicsRootEntity.name = "LunarModuleRoot"
-            physicsRootEntity.addChild(landerClone)
-
-            physicsRoot = physicsRootEntity
-            displayModel = physicsRootEntity
-
-            rootEntity.children.removeAll()
-            rootEntity.addChild(physicsRootEntity)
-
-            let scaledExtents = physicsBounds.extents * scaleFactor
-            collisionExtents = SIMD3<Float>(
-                max(scaledExtents.x, 0.1),
-                max(scaledExtents.y, 0.1),
-                max(scaledExtents.z, 0.1)
-            )
-            let collisionShape = ShapeResource.generateBox(size: collisionExtents)
-            physicsRootEntity.components[CollisionComponent.self] = CollisionComponent(shapes: [collisionShape])
-
-            moduleMass = 2150.0
-            let width = max(collisionExtents.x, 1e-3)
-            let height = max(collisionExtents.y, 1e-3)
-            let depth = max(collisionExtents.z, 1e-3)
-            let oneTwelfthMass = moduleMass / 12.0
-            inertiaTensor = SIMD3<Float>(
-                oneTwelfthMass * (height * height + depth * depth),
-                oneTwelfthMass * (width * width + depth * depth),
-                oneTwelfthMass * (width * width + height * height)
-            )
-
-            var physicsBody = PhysicsBodyComponent()
-            physicsBody.massProperties = .init(shape: collisionShape, mass: moduleMass)
-            physicsBody.material = .generate(friction: 0.0, restitution: 0.0)
-            physicsBody.mode = .dynamic
-            physicsBody.isAffectedByGravity = false
-            physicsBody.linearDamping = 0.0
-            physicsBody.angularDamping = 0.0
-            physicsRootEntity.components[PhysicsBodyComponent.self] = physicsBody
-            physicsRootEntity.components[PhysicsMotionComponent.self] = PhysicsMotionComponent()
-            print("Configured physics root with COM offset \(centerOfMassOffset) and extents: \(collisionExtents)")
-
-            // Define the thruster mapping (using the same group names as before)
-            let thrusterMapping: [String: RCSThruster] = [
-                "group13_g5": .A1U,
-                "group13_g7": .A1F,
-                "group13_g6": .B1L,
-                "group13_g4": .B1D,
-
-                "group13_10": .A2A,
-                "group13_g8": .A2D,
-                "group13_g9": .B2U,
-                "group13_11": .B2L,
-
-                "group13_12": .A3U,
-                "group13_13": .A3R,
-                "group13_14": .B3A,
-                "group13_p1": .B3D,
-
-                "group13_g2": .A4R,
-                "group13_g1": .A4D,
-                "group13_gr": .B4U,
-                "group13_g3": .B4F
-            ]
-
-            thrusters.removeAll()
-            for (groupName, thruster) in thrusterMapping {
-                guard
-                    let thrusterEntity = physicsRootEntity.findEntity(named: groupName),
-                    let direction = thrusterDirections[thruster]
-                else {
-                    print("Missing thruster entity or direction for \(groupName)")
-                    continue
-                }
-
-                let localPosition = thrusterEntity.position(relativeTo: physicsRootEntity)
-                let approximateDirection = simd_normalize(direction)
-                let thrusterOrientation = thrusterEntity.orientation(relativeTo: physicsRootEntity)
-                let localDirection = resolvedThrusterDirection(approximate: approximateDirection, orientation: thrusterOrientation)
-
-                let coneName = "thruster-debug-\(thruster.rawValue)"
-                let coneDirection = simd_normalize(localDirection)
-                let coneHeight: Float = 0.2
-                let coneRadius: Float = 0.05
-                if let existingCone = thrusterEntity.findEntity(named: coneName) as? ModelEntity {
-                    existingCone.model?.materials = [UnlitMaterial(color: UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 0.8))]
-                    existingCone.transform = Transform(
-                        rotation: rotationAligningPositiveY(to: coneDirection),
-                        translation: coneDirection * (-coneHeight * 0.5)
-                    )
-                } else {
-                    let coneMesh = MeshResource.generateCone(height: coneHeight, radius: coneRadius)
-                    let marker = ModelEntity(
-                        mesh: coneMesh,
-                        materials: [UnlitMaterial(color: UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 0.8))]
-                    )
-                    marker.name = coneName
-                    marker.transform = Transform(
-                        rotation: rotationAligningPositiveY(to: coneDirection),
-                        translation: coneDirection * (-coneHeight * 0.5)
-                    )
-                    thrusterEntity.addChild(marker)
-                }
-
-                thrusters[thruster] = RCSThrusterData(
-                    thruster: thruster,
-                    entity: thrusterEntity,
-                    localPosition: localPosition,
-                    localDirection: localDirection,
-                    debugConeName: coneName
-                )
-                print("Stored thruster \(thruster) at \(localPosition) dir \(localDirection)")
-            }
-        } catch {
-            print("Failed to load lunar-module scene: \(error)")
-        }
-    }
-
+    
     func resetSimulation() {
-        guard let moduleEntity = physicsRoot else { return }
-
-        var transform = moduleEntity.transform
-        transform.translation = .zero
-        transform.rotation = simd_quatf()
-        moduleEntity.transform = transform
-
-        if var motion = moduleEntity.components[PhysicsMotionComponent.self] {
-            motion.linearVelocity = .zero
-            motion.angularVelocity = .zero
-            moduleEntity.components[PhysicsMotionComponent.self] = motion
-        }
-
-        print("Simulation reset to origin with zeroed velocities")
+        module.reset()
         updateTelemetry()
     }
-
-    // MARK: - Thruster Functions
-
-    /// Fires a specific RCS thruster
+    
     private func fireThruster(_ thruster: RCSThruster) {
-        guard
-            let thrusterData = thrusters[thruster],
-            let module = physicsRoot,
-            var motion = module.components[PhysicsMotionComponent.self]
-        else {
-            print("Missing thruster data or physics root for \(thruster)")
-            return
-        }
-
-        print("Thruster \(thruster.rawValue) fired at position \(thrusterData.localPosition), direction \(thrusterData.localDirection)")
-
-        let length = simd_length(thrusterData.localDirection)
-        let normalizedDirection = length > 0 ? thrusterData.localDirection / length : SIMD3<Float>(0, 1, 0)
-        let force = normalizedDirection * thrusterForceMagnitude
-        let impulse = force * minimumPulseDuration
-
-        // Linear impulse contribution
-        let deltaLinearVelocity = impulse / moduleMass
-        motion.linearVelocity += deltaLinearVelocity
-
-        // Angular impulse contribution (torque = r x F)
-        let torque = simd_cross(thrusterData.localPosition, force)
-        let angularImpulse = torque * minimumPulseDuration
-        let deltaAngularVelocity = SIMD3<Float>(
-            inertiaTensor.x > 0 ? angularImpulse.x / inertiaTensor.x : 0,
-            inertiaTensor.y > 0 ? angularImpulse.y / inertiaTensor.y : 0,
-            inertiaTensor.z > 0 ? angularImpulse.z / inertiaTensor.z : 0
-        )
-        motion.angularVelocity += deltaAngularVelocity
-
-        module.components[PhysicsMotionComponent.self] = motion
-
-        // Highlight the thruster's debug cone in red while firing.
-        let coneName = thrusterData.debugConeName
-        if let debugCone = module.findEntity(named: coneName) as? ModelEntity {
-            let onMaterial = UnlitMaterial(color: UIColor(red: 1.0, green: 0.15, blue: 0.1, alpha: 0.95))
-            let offMaterial = UnlitMaterial(color: UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 0.8))
-            debugCone.model?.materials = [onMaterial]
-            let highlightDurationMilliseconds = max(1, Int(minimumPulseDuration * 6_000))
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(highlightDurationMilliseconds)) {
-                debugCone.model?.materials = [offMaterial]
-            }
-        }
-
+        module.fireThruster(thruster)
+        updateTelemetry()
     }
-
     /// Updated RCS control function that fires appropriate thrusters
     func fireRCSThruster(_ direction: RCSDirection) {
         switch direction {
