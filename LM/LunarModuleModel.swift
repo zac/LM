@@ -5,6 +5,8 @@
 //  Created by Zac White on 11/6/25.
 //
 
+import UIKit
+import RealityKitContent
 import RealityKit
 
 final class LunarModuleModel {
