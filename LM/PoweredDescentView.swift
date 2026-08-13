@@ -56,7 +56,7 @@ struct PoweredDescentView: View {
             }
             .buttonStyle(.borderedProminent)
 
-            Text("PDI kinematics are sourced from NASA TN D-6846 and TN D-4131. Start boots Luminary, loads NASA Luminary 99 pad-loads and MODE CONTROL AUTO, then keys V37E63E. Nav is a modeled local-vertical frame, not a real ephemeris. V50N25 is ENTERed to skip fine-align; V50N18 and V99 PROCEED are held automatically.")
+            Text("PDI kinematics are sourced from NASA TN D-6846 and TN D-4131. Start boots Luminary, loads NASA Luminary 99 pad-loads (including RLS/TEPHEM) and MODE CONTROL AUTO, then keys V37E63E. RN is a moon-fixed offset from NASA RLS, still over the site. V50N25 is ENTERed to skip fine-align; V50N18 and V99 PROCEED are held automatically.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
