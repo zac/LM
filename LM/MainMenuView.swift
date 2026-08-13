@@ -33,10 +33,10 @@ struct MainMenuView: View {
                 .padding(.bottom)
 
                 NewGameButton()
-                
-                // New button to open the LM Thruster Simulation
+                PoweredDescentSpaceButton()
+
                 NavigationLink(destination: LunarLanderSimulationView()) {
-                    Text("LM Thruster Sim")
+                    Text("LM Thruster Sim (sandbox)")
                         .font(.headline)
                         .padding()
                         .frame(maxWidth: .infinity)

@@ -17,7 +17,7 @@ enum RCSDirection {
 }
 
 // Add an enum to define the specific RCS thrusters
-enum RCSThruster: String {
+enum RCSThruster: String, Hashable, CaseIterable {
     // Quad 1 (front right)
     case A1U, A1F, B1L, B1D
     // Quad 2 (front left) 

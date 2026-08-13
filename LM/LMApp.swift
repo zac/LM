@@ -1,10 +1,3 @@
-//
-//  LMApp.swift
-//  LM
-//
-//  Created by Zac White on 1/25/25.
-//
-
 import SwiftUI
 
 @main
@@ -13,17 +6,18 @@ struct LMApp: App {
 
     var body: some Scene {
         WindowGroup {
-            LunarLanderSimulationView()
+            PoweredDescentView()
+                .environment(viewModel)
         }
+        .defaultSize(width: 980, height: 720)
 
-        WindowGroup {
+        WindowGroup(id: "menu") {
             MainMenuView()
                 .environment(viewModel)
         }
         .defaultSize(width: 400, height: 400)
 
-
-        ImmersiveSpace(id: viewModel.immersiveSpaceID) {
+        ImmersiveSpace(id: viewModel.moonSpaceID) {
             ImmersiveView()
                 .environment(viewModel)
                 .onAppear {
@@ -34,5 +28,17 @@ struct LMApp: App {
                 }
         }
         .immersionStyle(selection: .constant(.full), in: .full)
+
+        ImmersiveSpace(id: viewModel.descentSpaceID) {
+            PoweredDescentImmersiveView()
+                .environment(viewModel)
+                .onAppear {
+                    viewModel.descentSpaceState = .open
+                }
+                .onDisappear {
+                    viewModel.descentSpaceState = .closed
+                }
+        }
+        .immersionStyle(selection: .constant(.mixed), in: .mixed)
     }
 }

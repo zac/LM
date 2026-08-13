@@ -8,14 +8,24 @@
 import UIKit
 import RealityKitContent
 import RealityKit
+import LMCore
+
+enum LunarModuleFlightMode {
+    case impulseSandbox
+    case kinematicGuidance
+}
 
 final class LunarModuleModel {
     let rootEntity = Entity()
+    let mode: LunarModuleFlightMode
     
     private(set) var physicsEntity: ModelEntity?
     private var thrusters: [RCSThruster: RCSThrusterData] = [:]
+    private var plumeEntity: ModelEntity?
     private let thrusterForceMagnitude: Float = 445.0  // ≈100 lbf
     private let minimumPulseDuration: Float = 0.05     // 50 ms pulse
+    private let idleConeMaterial = UnlitMaterial(color: UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 0.8))
+    private let activeConeMaterial = UnlitMaterial(color: UIColor(red: 1.0, green: 0.15, blue: 0.1, alpha: 0.95))
     
     private var moduleMass: Float = 2150.0
     private var inertiaTensor: SIMD3<Float> = SIMD3<Float>(repeating: 1.0)
@@ -47,8 +57,34 @@ final class LunarModuleModel {
         .B4F: SIMD3<Float>(0, 0, -1)   // Forward
     ]
     
-    init() {
+    init(mode: LunarModuleFlightMode = .impulseSandbox) {
+        self.mode = mode
         loadModel()
+    }
+
+    func apply(siState: LMVehicleStateSnapshot, mapper: LMWorldMapper) {
+        guard let physicsEntity else { return }
+        let pose = mapper.pose(from: siState)
+        physicsEntity.position = pose.position
+        physicsEntity.orientation = pose.orientation
+    }
+
+    func setActiveJets(_ jets: Set<RCSThruster>) {
+        guard let module = physicsEntity else { return }
+        for (thruster, data) in thrusters {
+            guard let cone = module.findEntity(named: data.debugConeName) as? ModelEntity else { continue }
+            cone.model?.materials = [jets.contains(thruster) ? activeConeMaterial : idleConeMaterial]
+        }
+    }
+
+    func setDPSThrust(newtons: Double?, engineOn: Bool) {
+        guard let plumeEntity else { return }
+        let thrust = newtons ?? 0
+        let lit = engineOn && thrust > 1
+        plumeEntity.isEnabled = lit
+        guard lit else { return }
+        let fraction = max(0.25, min(1.6, thrust / LMDPSThrottleMap.ratedMaxThrustNewtons))
+        plumeEntity.scale = SIMD3(repeating: Float(fraction))
     }
     
     func currentTelemetry() -> LMTelemetry? {
@@ -174,7 +210,7 @@ final class LunarModuleModel {
             var physicsBody = PhysicsBodyComponent()
             physicsBody.massProperties = .init(shape: collisionShape, mass: moduleMass)
             physicsBody.material = .generate(friction: 0.0, restitution: 0.0)
-            physicsBody.mode = .dynamic
+            physicsBody.mode = mode == .kinematicGuidance ? .kinematic : .dynamic
             physicsBody.isAffectedByGravity = false
             physicsBody.linearDamping = 0.0
             physicsBody.angularDamping = 0.0
@@ -183,6 +219,7 @@ final class LunarModuleModel {
             print("Configured physics root with COM offset \(centerOfMassOffset) and extents: \(collisionExtents)")
             
             configureThrusters(on: physicsRootEntity)
+            configureDPSPlume(on: physicsRootEntity)
         } catch {
             print("Failed to load lunar-module scene: \(error)")
         }
@@ -232,7 +269,7 @@ final class LunarModuleModel {
             let coneRadius: Float = 0.0075
             
             if let existingCone = thrusterEntity.findEntity(named: coneName) as? ModelEntity {
-                existingCone.model?.materials = [UnlitMaterial(color: UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 0.8))]
+                existingCone.model?.materials = [idleConeMaterial]
                 existingCone.transform = Transform(
                     rotation: rotationAligningPositiveY(to: coneDirection),
                     translation: coneDirection * (-coneHeight * 0.5)
@@ -241,7 +278,7 @@ final class LunarModuleModel {
                 let coneMesh = MeshResource.generateCone(height: coneHeight, radius: coneRadius)
                 let marker = ModelEntity(
                     mesh: coneMesh,
-                    materials: [UnlitMaterial(color: UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 0.8))]
+                    materials: [idleConeMaterial]
                 )
                 marker.name = coneName
                 marker.transform = Transform(
@@ -267,14 +304,25 @@ final class LunarModuleModel {
             let debugCone = module.findEntity(named: thrusterData.debugConeName) as? ModelEntity
         else { return }
         
-        let onMaterial = UnlitMaterial(color: UIColor(red: 1.0, green: 0.15, blue: 0.1, alpha: 0.95))
-        let offMaterial = UnlitMaterial(color: UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 0.8))
-        
-        debugCone.model?.materials = [onMaterial]
+        debugCone.model?.materials = [activeConeMaterial]
         let highlightDurationMilliseconds = max(1, Int(minimumPulseDuration * 6_000))
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(highlightDurationMilliseconds)) {
-            debugCone.model?.materials = [offMaterial]
+            debugCone.model?.materials = [self.idleConeMaterial]
         }
+    }
+
+    private func configureDPSPlume(on physicsRootEntity: ModelEntity) {
+        let mesh = MeshResource.generateCone(height: 0.12, radius: 0.035)
+        let plume = ModelEntity(
+            mesh: mesh,
+            materials: [UnlitMaterial(color: UIColor(red: 1.0, green: 0.55, blue: 0.15, alpha: 0.85))]
+        )
+        plume.name = "DPSPlume"
+        plume.orientation = simd_quatf(angle: .pi, axis: SIMD3(1, 0, 0))
+        plume.position = SIMD3(0, -0.07, 0)
+        plume.isEnabled = false
+        physicsRootEntity.addChild(plume)
+        plumeEntity = plume
     }
     
     private func rotationAligningReferenceAxis(_ reference: SIMD3<Float>, to direction: SIMD3<Float>) -> simd_quatf {

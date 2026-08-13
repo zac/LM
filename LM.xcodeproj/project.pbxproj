@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		11F3D7792D4569A800205449 /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 11F3D7782D4569A800205449 /* RealityKitContent */; };
+		153481058BB7D6ABE3016B26 /* AGC in Frameworks */ = {isa = PBXBuildFile; productRef = 7F923C8DED5D27B4856DF91E /* AGC */; };
+		8B235D3F452923FA7A4072FF /* LMCore in Frameworks */ = {isa = PBXBuildFile; productRef = A9EB3C526EF0E03AA143B6C9 /* LMCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +60,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				11F3D7792D4569A800205449 /* RealityKitContent in Frameworks */,
+				153481058BB7D6ABE3016B26 /* AGC in Frameworks */,
+				8B235D3F452923FA7A4072FF /* LMCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +123,8 @@
 			name = LM;
 			packageProductDependencies = (
 				11F3D7782D4569A800205449 /* RealityKitContent */,
+				7F923C8DED5D27B4856DF91E /* AGC */,
+				A9EB3C526EF0E03AA143B6C9 /* LMCore */,
 			);
 			productName = LM;
 			productReference = 11F3D7732D4569A800205449 /* LM.app */;
@@ -141,8 +147,6 @@
 				11F3D7952D4569A900205449 /* LMTests */,
 			);
 			name = LMTests;
-			packageProductDependencies = (
-			);
 			productName = LMTests;
 			productReference = 11F3D7922D4569A900205449 /* LMTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -175,6 +179,9 @@
 			);
 			mainGroup = 11F3D76A2D4569A800205449;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 11F3D7742D4569A800205449 /* Products */;
 			projectDirPath = "";
@@ -472,10 +479,27 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../AGC;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		11F3D7782D4569A800205449 /* RealityKitContent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RealityKitContent;
+		};
+		7F923C8DED5D27B4856DF91E /* AGC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */;
+			productName = AGC;
+		};
+		A9EB3C526EF0E03AA143B6C9 /* LMCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */;
+			productName = LMCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
