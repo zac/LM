@@ -56,7 +56,7 @@ struct PoweredDescentView: View {
             }
             .buttonStyle(.borderedProminent)
 
-            Text("PDI kinematics are sourced from NASA TN D-6846 and TN D-4131. Start boots Luminary, loads NASA Luminary 99 pad-loads (including RLS/TEPHEM) and MODE CONTROL AUTO, then keys V37E63E. RN is a moon-fixed offset from NASA RLS, still over the site. V50N25 is ENTERed to skip fine-align; V50N18 and V99 PROCEED are held automatically.")
+            Text("PDI kinematics are sourced from NASA TN D-6846 and TN D-4131. RN starts at the NASA RIGN offset (~237 nmi uprange). The tabletop LM stays over the pad until PROG 64; P63 range-to-go is the strip on the table. V50N25 is ENTERed to skip fine-align; V50N18 and V99 PROCEED are held automatically.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -76,6 +76,7 @@ struct PoweredDescentView: View {
                     let vy = state?.velocityMetersPerSecond.y ?? 0
                     return (vx * vx + vy * vy).squareRoot()
                 }()))
+                labeled("Range", rangeLabel(state?.groundRangeMeters))
                 labeled("Gimbal", String(
                     format: "P %+0.2f°  R %+0.2f°",
                     (state?.dpsPitchGimbalRadians ?? 0) * 180 / .pi,
@@ -108,6 +109,12 @@ struct PoweredDescentView: View {
             Spacer()
             Text(value)
         }
+    }
+
+    private func rangeLabel(_ meters: Double?) -> String {
+        guard let meters else { return "—" }
+        let nauticalMiles = meters / 1852.0
+        return String(format: "%.1f nmi  (%.1f km)", nauticalMiles, meters / 1000)
     }
 
     private func feetAndMeters(_ meters: Double?) -> String {

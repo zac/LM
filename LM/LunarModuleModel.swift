@@ -62,9 +62,9 @@ final class LunarModuleModel {
         loadModel()
     }
 
-    func apply(siState: LMVehicleStateSnapshot, mapper: LMWorldMapper) {
+    func apply(siState: LMVehicleStateSnapshot, mapper: LMWorldMapper, program: Int? = nil) {
         guard let physicsEntity else { return }
-        let pose = mapper.pose(from: siState)
+        let pose = mapper.pose(from: siState, program: program)
         physicsEntity.position = pose.position
         physicsEntity.orientation = pose.orientation
     }
