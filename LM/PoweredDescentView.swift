@@ -56,7 +56,7 @@ struct PoweredDescentView: View {
             }
             .buttonStyle(.borderedProminent)
 
-            Text("PDI kinematics are sourced from NASA TN D-6846 and TN D-4131. Start boots Luminary, loads NASA Luminary 99 pad-loads and MODE CONTROL AUTO, then keys V37E63E. Nav is a modeled local-vertical frame, not a real ephemeris; V99 PRO is still crew.")
+            Text("PDI kinematics are sourced from NASA TN D-6846 and TN D-4131. Start boots Luminary, loads NASA Luminary 99 pad-loads and MODE CONTROL AUTO, then keys V37E63E. Nav is a modeled local-vertical frame, not a real ephemeris. V99 PROCEED is held automatically when the DSKY shows 99.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
