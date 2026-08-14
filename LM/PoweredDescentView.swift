@@ -43,20 +43,20 @@ struct PoweredDescentView: View {
                 .font(.headline)
 
             HStack(spacing: 12) {
-                Button("Start") { appModel.session.start() }
+                Button("Auto-land") { appModel.session.start() }
                     .disabled(!appModel.session.canStart)
                 Button("Stop") { appModel.session.stop() }
                     .disabled(!appModel.session.canStop)
                 Button("Reset") { appModel.session.reset() }
                     .disabled(!appModel.session.canReset)
-                Button(appModel.descentSpaceState == .open ? "Leave table" : "Place on table") {
+                Button(appModel.descentSpaceState == .open ? "Leave table" : "Auto-land on table") {
                     Task { await toggleDescentSpace() }
                 }
                 .disabled(appModel.descentSpaceState == .inTransition)
             }
             .buttonStyle(.borderedProminent)
 
-            Text("PDI kinematics are sourced from NASA TN D-6846 and TN D-4131. RN starts at the NASA RIGN offset (~237 nmi uprange). The tabletop LM stays over the pad until PROG 64; P63 range-to-go is the strip on the table. V06N61 and V99 PROCEED are held automatically; V50N25 and V50N18 are ENTERed to skip fine-align and R60. P63 runs accelerated GET; P64 onward is 1×.")
+            Text("Auto-land boots Luminary, keys V37E63E, and answers V06N61 / V50N25 / V50N18 / V99 so P63→P64→P65 run closed-loop. P63 GET is accelerated; P64 onward is 1×. The tabletop LM stays over the pad until PROG 64. Body rates still come only from DPS gimbal and RCS jets.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -141,7 +141,9 @@ struct PoweredDescentView: View {
             appModel.descentSpaceState = .inTransition
             switch await openImmersiveSpace(id: appModel.descentSpaceID) {
             case .opened:
-                break
+                if appModel.session.canStart {
+                    appModel.session.start()
+                }
             case .userCancelled, .error:
                 fallthrough
             @unknown default:

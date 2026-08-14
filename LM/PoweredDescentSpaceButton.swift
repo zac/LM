@@ -16,7 +16,9 @@ struct PoweredDescentSpaceButton: View {
                     appModel.descentSpaceState = .inTransition
                     switch await openImmersiveSpace(id: appModel.descentSpaceID) {
                     case .opened:
-                        break
+                        if appModel.session.canStart {
+                            appModel.session.start()
+                        }
                     case .userCancelled, .error:
                         fallthrough
                     @unknown default:
@@ -27,7 +29,7 @@ struct PoweredDescentSpaceButton: View {
                 }
             }
         } label: {
-            Text(appModel.descentSpaceState == .open ? "Leave table" : "Tabletop descent")
+            Text(appModel.descentSpaceState == .open ? "Leave table" : "Auto-land on table")
         }
         .disabled(appModel.descentSpaceState == .inTransition)
         .fontWeight(.semibold)

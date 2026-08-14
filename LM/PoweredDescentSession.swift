@@ -83,11 +83,11 @@ final class PoweredDescentSession {
         loopTask = Task { @MainActor [weak self] in
             guard let self else { return }
             if (self.snapshot?.agc.cycle ?? 0) < 1_000_000 {
-                self.loadMessage = "Booting Luminary 099 and keying V37E63E…"
+                self.loadMessage = "Auto-land · booting Luminary 099…"
                 let prepared = await runtime.bootAndEnterP63()
                 guard self.runID == runID else { return }
                 self.snapshot = prepared
-                self.loadMessage = "Luminary 099 · V37E63E keyed"
+                self.loadMessage = self.autoLandMessage(program: prepared.agc.dsky.programNumber, accelerated: true)
             }
             var last = CACurrentMediaTime()
             while !Task.isCancelled, self.runID == runID {
@@ -100,11 +100,11 @@ final class PoweredDescentSession {
                 guard self.runID == runID else { return }
                 self.snapshot = snap
                 if pace == .accelerated {
-                    self.loadMessage = "Luminary 099 · P63 accelerated"
+                    self.loadMessage = self.autoLandMessage(program: snap.agc.dsky.programNumber, accelerated: true)
                     await Task.yield()
                     continue
                 }
-                self.loadMessage = "Luminary 099 · 1× from P\(snap.agc.dsky.programNumber.map(String.init) ?? "64")"
+                self.loadMessage = self.autoLandMessage(program: snap.agc.dsky.programNumber, accelerated: false)
                 let elapsed = CACurrentMediaTime() - now
                 let remaining = LMSimulationPace.realtimeTargetFrameSeconds - elapsed
                 if remaining > 0 {
@@ -195,18 +195,23 @@ final class PoweredDescentSession {
     private func makeFrameInput() -> LMFrameInput {
         let altitude = snapshot?.vehicleState.altitudeMeters
             ?? LMPoweredDescentScenario.apollo11SourceBacked.initialState.altitudeMeters
-        return LMFrameInput(
-            radarInput: .measurement(LMRadarMeasurementInput(altitudeMeters: max(0, altitude))),
-            rotationalHandControllerInput: LMRotationalHandControllerInput(
+        return .autoLand(
+            altitudeMeters: altitude,
+            rotationalHandController: LMRotationalHandControllerInput(
                 pitch: rhcPitch,
                 yaw: rhcYaw,
                 roll: rhcRoll
             ),
-            descentRateInput: LMDescentRateControlInput(
-                descendPlus: descendPlus,
-                descendMinus: descendMinus
-            ),
-            rawChannelInputs: LMPoweredDescentPanel.channelInputs
+            descendPlus: descendPlus,
+            descendMinus: descendMinus
         )
+    }
+
+    private func autoLandMessage(program: Int?, accelerated: Bool) -> String {
+        let prog = program.map { "P\($0)" } ?? "P63"
+        if accelerated {
+            return "Auto-land · \(prog) accelerated GET"
+        }
+        return "Auto-land · \(prog) at 1×"
     }
 }

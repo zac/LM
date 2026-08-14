@@ -27,7 +27,19 @@ struct PoweredDescentImmersiveView: View {
                 }
         )
         .ornament(attachmentAnchor: .scene(.bottom)) {
-            CrewControlPanel(session: appModel.session)
+            VStack(spacing: 12) {
+                HStack(spacing: 12) {
+                    Button("Auto-land") { appModel.session.start() }
+                        .disabled(!appModel.session.canStart)
+                    Button("Stop") { appModel.session.stop() }
+                        .disabled(!appModel.session.canStop)
+                    Text(appModel.session.loadMessage)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.borderedProminent)
+                CrewControlPanel(session: appModel.session)
+            }
         }
         .ornament(attachmentAnchor: .scene(.leading)) {
             DSKYPanel(session: appModel.session)
