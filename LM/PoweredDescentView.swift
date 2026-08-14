@@ -56,7 +56,7 @@ struct PoweredDescentView: View {
             }
             .buttonStyle(.borderedProminent)
 
-            Text("PDI kinematics are sourced from NASA TN D-6846 and TN D-4131. RN starts at the NASA RIGN offset (~237 nmi uprange). The tabletop LM stays over the pad until PROG 64; P63 range-to-go is the strip on the table. V50N25 is ENTERed to skip fine-align; V50N18 and V99 PROCEED are held automatically.")
+            Text("PDI kinematics are sourced from NASA TN D-6846 and TN D-4131. RN starts at the NASA RIGN offset (~237 nmi uprange). The tabletop LM stays over the pad until PROG 64; P63 range-to-go is the strip on the table. V06N61 and V99 PROCEED are held automatically; V50N25 and V50N18 are ENTERed to skip fine-align and R60. P63 runs accelerated GET; P64 onward is 1×.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }

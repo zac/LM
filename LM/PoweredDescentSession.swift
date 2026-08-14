@@ -14,8 +14,6 @@ final class PoweredDescentSession {
         case error(String)
     }
 
-    static let maxFrameDelta = 1.0 / 15.0
-    static let targetFrameDuration = 1.0 / 60.0
     static let rhcDeflection = 0o2000
 
     private(set) var status: Status = .unloaded
@@ -94,13 +92,21 @@ final class PoweredDescentSession {
             var last = CACurrentMediaTime()
             while !Task.isCancelled, self.runID == runID {
                 let now = CACurrentMediaTime()
-                let delta = min(max(now - last, 1.0 / 240.0), Self.maxFrameDelta)
+                let wallDelta = now - last
                 last = now
+                let pace = LMSimulationPace.pace(programNumber: self.snapshot?.agc.dsky.programNumber)
+                let delta = pace.simulationDelta(wallDelta: wallDelta)
                 let snap = await runtime.step(deltaTime: delta, input: self.makeFrameInput())
                 guard self.runID == runID else { return }
                 self.snapshot = snap
+                if pace == .accelerated {
+                    self.loadMessage = "Luminary 099 · P63 accelerated"
+                    await Task.yield()
+                    continue
+                }
+                self.loadMessage = "Luminary 099 · 1× from P\(snap.agc.dsky.programNumber.map(String.init) ?? "64")"
                 let elapsed = CACurrentMediaTime() - now
-                let remaining = Self.targetFrameDuration - elapsed
+                let remaining = LMSimulationPace.realtimeTargetFrameSeconds - elapsed
                 if remaining > 0 {
                     try? await Task.sleep(for: .seconds(remaining))
                 } else {
