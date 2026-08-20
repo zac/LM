@@ -21,11 +21,9 @@ final class LunarModuleModel {
     
     private(set) var physicsEntity: ModelEntity?
     private var thrusters: [RCSThruster: RCSThrusterData] = [:]
-    private var plumeEntity: ModelEntity?
+    private var plumeEntity: Entity?
     private let thrusterForceMagnitude: Float = 445.0  // ≈100 lbf
     private let minimumPulseDuration: Float = 0.05     // 50 ms pulse
-    private let idleConeMaterial = UnlitMaterial(color: UIColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 0.8))
-    private let activeConeMaterial = UnlitMaterial(color: UIColor(red: 1.0, green: 0.15, blue: 0.1, alpha: 0.95))
     
     private var moduleMass: Float = 2150.0
     private var inertiaTensor: SIMD3<Float> = SIMD3<Float>(repeating: 1.0)
@@ -70,10 +68,8 @@ final class LunarModuleModel {
     }
 
     func setActiveJets(_ jets: Set<RCSThruster>) {
-        guard let module = physicsEntity else { return }
         for (thruster, data) in thrusters {
-            guard let cone = module.findEntity(named: data.debugConeName) as? ModelEntity else { continue }
-            cone.model?.materials = [jets.contains(thruster) ? activeConeMaterial : idleConeMaterial]
+            setExhaustFiring(data.plumeEntity, firing: jets.contains(thruster))
         }
     }
 
@@ -81,10 +77,10 @@ final class LunarModuleModel {
         guard let plumeEntity else { return }
         let thrust = newtons ?? 0
         let lit = engineOn && thrust > 1
-        plumeEntity.isEnabled = lit
+        setExhaustFiring(plumeEntity, firing: lit)
         guard lit else { return }
-        let fraction = max(0.25, min(1.6, thrust / LMDPSThrottleMap.ratedMaxThrustNewtons))
-        plumeEntity.scale = SIMD3(repeating: Float(fraction))
+        let fraction = max(0.35, min(1.8, thrust / LMDPSThrottleMap.ratedMaxThrustNewtons))
+        plumeEntity.scale = SIMD3(1, Float(fraction), 1)
     }
     
     func currentTelemetry() -> LMTelemetry? {
@@ -141,7 +137,11 @@ final class LunarModuleModel {
         
         module.components[PhysicsMotionComponent.self] = motion
         
-        highlightCone(for: thrusterData)
+        setExhaustFiring(thrusterData.plumeEntity, firing: true)
+        let highlightDurationMilliseconds = max(1, Int(minimumPulseDuration * 6_000))
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(highlightDurationMilliseconds)) {
+            self.setExhaustFiring(thrusterData.plumeEntity, firing: false)
+        }
     }
     
     // MARK: - Private helpers
@@ -262,67 +262,113 @@ final class LunarModuleModel {
             let thrusterOrientation = thrusterEntity.orientation(relativeTo: physicsRootEntity)
             let localDirection = resolvedThrusterDirection(approximate: approximateDirection,
                                                            orientation: thrusterOrientation)
-            
-            let coneName = "thruster-debug-\(thruster.rawValue)"
-            let coneDirection = simd_normalize(localDirection)
-            let coneHeight: Float = 0.02
-            let coneRadius: Float = 0.0075
-            
-            if let existingCone = thrusterEntity.findEntity(named: coneName) as? ModelEntity {
-                existingCone.model?.materials = [idleConeMaterial]
-                existingCone.transform = Transform(
-                    rotation: rotationAligningPositiveY(to: coneDirection),
-                    translation: coneDirection * (-coneHeight * 0.5)
-                )
-            } else {
-                let coneMesh = MeshResource.generateCone(height: coneHeight, radius: coneRadius)
-                let marker = ModelEntity(
-                    mesh: coneMesh,
-                    materials: [idleConeMaterial]
-                )
-                marker.name = coneName
-                marker.transform = Transform(
-                    rotation: rotationAligningPositiveY(to: coneDirection),
-                    translation: coneDirection * (-coneHeight * 0.5)
-                )
-                thrusterEntity.addChild(marker)
-            }
-            
+            let exhaust = simd_normalize(-localDirection)
+            let plume = makeExhaustPlume(
+                name: "rcs-plume-\(thruster.rawValue)",
+                length: 0.055,
+                radius: 0.007,
+                core: UIColor(red: 0.82, green: 0.95, blue: 1.0, alpha: 0.95),
+                envelope: UIColor(red: 0.45, green: 0.78, blue: 1.0, alpha: 0.7),
+                birthRate: 90,
+                speed: 0.22,
+                lifeSpan: 0.18,
+                particleSize: 0.004
+            )
+            plume.orientation = rotationAligningPositiveY(to: exhaust)
+            thrusterEntity.addChild(plume)
+
             thrusters[thruster] = RCSThrusterData(
                 thruster: thruster,
                 entity: thrusterEntity,
                 localPosition: localPosition,
                 localDirection: localDirection,
-                debugConeName: coneName
+                plumeEntity: plume
             )
-        }
-    }
-    
-    private func highlightCone(for thrusterData: RCSThrusterData) {
-        guard
-            let module = physicsEntity,
-            let debugCone = module.findEntity(named: thrusterData.debugConeName) as? ModelEntity
-        else { return }
-        
-        debugCone.model?.materials = [activeConeMaterial]
-        let highlightDurationMilliseconds = max(1, Int(minimumPulseDuration * 6_000))
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(highlightDurationMilliseconds)) {
-            debugCone.model?.materials = [self.idleConeMaterial]
         }
     }
 
     private func configureDPSPlume(on physicsRootEntity: ModelEntity) {
-        let mesh = MeshResource.generateCone(height: 0.12, radius: 0.035)
-        let plume = ModelEntity(
-            mesh: mesh,
-            materials: [UnlitMaterial(color: UIColor(red: 1.0, green: 0.55, blue: 0.15, alpha: 0.85))]
+        let plume = makeExhaustPlume(
+            name: "DPSPlume",
+            length: 0.18,
+            radius: 0.038,
+            core: UIColor(red: 1.0, green: 0.95, blue: 0.75, alpha: 0.95),
+            envelope: UIColor(red: 1.0, green: 0.45, blue: 0.12, alpha: 0.8),
+            birthRate: 220,
+            speed: 0.45,
+            lifeSpan: 0.28,
+            particleSize: 0.012
         )
-        plume.name = "DPSPlume"
-        plume.orientation = simd_quatf(angle: .pi, axis: SIMD3(1, 0, 0))
-        plume.position = SIMD3(0, -0.07, 0)
-        plume.isEnabled = false
+        plume.orientation = rotationAligningPositiveY(to: SIMD3(0, -1, 0))
+        plume.position = SIMD3(0, -0.08, 0)
         physicsRootEntity.addChild(plume)
         plumeEntity = plume
+    }
+
+    private func makeExhaustPlume(
+        name: String,
+        length: Float,
+        radius: Float,
+        core: UIColor,
+        envelope: UIColor,
+        birthRate: Float,
+        speed: Float,
+        lifeSpan: Double,
+        particleSize: Float
+    ) -> Entity {
+        let root = Entity()
+        root.name = name
+
+        let envelopeMesh = MeshResource.generateCone(height: length, radius: radius)
+        let envelopeCone = ModelEntity(
+            mesh: envelopeMesh,
+            materials: [UnlitMaterial(color: envelope)]
+        )
+        envelopeCone.name = "\(name)-envelope"
+        envelopeCone.orientation = simd_quatf(angle: .pi, axis: SIMD3(1, 0, 0))
+        envelopeCone.position = SIMD3(0, length * 0.5, 0)
+        root.addChild(envelopeCone)
+
+        let coreMesh = MeshResource.generateCone(height: length * 0.72, radius: radius * 0.38)
+        let coreCone = ModelEntity(
+            mesh: coreMesh,
+            materials: [UnlitMaterial(color: core)]
+        )
+        coreCone.name = "\(name)-core"
+        coreCone.orientation = simd_quatf(angle: .pi, axis: SIMD3(1, 0, 0))
+        coreCone.position = SIMD3(0, length * 0.36, 0)
+        root.addChild(coreCone)
+
+        var particles = ParticleEmitterComponent.Presets.sparks
+        particles.emitterShape = .point
+        particles.birthDirection = .local
+        particles.speed = speed
+        particles.isEmitting = false
+        particles.mainEmitter.birthRate = birthRate
+        particles.mainEmitter.lifeSpan = lifeSpan
+        particles.mainEmitter.lifeSpanVariation = lifeSpan * 0.25
+        particles.mainEmitter.size = particleSize
+        particles.mainEmitter.sizeVariation = particleSize * 0.35
+        particles.mainEmitter.spreadingAngle = 0.18
+        particles.mainEmitter.stretchFactor = 6
+        particles.mainEmitter.color = .evolving(
+            start: .single(core),
+            end: .single(envelope.withAlphaComponent(0))
+        )
+        root.components.set(particles)
+
+        setExhaustFiring(root, firing: false)
+        return root
+    }
+
+    private func setExhaustFiring(_ plume: Entity, firing: Bool) {
+        for child in plume.children {
+            child.isEnabled = firing
+        }
+        if var particles = plume.components[ParticleEmitterComponent.self] {
+            particles.isEmitting = firing
+            plume.components.set(particles)
+        }
     }
     
     private func rotationAligningReferenceAxis(_ reference: SIMD3<Float>, to direction: SIMD3<Float>) -> simd_quatf {

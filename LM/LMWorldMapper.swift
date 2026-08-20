@@ -7,8 +7,11 @@ import LMCore
 /// LMCore body: +Z = NASA +X (DPS/up), +X = NASA +Y, +Y = NASA +Z.
 /// RealityKit: +Y up, −Z forward, +X right.
 ///
-/// The pad is a landing theater, not a map. Until PROG 64 the LM stays over
-/// the pad (altitude and attitude only). P63 range-to-go is a separate strip.
+/// The pad is a landing theater, not a map. The kinematic LM stays over the
+/// pad (altitude and attitude) until range is inside the last few kilometers.
+/// The range bead is the map for the rest of the descent, including overshoot
+/// past the site. PROG 64 is not high gate on this trajectory, so it must not
+/// hide the bead or slam the LM onto the pad rim.
 struct LMWorldMapper: Equatable, Sendable {
     var highAltitudeMeters: Double
     var highVisualMeters: Double
@@ -17,9 +20,6 @@ struct LMWorldMapper: Equatable, Sendable {
     var pdiRangeMeters: Double
     var stripLengthMeters: Double
     var padRadiusMeters: Double
-
-    /// High gate / approach. Horizontal site-relative motion is shown from here.
-    static let landingProgram = 64
 
     static let tabletop = LMWorldMapper(
         highAltitudeMeters: 48_814.0 * 0.3048,
@@ -31,8 +31,13 @@ struct LMWorldMapper: Equatable, Sendable {
         padRadiusMeters: 0.45
     )
 
-    func showsSiteRelativeHorizontal(program: Int?) -> Bool {
-        (program ?? 0) >= Self.landingProgram
+    /// Horizontal site-relative motion fits the pad inside this radius.
+    var theaterRangeMeters: Double {
+        highAltitudeMeters * padRadiusMeters / max(highVisualMeters, 1e-9)
+    }
+
+    func showsSiteRelativeHorizontal(rangeMeters: Double) -> Bool {
+        rangeMeters <= theaterRangeMeters
     }
 
     func visualAltitude(_ altitudeMeters: Double) -> Double {
@@ -46,8 +51,13 @@ struct LMWorldMapper: Equatable, Sendable {
     }
 
     func position(from si: LMVector3D, program: Int? = nil) -> SIMD3<Float> {
+        _ = program
+        return position(from: si, rangeMeters: hypot(si.x, si.y))
+    }
+
+    func position(from si: LMVector3D, rangeMeters: Double) -> SIMD3<Float> {
         let altitude = Float(visualAltitude(si.z))
-        guard showsSiteRelativeHorizontal(program: program) else {
+        guard showsSiteRelativeHorizontal(rangeMeters: rangeMeters) else {
             return SIMD3(0, altitude, 0)
         }
         let scale = highVisualMeters / max(highAltitudeMeters, 1e-9)
@@ -59,10 +69,15 @@ struct LMWorldMapper: Equatable, Sendable {
         )
     }
 
-    /// Site at the pad (z = 0). PDI is the far end, further into the scene (−Z).
+    /// Site at the pad (z = 0). PDI is the far end (−Z). East past the site
+    /// continues toward the viewer so overshoot stays on the ribbon.
     func stripBeadOffset(rangeMeters: Double) -> SIMD3<Float> {
+        stripBeadOffset(downrangeMeters: -rangeMeters)
+    }
+
+    func stripBeadOffset(downrangeMeters: Double) -> SIMD3<Float> {
         let pdi = max(pdiRangeMeters, 1e-9)
-        let fraction = min(max(rangeMeters / pdi, 0), 1)
+        let fraction = min(max(-downrangeMeters / pdi, -0.5), 1.05)
         return SIMD3(0, 0.024, Float(-fraction * stripLengthMeters))
     }
 
@@ -80,7 +95,22 @@ struct LMWorldMapper: Equatable, Sendable {
     }
 
     func pose(from state: LMVehicleStateSnapshot, program: Int? = nil) -> (position: SIMD3<Float>, orientation: simd_quatf) {
-        (position(from: state.positionMeters, program: program), orientation(from: state.attitude))
+        _ = program
+        let altitude = Float(visualAltitude(state.altitudeMeters))
+        guard showsSiteRelativeHorizontal(rangeMeters: state.groundRangeMeters) else {
+            return (SIMD3(0, altitude, 0), orientation(from: state.attitude))
+        }
+        let scale = highVisualMeters / max(highAltitudeMeters, 1e-9)
+        let limit = padRadiusMeters
+        let si = state.positionMeters
+        return (
+            SIMD3(
+                Float(clamped(si.x * scale, limit: limit)),
+                altitude,
+                Float(clamped(-si.y * scale, limit: limit))
+            ),
+            orientation(from: state.attitude)
+        )
     }
 
     private func clamped(_ value: Double, limit: Double) -> Double {

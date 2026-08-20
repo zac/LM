@@ -6,8 +6,12 @@ struct LMApp: App {
 
     var body: some Scene {
         WindowGroup {
-            PoweredDescentView()
-                .environment(viewModel)
+            if ProcessInfo.processInfo.arguments.contains("--fdai-preview") {
+                FDAITexturePreviewView()
+            } else {
+                PoweredDescentView()
+                    .environment(viewModel)
+            }
         }
         .defaultSize(width: 980, height: 720)
 

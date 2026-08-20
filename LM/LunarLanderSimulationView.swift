@@ -42,7 +42,7 @@ struct RCSThrusterData {
     let entity: Entity
     let localPosition: SIMD3<Float>
     let localDirection: SIMD3<Float>
-    let debugConeName: String
+    let plumeEntity: Entity
 }
 
 // MARK: - Main Simulation View

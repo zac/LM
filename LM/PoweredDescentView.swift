@@ -9,19 +9,27 @@ struct PoweredDescentView: View {
     var body: some View {
         @Bindable var session = appModel.session
         NavigationStack {
-            HStack(alignment: .top, spacing: 20) {
-                DSKYPanel(session: session)
-                    .frame(minWidth: 420)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    HStack(alignment: .top, spacing: 20) {
+                        VStack(alignment: .leading, spacing: 18) {
+                            FDAIPanel(session: session)
+                            controls
+                        }
+                        .frame(width: 220)
 
-                VStack(alignment: .leading, spacing: 16) {
-                    controls
-                    telemetry
-                    CrewControlPanel(session: session)
-                    Spacer()
+                        DSKYPanel(session: session)
+                            .frame(maxWidth: .infinity)
+
+                        telemetry
+                            .frame(width: 230)
+                    }
+
                 }
-                .frame(minWidth: 320)
+                .frame(maxWidth: 1180)
+                .padding(20)
+                .frame(maxWidth: .infinity)
             }
-            .padding(20)
             .navigationTitle("Powered Descent")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
@@ -29,6 +37,10 @@ struct PoweredDescentView: View {
                         LunarLanderSimulationView()
                     }
                 }
+            }
+            .ornament(attachmentAnchor: .scene(.bottom)) {
+                CrewControlPanel(session: session)
+                    .frame(width: 620)
             }
         }
     }
@@ -42,23 +54,39 @@ struct PoweredDescentView: View {
             Text(statusLabel)
                 .font(.headline)
 
-            HStack(spacing: 12) {
-                Button("Auto-land") { appModel.session.start() }
-                    .disabled(!appModel.session.canStart)
-                Button("Stop") { appModel.session.stop() }
-                    .disabled(!appModel.session.canStop)
-                Button("Reset") { appModel.session.reset() }
-                    .disabled(!appModel.session.canReset)
-                Button(appModel.descentSpaceState == .open ? "Leave table" : "Auto-land on table") {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 8) {
+                    Button { appModel.session.start() } label: {
+                        Image(systemName: "arrow.down.to.line")
+                    }
+                        .disabled(!appModel.session.canStart)
+                        .accessibilityLabel("Auto-land")
+                        .help("Auto-land")
+                    Button { appModel.session.stop() } label: {
+                        Image(systemName: "stop.fill")
+                    }
+                        .disabled(!appModel.session.canStop)
+                        .accessibilityLabel("Stop")
+                        .help("Stop")
+                    Button { appModel.session.reset() } label: {
+                        Image(systemName: "arrow.counterclockwise")
+                    }
+                        .disabled(!appModel.session.canReset)
+                        .accessibilityLabel("Reset")
+                        .help("Reset")
+                }
+                Button(appModel.descentSpaceState == .open ? "Leave table" : "Table") {
                     Task { await toggleDescentSpace() }
                 }
                 .disabled(appModel.descentSpaceState == .inTransition)
+                .accessibilityLabel(appModel.descentSpaceState == .open ? "Leave table" : "Auto-land on table")
             }
             .buttonStyle(.borderedProminent)
 
-            Text("Auto-land boots Luminary, keys V37E63E, and answers V06N61 / V50N25 / V50N18 / V99 so P63→P64→P65 run closed-loop. P63 GET is accelerated; P64 onward is 1×. The tabletop LM stays over the pad until PROG 64. Body rates still come only from DPS gimbal and RCS jets.")
+            Label("Luminary 099 · P63 → P64 → P65", systemImage: "info.circle")
                 .font(.caption)
                 .foregroundStyle(.secondary)
+                .help("Auto-land boots Luminary, keys V37E63E, and answers V06N61 / V50N25 / V50N18 / V99 so P63→P64→P65 run closed-loop. P63 GET is accelerated; P64 onward is 1×. The range bead is the map until the last few kilometers; the LM stays over the pad until then. Body rates still come only from DPS gimbal and RCS jets.")
         }
     }
 
@@ -76,7 +104,7 @@ struct PoweredDescentView: View {
                     let vy = state?.velocityMetersPerSecond.y ?? 0
                     return (vx * vx + vy * vy).squareRoot()
                 }()))
-                labeled("Range", rangeLabel(state?.groundRangeMeters))
+                labeled("Range", rangeLabel(state?.downrangeMeters))
                 labeled("Gimbal", String(
                     format: "P %+0.2f°  R %+0.2f°",
                     (state?.dpsPitchGimbalRadians ?? 0) * 180 / .pi,
@@ -88,7 +116,7 @@ struct PoweredDescentView: View {
                 labeled("RCS jets", "\(commands?.rcsJets.count ?? 0)")
                 labeled("Radar alt", feetAndMeters(state?.altitudeMeters))
             }
-            .font(.system(.body, design: .monospaced))
+            .font(.system(.caption, design: .monospaced))
         }
     }
 
@@ -111,10 +139,15 @@ struct PoweredDescentView: View {
         }
     }
 
-    private func rangeLabel(_ meters: Double?) -> String {
-        guard let meters else { return "—" }
+    private func rangeLabel(_ downrangeMeters: Double?) -> String {
+        guard let downrangeMeters else { return "—" }
+        let meters = abs(downrangeMeters)
         let nauticalMiles = meters / 1852.0
-        return String(format: "%.1f nmi  (%.1f km)", nauticalMiles, meters / 1000)
+        let magnitude = String(format: "%.1f nmi  (%.1f km)", nauticalMiles, meters / 1000)
+        if downrangeMeters > 50 {
+            return "past \(magnitude)"
+        }
+        return magnitude
     }
 
     private func feetAndMeters(_ meters: Double?) -> String {

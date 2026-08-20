@@ -49,12 +49,16 @@ final class DescentRangeStrip {
         )
         bead.name = "RangeBead"
         root.addChild(bead)
-        apply(rangeMeters: mapper.pdiRangeMeters, mapper: mapper, visible: true)
+        apply(downrangeMeters: -mapper.pdiRangeMeters, mapper: mapper, visible: true)
     }
 
     func apply(rangeMeters: Double, mapper: LMWorldMapper, visible: Bool) {
+        apply(downrangeMeters: -rangeMeters, mapper: mapper, visible: visible)
+    }
+
+    func apply(downrangeMeters: Double, mapper: LMWorldMapper, visible: Bool) {
         root.isEnabled = visible
         guard visible else { return }
-        bead.position = mapper.stripBeadOffset(rangeMeters: rangeMeters)
+        bead.position = mapper.stripBeadOffset(downrangeMeters: downrangeMeters)
     }
 }

@@ -42,8 +42,12 @@ struct PoweredDescentImmersiveView: View {
             }
         }
         .ornament(attachmentAnchor: .scene(.leading)) {
-            DSKYPanel(session: appModel.session)
-                .frame(width: 440)
+            HStack(alignment: .top, spacing: 12) {
+                FDAIPanel(session: appModel.session)
+                    .frame(width: 240)
+                DSKYPanel(session: appModel.session)
+                    .frame(width: 440)
+            }
         }
     }
 
@@ -52,11 +56,10 @@ struct PoweredDescentImmersiveView: View {
         let program = appModel.session.dsky?.programNumber
         if let state = appModel.session.vehicleState {
             module.apply(siState: state, mapper: mapper, program: program)
-            let landing = mapper.showsSiteRelativeHorizontal(program: program)
             rangeStrip.apply(
-                rangeMeters: state.groundRangeMeters,
+                downrangeMeters: state.downrangeMeters,
                 mapper: mapper,
-                visible: !landing
+                visible: true
             )
         }
         if let commands = appModel.session.vehicleCommands {
