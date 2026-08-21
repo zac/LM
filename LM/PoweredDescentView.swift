@@ -30,6 +30,7 @@ struct PoweredDescentView: View {
                 .padding(20)
                 .frame(maxWidth: .infinity)
             }
+            .contentMargins(.bottom, 120, for: .scrollContent)
             .navigationTitle("Powered Descent")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {

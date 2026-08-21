@@ -88,6 +88,20 @@ struct LMTests {
         #expect(abs(gimbals.r) < 2)
     }
 
+    @Test func fdaiStartsAtItsPoweredDescentInertialReference() {
+        let pdi = FDAIOrientation.poweredDescentReferenceAttitude
+        let orientation = FDAIOrientation.ballOrientation(for: pdi, relativeTo: pdi)
+        let redPole = orientation.act(SIMD3<Float>(0, 1, 0))
+        let gimbals = FDAIOrientation.nasaGimbalDegrees(for: pdi, relativeTo: pdi)
+
+        #expect(abs(redPole.x) < 1e-5)
+        #expect(abs(redPole.y - 1) < 1e-5)
+        #expect(abs(redPole.z) < 1e-5)
+        #expect(abs(gimbals.p) < 1e-5)
+        #expect(abs(gimbals.q) < 1e-5)
+        #expect(abs(gimbals.r) < 1e-5)
+    }
+
     @Test func worldMapperPlacesPDIBeadAtTheFarEndOfTheRangeStrip() {
         let mapper = LMWorldMapper.tabletop
         let pdi = mapper.stripBeadOffset(rangeMeters: mapper.pdiRangeMeters)

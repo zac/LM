@@ -193,10 +193,10 @@ final class PoweredDescentSession {
     }
 
     private func makeFrameInput() -> LMFrameInput {
-        let altitude = snapshot?.vehicleState.altitudeMeters
-            ?? LMPoweredDescentScenario.apollo11SourceBacked.initialState.altitudeMeters
+        let state = snapshot?.vehicleState
+            ?? LMPoweredDescentScenario.apollo11SourceBacked.initialState
         return .autoLand(
-            altitudeMeters: altitude,
+            from: state,
             rotationalHandController: LMRotationalHandControllerInput(
                 pitch: rhcPitch,
                 yaw: rhcYaw,
