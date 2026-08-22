@@ -4,6 +4,21 @@ import LMCore
 @testable import LM
 
 struct LMTests {
+    @Test func bundledAutomaticReplayIsContactGatedAndStaysAutomatic() throws {
+        let recording = try PoweredDescentSession.bundledAutomaticRecording()
+        let final = try #require(recording.frames.last)
+
+        #expect(recording.controlMode == .automatic)
+        #expect(recording.frames.first?.programNumber == 65)
+        #expect(recording.frames.allSatisfy { $0.panelState == .automatic })
+        #expect(recording.frames.allSatisfy {
+            $0.rhcPitch == 0 && $0.rhcYaw == 0 && $0.rhcRoll == 0
+        })
+        #expect(recording.frames.allSatisfy { $0.descentRateChannel16 == 0 })
+        #expect(final.vehicleState.flightOutcome == .softLanding)
+        #expect(final.vehicleState.surfaceContact != nil)
+    }
+
     @Test func bundledP66ReplayIsContactGatedAndContainsCrewInputs() throws {
         let recording = try PoweredDescentSession.bundledP66Recording()
         let final = try #require(recording.frames.last)

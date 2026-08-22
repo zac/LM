@@ -46,8 +46,10 @@ struct PoweredDescentView: View {
             }
         }
         .task {
+            let arguments = ProcessInfo.processInfo.arguments
             guard !didLaunchReplayFixture,
-                  ProcessInfo.processInfo.arguments.contains("--replay-p66") else { return }
+                  arguments.contains("--replay-p66")
+                    || arguments.contains("--replay-automatic") else { return }
             didLaunchReplayFixture = true
             appModel.session.replay(speed: 2)
             await toggleDescentSpace()
