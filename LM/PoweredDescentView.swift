@@ -75,6 +75,12 @@ struct PoweredDescentView: View {
                         .disabled(!appModel.session.canReset)
                         .accessibilityLabel("Reset")
                         .help("Reset")
+                    Button { appModel.session.replay() } label: {
+                        Image(systemName: "play.square.stack")
+                    }
+                        .disabled(!appModel.session.canReplay)
+                        .accessibilityLabel("Replay last flight")
+                        .help("Replay last flight at 8×")
                 }
                 Button(appModel.descentSpaceState == .open ? "Leave table" : "Table") {
                     Task { await toggleDescentSpace() }
@@ -126,6 +132,7 @@ struct PoweredDescentView: View {
         case .unloaded: return "Not loaded"
         case .idle: return "Idle"
         case .running: return "Running"
+        case .replaying: return "Replaying"
         case .stopped: return "Stopped"
         case .error(let message): return "Error: \(message)"
         }

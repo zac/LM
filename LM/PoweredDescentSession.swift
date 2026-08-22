@@ -10,17 +10,22 @@ final class PoweredDescentSession {
         case unloaded
         case idle
         case running
+        case replaying
         case stopped
         case error(String)
     }
 
-    static let rhcDeflection = 0o2000
+    /// Nominal full-scale ACA deflection is 42 counter increments at 10°.
+    static let rhcDeflection = 42
 
     private(set) var status: Status = .unloaded
     private(set) var isRunning = false
     private(set) var snapshot: LMSimulationSnapshot?
+    private(set) var replayFrame: LMFlightReplayFrame?
+    private(set) var recording: LMFlightRecording?
     private(set) var loadMessage = "Luminary 099 not loaded"
 
+    var attitudeMode = LMPoweredDescentAttitudeMode.automatic
     var rhcPitch = 0
     var rhcYaw = 0
     var rhcRoll = 0
@@ -29,16 +34,20 @@ final class PoweredDescentSession {
 
     @ObservationIgnored private var runtime: LMSimulationRuntime?
     @ObservationIgnored private var loopTask: Task<Void, Never>?
+    @ObservationIgnored private var replayTask: Task<Void, Never>?
     @ObservationIgnored private var dskyTask: Task<Void, Never>?
+    @ObservationIgnored private var recordedFrames: [LMFlightFrame] = []
     @ObservationIgnored private var runID = UUID()
 
     var dsky: DSKYSnapshot? { snapshot?.agc.dsky }
-    var vehicleState: LMVehicleStateSnapshot? { snapshot?.vehicleState }
-    var vehicleCommands: LMVehicleSnapshot? { snapshot?.vehicleCommands }
+    var programNumber: Int? { replayFrame?.programNumber ?? dsky?.programNumber }
+    var vehicleState: LMVehicleStateSnapshot? { replayFrame?.vehicleState ?? snapshot?.vehicleState }
+    var vehicleCommands: LMVehicleSnapshot? { replayFrame?.vehicleCommands ?? snapshot?.vehicleCommands }
 
-    var canStart: Bool { runtime != nil && !isRunning }
-    var canStop: Bool { isRunning }
+    var canStart: Bool { runtime != nil && !isRunning && replayTask == nil }
+    var canStop: Bool { isRunning || replayTask != nil }
     var canReset: Bool { runtime != nil }
+    var canReplay: Bool { recording?.frames.isEmpty == false && !isRunning && replayTask == nil }
 
     init() {
         loadProgram()
@@ -46,6 +55,9 @@ final class PoweredDescentSession {
 
     func loadProgram() {
         stop()
+        recording = nil
+        replayFrame = nil
+        recordedFrames.removeAll()
         dskyTask?.cancel()
         dskyTask = nil
         guard let url = Bundle.main.url(forResource: "Luminary099", withExtension: "bin") else {
@@ -78,6 +90,8 @@ final class PoweredDescentSession {
         loopTask?.cancel()
         let runID = UUID()
         self.runID = runID
+        replayFrame = nil
+        recordedFrames.removeAll(keepingCapacity: true)
         isRunning = true
         status = .running
         loopTask = Task { @MainActor [weak self] in
@@ -87,6 +101,7 @@ final class PoweredDescentSession {
                 let prepared = await runtime.bootAndEnterP63()
                 guard self.runID == runID else { return }
                 self.snapshot = prepared
+                self.record(prepared)
                 self.loadMessage = self.autoLandMessage(program: prepared.agc.dsky.programNumber, accelerated: true)
             }
             var last = CACurrentMediaTime()
@@ -99,6 +114,10 @@ final class PoweredDescentSession {
                 let snap = await runtime.step(deltaTime: delta, input: self.makeFrameInput())
                 guard self.runID == runID else { return }
                 self.snapshot = snap
+                self.record(snap)
+                if snap.vehicleState.flightOutcome.isTerminal {
+                    break
+                }
                 if pace == .accelerated {
                     self.loadMessage = self.autoLandMessage(program: snap.agc.dsky.programNumber, accelerated: true)
                     await Task.yield()
@@ -116,6 +135,7 @@ final class PoweredDescentSession {
             guard self.runID == runID else { return }
             self.isRunning = false
             self.loopTask = nil
+            self.finishRecording()
             if self.status == .running {
                 self.status = .stopped
             }
@@ -126,6 +146,12 @@ final class PoweredDescentSession {
         runID = UUID()
         loopTask?.cancel()
         loopTask = nil
+        replayTask?.cancel()
+        replayTask = nil
+        replayFrame = nil
+        if isRunning {
+            finishRecording()
+        }
         isRunning = false
         switch status {
         case .unloaded, .error:
@@ -143,6 +169,7 @@ final class PoweredDescentSession {
         rhcPitch = 0
         rhcYaw = 0
         rhcRoll = 0
+        attitudeMode = .automatic
         descendPlus = false
         descendMinus = false
         Task { @MainActor [weak self] in
@@ -192,18 +219,70 @@ final class PoweredDescentSession {
         }
     }
 
+    func replay(speed: Double = 8) {
+        guard canReplay, let recording else { return }
+        stop()
+        let replay = LMFlightReplay(recording: recording)
+        let rate = max(0.25, speed)
+        let modeLabel = recording.controlMode == .astronautP66 ? "P66 crew" : "automatic"
+        status = .replaying
+        loadMessage = "Replay · " + modeLabel + " · " + rate.formatted() + "×"
+        replayTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            let start = CACurrentMediaTime()
+            while !Task.isCancelled {
+                let elapsed = (CACurrentMediaTime() - start) * rate
+                self.replayFrame = replay.frame(at: elapsed)
+                if elapsed >= recording.durationSeconds { break }
+                try? await Task.sleep(for: .milliseconds(16))
+            }
+            guard !Task.isCancelled else { return }
+            self.replayFrame = replay.frame(at: recording.durationSeconds)
+            self.replayTask = nil
+            self.status = .stopped
+            self.loadMessage = "Replay complete · "
+                + (recording.flightOutcome?.rawValue ?? "inFlight")
+        }
+    }
+
     private func makeFrameInput() -> LMFrameInput {
         let state = snapshot?.vehicleState
             ?? LMPoweredDescentScenario.apollo11SourceBacked.initialState
-        return .autoLand(
-            from: state,
-            rotationalHandController: LMRotationalHandControllerInput(
-                pitch: rhcPitch,
-                yaw: rhcYaw,
-                roll: rhcRoll
-            ),
-            descendPlus: descendPlus,
-            descendMinus: descendMinus
+        let controller = LMRotationalHandControllerInput(
+            pitch: rhcPitch,
+            yaw: rhcYaw,
+            roll: rhcRoll
+        )
+        switch attitudeMode {
+        case .automatic:
+            return .autoLand(
+                from: state,
+                rotationalHandController: controller,
+                descendPlus: descendPlus,
+                descendMinus: descendMinus
+            )
+        case .attitudeHold:
+            return .astronautLand(
+                from: state,
+                panelState: .p66AttitudeHold,
+                attitudeController: controller,
+                descendPlus: descendPlus,
+                descendMinus: descendMinus
+            )
+        }
+    }
+
+    private func record(_ snapshot: LMSimulationSnapshot) {
+        recordedFrames.append(LMFlightFrame(snapshot: snapshot))
+    }
+
+    private func finishRecording() {
+        guard !recordedFrames.isEmpty else { return }
+        recording = LMFlightRecording(
+            controlMode: recordedFrames.contains { $0.panelState.attitudeMode == .attitudeHold }
+                ? .astronautP66
+                : .automatic,
+            frames: recordedFrames
         )
     }
 

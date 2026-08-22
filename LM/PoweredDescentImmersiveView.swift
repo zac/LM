@@ -33,6 +33,8 @@ struct PoweredDescentImmersiveView: View {
                         .disabled(!appModel.session.canStart)
                     Button("Stop") { appModel.session.stop() }
                         .disabled(!appModel.session.canStop)
+                    Button("Replay") { appModel.session.replay() }
+                        .disabled(!appModel.session.canReplay)
                     Text(appModel.session.loadMessage)
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -53,7 +55,7 @@ struct PoweredDescentImmersiveView: View {
 
     private func applySnapshot() {
         let mapper = LMWorldMapper.tabletop
-        let program = appModel.session.dsky?.programNumber
+        let program = appModel.session.programNumber
         if let state = appModel.session.vehicleState {
             module.apply(siState: state, mapper: mapper, program: program)
             rangeStrip.apply(

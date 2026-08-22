@@ -84,7 +84,7 @@ struct FDAIPanel: View {
     }
 
     private var vehicleAttitude: LMQuaternion? {
-        session.snapshot?.vehicleState.attitude
+        session.vehicleState?.attitude
     }
 
     private var ballRotation: simd_quatf {

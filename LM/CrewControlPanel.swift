@@ -8,6 +8,15 @@ struct CrewControlPanel: View {
             Text("Crew")
                 .font(.headline)
 
+            Toggle(
+                "MODE CONTROL · ATT HOLD (P66)",
+                isOn: Binding(
+                    get: { session.attitudeMode == .attitudeHold },
+                    set: { session.attitudeMode = $0 ? .attitudeHold : .automatic }
+                )
+            )
+            .toggleStyle(.switch)
+
             HStack(alignment: .top, spacing: 20) {
                 axisGroup("RHC pitch", plus: "arrow.up", minus: "arrow.down") { held, sign in
                     session.rhcPitch = held ? sign * PoweredDescentSession.rhcDeflection : 0
@@ -27,7 +36,7 @@ struct CrewControlPanel: View {
                 }
             }
 
-            Text("These feed LMFrameInput (RHC + channel 16), not the old impulse sandbox.")
+            Text("ATT HOLD selects P66. ACA and ROD feed the live Luminary input channels.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
