@@ -53,6 +53,15 @@ final class PoweredDescentSession {
         loadProgram()
     }
 
+    nonisolated static func bundledP66Recording(
+        in bundle: Bundle = .main
+    ) throws -> LMFlightRecording {
+        guard let url = bundle.url(forResource: "P66TerminalDescent", withExtension: "json") else {
+            throw CocoaError(.fileNoSuchFile)
+        }
+        return try LMFlightRecording.decode(Data(contentsOf: url))
+    }
+
     func loadProgram() {
         stop()
         recording = nil
@@ -70,6 +79,7 @@ final class PoweredDescentSession {
         do {
             let loaded = try LMSimulationRuntime(binFile: url, scenario: .apollo11SourceBacked)
             runtime = loaded
+            recording = try? Self.bundledP66Recording()
             loadMessage = "Luminary 099 · Apollo 11 powered-descent foundation"
             status = .idle
             Task { @MainActor [weak self] in

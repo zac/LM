@@ -5,6 +5,7 @@ struct PoweredDescentView: View {
     @Environment(MainMenuViewModel.self) private var appModel
     @Environment(\.openImmersiveSpace) private var openImmersiveSpace
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
+    @State private var didLaunchReplayFixture = false
 
     var body: some View {
         @Bindable var session = appModel.session
@@ -43,6 +44,13 @@ struct PoweredDescentView: View {
                 CrewControlPanel(session: session)
                     .frame(width: 620)
             }
+        }
+        .task {
+            guard !didLaunchReplayFixture,
+                  ProcessInfo.processInfo.arguments.contains("--replay-p66") else { return }
+            didLaunchReplayFixture = true
+            appModel.session.replay(speed: 2)
+            await toggleDescentSpace()
         }
     }
 
