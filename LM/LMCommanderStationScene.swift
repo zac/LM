@@ -20,6 +20,7 @@ final class LMCommanderStationScene {
 
     private let instrumentMount = Entity()
     private let provisionalTerrain = Entity()
+    private let dustCloud = Entity()
     private let mapper = LMCockpitWorldMapper.fullScale
     private let controlMapper = LMSpatialControlMapper()
     private let acaNeutralPosition = SIMD3<Float>(-0.49, 0.50, -0.37)
@@ -31,10 +32,12 @@ final class LMCommanderStationScene {
         lunarWorld.name = "Lunar World"
         instrumentMount.name = "Commander Instruments"
         provisionalTerrain.name = "Provisional terrain"
+        dustCloud.name = "Descent engine dust"
 
         buildCabin()
         buildPhysicalControls()
         buildProvisionalSurface()
+        buildDustCloud()
 
         root.addChild(lunarWorld)
         root.addChild(instrumentMount)
@@ -83,6 +86,39 @@ final class LMCommanderStationScene {
             angle: isAttitudeHold ? -.pi / 7 : .pi / 7,
             axis: SIMD3(1, 0, 0)
         )
+    }
+
+    func updateDust(
+        state: LMVehicleStateSnapshot?,
+        commands: LMVehicleSnapshot?
+    ) {
+        guard let state,
+              state.flightOutcome == .inFlight,
+              state.altitudeMeters < 35,
+              commands?.mainEngineOn == true,
+              commands?.mainEngineOff != true else {
+            dustCloud.isEnabled = false
+            return
+        }
+
+        let thrust = commands?.dps.commandedThrustNewtons ?? 0
+        let throttle = Float(min(max(thrust / 46_710, 0), 1))
+        let proximity = Float(min(max((35 - state.altitudeMeters) / 35, 0), 1))
+        let intensity = throttle * proximity
+        guard intensity > 0.015 else {
+            dustCloud.isEnabled = false
+            return
+        }
+
+        dustCloud.isEnabled = true
+        dustCloud.position = mapper.realityPosition(from: LMVector3D(
+            x: state.positionMeters.x,
+            y: state.positionMeters.y,
+            z: 0.18
+        ))
+        let spread = 0.8 + intensity * 2.6
+        dustCloud.scale = SIMD3(spread, 0.25 + intensity * 0.45, spread)
+        dustCloud.components.set(OpacityComponent(opacity: 0.08 + intensity * 0.34))
     }
 
     private func buildCabin() {
@@ -204,6 +240,26 @@ final class LMCommanderStationScene {
         ]))
         setAttitudeHoldVisual(false)
         root.addChild(attitudeModeSwitch)
+    }
+
+    private func buildDustCloud() {
+        let dustMaterial = SimpleMaterial(
+            color: UIColor(red: 0.56, green: 0.53, blue: 0.46, alpha: 0.22),
+            roughness: 1,
+            isMetallic: false
+        )
+        for index in 0..<18 {
+            let angle = Float(index) * 2 * .pi / 18
+            let radius = Float(4 + (index % 5) * 3)
+            let sheet = ModelEntity(
+                mesh: .generateCylinder(height: 0.018, radius: 2.8 + Float(index % 4)),
+                materials: [dustMaterial]
+            )
+            sheet.position = SIMD3(cos(angle) * radius, Float(index % 3) * 0.05, sin(angle) * radius)
+            dustCloud.addChild(sheet)
+        }
+        dustCloud.isEnabled = false
+        lunarWorld.addChild(dustCloud)
     }
 
     private func buildProvisionalSurface() {

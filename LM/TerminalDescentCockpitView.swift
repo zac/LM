@@ -11,6 +11,12 @@ struct TerminalDescentCockpitView: View {
     @State private var acaGestureOrigin: SIMD3<Float>?
     @State private var rodGestureOrigin: SIMD3<Float>?
     @State private var showsFallbackControls = false
+    @State private var trainingOverlayEnabled = true
+    @State private var audioEnabled = true
+    @State private var experienceDirector = LMCockpitExperienceDirector()
+    @State private var activeCue: LMCockpitCue?
+    @State private var cuePresentationTask: Task<Void, Never>?
+    @State private var audioController = LMCockpitAudioController()
 
     private let controlMapper = LMSpatialControlMapper()
 
@@ -45,7 +51,7 @@ struct TerminalDescentCockpitView: View {
             VStack(spacing: 8) {
                 HStack(spacing: 10) {
                     Button {
-                        appModel.session.restart()
+                        restartExperience()
                     } label: {
                         Label("Restart P65", systemImage: "arrow.counterclockwise")
                     }
@@ -57,6 +63,25 @@ struct TerminalDescentCockpitView: View {
                         Label(
                             showsFallbackControls ? "Hide fallback" : "Fallback controls",
                             systemImage: "slider.horizontal.3"
+                        )
+                    }
+
+                    Button {
+                        trainingOverlayEnabled.toggle()
+                    } label: {
+                        Label(
+                            trainingOverlayEnabled ? "Training on" : "Training off",
+                            systemImage: trainingOverlayEnabled ? "scope" : "scope"
+                        )
+                    }
+
+                    Button {
+                        audioEnabled.toggle()
+                        audioController.isEnabled = audioEnabled
+                    } label: {
+                        Label(
+                            audioEnabled ? "Audio on" : "Audio off",
+                            systemImage: audioEnabled ? "speaker.wave.2" : "speaker.slash"
                         )
                     }
 
@@ -86,18 +111,46 @@ struct TerminalDescentCockpitView: View {
             .padding(10)
             .glassBackgroundEffect()
         }
+        .ornament(attachmentAnchor: .scene(.top)) {
+            if let activeCue {
+                VStack(spacing: 4) {
+                    Text(activeCue.title)
+                        .font(.title3.weight(.bold).monospaced())
+                        .foregroundStyle(cueColor(activeCue))
+                    if trainingOverlayEnabled {
+                        Text(activeCue.detail)
+                            .font(.caption)
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .frame(maxWidth: 420)
+                .padding(.horizontal, 18)
+                .padding(.vertical, 12)
+                .glassBackgroundEffect()
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(activeCue.title)
+                .accessibilityValue(trainingOverlayEnabled ? activeCue.detail : "")
+            }
+        }
         .task {
             guard !didStart else { return }
             didStart = true
+            audioController.isEnabled = audioEnabled
+            audioController.start()
             if appModel.session.canStart {
                 appModel.session.start(from: .p65TerminalDescent)
             }
+            updateExperience()
             do {
                 try await station.loadApollo11Terrain()
                 terrainStatus = "LROC NAC DTM · 2.05 km · true vertical scale"
             } catch {
                 terrainStatus = "Terrain unavailable · \(error.localizedDescription)"
             }
+        }
+        .onChange(of: appModel.session.snapshot?.agc.cycle) { _, _ in
+            updateExperience()
         }
         .onChange(of: scenePhase) { _, phase in
             if phase != .active {
@@ -106,6 +159,8 @@ struct TerminalDescentCockpitView: View {
         }
         .onDisappear {
             releaseSpatialControls()
+            cuePresentationTask?.cancel()
+            audioController.stop()
         }
     }
 
@@ -165,6 +220,10 @@ struct TerminalDescentCockpitView: View {
         station.setACAVisual(appModel.session.aca)
         station.setRODVisual(appModel.session.rodSwitchPosition)
         station.setAttitudeHoldVisual(appModel.session.attitudeMode == .attitudeHold)
+        station.updateDust(
+            state: appModel.session.vehicleState,
+            commands: appModel.session.vehicleCommands
+        )
     }
 
     private func applyROD(_ position: PoweredDescentSession.RODSwitchPosition) {
@@ -179,6 +238,52 @@ struct TerminalDescentCockpitView: View {
         appModel.session.releaseACA()
         applyROD(.neutral)
         station.setACAVisual(.neutral)
+    }
+
+    private func updateExperience() {
+        let session = appModel.session
+        audioController.update(commands: session.vehicleCommands)
+        let cues = experienceDirector.consume(
+            program: session.programNumber,
+            altitudeMeters: session.vehicleState?.altitudeMeters,
+            outcome: session.vehicleState?.flightOutcome,
+            hasSurfaceContact: session.vehicleState?.surfaceContact != nil
+        )
+        guard !cues.isEmpty else { return }
+
+        cuePresentationTask?.cancel()
+        cuePresentationTask = Task { @MainActor in
+            for cue in cues {
+                guard !Task.isCancelled else { return }
+                activeCue = cue
+                audioController.play(cue)
+                try? await Task.sleep(for: .seconds(2.4))
+            }
+            guard !Task.isCancelled else { return }
+            activeCue = nil
+        }
+    }
+
+    private func restartExperience() {
+        cuePresentationTask?.cancel()
+        activeCue = nil
+        experienceDirector.reset()
+        appModel.session.restart()
+    }
+
+    private func cueColor(_ cue: LMCockpitCue) -> Color {
+        switch cue.kind {
+        case .phase, .altitude:
+            return .white
+        case .contact:
+            return .yellow
+        case .success:
+            return .green
+        case .warning:
+            return .orange
+        case .failure:
+            return .red
+        }
     }
 
     private var cockpitStatus: String {

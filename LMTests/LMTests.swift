@@ -445,3 +445,80 @@ struct SpatialCockpitControlTests {
         #expect(mapper.visualRODTranslation(for: .neutral) == 0)
     }
 }
+
+@Suite("Cockpit experience events")
+struct CockpitExperienceEventTests {
+    @Test func phaseAndAltitudeCalloutsFireOnlyAtTheirRealGates() {
+        var director = LMCockpitExperienceDirector()
+
+        let p65 = director.consume(
+            program: 65,
+            altitudeMeters: 43.8,
+            outcome: .inFlight,
+            hasSurfaceContact: false
+        )
+        #expect(p65.map(\.id) == [.p65])
+
+        let oneHundred = director.consume(
+            program: 65,
+            altitudeMeters: 30,
+            outcome: .inFlight,
+            hasSurfaceContact: false
+        )
+        #expect(oneHundred.map(\.id) == [.oneHundredFeet])
+
+        let fifty = director.consume(
+            program: 66,
+            altitudeMeters: 15,
+            outcome: .inFlight,
+            hasSurfaceContact: false
+        )
+        #expect(fifty.map(\.id) == [.p66, .fiftyFeet])
+
+        let duplicates = director.consume(
+            program: 66,
+            altitudeMeters: 10,
+            outcome: .inFlight,
+            hasSurfaceContact: false
+        )
+        #expect(duplicates.isEmpty)
+    }
+
+    @Test func contactAndLandingOutcomeRemainDistinctAndContactGated() {
+        var director = LMCockpitExperienceDirector()
+
+        let contact = director.consume(
+            program: 66,
+            altitudeMeters: 0,
+            outcome: .softLanding,
+            hasSurfaceContact: true
+        )
+        #expect(contact.map(\.id) == [
+            .p66,
+            .contact,
+            .softLanding
+        ])
+        #expect(!contact.contains { $0.id == .hardLanding || $0.id == .crashed })
+
+        let duplicates = director.consume(
+            program: 66,
+            altitudeMeters: 0,
+            outcome: .softLanding,
+            hasSurfaceContact: true
+        )
+        #expect(duplicates.isEmpty)
+    }
+
+    @Test func crashNeverProducesAContactOrSuccessCalloutWithoutContact() {
+        var director = LMCockpitExperienceDirector()
+        let cues = director.consume(
+            program: 66,
+            altitudeMeters: 0,
+            outcome: .crashed,
+            hasSurfaceContact: false
+        )
+
+        #expect(cues.map(\.id) == [.p66, .crashed])
+        #expect(!cues.contains { $0.id == .contact || $0.id == .softLanding })
+    }
+}
