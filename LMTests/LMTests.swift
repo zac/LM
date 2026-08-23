@@ -344,3 +344,47 @@ struct P65CheckpointSessionTests {
         var description: String { stateDescription ?? "timed out after \(timeoutSeconds)s waiting for \(label)" }
     }
 }
+
+@Suite("Cockpit world mapping")
+struct CockpitWorldMappingTests {
+    let mapper = LMCockpitWorldMapper.fullScale
+
+    @Test func vehicleOriginIsAlwaysAtTheFixedCockpitOrigin() {
+        let position = LMVector3D(x: 18, y: -42, z: 43.8)
+        let attitude = LMQuaternion.fromAxisAngle(
+            axis: LMVector3D(z: 1),
+            radians: 12 * .pi / 180
+        )
+        let vehiclePosition = mapper.realityPosition(from: position)
+        let vehiclePoint = SIMD4(vehiclePosition.x, vehiclePosition.y, vehiclePosition.z, 1)
+        let cockpitPoint = mapper.lunarWorldMatrix(
+            position: position,
+            attitude: attitude
+        ) * vehiclePoint
+
+        #expect(abs(cockpitPoint.x) < 1e-4)
+        #expect(abs(cockpitPoint.y) < 1e-4)
+        #expect(abs(cockpitPoint.z) < 1e-4)
+    }
+
+    @Test func identityAttitudePlacesSurfaceAtTrueAltitudeBelowTheCockpit() {
+        let altitude = 43.8
+        let transform = mapper.lunarWorldMatrix(
+            position: LMVector3D(z: altitude),
+            attitude: .identity
+        )
+        let siteInCockpit = transform * SIMD4<Float>(0, 0, 0, 1)
+
+        #expect(abs(siteInCockpit.x) < 1e-5)
+        #expect(abs(siteInCockpit.y + Float(altitude)) < 1e-4)
+        #expect(abs(siteInCockpit.z) < 1e-5)
+    }
+
+    @Test func fullScaleMappingDoesNotCompressTerminalDescent() {
+        let mapped = mapper.realityPosition(from: LMVector3D(x: 12, y: -25, z: 43.8))
+
+        #expect(abs(mapped.x - 12) < 1e-5)
+        #expect(abs(mapped.y - 43.8) < 1e-5)
+        #expect(abs(mapped.z - 25) < 1e-5)
+    }
+}

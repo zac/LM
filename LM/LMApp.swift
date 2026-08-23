@@ -44,5 +44,17 @@ struct LMApp: App {
                 }
         }
         .immersionStyle(selection: .constant(.mixed), in: .mixed)
+
+        ImmersiveSpace(id: viewModel.cockpitSpaceID) {
+            TerminalDescentCockpitView()
+                .environment(viewModel)
+                .onAppear {
+                    viewModel.cockpitSpaceState = .open
+                }
+                .onDisappear {
+                    viewModel.cockpitSpaceState = .closed
+                }
+        }
+        .immersionStyle(selection: .constant(.full), in: .full)
     }
 }

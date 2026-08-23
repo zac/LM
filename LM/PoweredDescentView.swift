@@ -48,8 +48,15 @@ struct PoweredDescentView: View {
         }
         .task {
             let arguments = ProcessInfo.processInfo.arguments
-            guard !didLaunchReplayFixture,
-                  arguments.contains("--replay-p66")
+            guard !didLaunchReplayFixture else { return }
+
+            if arguments.contains("--terminal-descent-cockpit") {
+                didLaunchReplayFixture = true
+                await toggleCockpitSpace()
+                return
+            }
+
+            guard arguments.contains("--replay-p66")
                     || arguments.contains("--replay-automatic") else { return }
             didLaunchReplayFixture = true
             appModel.session.replay(speed: 2)
@@ -99,11 +106,29 @@ struct PoweredDescentView: View {
                         .accessibilityLabel("Replay last flight")
                         .help("Replay last flight at 8×")
                 }
-                Button(appModel.descentSpaceState == .open ? "Leave table" : "Table") {
-                    Task { await toggleDescentSpace() }
+                HStack(spacing: 8) {
+                    Button(appModel.cockpitSpaceState == .open ? "Leave cockpit" : "Enter cockpit") {
+                        Task { await toggleCockpitSpace() }
+                    }
+                    .disabled(
+                        appModel.cockpitSpaceState == .inTransition
+                            || appModel.descentSpaceState != .closed
+                    )
+                    .accessibilityLabel(
+                        appModel.cockpitSpaceState == .open
+                            ? "Leave terminal descent cockpit"
+                            : "Enter terminal descent cockpit at P65"
+                    )
+
+                    Button(appModel.descentSpaceState == .open ? "Leave table" : "Table") {
+                        Task { await toggleDescentSpace() }
+                    }
+                    .disabled(
+                        appModel.descentSpaceState == .inTransition
+                            || appModel.cockpitSpaceState != .closed
+                    )
+                    .accessibilityLabel(appModel.descentSpaceState == .open ? "Leave table" : "Auto-land on table")
                 }
-                .disabled(appModel.descentSpaceState == .inTransition)
-                .accessibilityLabel(appModel.descentSpaceState == .open ? "Leave table" : "Auto-land on table")
             }
             .buttonStyle(.borderedProminent)
 
@@ -188,6 +213,26 @@ struct PoweredDescentView: View {
             return String(format: "ON %.0f N", newtons)
         }
         return on ? "ON" : "OFF"
+    }
+
+    private func toggleCockpitSpace() async {
+        switch appModel.cockpitSpaceState {
+        case .open:
+            appModel.cockpitSpaceState = .inTransition
+            await dismissImmersiveSpace()
+        case .closed:
+            appModel.cockpitSpaceState = .inTransition
+            switch await openImmersiveSpace(id: appModel.cockpitSpaceID) {
+            case .opened:
+                break
+            case .userCancelled, .error:
+                fallthrough
+            @unknown default:
+                appModel.cockpitSpaceState = .closed
+            }
+        case .inTransition:
+            break
+        }
     }
 
     private func toggleDescentSpace() async {

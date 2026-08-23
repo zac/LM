@@ -46,11 +46,14 @@ struct DSKYKeyButtonStyle: ButtonStyle {
 
 struct DSKYPanel: View {
     @Bindable var session: PoweredDescentSession
+    var showsScripts = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             display
-            scripts
+            if showsScripts {
+                scripts
+            }
             keypad
         }
         .padding(16)
