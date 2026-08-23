@@ -26,12 +26,22 @@ struct LMCockpitWorldMapper: Equatable, Sendable {
 
     func lunarWorldMatrix(
         position: LMVector3D,
-        attitude: LMQuaternion
+        attitude: LMQuaternion,
+        surfaceElevationMeters: Double = 0
     ) -> simd_float4x4 {
-        simd_inverse(vehicleMatrix(position: position, attitude: attitude))
+        var terrainDatum = matrix_identity_float4x4
+        terrainDatum.columns.3.y = -Float(surfaceElevationMeters)
+        return simd_inverse(vehicleMatrix(position: position, attitude: attitude)) * terrainDatum
     }
 
-    func lunarWorldMatrix(from state: LMVehicleStateSnapshot) -> simd_float4x4 {
-        lunarWorldMatrix(position: state.positionMeters, attitude: state.attitude)
+    func lunarWorldMatrix(
+        from state: LMVehicleStateSnapshot,
+        surfaceElevationMeters: Double = 0
+    ) -> simd_float4x4 {
+        lunarWorldMatrix(
+            position: state.positionMeters,
+            attitude: state.attitude,
+            surfaceElevationMeters: surfaceElevationMeters
+        )
     }
 }

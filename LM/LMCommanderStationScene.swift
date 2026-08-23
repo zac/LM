@@ -23,6 +23,8 @@ final class LMCommanderStationScene {
     private let dustCloud = Entity()
     private let mapper = LMCockpitWorldMapper.fullScale
     private let controlMapper = LMSpatialControlMapper()
+    private var terrainHeightField: Apollo11TerrainHeightField?
+    private var lastVehicleState: LMVehicleStateSnapshot?
     private let acaNeutralPosition = SIMD3<Float>(-0.49, 0.50, -0.37)
     private let rodNeutralPosition = SIMD3<Float>(0.43, 0.58, -0.49)
     private let attitudeModeAutomaticPosition = SIMD3<Float>(0.48, 0.78, -0.675)
@@ -54,13 +56,24 @@ final class LMCommanderStationScene {
 
     func apply(_ state: LMVehicleStateSnapshot?) {
         guard let state else { return }
-        lunarWorld.transform = Transform(matrix: mapper.lunarWorldMatrix(from: state))
+        lastVehicleState = state
+        let surfaceElevation = terrainHeightField?.relativeElevation(
+            eastMeters: state.positionMeters.x,
+            northMeters: state.positionMeters.y
+        ) ?? 0
+        lunarWorld.transform = Transform(matrix: mapper.lunarWorldMatrix(
+            from: state,
+            surfaceElevationMeters: Double(surfaceElevation)
+        ))
     }
 
     func loadApollo11Terrain() async throws {
-        let terrain = try await Apollo11TerrainResource.makeEntity()
+        let heightField = try Apollo11TerrainResource.loadHeightField()
+        let terrain = try await Apollo11TerrainResource.makeEntity(heightField: heightField)
+        terrainHeightField = heightField
         provisionalTerrain.removeFromParent()
         lunarWorld.addChild(terrain)
+        apply(lastVehicleState)
     }
 
     func setACAVisual(_ input: LMACANormalizedInput) {
@@ -111,10 +124,14 @@ final class LMCommanderStationScene {
         }
 
         dustCloud.isEnabled = true
+        let surfaceElevation = terrainHeightField?.relativeElevation(
+            eastMeters: state.positionMeters.x,
+            northMeters: state.positionMeters.y
+        ) ?? 0
         dustCloud.position = mapper.realityPosition(from: LMVector3D(
             x: state.positionMeters.x,
             y: state.positionMeters.y,
-            z: 0.18
+            z: Double(surfaceElevation) + 0.18
         ))
         let spread = 0.8 + intensity * 2.6
         dustCloud.scale = SIMD3(spread, 0.25 + intensity * 0.45, spread)

@@ -23,7 +23,8 @@ struct Apollo11TerrainManifest: Codable, Equatable, Sendable {
     let landingPixelY: Int
     let cropOriginX: Int
     let cropOriginY: Int
-    let cropSizePixels: Int
+    let cropWidthPixels: Int
+    let cropHeightPixels: Int
     let meshWidth: Int
     let meshHeight: Int
     let meshSampleStridePixels: Int
@@ -33,6 +34,35 @@ struct Apollo11TerrainManifest: Codable, Equatable, Sendable {
     let maximumRelativeElevationMeters: Float
     let heightEncoding: String
     let axisConvention: String
+}
+
+struct Apollo11TerrainHeightField: Equatable, Sendable {
+    let manifest: Apollo11TerrainManifest
+    let heights: [Float]
+
+    func relativeElevation(eastMeters: Double, northMeters: Double) -> Float? {
+        let spacing = manifest.meshSpacingMeters
+        let column = eastMeters / spacing + Double(manifest.meshWidth - 1) / 2
+        let row = -northMeters / spacing + Double(manifest.meshHeight - 1) / 2
+        guard column >= 0, row >= 0,
+              column <= Double(manifest.meshWidth - 1),
+              row <= Double(manifest.meshHeight - 1) else {
+            return nil
+        }
+
+        let x0 = Int(column.rounded(.down))
+        let y0 = Int(row.rounded(.down))
+        let x1 = min(x0 + 1, manifest.meshWidth - 1)
+        let y1 = min(y0 + 1, manifest.meshHeight - 1)
+        let tx = Float(column - Double(x0))
+        let ty = Float(row - Double(y0))
+        func value(_ x: Int, _ y: Int) -> Float {
+            heights[y * manifest.meshWidth + x]
+        }
+        let north = value(x0, y0) + (value(x1, y0) - value(x0, y0)) * tx
+        let south = value(x0, y1) + (value(x1, y1) - value(x0, y1)) * tx
+        return north + (south - north) * ty
+    }
 }
 
 enum Apollo11TerrainResource {
@@ -53,7 +83,7 @@ enum Apollo11TerrainResource {
             Apollo11TerrainManifest.self,
             from: Data(contentsOf: url)
         )
-        guard manifest.schemaVersion == 1 else {
+        guard manifest.schemaVersion == 2 else {
             throw ResourceError.unsupportedSchema(manifest.schemaVersion)
         }
         guard manifest.meshWidth >= 2,
@@ -62,6 +92,16 @@ enum Apollo11TerrainResource {
             throw ResourceError.invalidDimensions
         }
         return manifest
+    }
+
+    nonisolated static func loadHeightField(
+        bundle: Bundle = .main
+    ) throws -> Apollo11TerrainHeightField {
+        let manifest = try loadManifest(bundle: bundle)
+        return Apollo11TerrainHeightField(
+            manifest: manifest,
+            heights: try loadHeights(manifest: manifest, bundle: bundle)
+        )
     }
 
     nonisolated static func loadHeights(
@@ -97,9 +137,12 @@ enum Apollo11TerrainResource {
     }
 
     @MainActor
-    static func makeEntity(bundle: Bundle = .main) async throws -> ModelEntity {
-        let manifest = try loadManifest(bundle: bundle)
-        let heights = try loadHeights(manifest: manifest, bundle: bundle)
+    static func makeEntity(
+        heightField: Apollo11TerrainHeightField,
+        bundle: Bundle = .main
+    ) async throws -> Entity {
+        let manifest = heightField.manifest
+        let heights = heightField.heights
         let width = manifest.meshWidth
         let height = manifest.meshHeight
         let spacing = Float(manifest.meshSpacingMeters)
@@ -172,8 +215,22 @@ enum Apollo11TerrainResource {
             texture: .init(texture)
         )
 
+        let root = Entity()
+        root.name = "Apollo 11 terrain environment"
+
+        var farFieldMaterial = UnlitMaterial()
+        farFieldMaterial.color = .init(tint: UIColor(white: 0.18, alpha: 1))
+        let farField = ModelEntity(
+            mesh: .generatePlane(width: 20_000, depth: 20_000),
+            materials: [farFieldMaterial]
+        )
+        farField.name = "Lunar far field"
+        farField.position.y = manifest.minimumRelativeElevationMeters - 4
+        root.addChild(farField)
+
         let entity = ModelEntity(mesh: mesh, materials: [material])
         entity.name = "LROC Apollo 11 landing-site terrain"
-        return entity
+        root.addChild(entity)
+        return root
     }
 }

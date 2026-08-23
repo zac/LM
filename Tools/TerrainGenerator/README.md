@@ -2,8 +2,10 @@
 
 This tool turns the official LROC `NAC_DTM_APOLLO11` GeoTIFF and hillshade
 into the compact, offline assets bundled by the LM app. It crops a 2.048 km
-square around the Apollo 11 landing coordinate, preserves true vertical scale,
-and samples the 2 m DTM at 8 m mesh spacing.
+east-west by 4.096 km north-south area around the Apollo 11 landing coordinate,
+preserves true vertical scale, and samples the 2 m DTM at 8 m mesh spacing. The
+longer approach axis keeps the checkpoint-resumed landing inside sourced relief
+through contact instead of exposing the edge of the DTM crop.
 
 The source files are intentionally not checked in. Download these products from
 the LROC PDS archive:

@@ -318,6 +318,47 @@ struct P65CheckpointSessionTests {
         )
     }
 
+    @Test @MainActor func bundledP65CheckpointFliesLiveToContact() async throws {
+        let checkpoint = try PoweredDescentSession.bundledP65Checkpoint()
+        let binURL = try #require(Bundle.main.url(forResource: "Luminary099", withExtension: "bin"))
+        let runtime = try LMSimulationRuntime(
+            binFile: binURL,
+            scenario: .apollo11SourceBacked
+        )
+        var snapshot = try await runtime.restore(from: checkpoint)
+        let deadline = snapshot.timeSeconds + 240
+
+        while snapshot.timeSeconds < deadline,
+              !snapshot.vehicleState.flightOutcome.isTerminal {
+            snapshot = await runtime.step(
+                deltaTime: LMSimulationPace.acceleratedDeltaSeconds,
+                input: .autoLand(from: snapshot.vehicleState)
+            )
+        }
+
+        #expect(snapshot.agc.dsky.programNumber == 65)
+        #expect(snapshot.vehicleState.surfaceContact != nil)
+        #expect(snapshot.vehicleState.flightOutcome == .softLanding)
+        #expect(!snapshot.vehicleCommands.isMainEngineProducingThrust(
+            outcome: snapshot.vehicleState.flightOutcome
+        ))
+    }
+
+    @Test @MainActor func sceneDeactivationNeutralizesEveryMomentaryCrewControl() {
+        let session = PoweredDescentSession()
+        session.setRHC(pitch: true, yaw: true, roll: true)
+        session.setACA(pitch: -0.4, yaw: 0.7, roll: -1)
+        session.setROD(.descendPlus, held: true)
+
+        session.setSceneActive(false)
+
+        #expect(session.effectiveRHCPitch == 0)
+        #expect(session.effectiveRHCYaw == 0)
+        #expect(session.effectiveRHCRoll == 0)
+        #expect(session.aca == .neutral)
+        #expect(session.rodSwitchPosition == .neutral)
+    }
+
     @MainActor
     private func waitUntil(
         _ label: String,
@@ -387,6 +428,26 @@ struct CockpitWorldMappingTests {
         #expect(abs(mapped.y - 43.8) < 1e-5)
         #expect(abs(mapped.z - 25) < 1e-5)
     }
+
+    @Test func localTerrainElevationIsNormalizedUnderTheVehicle() {
+        let position = LMVector3D(x: -547, y: 732, z: 0)
+        let surfaceElevation = -5.4
+        let transform = mapper.lunarWorldMatrix(
+            position: position,
+            attitude: .identity,
+            surfaceElevationMeters: surfaceElevation
+        )
+        let surface = mapper.realityPosition(from: LMVector3D(
+            x: position.x,
+            y: position.y,
+            z: surfaceElevation
+        ))
+        let underVehicle = transform * SIMD4(surface.x, surface.y, surface.z, 1)
+
+        #expect(abs(underVehicle.x) < 1e-4)
+        #expect(abs(underVehicle.y) < 1e-4)
+        #expect(abs(underVehicle.z) < 1e-4)
+    }
 }
 
 @Suite("Apollo 11 terrain assets")
@@ -399,7 +460,9 @@ struct Apollo11TerrainAssetTests {
         #expect(manifest.sourceHillshadeSHA256 == "a47fbe33a371fb0a5a823f1af6729888fa8bc9e0614a9acb3bd4784b29a974e3")
         #expect(abs(manifest.landingLatitudeDegrees - 0.67409) < 1e-8)
         #expect(abs(manifest.landingLongitudeDegrees - 23.47298) < 1e-8)
-        #expect(manifest.cropSizePixels == 1_025)
+        #expect(manifest.schemaVersion == 2)
+        #expect(manifest.cropWidthPixels == 1_025)
+        #expect(manifest.cropHeightPixels == 2_049)
     }
 
     @Test func heightmapMatchesManifestAndIsCenteredOnTheLandingPost() throws {
@@ -408,12 +471,16 @@ struct Apollo11TerrainAssetTests {
 
         #expect(heights.count == manifest.meshWidth * manifest.meshHeight)
         #expect(manifest.meshWidth == 257)
-        #expect(manifest.meshHeight == 257)
+        #expect(manifest.meshHeight == 513)
         #expect(abs(manifest.meshSpacingMeters - 8) < 1e-6)
         let center = heights[(manifest.meshHeight / 2) * manifest.meshWidth + manifest.meshWidth / 2]
         #expect(abs(center) < 1e-6)
         let allFinite = heights.allSatisfy { $0.isFinite }
         #expect(allFinite)
+
+        let field = Apollo11TerrainHeightField(manifest: manifest, heights: heights)
+        #expect(abs(try #require(field.relativeElevation(eastMeters: 0, northMeters: 0))) < 1e-6)
+        #expect(field.relativeElevation(eastMeters: -547, northMeters: 732) != nil)
     }
 }
 

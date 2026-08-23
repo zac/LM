@@ -13,6 +13,7 @@ class MainMenuViewModel {
     let moonSpaceID = "ImmersiveSpace"
     let descentSpaceID = "PoweredDescent"
     let cockpitSpaceID = "TerminalDescentCockpit"
+    let descentConsoleWindowID = "PoweredDescentConsole"
 
     var immersiveSpaceID: String { moonSpaceID }
     var immersiveSpaceState = ImmersiveSpaceState.closed

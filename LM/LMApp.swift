@@ -5,7 +5,7 @@ struct LMApp: App {
     @State private var viewModel = MainMenuViewModel()
 
     var body: some Scene {
-        WindowGroup {
+        WindowGroup(id: viewModel.descentConsoleWindowID) {
             if ProcessInfo.processInfo.arguments.contains("--fdai-preview") {
                 FDAITexturePreviewView()
             } else {

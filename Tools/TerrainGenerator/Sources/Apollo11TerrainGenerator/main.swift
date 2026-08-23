@@ -47,7 +47,8 @@ private struct TerrainManifest: Codable {
     let landingPixelY: Int
     let cropOriginX: Int
     let cropOriginY: Int
-    let cropSizePixels: Int
+    let cropWidthPixels: Int
+    let cropHeightPixels: Int
     let meshWidth: Int
     let meshHeight: Int
     let meshSampleStridePixels: Int
@@ -105,10 +106,13 @@ private let easternLongitude = 23.511_529_6
 private let landingLatitude = 0.674_09
 private let landingLongitude = 23.472_98
 
-private let cropRadiusPixels = 512
-private let cropSizePixels = cropRadiusPixels * 2 + 1
+private let cropRadiusXPixels = 512
+private let cropRadiusYPixels = 1_024
+private let cropWidthPixels = cropRadiusXPixels * 2 + 1
+private let cropHeightPixels = cropRadiusYPixels * 2 + 1
 private let meshSampleStride = 4
-private let meshSize = cropSizePixels / meshSampleStride + 1
+private let meshWidth = cropWidthPixels / meshSampleStride + 1
+private let meshHeight = cropHeightPixels / meshSampleStride + 1
 
 private func pixelX(longitude: Double) -> Int {
     Int(((longitude - westernLongitude) / (easternLongitude - westernLongitude)
@@ -144,15 +148,15 @@ private func writeHillshadeCrop(
           let grayscaleCrop = image.cropping(to: CGRect(
             x: cropOriginX,
             y: cropOriginY,
-            width: cropSizePixels,
-            height: cropSizePixels
+            width: cropWidthPixels,
+            height: cropHeightPixels
           )),
           let colorContext = CGContext(
             data: nil,
-            width: cropSizePixels,
-            height: cropSizePixels,
+            width: cropWidthPixels,
+            height: cropHeightPixels,
             bitsPerComponent: 8,
-            bytesPerRow: cropSizePixels * 4,
+            bytesPerRow: cropWidthPixels * 4,
             space: CGColorSpaceCreateDeviceRGB(),
             bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue
           ) else {
@@ -164,7 +168,7 @@ private func writeHillshadeCrop(
     colorContext.interpolationQuality = .none
     colorContext.draw(
         grayscaleCrop,
-        in: CGRect(x: 0, y: 0, width: cropSizePixels, height: cropSizePixels)
+        in: CGRect(x: 0, y: 0, width: cropWidthPixels, height: cropHeightPixels)
     )
     guard let colorCrop = colorContext.makeImage(),
           let destination = CGImageDestinationCreateWithURL(
@@ -198,11 +202,11 @@ private func run() throws {
 
     let landingX = pixelX(longitude: landingLongitude)
     let landingY = pixelY(latitude: landingLatitude)
-    let cropOriginX = landingX - cropRadiusPixels
-    let cropOriginY = landingY - cropRadiusPixels
+    let cropOriginX = landingX - cropRadiusXPixels
+    let cropOriginY = landingY - cropRadiusYPixels
     guard cropOriginX >= 0, cropOriginY >= 0,
-          cropOriginX + cropSizePixels <= sourceWidth,
-          cropOriginY + cropSizePixels <= sourceHeight else {
+          cropOriginX + cropWidthPixels <= sourceWidth,
+          cropOriginY + cropHeightPixels <= sourceHeight else {
         throw GeneratorError.cropOutsideSource
     }
 
@@ -211,11 +215,11 @@ private func run() throws {
         throw GeneratorError.unsupportedDTM("landing-site pixel is NoData")
     }
 
-    var heights = Data(capacity: meshSize * meshSize * MemoryLayout<Float>.size)
+    var heights = Data(capacity: meshWidth * meshHeight * MemoryLayout<Float>.size)
     var minimumRelative = Float.greatestFiniteMagnitude
     var maximumRelative = -Float.greatestFiniteMagnitude
-    for row in 0..<meshSize {
-        for column in 0..<meshSize {
+    for row in 0..<meshHeight {
+        for column in 0..<meshWidth {
             let sourceX = cropOriginX + column * meshSampleStride
             let sourceY = cropOriginY + row * meshSampleStride
             let sourceElevation = dtm.value(x: sourceX, y: sourceY)
@@ -241,7 +245,7 @@ private func run() throws {
     )
 
     let manifest = TerrainManifest(
-        schemaVersion: 1,
+        schemaVersion: 2,
         productID: "NAC_DTM_APOLLO11",
         sourceDTMURL: sourceDTMURL,
         sourceHillshadeURL: sourceHillshadeURL,
@@ -260,9 +264,10 @@ private func run() throws {
         landingPixelY: landingY,
         cropOriginX: cropOriginX,
         cropOriginY: cropOriginY,
-        cropSizePixels: cropSizePixels,
-        meshWidth: meshSize,
-        meshHeight: meshSize,
+        cropWidthPixels: cropWidthPixels,
+        cropHeightPixels: cropHeightPixels,
+        meshWidth: meshWidth,
+        meshHeight: meshHeight,
         meshSampleStridePixels: meshSampleStride,
         meshSpacingMeters: postSpacingMeters * Double(meshSampleStride),
         landingElevationMeters: landingElevation,
@@ -275,7 +280,7 @@ private func run() throws {
     encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
     try encoder.encode(manifest).write(to: manifestURL, options: .atomic)
 
-    print("Generated \(meshSize)x\(meshSize) terrain at \(manifest.meshSpacingMeters)m spacing")
+    print("Generated \(meshWidth)x\(meshHeight) terrain at \(manifest.meshSpacingMeters)m spacing")
     print("Landing pixel: \(landingX),\(landingY); elevation: \(landingElevation)m")
     print("Relative elevation: \(minimumRelative)...\(maximumRelative)m")
     print("Output: \(outputDirectory.path)")

@@ -279,6 +279,7 @@ final class PoweredDescentSession {
         snapshotTask?.cancel()
         snapshotTask = nil
         replayFrame = nil
+        releaseCrewControls()
         if isRunning {
             finishRecording()
         }
@@ -296,12 +297,7 @@ final class PoweredDescentSession {
     func reset() {
         guard let runtime else { return }
         stop()
-        rhcPitch = 0
-        rhcYaw = 0
-        rhcRoll = 0
-        releaseACA()
         attitudeMode = .automatic
-        rodSwitchPosition = .neutral
         snapshotTask = Task { @MainActor [weak self] in
             guard let self else { return }
             do {
@@ -365,6 +361,19 @@ final class PoweredDescentSession {
 
     func setSceneActive(_ active: Bool) {
         isSceneActive = active
+        if !active {
+            releaseCrewControls()
+        }
+    }
+
+    /// Neutralize every momentary crew input. This is the fail-safe path for
+    /// gesture cancellation, scene deactivation, tracking interruption, and stop.
+    func releaseCrewControls() {
+        rhcPitch = 0
+        rhcYaw = 0
+        rhcRoll = 0
+        releaseACA()
+        rodSwitchPosition = .neutral
     }
 
     func setROD(_ position: RODSwitchPosition, held: Bool) {
@@ -499,5 +508,15 @@ final class PoweredDescentSession {
 
     nonisolated static func altitudeText(_ meters: Double) -> String {
         String(format: "%.0f ft", meters * 3.280_839_895)
+    }
+}
+
+extension LMVehicleSnapshot {
+    /// The command snapshot can still contain Luminary's final engine-on bit on
+    /// the exact frame where the dynamics model declares contact. Terminal
+    /// vehicle states no longer propagate thrust, so presentation and audio must
+    /// resolve that latched command as a physically stopped engine.
+    func isMainEngineProducingThrust(outcome: LMFlightOutcome?) -> Bool {
+        outcome?.isTerminal != true && mainEngineOn && !mainEngineOff
     }
 }

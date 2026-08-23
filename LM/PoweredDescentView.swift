@@ -5,6 +5,7 @@ struct PoweredDescentView: View {
     @Environment(MainMenuViewModel.self) private var appModel
     @Environment(\.openImmersiveSpace) private var openImmersiveSpace
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
+    @Environment(\.dismissWindow) private var dismissWindow
     @Environment(\.scenePhase) private var scenePhase
     @State private var didLaunchReplayFixture = false
 
@@ -63,10 +64,10 @@ struct PoweredDescentView: View {
             await toggleDescentSpace()
         }
         .onAppear {
-            appModel.session.setSceneActive(scenePhase == .active)
+            updateSessionActivity(for: scenePhase)
         }
         .onChange(of: scenePhase) { _, phase in
-            appModel.session.setSceneActive(phase == .active)
+            updateSessionActivity(for: phase)
         }
     }
 
@@ -161,7 +162,13 @@ struct PoweredDescentView: View {
                 ))
                 labeled("Mass", state?.massKilograms.map { String(format: "%.0f kg", $0) } ?? "—")
                 labeled("Landed", (state?.isLanded ?? false) ? "yes" : "no")
-                labeled("Engine", engineLabel(commands))
+                labeled(
+                    "Engine",
+                    engineLabel(
+                        commands,
+                        outcome: state?.flightOutcome
+                    )
+                )
                 labeled("RCS jets", "\(commands?.rcsJets.count ?? 0)")
                 labeled("Radar alt", feetAndMeters(appModel.session.radarAltitudeMeters))
             }
@@ -206,13 +213,25 @@ struct PoweredDescentView: View {
         return String(format: "%.0f ft  (%.1f m)", feet, meters)
     }
 
-    private func engineLabel(_ commands: LMVehicleSnapshot?) -> String {
+    private func engineLabel(
+        _ commands: LMVehicleSnapshot?,
+        outcome: LMFlightOutcome?
+    ) -> String {
         guard let commands else { return "—" }
-        let on = commands.mainEngineOn && !commands.mainEngineOff
+        let on = commands.isMainEngineProducingThrust(outcome: outcome)
         if let newtons = commands.dps.commandedThrustNewtons, on {
             return String(format: "ON %.0f N", newtons)
         }
-        return on ? "ON" : "OFF"
+        return outcome?.isTerminal == true ? "OFF · contact" : "OFF"
+    }
+
+    private func updateSessionActivity(for phase: ScenePhase) {
+        // Opening an immersive space keeps this window's view alive long enough
+        // for dismissWindow to report an inactive phase. The cockpit remains the
+        // active flight scene, so the hidden diagnostics window must not pause it.
+        let immersiveScenePresented = appModel.cockpitSpaceState != .closed
+            || appModel.descentSpaceState != .closed
+        appModel.session.setSceneActive(phase == .active || immersiveScenePresented)
     }
 
     private func toggleCockpitSpace() async {
@@ -224,7 +243,7 @@ struct PoweredDescentView: View {
             appModel.cockpitSpaceState = .inTransition
             switch await openImmersiveSpace(id: appModel.cockpitSpaceID) {
             case .opened:
-                break
+                dismissWindow(id: appModel.descentConsoleWindowID)
             case .userCancelled, .error:
                 fallthrough
             @unknown default:

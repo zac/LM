@@ -1,9 +1,11 @@
 import RealityKit
 import SwiftUI
+import OSLog
 
 struct TerminalDescentCockpitView: View {
     @Environment(MainMenuViewModel.self) private var appModel
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
+    @Environment(\.openWindow) private var openWindow
     @Environment(\.scenePhase) private var scenePhase
     @State private var station = LMCommanderStationScene()
     @State private var didStart = false
@@ -17,8 +19,14 @@ struct TerminalDescentCockpitView: View {
     @State private var activeCue: LMCockpitCue?
     @State private var cuePresentationTask: Task<Void, Never>?
     @State private var audioController = LMCockpitAudioController()
+    @GestureState private var acaGestureIsActive = false
+    @GestureState private var rodGestureIsActive = false
 
     private let controlMapper = LMSpatialControlMapper()
+    private let logger = Logger(
+        subsystem: Bundle.main.bundleIdentifier ?? "io.positron.LM",
+        category: "TerminalDescentCockpit"
+    )
 
     var body: some View {
         RealityView { content, attachments in
@@ -86,8 +94,7 @@ struct TerminalDescentCockpitView: View {
                     }
 
                     Button {
-                        appModel.session.stop()
-                        Task { await dismissImmersiveSpace() }
+                        leaveCockpit()
                     } label: {
                         Label("Leave cockpit", systemImage: "rectangle.portrait.and.arrow.right")
                     }
@@ -136,6 +143,7 @@ struct TerminalDescentCockpitView: View {
         .task {
             guard !didStart else { return }
             didStart = true
+            appModel.session.setSceneActive(scenePhase == .active)
             audioController.isEnabled = audioEnabled
             audioController.start()
             if appModel.session.canStart {
@@ -145,28 +153,46 @@ struct TerminalDescentCockpitView: View {
             do {
                 try await station.loadApollo11Terrain()
                 terrainStatus = "LROC NAC DTM · 2.05 km · true vertical scale"
+                logger.info("Apollo 11 LROC terrain loaded")
             } catch {
                 terrainStatus = "Terrain unavailable · \(error.localizedDescription)"
+                logger.error("Apollo 11 terrain failed: \(error.localizedDescription, privacy: .public)")
             }
         }
         .onChange(of: appModel.session.snapshot?.agc.cycle) { _, _ in
             updateExperience()
         }
         .onChange(of: scenePhase) { _, phase in
+            appModel.session.setSceneActive(phase == .active)
             if phase != .active {
                 releaseSpatialControls()
             }
         }
+        .onChange(of: acaGestureIsActive) { wasActive, isActive in
+            if wasActive && !isActive {
+                releaseACAControl()
+            }
+        }
+        .onChange(of: rodGestureIsActive) { wasActive, isActive in
+            if wasActive && !isActive {
+                releaseRODControl()
+            }
+        }
         .onDisappear {
             releaseSpatialControls()
+            appModel.session.setSceneActive(false)
             cuePresentationTask?.cancel()
             audioController.stop()
+            openWindow(id: appModel.descentConsoleWindowID)
         }
     }
 
     private var acaGesture: some Gesture {
         DragGesture(minimumDistance: 0)
             .targetedToEntity(station.acaHandle)
+            .updating($acaGestureIsActive) { _, isActive, _ in
+                isActive = true
+            }
             .onChanged { value in
                 let sceneLocation = value.convert(value.location3D, from: .local, to: .scene)
                 if acaGestureOrigin == nil {
@@ -182,15 +208,16 @@ struct TerminalDescentCockpitView: View {
                 station.setACAVisual(input)
             }
             .onEnded { _ in
-                acaGestureOrigin = nil
-                appModel.session.releaseACA()
-                station.setACAVisual(.neutral)
+                releaseACAControl()
             }
     }
 
     private var rodGesture: some Gesture {
         DragGesture(minimumDistance: 0)
             .targetedToEntity(station.rodSwitch)
+            .updating($rodGestureIsActive) { _, isActive, _ in
+                isActive = true
+            }
             .onChanged { value in
                 let sceneLocation = value.convert(value.location3D, from: .local, to: .scene)
                 if rodGestureOrigin == nil {
@@ -200,8 +227,7 @@ struct TerminalDescentCockpitView: View {
                 applyROD(controlMapper.rodPosition(for: sceneLocation.y - origin.y))
             }
             .onEnded { _ in
-                rodGestureOrigin = nil
-                applyROD(.neutral)
+                releaseRODControl()
             }
     }
 
@@ -233,16 +259,27 @@ struct TerminalDescentCockpitView: View {
     }
 
     private func releaseSpatialControls() {
+        releaseACAControl()
+        releaseRODControl()
+    }
+
+    private func releaseACAControl() {
         acaGestureOrigin = nil
-        rodGestureOrigin = nil
         appModel.session.releaseACA()
-        applyROD(.neutral)
         station.setACAVisual(.neutral)
+    }
+
+    private func releaseRODControl() {
+        rodGestureOrigin = nil
+        applyROD(.neutral)
     }
 
     private func updateExperience() {
         let session = appModel.session
-        audioController.update(commands: session.vehicleCommands)
+        audioController.update(
+            commands: session.vehicleCommands,
+            outcome: session.vehicleState?.flightOutcome
+        )
         let cues = experienceDirector.consume(
             program: session.programNumber,
             altitudeMeters: session.vehicleState?.altitudeMeters,
@@ -250,6 +287,9 @@ struct TerminalDescentCockpitView: View {
             hasSurfaceContact: session.vehicleState?.surfaceContact != nil
         )
         guard !cues.isEmpty else { return }
+        for cue in cues {
+            logger.notice("Cockpit event: \(cue.id.rawValue, privacy: .public)")
+        }
 
         cuePresentationTask?.cancel()
         cuePresentationTask = Task { @MainActor in
@@ -269,6 +309,11 @@ struct TerminalDescentCockpitView: View {
         activeCue = nil
         experienceDirector.reset()
         appModel.session.restart()
+    }
+
+    private func leaveCockpit() {
+        appModel.session.stop()
+        Task { await dismissImmersiveSpace() }
     }
 
     private func cueColor(_ cue: LMCockpitCue) -> Color {
