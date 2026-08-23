@@ -6,6 +6,14 @@ import LMCore
 @MainActor
 @Observable
 final class PoweredDescentSession {
+    /// Where a live run begins. `.ignition` boots Luminary fresh and flies the
+    /// automatic P63 approach; `.p65TerminalDescent` restores the validated
+    /// bundled checkpoint so the cockpit is controllable within seconds.
+    enum StartPoint: Equatable {
+        case ignition
+        case p65TerminalDescent
+    }
+
     enum RODSwitchPosition: Equatable {
         case descendPlus
         case neutral
@@ -35,6 +43,9 @@ final class PoweredDescentSession {
     var rhcPitch = 0
     var rhcYaw = 0
     var rhcRoll = 0
+    /// Continuous analog ACA axes (-1…1). Buttons add discrete ±42-count
+    /// commands on top; the combined deflection clamps at ±57 counts.
+    var aca = LMACANormalizedInput.neutral
     private(set) var rodSwitchPosition = RODSwitchPosition.neutral
 
     @ObservationIgnored private var runtime: LMSimulationRuntime?
@@ -46,6 +57,8 @@ final class PoweredDescentSession {
     @ObservationIgnored private var recordedFrames: [LMFlightFrame] = []
     @ObservationIgnored private var runID = UUID()
     @ObservationIgnored private var isSceneActive = true
+    @ObservationIgnored private var p65Checkpoint: LMSimulationCheckpoint?
+    @ObservationIgnored private var lastStartPoint: StartPoint = .ignition
 
     var dsky: DSKYSnapshot? { snapshot?.agc.dsky }
     var programNumber: Int? { replayFrame?.programNumber ?? dsky?.programNumber }
@@ -89,6 +102,30 @@ final class PoweredDescentSession {
         return try LMFlightRecording.decode(Data(contentsOf: url))
     }
 
+    /// Decode and fully validate the bundled P65 terminal-descent checkpoint
+    /// against the bundled Luminary099.bin and scenario identity.
+    nonisolated static func bundledP65Checkpoint(
+        in bundle: Bundle = .main
+    ) throws -> LMSimulationCheckpoint {
+        guard let checkpointURL = bundle.url(
+            forResource: "P65TerminalDescentCheckpoint",
+            withExtension: "bplist"
+        ) else {
+            throw CocoaError(.fileNoSuchFile)
+        }
+        let checkpoint = try LMSimulationCheckpoint.decodeFixture(
+            Data(contentsOf: checkpointURL)
+        )
+        guard let binURL = bundle.url(forResource: "Luminary099", withExtension: "bin") else {
+            throw CocoaError(.fileNoSuchFile)
+        }
+        try checkpoint.validate(
+            coreImageSHA256: AGCRuntimeCheckpoint.coreImageSHA256(of: Data(contentsOf: binURL)),
+            scenarioID: LMPoweredDescentScenario.apollo11SourceBacked.id
+        )
+        return checkpoint
+    }
+
     func loadProgram() {
         stop()
         recording = nil
@@ -104,6 +141,12 @@ final class PoweredDescentSession {
         do {
             let loaded = try LMSimulationRuntime(binFile: url, scenario: .apollo11SourceBacked)
             runtime = loaded
+            do {
+                p65Checkpoint = try Self.bundledP65Checkpoint()
+            } catch {
+                p65Checkpoint = nil
+                loadMessage = "P65 checkpoint unavailable: \(error.localizedDescription)"
+            }
             let arguments = ProcessInfo.processInfo.arguments
             if arguments.contains("--replay-automatic") {
                 recording = try? Self.bundledAutomaticRecording()
@@ -130,17 +173,49 @@ final class PoweredDescentSession {
     }
 
     func start() {
+        start(from: .ignition)
+    }
+
+    /// Begin a live run. `.ignition` boots Luminary and flies the automatic
+    /// approach from P63; `.p65TerminalDescent` restores the bundled checkpoint
+    /// into the running runtime, which needs no boot or replay frames.
+    func start(from startPoint: StartPoint) {
         guard canStart, let runtime else { return }
+        if startPoint == .p65TerminalDescent && p65Checkpoint == nil {
+            status = .error("P65 terminal-descent checkpoint is unavailable.")
+            return
+        }
         loopTask?.cancel()
         let runID = UUID()
         self.runID = runID
+        lastStartPoint = startPoint
         replayFrame = nil
         recordedFrames.removeAll(keepingCapacity: true)
         isRunning = true
         status = .running
         loopTask = Task { @MainActor [weak self] in
             guard let self else { return }
-            if (self.snapshot?.agc.cycle ?? 0) < 1_000_000 {
+            if startPoint == .p65TerminalDescent {
+                guard let checkpoint = self.p65Checkpoint else {
+                    self.status = .error("P65 terminal-descent checkpoint is unavailable.")
+                    self.isRunning = false
+                    return
+                }
+                do {
+                    let restored = try await runtime.restore(from: checkpoint)
+                    guard self.runID == runID else { return }
+                    self.snapshot = restored
+                    self.record(restored)
+                    self.loadMessage = "Live · restored P65 at "
+                        + Self.altitudeText(restored.vehicleState.altitudeMeters)
+                } catch {
+                    guard self.runID == runID else { return }
+                    self.isRunning = false
+                    self.loopTask = nil
+                    self.status = .error(error.localizedDescription)
+                    return
+                }
+            } else if (self.snapshot?.agc.cycle ?? 0) < 1_000_000 {
                 self.loadMessage = "Auto-land · booting Luminary 099…"
                 let prepared = await runtime.bootAndEnterP63()
                 guard self.runID == runID else { return }
@@ -224,6 +299,7 @@ final class PoweredDescentSession {
         rhcPitch = 0
         rhcYaw = 0
         rhcRoll = 0
+        releaseACA()
         attitudeMode = .automatic
         rodSwitchPosition = .neutral
         snapshotTask = Task { @MainActor [weak self] in
@@ -239,6 +315,13 @@ final class PoweredDescentSession {
             }
             self.snapshotTask = nil
         }
+    }
+
+    /// Rapid restart: cancel the live run and re-establish the last start point.
+    /// A checkpoint start re-restores in well under a second — no boot cycle.
+    func restart() {
+        stop()
+        start(from: lastStartPoint)
     }
 
     func sendDSKYKey(_ key: DSKYKeyCode) {
@@ -304,6 +387,39 @@ final class PoweredDescentSession {
         }
     }
 
+    /// Continuous analog ACA axes, clamped to -1…1 per axis.
+    func setACA(pitch: Double? = nil, yaw: Double? = nil, roll: Double? = nil) {
+        if let pitch {
+            aca.pitch = min(max(pitch, -1), 1)
+        }
+        if let yaw {
+            aca.yaw = min(max(yaw, -1), 1)
+        }
+        if let roll {
+            aca.roll = min(max(roll, -1), 1)
+        }
+    }
+
+    /// Handle released or hand tracking lost: every axis returns to neutral
+    /// before the next simulation frame is built.
+    func releaseACA() {
+        aca = .neutral
+    }
+
+    /// Combined RHC counts fed to the AGC this frame: discrete button commands
+    /// plus mapped analog deflection, clamped at the ±57-count mechanical stops.
+    var effectiveRHCPitch: Int {
+        LMACAInputMapper().combined(buttonCounts: rhcPitch, normalizedAxis: aca.pitch)
+    }
+
+    var effectiveRHCYaw: Int {
+        LMACAInputMapper().combined(buttonCounts: rhcYaw, normalizedAxis: aca.yaw)
+    }
+
+    var effectiveRHCRoll: Int {
+        LMACAInputMapper().combined(buttonCounts: rhcRoll, normalizedAxis: aca.roll)
+    }
+
     func replay(speed: Double = 8) {
         guard canReplay, let recording else { return }
         stop()
@@ -334,9 +450,9 @@ final class PoweredDescentSession {
         let state = snapshot?.vehicleState
             ?? LMPoweredDescentScenario.apollo11SourceBacked.initialState
         let controller = LMRotationalHandControllerInput(
-            pitch: rhcPitch,
-            yaw: rhcYaw,
-            roll: rhcRoll
+            pitch: effectiveRHCPitch,
+            yaw: effectiveRHCYaw,
+            roll: effectiveRHCRoll
         )
         let descendPlus = rodSwitchPosition == .descendPlus
         let descendMinus = rodSwitchPosition == .descendMinus
@@ -379,5 +495,9 @@ final class PoweredDescentSession {
             return "Auto-land · \(prog) accelerated GET"
         }
         return "Auto-land · \(prog) at 1×"
+    }
+
+    nonisolated static func altitudeText(_ meters: Double) -> String {
+        String(format: "%.0f ft", meters * 3.280_839_895)
     }
 }
