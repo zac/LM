@@ -169,10 +169,11 @@ struct TerminalDescentCockpitView: View {
             }
             updateExperience()
             do {
+                let artistCabinLoaded = try await station.loadArtistCabinIfAvailable()
                 try await station.loadApollo11Terrain()
-                terrainStatus = "LROC NAC DTM · 2.05 km · true vertical scale"
+                terrainStatus = "LROC 8 m measured · 2 m progressive near field"
                 recordValidation { $0.observeTerrainLoaded() }
-                logger.info("Apollo 11 LROC terrain loaded")
+                logger.info("Apollo 11 LROC terrain loaded; artist cabin: \(artistCabinLoaded)")
             } catch {
                 terrainStatus = "Terrain unavailable · \(error.localizedDescription)"
                 logger.error("Apollo 11 terrain failed: \(error.localizedDescription, privacy: .public)")

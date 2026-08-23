@@ -139,7 +139,9 @@ enum Apollo11TerrainResource {
     @MainActor
     static func makeEntity(
         heightField: Apollo11TerrainHeightField,
-        bundle: Bundle = .main
+        bundle: Bundle = .main,
+        nearFieldCenterEastMeters: Double? = nil,
+        nearFieldCenterNorthMeters: Double? = nil
     ) async throws -> Entity {
         let manifest = heightField.manifest
         let heights = heightField.heights
@@ -231,6 +233,105 @@ enum Apollo11TerrainResource {
         let entity = ModelEntity(mesh: mesh, materials: [material])
         entity.name = "LROC Apollo 11 landing-site terrain"
         root.addChild(entity)
+
+        if let nearFieldCenterEastMeters, let nearFieldCenterNorthMeters,
+           let nearField = try makeProgressiveNearFieldEntity(
+                heightField: heightField,
+                centerEastMeters: nearFieldCenterEastMeters,
+                centerNorthMeters: nearFieldCenterNorthMeters,
+                material: material
+           ) {
+            root.addChild(nearField)
+        }
         return root
+    }
+
+    @MainActor
+    private static func makeProgressiveNearFieldEntity(
+        heightField: Apollo11TerrainHeightField,
+        centerEastMeters: Double,
+        centerNorthMeters: Double,
+        material: UnlitMaterial
+    ) throws -> ModelEntity? {
+        let tileSize = 320.0
+        let sampleSpacing = 2.0
+        let sampleCount = Int(tileSize / sampleSpacing) + 1
+        let snappedEast = (floor(centerEastMeters / 64) + 0.5) * 64
+        let snappedNorth = (floor(centerNorthMeters / 64) + 0.5) * 64
+        let sampler = LMProgressiveTerrainSampler(heightField: heightField)
+        let halfSize = tileSize / 2
+
+        var positions = [SIMD3<Float>]()
+        var textureCoordinates = [SIMD2<Float>]()
+        positions.reserveCapacity(sampleCount * sampleCount)
+        textureCoordinates.reserveCapacity(sampleCount * sampleCount)
+
+        let manifest = heightField.manifest
+        let measuredHalfWidth = Double(manifest.meshWidth - 1) * manifest.meshSpacingMeters / 2
+        let measuredHalfDepth = Double(manifest.meshHeight - 1) * manifest.meshSpacingMeters / 2
+        for row in 0..<sampleCount {
+            let north = snappedNorth + halfSize - Double(row) * sampleSpacing
+            for column in 0..<sampleCount {
+                let east = snappedEast - halfSize + Double(column) * sampleSpacing
+                guard let sample = sampler.sample(
+                    eastMeters: east,
+                    northMeters: north,
+                    requestedSpacingMeters: sampleSpacing
+                ) else {
+                    return nil
+                }
+                positions.append(SIMD3(
+                    Float(east),
+                    sample.elevationMeters + 0.008,
+                    Float(-north)
+                ))
+                textureCoordinates.append(SIMD2(
+                    Float((east + measuredHalfWidth) / (measuredHalfWidth * 2)),
+                    Float((north + measuredHalfDepth) / (measuredHalfDepth * 2))
+                ))
+            }
+        }
+
+        var normals = [SIMD3<Float>](repeating: SIMD3(0, 1, 0), count: positions.count)
+        for row in 0..<sampleCount {
+            for column in 0..<sampleCount {
+                let leftColumn = max(column - 1, 0)
+                let rightColumn = min(column + 1, sampleCount - 1)
+                let northRow = max(row - 1, 0)
+                let southRow = min(row + 1, sampleCount - 1)
+                let left = positions[row * sampleCount + leftColumn]
+                let right = positions[row * sampleCount + rightColumn]
+                let north = positions[northRow * sampleCount + column]
+                let south = positions[southRow * sampleCount + column]
+                normals[row * sampleCount + column] = simd_normalize(
+                    simd_cross(south - north, right - left)
+                )
+            }
+        }
+
+        var indices = [UInt32]()
+        indices.reserveCapacity((sampleCount - 1) * (sampleCount - 1) * 6)
+        for row in 0..<(sampleCount - 1) {
+            for column in 0..<(sampleCount - 1) {
+                let northwest = UInt32(row * sampleCount + column)
+                let northeast = northwest + 1
+                let southwest = UInt32((row + 1) * sampleCount + column)
+                let southeast = southwest + 1
+                indices.append(contentsOf: [
+                    northwest, southwest, northeast,
+                    northeast, southwest, southeast,
+                ])
+            }
+        }
+
+        var descriptor = MeshDescriptor(name: "Progressive LROC near field")
+        descriptor.positions = MeshBuffers.Positions(positions)
+        descriptor.normals = MeshBuffers.Normals(normals)
+        descriptor.textureCoordinates = MeshBuffers.TextureCoordinates(textureCoordinates)
+        descriptor.primitives = .triangles(indices)
+        let mesh = try MeshResource.generate(from: [descriptor])
+        let entity = ModelEntity(mesh: mesh, materials: [material])
+        entity.name = "LROC measured terrain with deterministic sub-resolution detail"
+        return entity
     }
 }

@@ -1,4 +1,5 @@
 import Foundation
+import RealityKit
 import Testing
 import simd
 import LMCore
@@ -481,6 +482,145 @@ struct Apollo11TerrainAssetTests {
         let field = Apollo11TerrainHeightField(manifest: manifest, heights: heights)
         #expect(abs(try #require(field.relativeElevation(eastMeters: 0, northMeters: 0))) < 1e-6)
         #expect(field.relativeElevation(eastMeters: -547, northMeters: 732) != nil)
+    }
+}
+
+@Suite("Progressive lunar terrain")
+struct ProgressiveLunarTerrainTests {
+    @Test func measuredPostsRemainExactAndProceduralDetailIsBounded() throws {
+        let field = try Apollo11TerrainResource.loadHeightField()
+        let sampler = LMProgressiveTerrainSampler(heightField: field)
+
+        let measuredPost = try #require(sampler.sample(
+            eastMeters: 0,
+            northMeters: 0,
+            requestedSpacingMeters: 0.5
+        ))
+        #expect(abs(measuredPost.proceduralResidualMeters) < 1e-7)
+        #expect(measuredPost.elevationMeters == measuredPost.measuredElevationMeters)
+        #expect(measuredPost.provenance == .measuredWithProceduralSubresolution)
+
+        let subPost = try #require(sampler.sample(
+            eastMeters: 3.25,
+            northMeters: 2.75,
+            requestedSpacingMeters: 0.5
+        ))
+        #expect(abs(subPost.proceduralResidualMeters) <= sampler.maximumResidualMeters)
+        #expect(abs(subPost.proceduralResidualMeters) > 1e-7)
+        #expect(abs(
+            subPost.elevationMeters
+                - subPost.measuredElevationMeters
+                - subPost.proceduralResidualMeters
+        ) < 1e-6)
+    }
+
+    @Test func proceduralResidualIsDeterministicAndNeverFillsUnknownCoverage() throws {
+        let field = try Apollo11TerrainResource.loadHeightField()
+        let first = LMProgressiveTerrainSampler(heightField: field)
+        let second = LMProgressiveTerrainSampler(heightField: field)
+
+        #expect(first.sample(
+            eastMeters: 103.5,
+            northMeters: -47.25,
+            requestedSpacingMeters: 1
+        ) == second.sample(
+            eastMeters: 103.5,
+            northMeters: -47.25,
+            requestedSpacingMeters: 1
+        ))
+        #expect(first.sample(
+            eastMeters: 50_000,
+            northMeters: 50_000,
+            requestedSpacingMeters: 0.5
+        ) == nil)
+    }
+
+    @Test func coarseRequestsReturnOnlyMeasuredInterpolation() throws {
+        let field = try Apollo11TerrainResource.loadHeightField()
+        let sample = try #require(LMProgressiveTerrainSampler(heightField: field).sample(
+            eastMeters: 11,
+            northMeters: 17,
+            requestedSpacingMeters: field.manifest.meshSpacingMeters
+        ))
+
+        #expect(sample.provenance == .measuredInterpolated)
+        #expect(sample.proceduralResidualMeters == 0)
+    }
+
+    @Test func tileIDsStayStableUntilTheFocusCrossesATileBoundary() throws {
+        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: 8)
+        let first = planner.plan(focusEastMeters: -547, focusNorthMeters: 732)
+        let sameTile = planner.plan(focusEastMeters: -546.5, focusNorthMeters: 732.5)
+        let crossed = planner.plan(focusEastMeters: -511.5, focusNorthMeters: 732.5)
+
+        #expect(first.map(\.id) == sameTile.map(\.id))
+        #expect(first.map(\.id) != crossed.map(\.id))
+        #expect(first.contains { $0.containsProceduralSubresolution })
+        #expect(first.contains { !$0.containsProceduralSubresolution })
+        #expect(Set(first.map(\.id)).count == first.count)
+    }
+}
+
+@Suite("Landing Point Designator")
+struct LandingPointDesignatorTests {
+    let lpd = LMLandingPointDesignator()
+
+    @Test func dualPaneMarksCollimateAtTheCommanderEye() {
+        for angle in [0.0, 10, 30, 47, 60] {
+            #expect(lpd.alignmentErrorRadians(
+                eyeMeters: lpd.commanderEyeMeters,
+                elevationDegrees: angle
+            ) < 0.0005)
+        }
+    }
+
+    @Test func aDisplacedHeadProducesVisibleParallax() {
+        let displacedEye = lpd.commanderEyeMeters + SIMD3<Float>(0.05, 0.03, 0)
+        #expect(lpd.alignmentErrorRadians(
+            eyeMeters: displacedEye,
+            elevationDegrees: 47
+        ) > 0.001)
+    }
+
+    @Test func lookAngleIsMeasuredDownFromTheForwardBodyAxis() {
+        let forward = SIMD3<Float>(0, 0, -1)
+        let direction = lpd.sightDirection(elevationDegrees: 47)
+        let angle = acos(simd_dot(forward, direction)) * 180 / .pi
+
+        #expect(abs(angle - 47) < 0.001)
+        #expect(direction.y < 0)
+    }
+
+    @Test func apollo11ScaleAndRedesignationIncrementsStayMissionSpecific() {
+        #expect(LMLandingPointDesignator.elevationDegrees == Array(0...60))
+        #expect(LMLandingPointDesignator.azimuthDegrees == Array(-10...10))
+        #expect(LMLandingPointDesignator.horizontalScaleElevations == [0, 50])
+        #expect(LMLandingPointDesignator.apollo11InPlaneRedesignationDegrees == 0.5)
+        #expect(LMLandingPointDesignator.apollo11CrossRangeRedesignationDegrees == 2)
+    }
+}
+
+@Suite("Artist cockpit asset contract")
+struct ArtistCockpitAssetContractTests {
+    @Test @MainActor func completeIdentityScaledAssetPassesValidation() {
+        let root = Entity()
+        for node in LMCockpitAssetContract.Node.allCases {
+            let entity = Entity()
+            entity.name = node.rawValue
+            root.addChild(entity)
+        }
+
+        #expect(LMCockpitAssetContract.validate(root).isEmpty)
+    }
+
+    @Test @MainActor func missingDatumsAndNonIdentityScaleFailValidation() {
+        let root = Entity()
+        root.scale = SIMD3(repeating: 0.01)
+        let issues = LMCockpitAssetContract.validate(root)
+
+        #expect(issues.contains(.rootScaleMustBeIdentity))
+        #expect(issues.contains(.missingNode(.commanderEye)))
+        #expect(issues.contains(.missingNode(.landingPointDesignatorOuter)))
     }
 }
 

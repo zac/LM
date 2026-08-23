@@ -12,6 +12,10 @@ import simd
 /// can be iterated on-device before committing to a heavyweight cabin asset.
 @MainActor
 final class LMCommanderStationScene {
+    enum AssetError: Error {
+        case invalidArtistCabin([LMCockpitAssetContract.ValidationIssue])
+    }
+
     let root = Entity()
     let lunarWorld = Entity()
     let acaHandle = ModelEntity()
@@ -19,11 +23,14 @@ final class LMCommanderStationScene {
     let attitudeModeSwitch = ModelEntity()
 
     private let instrumentMount = Entity()
+    private let proceduralCabin = Entity()
     private let provisionalTerrain = Entity()
     private let dustCloud = Entity()
     private let mapper = LMCockpitWorldMapper.fullScale
     private let controlMapper = LMSpatialControlMapper()
+    private let landingPointDesignator = LMLandingPointDesignator()
     private var terrainHeightField: Apollo11TerrainHeightField?
+    private var artistCabin: Entity?
     private var lastVehicleState: LMVehicleStateSnapshot?
     private let acaNeutralPosition = SIMD3<Float>(-0.49, 0.50, -0.37)
     private let rodNeutralPosition = SIMD3<Float>(0.43, 0.58, -0.49)
@@ -33,9 +40,11 @@ final class LMCommanderStationScene {
         root.name = "LM Commander Station"
         lunarWorld.name = "Lunar World"
         instrumentMount.name = "Commander Instruments"
+        proceduralCabin.name = "Procedural cabin fallback"
         provisionalTerrain.name = "Provisional terrain"
         dustCloud.name = "Descent engine dust"
 
+        root.addChild(proceduralCabin)
         buildCabin()
         buildPhysicalControls()
         buildProvisionalSurface()
@@ -69,11 +78,32 @@ final class LMCommanderStationScene {
 
     func loadApollo11Terrain() async throws {
         let heightField = try Apollo11TerrainResource.loadHeightField()
-        let terrain = try await Apollo11TerrainResource.makeEntity(heightField: heightField)
+        let terrain = try await Apollo11TerrainResource.makeEntity(
+            heightField: heightField,
+            nearFieldCenterEastMeters: lastVehicleState?.positionMeters.x,
+            nearFieldCenterNorthMeters: lastVehicleState?.positionMeters.y
+        )
         terrainHeightField = heightField
         provisionalTerrain.removeFromParent()
         lunarWorld.addChild(terrain)
         apply(lastVehicleState)
+    }
+
+    @discardableResult
+    func loadArtistCabinIfAvailable() async throws -> Bool {
+        guard let cabin = try await LMCockpitAssetContract.loadIfAvailable() else {
+            return false
+        }
+        let issues = LMCockpitAssetContract.validate(cabin)
+        guard issues.isEmpty else {
+            throw AssetError.invalidArtistCabin(issues)
+        }
+        artistCabin?.removeFromParent()
+        cabin.name = LMCockpitAssetContract.Node.cabinRoot.rawValue
+        root.addChild(cabin)
+        artistCabin = cabin
+        proceduralCabin.isEnabled = false
+        return true
     }
 
     func setACAVisual(_ input: LMACANormalizedInput) {
@@ -183,10 +213,107 @@ final class LMCommanderStationScene {
         )
         addBox(size: SIMD3(0.10, 0.78, 0.12), position: SIMD3(0, 1.48, -0.76), material: aluminum, name: "Center window post")
 
-        // Landing-point designator reticle: fixed to the commander's window.
-        let reticleMaterial = SimpleMaterial(color: UIColor(red: 0.92, green: 0.78, blue: 0.28, alpha: 0.72), isMetallic: false)
-        addBox(size: SIMD3(0.30, 0.004, 0.004), position: SIMD3(-0.36, 1.48, -0.84), material: reticleMaterial, name: "LPD horizontal")
-        addBox(size: SIMD3(0.004, 0.30, 0.004), position: SIMD3(-0.36, 1.48, -0.84), material: reticleMaterial, name: "LPD vertical")
+        buildLandingPointDesignator()
+    }
+
+    private func buildLandingPointDesignator() {
+        for pane in LMLPDPane.allCases {
+            guard let mesh = try? makeLandingPointDesignatorMesh(pane: pane) else { continue }
+            let color: UIColor = pane == .inner
+                ? UIColor(red: 0.95, green: 0.26, blue: 0.55, alpha: 0.82)
+                : UIColor(red: 0.34, green: 0.94, blue: 0.82, alpha: 0.72)
+            let entity = ModelEntity(
+                mesh: mesh,
+                materials: [UnlitMaterial(color: color)]
+            )
+            entity.name = pane == .inner
+                ? LMCockpitAssetContract.Node.landingPointDesignatorInner.rawValue
+                : LMCockpitAssetContract.Node.landingPointDesignatorOuter.rawValue
+            proceduralCabin.addChild(entity)
+            addLandingPointDesignatorLabels(pane: pane, color: color)
+        }
+    }
+
+    private func makeLandingPointDesignatorMesh(pane: LMLPDPane) throws -> MeshResource {
+        var segments = [(SIMD3<Float>, SIMD3<Float>)]()
+        for elevation in 0..<60 {
+            segments.append((
+                landingPointDesignator.point(elevationDegrees: Double(elevation), on: pane),
+                landingPointDesignator.point(elevationDegrees: Double(elevation + 1), on: pane)
+            ))
+        }
+        for elevation in LMLandingPointDesignator.elevationDegrees {
+            let center = landingPointDesignator.point(elevationDegrees: Double(elevation), on: pane)
+            let halfWidth: Float = elevation.isMultiple(of: 10) ? 0.030
+                : elevation.isMultiple(of: 5) ? 0.019 : 0.010
+            segments.append((center - SIMD3(halfWidth, 0, 0), center + SIMD3(halfWidth, 0, 0)))
+        }
+        for elevation in LMLandingPointDesignator.horizontalScaleElevations {
+            for azimuth in -10..<10 {
+                segments.append((
+                    landingPointDesignator.point(
+                        elevationDegrees: Double(elevation),
+                        azimuthDegrees: Double(azimuth),
+                        on: pane
+                    ),
+                    landingPointDesignator.point(
+                        elevationDegrees: Double(elevation),
+                        azimuthDegrees: Double(azimuth + 1),
+                        on: pane
+                    )
+                ))
+            }
+            for azimuth in LMLandingPointDesignator.azimuthDegrees {
+                let center = landingPointDesignator.point(
+                    elevationDegrees: Double(elevation),
+                    azimuthDegrees: Double(azimuth),
+                    on: pane
+                )
+                let halfHeight: Float = azimuth.isMultiple(of: 5) ? 0.016 : 0.009
+                segments.append((center - SIMD3(0, halfHeight, 0), center + SIMD3(0, halfHeight, 0)))
+            }
+        }
+
+        var positions = [SIMD3<Float>]()
+        var indices = [UInt32]()
+        let halfThickness: Float = 0.00085
+        for (start, end) in segments {
+            let direction = simd_normalize(end - start)
+            let perpendicular = SIMD3(-direction.y, direction.x, 0) * halfThickness
+            let base = UInt32(positions.count)
+            positions.append(contentsOf: [
+                start - perpendicular,
+                start + perpendicular,
+                end - perpendicular,
+                end + perpendicular,
+            ])
+            indices.append(contentsOf: [base, base + 2, base + 1, base + 1, base + 2, base + 3])
+        }
+
+        var descriptor = MeshDescriptor(name: "Apollo LM dual-pane LPD \(pane)")
+        descriptor.positions = MeshBuffers.Positions(positions)
+        descriptor.primitives = .triangles(indices)
+        return try MeshResource.generate(from: [descriptor])
+    }
+
+    private func addLandingPointDesignatorLabels(pane: LMLPDPane, color: UIColor) {
+        for elevation in stride(from: 0, through: 60, by: 10) {
+            let mesh = MeshResource.generateText(
+                "\(elevation)",
+                extrusionDepth: 0.0002,
+                font: .monospacedDigitSystemFont(ofSize: 0.023, weight: .medium),
+                containerFrame: .zero,
+                alignment: .left,
+                lineBreakMode: .byClipping
+            )
+            let label = ModelEntity(mesh: mesh, materials: [UnlitMaterial(color: color)])
+            label.name = "LPD \(pane) \(elevation) degree label"
+            label.position = landingPointDesignator.point(
+                elevationDegrees: Double(elevation),
+                on: pane
+            ) + SIMD3(0.036, -0.010, 0.0005)
+            proceduralCabin.addChild(label)
+        }
     }
 
     private func buildPhysicalControls() {
@@ -327,6 +454,6 @@ final class LMCommanderStationScene {
         entity.name = name
         entity.position = position
         entity.orientation = orientation
-        root.addChild(entity)
+        proceduralCabin.addChild(entity)
     }
 }
