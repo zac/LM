@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 import simd
 import LMCore
@@ -167,5 +168,179 @@ struct LMTests {
         #expect(LMRCSJetMapping.table.count == LMRCSJet.allCases.count)
         #expect(Set(LMRCSJetMapping.table.values).count == LMRCSJet.allCases.count)
         #expect(Set(LMRCSJetMapping.table.keys) == Set(LMRCSJet.allCases))
+    }
+}
+
+@Suite("ACA analog input mapping")
+struct ACAInputMappingTests {
+    let mapper = LMACAInputMapper()
+
+    @Test func centerDeadZoneSuppressesSmallDeflections() {
+        #expect(mapper.counts(for: 0) == 0)
+        #expect(mapper.counts(for: 0.07) == 0)
+        #expect(mapper.counts(for: -0.08) == 0)
+        #expect(mapper.counts(for: 0.081) != 0)
+    }
+
+    @Test func nominalFullTravelMapsTo42CountsBothWays() {
+        #expect(mapper.counts(for: 1) == 42)
+        #expect(mapper.counts(for: -1) == -42)
+        #expect(mapper.counts(for: 0.5) == 21)
+    }
+
+    @Test func outOfRangeExcursionStopsAtTheMechanicalClamp() {
+        #expect(mapper.counts(for: 1.4) == 57)
+        #expect(mapper.counts(for: -3.0) == -57)
+        #expect(mapper.counts(for: .infinity) == 57)
+        #expect(mapper.counts(for: -.infinity) == -57)
+    }
+
+    @Test func combinedButtonAndAnalogCommandsClampAtMechanicalStops() {
+        #expect(mapper.combined(buttonCounts: 42, normalizedAxis: 0.5) == 63.clampedToMechanicalStops)
+        #expect(mapper.combined(buttonCounts: 42, normalizedAxis: -1) == 0)
+        #expect(mapper.combined(buttonCounts: -42, normalizedAxis: -1) == -57)
+        #expect(mapper.combined(buttonCounts: 0, normalizedAxis: 0) == 0)
+    }
+
+    @Test func releaseReturnsEveryAxisToNeutralWithinOneFrame() {
+        let mapper = LMACAInputMapper()
+        var axes = LMACANormalizedInput(pitch: 1, yaw: -0.6, roll: 0.3)
+        let deflected = (
+            mapper.combined(buttonCounts: 0, normalizedAxis: axes.pitch),
+            mapper.combined(buttonCounts: 0, normalizedAxis: axes.yaw),
+            mapper.combined(buttonCounts: 0, normalizedAxis: axes.roll)
+        )
+        #expect(deflected == (42, -25, 13))
+
+        axes = .neutral
+        let released = (
+            mapper.combined(buttonCounts: 0, normalizedAxis: axes.pitch),
+            mapper.combined(buttonCounts: 0, normalizedAxis: axes.yaw),
+            mapper.combined(buttonCounts: 0, normalizedAxis: axes.roll)
+        )
+        #expect(released == (0, 0, 0))
+    }
+}
+
+extension Int {
+    /// ±57-count ACA mechanical stops.
+    fileprivate var clampedToMechanicalStops: Int {
+        Swift.min(Swift.max(self, -LMACAInputMapper.mechanicalClampCounts), LMACAInputMapper.mechanicalClampCounts)
+    }
+}
+
+/// Live checkpoint-resumed flight against the bundled P65 fixture.
+@Suite("P65 checkpoint session", .serialized)
+struct P65CheckpointSessionTests {
+    @Test @MainActor func bundledP65CheckpointMatchesBundledCoreImageAndScenario() throws {
+        let checkpoint = try PoweredDescentSession.bundledP65Checkpoint()
+
+        #expect(checkpoint.schemaVersion == LMSimulationCheckpoint.schemaVersion)
+        #expect(checkpoint.scenarioID == LMPoweredDescentScenario.apollo11SourceBacked.id)
+        // Terminal-descent entry at approximately 143 ft.
+        #expect(abs(checkpoint.vehicleState.altitudeMeters - 43.8) < 5)
+    }
+
+    @Test @MainActor func startFromP65RestoresLiveLuminaryAndAttHoldSelectsP66() async throws {
+        let session = PoweredDescentSession()
+        guard case .idle = session.status else {
+            Issue.record("session should load idle, got \(session.status)")
+            return
+        }
+
+        session.start(from: .p65TerminalDescent)
+        defer { session.stop() }
+
+        try await waitUntil("checkpoint restore", timeoutSeconds: 10) {
+            session.snapshot?.agc.dsky.programNumber == 65
+        }
+        let restored = try #require(session.snapshot)
+        #expect(restored.vehicleState.flightOutcome == .inFlight)
+        // Restored checkpoint time is the captured P65 entry time (~775 s).
+        #expect(abs(restored.timeSeconds - 775.82) < 2)
+
+        // ATT HOLD transitions the live AGC from P65 into P66. Luminary's
+        // GUILDENSTERN selects P66 on the attitude-hold discrete only together
+        // with a ROD switch click, so follow the crew flow: select ATT HOLD,
+        // then momentarily press DESCEND+ before releasing to center.
+        session.attitudeMode = .attitudeHold
+        try await Task.sleep(for: .milliseconds(120))
+        session.setROD(.descendPlus, held: true)
+        try await Task.sleep(for: .milliseconds(150))
+        session.setROD(.descendPlus, held: false)
+        try await waitUntil(
+            "P66 transition",
+            timeoutSeconds: 90,
+            describe: {
+                "prog=\(session.programNumber.map(String.init) ?? "none")"
+                    + " t=\(String(format: "%.1f", session.snapshot?.timeSeconds ?? -1))"
+                    + " alt=\(String(format: "%.1f", session.snapshot?.vehicleState.altitudeMeters ?? -1))"
+            },
+            condition: { session.programNumber == 66 }
+        )
+
+        // Releasing the ACA returns all axes to neutral for the next frame.
+        session.setACA(pitch: 1, yaw: 0.4, roll: -0.2)
+        #expect(session.effectiveRHCPitch == 42)
+        session.releaseACA()
+        #expect(session.effectiveRHCPitch == 0)
+        #expect(session.effectiveRHCYaw == 0)
+        #expect(session.effectiveRHCRoll == 0)
+
+        session.stop()
+        #expect(!session.isRunning)
+    }
+
+    @Test @MainActor func rapidRestartReRestoresTheCheckpointWithoutABootCycle() async throws {
+        let session = PoweredDescentSession()
+        session.start(from: .p65TerminalDescent)
+        defer { session.stop() }
+
+        try await waitUntil("first restore", timeoutSeconds: 10) {
+            session.snapshot?.agc.dsky.programNumber == 65
+        }
+        session.stop()
+
+        let restartWallStart = Date()
+        session.restart()
+        try await waitUntil("rapid restart", timeoutSeconds: 10) {
+            session.isRunning && session.snapshot?.agc.dsky.programNumber == 65
+        }
+        let wallSeconds = Date().timeIntervalSince(restartWallStart)
+        #expect(wallSeconds < 5, "restart must re-restore quickly, took \(wallSeconds)s")
+        let snapshot = try #require(session.snapshot)
+        // The restored cycle must be the captured checkpoint cycle, not a
+        // fresh Luminary boot (which lands near one million MCTs).
+        let checkpoint = try PoweredDescentSession.bundledP65Checkpoint()
+        #expect(
+            abs(Int64(snapshot.agc.cycle) - Int64(checkpoint.agc.cycleCounter)) < 400_000,
+            "restart must resume from the checkpoint cycle, got \(snapshot.agc.cycle)"
+        )
+    }
+
+    @MainActor
+    private func waitUntil(
+        _ label: String,
+        timeoutSeconds: Double,
+        describe: (() -> String)? = nil,
+        condition: () -> Bool
+    ) async throws {
+        let deadline = Date().addingTimeInterval(timeoutSeconds)
+        while Date() < deadline {
+            if condition() { return }
+            try await Task.sleep(for: .milliseconds(50))
+        }
+        var description = "timed out after \(timeoutSeconds)s waiting for \(label)"
+        if let describe {
+            description += " (\(describe()))"
+        }
+        throw TimeoutError(label: label, timeoutSeconds: timeoutSeconds, stateDescription: description)
+    }
+
+    private struct TimeoutError: Error, CustomStringConvertible {
+        let label: String
+        let timeoutSeconds: Double
+        let stateDescription: String?
+        var description: String { stateDescription ?? "timed out after \(timeoutSeconds)s waiting for \(label)" }
     }
 }
