@@ -13,12 +13,14 @@ struct TerminalDescentCockpitView: View {
     @State private var acaGestureOrigin: SIMD3<Float>?
     @State private var rodGestureOrigin: SIMD3<Float>?
     @State private var showsFallbackControls = false
+    @State private var showsValidationChecklist = false
     @State private var trainingOverlayEnabled = true
     @State private var audioEnabled = true
     @State private var experienceDirector = LMCockpitExperienceDirector()
     @State private var activeCue: LMCockpitCue?
     @State private var cuePresentationTask: Task<Void, Never>?
     @State private var audioController = LMCockpitAudioController()
+    @State private var validationRecorder = LMCockpitValidationRecorder()
     @GestureState private var acaGestureIsActive = false
     @GestureState private var rodGestureIsActive = false
 
@@ -84,6 +86,17 @@ struct TerminalDescentCockpitView: View {
                     }
 
                     Button {
+                        showsValidationChecklist.toggle()
+                    } label: {
+                        Label(
+                            "Validation \(validationRecorder.completedCount)/\(validationRecorder.totalCount)",
+                            systemImage: validationRecorder.isComplete
+                                ? "checkmark.seal.fill"
+                                : "checklist"
+                        )
+                    }
+
+                    Button {
                         audioEnabled.toggle()
                         audioController.isEnabled = audioEnabled
                     } label: {
@@ -140,6 +153,11 @@ struct TerminalDescentCockpitView: View {
                 .accessibilityValue(trainingOverlayEnabled ? activeCue.detail : "")
             }
         }
+        .ornament(attachmentAnchor: .scene(.trailing)) {
+            if showsValidationChecklist {
+                validationChecklist
+            }
+        }
         .task {
             guard !didStart else { return }
             didStart = true
@@ -153,6 +171,7 @@ struct TerminalDescentCockpitView: View {
             do {
                 try await station.loadApollo11Terrain()
                 terrainStatus = "LROC NAC DTM · 2.05 km · true vertical scale"
+                recordValidation { $0.observeTerrainLoaded() }
                 logger.info("Apollo 11 LROC terrain loaded")
             } catch {
                 terrainStatus = "Terrain unavailable · \(error.localizedDescription)"
@@ -200,6 +219,7 @@ struct TerminalDescentCockpitView: View {
                 }
                 guard let origin = acaGestureOrigin else { return }
                 let input = controlMapper.acaInput(for: sceneLocation - origin)
+                recordValidation { $0.observeDirectACA(input) }
                 appModel.session.setACA(
                     pitch: input.pitch,
                     yaw: input.yaw,
@@ -224,7 +244,9 @@ struct TerminalDescentCockpitView: View {
                     rodGestureOrigin = sceneLocation
                 }
                 guard let origin = rodGestureOrigin else { return }
-                applyROD(controlMapper.rodPosition(for: sceneLocation.y - origin.y))
+                let position = controlMapper.rodPosition(for: sceneLocation.y - origin.y)
+                recordValidation { $0.observeDirectROD(position) }
+                applyROD(position)
             }
             .onEnded { _ in
                 releaseRODControl()
@@ -238,6 +260,9 @@ struct TerminalDescentCockpitView: View {
                 let selectsP66 = appModel.session.attitudeMode != .attitudeHold
                 appModel.session.attitudeMode = selectsP66 ? .attitudeHold : .automatic
                 station.setAttitudeHoldVisual(selectsP66)
+                if selectsP66 {
+                    recordValidation { $0.observeDirectAttitudeHold() }
+                }
             }
     }
 
@@ -267,11 +292,13 @@ struct TerminalDescentCockpitView: View {
         acaGestureOrigin = nil
         appModel.session.releaseACA()
         station.setACAVisual(.neutral)
+        recordValidation { $0.observeDirectACARelease() }
     }
 
     private func releaseRODControl() {
         rodGestureOrigin = nil
         applyROD(.neutral)
+        recordValidation { $0.observeDirectROD(.neutral) }
     }
 
     private func updateExperience() {
@@ -287,6 +314,7 @@ struct TerminalDescentCockpitView: View {
             hasSurfaceContact: session.vehicleState?.surfaceContact != nil
         )
         guard !cues.isEmpty else { return }
+        recordValidation { $0.observe(events: cues.map(\.id)) }
         for cue in cues {
             logger.notice("Cockpit event: \(cue.id.rawValue, privacy: .public)")
         }
@@ -308,6 +336,7 @@ struct TerminalDescentCockpitView: View {
         cuePresentationTask?.cancel()
         activeCue = nil
         experienceDirector.reset()
+        validationRecorder.resetForRun()
         appModel.session.restart()
     }
 
@@ -335,6 +364,101 @@ struct TerminalDescentCockpitView: View {
         let program = appModel.session.programNumber.map { "P\($0)" } ?? "P--"
         let feet = (appModel.session.vehicleState?.altitudeMeters ?? 0) * 3.280_839_895
         return String(format: "%@ · %.0f ft", program, feet)
+    }
+
+    private var validationChecklist: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Label("HEADSET VALIDATION", systemImage: "visionpro")
+                    .font(.headline.monospaced())
+                Spacer()
+                Text("\(validationRecorder.completedCount)/\(validationRecorder.totalCount)")
+                    .font(.headline.monospacedDigit())
+                    .foregroundStyle(validationRecorder.isComplete ? .green : .secondary)
+            }
+
+            Grid(alignment: .leading, horizontalSpacing: 18, verticalSpacing: 6) {
+                ForEach(
+                    Array(LMCockpitValidationRecorder.Requirement.allCases.enumerated()),
+                    id: \.element
+                ) { index, requirement in
+                    if index.isMultiple(of: 2) {
+                        GridRow {
+                            validationRequirement(requirement)
+                            if index + 1 < LMCockpitValidationRecorder.Requirement.allCases.count {
+                                validationRequirement(
+                                    LMCockpitValidationRecorder.Requirement.allCases[index + 1]
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            Button {
+                recordValidation { $0.confirmComfort() }
+            } label: {
+                Label(
+                    validationRecorder.completed.contains(.comfortConfirmed)
+                        ? "Fit, reach, and comfort confirmed"
+                        : "Confirm fit, reach, and comfort",
+                    systemImage: validationRecorder.completed.contains(.comfortConfirmed)
+                        ? "checkmark.circle.fill"
+                        : "hand.tap"
+                )
+            }
+            .disabled(validationRecorder.completed.contains(.comfortConfirmed))
+
+            Text(validationFooter)
+                .font(.caption2.monospaced())
+                .foregroundStyle(validationRecorder.isComplete ? .green : .secondary)
+        }
+        .frame(width: 430)
+        .padding(14)
+        .glassBackgroundEffect()
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Headset validation checklist")
+    }
+
+    private func validationRequirement(
+        _ requirement: LMCockpitValidationRecorder.Requirement
+    ) -> some View {
+        let isComplete = validationRecorder.completed.contains(requirement)
+        return Label(
+            requirement.title,
+            systemImage: isComplete ? "checkmark.circle.fill" : "circle"
+        )
+        .font(.caption.monospaced())
+        .foregroundStyle(isComplete ? .green : .secondary)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var validationFooter: String {
+        if validationRecorder.isComplete {
+            return "PASS · on-head controls, comfort, and soft landing observed"
+        }
+        switch validationRecorder.terminalResult {
+        case .hardLanding:
+            return "RUN ENDED · hard landing · restart P65"
+        case .crashed:
+            return "RUN ENDED · vehicle lost · restart P65"
+        default:
+            return "Direct spatial gestures only · fallback controls excluded"
+        }
+    }
+
+    private func recordValidation(
+        _ update: (inout LMCockpitValidationRecorder) -> Void
+    ) {
+        let previous = validationRecorder.completed
+        update(&validationRecorder)
+        let additions = validationRecorder.completed.subtracting(previous)
+        for requirement in additions.sorted(by: { $0.rawValue < $1.rawValue }) {
+            logger.notice("Validation gate: \(requirement.rawValue, privacy: .public)")
+        }
+        if validationRecorder.isComplete && previous.count != validationRecorder.totalCount {
+            logger.notice("Headset validation pass: \(validationRecorder.summary(), privacy: .public)")
+        }
     }
 }
 

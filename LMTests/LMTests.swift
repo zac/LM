@@ -589,3 +589,64 @@ struct CockpitExperienceEventTests {
         #expect(!cues.contains { $0.id == .contact || $0.id == .softLanding })
     }
 }
+
+@Suite("Cockpit headset validation")
+struct CockpitHeadsetValidationTests {
+    @Test func directControlsAndFlightEventsCompleteEveryGate() {
+        var recorder = LMCockpitValidationRecorder()
+
+        recorder.observeTerrainLoaded()
+        recorder.observe(events: [.p65])
+        recorder.observeDirectACA(.init(pitch: 0.3, yaw: 0, roll: 0))
+        recorder.observeDirectACA(.init(pitch: 0, yaw: -0.3, roll: 0.3))
+        recorder.observeDirectACARelease()
+        recorder.observeDirectROD(.descendPlus)
+        recorder.observeDirectROD(.descendMinus)
+        recorder.observeDirectROD(.neutral)
+        recorder.observeDirectAttitudeHold()
+        recorder.confirmComfort()
+        recorder.observe(events: [
+            .p66,
+            .oneHundredFeet,
+            .fiftyFeet,
+            .contact,
+            .softLanding,
+        ])
+
+        #expect(recorder.isComplete)
+        #expect(recorder.completedCount == recorder.totalCount)
+        #expect(recorder.terminalResult == .softLanding)
+        #expect(recorder.summary().contains("missing=[]"))
+    }
+
+    @Test func neutralReturnsRequirePriorDirectDeflection() {
+        var recorder = LMCockpitValidationRecorder()
+
+        recorder.observeDirectACARelease()
+        recorder.observeDirectROD(.neutral)
+        #expect(!recorder.completed.contains(.acaNeutral))
+        #expect(!recorder.completed.contains(.rodNeutral))
+
+        recorder.observeDirectACA(.init(pitch: 0.19, yaw: 0, roll: 0))
+        recorder.observeDirectACARelease()
+        recorder.observeDirectROD(.descendPlus)
+        recorder.observeDirectROD(.neutral)
+        #expect(!recorder.completed.contains(.acaNeutral))
+        #expect(recorder.completed.contains(.rodNeutral))
+    }
+
+    @Test func restartPreservesTerrainButClearsRunEvidence() {
+        var recorder = LMCockpitValidationRecorder()
+        recorder.observeTerrainLoaded()
+        recorder.observe(events: [.p65, .hardLanding])
+        recorder.observeDirectACA(.init(pitch: 1, yaw: 1, roll: 1))
+        recorder.confirmComfort()
+
+        recorder.resetForRun()
+
+        #expect(recorder.completed == [.terrainLoaded])
+        #expect(recorder.terminalResult == nil)
+        recorder.observeDirectACARelease()
+        #expect(!recorder.completed.contains(.acaNeutral))
+    }
+}
