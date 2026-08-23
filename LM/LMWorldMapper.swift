@@ -82,16 +82,34 @@ struct LMWorldMapper: Equatable, Sendable {
     }
 
     func direction(from si: LMVector3D) -> SIMD3<Float> {
-        simd_normalize(SIMD3(Float(si.x), Float(si.z), Float(-si.y)))
+        Self.attitudeDirection(from: si)
     }
 
     func orientation(from attitude: LMQuaternion) -> simd_quatf {
-        let columnX = direction(from: attitude.rotated(LMVector3D(x: 1)))
-        let columnY = direction(from: attitude.rotated(LMVector3D(z: 1)))
-        let columnZ = direction(from: attitude.rotated(LMVector3D(y: -1)))
+        Self.attitudeOrientation(from: attitude)
+    }
+
+    /// Shared sim→RealityKit direction convention: +X north, +Y up, -Z east.
+    /// Independent of the tabletop theater scaling, so the full-immersion
+    /// cockpit world can reuse it at 1:1 scale.
+    static func attitudeDirection(from si: LMVector3D) -> SIMD3<Float> {
+        simd_normalize(SIMD3(Float(si.x), Float(si.z), Float(-si.y)))
+    }
+
+    static func attitudeOrientation(from attitude: LMQuaternion) -> simd_quatf {
+        let columnX = attitudeDirection(from: attitude.rotated(LMVector3D(x: 1)))
+        let columnY = attitudeDirection(from: attitude.rotated(LMVector3D(z: 1)))
+        let columnZ = attitudeDirection(from: attitude.rotated(LMVector3D(y: -1)))
         var matrix = simd_float3x3(columns: (columnX, columnY, columnZ))
-        matrix = orthonormalized(matrix)
+        matrix = sharedOrthonormalized(matrix)
         return simd_quatf(matrix)
+    }
+
+    static func sharedOrthonormalized(_ matrix: simd_float3x3) -> simd_float3x3 {
+        let x = simd_normalize(matrix.columns.0)
+        let z = simd_normalize(simd_cross(x, matrix.columns.1))
+        let y = simd_normalize(simd_cross(z, x))
+        return simd_float3x3(columns: (x, y, z))
     }
 
     func pose(from state: LMVehicleStateSnapshot, program: Int? = nil) -> (position: SIMD3<Float>, orientation: simd_quatf) {
@@ -115,12 +133,5 @@ struct LMWorldMapper: Equatable, Sendable {
 
     private func clamped(_ value: Double, limit: Double) -> Double {
         min(max(value, -limit), limit)
-    }
-
-    private func orthonormalized(_ matrix: simd_float3x3) -> simd_float3x3 {
-        let x = simd_normalize(matrix.columns.0)
-        let z = simd_normalize(simd_cross(x, matrix.columns.1))
-        let y = simd_normalize(simd_cross(z, x))
-        return simd_float3x3(columns: (x, y, z))
     }
 }

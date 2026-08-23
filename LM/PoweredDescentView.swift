@@ -40,6 +40,12 @@ struct PoweredDescentView: View {
                         LunarLanderSimulationView()
                     }
                 }
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Full cockpit") {
+                        Task { await enterFullCockpit() }
+                    }
+                    .disabled(appModel.fullDescentSpaceState == .inTransition)
+                }
             }
             .ornament(attachmentAnchor: .scene(.bottom)) {
                 CrewControlPanel(session: session)
@@ -50,10 +56,15 @@ struct PoweredDescentView: View {
             let arguments = ProcessInfo.processInfo.arguments
             guard !didLaunchReplayFixture,
                   arguments.contains("--replay-p66")
-                    || arguments.contains("--replay-automatic") else { return }
+                    || arguments.contains("--replay-automatic")
+                    || arguments.contains("--full-cockpit") else { return }
             didLaunchReplayFixture = true
-            appModel.session.replay(speed: 2)
-            await toggleDescentSpace()
+            if arguments.contains("--full-cockpit") {
+                await enterFullCockpit()
+            } else {
+                appModel.session.replay(speed: 2)
+                await toggleDescentSpace()
+            }
         }
         .onAppear {
             appModel.session.setSceneActive(scenePhase == .active)
@@ -209,6 +220,27 @@ struct PoweredDescentView: View {
             }
         case .inTransition:
             break
+        }
+    }
+
+    /// Leave the tabletop theater and enter the life-size full-immersion
+    /// cockpit, resuming from the bundled P65 checkpoint so the scene is
+    /// controllable within seconds of launch.
+    private func enterFullCockpit() async {
+        if appModel.descentSpaceState == .open {
+            appModel.descentSpaceState = .inTransition
+            await dismissImmersiveSpace()
+        }
+        appModel.fullDescentSpaceState = .inTransition
+        switch await openImmersiveSpace(id: appModel.fullDescentSpaceID) {
+        case .opened:
+            if appModel.session.canStart {
+                appModel.session.start(from: .p65TerminalDescent)
+            }
+        case .userCancelled, .error:
+            fallthrough
+        @unknown default:
+            appModel.fullDescentSpaceState = .closed
         }
     }
 }

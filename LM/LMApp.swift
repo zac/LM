@@ -44,5 +44,17 @@ struct LMApp: App {
                 }
         }
         .immersionStyle(selection: .constant(.mixed), in: .mixed)
+
+        ImmersiveSpace(id: viewModel.fullDescentSpaceID) {
+            FullDescentWorldView()
+                .environment(viewModel)
+                .onAppear {
+                    viewModel.fullDescentSpaceState = .open
+                }
+                .onDisappear {
+                    viewModel.fullDescentSpaceState = .closed
+                }
+        }
+        .immersionStyle(selection: .constant(.full), in: .full)
     }
 }

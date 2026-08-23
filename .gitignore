@@ -16,3 +16,6 @@ xcuserdata/
 .build/
 # macOS
 .DS_Store
+# Terrain tool raw PDS downloads
+Tools/TerrainGenerator/cache/
+LM/Terrain/*-hillshade.png

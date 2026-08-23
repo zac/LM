@@ -291,8 +291,7 @@ struct P65CheckpointSessionTests {
         #expect(!session.isRunning)
     }
 
-    @Test @MainActor func rapidRestartReRestoresTheCheckpointWithoutABootCycle() async throws {
-        let session = PoweredDescentSession()
+    @Test @MainActor func rapidRestartReRestoresTheCheckpointWithoutABootCycle() async throws {        let session = PoweredDescentSession()
         session.start(from: .p65TerminalDescent)
         defer { session.stop() }
 
@@ -342,5 +341,210 @@ struct P65CheckpointSessionTests {
         let timeoutSeconds: Double
         let stateDescription: String?
         var description: String { stateDescription ?? "timed out after \(timeoutSeconds)s waiting for \(label)" }
+    }
+}
+
+/// Full-immersion terrain pipeline: manifest provenance, height-map decode,
+/// mesh grid conventions, and the 1:1 inverse-pose world mapping.
+@Suite("Full descent terrain")
+struct FullDescentTerrainTests {
+    @Test func bundledManifestPinsApollo11Sources() throws {
+        let manifest = try LMTerrainManifest.load()
+
+        #expect(manifest.schemaVersion == LMTerrainManifest.schemaVersion)
+        #expect(manifest.scenarioID == LMPoweredDescentScenario.apollo11SourceBacked.id)
+        #expect(abs(manifest.landingOrigin.latitudeDegrees - 0.673433) < 1e-9)
+        #expect(abs(manifest.landingOrigin.longitudeDegrees - 23.473113) < 1e-9)
+        #expect(manifest.projection.mapProjectionType == "EQUIRECTANGULAR")
+        #expect(abs(manifest.projection.sphereRadiusMeters - 1_737_400) < 1)
+
+        let source = try #require(manifest.sources.first)
+        #expect(source.productId == "NAC_DTM_APOLLO11")
+        #expect(source.sha256.count == 64)
+        #expect(source.url.contains("NAC_DTM/APOLLO11/NAC_DTM_APOLLO11.TIF"))
+
+        let near = try #require(manifest.tile(id: "near-field"))
+        #expect(near.postsPerSide == 1024)
+        #expect(abs(near.postSpacingMeters - 2) < 1e-9)
+        let horizon = try #require(manifest.tile(id: "horizon"))
+        #expect(horizon.postsPerSide == 512)
+        #expect(abs(horizon.postSpacingMeters - 32) < 1e-9)
+
+        // Mission-appropriate low sun out of the west-southwest.
+        #expect(manifest.sun.elevationDegrees > 5 && manifest.sun.elevationDegrees < 20)
+        #expect(manifest.sun.azimuthDegreesClockwiseFromNorth > 240
+            && manifest.sun.azimuthDegreesClockwiseFromNorth < 300)
+        let sunENU = manifest.sunDirectionENU
+        #expect(sunENU.z > 0)
+        #expect(sunENU.y < 0, "sun azimuth west-southwest puts the sun west of the site")
+    }
+
+    @Test func heightMapsDecodeAtNativePrecision() throws {
+        let manifest = try LMTerrainManifest.load()
+        let near = try #require(manifest.tile(id: "near-field"))
+
+        guard let heightURL = Bundle.main.url(
+            forResource: "near-field-height",
+            withExtension: "png",
+            subdirectory: "Terrain"
+        ) ?? Bundle.main.url(forResource: "near-field-height", withExtension: "png") else {
+            Issue.record("near-field-height.png missing from the app bundle")
+            return
+        }
+        let map = try LMTerrainHeightMap.load(contentsOf: heightURL)
+        #expect(map.width == near.postsPerSide)
+        #expect(map.height == near.postsPerSide)
+
+        // With an even post count the landing origin falls between the four
+        // middle posts; their average height must sit within a few meters of
+        // the site elevation (the tile's zero point).
+        let half = near.postsPerSide / 2
+        let middleSum = Int(map.counts[(half - 1) * near.postsPerSide + half - 1])
+            + Int(map.counts[(half - 1) * near.postsPerSide + half])
+            + Int(map.counts[half * near.postsPerSide + half - 1])
+            + Int(map.counts[half * near.postsPerSide + half])
+        let middleMeters = Double(middleSum) / 4.0 / 100.0
+        #expect(abs(middleMeters + near.zeroPointMeters) < 5,
+                "middle posts \(middleMeters) m should be near the site zero \(near.zeroPointMeters) m")
+
+        // The generator clamps counts at the tile minimum, so the minimum
+        // count is zero and the tallest count reproduces the manifest envelope.
+        #expect(map.counts.min() == 0)
+        let maxHeight = near.zeroPointMeters + Double(map.counts.max()!) / 100.0
+        #expect(abs(maxHeight - near.maximumHeightMeters) < 0.02)
+    }
+
+    @Test func meshGridFollowsNorthUpEastBackConventions() throws {
+        let posts = 8
+        let spacing = 2.0
+        let tile = makeTile(posts: posts, spacing: spacing)
+        var counts = [UInt16](repeating: 0, count: posts * posts)
+        // Row 0 = north edge raised by 10 m; the rest stays at ground level.
+        for column in 0..<posts { counts[column] = 1_000 }
+        let map = LMTerrainHeightMap(width: posts, height: posts, counts: counts)
+
+        let grid = try LMTerrainMeshBuilder.grid(tile: tile, heightMap: map)
+        #expect(grid.positions.count == posts * posts)
+        // Row 0, column posts-1: north edge, east edge -> +X, -Z.
+        let halfSpan = Float(Double(posts - 1) / 2.0 * spacing)
+        let northEast = grid.positions[posts - 1]
+        #expect(abs(northEast.x - halfSpan) < 1e-4)
+        #expect(abs(northEast.z + halfSpan) < 1e-4)
+        #expect(abs(northEast.y - 10) < 0.02)
+        // South-west corner at ground level.
+        let southWest = grid.positions[(posts - 1) * posts]
+        #expect(abs(southWest.x + halfSpan) < 1e-4)
+        #expect(abs(southWest.y) < 0.02)
+        // Normals on the flat south rows point up; on the raised north row
+        // they tilt away from the raised edge.
+        let flatNormal = grid.normals[(posts - 1) * posts + posts - 1]
+        #expect(abs(flatNormal.y - 1) < 0.05)
+        #expect(grid.triangles.count == (posts - 1) * (posts - 1) * 6)
+    }
+
+    @Test func meshHolePunchSkipsInteriorQuads() throws {
+        let posts = 16
+        let spacing = 4.0
+        let tile = makeTile(posts: posts, spacing: spacing)
+        let map = LMTerrainHeightMap(
+            width: posts,
+            height: posts,
+            counts: [UInt16](repeating: 0, count: posts * posts)
+        )
+        // Hole wider than the middle half removes the central quads.
+        let hole = Double(posts - 2) / 2.0 * spacing - spacing / 2
+        let grid = try LMTerrainMeshBuilder.grid(
+            tile: tile,
+            heightMap: map,
+            holeExtentMeters: hole
+        )
+        let fullCount = (posts - 1) * (posts - 1) * 6
+        #expect(grid.triangles.count < fullCount)
+        #expect(grid.triangles.count > 0)
+    }
+
+    @Test func fullDescentMapperKeepsGroundBelowTheUser() {
+        let mapper = LMFullDescentMapper()
+
+        // Level vehicle 100 m above the site: the landing origin must appear
+        // exactly 100 m below the cockpit origin.
+        let level = LMVehicleStateSnapshot(
+            positionMeters: LMVector3D(x: 0, y: 0, z: 100),
+            velocityMetersPerSecond: .zero,
+            attitude: .identity,
+            angularVelocityRadiansPerSecond: .zero,
+            massKilograms: 15_000
+        )
+        let levelTransform = mapper.worldTransform(for: level)
+        #expect(abs(levelTransform.translation.y + 100) < 1e-4)
+        #expect(abs(levelTransform.translation.x) < 1e-4)
+        #expect(abs(levelTransform.translation.z) < 1e-4)
+
+        // 90-degree yaw about the up axis: a site feature 10 m north must
+        // swing to the cockpit's -X (yaw carries world features around).
+        let yaw = LMQuaternion.fromAxisAngle(axis: LMVector3D(z: 1), radians: .pi / 2)
+        let yawed = LMVehicleStateSnapshot(
+            positionMeters: LMVector3D(x: 0, y: 0, z: 100),
+            velocityMetersPerSecond: .zero,
+            attitude: yaw,
+            angularVelocityRadiansPerSecond: .zero,
+            massKilograms: 15_000
+        )
+        let yawedTransform = mapper.worldTransform(for: yawed)
+        let featureNorthOfSite = SIMD4<Float>(10, 0, 0, 1)
+        let cockpit = yawedTransform.matrix * featureNorthOfSite
+        #expect(abs(cockpit.x) < 1e-3)
+        #expect(abs(cockpit.y + 100) < 1e-3)
+        #expect(abs(abs(cockpit.z) - 10) < 1e-3)
+
+        // Altitude and horizontal offsets translate the world oppositely.
+        let offset = LMVehicleStateSnapshot(
+            positionMeters: LMVector3D(x: 30, y: -40, z: 50),
+            velocityMetersPerSecond: .zero,
+            attitude: .identity,
+            angularVelocityRadiansPerSecond: .zero,
+            massKilograms: 15_000
+        )
+        let offsetTransform = mapper.worldTransform(for: offset)
+        let site = offsetTransform.matrix * SIMD4<Float>(0, 0, 0, 1)
+        #expect(abs(site.x + 30) < 1e-4)
+        #expect(abs(site.z + 40) < 1e-4, "vehicle 40 m west puts the site 40 m east, toward -Z")
+        #expect(abs(site.y + 50) < 1e-4)
+    }
+
+    @Test func missionSunLightPointsAlongTheIlluminationAxis() throws {
+        let manifest = try LMTerrainManifest.load()
+        let sunRK = LMFullDescentMapper.sunDirection(from: manifest)
+        let orientation = LMFullDescentMapper.sunLightOrientation(from: manifest)
+        let lit = orientation.act(SIMD3(0, 0, -1))
+        #expect(simd_distance(lit, -sunRK) < 1e-4)
+        // RealityKit convention: +Y up, -Z east. A low western sun is mostly
+        // +Z (west is -east), barely above the horizon.
+        #expect(sunRK.z > 0.9)
+        #expect(abs(sunRK.y - Float(sin(manifest.sun.elevationDegrees * .pi / 180))) < 1e-3)
+        #expect(sunRK.z > sunRK.y * 3)
+    }
+
+    private func makeTile(posts: Int, spacing: Double) -> LMTerrainManifest.Tile {
+        LMTerrainManifest.Tile(
+            id: "test",
+            postsPerSide: posts,
+            postSpacingMeters: spacing,
+            extentMeters: Double(posts - 1) * spacing,
+            zeroPointMeters: 0,
+            minimumHeightMeters: 0,
+            maximumHeightMeters: 10,
+            curvatureCorrected: false,
+            edgeHandling: nil,
+            heightFile: "test-height.png",
+            albedoFile: "test-albedo.png",
+            heightEncoding: .init(
+                format: "PNG_GRAYSCALE_16LE",
+                centimetersPerCount: 1,
+                detail: ""
+            ),
+            albedoEncoding: .init(format: "PNG_RGB_8", detail: ""),
+            detail: nil
+        )
     }
 }
