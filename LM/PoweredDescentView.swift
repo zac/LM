@@ -111,6 +111,7 @@ struct PoweredDescentView: View {
                     Button(appModel.cockpitSpaceState == .open ? "Leave cockpit" : "Enter cockpit") {
                         Task { await toggleCockpitSpace() }
                     }
+                    .accessibilityIdentifier("enter-terminal-descent-cockpit")
                     .disabled(
                         appModel.cockpitSpaceState == .inTransition
                             || appModel.descentSpaceState != .closed

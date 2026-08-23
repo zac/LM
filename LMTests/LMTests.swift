@@ -2,6 +2,7 @@ import Foundation
 import RealityKit
 import Testing
 import simd
+import AGC
 import LMCore
 @testable import LM
 
@@ -221,6 +222,17 @@ struct ACAInputMappingTests {
         )
         #expect(released == (0, 0, 0))
     }
+
+    @Test @MainActor func sessionEncodesNegativeACAAsAGCOnesComplement() {
+        let session = PoweredDescentSession()
+        session.setACA(pitch: -1, yaw: 1, roll: -0.5)
+
+        let input = session.effectiveRHCInput
+        #expect(input.pitch == AGCSinglePrecision.encode(value: -42, scale: 14).word)
+        #expect(input.yaw == AGCSinglePrecision.encode(value: 42, scale: 14).word)
+        #expect(input.roll == AGCSinglePrecision.encode(value: -21, scale: 14).word)
+        #expect(input.pitch != (-42 & 0o77777))
+    }
 }
 
 extension Int {
@@ -231,8 +243,138 @@ extension Int {
 }
 
 /// Live checkpoint-resumed flight against the bundled P65 fixture.
-@Suite("P65 checkpoint session", .serialized)
-struct P65CheckpointSessionTests {
+@Suite("Powered-descent checkpoint session", .serialized)
+struct PoweredDescentCheckpointSessionTests {
+    @Test @MainActor func bundledP64CheckpointMatchesBundledCoreImageAndScenario() throws {
+        let checkpoint = try PoweredDescentSession.bundledP64Checkpoint()
+
+        #expect(checkpoint.schemaVersion == LMSimulationCheckpoint.schemaVersion)
+        #expect(checkpoint.scenarioID == LMPoweredDescentScenario.apollo11SourceBacked.id)
+        #expect(checkpoint.vehicleState.flightOutcome == .inFlight)
+        #expect(checkpoint.vehicleState.altitudeMeters > 100)
+    }
+
+    @Test @MainActor func startFromP64RestoresLiveLandingPointDisplay() async throws {
+        let session = PoweredDescentSession()
+        guard case .idle = session.status else {
+            Issue.record("session should load idle, got \(session.status)")
+            return
+        }
+
+        session.start(from: .p64Approach)
+        defer { session.stop() }
+
+        try await waitUntil("P64 checkpoint restore", timeoutSeconds: 10) {
+            session.isLandingPointDisplayActive
+        }
+        #expect(session.programNumber == 64)
+        #expect(session.dsky?.verb == "06")
+        #expect(session.dsky?.noun == "64")
+        #expect(!session.isLandingPointRedesignationEnabled)
+        let lookAngle = try #require(
+            session.landingPointLookAngleDegrees,
+            "N64 R1 was \(session.dsky?.r1 ?? "nil")"
+        )
+        let redesignationTime = try #require(
+            session.landingPointRedesignationTimeRemainingSeconds,
+            "N64 R1 was \(session.dsky?.r1 ?? "nil")"
+        )
+        #expect((0...75).contains(lookAngle))
+        #expect(redesignationTime > 0)
+        #expect(session.vehicleState?.flightOutcome == .inFlight)
+
+        session.sendDSKYKey(.pro)
+        try await waitUntil("P64 redesignation enable", timeoutSeconds: 10) {
+            session.isLandingPointRedesignationEnabled
+                && session.dsky?.proKeyPressed == false
+        }
+    }
+
+    @Test func p64PROAndACAChangeLuminaryLandingTarget() async throws {
+        let checkpoint = try PoweredDescentSession.bundledP64Checkpoint()
+        let binURL = try #require(Bundle.main.url(forResource: "Luminary099", withExtension: "bin"))
+        let neutralRuntime = try LMSimulationRuntime(binFile: binURL, scenario: .apollo11SourceBacked)
+        let redesignationRuntime = try LMSimulationRuntime(binFile: binURL, scenario: .apollo11SourceBacked)
+        var neutral = try await neutralRuntime.restore(from: checkpoint)
+        var redesigned = try await redesignationRuntime.restore(from: checkpoint)
+
+        for runtime in [neutralRuntime, redesignationRuntime] {
+            await runtime.sendPRO(pressed: true)
+        }
+        neutral = await neutralRuntime.step(
+            deltaTime: 0.15,
+            input: .autoLand(from: neutral.vehicleState)
+        )
+        redesigned = await redesignationRuntime.step(
+            deltaTime: 0.15,
+            input: .autoLand(from: redesigned.vehicleState)
+        )
+        for runtime in [neutralRuntime, redesignationRuntime] {
+            await runtime.sendPRO(pressed: false)
+        }
+        #expect(!neutral.agc.dsky.verbNounFlash)
+        #expect(!redesigned.agc.dsky.verbNounFlash)
+
+        let landBefore = await landingTargetWords(redesignationRuntime)
+        let neutralLandBefore = await landingTargetWords(neutralRuntime)
+        #expect(landBefore == neutralLandBefore)
+
+        // P64 maps the ACA pitch breakout to LPD elevation and the roll
+        // breakout to LPD azimuth. REDESMON counts the requested increment
+        // when the controller is released back into detent.
+        let aca = LMRotationalHandControllerInput.signedCounts(pitch: 42, roll: 42)
+        for _ in 0..<40 {
+            neutral = await neutralRuntime.step(
+                deltaTime: 0.05,
+                input: .autoLand(from: neutral.vehicleState)
+            )
+            redesigned = await redesignationRuntime.step(
+                deltaTime: 0.05,
+                input: .autoLand(
+                    from: redesigned.vehicleState,
+                    rotationalHandController: aca
+                )
+            )
+        }
+        let heldChannel31 = try #require(redesigned.agc.inputChannels[0o31])
+        #expect(
+            (heldChannel31 & LMPoweredDescentPanel.channel31PositivePitch) == 0,
+            "held CH31 was \(String(heldChannel31, radix: 8))"
+        )
+        #expect(
+            (heldChannel31 & LMPoweredDescentPanel.channel31PositiveRoll) == 0,
+            "held CH31 was \(String(heldChannel31, radix: 8))"
+        )
+        let heldCheckpoint = await redesignationRuntime.captureCheckpoint()
+        let heldMonitorBits = await redesignationRuntime.readErasable(ecadr: 0o1265)
+        #expect(!heldCheckpoint.agc.trap31A, "CH31 trap never fired")
+        #expect(heldMonitorBits != 0, "PITFALL/REDESMON never latched CH31 directions")
+        // An omitted ACA sample means "keep holding the prior hardware state."
+        // Send an explicit centered controller so REDESMON sees the detent
+        // transition, then allow the next P64 guidance passes to consume it.
+        let centeredACA = LMRotationalHandControllerInput.signedCounts()
+        for _ in 0..<100 {
+            neutral = await neutralRuntime.step(
+                deltaTime: 0.05,
+                input: .autoLand(from: neutral.vehicleState)
+            )
+            redesigned = await redesignationRuntime.step(
+                deltaTime: 0.05,
+                input: .autoLand(
+                    from: redesigned.vehicleState,
+                    rotationalHandController: centeredACA
+                )
+            )
+        }
+
+        let neutralLand = await landingTargetWords(neutralRuntime)
+        let redesignedLand = await landingTargetWords(redesignationRuntime)
+        #expect(neutral.agc.dsky.programNumber == 64)
+        #expect(redesigned.agc.dsky.programNumber == 64)
+        #expect(redesignedLand != neutralLand)
+        #expect(redesignedLand != landBefore)
+    }
+
     @Test @MainActor func bundledP65CheckpointMatchesBundledCoreImageAndScenario() throws {
         let checkpoint = try PoweredDescentSession.bundledP65Checkpoint()
 
@@ -377,6 +519,14 @@ struct P65CheckpointSessionTests {
             description += " (\(describe()))"
         }
         throw TimeoutError(label: label, timeoutSeconds: timeoutSeconds, stateDescription: description)
+    }
+
+    private func landingTargetWords(_ runtime: LMSimulationRuntime) async -> [Int] {
+        var words = [Int]()
+        for offset in 0..<6 {
+            words.append(await runtime.readErasable(ecadr: Luminary099Erasable.land + offset))
+        }
+        return words
     }
 
     private struct TimeoutError: Error, CustomStringConvertible {
@@ -658,6 +808,23 @@ struct CockpitExperienceEventTests {
     @Test func phaseAndAltitudeCalloutsFireOnlyAtTheirRealGates() {
         var director = LMCockpitExperienceDirector()
 
+        let prematureP64 = director.consume(
+            program: 64,
+            altitudeMeters: 2_271,
+            outcome: .inFlight,
+            hasSurfaceContact: false
+        )
+        #expect(prematureP64.isEmpty)
+
+        let p64 = director.consume(
+            program: 64,
+            landingPointDisplayActive: true,
+            altitudeMeters: 2_271,
+            outcome: .inFlight,
+            hasSurfaceContact: false
+        )
+        #expect(p64.map(\.id) == [.p64])
+
         let p65 = director.consume(
             program: 65,
             altitudeMeters: 43.8,
@@ -736,7 +903,7 @@ struct CockpitHeadsetValidationTests {
         var recorder = LMCockpitValidationRecorder()
 
         recorder.observeTerrainLoaded()
-        recorder.observe(events: [.p65])
+        recorder.observe(events: [.p64, .p65])
         recorder.observeDirectACA(.init(pitch: 0.3, yaw: 0, roll: 0))
         recorder.observeDirectACA(.init(pitch: 0, yaw: -0.3, roll: 0.3))
         recorder.observeDirectACARelease()

@@ -7,11 +7,20 @@ import LMCore
 @Observable
 final class PoweredDescentSession {
     /// Where a live run begins. `.ignition` boots Luminary fresh and flies the
-    /// automatic P63 approach; `.p65TerminalDescent` restores the validated
-    /// bundled checkpoint so the cockpit is controllable within seconds.
+    /// automatic P63 approach; checkpoint starts restore the real AGC, vehicle,
+    /// radar, and crew-control state at a validated program/display boundary.
     enum StartPoint: Equatable {
         case ignition
+        case p64Approach
         case p65TerminalDescent
+
+        var programLabel: String {
+            switch self {
+            case .ignition: "P63"
+            case .p64Approach: "P64"
+            case .p65TerminalDescent: "P65"
+            }
+        }
     }
 
     enum RODSwitchPosition: Equatable {
@@ -57,6 +66,7 @@ final class PoweredDescentSession {
     @ObservationIgnored private var recordedFrames: [LMFlightFrame] = []
     @ObservationIgnored private var runID = UUID()
     @ObservationIgnored private var isSceneActive = true
+    @ObservationIgnored private var p64Checkpoint: LMSimulationCheckpoint?
     @ObservationIgnored private var p65Checkpoint: LMSimulationCheckpoint?
     @ObservationIgnored private var lastStartPoint: StartPoint = .ignition
 
@@ -64,6 +74,35 @@ final class PoweredDescentSession {
     var programNumber: Int? { replayFrame?.programNumber ?? dsky?.programNumber }
     var vehicleState: LMVehicleStateSnapshot? { replayFrame?.vehicleState ?? snapshot?.vehicleState }
     var vehicleCommands: LMVehicleSnapshot? { replayFrame?.vehicleCommands ?? snapshot?.vehicleCommands }
+    var isLandingPointDisplayActive: Bool {
+        replayFrame == nil
+            && programNumber == 64
+            && dsky?.verb == "06"
+            && dsky?.noun == "64"
+    }
+    var isLandingPointRedesignationEnabled: Bool {
+        isLandingPointDisplayActive
+            && dsky?.verbNounFlash == false
+            && (landingPointRedesignationTimeRemainingSeconds ?? 0) > 0
+    }
+    /// Luminary's FUNNYDSP packs TREDES and LOOKANGL into N64 register 1 as
+    /// `TT AA`: two time digits, a deliberately blank center position, and two
+    /// integer landing-point-designator angle digits.
+    var landingPointLookAngleDegrees: Int? {
+        guard isLandingPointDisplayActive,
+              let digits = dsky?.r1.filter(\.isNumber), digits.count == 4 else {
+            return nil
+        }
+        return Int(digits.suffix(2))
+    }
+
+    var landingPointRedesignationTimeRemainingSeconds: Int? {
+        guard isLandingPointDisplayActive,
+              let digits = dsky?.r1.filter(\.isNumber), digits.count == 4 else {
+            return nil
+        }
+        return Int(digits.prefix(2))
+    }
     var radarAltitudeMeters: Double? {
         guard replayFrame == nil,
               case .measurement(let measurement)? = snapshot?.sensorState.radarInput else {
@@ -102,20 +141,16 @@ final class PoweredDescentSession {
         return try LMFlightRecording.decode(Data(contentsOf: url))
     }
 
-    /// Decode and fully validate the bundled P65 terminal-descent checkpoint
-    /// against the bundled Luminary099.bin and scenario identity.
-    nonisolated static func bundledP65Checkpoint(
-        in bundle: Bundle = .main
+    /// Decode and fully validate a bundled powered-descent checkpoint against
+    /// the bundled Luminary099.bin and scenario identity.
+    nonisolated private static func bundledCheckpoint(
+        named resource: String,
+        in bundle: Bundle
     ) throws -> LMSimulationCheckpoint {
-        guard let checkpointURL = bundle.url(
-            forResource: "P65TerminalDescentCheckpoint",
-            withExtension: "bplist"
-        ) else {
+        guard let checkpointURL = bundle.url(forResource: resource, withExtension: "bplist") else {
             throw CocoaError(.fileNoSuchFile)
         }
-        let checkpoint = try LMSimulationCheckpoint.decodeFixture(
-            Data(contentsOf: checkpointURL)
-        )
+        let checkpoint = try LMSimulationCheckpoint.decodeFixture(Data(contentsOf: checkpointURL))
         guard let binURL = bundle.url(forResource: "Luminary099", withExtension: "bin") else {
             throw CocoaError(.fileNoSuchFile)
         }
@@ -124,6 +159,18 @@ final class PoweredDescentSession {
             scenarioID: LMPoweredDescentScenario.apollo11SourceBacked.id
         )
         return checkpoint
+    }
+
+    nonisolated static func bundledP64Checkpoint(
+        in bundle: Bundle = .main
+    ) throws -> LMSimulationCheckpoint {
+        try bundledCheckpoint(named: "P64ApproachCheckpoint", in: bundle)
+    }
+
+    nonisolated static func bundledP65Checkpoint(
+        in bundle: Bundle = .main
+    ) throws -> LMSimulationCheckpoint {
+        try bundledCheckpoint(named: "P65TerminalDescentCheckpoint", in: bundle)
     }
 
     func loadProgram() {
@@ -141,6 +188,12 @@ final class PoweredDescentSession {
         do {
             let loaded = try LMSimulationRuntime(binFile: url, scenario: .apollo11SourceBacked)
             runtime = loaded
+            do {
+                p64Checkpoint = try Self.bundledP64Checkpoint()
+            } catch {
+                p64Checkpoint = nil
+                loadMessage = "P64 checkpoint unavailable: \(error.localizedDescription)"
+            }
             do {
                 p65Checkpoint = try Self.bundledP65Checkpoint()
             } catch {
@@ -176,13 +229,21 @@ final class PoweredDescentSession {
         start(from: .ignition)
     }
 
-    /// Begin a live run. `.ignition` boots Luminary and flies the automatic
-    /// approach from P63; `.p65TerminalDescent` restores the bundled checkpoint
-    /// into the running runtime, which needs no boot or replay frames.
+    /// Begin a live run. `.ignition` boots Luminary and flies P63; checkpoint
+    /// starts restore directly into the running runtime with no replay frames.
     func start(from startPoint: StartPoint) {
         guard canStart, let runtime else { return }
-        if startPoint == .p65TerminalDescent && p65Checkpoint == nil {
-            status = .error("P65 terminal-descent checkpoint is unavailable.")
+        let checkpoint: LMSimulationCheckpoint?
+        switch startPoint {
+        case .ignition:
+            checkpoint = nil
+        case .p64Approach:
+            checkpoint = p64Checkpoint
+        case .p65TerminalDescent:
+            checkpoint = p65Checkpoint
+        }
+        if startPoint != .ignition && checkpoint == nil {
+            status = .error("The \(startPoint.programLabel) checkpoint is unavailable.")
             return
         }
         loopTask?.cancel()
@@ -195,9 +256,9 @@ final class PoweredDescentSession {
         status = .running
         loopTask = Task { @MainActor [weak self] in
             guard let self else { return }
-            if startPoint == .p65TerminalDescent {
-                guard let checkpoint = self.p65Checkpoint else {
-                    self.status = .error("P65 terminal-descent checkpoint is unavailable.")
+            if startPoint != .ignition {
+                guard let checkpoint else {
+                    self.status = .error("The \(startPoint.programLabel) checkpoint is unavailable.")
                     self.isRunning = false
                     return
                 }
@@ -206,7 +267,7 @@ final class PoweredDescentSession {
                     guard self.runID == runID else { return }
                     self.snapshot = restored
                     self.record(restored)
-                    self.loadMessage = "Live · restored P65 at "
+                    self.loadMessage = "Live · restored \(startPoint.programLabel) at "
                         + Self.altitudeText(restored.vehicleState.altitudeMeters)
                 } catch {
                     guard self.runID == runID else { return }
@@ -327,7 +388,18 @@ final class PoweredDescentSession {
         dskyKeyTask?.cancel()
         dskyKeyTask = Task { @MainActor [weak self] in
             guard let self else { return }
-            await runtime.sendDSKYKey(key)
+            if key == .pro {
+                // PROCEED is a spring-loaded channel-032 discrete. Luminary's
+                // P64 flash handler consumes the press and then requires the
+                // release edge before later PRO operations can be recognized.
+                await runtime.sendPRO(pressed: true)
+                try? await Task.sleep(for: .milliseconds(120))
+                // Cancellation by a subsequent DSKY key must not strand the
+                // spring-loaded switch in its pressed state.
+                await runtime.sendPRO(pressed: false)
+            } else {
+                await runtime.sendDSKYKey(key)
+            }
             guard !Task.isCancelled else { return }
             if !self.isRunning {
                 let snap = await runtime.snapshot()
@@ -429,6 +501,17 @@ final class PoweredDescentSession {
         LMACAInputMapper().combined(buttonCounts: rhcRoll, normalizedAxis: aca.roll)
     }
 
+    /// AGC channel words for the effective ACA deflection. The computer uses
+    /// 15-bit ones'-complement, so negative Swift integers must be encoded
+    /// rather than truncated directly into channel 0166-0170.
+    var effectiveRHCInput: LMRotationalHandControllerInput {
+        .signedCounts(
+            pitch: effectiveRHCPitch,
+            yaw: effectiveRHCYaw,
+            roll: effectiveRHCRoll
+        )
+    }
+
     func replay(speed: Double = 8) {
         guard canReplay, let recording else { return }
         stop()
@@ -458,11 +541,7 @@ final class PoweredDescentSession {
     private func makeFrameInput() -> LMFrameInput {
         let state = snapshot?.vehicleState
             ?? LMPoweredDescentScenario.apollo11SourceBacked.initialState
-        let controller = LMRotationalHandControllerInput(
-            pitch: effectiveRHCPitch,
-            yaw: effectiveRHCYaw,
-            roll: effectiveRHCRoll
-        )
+        let controller = effectiveRHCInput
         let descendPlus = rodSwitchPosition == .descendPlus
         let descendMinus = rodSwitchPosition == .descendMinus
         switch attitudeMode {

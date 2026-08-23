@@ -19,6 +19,7 @@ struct LMCockpitCue: Equatable, Identifiable, Sendable {
 
 struct LMCockpitExperienceDirector: Equatable, Sendable {
     enum Event: String, CaseIterable, Sendable {
+        case p64
         case p65
         case p66
         case oneHundredFeet
@@ -37,12 +38,22 @@ struct LMCockpitExperienceDirector: Equatable, Sendable {
 
     mutating func consume(
         program: Int?,
+        landingPointDisplayActive: Bool = false,
         altitudeMeters: Double?,
         outcome: LMFlightOutcome?,
         hasSurfaceContact: Bool
     ) -> [LMCockpitCue] {
         var cues = [LMCockpitCue]()
 
+        if program == 64 && landingPointDisplayActive {
+            emit(
+                .p64,
+                title: "P64 · LANDING APPROACH",
+                detail: "Read the N64 LPD angle on the commander window. PRO enables ACA redesignation.",
+                kind: .phase,
+                into: &cues
+            )
+        }
         if program == 65 {
             emit(
                 .p65,

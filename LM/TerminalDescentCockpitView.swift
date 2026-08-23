@@ -63,7 +63,7 @@ struct TerminalDescentCockpitView: View {
                     Button {
                         restartExperience()
                     } label: {
-                        Label("Restart P65", systemImage: "arrow.counterclockwise")
+                        Label("Restart P64", systemImage: "arrow.counterclockwise")
                     }
                     .disabled(!appModel.session.canStop && !appModel.session.canStart)
 
@@ -117,7 +117,7 @@ struct TerminalDescentCockpitView: View {
                             .font(.caption.monospacedDigit())
                         Text(terrainStatus)
                             .font(.caption2)
-                        Text("Grip ACA · drag ROD · tap MODE CONTROL")
+                        Text(crewControlHint)
                             .font(.caption2)
                     }
                     .foregroundStyle(.secondary)
@@ -165,7 +165,7 @@ struct TerminalDescentCockpitView: View {
             audioController.isEnabled = audioEnabled
             audioController.start()
             if appModel.session.canStart {
-                appModel.session.start(from: .p65TerminalDescent)
+                appModel.session.start(from: .p64Approach)
             }
             updateExperience()
             do {
@@ -310,6 +310,7 @@ struct TerminalDescentCockpitView: View {
         )
         let cues = experienceDirector.consume(
             program: session.programNumber,
+            landingPointDisplayActive: session.isLandingPointDisplayActive,
             altitudeMeters: session.vehicleState?.altitudeMeters,
             outcome: session.vehicleState?.flightOutcome,
             hasSurfaceContact: session.vehicleState?.surfaceContact != nil
@@ -365,6 +366,21 @@ struct TerminalDescentCockpitView: View {
         let program = appModel.session.programNumber.map { "P\($0)" } ?? "P--"
         let feet = (appModel.session.vehicleState?.altitudeMeters ?? 0) * 3.280_839_895
         return String(format: "%@ · %.0f ft", program, feet)
+    }
+
+    private var crewControlHint: String {
+        if appModel.session.isLandingPointDisplayActive {
+            let angle = appModel.session.landingPointLookAngleDegrees.map { "LPD \($0)°" }
+                ?? "N64 LPD"
+            if appModel.session.landingPointRedesignationTimeRemainingSeconds == 0 {
+                return "\(angle) · redesignation window closed"
+            }
+            if appModel.session.isLandingPointRedesignationEnabled {
+                return "\(angle) · ACA redesignation enabled"
+            }
+            return "\(angle) · press PRO to enable ACA redesignation"
+        }
+        return "Grip ACA · drag ROD · tap MODE CONTROL"
     }
 
     private var validationChecklist: some View {
@@ -440,9 +456,9 @@ struct TerminalDescentCockpitView: View {
         }
         switch validationRecorder.terminalResult {
         case .hardLanding:
-            return "RUN ENDED · hard landing · restart P65"
+            return "RUN ENDED · hard landing · restart P64"
         case .crashed:
-            return "RUN ENDED · vehicle lost · restart P65"
+            return "RUN ENDED · vehicle lost · restart P64"
         default:
             return "Direct spatial gestures only · fallback controls excluded"
         }

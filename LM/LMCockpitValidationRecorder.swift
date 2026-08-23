@@ -3,6 +3,7 @@ import Foundation
 struct LMCockpitValidationRecorder: Equatable, Sendable {
     enum Requirement: String, CaseIterable, Identifiable, Sendable {
         case terrainLoaded
+        case p64LPD
         case p65
         case acaPitch
         case acaYaw
@@ -24,6 +25,7 @@ struct LMCockpitValidationRecorder: Equatable, Sendable {
         var title: String {
             switch self {
             case .terrainLoaded: "LROC terrain"
+            case .p64LPD: "P64 N64 / LPD"
             case .p65: "P65 live"
             case .acaPitch: "ACA pitch"
             case .acaYaw: "ACA yaw"
@@ -70,6 +72,8 @@ struct LMCockpitValidationRecorder: Equatable, Sendable {
     mutating func observe(events: some Sequence<LMCockpitExperienceDirector.Event>) {
         for event in events {
             switch event {
+            case .p64:
+                completed.insert(.p64LPD)
             case .p65:
                 completed.insert(.p65)
             case .p66:
