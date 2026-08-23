@@ -14,10 +14,17 @@ import simd
 final class LMCommanderStationScene {
     let root = Entity()
     let lunarWorld = Entity()
+    let acaHandle = ModelEntity()
+    let rodSwitch = ModelEntity()
+    let attitudeModeSwitch = ModelEntity()
 
     private let instrumentMount = Entity()
     private let provisionalTerrain = Entity()
     private let mapper = LMCockpitWorldMapper.fullScale
+    private let controlMapper = LMSpatialControlMapper()
+    private let acaNeutralPosition = SIMD3<Float>(-0.49, 0.50, -0.37)
+    private let rodNeutralPosition = SIMD3<Float>(0.43, 0.58, -0.49)
+    private let attitudeModeAutomaticPosition = SIMD3<Float>(0.48, 0.78, -0.675)
 
     init() {
         root.name = "LM Commander Station"
@@ -26,6 +33,7 @@ final class LMCommanderStationScene {
         provisionalTerrain.name = "Provisional terrain"
 
         buildCabin()
+        buildPhysicalControls()
         buildProvisionalSurface()
 
         root.addChild(lunarWorld)
@@ -50,6 +58,31 @@ final class LMCommanderStationScene {
         let terrain = try await Apollo11TerrainResource.makeEntity()
         provisionalTerrain.removeFromParent()
         lunarWorld.addChild(terrain)
+    }
+
+    func setACAVisual(_ input: LMACANormalizedInput) {
+        acaHandle.position = acaNeutralPosition + controlMapper.visualACATranslation(for: input)
+        acaHandle.orientation = simd_quatf(
+            angle: Float(input.roll) * -0.18,
+            axis: SIMD3(0, 0, 1)
+        ) * simd_quatf(
+            angle: Float(input.pitch) * 0.18,
+            axis: SIMD3(1, 0, 0)
+        )
+    }
+
+    func setRODVisual(_ position: PoweredDescentSession.RODSwitchPosition) {
+        rodSwitch.position = rodNeutralPosition
+            + SIMD3(0, controlMapper.visualRODTranslation(for: position), 0)
+    }
+
+    func setAttitudeHoldVisual(_ isAttitudeHold: Bool) {
+        attitudeModeSwitch.position = attitudeModeAutomaticPosition
+            + SIMD3(0, isAttitudeHold ? 0.028 : 0, 0)
+        attitudeModeSwitch.orientation = simd_quatf(
+            angle: isAttitudeHold ? -.pi / 7 : .pi / 7,
+            axis: SIMD3(1, 0, 0)
+        )
     }
 
     private func buildCabin() {
@@ -101,6 +134,76 @@ final class LMCommanderStationScene {
         let reticleMaterial = SimpleMaterial(color: UIColor(red: 0.92, green: 0.78, blue: 0.28, alpha: 0.72), isMetallic: false)
         addBox(size: SIMD3(0.30, 0.004, 0.004), position: SIMD3(-0.36, 1.48, -0.84), material: reticleMaterial, name: "LPD horizontal")
         addBox(size: SIMD3(0.004, 0.30, 0.004), position: SIMD3(-0.36, 1.48, -0.84), material: reticleMaterial, name: "LPD vertical")
+    }
+
+    private func buildPhysicalControls() {
+        let housing = SimpleMaterial(
+            color: UIColor(red: 0.12, green: 0.13, blue: 0.115, alpha: 1),
+            roughness: 0.72,
+            isMetallic: false
+        )
+        let handleMaterial = SimpleMaterial(
+            color: UIColor(red: 0.29, green: 0.27, blue: 0.20, alpha: 1),
+            roughness: 0.58,
+            isMetallic: false
+        )
+        let switchMaterial = SimpleMaterial(
+            color: UIColor(red: 0.72, green: 0.69, blue: 0.54, alpha: 1),
+            roughness: 0.45,
+            isMetallic: true
+        )
+
+        addBox(
+            size: SIMD3(0.24, 0.08, 0.28),
+            position: SIMD3(acaNeutralPosition.x, 0.365, acaNeutralPosition.z),
+            material: housing,
+            name: "ACA pedestal"
+        )
+        acaHandle.name = "Attitude Controller Assembly"
+        acaHandle.model = ModelComponent(
+            mesh: .generateCylinder(height: 0.25, radius: 0.028),
+            materials: [handleMaterial]
+        )
+        acaHandle.position = acaNeutralPosition
+        acaHandle.components.set(InputTargetComponent())
+        acaHandle.components.set(HoverEffectComponent())
+        acaHandle.components.set(CollisionComponent(shapes: [
+            .generateBox(size: SIMD3(0.14, 0.30, 0.14))
+        ]))
+        root.addChild(acaHandle)
+
+        addBox(
+            size: SIMD3(0.18, 0.07, 0.18),
+            position: SIMD3(rodNeutralPosition.x, 0.49, rodNeutralPosition.z),
+            material: housing,
+            name: "ROD switch pedestal"
+        )
+        rodSwitch.name = "Rate of Descent switch"
+        rodSwitch.model = ModelComponent(
+            mesh: .generateBox(size: SIMD3(0.10, 0.10, 0.08)),
+            materials: [switchMaterial]
+        )
+        rodSwitch.position = rodNeutralPosition
+        rodSwitch.components.set(InputTargetComponent())
+        rodSwitch.components.set(HoverEffectComponent())
+        rodSwitch.components.set(CollisionComponent(shapes: [
+            .generateBox(size: SIMD3(0.16, 0.18, 0.14))
+        ]))
+        root.addChild(rodSwitch)
+
+        attitudeModeSwitch.name = "Mode Control attitude hold"
+        attitudeModeSwitch.model = ModelComponent(
+            mesh: .generateBox(size: SIMD3(0.08, 0.13, 0.055)),
+            materials: [switchMaterial]
+        )
+        attitudeModeSwitch.position = attitudeModeAutomaticPosition
+        attitudeModeSwitch.components.set(InputTargetComponent())
+        attitudeModeSwitch.components.set(HoverEffectComponent())
+        attitudeModeSwitch.components.set(CollisionComponent(shapes: [
+            .generateBox(size: SIMD3(0.16, 0.20, 0.12))
+        ]))
+        setAttitudeHoldVisual(false)
+        root.addChild(attitudeModeSwitch)
     }
 
     private func buildProvisionalSurface() {

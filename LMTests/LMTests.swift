@@ -416,3 +416,32 @@ struct Apollo11TerrainAssetTests {
         #expect(allFinite)
     }
 }
+
+@Suite("Spatial cockpit controls")
+struct SpatialCockpitControlTests {
+    let mapper = LMSpatialControlMapper()
+
+    @Test func threeDimensionalGripMapsOntoAllACAAxesAndClamps() {
+        let input = mapper.acaInput(for: SIMD3(
+            mapper.acaTravelMeters * 2,
+            mapper.acaTravelMeters * -0.5,
+            mapper.acaTravelMeters * -0.75
+        ))
+
+        #expect(abs(input.pitch - 0.75) < 1e-6)
+        #expect(abs(input.yaw + 0.5) < 1e-6)
+        #expect(abs(input.roll - 1) < 1e-6)
+        let visual = mapper.visualACATranslation(for: input)
+        #expect(abs(visual.x - mapper.acaTravelMeters) < 1e-6)
+        #expect(abs(visual.y + mapper.acaTravelMeters * 0.5) < 1e-6)
+        #expect(abs(visual.z + mapper.acaTravelMeters * 0.75) < 1e-6)
+    }
+
+    @Test func rodUsesSpringLoadedDetentsAroundNeutral() {
+        #expect(mapper.rodPosition(for: 0) == .neutral)
+        #expect(mapper.rodPosition(for: mapper.rodTravelMeters * 0.2) == .neutral)
+        #expect(mapper.rodPosition(for: mapper.rodTravelMeters * 0.5) == .descendPlus)
+        #expect(mapper.rodPosition(for: mapper.rodTravelMeters * -0.5) == .descendMinus)
+        #expect(mapper.visualRODTranslation(for: .neutral) == 0)
+    }
+}
