@@ -388,3 +388,31 @@ struct CockpitWorldMappingTests {
         #expect(abs(mapped.z - 25) < 1e-5)
     }
 }
+
+@Suite("Apollo 11 terrain assets")
+struct Apollo11TerrainAssetTests {
+    @Test func manifestPinsTheOfficialLROCProductAndApollo11Site() throws {
+        let manifest = try Apollo11TerrainResource.loadManifest()
+
+        #expect(manifest.productID == "NAC_DTM_APOLLO11")
+        #expect(manifest.sourceDTMSHA256 == "920da622e3d7c3f047c67a970b5429aaadf00f886804e3fc6c72f6e5298043e9")
+        #expect(manifest.sourceHillshadeSHA256 == "a47fbe33a371fb0a5a823f1af6729888fa8bc9e0614a9acb3bd4784b29a974e3")
+        #expect(abs(manifest.landingLatitudeDegrees - 0.67409) < 1e-8)
+        #expect(abs(manifest.landingLongitudeDegrees - 23.47298) < 1e-8)
+        #expect(manifest.cropSizePixels == 1_025)
+    }
+
+    @Test func heightmapMatchesManifestAndIsCenteredOnTheLandingPost() throws {
+        let manifest = try Apollo11TerrainResource.loadManifest()
+        let heights = try Apollo11TerrainResource.loadHeights(manifest: manifest)
+
+        #expect(heights.count == manifest.meshWidth * manifest.meshHeight)
+        #expect(manifest.meshWidth == 257)
+        #expect(manifest.meshHeight == 257)
+        #expect(abs(manifest.meshSpacingMeters - 8) < 1e-6)
+        let center = heights[(manifest.meshHeight / 2) * manifest.meshWidth + manifest.meshWidth / 2]
+        #expect(abs(center) < 1e-6)
+        let allFinite = heights.allSatisfy { $0.isFinite }
+        #expect(allFinite)
+    }
+}

@@ -16,12 +16,14 @@ final class LMCommanderStationScene {
     let lunarWorld = Entity()
 
     private let instrumentMount = Entity()
+    private let provisionalTerrain = Entity()
     private let mapper = LMCockpitWorldMapper.fullScale
 
     init() {
         root.name = "LM Commander Station"
         lunarWorld.name = "Lunar World"
         instrumentMount.name = "Commander Instruments"
+        provisionalTerrain.name = "Provisional terrain"
 
         buildCabin()
         buildProvisionalSurface()
@@ -42,6 +44,12 @@ final class LMCommanderStationScene {
     func apply(_ state: LMVehicleStateSnapshot?) {
         guard let state else { return }
         lunarWorld.transform = Transform(matrix: mapper.lunarWorldMatrix(from: state))
+    }
+
+    func loadApollo11Terrain() async throws {
+        let terrain = try await Apollo11TerrainResource.makeEntity()
+        provisionalTerrain.removeFromParent()
+        lunarWorld.addChild(terrain)
     }
 
     private func buildCabin() {
@@ -106,7 +114,7 @@ final class LMCommanderStationScene {
             materials: [surfaceMaterial]
         )
         surface.name = "Provisional lunar surface"
-        lunarWorld.addChild(surface)
+        provisionalTerrain.addChild(surface)
 
         let markerMaterial = SimpleMaterial(
             color: UIColor(red: 0.66, green: 0.64, blue: 0.57, alpha: 1),
@@ -122,8 +130,9 @@ final class LMCommanderStationScene {
             )
             rock.position = SIMD3(cos(angle) * radius, 0.17, sin(angle) * radius)
             rock.orientation = simd_quatf(angle: angle * 0.37, axis: SIMD3(0, 1, 0))
-            lunarWorld.addChild(rock)
+            provisionalTerrain.addChild(rock)
         }
+        lunarWorld.addChild(provisionalTerrain)
 
         let sun = Entity()
         sun.components.set(DirectionalLightComponent(color: .white, intensity: 42_000))

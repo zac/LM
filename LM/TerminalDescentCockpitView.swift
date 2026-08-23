@@ -6,6 +6,7 @@ struct TerminalDescentCockpitView: View {
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
     @State private var station = LMCommanderStationScene()
     @State private var didStart = false
+    @State private var terrainStatus = "Loading Apollo 11 terrain…"
 
     var body: some View {
         RealityView { content, attachments in
@@ -47,9 +48,13 @@ struct TerminalDescentCockpitView: View {
                     Label("Leave cockpit", systemImage: "rectangle.portrait.and.arrow.right")
                 }
 
-                Text(cockpitStatus)
-                    .font(.caption.monospacedDigit())
-                    .foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(cockpitStatus)
+                        .font(.caption.monospacedDigit())
+                    Text(terrainStatus)
+                        .font(.caption2)
+                }
+                .foregroundStyle(.secondary)
             }
             .padding(10)
             .glassBackgroundEffect()
@@ -59,6 +64,12 @@ struct TerminalDescentCockpitView: View {
             didStart = true
             if appModel.session.canStart {
                 appModel.session.start(from: .p65TerminalDescent)
+            }
+            do {
+                try await station.loadApollo11Terrain()
+                terrainStatus = "LROC NAC DTM · 2.05 km · true vertical scale"
+            } catch {
+                terrainStatus = "Terrain unavailable · \(error.localizedDescription)"
             }
         }
         .onDisappear {
