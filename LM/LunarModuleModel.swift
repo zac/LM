@@ -22,6 +22,10 @@ final class LunarModuleModel {
     private(set) var physicsEntity: ModelEntity?
     private var thrusters: [RCSThruster: RCSThrusterData] = [:]
     private var plumeEntity: Entity?
+    private var dpsBellEntity: Entity?
+    private var dpsBellBaseOrientation = simd_quatf()
+    private var dpsPlumeBaseOrientation = simd_quatf()
+    private var activeJets: Set<RCSThruster> = []
     private let thrusterForceMagnitude: Float = 445.0  // ≈100 lbf
     private let minimumPulseDuration: Float = 0.05     // 50 ms pulse
     
@@ -65,12 +69,25 @@ final class LunarModuleModel {
         let pose = mapper.pose(from: siState, program: program)
         physicsEntity.position = pose.position
         physicsEntity.orientation = pose.orientation
+        applyDPSGimbal(
+            pitchRadians: siState.dpsPitchGimbalRadians,
+            rollRadians: siState.dpsRollGimbalRadians
+        )
     }
 
     func setActiveJets(_ jets: Set<RCSThruster>) {
-        for (thruster, data) in thrusters {
-            setExhaustFiring(data.plumeEntity, firing: jets.contains(thruster))
+        guard jets != activeJets else { return }
+        for thruster in activeJets.subtracting(jets) {
+            if let plume = thrusters[thruster]?.plumeEntity {
+                setExhaustFiring(plume, firing: false)
+            }
         }
+        for thruster in jets.subtracting(activeJets) {
+            if let plume = thrusters[thruster]?.plumeEntity {
+                setExhaustFiring(plume, firing: true)
+            }
+        }
+        activeJets = jets
     }
 
     func setDPSThrust(newtons: Double?, engineOn: Bool) {
@@ -151,6 +168,7 @@ final class LunarModuleModel {
             let scene = try Entity.load(named: "lm", in: realityKitContentBundle)
             rootEntity.children.removeAll()
             thrusters.removeAll()
+            activeJets.removeAll()
             
             guard let landerGeometry = scene.findEntity(named: "lunarlander") else {
                 print("Unable to locate lunar lander entity in loaded scene")
@@ -183,6 +201,14 @@ final class LunarModuleModel {
             let physicsRootEntity = ModelEntity()
             physicsRootEntity.name = "LunarModuleRoot"
             physicsRootEntity.addChild(landerClone)
+
+            if let dpsBell = physicsRootEntity.findEntity(named: "group13_p2") {
+                dpsBellEntity = dpsBell
+                dpsBellBaseOrientation = dpsBell.orientation
+            } else {
+                dpsBellEntity = nil
+                print("WARNING: DPS engine bell entity group13_p2 not found")
+            }
             
             rootEntity.addChild(physicsRootEntity)
             physicsEntity = physicsRootEntity
@@ -303,6 +329,25 @@ final class LunarModuleModel {
         plume.position = SIMD3(0, -0.08, 0)
         physicsRootEntity.addChild(plume)
         plumeEntity = plume
+        dpsPlumeBaseOrientation = plume.orientation
+    }
+
+    private func applyDPSGimbal(pitchRadians: Double, rollRadians: Double) {
+        let thrustBody = LMDPSGimbalMap.thrustDirectionBody(
+            pitchRadians: pitchRadians,
+            rollRadians: rollRadians
+        )
+        let exhaustDirection = simd_normalize(SIMD3<Float>(
+            -Float(thrustBody.x),
+            -Float(thrustBody.z),
+            Float(thrustBody.y)
+        ))
+        let gimbal = rotationAligningReferenceAxis(
+            SIMD3<Float>(0, -1, 0),
+            to: exhaustDirection
+        )
+        dpsBellEntity?.orientation = gimbal * dpsBellBaseOrientation
+        plumeEntity?.orientation = gimbal * dpsPlumeBaseOrientation
     }
 
     private func makeExhaustPlume(

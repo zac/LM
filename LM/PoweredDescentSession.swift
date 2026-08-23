@@ -6,6 +6,12 @@ import LMCore
 @MainActor
 @Observable
 final class PoweredDescentSession {
+    enum RODSwitchPosition: Equatable {
+        case descendPlus
+        case neutral
+        case descendMinus
+    }
+
     enum Status: Equatable {
         case unloaded
         case idle
@@ -29,20 +35,29 @@ final class PoweredDescentSession {
     var rhcPitch = 0
     var rhcYaw = 0
     var rhcRoll = 0
-    var descendPlus = false
-    var descendMinus = false
+    private(set) var rodSwitchPosition = RODSwitchPosition.neutral
 
     @ObservationIgnored private var runtime: LMSimulationRuntime?
     @ObservationIgnored private var loopTask: Task<Void, Never>?
     @ObservationIgnored private var replayTask: Task<Void, Never>?
     @ObservationIgnored private var dskyTask: Task<Void, Never>?
+    @ObservationIgnored private var dskyKeyTask: Task<Void, Never>?
+    @ObservationIgnored private var snapshotTask: Task<Void, Never>?
     @ObservationIgnored private var recordedFrames: [LMFlightFrame] = []
     @ObservationIgnored private var runID = UUID()
+    @ObservationIgnored private var isSceneActive = true
 
     var dsky: DSKYSnapshot? { snapshot?.agc.dsky }
     var programNumber: Int? { replayFrame?.programNumber ?? dsky?.programNumber }
     var vehicleState: LMVehicleStateSnapshot? { replayFrame?.vehicleState ?? snapshot?.vehicleState }
     var vehicleCommands: LMVehicleSnapshot? { replayFrame?.vehicleCommands ?? snapshot?.vehicleCommands }
+    var radarAltitudeMeters: Double? {
+        guard replayFrame == nil,
+              case .measurement(let measurement)? = snapshot?.sensorState.radarInput else {
+            return nil
+        }
+        return measurement.altitudeMeters
+    }
 
     var canStart: Bool { runtime != nil && !isRunning && replayTask == nil }
     var canStop: Bool { isRunning || replayTask != nil }
@@ -79,8 +94,6 @@ final class PoweredDescentSession {
         recording = nil
         replayFrame = nil
         recordedFrames.removeAll()
-        dskyTask?.cancel()
-        dskyTask = nil
         guard let url = Bundle.main.url(forResource: "Luminary099", withExtension: "bin") else {
             runtime = nil
             snapshot = nil
@@ -91,17 +104,22 @@ final class PoweredDescentSession {
         do {
             let loaded = try LMSimulationRuntime(binFile: url, scenario: .apollo11SourceBacked)
             runtime = loaded
-            if ProcessInfo.processInfo.arguments.contains("--replay-automatic") {
+            let arguments = ProcessInfo.processInfo.arguments
+            if arguments.contains("--replay-automatic") {
                 recording = try? Self.bundledAutomaticRecording()
+            } else if arguments.contains("--replay-p66") {
+                recording = try? Self.bundledP66Recording()
             } else {
                 recording = try? Self.bundledP66Recording()
             }
             loadMessage = "Luminary 099 · Apollo 11 powered-descent foundation"
             status = .idle
-            Task { @MainActor [weak self] in
+            snapshotTask = Task { @MainActor [weak self] in
                 guard let self else { return }
                 let snap = await loaded.snapshot()
+                guard !Task.isCancelled else { return }
                 self.snapshot = snap
+                self.snapshotTask = nil
             }
         } catch {
             runtime = nil
@@ -132,6 +150,11 @@ final class PoweredDescentSession {
             }
             var last = CACurrentMediaTime()
             while !Task.isCancelled, self.runID == runID {
+                if !self.isSceneActive {
+                    try? await Task.sleep(for: .milliseconds(100))
+                    last = CACurrentMediaTime()
+                    continue
+                }
                 let now = CACurrentMediaTime()
                 let wallDelta = now - last
                 last = now
@@ -146,7 +169,7 @@ final class PoweredDescentSession {
                 }
                 if pace == .accelerated {
                     self.loadMessage = self.autoLandMessage(program: snap.agc.dsky.programNumber, accelerated: true)
-                    await Task.yield()
+                    try? await Task.sleep(for: .milliseconds(2))
                     continue
                 }
                 self.loadMessage = self.autoLandMessage(program: snap.agc.dsky.programNumber, accelerated: false)
@@ -174,6 +197,12 @@ final class PoweredDescentSession {
         loopTask = nil
         replayTask?.cancel()
         replayTask = nil
+        dskyTask?.cancel()
+        dskyTask = nil
+        dskyKeyTask?.cancel()
+        dskyKeyTask = nil
+        snapshotTask?.cancel()
+        snapshotTask = nil
         replayFrame = nil
         if isRunning {
             finishRecording()
@@ -196,40 +225,70 @@ final class PoweredDescentSession {
         rhcYaw = 0
         rhcRoll = 0
         attitudeMode = .automatic
-        descendPlus = false
-        descendMinus = false
-        Task { @MainActor [weak self] in
+        rodSwitchPosition = .neutral
+        snapshotTask = Task { @MainActor [weak self] in
             guard let self else { return }
             do {
-                self.snapshot = try await runtime.reset()
+                let snapshot = try await runtime.reset()
+                guard !Task.isCancelled else { return }
+                self.snapshot = snapshot
                 self.status = .idle
             } catch {
+                guard !Task.isCancelled else { return }
                 self.status = .error(error.localizedDescription)
             }
+            self.snapshotTask = nil
         }
     }
 
     func sendDSKYKey(_ key: DSKYKeyCode) {
         guard let runtime else { return }
-        Task {
+        dskyTask?.cancel()
+        dskyTask = nil
+        dskyKeyTask?.cancel()
+        dskyKeyTask = Task { @MainActor [weak self] in
+            guard let self else { return }
             await runtime.sendDSKYKey(key)
+            guard !Task.isCancelled else { return }
             if !self.isRunning {
                 let snap = await runtime.snapshot()
-                await MainActor.run { self.snapshot = snap }
+                guard !Task.isCancelled else { return }
+                self.snapshot = snap
             }
+            self.dskyKeyTask = nil
         }
     }
 
     func sendDSKYScript(_ script: DSKYScript) {
-        guard runtime != nil else { return }
+        guard let runtime else { return }
+        dskyKeyTask?.cancel()
+        dskyKeyTask = nil
         dskyTask?.cancel()
         dskyTask = Task { @MainActor [weak self] in
             guard let self else { return }
             for key in script.keys {
                 if Task.isCancelled { break }
-                self.sendDSKYKey(key)
+                await runtime.sendDSKYKey(key)
+                guard !Task.isCancelled else { break }
+                if !self.isRunning {
+                    self.snapshot = await runtime.snapshot()
+                }
                 try? await Task.sleep(for: .milliseconds(180))
             }
+            guard !Task.isCancelled else { return }
+            self.dskyTask = nil
+        }
+    }
+
+    func setSceneActive(_ active: Bool) {
+        isSceneActive = active
+    }
+
+    func setROD(_ position: RODSwitchPosition, held: Bool) {
+        if held {
+            rodSwitchPosition = position
+        } else if rodSwitchPosition == position {
+            rodSwitchPosition = .neutral
         }
     }
 
@@ -279,6 +338,8 @@ final class PoweredDescentSession {
             yaw: rhcYaw,
             roll: rhcRoll
         )
+        let descendPlus = rodSwitchPosition == .descendPlus
+        let descendMinus = rodSwitchPosition == .descendMinus
         switch attitudeMode {
         case .automatic:
             return .autoLand(

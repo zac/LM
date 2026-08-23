@@ -5,6 +5,7 @@ struct PoweredDescentView: View {
     @Environment(MainMenuViewModel.self) private var appModel
     @Environment(\.openImmersiveSpace) private var openImmersiveSpace
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
+    @Environment(\.scenePhase) private var scenePhase
     @State private var didLaunchReplayFixture = false
 
     var body: some View {
@@ -53,6 +54,12 @@ struct PoweredDescentView: View {
             didLaunchReplayFixture = true
             appModel.session.replay(speed: 2)
             await toggleDescentSpace()
+        }
+        .onAppear {
+            appModel.session.setSceneActive(scenePhase == .active)
+        }
+        .onChange(of: scenePhase) { _, phase in
+            appModel.session.setSceneActive(phase == .active)
         }
     }
 
@@ -131,7 +138,7 @@ struct PoweredDescentView: View {
                 labeled("Landed", (state?.isLanded ?? false) ? "yes" : "no")
                 labeled("Engine", engineLabel(commands))
                 labeled("RCS jets", "\(commands?.rcsJets.count ?? 0)")
-                labeled("Radar alt", feetAndMeters(state?.altitudeMeters))
+                labeled("Radar alt", feetAndMeters(appModel.session.radarAltitudeMeters))
             }
             .font(.system(.caption, design: .monospaced))
         }

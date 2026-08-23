@@ -31,8 +31,14 @@ struct CrewControlPanel: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Rate")
                         .font(.subheadline)
-                    holdButton("DESCENT+", systemImage: "minus.circle") { session.descendPlus = $0 }
-                    holdButton("DESCENT−", systemImage: "plus.circle") { session.descendMinus = $0 }
+                    holdButton("DESCENT+", systemImage: "minus.circle") {
+                        session.setROD(.descendPlus, held: $0)
+                    }
+                    .help("Slow descent by 1 ft/s while held")
+                    holdButton("DESCENT−", systemImage: "plus.circle") {
+                        session.setROD(.descendMinus, held: $0)
+                    }
+                    .help("Increase descent by 1 ft/s while held")
                 }
             }
 

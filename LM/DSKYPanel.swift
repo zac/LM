@@ -144,7 +144,7 @@ struct DSKYPanel: View {
             HStack(spacing: 12) {
                 Text(dsky.compActy ? "COMP ACTY" : "COMP")
                     .foregroundStyle(dsky.compActy ? .green : .secondary)
-                Text(dsky.proKeyPressed ? "PRO" : "PRO")
+                Text("PRO")
                     .foregroundStyle(dsky.proKeyPressed ? .green : .secondary)
             }
             .font(.caption)

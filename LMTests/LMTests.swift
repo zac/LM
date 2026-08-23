@@ -4,6 +4,22 @@ import LMCore
 @testable import LM
 
 struct LMTests {
+    @Test @MainActor func rodSwitchIsSpringLoadedAndMutuallyExclusive() {
+        let session = PoweredDescentSession()
+
+        session.setROD(.descendPlus, held: true)
+        #expect(session.rodSwitchPosition == .descendPlus)
+
+        session.setROD(.descendMinus, held: true)
+        #expect(session.rodSwitchPosition == .descendMinus)
+
+        session.setROD(.descendPlus, held: false)
+        #expect(session.rodSwitchPosition == .descendMinus)
+
+        session.setROD(.descendMinus, held: false)
+        #expect(session.rodSwitchPosition == .neutral)
+    }
+
     @Test func bundledAutomaticReplayIsContactGatedAndStaysAutomatic() throws {
         let recording = try PoweredDescentSession.bundledAutomaticRecording()
         let final = try #require(recording.frames.last)
