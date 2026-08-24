@@ -40,6 +40,7 @@ final class LMCommanderStationScene {
     )
     private var terrainHeightField: Apollo11TerrainHeightField?
     private var terrainEnvironment: Entity?
+    private var terrainAlbedoTexture: TextureResource?
     private var progressiveTerrainEntities = [LMTerrainTileID: ModelEntity]()
     private var requestedTerrainTileIDs = Set<LMTerrainTileID>()
     private var terrainRefreshTask: Task<Void, Never>?
@@ -124,16 +125,20 @@ final class LMCommanderStationScene {
 
     func loadApollo11Terrain() async throws {
         let heightField = try Apollo11TerrainResource.loadSourceBackedHeightField()
-        let terrain = try await LMTerrainWorld.load().worldRoot
+        let assembly = try await LMTerrainWorld.load()
+        let terrain = assembly.worldRoot
         terrainHeightField = heightField
         terrainEnvironment = terrain
+        terrainAlbedoTexture = assembly.nearAlbedoTexture
         provisionalTerrain.removeFromParent()
         lunarWorld.addChild(terrain)
         apply(lastVehicleState)
     }
 
     private func requestProgressiveTerrain(around state: LMVehicleStateSnapshot) {
-        guard let heightField = terrainHeightField, let terrainEnvironment else { return }
+        guard let heightField = terrainHeightField,
+              let terrainEnvironment,
+              let terrainAlbedoTexture else { return }
         let plans = LMProgressiveTerrainPlanner(
             sourceSpacingMeters: heightField.spacingMeters
         ).focusedPlans(
@@ -155,7 +160,11 @@ final class LMCommanderStationScene {
                 } else {
                     do {
                         if let entity = try await Apollo11TerrainResource
-                            .makeProgressiveTileEntity(heightField: heightField, plan: plan) {
+                            .makeProgressiveTileEntity(
+                                heightField: heightField,
+                                plan: plan,
+                                albedoTexture: terrainAlbedoTexture
+                            ) {
                             replacements[plan.id] = entity
                         }
                     } catch {

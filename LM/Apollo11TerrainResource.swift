@@ -72,7 +72,8 @@ enum Apollo11TerrainResource {
     @MainActor
     static func makeProgressiveTileEntity(
         heightField: Apollo11TerrainHeightField,
-        plan: LMTerrainTilePlan
+        plan: LMTerrainTilePlan,
+        albedoTexture: TextureResource
     ) async throws -> ModelEntity? {
         let tileSize = plan.sizeMeters
         let sampleSpacing = plan.sampleSpacingMeters
@@ -107,9 +108,11 @@ enum Apollo11TerrainResource {
                     sample.elevationMeters + layerOffset,
                     Float(-east)
                 ))
-                textureCoordinates.append(SIMD2(
-                    Float((east + measuredHalfWidth) / (measuredHalfWidth * 2)),
-                    Float((north + measuredHalfDepth) / (measuredHalfDepth * 2))
+                textureCoordinates.append(textureCoordinate(
+                    eastMeters: east,
+                    northMeters: north,
+                    measuredHalfWidth: measuredHalfWidth,
+                    measuredHalfDepth: measuredHalfDepth
                 ))
             }
         }
@@ -152,14 +155,24 @@ enum Apollo11TerrainResource {
         descriptor.textureCoordinates = MeshBuffers.TextureCoordinates(textureCoordinates)
         descriptor.primitives = .triangles(indices)
         let mesh = try MeshResource.generate(from: [descriptor])
-        let material = SimpleMaterial(
-            color: UIColor(white: 0.55, alpha: 1),
-            roughness: 1,
-            isMetallic: false
-        )
+        let material = LMTerrainWorld.terrainMaterial(texture: albedoTexture)
         let entity = ModelEntity(mesh: mesh, materials: [material])
         entity.name = "LROC progressive L\(plan.id.level) E\(plan.id.eastIndex) N\(plan.id.northIndex) \(sampleSpacing)m"
         return entity
+    }
+
+    /// North-up image rows run from north at v=0 to south at v=1, matching
+    /// `LMTerrainMeshBuilder` and the generator's row-major PDS sampling.
+    nonisolated static func textureCoordinate(
+        eastMeters: Double,
+        northMeters: Double,
+        measuredHalfWidth: Double,
+        measuredHalfDepth: Double
+    ) -> SIMD2<Float> {
+        SIMD2(
+            Float((eastMeters + measuredHalfWidth) / (measuredHalfWidth * 2)),
+            Float((measuredHalfDepth - northMeters) / (measuredHalfDepth * 2))
+        )
     }
 
     private static func layerOffsetMeters(

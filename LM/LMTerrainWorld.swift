@@ -58,6 +58,7 @@ enum LMTerrainWorld {
         let worldRoot: Entity
         let sun: DirectionalLight
         let manifest: LMTerrainManifest
+        let nearAlbedoTexture: TextureResource
     }
 
     enum WorldError: Error, Equatable {
@@ -85,6 +86,7 @@ enum LMTerrainWorld {
             (tile: mediumTile, holeHalfExtent: nearTile.extentMeters / 2.0),
             (tile: farTile, holeHalfExtent: mediumTile.extentMeters / 2.0),
         ]
+        var nearAlbedoTexture: TextureResource?
 
         for (tile, hole) in bands {
             let heightURL = try resourceURL(bundle: bundle, file: tile.heightFile)
@@ -97,8 +99,10 @@ enum LMTerrainWorld {
             )
             let mesh = try LMTerrainMeshBuilder.mesh(from: grid)
             let texture = try await TextureResource(contentsOf: albedoURL)
-            var material = SimpleMaterial(color: .white, isMetallic: false)
-            material.color = SimpleMaterial.BaseColor(tint: .white, texture: .init(texture))
+            if tile.id == nearFieldTileID {
+                nearAlbedoTexture = texture
+            }
+            let material = terrainMaterial(texture: texture)
             let model = ModelEntity(mesh: mesh, materials: [material])
             model.name = "Terrain-\(tile.id)"
             worldRoot.addChild(model)
@@ -110,7 +114,23 @@ enum LMTerrainWorld {
         sun.orientation = LMFullDescentMapper.sunLightOrientation(from: manifest)
         worldRoot.addChild(sun)
 
-        return Assembly(worldRoot: worldRoot, sun: sun, manifest: manifest)
+        guard let nearAlbedoTexture else {
+            throw WorldError.missingTile(nearFieldTileID)
+        }
+        return Assembly(
+            worldRoot: worldRoot,
+            sun: sun,
+            manifest: manifest,
+            nearAlbedoTexture: nearAlbedoTexture
+        )
+    }
+
+    static func terrainMaterial(texture: TextureResource) -> PhysicallyBasedMaterial {
+        var material = PhysicallyBasedMaterial()
+        material.baseColor = .init(tint: .white, texture: .init(texture))
+        material.roughness = .init(floatLiteral: 0.96)
+        material.metallic = .init(floatLiteral: 0)
+        return material
     }
 
     static func worldTransform(for state: LMVehicleStateSnapshot?) -> Transform {

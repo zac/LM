@@ -40,6 +40,7 @@ struct LMTerrainManifest: Equatable, Decodable {
         let sourceBytes: Int?
         let byteRangeStart: Int?
         let byteRangeEnd: Int?
+        let sourceMD5: String?
         let sourceRowStart: Int?
         let sourceRowEnd: Int?
         let sourceRowBytes: Int?
@@ -58,7 +59,36 @@ struct LMTerrainManifest: Equatable, Decodable {
 
     struct AlbedoEncoding: Equatable, Decodable {
         let format: String
+        let colorSpace: String?
+        let texelsPerSide: Int?
+        let metersPerTexel: Double?
+        let sourceIDs: [String]?
+        let edgeHandling: String?
+        let minimumLinearReflectance: Double?
+        let maximumLinearReflectance: Double?
         let detail: String
+
+        init(
+            format: String,
+            colorSpace: String? = nil,
+            texelsPerSide: Int? = nil,
+            metersPerTexel: Double? = nil,
+            sourceIDs: [String]? = nil,
+            edgeHandling: String? = nil,
+            minimumLinearReflectance: Double? = nil,
+            maximumLinearReflectance: Double? = nil,
+            detail: String
+        ) {
+            self.format = format
+            self.colorSpace = colorSpace
+            self.texelsPerSide = texelsPerSide
+            self.metersPerTexel = metersPerTexel
+            self.sourceIDs = sourceIDs
+            self.edgeHandling = edgeHandling
+            self.minimumLinearReflectance = minimumLinearReflectance
+            self.maximumLinearReflectance = maximumLinearReflectance
+            self.detail = detail
+        }
     }
 
     struct Tile: Equatable, Decodable {

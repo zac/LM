@@ -8,8 +8,10 @@ sample. The same absolute lunar coordinate and generator version must always
 produce the same result.
 
 The current Apollo 11 vertical slice combines the LROC
-`NAC_DTM_APOLLO11` v1.9 product with LOLA/SELENE `SLDEM2015` V2.0. All three
-source inputs and their exact PDS byte ranges are pinned in
+`NAC_DTM_APOLLO11` v1.9 product, two registered 0.5 m NAC orthorectified
+observations, the LROC WAC empirical normalized 643 nm reflectance mosaic,
+and LOLA/SELENE `SLDEM2015` V2.0. All eight source inputs and their exact PDS
+byte ranges are pinned in
 `LM/Terrain/TerrainManifest.json`:
 
 - **Near field:** 1,025 × 1,025 posts at 2 m spacing, centered on the Apollo 11
@@ -26,8 +28,14 @@ source inputs and their exact PDS byte ranges are pinned in
   the medium field. This covers the geometric horizon throughout P64-P66.
 - **Terminal residual:** below 250 m altitude, a deterministic 0.5 m grid adds
   a bounded residual that is exactly zero at every 2 m measured post.
-- **Appearance:** albedo is currently flat neutral regolith under a
-  mission-angle directional light. Diagnostic hillshade is not used as albedo.
+- **Appearance:** the WAC empirical mosaic supplies photometrically normalized
+  broad reflectance at about 99.7 m/pixel in the near and medium bands and
+  473.8 m/pixel in the far band. The near texture adds only bounded,
+  exposure-normalized high-frequency contrast from the two registered 0.5 m
+  NAC observations. That detail fades to zero through the outer 128 m collar,
+  and the far WAC band is registered to the medium boundary. Textures encode a
+  linear 643 nm reflectance proxy as sRGB; mission lighting and mesh normals
+  remain dynamic in RealityKit. Diagnostic hillshade is never surface color.
 
 The runtime coordinate convention is +X north, +Y up, and -Z east. The cockpit
 stays fixed around the wearer while the lunar world receives the inverse
@@ -36,10 +44,12 @@ vehicle pose at 1:1 scale.
 ## Reproduction
 
 `Tools/TerrainGenerator` verifies the 118 MB NAC GeoTIFF by byte count and
-SHA-256. It also verifies two contiguous SLDEM2015 row slabs fetched by exact
-HTTP byte range: 26 MB at 512 pixels/degree and 205 MB at 128 pixels/degree.
-The committed PDS labels are independently cross-checked, and the manifest
-records the full source sizes, byte offsets, slab hashes, and generator hash.
+SHA-256. It also verifies two contiguous SLDEM2015 geometry slabs, two 69 MB
+NAC orthophoto slabs, an 18 MB 304-pixel/degree WAC slab, and north/south
+64-pixel/degree WAC slabs fetched by exact HTTP byte range. The committed PDS
+labels are independently cross-checked, and the manifest records full source
+sizes and MD5 values where published, byte offsets, slab SHA-256 values, and
+the generator hash.
 With identical inputs, every committed runtime terrain asset and manifest is
 byte-for-byte reproducible.
 
@@ -50,8 +60,9 @@ quantization, preventing overlaps, gaps, and vertical steps.
 
 ## Next fidelity layers
 
-1. Add a pinned, photometrically normalized LROC NAC orthomosaic instead of
-   treating hillshade as surface color.
+1. Characterize the two NAC observations' photometric response more precisely,
+   or replace their exposure-normalized residual with a calibrated NAC mosaic
+   if one becomes available. Keep WAC as the absolute reflectance reference.
 2. Stream nested tiles around the vehicle with crack-free edge morphing rather
    than keeping the full near-field mesh resident.
 3. Move dense terrain updates to RealityKit `LowLevelMesh` and Metal compute

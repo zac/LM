@@ -1,4 +1,6 @@
 import Foundation
+import CoreGraphics
+import ImageIO
 import RealityKit
 import Testing
 import simd
@@ -612,7 +614,8 @@ struct SourceBackedTerrainTileTests {
         #expect(abs(manifest.projection.sphereRadiusMeters - 1_737_400) < 1)
         #expect(manifest.projection.sourceSamples == 2_111)
         #expect(manifest.projection.sourceLines == 13_978)
-        #expect(manifest.toolSHA256 == "3b1f051e45278cb7f6f6b6c1b0d5b9999aaaa2c54821de74ef62d25daa2139a3")
+        #expect(manifest.sources.count == 8)
+        #expect(manifest.toolSHA256 == "0e506408273c8e57e2f74d43491d7506dfb8954dcfba15b0bdb83f6bfbd47820")
 
         let nac = try #require(manifest.sources.first { $0.id == "nac-dtm-apollo11" })
         #expect(nac.productId == "NAC_DTM_APOLLO11")
@@ -643,12 +646,71 @@ struct SourceBackedTerrainTileTests {
         #expect(farSource.sourceRowEnd == 8_150)
         #expect(farSource.sha256 == "f02bb39e4b11f664a77ce3ed8ab0f12087fd89a01d534942564fba5d643122f9")
 
+        let nacOrthoA = try #require(manifest.sources.first {
+            $0.id == "nac-ortho-m150361817-50cm-slab"
+        })
+        #expect(nacOrthoA.productId == "NAC_DTM_APOLLO11_M150361817_50CM")
+        #expect(nacOrthoA.role == "near-field-high-frequency-reflectance")
+        #expect(nacOrthoA.bytes == 69_174_240)
+        #expect(nacOrthoA.sourceBytes == 943_743_920)
+        #expect(nacOrthoA.byteRangeStart == 541_864_880)
+        #expect(nacOrthoA.byteRangeEnd == 611_039_119)
+        #expect(nacOrthoA.sourceRowStart == 32_100)
+        #expect(nacOrthoA.sourceRowEnd == 36_197)
+        #expect(nacOrthoA.sourceRowBytes == 16_880)
+        #expect(nacOrthoA.sourceMD5 == "c3784f010eb6d6c2d84d6ee7b4088331")
+        #expect(nacOrthoA.sha256 == "b6e9df38ddae806b66c6dc3afbe7f1e94b932421292e3af07f048606d9d6e961")
+
+        let nacOrthoB = try #require(manifest.sources.first {
+            $0.id == "nac-ortho-m150368601-50cm-slab"
+        })
+        #expect(nacOrthoB.productId == "NAC_DTM_APOLLO11_M150368601_50CM")
+        #expect(nacOrthoB.sourceMD5 == "95decbebbf283e46d6146c47fec988ed")
+        #expect(nacOrthoB.sha256 == "e93a51b8f18dd549aa7b3b22e708c7d06775273a6605b43026679d54e380a207")
+
+        let wacMedium = try #require(manifest.sources.first {
+            $0.id == "wac-emp-643nm-304p-apollo11-slab"
+        })
+        #expect(wacMedium.productId == "WAC_EMP_643NM_E300N0450_304P")
+        #expect(wacMedium.role == "near-and-medium-photometric-reflectance")
+        #expect(wacMedium.bytes == 18_385_920)
+        #expect(wacMedium.sourceBytes == 1_996_295_040)
+        #expect(wacMedium.byteRangeStart == 1_964_666_880)
+        #expect(wacMedium.byteRangeEnd == 1_983_052_799)
+        #expect(wacMedium.sourceMD5 == "97af2366068cffb38415b3658993b4f1")
+        #expect(wacMedium.sha256 == "08829725710d9e4dba155372369e6bf5c268eac37023ae6ed77f15902640072a")
+
+        let wacNorth = try #require(manifest.sources.first {
+            $0.id == "wac-emp-643nm-64p-north-apollo11-slab"
+        })
+        #expect(wacNorth.productId == "WAC_EMP_643NM_E300N0450_064P")
+        #expect(wacNorth.sourceMD5 == "37e0144f3fa52cf91f9cb0aa605d9200")
+        #expect(wacNorth.sha256 == "831255f649b8184f7e8ea339ced80878c840052971fd0fcd761d6c30c6395e42")
+
+        let wacSouth = try #require(manifest.sources.first {
+            $0.id == "wac-emp-643nm-64p-south-apollo11-slab"
+        })
+        #expect(wacSouth.productId == "WAC_EMP_643NM_E300S0450_064P")
+        #expect(wacSouth.sourceMD5 == "53eb43347e3a96bc8fdb17c1f3207546")
+        #expect(wacSouth.sha256 == "9a8bcc140296ddf9dd8289e95f85f112a30776cc8c441955a56347d66b1b7c86")
+
         let near = try #require(manifest.tile(id: LMTerrainWorld.nearFieldTileID))
         #expect(near.postsPerSide == 1_025)
         #expect(near.extentMeters == 2_048)
         #expect(abs(near.postSpacingMeters - 2) < 1e-9)
         #expect(near.heightEncoding.centimetersPerCount == 1)
         #expect(near.sourceIDs == ["nac-dtm-apollo11"])
+        #expect(near.albedoEncoding.colorSpace == "sRGB encoding of a linear 643 nm reflectance proxy")
+        #expect(near.albedoEncoding.texelsPerSide == 4_097)
+        #expect(near.albedoEncoding.metersPerTexel == 0.5)
+        #expect(near.albedoEncoding.sourceIDs == [
+            "wac-emp-643nm-304p-apollo11-slab",
+            "nac-ortho-m150361817-50cm-slab",
+            "nac-ortho-m150368601-50cm-slab",
+        ])
+        #expect(near.albedoEncoding.edgeHandling == "wac-base-with-nac-high-pass-edge-fade")
+        #expect((near.albedoEncoding.maximumLinearReflectance ?? 0)
+            - (near.albedoEncoding.minimumLinearReflectance ?? 0) > 0.04)
 
         let medium = try #require(manifest.tile(id: LMTerrainWorld.mediumFieldTileID))
         #expect(medium.postsPerSide == 513)
@@ -657,6 +719,9 @@ struct SourceBackedTerrainTileTests {
         #expect(abs((medium.nativeSourceSpacingMeters ?? 0) - 59.2252938) < 1e-8)
         #expect(medium.transitionWidthMeters == 1_024)
         #expect(medium.heightEncoding.centimetersPerCount == 1)
+        #expect(medium.albedoEncoding.texelsPerSide == 513)
+        #expect(abs((medium.albedoEncoding.metersPerTexel ?? 0) - 99.747863237334) < 1e-9)
+        #expect(medium.albedoEncoding.edgeHandling == "photometrically-normalized-source")
 
         let far = try #require(manifest.tile(id: LMTerrainWorld.farFieldTileID))
         #expect(far.postsPerSide == 513)
@@ -666,6 +731,9 @@ struct SourceBackedTerrainTileTests {
         #expect(far.transitionWidthMeters == 16_384)
         #expect(far.heightEncoding.centimetersPerCount == 25)
         #expect(far.maximumHeightMeters - far.minimumHeightMeters > 10_000)
+        #expect(far.albedoEncoding.texelsPerSide == 513)
+        #expect(abs((far.albedoEncoding.metersPerTexel ?? 0) - 473.80235037734) < 1e-9)
+        #expect(far.albedoEncoding.edgeHandling == "inner-boundary-registered-reflectance-blend")
 
         let p64Altitude = try PoweredDescentSession.bundledP64Checkpoint().vehicleState.altitudeMeters
         let geometricHorizon = sqrt(
@@ -673,6 +741,43 @@ struct SourceBackedTerrainTileTests {
                 + p64Altitude * p64Altitude
         )
         #expect(far.extentMeters / 2 > geometricHorizon)
+    }
+
+    @Test func nestedAlbedoBandsAreNonFlatAndShareBoundaryReflectance() throws {
+        let manifest = try LMTerrainManifest.load()
+        let nearTile = try #require(manifest.tile(id: LMTerrainWorld.nearFieldTileID))
+        let mediumTile = try #require(manifest.tile(id: LMTerrainWorld.mediumFieldTileID))
+        let farTile = try #require(manifest.tile(id: LMTerrainWorld.farFieldTileID))
+        let near = try albedoImage(for: nearTile)
+        let medium = try albedoImage(for: mediumTile)
+        let far = try albedoImage(for: farTile)
+
+        #expect(near.width == 4_097 && near.height == 4_097)
+        #expect(medium.width == 513 && medium.height == 513)
+        #expect(far.width == 513 && far.height == 513)
+        #expect(Int(near.pixels.max() ?? 0) - Int(near.pixels.min() ?? 0) > 20)
+        #expect(Int(medium.pixels.max() ?? 0) - Int(medium.pixels.min() ?? 0) > 10)
+        #expect(Int(far.pixels.max() ?? 0) - Int(far.pixels.min() ?? 0) > 70)
+
+        // The 2,048 m near texture boundary lands on medium indices 224...288.
+        for index in 0...64 {
+            let nearIndex = index * 64
+            let mediumIndex = 224 + index
+            expectSameAlbedo(near, 0, nearIndex, medium, 224, mediumIndex)
+            expectSameAlbedo(near, 4_096, nearIndex, medium, 288, mediumIndex)
+            expectSameAlbedo(near, nearIndex, 0, medium, mediumIndex, 224)
+            expectSameAlbedo(near, nearIndex, 4_096, medium, mediumIndex, 288)
+        }
+
+        // The 16,384 m medium texture boundary lands on far indices 240...272.
+        for index in 0...32 {
+            let mediumIndex = index * 16
+            let farIndex = 240 + index
+            expectSameAlbedo(medium, 0, mediumIndex, far, 240, farIndex)
+            expectSameAlbedo(medium, 512, mediumIndex, far, 272, farIndex)
+            expectSameAlbedo(medium, mediumIndex, 0, far, farIndex, 240)
+            expectSameAlbedo(medium, mediumIndex, 512, far, farIndex, 272)
+        }
     }
 
     @Test func nativeNearFieldDrivesTheProductionSampler() throws {
@@ -746,6 +851,52 @@ struct SourceBackedTerrainTileTests {
         return try LMTerrainHeightMap.load(contentsOf: url)
     }
 
+    private struct AlbedoImage {
+        let width: Int
+        let height: Int
+        let pixels: [UInt8]
+
+        subscript(row: Int, column: Int) -> UInt8 {
+            pixels[row * width + column]
+        }
+    }
+
+    private func albedoImage(for tile: LMTerrainManifest.Tile) throws -> AlbedoImage {
+        let name = (tile.albedoFile as NSString).deletingPathExtension
+        let ext = (tile.albedoFile as NSString).pathExtension
+        let url = try #require(
+            Bundle.main.url(forResource: name, withExtension: ext, subdirectory: "Terrain")
+                ?? Bundle.main.url(forResource: name, withExtension: ext)
+        )
+        let source = try #require(CGImageSourceCreateWithURL(url as CFURL, nil))
+        let image = try #require(CGImageSourceCreateImageAtIndex(source, 0, nil))
+        var pixels = [UInt8](repeating: 0, count: image.width * image.height)
+        let context = try #require(CGContext(
+            data: &pixels,
+            width: image.width,
+            height: image.height,
+            bitsPerComponent: 8,
+            bytesPerRow: image.width,
+            space: CGColorSpaceCreateDeviceGray(),
+            bitmapInfo: CGImageAlphaInfo.none.rawValue
+        ))
+        context.translateBy(x: 0, y: CGFloat(image.height))
+        context.scaleBy(x: 1, y: -1)
+        context.draw(image, in: CGRect(x: 0, y: 0, width: image.width, height: image.height))
+        return AlbedoImage(width: image.width, height: image.height, pixels: pixels)
+    }
+
+    private func expectSameAlbedo(
+        _ first: AlbedoImage,
+        _ firstRow: Int,
+        _ firstColumn: Int,
+        _ second: AlbedoImage,
+        _ secondRow: Int,
+        _ secondColumn: Int
+    ) {
+        #expect(abs(Int(first[firstRow, firstColumn]) - Int(second[secondRow, secondColumn])) <= 1)
+    }
+
     private func expectSameHeight(
         _ firstMap: LMTerrainHeightMap,
         _ firstTile: LMTerrainManifest.Tile,
@@ -805,6 +956,23 @@ struct SourceBackedTerrainTileTests {
         #expect(abs(northeast.z + halfSpan) < 1e-4)
         #expect(abs(northeast.y - 10) < 0.02)
         #expect(grid.normals[(posts - 1) * posts + posts - 1].y > 0.95)
+    }
+
+    @Test func progressiveTextureCoordinatesMatchNorthUpMeasuredTiles() {
+        let northwest = Apollo11TerrainResource.textureCoordinate(
+            eastMeters: -1_024,
+            northMeters: 1_024,
+            measuredHalfWidth: 1_024,
+            measuredHalfDepth: 1_024
+        )
+        let southeast = Apollo11TerrainResource.textureCoordinate(
+            eastMeters: 1_024,
+            northMeters: -1_024,
+            measuredHalfWidth: 1_024,
+            measuredHalfDepth: 1_024
+        )
+        #expect(northwest == SIMD2<Float>(0, 0))
+        #expect(southeast == SIMD2<Float>(1, 1))
     }
 
     @Test func measuredMeshNormalsFollowNorthAndEastSlopes() throws {

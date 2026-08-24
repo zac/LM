@@ -17,6 +17,11 @@ import UniformTypeIdentifiers
 //     --dtm Tools/TerrainGenerator/cache/NAC_DTM_APOLLO11.TIF \
 //     --sldem-medium Tools/TerrainGenerator/cache/SLDEM2015_512_APOLLO11_ROWS_14874_15156_FLOAT.bin \
 //     --sldem-far Tools/TerrainGenerator/cache/SLDEM2015_128_APOLLO11_ROWS_7038_8150_FLOAT.bin \
+//     --nac-ortho-a Tools/TerrainGenerator/cache/NAC_DTM_APOLLO11_M150361817_50CM_ROWS_32100_36197.bin \
+//     --nac-ortho-b Tools/TerrainGenerator/cache/NAC_DTM_APOLLO11_M150368601_50CM_ROWS_32100_36197.bin \
+//     --wac-medium Tools/TerrainGenerator/cache/WAC_EMP_643NM_304P_N_ROWS_17951_18118_FLOAT.bin \
+//     --wac-far-north Tools/TerrainGenerator/cache/WAC_EMP_643NM_064P_N_ROWS_3518_3839_FLOAT.bin \
+//     --wac-far-south Tools/TerrainGenerator/cache/WAC_EMP_643NM_064P_S_ROWS_0_235_FLOAT.bin \
 //     --out LM/Terrain
 
 // MARK: - Pinned sources (Docs/visionOS Immersive.md)
@@ -28,6 +33,25 @@ struct PinnedSource {
     let sourceBytes: Int?
     let byteRangeStart: Int?
     let byteRangeEnd: Int?
+    let sourceMD5: String?
+
+    init(
+        url: String,
+        sha256: String?,
+        bytes: Int?,
+        sourceBytes: Int?,
+        byteRangeStart: Int?,
+        byteRangeEnd: Int?,
+        sourceMD5: String? = nil
+    ) {
+        self.url = url
+        self.sha256 = sha256
+        self.bytes = bytes
+        self.sourceBytes = sourceBytes
+        self.byteRangeStart = byteRangeStart
+        self.byteRangeEnd = byteRangeEnd
+        self.sourceMD5 = sourceMD5
+    }
 }
 
 let pinnedDTM = PinnedSource(
@@ -66,6 +90,55 @@ let pinnedSLDEMFar = PinnedSource(
     byteRangeEnd: 1_502_392_319
 )
 let pinnedSLDEMFarLabelURL = "\(sldemBaseURL)/global/float_img/sldem2015_128_60s_60n_000_360_float.lbl"
+
+let lrocApollo11BaseURL = "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO11"
+let pinnedNACOrthoA = PinnedSource(
+    url: "\(lrocApollo11BaseURL)/NAC_DTM_APOLLO11_M150361817_50CM.IMG",
+    sha256: "b6e9df38ddae806b66c6dc3afbe7f1e94b932421292e3af07f048606d9d6e961",
+    bytes: 69_174_240,
+    sourceBytes: 943_743_920,
+    byteRangeStart: 541_864_880,
+    byteRangeEnd: 611_039_119,
+    sourceMD5: "c3784f010eb6d6c2d84d6ee7b4088331"
+)
+let pinnedNACOrthoB = PinnedSource(
+    url: "\(lrocApollo11BaseURL)/NAC_DTM_APOLLO11_M150368601_50CM.IMG",
+    sha256: "e93a51b8f18dd549aa7b3b22e708c7d06775273a6605b43026679d54e380a207",
+    bytes: 69_174_240,
+    sourceBytes: 943_743_920,
+    byteRangeStart: 541_864_880,
+    byteRangeEnd: 611_039_119,
+    sourceMD5: "95decbebbf283e46d6146c47fec988ed"
+)
+
+let wacEMPBaseURL = "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/MDR/WAC_EMP"
+let pinnedWACMedium = PinnedSource(
+    url: "\(wacEMPBaseURL)/WAC_EMP_643NM_E300N0450_304P.IMG",
+    sha256: "08829725710d9e4dba155372369e6bf5c268eac37023ae6ed77f15902640072a",
+    bytes: 18_385_920,
+    sourceBytes: 1_996_295_040,
+    byteRangeStart: 1_964_666_880,
+    byteRangeEnd: 1_983_052_799,
+    sourceMD5: "97af2366068cffb38415b3658993b4f1"
+)
+let pinnedWACFarNorth = PinnedSource(
+    url: "\(wacEMPBaseURL)/WAC_EMP_643NM_E300N0450_064P.IMG",
+    sha256: "831255f649b8184f7e8ea339ced80878c840052971fd0fcd761d6c30c6395e42",
+    bytes: 7_418_880,
+    sourceBytes: 88_496_640,
+    byteRangeStart: 81_077_760,
+    byteRangeEnd: 88_496_639,
+    sourceMD5: "37e0144f3fa52cf91f9cb0aa605d9200"
+)
+let pinnedWACFarSouth = PinnedSource(
+    url: "\(wacEMPBaseURL)/WAC_EMP_643NM_E300S0450_064P.IMG",
+    sha256: "9a8bcc140296ddf9dd8289e95f85f112a30776cc8c441955a56347d66b1b7c86",
+    bytes: 5_437_440,
+    sourceBytes: 88_496_640,
+    byteRangeStart: 23_040,
+    byteRangeEnd: 5_460_479,
+    sourceMD5: "53eb43347e3a96bc8fdb17c1f3207546"
+)
 
 /// Apollo 11 retroreflector (LRR-3) alignment per Docs/visionOS Immersive.md.
 let siteLatitudeDegrees = 0.673_433
@@ -113,6 +186,36 @@ let sldemFarRowStart = 7_038
 let sldemFarRowEnd = 8_150
 let sldemFarMetersPerPost = 236.901
 
+let nacOrthoSamples = 8_440
+let nacOrthoResolutionPixelsPerDegree = 60_646.700_848_3
+let nacOrthoMaximumLatitude = 1.236_505_84
+let nacOrthoWesternmostLongitude = 23.372_316_47
+let nacOrthoRowStart = 32_100
+let nacOrthoRowEnd = 36_197
+let nacOrthoMetersPerPixel = 0.5
+
+let wacMediumSamples = 27_360
+let wacMediumResolutionPixelsPerDegree = 304.0
+let wacMediumMaximumLatitude = 60.0
+let wacMediumWesternmostLongitude = 0.0
+let wacMediumRowStart = 17_951
+let wacMediumRowEnd = 18_118
+let wacMediumMetersPerPixel = 99.747_863_237_334
+
+let wacFarSamples = 5_760
+let wacFarResolutionPixelsPerDegree = 64.0
+let wacFarNorthMaximumLatitude = 60.0
+let wacFarNorthRowStart = 3_518
+let wacFarNorthRowEnd = 3_839
+let wacFarSouthMaximumLatitude = 0.0
+let wacFarSouthRowStart = 0
+let wacFarSouthRowEnd = 235
+let wacFarMetersPerPixel = 473.802_350_377_34
+
+let nearAlbedoTexels = 4_097
+let mediumAlbedoTexels = mediumTilePosts
+let farAlbedoTexels = farTilePosts
+
 // MARK: - Manifest model (mirrored by LM/LM/LMTerrainManifest.swift)
 
 func manifestJSON() -> [String: Any] {
@@ -152,7 +255,7 @@ func manifestJSON() -> [String: Any] {
                 "productId": "NAC_DTM_APOLLO11",
                 "productVersion": "v1.9",
                 "labelURL": pinnedLabel.url,
-                "detail": "LROC NAC DTM. The companion photometric orthophoto (NAC_ANAPOLLO11.EOR) is not present in volume LROLRC_2001; committed albedo layers are flat neutral regolith until a pinned orthophoto source is added, and the mission-sun DirectionalLight shades the mesh normals. Per-tile hillshade PNGs are regenerable diagnostics."
+                "detail": "LROC NAC DTM supplies measured near-field geometry. Separately pinned 0.5 m orthorectified NAC observations supply only exposure-normalized high-frequency reflectance detail over a photometrically normalized WAC base. The mission-sun DirectionalLight shades the mesh normals; per-tile hillshade PNGs remain regenerable diagnostics rather than surface color."
             ],
             sourceManifest(
                 id: "sldem2015-512-apollo11-slab",
@@ -177,6 +280,66 @@ func manifestJSON() -> [String: Any] {
                 rowBytes: sldemFarSamples * MemoryLayout<Float>.size,
                 resolution: sldemFarResolutionPixelsPerDegree,
                 detail: "Exact PDS byte-range slab covering the 262.144 km Apollo 11 far field. Native SLDEM2015 posts are about 236.9 m at the equator; the 512 m render grid is boundary-registered to the medium field."
+            ),
+            sourceManifest(
+                id: "nac-ortho-m150361817-50cm-slab",
+                role: "near-field-high-frequency-reflectance",
+                source: pinnedNACOrthoA,
+                productID: "NAC_DTM_APOLLO11_M150361817_50CM",
+                labelURL: "\(lrocApollo11BaseURL)/NAC_DTM_APOLLO11_M150361817_50CM.xml",
+                rowStart: nacOrthoRowStart,
+                rowEnd: nacOrthoRowEnd,
+                rowBytes: nacOrthoSamples * MemoryLayout<Int16>.size,
+                resolution: nacOrthoResolutionPixelsPerDegree,
+                detail: "Exact PDS byte-range slab from the first 0.5 m orthorectified NAC stereo observation. Exposure-normalized high-frequency contrast is averaged with the second observation and faded to zero at the near-field edge; it is not treated as photometrically normalized absolute albedo."
+            ),
+            sourceManifest(
+                id: "nac-ortho-m150368601-50cm-slab",
+                role: "near-field-high-frequency-reflectance",
+                source: pinnedNACOrthoB,
+                productID: "NAC_DTM_APOLLO11_M150368601_50CM",
+                labelURL: "\(lrocApollo11BaseURL)/NAC_DTM_APOLLO11_M150368601_50CM.xml",
+                rowStart: nacOrthoRowStart,
+                rowEnd: nacOrthoRowEnd,
+                rowBytes: nacOrthoSamples * MemoryLayout<Int16>.size,
+                resolution: nacOrthoResolutionPixelsPerDegree,
+                detail: "Exact PDS byte-range slab from the second 0.5 m orthorectified NAC stereo observation. Its independent gain and offset are normalized before the two registered views are averaged."
+            ),
+            sourceManifest(
+                id: "wac-emp-643nm-304p-apollo11-slab",
+                role: "near-and-medium-photometric-reflectance",
+                source: pinnedWACMedium,
+                productID: "WAC_EMP_643NM_E300N0450_304P",
+                labelURL: "\(wacEMPBaseURL)/WAC_EMP_643NM_E300N0450_304P.xml",
+                rowStart: wacMediumRowStart,
+                rowEnd: wacMediumRowEnd,
+                rowBytes: wacMediumSamples * MemoryLayout<Float>.size,
+                resolution: wacMediumResolutionPixelsPerDegree,
+                detail: "Exact PDS byte-range slab from the empirically photometrically normalized 643 nm WAC mosaic at about 99.7 m/pixel. It supplies absolute low-frequency reflectance for the near and medium bands."
+            ),
+            sourceManifest(
+                id: "wac-emp-643nm-64p-north-apollo11-slab",
+                role: "far-field-photometric-reflectance",
+                source: pinnedWACFarNorth,
+                productID: "WAC_EMP_643NM_E300N0450_064P",
+                labelURL: "\(wacEMPBaseURL)/WAC_EMP_643NM_E300N0450_064P.xml",
+                rowStart: wacFarNorthRowStart,
+                rowEnd: wacFarNorthRowEnd,
+                rowBytes: wacFarSamples * MemoryLayout<Float>.size,
+                resolution: wacFarResolutionPixelsPerDegree,
+                detail: "Exact PDS byte-range slab from the normalized 643 nm WAC mosaic north of the equator at about 473.8 m/pixel."
+            ),
+            sourceManifest(
+                id: "wac-emp-643nm-64p-south-apollo11-slab",
+                role: "far-field-photometric-reflectance",
+                source: pinnedWACFarSouth,
+                productID: "WAC_EMP_643NM_E300S0450_064P",
+                labelURL: "\(wacEMPBaseURL)/WAC_EMP_643NM_E300S0450_064P.xml",
+                rowStart: wacFarSouthRowStart,
+                rowEnd: wacFarSouthRowEnd,
+                rowBytes: wacFarSamples * MemoryLayout<Float>.size,
+                resolution: wacFarResolutionPixelsPerDegree,
+                detail: "Exact PDS byte-range slab from the normalized 643 nm WAC mosaic south of the equator at about 473.8 m/pixel."
             )
         ],
         "tiles": [
@@ -199,7 +362,7 @@ func sourceManifest(
     resolution: Double,
     detail: String
 ) -> [String: Any] {
-    [
+    var manifest: [String: Any] = [
         "id": id,
         "role": role,
         "url": source.url,
@@ -217,6 +380,10 @@ func sourceManifest(
         "labelURL": labelURL,
         "detail": detail
     ]
+    if let sourceMD5 = source.sourceMD5 {
+        manifest["sourceMD5"] = sourceMD5
+    }
+    return manifest
 }
 
 func nearManifestTile() -> [String: Any] {
@@ -227,6 +394,14 @@ func nearManifestTile() -> [String: Any] {
         sourceIDs: ["nac-dtm-apollo11"],
         nativeSourceSpacing: dtmMetersPerPost,
         centimetersPerCount: 1,
+        albedoTexels: nearAlbedoTexels,
+        albedoMetersPerTexel: nacOrthoMetersPerPixel,
+        albedoSourceIDs: [
+            "wac-emp-643nm-304p-apollo11-slab",
+            "nac-ortho-m150361817-50cm-slab",
+            "nac-ortho-m150368601-50cm-slab",
+        ],
+        albedoEdgeHandling: "wac-base-with-nac-high-pass-edge-fade",
         edgeHandling: "measured",
         transitionWidth: nil,
         detail: "Dense near field around Tranquility Base."
@@ -238,9 +413,17 @@ func mediumManifestTile() -> [String: Any] {
         id: "medium-field",
         posts: mediumTilePosts,
         postSpacing: mediumTilePostSpacingMeters,
-        sourceIDs: ["nac-dtm-apollo11", "sldem2015-512-apollo11-slab"],
+        sourceIDs: [
+            "nac-dtm-apollo11",
+            "sldem2015-512-apollo11-slab",
+            "wac-emp-643nm-304p-apollo11-slab",
+        ],
         nativeSourceSpacing: sldemMediumMetersPerPost,
         centimetersPerCount: 1,
+        albedoTexels: mediumAlbedoTexels,
+        albedoMetersPerTexel: wacMediumMetersPerPixel,
+        albedoSourceIDs: ["wac-emp-643nm-304p-apollo11-slab"],
+        albedoEdgeHandling: "photometrically-normalized-source",
         edgeHandling: "inner-boundary-registered-bias-blend",
         transitionWidth: 1_024,
         detail: "SLDEM2015 medium field on a 32 m render grid; the inner collar is registered to the measured NAC boundary."
@@ -252,9 +435,23 @@ func farManifestTile() -> [String: Any] {
         id: "far-field",
         posts: farTilePosts,
         postSpacing: farTilePostSpacingMeters,
-        sourceIDs: ["sldem2015-512-apollo11-slab", "sldem2015-128-apollo11-slab"],
+        sourceIDs: [
+            "sldem2015-512-apollo11-slab",
+            "sldem2015-128-apollo11-slab",
+            "wac-emp-643nm-304p-apollo11-slab",
+            "wac-emp-643nm-64p-north-apollo11-slab",
+            "wac-emp-643nm-64p-south-apollo11-slab",
+        ],
         nativeSourceSpacing: sldemFarMetersPerPost,
         centimetersPerCount: 25,
+        albedoTexels: farAlbedoTexels,
+        albedoMetersPerTexel: wacFarMetersPerPixel,
+        albedoSourceIDs: [
+            "wac-emp-643nm-304p-apollo11-slab",
+            "wac-emp-643nm-64p-north-apollo11-slab",
+            "wac-emp-643nm-64p-south-apollo11-slab",
+        ],
+        albedoEdgeHandling: "inner-boundary-registered-reflectance-blend",
         edgeHandling: "inner-boundary-registered-bias-blend",
         transitionWidth: 16_384,
         detail: "Global SLDEM2015 far field covering 262.144 km on a 512 m render grid; the inner collar is registered to the medium field."
@@ -268,6 +465,10 @@ func tileManifest(
     sourceIDs: [String],
     nativeSourceSpacing: Double,
     centimetersPerCount: Int,
+    albedoTexels: Int,
+    albedoMetersPerTexel: Double,
+    albedoSourceIDs: [String],
+    albedoEdgeHandling: String,
     edgeHandling: String,
     transitionWidth: Double?,
     detail: String
@@ -287,7 +488,12 @@ func tileManifest(
         ],
         "albedoEncoding": [
             "format": "PNG_RGB_8",
-            "detail": "Flat neutral regolith (RGB 140). Shading is applied in-engine from tile mesh normals under the mission sun."
+            "colorSpace": "sRGB encoding of a linear 643 nm reflectance proxy",
+            "texelsPerSide": albedoTexels,
+            "metersPerTexel": albedoMetersPerTexel,
+            "sourceIDs": albedoSourceIDs,
+            "edgeHandling": albedoEdgeHandling,
+            "detail": "Photometrically normalized WAC reflectance supplies broad tone. The near band adds bounded, exposure-normalized 0.5 m NAC high-frequency contrast while retaining the WAC value at its boundary. Mission lighting remains dynamic in-engine."
         ],
         "hillshadeEncoding": [
             "format": "PNG_RGB_8",
@@ -380,6 +586,19 @@ func verifySLDEMLabel(
     try expect("SAMPLE_BITS", 32)
     try expect("SCALING_FACTOR", 1)
     try expect("OFFSET", 1_737.4)
+}
+
+func verifyPDS4Metadata(
+    resource: String,
+    expectedFragments: [String]
+) throws {
+    guard let url = Bundle.module.url(forResource: resource, withExtension: "xml") else {
+        throw TerrainError("bundled \(resource).xml is missing")
+    }
+    let text = try String(contentsOf: url, encoding: .utf8)
+    for fragment in expectedFragments where !text.contains(fragment) {
+        throw TerrainError("\(resource).xml does not contain pinned metadata: \(fragment)")
+    }
 }
 
 struct TerrainError: Error, CustomStringConvertible {
@@ -643,6 +862,364 @@ struct SLDEMFloatSlab {
     }
 }
 
+/// Contiguous complete rows from a signed 16-bit LROC NAC orthophoto.
+/// The two source observations are independently exposed, so their DNs are
+/// normalized before only their high-frequency contrast is retained.
+struct NACOrthoSlab {
+    let sourceWidth: Int
+    let sourceRowStart: Int
+    let sourceRowEnd: Int
+    let resolutionPixelsPerDegree: Double
+    let maximumLatitudeDegrees: Double
+    let westernmostLongitudeDegrees: Double
+    let samples: [Int16]
+
+    static func load(
+        contentsOf url: URL,
+        source: PinnedSource
+    ) throws -> NACOrthoSlab {
+        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+        let byteCount = attributes[.size] as? Int ?? 0
+        guard byteCount == source.bytes else {
+            throw TerrainError("NAC orthophoto slab size \(byteCount) != pinned \(source.bytes ?? 0)")
+        }
+        let digest = try sha256Hex(contentsOf: url)
+        guard digest == source.sha256 else {
+            throw TerrainError("NAC orthophoto slab SHA-256 mismatch: \(digest)")
+        }
+        let expectedRows = nacOrthoRowEnd - nacOrthoRowStart + 1
+        let expectedSamples = expectedRows * nacOrthoSamples
+        guard byteCount == expectedSamples * MemoryLayout<Int16>.size else {
+            throw TerrainError("NAC orthophoto slab dimensions do not match its byte range")
+        }
+        let data = try Data(contentsOf: url, options: [.mappedIfSafe])
+        var samples = [Int16](repeating: 0, count: expectedSamples)
+        _ = samples.withUnsafeMutableBytes { destination in
+            data.copyBytes(to: destination)
+        }
+        let validCount = samples.reduce(into: 0) { count, value in
+            if value > -32_764 { count += 1 }
+        }
+        guard validCount > expectedSamples / 2 else {
+            throw TerrainError("NAC orthophoto slab contains insufficient valid image data")
+        }
+        print("verified NAC orthophoto slab checksum \(digest.prefix(16))…")
+        return NACOrthoSlab(
+            sourceWidth: nacOrthoSamples,
+            sourceRowStart: nacOrthoRowStart,
+            sourceRowEnd: nacOrthoRowEnd,
+            resolutionPixelsPerDegree: nacOrthoResolutionPixelsPerDegree,
+            maximumLatitudeDegrees: nacOrthoMaximumLatitude,
+            westernmostLongitudeDegrees: nacOrthoWesternmostLongitude,
+            samples: samples
+        )
+    }
+
+    func dn(latitudeDegrees: Double, longitudeDegrees: Double) -> Double? {
+        let globalLine = (maximumLatitudeDegrees - latitudeDegrees)
+            * resolutionPixelsPerDegree - 0.5
+        let globalSample = (longitudeDegrees - westernmostLongitudeDegrees)
+            * resolutionPixelsPerDegree - 0.5
+        guard globalLine >= Double(sourceRowStart) - 0.5,
+              globalLine <= Double(sourceRowEnd) + 0.5,
+              globalSample >= -0.5,
+              globalSample <= Double(sourceWidth) - 0.5 else {
+            return nil
+        }
+        let localLine = min(
+            max(globalLine - Double(sourceRowStart), 0),
+            Double(sourceRowEnd - sourceRowStart)
+        )
+        let sample = min(max(globalSample, 0), Double(sourceWidth - 1))
+        let line0 = Int(floor(localLine))
+        let sample0 = Int(floor(sample))
+        let line1 = min(line0 + 1, sourceRowEnd - sourceRowStart)
+        let sample1 = min(sample0 + 1, sourceWidth - 1)
+        let lineFraction = localLine - Double(line0)
+        let sampleFraction = sample - Double(sample0)
+        func value(line: Int, sample: Int) -> Double? {
+            let value = samples[line * sourceWidth + sample]
+            return value > -32_764 ? Double(value) : nil
+        }
+        guard let v00 = value(line: line0, sample: sample0),
+              let v01 = value(line: line0, sample: sample1),
+              let v10 = value(line: line1, sample: sample0),
+              let v11 = value(line: line1, sample: sample1) else {
+            return nil
+        }
+        let top = v00 * (1 - sampleFraction) + v01 * sampleFraction
+        let bottom = v10 * (1 - sampleFraction) + v11 * sampleFraction
+        return top * (1 - lineFraction) + bottom * lineFraction
+    }
+}
+
+/// A byte-range slab from the empirically normalized LROC WAC 643 nm mosaic.
+/// Values are dimensionless reflectance at the product's standard geometry.
+struct WACReflectanceSlab {
+    let sourceWidth: Int
+    let sourceRowStart: Int
+    let sourceRowEnd: Int
+    let resolutionPixelsPerDegree: Double
+    let maximumLatitudeDegrees: Double
+    let westernmostLongitudeDegrees: Double
+    let samples: [Float]
+
+    static func load(
+        contentsOf url: URL,
+        source: PinnedSource,
+        sourceWidth: Int,
+        sourceRowStart: Int,
+        sourceRowEnd: Int,
+        resolutionPixelsPerDegree: Double,
+        maximumLatitudeDegrees: Double,
+        westernmostLongitudeDegrees: Double
+    ) throws -> WACReflectanceSlab {
+        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+        let byteCount = attributes[.size] as? Int ?? 0
+        guard byteCount == source.bytes else {
+            throw TerrainError("WAC reflectance slab size \(byteCount) != pinned \(source.bytes ?? 0)")
+        }
+        let digest = try sha256Hex(contentsOf: url)
+        guard digest == source.sha256 else {
+            throw TerrainError("WAC reflectance slab SHA-256 mismatch: \(digest)")
+        }
+        let expectedRows = sourceRowEnd - sourceRowStart + 1
+        let expectedFloats = expectedRows * sourceWidth
+        guard byteCount == expectedFloats * MemoryLayout<Float>.size else {
+            throw TerrainError("WAC reflectance slab dimensions do not match its byte range")
+        }
+        let data = try Data(contentsOf: url, options: [.mappedIfSafe])
+        var samples = [Float](repeating: 0, count: expectedFloats)
+        _ = samples.withUnsafeMutableBytes { destination in
+            data.copyBytes(to: destination)
+        }
+        let valid = samples.filter { $0.isFinite && $0 > 0 && $0 < 1 }
+        guard valid.count > expectedFloats / 2 else {
+            throw TerrainError("WAC reflectance slab contains insufficient valid data")
+        }
+        print("verified WAC reflectance slab checksum \(digest.prefix(16))…")
+        return WACReflectanceSlab(
+            sourceWidth: sourceWidth,
+            sourceRowStart: sourceRowStart,
+            sourceRowEnd: sourceRowEnd,
+            resolutionPixelsPerDegree: resolutionPixelsPerDegree,
+            maximumLatitudeDegrees: maximumLatitudeDegrees,
+            westernmostLongitudeDegrees: westernmostLongitudeDegrees,
+            samples: samples
+        )
+    }
+
+    func reflectance(latitudeDegrees: Double, longitudeDegrees: Double) throws -> Double {
+        let globalLine = (maximumLatitudeDegrees - latitudeDegrees)
+            * resolutionPixelsPerDegree - 0.5
+        let globalSample = (longitudeDegrees - westernmostLongitudeDegrees)
+            * resolutionPixelsPerDegree - 0.5
+        guard globalLine >= Double(sourceRowStart) - 0.5,
+              globalLine <= Double(sourceRowEnd) + 0.5,
+              globalSample >= -0.5,
+              globalSample <= Double(sourceWidth) - 0.5 else {
+            throw TerrainError(
+                String(format: "WAC slab misses lat %.6f lon %.6f", latitudeDegrees, longitudeDegrees)
+            )
+        }
+        let localLine = min(
+            max(globalLine - Double(sourceRowStart), 0),
+            Double(sourceRowEnd - sourceRowStart)
+        )
+        let sample = min(max(globalSample, 0), Double(sourceWidth - 1))
+        let line0 = Int(floor(localLine))
+        let sample0 = Int(floor(sample))
+        let line1 = min(line0 + 1, sourceRowEnd - sourceRowStart)
+        let sample1 = min(sample0 + 1, sourceWidth - 1)
+        let lineFraction = localLine - Double(line0)
+        let sampleFraction = sample - Double(sample0)
+        func value(line: Int, sample: Int) throws -> Double {
+            let value = samples[line * sourceWidth + sample]
+            guard value.isFinite, value > 0, value < 1 else {
+                throw TerrainError("WAC reflectance contains a special or invalid pixel")
+            }
+            return Double(value)
+        }
+        let v00 = try value(line: line0, sample: sample0)
+        let v01 = try value(line: line0, sample: sample1)
+        let v10 = try value(line: line1, sample: sample0)
+        let v11 = try value(line: line1, sample: sample1)
+        let top = v00 * (1 - sampleFraction) + v01 * sampleFraction
+        let bottom = v10 * (1 - sampleFraction) + v11 * sampleFraction
+        return top * (1 - lineFraction) + bottom * lineFraction
+    }
+}
+
+struct AlbedoField {
+    let texelsPerSide: Int
+    let linearReflectance: [Float]
+}
+
+private struct RunningStatistics {
+    var count = 0
+    var mean = 0.0
+    var m2 = 0.0
+
+    mutating func add(_ value: Double) {
+        count += 1
+        let delta = value - mean
+        mean += delta / Double(count)
+        m2 += delta * (value - mean)
+    }
+
+    var standardDeviation: Double {
+        count > 1 ? sqrt(m2 / Double(count - 1)) : 0
+    }
+}
+
+func sampledAlbedoField(
+    texelsPerSide: Int,
+    extentMeters: Double,
+    reflectance: (_ northMeters: Double, _ eastMeters: Double) throws -> Double
+) throws -> AlbedoField {
+    let spacing = extentMeters / Double(texelsPerSide - 1)
+    let halfExtent = extentMeters / 2
+    var values = [Float](repeating: 0, count: texelsPerSide * texelsPerSide)
+    for row in 0..<texelsPerSide {
+        let north = halfExtent - Double(row) * spacing
+        for column in 0..<texelsPerSide {
+            let east = Double(column) * spacing - halfExtent
+            values[row * texelsPerSide + column] = Float(try reflectance(north, east))
+        }
+    }
+    return AlbedoField(texelsPerSide: texelsPerSide, linearReflectance: values)
+}
+
+/// Build a near-field reflectance texture from normalized WAC broad tone and
+/// only the locally high-passed, exposure-normalized detail shared by the two
+/// registered 0.5 m NAC orthophotos. The detail fades to exactly zero in a
+/// 128 m boundary collar, so the near tile meets the medium WAC texture.
+func nearAlbedoField(
+    orthoA: NACOrthoSlab,
+    orthoB: NACOrthoSlab,
+    broadReflectance: (_ northMeters: Double, _ eastMeters: Double) throws -> Double
+) throws -> AlbedoField {
+    let size = nearAlbedoTexels
+    let spacing = nearTilePostSpacingMeters * Double(nearTilePosts - 1)
+        / Double(size - 1)
+    let halfExtent = nearTilePostSpacingMeters * Double(nearTilePosts - 1) / 2
+
+    func sourceDN(
+        _ source: NACOrthoSlab,
+        row: Int,
+        column: Int
+    ) -> Double? {
+        let north = halfExtent - Double(row) * spacing
+        let east = Double(column) * spacing - halfExtent
+        let coordinate = siteCoordinates(northMeters: north, eastMeters: east)
+        return source.dn(
+            latitudeDegrees: coordinate.latitude,
+            longitudeDegrees: coordinate.longitude
+        )
+    }
+
+    var statsA = RunningStatistics()
+    var statsB = RunningStatistics()
+    for row in stride(from: 0, to: size, by: 16) {
+        for column in stride(from: 0, to: size, by: 16) {
+            if let value = sourceDN(orthoA, row: row, column: column) {
+                statsA.add(value)
+            }
+            if let value = sourceDN(orthoB, row: row, column: column) {
+                statsB.add(value)
+            }
+        }
+    }
+    guard statsA.standardDeviation > 0, statsB.standardDeviation > 0 else {
+        throw TerrainError("NAC orthophoto exposure statistics are degenerate")
+    }
+    print(String(
+        format: "NAC orthophoto normalization: A %.2f±%.2f DN, B %.2f±%.2f DN",
+        statsA.mean,
+        statsA.standardDeviation,
+        statsB.mean,
+        statsB.standardDeviation
+    ))
+
+    var normalized = [Float](repeating: 0, count: size * size)
+    for row in 0..<size {
+        for column in 0..<size {
+            guard let a = sourceDN(orthoA, row: row, column: column),
+                  let b = sourceDN(orthoB, row: row, column: column) else {
+                throw TerrainError("NAC orthophoto coverage hole inside the near tile")
+            }
+            let za = (a - statsA.mean) / statsA.standardDeviation
+            let zb = (b - statsB.mean) / statsB.standardDeviation
+            normalized[row * size + column] = Float((za + zb) / 2)
+        }
+    }
+
+    let radius = Int((32.0 / spacing).rounded())
+    var horizontalMean = [Float](repeating: 0, count: normalized.count)
+    for row in 0..<size {
+        var sum = 0.0
+        var lower = 0
+        var upper = min(radius, size - 1)
+        for column in lower...upper {
+            sum += Double(normalized[row * size + column])
+        }
+        for column in 0..<size {
+            let count = upper - lower + 1
+            horizontalMean[row * size + column] = Float(sum / Double(count))
+            let nextLower = max(column + 1 - radius, 0)
+            let nextUpper = min(column + 1 + radius, size - 1)
+            while lower < nextLower {
+                sum -= Double(normalized[row * size + lower])
+                lower += 1
+            }
+            while upper < nextUpper {
+                upper += 1
+                sum += Double(normalized[row * size + upper])
+            }
+        }
+    }
+
+    var reflectance = [Float](repeating: 0, count: normalized.count)
+    for column in 0..<size {
+        var sum = 0.0
+        var lower = 0
+        var upper = min(radius, size - 1)
+        for row in lower...upper {
+            sum += Double(horizontalMean[row * size + column])
+        }
+        for row in 0..<size {
+            let count = upper - lower + 1
+            let localMean = sum / Double(count)
+            let highFrequency = min(max(
+                Double(normalized[row * size + column]) - localMean,
+                -1.8
+            ), 1.8)
+            let north = halfExtent - Double(row) * spacing
+            let east = Double(column) * spacing - halfExtent
+            let edgeDistance = Double(min(row, column, size - 1 - row, size - 1 - column))
+                * spacing
+            let normalizedEdge = min(max(edgeDistance / 128.0, 0), 1)
+            let edgeWeight = normalizedEdge * normalizedEdge * (3 - 2 * normalizedEdge)
+            let detailMultiplier = exp(highFrequency * 0.18 * edgeWeight)
+            reflectance[row * size + column] = Float(
+                try broadReflectance(north, east) * detailMultiplier
+            )
+
+            let nextLower = max(row + 1 - radius, 0)
+            let nextUpper = min(row + 1 + radius, size - 1)
+            while lower < nextLower {
+                sum -= Double(horizontalMean[lower * size + column])
+                lower += 1
+            }
+            while upper < nextUpper {
+                upper += 1
+                sum += Double(horizontalMean[upper * size + column])
+            }
+        }
+    }
+    return AlbedoField(texelsPerSide: size, linearReflectance: reflectance)
+}
+
 // MARK: - Tile generation
 
 struct TileResult {
@@ -650,6 +1227,8 @@ struct TileResult {
     let zeroPointMeters: Double
     let minimumHeightMeters: Double
     let maximumHeightMeters: Double
+    let minimumLinearReflectance: Double
+    let maximumLinearReflectance: Double
 }
 
 func metersPerDegree(latitudeDegrees: Double) -> (north: Double, east: Double) {
@@ -740,6 +1319,7 @@ func generateTile(
     postSpacing: Double,
     centimetersPerCount: Int,
     relativeElevation: (_ northMeters: Double, _ eastMeters: Double) throws -> Double,
+    albedoField: AlbedoField,
     sunENU: (x: Double, y: Double, z: Double),
     outDir: URL
 ) throws -> TileResult {
@@ -775,18 +1355,18 @@ func generateTile(
         to: outDir.appendingPathComponent("\(id)-height.png")
     )
 
-    // Albedo PNG: flat neutral regolith. Shading comes from the mesh normals
-    // under the in-engine mission sun; a baked hillshade would double-shade.
-    // The hillshade is still written beside the manifest as a diagnostic.
+    guard albedoField.linearReflectance.count
+            == albedoField.texelsPerSide * albedoField.texelsPerSide else {
+        throw TerrainError("\(id): albedo field dimensions are inconsistent")
+    }
+    // Albedo PNG: encode the source-backed linear reflectance proxy into sRGB.
+    // Shading still comes from mesh normals under the in-engine mission sun;
+    // the diagnostic hillshade is never consumed by the app.
     var shadePixels = [UInt8](repeating: 0, count: posts * posts * 3)
-    var albedoPixels = [UInt8](repeating: 0, count: posts * posts * 3)
     let inverseCentralDifferenceSpan = 1.0 / (2.0 * postSpacing)
     for row in 0..<posts {
         for column in 0..<posts {
             let p = (row * posts + column) * 3
-            albedoPixels[p] = 140
-            albedoPixels[p + 1] = 140
-            albedoPixels[p + 2] = 140
             let l = min(max(row, 1), posts - 2)
             let s = min(max(column, 1), posts - 2)
             let northSlope = (heights[(l - 1) * posts + s] - heights[(l + 1) * posts + s])
@@ -802,10 +1382,20 @@ func generateTile(
             shadePixels[p + 2] = shade
         }
     }
+    var albedoPixels = [UInt8](
+        repeating: 0,
+        count: albedoField.texelsPerSide * albedoField.texelsPerSide * 3
+    )
+    for (index, value) in albedoField.linearReflectance.enumerated() {
+        let encoded = linearReflectanceToSRGB8(Double(value))
+        albedoPixels[index * 3] = encoded
+        albedoPixels[index * 3 + 1] = encoded
+        albedoPixels[index * 3 + 2] = encoded
+    }
     try writeRGB8PNG(
         pixels: albedoPixels,
-        width: posts,
-        height: posts,
+        width: albedoField.texelsPerSide,
+        height: albedoField.texelsPerSide,
         to: outDir.appendingPathComponent("\(id)-albedo.png")
     )
     try writeRGB8PNG(
@@ -819,8 +1409,18 @@ func generateTile(
         name: id,
         zeroPointMeters: minHeight,
         minimumHeightMeters: minHeight,
-        maximumHeightMeters: maxHeight
+        maximumHeightMeters: maxHeight,
+        minimumLinearReflectance: Double(albedoField.linearReflectance.min() ?? 0),
+        maximumLinearReflectance: Double(albedoField.linearReflectance.max() ?? 0)
     )
+}
+
+func linearReflectanceToSRGB8(_ reflectance: Double) -> UInt8 {
+    let linear = min(max(reflectance, 0.015), 0.45)
+    let srgb = linear <= 0.003_130_8
+        ? 12.92 * linear
+        : 1.055 * pow(linear, 1 / 2.4) - 0.055
+    return UInt8(min(max((srgb * 255).rounded(), 0), 255))
 }
 
 // MARK: - PNG writing
@@ -906,6 +1506,11 @@ func run() throws {
     var dtmPath: URL?
     var sldemMediumPath: URL?
     var sldemFarPath: URL?
+    var nacOrthoAPath: URL?
+    var nacOrthoBPath: URL?
+    var wacMediumPath: URL?
+    var wacFarNorthPath: URL?
+    var wacFarSouthPath: URL?
     var outDir = URL(fileURLWithPath: "LM/Terrain")
     var arguments = Array(CommandLine.arguments.dropFirst())
     while !arguments.isEmpty {
@@ -919,16 +1524,32 @@ func run() throws {
             sldemMediumPath = URL(fileURLWithPath: arguments[1]); arguments.removeFirst(2)
         case "--sldem-far":
             sldemFarPath = URL(fileURLWithPath: arguments[1]); arguments.removeFirst(2)
+        case "--nac-ortho-a":
+            nacOrthoAPath = URL(fileURLWithPath: arguments[1]); arguments.removeFirst(2)
+        case "--nac-ortho-b":
+            nacOrthoBPath = URL(fileURLWithPath: arguments[1]); arguments.removeFirst(2)
+        case "--wac-medium":
+            wacMediumPath = URL(fileURLWithPath: arguments[1]); arguments.removeFirst(2)
+        case "--wac-far-north":
+            wacFarNorthPath = URL(fileURLWithPath: arguments[1]); arguments.removeFirst(2)
+        case "--wac-far-south":
+            wacFarSouthPath = URL(fileURLWithPath: arguments[1]); arguments.removeFirst(2)
         case "--out":
             outDir = URL(fileURLWithPath: arguments[1]); arguments.removeFirst(2)
         default:
             throw TerrainError("unknown argument \(arguments[0])")
         }
     }
-    guard let dtmPath, let sldemMediumPath, let sldemFarPath else {
+    guard let dtmPath, let sldemMediumPath, let sldemFarPath,
+          let nacOrthoAPath, let nacOrthoBPath,
+          let wacMediumPath, let wacFarNorthPath, let wacFarSouthPath else {
         throw TerrainError(
             "usage: Apollo11TerrainGenerator --dtm <NAC_DTM_APOLLO11.TIF> "
-                + "--sldem-medium <SLDEM512-row-slab> --sldem-far <SLDEM128-row-slab> --out <dir>"
+                + "--sldem-medium <SLDEM512-row-slab> --sldem-far <SLDEM128-row-slab> "
+                + "--nac-ortho-a <NAC-50cm-row-slab> --nac-ortho-b <NAC-50cm-row-slab> "
+                + "--wac-medium <WAC-304P-row-slab> "
+                + "--wac-far-north <WAC-64P-north-row-slab> "
+                + "--wac-far-south <WAC-64P-south-row-slab> --out <dir>"
         )
     }
 
@@ -984,6 +1605,53 @@ func run() throws {
         westernmostLongitude: 0,
         easternmostLongitude: 360
     )
+    try verifyPDS4Metadata(
+        resource: "NAC_DTM_APOLLO11_M150361817_50CM",
+        expectedFragments: [
+            "<file_size unit=\"byte\">943743920</file_size>",
+            "<md5_checksum>c3784f010eb6d6c2d84d6ee7b4088331</md5_checksum>",
+            "<elements>55908</elements>",
+            "<elements>8440</elements>",
+            "<cart:pixel_scale_x unit=\"m/pixel\">0.49999999999999</cart:pixel_scale_x>",
+        ]
+    )
+    try verifyPDS4Metadata(
+        resource: "NAC_DTM_APOLLO11_M150368601_50CM",
+        expectedFragments: [
+            "<file_size unit=\"byte\">943743920</file_size>",
+            "<md5_checksum>95decbebbf283e46d6146c47fec988ed</md5_checksum>",
+            "<elements>55908</elements>",
+            "<elements>8440</elements>",
+        ]
+    )
+    try verifyPDS4Metadata(
+        resource: "WAC_EMP_643NM_E300N0450_304P",
+        expectedFragments: [
+            "<file_size unit=\"byte\">1996295040</file_size>",
+            "<md5_checksum>97af2366068cffb38415b3658993b4f1</md5_checksum>",
+            "<elements>18240</elements>",
+            "<elements>27360</elements>",
+            "<cart:pixel_resolution_x unit=\"deg/pixel\">0.003289473684210526</cart:pixel_resolution_x>",
+        ]
+    )
+    try verifyPDS4Metadata(
+        resource: "WAC_EMP_643NM_E300N0450_064P",
+        expectedFragments: [
+            "<file_size unit=\"byte\">88496640</file_size>",
+            "<md5_checksum>37e0144f3fa52cf91f9cb0aa605d9200</md5_checksum>",
+            "<elements>3840</elements>",
+            "<elements>5760</elements>",
+        ]
+    )
+    try verifyPDS4Metadata(
+        resource: "WAC_EMP_643NM_E300S0450_064P",
+        expectedFragments: [
+            "<file_size unit=\"byte\">88496640</file_size>",
+            "<md5_checksum>53eb43347e3a96bc8fdb17c1f3207546</md5_checksum>",
+            "<elements>3840</elements>",
+            "<elements>5760</elements>",
+        ]
+    )
     print("PDS label constants verified")
 
     print("reading \(dtmPath.path)…")
@@ -1011,6 +1679,44 @@ func run() throws {
         resolutionPixelsPerDegree: sldemFarResolutionPixelsPerDegree,
         maximumLatitudeDegrees: sldemFarMaximumLatitude,
         westernmostLongitudeDegrees: sldemFarWesternmostLongitude
+    )
+    let nacOrthoA = try NACOrthoSlab.load(
+        contentsOf: nacOrthoAPath,
+        source: pinnedNACOrthoA
+    )
+    let nacOrthoB = try NACOrthoSlab.load(
+        contentsOf: nacOrthoBPath,
+        source: pinnedNACOrthoB
+    )
+    let wacMedium = try WACReflectanceSlab.load(
+        contentsOf: wacMediumPath,
+        source: pinnedWACMedium,
+        sourceWidth: wacMediumSamples,
+        sourceRowStart: wacMediumRowStart,
+        sourceRowEnd: wacMediumRowEnd,
+        resolutionPixelsPerDegree: wacMediumResolutionPixelsPerDegree,
+        maximumLatitudeDegrees: wacMediumMaximumLatitude,
+        westernmostLongitudeDegrees: wacMediumWesternmostLongitude
+    )
+    let wacFarNorth = try WACReflectanceSlab.load(
+        contentsOf: wacFarNorthPath,
+        source: pinnedWACFarNorth,
+        sourceWidth: wacFarSamples,
+        sourceRowStart: wacFarNorthRowStart,
+        sourceRowEnd: wacFarNorthRowEnd,
+        resolutionPixelsPerDegree: wacFarResolutionPixelsPerDegree,
+        maximumLatitudeDegrees: wacFarNorthMaximumLatitude,
+        westernmostLongitudeDegrees: 0
+    )
+    let wacFarSouth = try WACReflectanceSlab.load(
+        contentsOf: wacFarSouthPath,
+        source: pinnedWACFarSouth,
+        sourceWidth: wacFarSamples,
+        sourceRowStart: wacFarSouthRowStart,
+        sourceRowEnd: wacFarSouthRowEnd,
+        resolutionPixelsPerDegree: wacFarResolutionPixelsPerDegree,
+        maximumLatitudeDegrees: wacFarSouthMaximumLatitude,
+        westernmostLongitudeDegrees: 0
     )
 
     let siteSample = (siteLongitudeDegrees - dtmWesternmostLongitude)
@@ -1090,12 +1796,56 @@ func run() throws {
         )
     }
 
+    let mediumReflectance: (Double, Double) throws -> Double = { north, east in
+        let coordinate = siteCoordinates(northMeters: north, eastMeters: east)
+        return try wacMedium.reflectance(
+            latitudeDegrees: coordinate.latitude,
+            longitudeDegrees: coordinate.longitude
+        )
+    }
+    let farSourceReflectance: (Double, Double) throws -> Double = { north, east in
+        let coordinate = siteCoordinates(northMeters: north, eastMeters: east)
+        let source = coordinate.latitude >= 0 ? wacFarNorth : wacFarSouth
+        return try source.reflectance(
+            latitudeDegrees: coordinate.latitude,
+            longitudeDegrees: coordinate.longitude
+        )
+    }
+    let farReflectance: (Double, Double) throws -> Double = { north, east in
+        try boundaryRegisteredElevation(
+            northMeters: north,
+            eastMeters: east,
+            innerHalfExtentMeters: Double(mediumTilePosts - 1)
+                * mediumTilePostSpacingMeters / 2,
+            transitionWidthMeters: 16_384,
+            innerElevation: mediumReflectance,
+            outerElevation: farSourceReflectance
+        )
+    }
+    print("generating source-backed albedo fields…")
+    let nearAlbedo = try nearAlbedoField(
+        orthoA: nacOrthoA,
+        orthoB: nacOrthoB,
+        broadReflectance: mediumReflectance
+    )
+    let mediumAlbedo = try sampledAlbedoField(
+        texelsPerSide: mediumAlbedoTexels,
+        extentMeters: Double(mediumTilePosts - 1) * mediumTilePostSpacingMeters,
+        reflectance: mediumReflectance
+    )
+    let farAlbedo = try sampledAlbedoField(
+        texelsPerSide: farAlbedoTexels,
+        extentMeters: Double(farTilePosts - 1) * farTilePostSpacingMeters,
+        reflectance: farReflectance
+    )
+
     let near = try generateTile(
         id: "near-field",
         posts: nearTilePosts,
         postSpacing: nearTilePostSpacingMeters,
         centimetersPerCount: 1,
         relativeElevation: nearElevation,
+        albedoField: nearAlbedo,
         sunENU: sunENU,
         outDir: outDir
     )
@@ -1105,6 +1855,7 @@ func run() throws {
         postSpacing: mediumTilePostSpacingMeters,
         centimetersPerCount: 1,
         relativeElevation: mediumElevation,
+        albedoField: mediumAlbedo,
         sunENU: sunENU,
         outDir: outDir
     )
@@ -1114,6 +1865,7 @@ func run() throws {
         postSpacing: farTilePostSpacingMeters,
         centimetersPerCount: 25,
         relativeElevation: farElevation,
+        albedoField: farAlbedo,
         sunENU: sunENU,
         outDir: outDir
     )
@@ -1135,6 +1887,10 @@ func run() throws {
         tile[index]["maximumHeightMeters"] = result.maximumHeightMeters
         tile[index]["heightFile"] = "\(result.name)-height.png"
         tile[index]["albedoFile"] = "\(result.name)-albedo.png"
+        var albedoEncoding = tile[index]["albedoEncoding"] as! [String: Any]
+        albedoEncoding["minimumLinearReflectance"] = result.minimumLinearReflectance
+        albedoEncoding["maximumLinearReflectance"] = result.maximumLinearReflectance
+        tile[index]["albedoEncoding"] = albedoEncoding
         manifest["tiles"] = tile
     }
     var jsonData = try JSONSerialization.data(
@@ -1145,7 +1901,15 @@ func run() throws {
     try jsonData.write(to: outDir.appendingPathComponent("TerrainManifest.json"))
 
     for result in [near, medium, far] {
-        print(String(format: "%@: heights %.1f…%.1f m (zero %.1f m)", result.name, result.minimumHeightMeters, result.maximumHeightMeters, result.zeroPointMeters))
+        print(String(
+            format: "%@: heights %.1f…%.1f m (zero %.1f m), reflectance %.4f…%.4f",
+            result.name,
+            result.minimumHeightMeters,
+            result.maximumHeightMeters,
+            result.zeroPointMeters,
+            result.minimumLinearReflectance,
+            result.maximumLinearReflectance
+        ))
     }
     print("wrote \(outDir.path)")
 }

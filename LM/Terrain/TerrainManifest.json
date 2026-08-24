@@ -28,7 +28,7 @@
   "sources" : [
     {
       "bytes" : 118142727,
-      "detail" : "LROC NAC DTM. The companion photometric orthophoto (NAC_ANAPOLLO11.EOR) is not present in volume LROLRC_2001; committed albedo layers are flat neutral regolith until a pinned orthophoto source is added, and the mission-sun DirectionalLight shades the mesh normals. Per-tile hillshade PNGs are regenerable diagnostics.",
+      "detail" : "LROC NAC DTM supplies measured near-field geometry. Separately pinned 0.5 m orthorectified NAC observations supply only exposure-normalized high-frequency reflectance detail over a photometrically normalized WAC base. The mission-sun DirectionalLight shades the mesh normals; per-tile hillshade PNGs remain regenerable diagnostics rather than surface color.",
       "id" : "nac-dtm-apollo11",
       "labelURL" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/SDP\/NAC_DTM\/APOLLO11\/NAC_DTM_APOLLO11.LBL",
       "productId" : "NAC_DTM_APOLLO11",
@@ -72,6 +72,101 @@
       "sourceRowEnd" : 8150,
       "sourceRowStart" : 7038,
       "url" : "https:\/\/pds-geosciences.wustl.edu\/lro\/lro-l-lola-3-rdr-v1\/lrolol_1xxx\/data\/sldem2015\/global\/float_img\/sldem2015_128_60s_60n_000_360_float.img"
+    },
+    {
+      "byteRangeEnd" : 611039119,
+      "byteRangeStart" : 541864880,
+      "bytes" : 69174240,
+      "detail" : "Exact PDS byte-range slab from the first 0.5 m orthorectified NAC stereo observation. Exposure-normalized high-frequency contrast is averaged with the second observation and faded to zero at the near-field edge; it is not treated as photometrically normalized absolute albedo.",
+      "id" : "nac-ortho-m150361817-50cm-slab",
+      "labelURL" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/SDP\/NAC_DTM\/APOLLO11\/NAC_DTM_APOLLO11_M150361817_50CM.xml",
+      "mapResolutionPixelsPerDegree" : 60646.700848300003,
+      "productId" : "NAC_DTM_APOLLO11_M150361817_50CM",
+      "productVersion" : "V2.0",
+      "role" : "near-field-high-frequency-reflectance",
+      "sha256" : "b6e9df38ddae806b66c6dc3afbe7f1e94b932421292e3af07f048606d9d6e961",
+      "sourceBytes" : 943743920,
+      "sourceMD5" : "c3784f010eb6d6c2d84d6ee7b4088331",
+      "sourceRowBytes" : 16880,
+      "sourceRowEnd" : 36197,
+      "sourceRowStart" : 32100,
+      "url" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/SDP\/NAC_DTM\/APOLLO11\/NAC_DTM_APOLLO11_M150361817_50CM.IMG"
+    },
+    {
+      "byteRangeEnd" : 611039119,
+      "byteRangeStart" : 541864880,
+      "bytes" : 69174240,
+      "detail" : "Exact PDS byte-range slab from the second 0.5 m orthorectified NAC stereo observation. Its independent gain and offset are normalized before the two registered views are averaged.",
+      "id" : "nac-ortho-m150368601-50cm-slab",
+      "labelURL" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/SDP\/NAC_DTM\/APOLLO11\/NAC_DTM_APOLLO11_M150368601_50CM.xml",
+      "mapResolutionPixelsPerDegree" : 60646.700848300003,
+      "productId" : "NAC_DTM_APOLLO11_M150368601_50CM",
+      "productVersion" : "V2.0",
+      "role" : "near-field-high-frequency-reflectance",
+      "sha256" : "e93a51b8f18dd549aa7b3b22e708c7d06775273a6605b43026679d54e380a207",
+      "sourceBytes" : 943743920,
+      "sourceMD5" : "95decbebbf283e46d6146c47fec988ed",
+      "sourceRowBytes" : 16880,
+      "sourceRowEnd" : 36197,
+      "sourceRowStart" : 32100,
+      "url" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/SDP\/NAC_DTM\/APOLLO11\/NAC_DTM_APOLLO11_M150368601_50CM.IMG"
+    },
+    {
+      "byteRangeEnd" : 1983052799,
+      "byteRangeStart" : 1964666880,
+      "bytes" : 18385920,
+      "detail" : "Exact PDS byte-range slab from the empirically photometrically normalized 643 nm WAC mosaic at about 99.7 m\/pixel. It supplies absolute low-frequency reflectance for the near and medium bands.",
+      "id" : "wac-emp-643nm-304p-apollo11-slab",
+      "labelURL" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/MDR\/WAC_EMP\/WAC_EMP_643NM_E300N0450_304P.xml",
+      "mapResolutionPixelsPerDegree" : 304,
+      "productId" : "WAC_EMP_643NM_E300N0450_304P",
+      "productVersion" : "V2.0",
+      "role" : "near-and-medium-photometric-reflectance",
+      "sha256" : "08829725710d9e4dba155372369e6bf5c268eac37023ae6ed77f15902640072a",
+      "sourceBytes" : 1996295040,
+      "sourceMD5" : "97af2366068cffb38415b3658993b4f1",
+      "sourceRowBytes" : 109440,
+      "sourceRowEnd" : 18118,
+      "sourceRowStart" : 17951,
+      "url" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/MDR\/WAC_EMP\/WAC_EMP_643NM_E300N0450_304P.IMG"
+    },
+    {
+      "byteRangeEnd" : 88496639,
+      "byteRangeStart" : 81077760,
+      "bytes" : 7418880,
+      "detail" : "Exact PDS byte-range slab from the normalized 643 nm WAC mosaic north of the equator at about 473.8 m\/pixel.",
+      "id" : "wac-emp-643nm-64p-north-apollo11-slab",
+      "labelURL" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/MDR\/WAC_EMP\/WAC_EMP_643NM_E300N0450_064P.xml",
+      "mapResolutionPixelsPerDegree" : 64,
+      "productId" : "WAC_EMP_643NM_E300N0450_064P",
+      "productVersion" : "V2.0",
+      "role" : "far-field-photometric-reflectance",
+      "sha256" : "831255f649b8184f7e8ea339ced80878c840052971fd0fcd761d6c30c6395e42",
+      "sourceBytes" : 88496640,
+      "sourceMD5" : "37e0144f3fa52cf91f9cb0aa605d9200",
+      "sourceRowBytes" : 23040,
+      "sourceRowEnd" : 3839,
+      "sourceRowStart" : 3518,
+      "url" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/MDR\/WAC_EMP\/WAC_EMP_643NM_E300N0450_064P.IMG"
+    },
+    {
+      "byteRangeEnd" : 5460479,
+      "byteRangeStart" : 23040,
+      "bytes" : 5437440,
+      "detail" : "Exact PDS byte-range slab from the normalized 643 nm WAC mosaic south of the equator at about 473.8 m\/pixel.",
+      "id" : "wac-emp-643nm-64p-south-apollo11-slab",
+      "labelURL" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/MDR\/WAC_EMP\/WAC_EMP_643NM_E300S0450_064P.xml",
+      "mapResolutionPixelsPerDegree" : 64,
+      "productId" : "WAC_EMP_643NM_E300S0450_064P",
+      "productVersion" : "V2.0",
+      "role" : "far-field-photometric-reflectance",
+      "sha256" : "9a8bcc140296ddf9dd8289e95f85f112a30776cc8c441955a56347d66b1b7c86",
+      "sourceBytes" : 88496640,
+      "sourceMD5" : "53eb43347e3a96bc8fdb17c1f3207546",
+      "sourceRowBytes" : 23040,
+      "sourceRowEnd" : 235,
+      "sourceRowStart" : 0,
+      "url" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/MDR\/WAC_EMP\/WAC_EMP_643NM_E300S0450_064P.IMG"
     }
   ],
   "sun" : {
@@ -82,8 +177,19 @@
   "tiles" : [
     {
       "albedoEncoding" : {
-        "detail" : "Flat neutral regolith (RGB 140). Shading is applied in-engine from tile mesh normals under the mission sun.",
-        "format" : "PNG_RGB_8"
+        "colorSpace" : "sRGB encoding of a linear 643 nm reflectance proxy",
+        "detail" : "Photometrically normalized WAC reflectance supplies broad tone. The near band adds bounded, exposure-normalized 0.5 m NAC high-frequency contrast while retaining the WAC value at its boundary. Mission lighting remains dynamic in-engine.",
+        "edgeHandling" : "wac-base-with-nac-high-pass-edge-fade",
+        "format" : "PNG_RGB_8",
+        "maximumLinearReflectance" : 0.082616530358791351,
+        "metersPerTexel" : 0.5,
+        "minimumLinearReflectance" : 0.034333404153585434,
+        "sourceIDs" : [
+          "wac-emp-643nm-304p-apollo11-slab",
+          "nac-ortho-m150361817-50cm-slab",
+          "nac-ortho-m150368601-50cm-slab"
+        ],
+        "texelsPerSide" : 4097
       },
       "albedoFile" : "near-field-albedo.png",
       "curvatureCorrected" : true,
@@ -115,8 +221,17 @@
     },
     {
       "albedoEncoding" : {
-        "detail" : "Flat neutral regolith (RGB 140). Shading is applied in-engine from tile mesh normals under the mission sun.",
-        "format" : "PNG_RGB_8"
+        "colorSpace" : "sRGB encoding of a linear 643 nm reflectance proxy",
+        "detail" : "Photometrically normalized WAC reflectance supplies broad tone. The near band adds bounded, exposure-normalized 0.5 m NAC high-frequency contrast while retaining the WAC value at its boundary. Mission lighting remains dynamic in-engine.",
+        "edgeHandling" : "photometrically-normalized-source",
+        "format" : "PNG_RGB_8",
+        "maximumLinearReflectance" : 0.071339763700962067,
+        "metersPerTexel" : 99.747863237334002,
+        "minimumLinearReflectance" : 0.045873545110225677,
+        "sourceIDs" : [
+          "wac-emp-643nm-304p-apollo11-slab"
+        ],
+        "texelsPerSide" : 513
       },
       "albedoFile" : "medium-field-albedo.png",
       "curvatureCorrected" : true,
@@ -143,15 +258,27 @@
       "postsPerSide" : 513,
       "sourceIDs" : [
         "nac-dtm-apollo11",
-        "sldem2015-512-apollo11-slab"
+        "sldem2015-512-apollo11-slab",
+        "wac-emp-643nm-304p-apollo11-slab"
       ],
       "transitionWidthMeters" : 1024,
       "zeroPointMeters" : -144.8503491613001
     },
     {
       "albedoEncoding" : {
-        "detail" : "Flat neutral regolith (RGB 140). Shading is applied in-engine from tile mesh normals under the mission sun.",
-        "format" : "PNG_RGB_8"
+        "colorSpace" : "sRGB encoding of a linear 643 nm reflectance proxy",
+        "detail" : "Photometrically normalized WAC reflectance supplies broad tone. The near band adds bounded, exposure-normalized 0.5 m NAC high-frequency contrast while retaining the WAC value at its boundary. Mission lighting remains dynamic in-engine.",
+        "edgeHandling" : "inner-boundary-registered-reflectance-blend",
+        "format" : "PNG_RGB_8",
+        "maximumLinearReflectance" : 0.21710459887981415,
+        "metersPerTexel" : 473.80235037734002,
+        "minimumLinearReflectance" : 0.04085492342710495,
+        "sourceIDs" : [
+          "wac-emp-643nm-304p-apollo11-slab",
+          "wac-emp-643nm-64p-north-apollo11-slab",
+          "wac-emp-643nm-64p-south-apollo11-slab"
+        ],
+        "texelsPerSide" : 513
       },
       "albedoFile" : "far-field-albedo.png",
       "curvatureCorrected" : true,
@@ -178,11 +305,14 @@
       "postsPerSide" : 513,
       "sourceIDs" : [
         "sldem2015-512-apollo11-slab",
-        "sldem2015-128-apollo11-slab"
+        "sldem2015-128-apollo11-slab",
+        "wac-emp-643nm-304p-apollo11-slab",
+        "wac-emp-643nm-64p-north-apollo11-slab",
+        "wac-emp-643nm-64p-south-apollo11-slab"
       ],
       "transitionWidthMeters" : 16384,
       "zeroPointMeters" : -10470.86870527425
     }
   ],
-  "toolSHA256" : "3b1f051e45278cb7f6f6b6c1b0d5b9999aaaa2c54821de74ef62d25daa2139a3"
+  "toolSHA256" : "0e506408273c8e57e2f74d43491d7506dfb8954dcfba15b0bdb83f6bfbd47820"
 }

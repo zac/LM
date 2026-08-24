@@ -18,8 +18,11 @@ The renderer consumes stable `LMTerrainTileID` values from `LMProgressiveTerrain
 
 Near-term data path:
 
-1. Keep the current 8 m LROC NAC DTM as the regional source.
-2. Add the official 2 m and 0.5 m LROC orthophotos as georeferenced albedo layers.
+1. Keep the current 2 m LROC NAC DTM as the authoritative near-field geometry.
+2. Use the photometrically normalized WAC 643 nm mosaic for broad reflectance
+   and the two registered 0.5 m NAC orthorectified observations for bounded
+   near-field high-frequency contrast. Do not claim the NAC residual as
+   absolute albedo without an additional calibration artifact.
 3. Add a higher-resolution measured DTM where one is available and record its hash, projection, datum, extent, and post spacing.
 4. Use deterministic procedural residual only below the finest measured scale.
 5. Validate seams, vertical datum, touchdown contact, memory, frame time, and stereo comfort on Vision Pro.
