@@ -144,6 +144,14 @@ let pinnedWACFarSouth = PinnedSource(
 let siteLatitudeDegrees = 0.673_433
 let siteLongitudeDegrees = 23.473_113
 
+/// Eagle position from JPL D-32296, Lunar Constants and Models Document,
+/// table 5-1. The terrain stays centered on the retroreflector so existing
+/// measured products remain pixel-registered; this landmark georeferences the
+/// simulated touchdown inside that terrain frame.
+let eagleLatitudeDegrees = 0.674_08
+let eagleLongitudeDegrees = 23.472_97
+let jplLunarConstantsURL = "https://ssd.jpl.nasa.gov/doc/lunar_cmd_2005_jpl_d32296.pdf"
+
 // NAC_DTM_APOLLO11 v1.9 label values (committed alongside this tool).
 let dtmLines = 13_978
 let dtmSamples = 2_111
@@ -220,12 +228,21 @@ let farAlbedoTexels = farTilePosts
 
 func manifestJSON() -> [String: Any] {
     [
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "scenarioID": "apollo11-progressive-real-data-terrain",
         "landingOrigin": [
             "latitudeDegrees": siteLatitudeDegrees,
             "longitudeDegrees": siteLongitudeDegrees,
             "detail": "Apollo 11 retroreflector alignment; heights are relative to the DTM elevation sampled at this point."
+        ],
+        "landmarks": [
+            [
+                "id": "apollo11-lm-eagle",
+                "latitudeDegrees": eagleLatitudeDegrees,
+                "longitudeDegrees": eagleLongitudeDegrees,
+                "sourceURL": jplLunarConstantsURL,
+                "detail": "Apollo 11 Lunar Module position from JPL D-32296 table 5-1. The visual terrain frame maps the bundled nominal P66 touchdown to this point while preserving live guidance deviations."
+            ]
         ],
         "projection": [
             "mapProjectionType": "EQUIRECTANGULAR",

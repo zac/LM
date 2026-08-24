@@ -39,6 +39,7 @@ final class LMCommanderStationScene {
         category: "ProgressiveTerrain"
     )
     private var terrainHeightField: Apollo11TerrainHeightField?
+    private var terrainFrameAlignment: LMTerrainFrameAlignment?
     private var terrainEnvironment: Entity?
     private var terrainAlbedoTexture: TextureResource?
     private var progressiveTerrainEntities = [LMTerrainTileID: ModelEntity]()
@@ -112,15 +113,20 @@ final class LMCommanderStationScene {
     func apply(_ state: LMVehicleStateSnapshot?) {
         guard let state else { return }
         lastVehicleState = state
+        let terrainPosition = terrainPosition(for: state.positionMeters)
         let surfaceElevation = terrainHeightField?.relativeElevation(
-            eastMeters: state.positionMeters.y,
-            northMeters: state.positionMeters.x
+            eastMeters: terrainPosition.y,
+            northMeters: terrainPosition.x
         ) ?? 0
         lunarWorld.transform = Transform(matrix: mapper.lunarWorldMatrix(
-            from: state,
+            position: terrainPosition,
+            attitude: state.attitude,
             surfaceElevationMeters: Double(surfaceElevation)
         ))
-        requestProgressiveTerrain(around: state)
+        requestProgressiveTerrain(
+            around: terrainPosition,
+            altitudeMeters: state.altitudeMeters
+        )
     }
 
     func loadApollo11Terrain() async throws {
@@ -128,6 +134,12 @@ final class LMCommanderStationScene {
         let assembly = try await LMTerrainWorld.load()
         let terrain = assembly.worldRoot
         terrainHeightField = heightField
+        terrainFrameAlignment = try LMTerrainFrameAlignment(manifest: assembly.manifest)
+        if let alignment = terrainFrameAlignment {
+            logger.info(
+                "Terrain aligned to Eagle at north \(alignment.terrainReferenceTouchdown.x, privacy: .public)m east \(alignment.terrainReferenceTouchdown.y, privacy: .public)m"
+            )
+        }
         terrainEnvironment = terrain
         terrainAlbedoTexture = assembly.nearAlbedoTexture
         provisionalTerrain.removeFromParent()
@@ -135,16 +147,23 @@ final class LMCommanderStationScene {
         apply(lastVehicleState)
     }
 
-    private func requestProgressiveTerrain(around state: LMVehicleStateSnapshot) {
+    private func terrainPosition(for guidancePosition: LMVector3D) -> LMVector3D {
+        terrainFrameAlignment?.terrainPosition(from: guidancePosition) ?? guidancePosition
+    }
+
+    private func requestProgressiveTerrain(
+        around terrainPosition: LMVector3D,
+        altitudeMeters: Double
+    ) {
         guard let heightField = terrainHeightField,
               let terrainEnvironment,
               let terrainAlbedoTexture else { return }
         let plans = LMProgressiveTerrainPlanner(
             sourceSpacingMeters: heightField.spacingMeters
         ).focusedPlans(
-            focusEastMeters: state.positionMeters.y,
-            focusNorthMeters: state.positionMeters.x,
-            altitudeMeters: state.altitudeMeters
+            focusEastMeters: terrainPosition.y,
+            focusNorthMeters: terrainPosition.x,
+            altitudeMeters: altitudeMeters
         )
         let requestedIDs = Set(plans.map(\.id))
         guard requestedIDs != requestedTerrainTileIDs else { return }
@@ -273,13 +292,14 @@ final class LMCommanderStationScene {
         }
 
         dustCloud.isEnabled = true
+        let terrainPosition = terrainPosition(for: state.positionMeters)
         let surfaceElevation = terrainHeightField?.relativeElevation(
-            eastMeters: state.positionMeters.y,
-            northMeters: state.positionMeters.x
+            eastMeters: terrainPosition.y,
+            northMeters: terrainPosition.x
         ) ?? 0
         dustCloud.position = mapper.realityPosition(from: LMVector3D(
-            x: state.positionMeters.x,
-            y: state.positionMeters.y,
+            x: terrainPosition.x,
+            y: terrainPosition.y,
             z: Double(surfaceElevation) + 0.18
         ))
         let spread = 0.8 + intensity * 2.6

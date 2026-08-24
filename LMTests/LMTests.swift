@@ -611,11 +611,18 @@ struct SourceBackedTerrainTileTests {
         #expect(manifest.scenarioID == "apollo11-progressive-real-data-terrain")
         #expect(abs(manifest.landingOrigin.latitudeDegrees - 0.673433) < 1e-9)
         #expect(abs(manifest.landingOrigin.longitudeDegrees - 23.473113) < 1e-9)
+        let eagle = try #require(manifest.landmark(id: LMTerrainManifest.eagleLandmarkID))
+        #expect(abs(eagle.latitudeDegrees - 0.67408) < 1e-9)
+        #expect(abs(eagle.longitudeDegrees - 23.47297) < 1e-9)
+        #expect(eagle.sourceURL == "https://ssd.jpl.nasa.gov/doc/lunar_cmd_2005_jpl_d32296.pdf")
+        let eagleLocal = manifest.localPosition(of: eagle)
+        #expect(abs(eagleLocal.x - 19.61920772442715) < 1e-6)
+        #expect(abs(eagleLocal.y - -4.335939305713085) < 1e-6)
         #expect(abs(manifest.projection.sphereRadiusMeters - 1_737_400) < 1)
         #expect(manifest.projection.sourceSamples == 2_111)
         #expect(manifest.projection.sourceLines == 13_978)
         #expect(manifest.sources.count == 8)
-        #expect(manifest.toolSHA256 == "0e506408273c8e57e2f74d43491d7506dfb8954dcfba15b0bdb83f6bfbd47820")
+        #expect(manifest.toolSHA256 == "c566f8da637b0ed0eb753068bd8f4fbd3978edd9faea1e1bb4583c31bf6d7660")
 
         let nac = try #require(manifest.sources.first { $0.id == "nac-dtm-apollo11" })
         #expect(nac.productId == "NAC_DTM_APOLLO11")
@@ -741,6 +748,46 @@ struct SourceBackedTerrainTileTests {
                 + p64Altitude * p64Altitude
         )
         #expect(far.extentMeters / 2 > geometricHorizon)
+    }
+
+    @Test func terminalDescentIsGeoreferencedToEagleWithoutChangingLiveDeviations() throws {
+        let manifest = try LMTerrainManifest.load()
+        let alignment = try LMTerrainFrameAlignment(manifest: manifest)
+        let recording = try PoweredDescentSession.bundledP66Recording()
+        let recordedTouchdown = try #require(recording.frames.last).vehicleState.positionMeters
+
+        #expect(abs(recordedTouchdown.x
+            - LMTerrainFrameAlignment.nominalP66GuidanceTouchdown.x) < 1e-9)
+        #expect(abs(recordedTouchdown.y
+            - LMTerrainFrameAlignment.nominalP66GuidanceTouchdown.y) < 1e-9)
+        #expect(abs(recordedTouchdown.z
+            - LMTerrainFrameAlignment.nominalP66GuidanceTouchdown.z) < 1e-9)
+
+        let alignedTouchdown = alignment.terrainPosition(from: recordedTouchdown)
+        #expect(abs(alignedTouchdown.x - alignment.terrainReferenceTouchdown.x) < 1e-9)
+        #expect(abs(alignedTouchdown.y - alignment.terrainReferenceTouchdown.y) < 1e-9)
+        #expect(alignedTouchdown.z == recordedTouchdown.z)
+
+        let deviated = alignment.terrainPosition(from: LMVector3D(
+            x: recordedTouchdown.x + 10,
+            y: recordedTouchdown.y - 7,
+            z: recordedTouchdown.z + 2
+        ))
+        #expect(abs(deviated.x - alignedTouchdown.x - 10) < 1e-9)
+        #expect(abs(deviated.y - alignedTouchdown.y + 7) < 1e-9)
+        #expect(abs(deviated.z - alignedTouchdown.z - 2) < 1e-9)
+
+        let p64 = try PoweredDescentSession.bundledP64Checkpoint().vehicleState.positionMeters
+        let p65 = try PoweredDescentSession.bundledP65Checkpoint().vehicleState.positionMeters
+        let alignedP64 = alignment.terrainPosition(from: p64)
+        let alignedP65 = alignment.terrainPosition(from: p65)
+        let near = try #require(manifest.tile(id: LMTerrainWorld.nearFieldTileID))
+        let far = try #require(manifest.tile(id: LMTerrainWorld.farFieldTileID))
+        #expect(abs(alignedP64.x) < far.extentMeters / 2)
+        #expect(abs(alignedP64.y) < far.extentMeters / 2)
+        #expect(abs(alignedP65.x) < near.extentMeters / 2)
+        #expect(abs(alignedP65.y) < near.extentMeters / 2)
+        #expect(alignedP64.y < alignedP65.y)
     }
 
     @Test func nestedAlbedoBandsAreNonFlatAndShareBoundaryReflectance() throws {

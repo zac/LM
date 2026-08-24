@@ -41,6 +41,27 @@ The runtime coordinate convention is +X north, +Y up, and -Z east. The cockpit
 stays fixed around the wearer while the lunar world receives the inverse
 vehicle pose at 1:1 scale.
 
+## Coordinate-frame alignment
+
+The terrain and Luminary do not share an origin. The measured terrain products
+remain centered on the Apollo 11 retroreflector at 0.673433° N, 23.473113° E,
+while the AGC navigation state is local to Luminary's reference landing site.
+Using `state.positionMeters` directly as terrain north/east would therefore put
+the nominal P66 contact about 930 m away from the real landing site.
+
+`LMTerrainFrameAlignment` makes that translation explicit. The generated
+manifest pins Eagle at 0.67408° N, 23.47297° E from JPL D-32296 table 5-1. In
+the terrain tangent plane that is 19.619 m north and 4.336 m west of the
+manifest origin. The bundled contact-gated P66 trajectory's nominal touchdown
+maps to Eagle, and any live north/east deviation is preserved exactly. This is
+a visual georeference only: it does not modify the AGC, vehicle dynamics,
+guidance state, altitude, or attitude.
+
+Surface-height queries, the inverse lunar-world transform, progressive LOD
+focus, and descent-engine dust all consume the aligned terrain position. A
+fixture regression test prevents regenerated P66 data from silently moving the
+calibration point.
+
 ## Reproduction
 
 `Tools/TerrainGenerator` verifies the 118 MB NAC GeoTIFF by byte count and

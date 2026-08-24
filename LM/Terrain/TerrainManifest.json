@@ -5,6 +5,15 @@
     "longitudeDegrees" : 23.473113000000001
   },
   "landingOriginElevationMeters" : -1928.037353515625,
+  "landmarks" : [
+    {
+      "detail" : "Apollo 11 Lunar Module position from JPL D-32296 table 5-1. The visual terrain frame maps the bundled nominal P66 touchdown to this point while preserving live guidance deviations.",
+      "id" : "apollo11-lm-eagle",
+      "latitudeDegrees" : 0.67408000000000001,
+      "longitudeDegrees" : 23.47297,
+      "sourceURL" : "https:\/\/ssd.jpl.nasa.gov\/doc\/lunar_cmd_2005_jpl_d32296.pdf"
+    }
+  ],
   "projection" : {
     "latitudeType" : "PLANETOCENTRIC",
     "mapProjectionType" : "EQUIRECTANGULAR",
@@ -19,7 +28,7 @@
     "sphereRadiusMeters" : 1737400
   },
   "scenarioID" : "apollo11-progressive-real-data-terrain",
-  "schemaVersion" : 1,
+  "schemaVersion" : 2,
   "sourceLandingOriginElevationsMeters" : {
     "nac-dtm-apollo11" : -1928.037353515625,
     "sldem2015-128-apollo11-slab" : -1926.1782513219268,
@@ -314,5 +323,5 @@
       "zeroPointMeters" : -10470.86870527425
     }
   ],
-  "toolSHA256" : "0e506408273c8e57e2f74d43491d7506dfb8954dcfba15b0bdb83f6bfbd47820"
+  "toolSHA256" : "c566f8da637b0ed0eb753068bd8f4fbd3978edd9faea1e1bb4583c31bf6d7660"
 }
