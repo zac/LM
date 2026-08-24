@@ -832,6 +832,16 @@ struct LandingPointDesignatorTests {
         #expect(!station.landingPointCalledAngleMarker.isEnabled)
     }
 
+    @Test @MainActor func commanderEntryPlacementMapsDesignEyeToHeadAnchorOrigin() {
+        let station = LMCommanderStationScene()
+
+        #expect(station.root.parent === station.commanderEntryAnchor)
+        #expect(simd_distance(
+            station.root.position + lpd.commanderEyeMeters,
+            .zero
+        ) < 1e-6)
+    }
+
     private func point(
         _ point: SIMD3<Float>,
         isInsideTriangle corners: [SIMD3<Float>]

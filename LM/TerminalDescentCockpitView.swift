@@ -14,6 +14,7 @@ struct TerminalDescentCockpitView: View {
     @State private var rodGestureOrigin: SIMD3<Float>?
     @State private var showsFallbackControls = false
     @State private var showsValidationChecklist = false
+    @State private var showsEyeAlignmentGuide = true
     @State private var trainingOverlayEnabled = true
     @State private var audioEnabled = true
     @State private var experienceDirector = LMCockpitExperienceDirector()
@@ -32,7 +33,7 @@ struct TerminalDescentCockpitView: View {
 
     var body: some View {
         RealityView { content, attachments in
-            content.add(station.root)
+            content.add(station.commanderEntryAnchor)
             if let instruments = attachments.entity(for: "commander-instruments") {
                 station.mountInstruments(instruments)
             }
@@ -78,12 +79,25 @@ struct TerminalDescentCockpitView: View {
 
                     Button {
                         trainingOverlayEnabled.toggle()
+                        if !trainingOverlayEnabled {
+                            showsEyeAlignmentGuide = false
+                        }
                     } label: {
                         Label(
                             trainingOverlayEnabled ? "Training on" : "Training off",
                             systemImage: trainingOverlayEnabled ? "scope" : "scope"
                         )
                     }
+
+                    Button {
+                        showsEyeAlignmentGuide.toggle()
+                    } label: {
+                        Label(
+                            showsEyeAlignmentGuide ? "Hide eye guide" : "Eye alignment",
+                            systemImage: "viewfinder"
+                        )
+                    }
+                    .disabled(!trainingOverlayEnabled)
 
                     Button {
                         showsValidationChecklist.toggle()
@@ -151,6 +165,24 @@ struct TerminalDescentCockpitView: View {
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel(activeCue.title)
                 .accessibilityValue(trainingOverlayEnabled ? activeCue.detail : "")
+            } else if trainingOverlayEnabled && showsEyeAlignmentGuide {
+                VStack(spacing: 4) {
+                    Text("COMMANDER DESIGN EYE")
+                        .font(.title3.weight(.bold).monospaced())
+                    Text("Settle into position, then fine-adjust until the magenta and green LPD scales overlap.")
+                        .font(.caption)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: 440)
+                .padding(.horizontal, 18)
+                .padding(.vertical, 12)
+                .glassBackgroundEffect()
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Commander design eye alignment")
+                .accessibilityValue(
+                    "Fine-adjust until the magenta and green Landing Point Designator scales overlap"
+                )
             }
         }
         .ornament(attachmentAnchor: .scene(.trailing)) {

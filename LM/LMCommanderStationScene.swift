@@ -16,6 +16,7 @@ final class LMCommanderStationScene {
         case invalidArtistCabin([LMCockpitAssetContract.ValidationIssue])
     }
 
+    let commanderEntryAnchor = AnchorEntity(.head)
     let root = Entity()
     let lunarWorld = Entity()
     let acaHandle = ModelEntity()
@@ -38,12 +39,21 @@ final class LMCommanderStationScene {
     private let attitudeModeAutomaticPosition = SIMD3<Float>(0.48, 0.78, -0.675)
 
     init() {
+        commanderEntryAnchor.name = "Commander entry head anchor"
+        commanderEntryAnchor.anchoring.trackingMode = .once
         root.name = "LM Commander Station"
         lunarWorld.name = "Lunar World"
         instrumentMount.name = "Commander Instruments"
         proceduralCabin.name = "Procedural cabin fallback"
         provisionalTerrain.name = "Provisional terrain"
         dustCloud.name = "Descent engine dust"
+
+        // Capture the wearer's entry pose once, then keep the vehicle fixed in
+        // world space. Offsetting the cabin by the optical datum puts the
+        // calibrated CDR design eye at the captured head origin without
+        // head-locking the cabin during flight.
+        root.position = -landingPointDesignator.commanderEyeMeters
+        commanderEntryAnchor.addChild(root)
 
         root.addChild(proceduralCabin)
         buildCabin()

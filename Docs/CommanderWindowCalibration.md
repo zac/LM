@@ -48,6 +48,12 @@ An `ApolloLMCabin.usdz` uses meters and identity root scale. The following optic
 
 The importer rejects eye or pane positions outside 3 mm and pane normals outside 0.25 degrees. This makes the window geometry a versioned handoff contract rather than an artist eyeball target.
 
+## Immersive entry placement
+
+The cockpit enters through a RealityKit head anchor whose tracking mode is `.once`, following [Apple's visionOS placement pattern](https://developer.apple.com/documentation/visionos/placing-entities-using-head-and-device-transform). The station root is offset so `CDR_Eye` coincides with the captured head datum on the first anchored frame. Because the anchor evaluates only once, the cabin remains world-locked when the wearer moves rather than following the head and causing an artificial stabilized view.
+
+The initial placement is a comfortable starting point, not proof of optical calibration for every wearer. A training-only guide asks the wearer to fine-adjust until the magenta inner-pane and green outer-pane scales overlap. The underlying parallax is physical scene geometry; the guide does not move the panes or alter Luminary. Exact binocular/on-head acceptance remains a Vision Pro hardware gate.
+
 ## Remaining measurement gate
 
 The cited primary sources do not dimension the inter-pane cavity in the available figures. The procedural fallback therefore keeps its 20 mm separation isolated as `provisionalPaneSeparationMeters`. It is not flight-certified. Replace it only with a dimensioned Grumman production drawing or a calibrated survey of a flight-configured artifact, then repeat stereo/on-head collimation at the commander design eye.
