@@ -3,7 +3,9 @@ import simd
 
 struct LMSpatialControlMapper: Equatable, Sendable {
     var acaTravelMeters: Float = 0.055
-    var rodTravelMeters: Float = 0.045
+    /// Hand travel used to cross a DES RATE detent. The switch itself pivots;
+    /// this is the spatial-gesture distance, not visible lever translation.
+    var rodTravelMeters: Float = 0.025
     var rodDetentFraction: Float = 0.32
 
     func acaInput(for translation: SIMD3<Float>) -> LMACANormalizedInput {
@@ -27,22 +29,26 @@ struct LMSpatialControlMapper: Equatable, Sendable {
         return .neutral
     }
 
-    func visualACATranslation(for input: LMACANormalizedInput) -> SIMD3<Float> {
-        SIMD3(
-            Float(input.roll) * acaTravelMeters,
-            Float(input.yaw) * acaTravelMeters,
-            -Float(input.pitch) * acaTravelMeters
-        )
+    func rodPosition(
+        for translation: SIMD3<Float>,
+        along actuationAxis: SIMD3<Float>
+    ) -> PoweredDescentSession.RODSwitchPosition {
+        let axisLength = simd_length(actuationAxis)
+        guard axisLength > 0.0001 else { return .neutral }
+        return rodPosition(for: simd_dot(translation, actuationAxis / axisLength))
     }
 
-    func visualRODTranslation(for position: PoweredDescentSession.RODSwitchPosition) -> Float {
+    func visualRODDeflectionRadians(
+        for position: PoweredDescentSession.RODSwitchPosition
+    ) -> Float {
+        let travel = Float.pi * 20 / 180
         switch position {
         case .descendPlus:
-            return rodTravelMeters
+            return travel
         case .neutral:
             return 0
         case .descendMinus:
-            return -rodTravelMeters
+            return -travel
         }
     }
 

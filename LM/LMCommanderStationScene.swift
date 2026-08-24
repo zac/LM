@@ -197,19 +197,26 @@ final class LMCommanderStationScene {
     }
 
     func setACAVisual(_ input: LMACANormalizedInput) {
-        acaHandle.position = acaNeutralPosition + controlMapper.visualACATranslation(for: input)
+        let travel = LMCommanderStationGeometry.acaProportionalTravelDegrees * .pi / 180
+        acaHandle.position = acaNeutralPosition
         acaHandle.orientation = simd_quatf(
-            angle: Float(input.roll) * -0.18,
-            axis: SIMD3(0, 0, 1)
+            angle: Float(input.yaw) * travel,
+            axis: SIMD3(0, 1, 0)
         ) * simd_quatf(
-            angle: Float(input.pitch) * 0.18,
+            angle: Float(input.pitch) * travel,
             axis: SIMD3(1, 0, 0)
+        ) * simd_quatf(
+            angle: Float(input.roll) * -travel,
+            axis: SIMD3(0, 0, 1)
         )
     }
 
     func setRODVisual(_ position: PoweredDescentSession.RODSwitchPosition) {
         rodSwitch.position = rodNeutralPosition
-            + SIMD3(0, controlMapper.visualRODTranslation(for: position), 0)
+        rodSwitch.orientation = LMCommanderStationGeometry.rodNeutralOrientation * simd_quatf(
+            angle: controlMapper.visualRODDeflectionRadians(for: position),
+            axis: SIMD3(1, 0, 0)
+        )
     }
 
     func setAttitudeHoldVisual(_ isAttitudeHold: Bool) {
@@ -850,42 +857,45 @@ final class LMCommanderStationScene {
         )
 
         addBox(
-            size: SIMD3(0.24, 0.08, 0.28),
-            position: SIMD3(acaNeutralPosition.x, 0.365, acaNeutralPosition.z),
+            size: SIMD3(0.18, 0.055, 0.20),
+            position: acaNeutralPosition - SIMD3(0, 0.040, 0),
             material: housing,
             name: "ACA pedestal"
         )
         acaHandle.name = LMCockpitAssetContract.Node.acaPivot.rawValue
-        acaHandle.model = ModelComponent(
-            mesh: .generateCylinder(height: 0.25, radius: 0.028),
-            materials: [handleMaterial]
-        )
         acaHandle.position = acaNeutralPosition
+        addACAHandleGeometry(to: acaHandle, material: handleMaterial, housing: housing)
         acaHandle.components.set(InputTargetComponent())
         acaHandle.components.set(HoverEffectComponent())
         acaHandle.components.set(CollisionComponent(shapes: [
-            .generateBox(size: SIMD3(0.14, 0.30, 0.14))
+            .generateBox(size: SIMD3(0.13, 0.29, 0.13))
         ]))
         root.addChild(acaHandle)
 
+        let panelFive = LMCommanderStationGeometry.surface(.panelFive)
+        let rodBasePosition = panelFive.scenePoint(local: SIMD3(
+            -0.095,
+            0.060,
+            panelFive.sizeMeters.z / 2 + 0.008
+        ))
         addBox(
-            size: SIMD3(0.18, 0.07, 0.18),
-            position: SIMD3(rodNeutralPosition.x, 0.49, rodNeutralPosition.z),
+            size: SIMD3(0.074, 0.105, 0.016),
+            position: rodBasePosition,
+            orientation: panelFive.orientation,
             material: housing,
-            name: "ROD switch pedestal"
+            name: "Panel 5 DES RATE switch plate"
         )
         rodSwitch.name = LMCockpitAssetContract.Node.rodPivot.rawValue
-        rodSwitch.model = ModelComponent(
-            mesh: .generateBox(size: SIMD3(0.10, 0.10, 0.08)),
-            materials: [switchMaterial]
-        )
         rodSwitch.position = rodNeutralPosition
+        addDescentRateSwitchGeometry(to: rodSwitch, material: switchMaterial)
         rodSwitch.components.set(InputTargetComponent())
         rodSwitch.components.set(HoverEffectComponent())
         rodSwitch.components.set(CollisionComponent(shapes: [
-            .generateBox(size: SIMD3(0.16, 0.18, 0.14))
+            .generateBox(size: SIMD3(0.075, 0.12, 0.10))
         ]))
+        setRODVisual(.neutral)
         root.addChild(rodSwitch)
+        addDescentRateSwitchLegend(on: panelFive)
 
         attitudeModeSwitch.name = LMCockpitAssetContract.Node.attitudeHoldPivot.rawValue
         attitudeModeSwitch.model = ModelComponent(
@@ -901,6 +911,93 @@ final class LMCommanderStationScene {
         ]))
         setAttitudeHoldVisual(false)
         root.addChild(attitudeModeSwitch)
+    }
+
+    private func addACAHandleGeometry(
+        to pivot: Entity,
+        material: SimpleMaterial,
+        housing: SimpleMaterial
+    ) {
+        let boot = ModelEntity(
+            mesh: .generateCylinder(height: 0.025, radius: 0.046),
+            materials: [housing]
+        )
+        boot.name = "ACA flexible boot"
+        boot.position = SIMD3(0, 0.0125, 0)
+        pivot.addChild(boot)
+
+        let shaft = ModelEntity(
+            mesh: .generateCylinder(height: 0.125, radius: 0.016),
+            materials: [material]
+        )
+        shaft.name = "ACA grip shaft"
+        shaft.position = SIMD3(0, 0.082, 0)
+        pivot.addChild(shaft)
+
+        let grip = ModelEntity(
+            mesh: .generateBox(size: SIMD3(0.057, 0.105, 0.052), cornerRadius: 0.014),
+            materials: [material]
+        )
+        grip.name = "ACA pistol grip"
+        grip.position = SIMD3(0, 0.175, -0.008)
+        grip.orientation = simd_quatf(angle: -0.10, axis: SIMD3(1, 0, 0))
+        pivot.addChild(grip)
+
+        let pushToTalk = ModelEntity(
+            mesh: .generateBox(size: SIMD3(0.024, 0.030, 0.010), cornerRadius: 0.004),
+            materials: [housing]
+        )
+        pushToTalk.name = "ACA push-to-talk switch"
+        pushToTalk.position = SIMD3(0, 0.185, -0.037)
+        pivot.addChild(pushToTalk)
+    }
+
+    private func addDescentRateSwitchGeometry(
+        to pivot: Entity,
+        material: SimpleMaterial
+    ) {
+        let stem = ModelEntity(
+            mesh: .generateCylinder(height: 0.050, radius: 0.0065),
+            materials: [material]
+        )
+        stem.name = "DES RATE switch stem"
+        stem.position = SIMD3(0, 0, 0.025)
+        stem.orientation = simd_quatf(angle: .pi / 2, axis: SIMD3(1, 0, 0))
+        pivot.addChild(stem)
+
+        let bat = ModelEntity(
+            mesh: .generateCylinder(height: 0.029, radius: 0.012),
+            materials: [material]
+        )
+        bat.name = "DES RATE switch bat"
+        bat.position = SIMD3(0, 0, 0.062)
+        bat.orientation = simd_quatf(angle: .pi / 2, axis: SIMD3(1, 0, 0))
+        pivot.addChild(bat)
+    }
+
+    private func addDescentRateSwitchLegend(
+        on panel: LMCommanderStationGeometry.Surface
+    ) {
+        let mesh = MeshResource.generateText(
+            "DES RATE\n+1 FPS\n−1 FPS",
+            extrusionDepth: 0.0002,
+            font: .systemFont(ofSize: 0.010, weight: .semibold),
+            containerFrame: CGRect(x: 0, y: 0, width: 0.075, height: 0.075),
+            alignment: .center,
+            lineBreakMode: .byWordWrapping
+        )
+        let legend = ModelEntity(
+            mesh: mesh,
+            materials: [UnlitMaterial(color: UIColor(white: 0.82, alpha: 1))]
+        )
+        legend.name = "Panel 5 DES RATE legend"
+        legend.position = panel.scenePoint(local: SIMD3(
+            -0.132,
+            0.107,
+            panel.sizeMeters.z / 2 + 0.017
+        ))
+        legend.orientation = panel.orientation
+        root.addChild(legend)
     }
 
     private func buildDustCloud() {

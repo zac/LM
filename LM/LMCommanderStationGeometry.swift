@@ -29,6 +29,11 @@ enum LMCommanderStationGeometry {
     static let mainPanelSandwichDepthInches: Float = 2
     static let mainPanelForwardCantDegrees: Float = 10
     static let centerPanelDownAndAftSlopeDegrees: Float = 45
+    /// Figure 2.1-40 identifies 1° through 11° as the proportional ACA range.
+    static let acaProportionalTravelDegrees: Float = 11
+    /// The LM-10 handbook defines ACA hardover as 12° or more in any axis.
+    static let acaHardoverDegrees: Float = 12
+    static let descentRateIncrementFeetPerSecond: Float = 1
 
     static let crewCompartmentDiameterMeters = crewCompartmentDiameterInches * metersPerInch
     static let crewCompartmentDepthMeters = crewCompartmentDepthInches * metersPerInch
@@ -179,7 +184,18 @@ enum LMCommanderStationGeometry {
     static let dskyMountOrientation = surface(.panelFour).orientation
 
     static let acaPivotPositionMeters = SIMD3<Float>(-0.49, 0.50, -0.37)
-    static let rodPivotPositionMeters = SIMD3<Float>(0.43, 0.58, -0.49)
+
+    /// The spring-return DES RATE switch is 1S5 on Panel 5. Each throw supplies
+    /// one Channel 16 pulse and changes commanded descent rate by 1 ft/s.
+    /// Its exact drawing station is not published in the handbook; this local
+    /// placement is reconstructed within the Panel 5 envelope from figure 1-7.
+    static let rodPivotPositionMeters = surface(.panelFive).scenePoint(
+        local: SIMD3(-0.095, 0.060, surface(.panelFive).sizeMeters.z / 2 + 0.020)
+    )
+    static let rodNeutralOrientation = surface(.panelFive).orientation
+    static let rodActuationAxis = simd_normalize(
+        surface(.panelFive).orientation.act(SIMD3<Float>(0, 1, 0))
+    )
     static let attitudeHoldPivotPositionMeters = surface(.panelThree).scenePoint(
         local: SIMD3(0.33, 0, surface(.panelThree).sizeMeters.z / 2 + 0.012)
     )

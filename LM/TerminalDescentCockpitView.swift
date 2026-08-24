@@ -290,7 +290,10 @@ struct TerminalDescentCockpitView: View {
                     rodGestureOrigin = sceneLocation
                 }
                 guard let origin = rodGestureOrigin else { return }
-                let position = controlMapper.rodPosition(for: sceneLocation.y - origin.y)
+                let position = controlMapper.rodPosition(
+                    for: sceneLocation - origin,
+                    along: LMCommanderStationGeometry.rodActuationAxis
+                )
                 recordValidation { $0.observeDirectROD(position) }
                 applyROD(position)
             }

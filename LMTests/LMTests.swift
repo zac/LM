@@ -937,6 +937,9 @@ struct Apollo11CommanderStationGeometryTests {
         #expect(abs(LMCommanderStationGeometry.deckWidthMeters - 1.397) < 0.000_001)
         #expect(abs(LMCommanderStationGeometry.deckDepthMeters - 0.914_4) < 0.000_001)
         #expect(abs(LMCommanderStationGeometry.mainPanelSandwichDepthMeters - 0.050_8) < 0.000_001)
+        #expect(LMCommanderStationGeometry.acaProportionalTravelDegrees == 11)
+        #expect(LMCommanderStationGeometry.acaHardoverDegrees == 12)
+        #expect(LMCommanderStationGeometry.descentRateIncrementFeetPerSecond == 1)
     }
 
     @Test func panelRelationshipsFollowTheOperationsHandbook() {
@@ -972,6 +975,18 @@ struct Apollo11CommanderStationGeometryTests {
         #expect(LMCommanderStationGeometry.shellSegments.allSatisfy {
             abs($0.sizeMeters.z - LMCommanderStationGeometry.crewCompartmentDepthMeters) < 0.000_001
         })
+
+        let panelFive = LMCommanderStationGeometry.surface(.panelFive)
+        let switchOffset = LMCommanderStationGeometry.rodPivotPositionMeters
+            - panelFive.centerMeters
+        #expect(abs(simd_dot(
+            switchOffset,
+            panelFive.faceNormalTowardCrew
+        ) - (panelFive.sizeMeters.z / 2 + 0.020)) < 0.000_001)
+        #expect(simd_dot(
+            LMCommanderStationGeometry.rodActuationAxis,
+            panelFive.orientation.act(SIMD3<Float>(0, 1, 0))
+        ) > 0.999_999)
     }
 
     @Test @MainActor func proceduralStationPublishesEveryArtistContractNode() {
@@ -1107,10 +1122,6 @@ struct SpatialCockpitControlTests {
         #expect(abs(input.pitch - 0.75) < 1e-6)
         #expect(abs(input.yaw + 0.5) < 1e-6)
         #expect(abs(input.roll - 1) < 1e-6)
-        let visual = mapper.visualACATranslation(for: input)
-        #expect(abs(visual.x - mapper.acaTravelMeters) < 1e-6)
-        #expect(abs(visual.y + mapper.acaTravelMeters * 0.5) < 1e-6)
-        #expect(abs(visual.z + mapper.acaTravelMeters * 0.75) < 1e-6)
     }
 
     @Test func rodUsesSpringLoadedDetentsAroundNeutral() {
@@ -1118,7 +1129,51 @@ struct SpatialCockpitControlTests {
         #expect(mapper.rodPosition(for: mapper.rodTravelMeters * 0.2) == .neutral)
         #expect(mapper.rodPosition(for: mapper.rodTravelMeters * 0.5) == .descendPlus)
         #expect(mapper.rodPosition(for: mapper.rodTravelMeters * -0.5) == .descendMinus)
-        #expect(mapper.visualRODTranslation(for: .neutral) == 0)
+        #expect(mapper.visualRODDeflectionRadians(for: .neutral) == 0)
+        #expect(mapper.visualRODDeflectionRadians(for: .descendPlus) > 0)
+        #expect(mapper.visualRODDeflectionRadians(for: .descendMinus) < 0)
+    }
+
+    @Test func rodGestureProjectsOntoThePhysicalPanelFiveAxis() {
+        let axis = simd_normalize(SIMD3<Float>(0.2, 0.3, -0.9))
+        let lateral = simd_normalize(simd_cross(axis, SIMD3<Float>(1, 0, 0)))
+        #expect(mapper.rodPosition(
+            for: axis * mapper.rodTravelMeters,
+            along: axis
+        ) == .descendPlus)
+        #expect(mapper.rodPosition(
+            for: -axis * mapper.rodTravelMeters,
+            along: axis
+        ) == .descendMinus)
+        #expect(mapper.rodPosition(
+            for: lateral * mapper.rodTravelMeters,
+            along: axis
+        ) == .neutral)
+    }
+
+    @Test @MainActor func proceduralControlsPivotAtTheirFlightDatums() {
+        let station = LMCommanderStationScene()
+        station.setACAVisual(LMACANormalizedInput(pitch: 1, yaw: 0, roll: 0))
+        #expect(simd_distance(
+            station.acaHandle.position,
+            LMCommanderStationGeometry.acaPivotPositionMeters
+        ) < 0.000_001)
+        let acaAngle = 2 * acos(min(max(abs(station.acaHandle.orientation.real), 0), 1))
+        #expect(abs(
+            acaAngle - LMCommanderStationGeometry.acaProportionalTravelDegrees * .pi / 180
+        ) < 0.000_001)
+
+        station.setRODVisual(.descendPlus)
+        #expect(simd_distance(
+            station.rodSwitch.position,
+            LMCommanderStationGeometry.rodPivotPositionMeters
+        ) < 0.000_001)
+        let rodDelta = LMCommanderStationGeometry.rodNeutralOrientation.inverse
+            * station.rodSwitch.orientation
+        let rodAngle = 2 * acos(min(max(abs(rodDelta.real), 0), 1))
+        #expect(abs(
+            rodAngle - mapper.visualRODDeflectionRadians(for: .descendPlus)
+        ) < 0.000_001)
     }
 }
 
