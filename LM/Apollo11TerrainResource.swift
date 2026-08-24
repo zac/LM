@@ -123,10 +123,10 @@ enum Apollo11TerrainResource {
         let tileSize = plan.sizeMeters
         let sampleSpacing = plan.sampleSpacingMeters
         let sampleCount = Int(tileSize / sampleSpacing) + 1
-        let sampler = LMProgressiveTerrainSampler(heightField: heightField)
+        let surfaceSampler = LMProgressiveTerrainSurfaceSampler(
+            heightField: heightField
+        )
         let halfSize = tileSize / 2
-        let parentSpacing = min(heightField.spacingMeters, sampleSpacing * 4)
-        let morphWidth = min(tileSize / 4, parentSpacing * 4)
 
         var positions = [SIMD3<Float>]()
         var textureCoordinates = [SIMD2<Float>]()
@@ -135,36 +135,18 @@ enum Apollo11TerrainResource {
 
         let measuredHalfWidth = Double(heightField.width - 1) * heightField.spacingMeters / 2
         let measuredHalfDepth = Double(heightField.height - 1) * heightField.spacingMeters / 2
-        let layerOffset = layerOffsetMeters(
-            sourceSpacingMeters: heightField.spacingMeters,
-            requestedSpacingMeters: sampleSpacing
-        )
         for row in 0..<sampleCount {
             try Task.checkCancellation()
             let north = plan.centerNorthMeters + halfSize - Double(row) * sampleSpacing
             for column in 0..<sampleCount {
                 let east = plan.centerEastMeters - halfSize + Double(column) * sampleSpacing
-                guard let fineSample = sampler.sample(
+                guard let elevation = surfaceSampler.renderedElevation(
                     eastMeters: east,
                     northMeters: north,
-                    requestedSpacingMeters: sampleSpacing
-                ), let parentSample = sampler.sample(
-                    eastMeters: east,
-                    northMeters: north,
-                    requestedSpacingMeters: parentSpacing
+                    plan: plan
                 ) else {
                     return nil
                 }
-                let boundaryDistance = min(
-                    Double(row) * sampleSpacing,
-                    Double(column) * sampleSpacing,
-                    Double(sampleCount - 1 - row) * sampleSpacing,
-                    Double(sampleCount - 1 - column) * sampleSpacing
-                )
-                let morph = smoothstep(boundaryDistance / morphWidth)
-                let elevation = parentSample.elevationMeters
-                    + (fineSample.elevationMeters - parentSample.elevationMeters) * Float(morph)
-                    + layerOffset * Float(morph)
                 positions.append(SIMD3(
                     Float(north),
                     elevation,
@@ -205,8 +187,8 @@ enum Apollo11TerrainResource {
                 let southwest = UInt32((row + 1) * sampleCount + column)
                 let southeast = southwest + 1
                 indices.append(contentsOf: [
-                    northwest, southwest, northeast,
-                    northeast, southwest, southeast,
+                    northwest, northeast, southwest,
+                    northeast, southeast, southwest,
                 ])
             }
         }
@@ -231,18 +213,6 @@ enum Apollo11TerrainResource {
             Float((eastMeters + measuredHalfWidth) / (measuredHalfWidth * 2)),
             Float((measuredHalfDepth - northMeters) / (measuredHalfDepth * 2))
         )
-    }
-
-    private nonisolated static func layerOffsetMeters(
-        sourceSpacingMeters: Double,
-        requestedSpacingMeters: Double
-    ) -> Float {
-        Float(max(log2(sourceSpacingMeters / requestedSpacingMeters), 1) * 0.004)
-    }
-
-    private nonisolated static func smoothstep(_ value: Double) -> Double {
-        let clamped = min(max(value, 0), 1)
-        return clamped * clamped * (3 - 2 * clamped)
     }
 
     private nonisolated static func terrainResourceURL(

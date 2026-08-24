@@ -43,7 +43,7 @@ struct LMFullDescentMapper: Equatable {
         LMWorldMapper.attitudeDirection(from: manifest.sunDirectionENU)
     }
 
-    /// Orientation whose -Z axis points from the scene toward the sun, the
+    /// Orientation whose -Z axis points from the sun toward the scene, the
     /// direction a RealityKit DirectionalLight illuminates along.
     static func sunLightOrientation(from manifest: LMTerrainManifest) -> simd_quatf {
         simd_quatf(from: SIMD3(0, 0, -1), to: -sunDirection(from: manifest))
@@ -54,6 +54,17 @@ struct LMFullDescentMapper: Equatable {
 /// terrain bands plus the mission sun.
 @MainActor
 enum LMTerrainWorld {
+    /// Renderer-space exposure for the mission sun. RealityKit measures this
+    /// in lux; 25,000 preserves the low-Sun relief without clipping the
+    /// reflectance-calibrated terrain against a black immersive sky.
+    nonisolated static let missionSunIlluminanceLux: Float = 25_000
+
+    /// A restrained texture-derived exposure floor keeps shadowed regolith
+    /// readable in an unlit immersive sky while the mission sun still supplies
+    /// the dominant directional relief. This is deliberately below 1 so it
+    /// cannot flatten the low-Sun topography into an unlit texture.
+    nonisolated static let regolithExposureFloor: Float = 0.08
+
     struct Assembly {
         let worldRoot: Entity
         let sun: DirectionalLight
@@ -110,7 +121,7 @@ enum LMTerrainWorld {
 
         let sun = DirectionalLight()
         sun.name = "MissionSun"
-        sun.light.intensity = 25_000
+        sun.light.intensity = missionSunIlluminanceLux
         sun.orientation = LMFullDescentMapper.sunLightOrientation(from: manifest)
         worldRoot.addChild(sun)
 
@@ -127,9 +138,14 @@ enum LMTerrainWorld {
 
     static func terrainMaterial(texture: TextureResource) -> PhysicallyBasedMaterial {
         var material = PhysicallyBasedMaterial()
-        material.baseColor = .init(tint: .white, texture: .init(texture))
+        let reflectance = MaterialParameters.Texture(texture)
+        material.baseColor = .init(tint: .white, texture: reflectance)
         material.roughness = .init(floatLiteral: 0.96)
         material.metallic = .init(floatLiteral: 0)
+        // RealityKit multiplies the emissive texture by this color. Be
+        // explicit: the initializer's black default would erase the texture.
+        material.emissiveColor = .init(color: .white, texture: reflectance)
+        material.emissiveIntensity = regolithExposureFloor
         return material
     }
 

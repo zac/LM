@@ -298,6 +298,8 @@ struct LMTerrainDetailPolicy: Equatable, Sendable {
     let approachAltitudeMeters: Double
     let terminalAltitudeMeters: Double
     let landingAltitudeMeters: Double
+    let landingPresentationBlendStartAltitudeMeters: Double
+    let landingPresentationBlendEndAltitudeMeters: Double
     let approachSpacingMeters: Double
     let terminalSpacingMeters: Double
     let landingSpacingMeters: Double
@@ -305,7 +307,9 @@ struct LMTerrainDetailPolicy: Equatable, Sendable {
     init(
         approachAltitudeMeters: Double = 2_500,
         terminalAltitudeMeters: Double = 250,
-        landingAltitudeMeters: Double = 40,
+        landingAltitudeMeters: Double = 60,
+        landingPresentationBlendStartAltitudeMeters: Double = 40,
+        landingPresentationBlendEndAltitudeMeters: Double = 25,
         approachSpacingMeters: Double = 2,
         terminalSpacingMeters: Double = 0.5,
         landingSpacingMeters: Double = 0.125
@@ -313,6 +317,10 @@ struct LMTerrainDetailPolicy: Equatable, Sendable {
         self.approachAltitudeMeters = approachAltitudeMeters
         self.terminalAltitudeMeters = terminalAltitudeMeters
         self.landingAltitudeMeters = landingAltitudeMeters
+        self.landingPresentationBlendStartAltitudeMeters =
+            landingPresentationBlendStartAltitudeMeters
+        self.landingPresentationBlendEndAltitudeMeters =
+            landingPresentationBlendEndAltitudeMeters
         self.approachSpacingMeters = approachSpacingMeters
         self.terminalSpacingMeters = terminalSpacingMeters
         self.landingSpacingMeters = landingSpacingMeters
@@ -329,6 +337,26 @@ struct LMTerrainDetailPolicy: Equatable, Sendable {
             return approachSpacingMeters
         }
         return nil
+    }
+
+    /// The landing tile is resident before it contributes to the cockpit datum.
+    /// This gives asynchronous generation twenty meters of descent margin and
+    /// prevents a late tile from moving the lunar world at its load instant.
+    func presentationBlend(
+        sampleSpacingMeters: Double,
+        altitudeMeters: Double
+    ) -> Double {
+        guard abs(sampleSpacingMeters - landingSpacingMeters) < 1e-6 else {
+            return 1
+        }
+        let span = landingPresentationBlendStartAltitudeMeters
+            - landingPresentationBlendEndAltitudeMeters
+        guard span > 0 else { return 1 }
+        let progress = (
+            landingPresentationBlendStartAltitudeMeters - altitudeMeters
+        ) / span
+        let clamped = min(max(progress, 0), 1)
+        return clamped * clamped * (3 - 2 * clamped)
     }
 }
 
@@ -453,5 +481,227 @@ struct LMProgressiveTerrainPlanner: Sendable {
         )
         var seen = Set<LMTerrainTileID>()
         return (current + predicted).filter { seen.insert($0.id).inserted }
+    }
+}
+
+struct LMTerrainSurfaceSample: Equatable, Sendable {
+    let measuredElevationMeters: Float
+    let renderedElevationMeters: Float
+    let presentationElevationMeters: Float
+    let sampleSpacingMeters: Double?
+    let presentationBlend: Double
+}
+
+/// Evaluates the exact hierarchical surface used by progressive terrain meshes.
+///
+/// Every level contributes only its new spatial band and morphs that band to
+/// zero at its own tile edge. Recursing through the actual parent tile makes a
+/// child boundary identical to the parent mesh, including where child and
+/// parent boundaries coincide. The same evaluator drives cockpit datum and
+/// dust placement, so presentation cannot drift from the rendered mesh.
+struct LMProgressiveTerrainSurfaceSampler: Sendable {
+    private static let spacingToleranceMeters = 1e-6
+
+    let heightField: Apollo11TerrainHeightField
+    let planner: LMProgressiveTerrainPlanner
+    let terrainSampler: LMProgressiveTerrainSampler
+
+    init(
+        heightField: Apollo11TerrainHeightField,
+        planner: LMProgressiveTerrainPlanner? = nil
+    ) {
+        self.heightField = heightField
+        self.planner = planner ?? LMProgressiveTerrainPlanner(
+            sourceSpacingMeters: heightField.spacingMeters
+        )
+        terrainSampler = LMProgressiveTerrainSampler(heightField: heightField)
+    }
+
+    func sample(
+        eastMeters: Double,
+        northMeters: Double,
+        altitudeMeters: Double,
+        activePlans: [LMTerrainTilePlan],
+        policy: LMTerrainDetailPolicy = .init()
+    ) -> LMTerrainSurfaceSample? {
+        guard let measured = heightField.relativeElevation(
+            eastMeters: eastMeters,
+            northMeters: northMeters
+        ) else {
+            return nil
+        }
+        guard let finestPlan = activePlans
+            .filter({ contains($0, eastMeters: eastMeters, northMeters: northMeters) })
+            .min(by: { $0.sampleSpacingMeters < $1.sampleSpacingMeters }) else {
+            return LMTerrainSurfaceSample(
+                measuredElevationMeters: measured,
+                renderedElevationMeters: measured,
+                presentationElevationMeters: measured,
+                sampleSpacingMeters: nil,
+                presentationBlend: 1
+            )
+        }
+        guard let rendered = renderedElevation(
+            eastMeters: eastMeters,
+            northMeters: northMeters,
+            plan: finestPlan
+        ) else {
+            return nil
+        }
+
+        let blend = policy.presentationBlend(
+            sampleSpacingMeters: finestPlan.sampleSpacingMeters,
+            altitudeMeters: altitudeMeters
+        )
+        let parent = parentPlan(
+            for: finestPlan,
+            eastMeters: eastMeters,
+            northMeters: northMeters
+        ).flatMap {
+            renderedElevation(
+                eastMeters: eastMeters,
+                northMeters: northMeters,
+                plan: $0
+            )
+        } ?? measured
+        let presentation = parent + (rendered - parent) * Float(blend)
+        return LMTerrainSurfaceSample(
+            measuredElevationMeters: measured,
+            renderedElevationMeters: rendered,
+            presentationElevationMeters: presentation,
+            sampleSpacingMeters: finestPlan.sampleSpacingMeters,
+            presentationBlend: blend
+        )
+    }
+
+    func renderedElevation(
+        eastMeters: Double,
+        northMeters: Double,
+        plan: LMTerrainTilePlan
+    ) -> Float? {
+        guard contains(plan, eastMeters: eastMeters, northMeters: northMeters),
+              let fine = terrainSampler.sample(
+                  eastMeters: eastMeters,
+                  northMeters: northMeters,
+                  requestedSpacingMeters: plan.sampleSpacingMeters
+              ) else {
+            return nil
+        }
+
+        let parent = parentPlan(
+            for: plan,
+            eastMeters: eastMeters,
+            northMeters: northMeters
+        )
+        let parentSpacing = parent?.sampleSpacingMeters ?? heightField.spacingMeters
+        guard let parentRaw = terrainSampler.sample(
+            eastMeters: eastMeters,
+            northMeters: northMeters,
+            requestedSpacingMeters: parentSpacing
+        ) else {
+            return nil
+        }
+        let parentRendered = parent.flatMap {
+            renderedElevation(
+                eastMeters: eastMeters,
+                northMeters: northMeters,
+                plan: $0
+            )
+        } ?? fine.measuredElevationMeters
+        let morphWidth = min(plan.sizeMeters / 4, parentSpacing * 4)
+        let edgeDistance = distanceToEdge(
+            plan,
+            eastMeters: eastMeters,
+            northMeters: northMeters
+        )
+        let morph = Self.smoothstep(edgeDistance / morphWidth)
+        let levelLift = Self.layerLiftMeters(
+            parentSpacingMeters: parentSpacing,
+            requestedSpacingMeters: plan.sampleSpacingMeters
+        )
+        let levelContribution = fine.elevationMeters
+            - parentRaw.elevationMeters
+            + levelLift
+        return parentRendered + levelContribution * Float(morph)
+    }
+
+    func parentPlan(
+        for plan: LMTerrainTilePlan,
+        eastMeters: Double,
+        northMeters: Double
+    ) -> LMTerrainTilePlan? {
+        guard let parent = planner.levels.enumerated()
+            .filter({ _, level in
+                level.sampleSpacingMeters
+                    > plan.sampleSpacingMeters + Self.spacingToleranceMeters
+                    && level.sampleSpacingMeters
+                    < heightField.spacingMeters - Self.spacingToleranceMeters
+            })
+            .min(by: { $0.element.sampleSpacingMeters < $1.element.sampleSpacingMeters }) else {
+            return nil
+        }
+        return tilePlan(
+            levelIndex: parent.offset,
+            level: parent.element,
+            eastMeters: eastMeters,
+            northMeters: northMeters
+        )
+    }
+
+    private func tilePlan(
+        levelIndex: Int,
+        level: LMProgressiveTerrainPlanner.Level,
+        eastMeters: Double,
+        northMeters: Double
+    ) -> LMTerrainTilePlan {
+        let eastIndex = Int(floor(eastMeters / level.tileSizeMeters))
+        let northIndex = Int(floor(northMeters / level.tileSizeMeters))
+        return LMTerrainTilePlan(
+            id: .init(level: levelIndex, eastIndex: eastIndex, northIndex: northIndex),
+            centerEastMeters: (Double(eastIndex) + 0.5) * level.tileSizeMeters,
+            centerNorthMeters: (Double(northIndex) + 0.5) * level.tileSizeMeters,
+            sizeMeters: level.tileSizeMeters,
+            sampleSpacingMeters: level.sampleSpacingMeters,
+            containsProceduralSubresolution: true
+        )
+    }
+
+    private func contains(
+        _ plan: LMTerrainTilePlan,
+        eastMeters: Double,
+        northMeters: Double
+    ) -> Bool {
+        let halfSize = plan.sizeMeters / 2
+        let tolerance = Self.spacingToleranceMeters
+        return eastMeters >= plan.centerEastMeters - halfSize - tolerance
+            && eastMeters <= plan.centerEastMeters + halfSize + tolerance
+            && northMeters >= plan.centerNorthMeters - halfSize - tolerance
+            && northMeters <= plan.centerNorthMeters + halfSize + tolerance
+    }
+
+    private func distanceToEdge(
+        _ plan: LMTerrainTilePlan,
+        eastMeters: Double,
+        northMeters: Double
+    ) -> Double {
+        let halfSize = plan.sizeMeters / 2
+        return max(0, min(
+            eastMeters - (plan.centerEastMeters - halfSize),
+            plan.centerEastMeters + halfSize - eastMeters,
+            northMeters - (plan.centerNorthMeters - halfSize),
+            plan.centerNorthMeters + halfSize - northMeters
+        ))
+    }
+
+    private static func layerLiftMeters(
+        parentSpacingMeters: Double,
+        requestedSpacingMeters: Double
+    ) -> Float {
+        Float(max(log2(parentSpacingMeters / requestedSpacingMeters), 1) * 0.004)
+    }
+
+    private static func smoothstep(_ value: Double) -> Double {
+        let clamped = min(max(value, 0), 1)
+        return clamped * clamped * (3 - 2 * clamped)
     }
 }

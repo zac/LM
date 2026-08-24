@@ -103,7 +103,7 @@ enum LMTerrainMeshBuilder {
                 let v1 = UInt32(row * posts + column + 1)
                 let v2 = UInt32((row + 1) * posts + column)
                 let v3 = UInt32((row + 1) * posts + column + 1)
-                data.triangles.append(contentsOf: [v0, v2, v1, v1, v2, v3])
+                data.triangles.append(contentsOf: [v0, v1, v2, v1, v3, v2])
             }
         }
         return data

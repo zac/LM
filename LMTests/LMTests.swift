@@ -605,6 +605,20 @@ struct CockpitWorldMappingTests {
 
 @Suite("Source-backed terrain tiles")
 struct SourceBackedTerrainTileTests {
+    @Test func missionSunDirectionAndExposureFloorPreserveLowSunRelief() throws {
+        let manifest = try LMTerrainManifest.load()
+        let illuminationDirection = LMFullDescentMapper
+            .sunLightOrientation(from: manifest)
+            .act(SIMD3<Float>(0, 0, -1))
+        let expectedDirection = -LMFullDescentMapper.sunDirection(from: manifest)
+
+        #expect(simd_dot(illuminationDirection, expectedDirection) > 0.999_99)
+        #expect(illuminationDirection.y < 0)
+        #expect(LMTerrainWorld.missionSunIlluminanceLux == 25_000)
+        #expect(LMTerrainWorld.regolithExposureFloor > 0)
+        #expect(LMTerrainWorld.regolithExposureFloor < 1)
+    }
+
     @Test func manifestPinsMeasuredNearAndProgressiveSLDEMCoverage() throws {
         let manifest = try LMTerrainManifest.load()
         #expect(manifest.schemaVersion == LMTerrainManifest.schemaVersion)
@@ -886,6 +900,25 @@ struct SourceBackedTerrainTileTests {
         )
         #expect(mediumGrid.triangles.count == (512 * 512 - 64 * 64) * 6)
         #expect(farGrid.triangles.count == (512 * 512 - 32 * 32) * 6)
+    }
+
+    @Test func measuredTerrainTriangleWindingFacesUpward() throws {
+        let manifest = try LMTerrainManifest.load()
+        let near = try #require(manifest.tile(id: LMTerrainWorld.nearFieldTileID))
+        let grid = try LMTerrainMeshBuilder.grid(
+            tile: near,
+            heightMap: heightMap(for: near)
+        )
+        let i0 = Int(grid.triangles[0])
+        let i1 = Int(grid.triangles[1])
+        let i2 = Int(grid.triangles[2])
+        let geometricNormal = simd_normalize(simd_cross(
+            grid.positions[i1] - grid.positions[i0],
+            grid.positions[i2] - grid.positions[i0]
+        ))
+
+        #expect(geometricNormal.y > 0.9)
+        #expect(simd_dot(geometricNormal, grid.normals[i0]) > 0.9)
     }
 
     private func heightMap(for tile: LMTerrainManifest.Tile) throws -> LMTerrainHeightMap {
@@ -1247,6 +1280,20 @@ struct ProgressiveLunarTerrainTests {
         #expect(terminal.map(\.sampleSpacingMeters) == [0.5])
         #expect(terminal.allSatisfy { $0.containsProceduralSubresolution })
 
+        let landingPreload = planner.focusedPlans(
+            focusEastMeters: -547,
+            focusNorthMeters: 732,
+            altitudeMeters: 50
+        )
+        #expect(landingPreload.map(\.sampleSpacingMeters) == [0.5, 0.125])
+
+        let aboveLandingPreload = planner.focusedPlans(
+            focusEastMeters: -547,
+            focusNorthMeters: 732,
+            altitudeMeters: 61
+        )
+        #expect(aboveLandingPreload.map(\.sampleSpacingMeters) == [0.5])
+
         let landing = planner.focusedPlans(
             focusEastMeters: -547,
             focusNorthMeters: 732,
@@ -1271,35 +1318,138 @@ struct ProgressiveLunarTerrainTests {
         #expect(!measuredScalePlan.containsProceduralSubresolution)
     }
 
-    @Test func finerLandingTileMorphsExactlyToItsParentAtTheBoundary() throws {
+    @Test func finerLandingTileMorphsExactlyToTheRenderedParentAtEveryBoundary() throws {
         let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
-        let plan = LMTerrainTilePlan(
-            id: .init(level: 1, eastIndex: 0, northIndex: 0),
-            centerEastMeters: 0,
-            centerNorthMeters: 0,
-            sizeMeters: 16,
-            sampleSpacingMeters: 0.125,
-            containsProceduralSubresolution: true
+        let plans = LMProgressiveTerrainPlanner(
+            sourceSpacingMeters: field.spacingMeters
+        ).focusedPlans(
+            focusEastMeters: 2,
+            focusNorthMeters: 2,
+            altitudeMeters: 20
         )
-        let generatedMesh = try Apollo11TerrainResource.makeProgressiveTileMeshData(
+        let parentPlan = try #require(plans.first { $0.sampleSpacingMeters == 0.5 })
+        let finePlan = try #require(plans.first { $0.sampleSpacingMeters == 0.125 })
+        let generatedParentMesh = try Apollo11TerrainResource.makeProgressiveTileMeshData(
             heightField: field,
-            plan: plan
+            plan: parentPlan
         )
-        let mesh = try #require(generatedMesh)
+        let generatedFineMesh = try Apollo11TerrainResource.makeProgressiveTileMeshData(
+            heightField: field,
+            plan: finePlan
+        )
+        let parentMesh = try #require(generatedParentMesh)
+        let fineMesh = try #require(generatedFineMesh)
         let samples = 129
-        #expect(mesh.positions.count == samples * samples)
-        #expect(mesh.indices.count == (samples - 1) * (samples - 1) * 6)
+        #expect(parentMesh.positions.count == samples * samples)
+        #expect(fineMesh.positions.count == samples * samples)
+        #expect(fineMesh.indices.count == (samples - 1) * (samples - 1) * 6)
+        let i0 = Int(fineMesh.indices[0])
+        let i1 = Int(fineMesh.indices[1])
+        let i2 = Int(fineMesh.indices[2])
+        let geometricNormal = simd_normalize(simd_cross(
+            fineMesh.positions[i1] - fineMesh.positions[i0],
+            fineMesh.positions[i2] - fineMesh.positions[i0]
+        ))
+        #expect(geometricNormal.y > 0.9)
+        #expect(simd_dot(geometricNormal, fineMesh.normals[i0]) > 0.9)
 
-        let parentSampler = LMProgressiveTerrainSampler(heightField: field)
-        for column in stride(from: 0, through: samples - 1, by: 16) {
-            let east = -8 + Double(column) * 0.125
-            let parent = try #require(parentSampler.sample(
-                eastMeters: east,
-                northMeters: 8,
-                requestedSpacingMeters: 0.5
-            ))
-            #expect(abs(mesh.positions[column].y - parent.elevationMeters) < 1e-6)
+        func parentHeight(eastMeters: Double, northMeters: Double) -> Float {
+            let halfSize = parentPlan.sizeMeters / 2
+            let column = Int((
+                (eastMeters - (parentPlan.centerEastMeters - halfSize))
+                    / parentPlan.sampleSpacingMeters
+            ).rounded())
+            let row = Int((
+                (parentPlan.centerNorthMeters + halfSize - northMeters)
+                    / parentPlan.sampleSpacingMeters
+            ).rounded())
+            return parentMesh.positions[row * samples + column].y
         }
+
+        let fineHalfSize = finePlan.sizeMeters / 2
+        for index in stride(from: 0, through: samples - 1, by: 4) {
+            let east = finePlan.centerEastMeters - fineHalfSize
+                + Double(index) * finePlan.sampleSpacingMeters
+            let north = finePlan.centerNorthMeters + fineHalfSize
+                - Double(index) * finePlan.sampleSpacingMeters
+            let northEdge = fineMesh.positions[index].y
+            let southEdge = fineMesh.positions[(samples - 1) * samples + index].y
+            let westEdge = fineMesh.positions[index * samples].y
+            let eastEdge = fineMesh.positions[index * samples + samples - 1].y
+            #expect(abs(northEdge - parentHeight(
+                eastMeters: east,
+                northMeters: finePlan.centerNorthMeters + fineHalfSize
+            )) < 1e-6)
+            #expect(abs(southEdge - parentHeight(
+                eastMeters: east,
+                northMeters: finePlan.centerNorthMeters - fineHalfSize
+            )) < 1e-6)
+            #expect(abs(westEdge - parentHeight(
+                eastMeters: finePlan.centerEastMeters - fineHalfSize,
+                northMeters: north
+            )) < 1e-6)
+            #expect(abs(eastEdge - parentHeight(
+                eastMeters: finePlan.centerEastMeters + fineHalfSize,
+                northMeters: north
+            )) < 1e-6)
+        }
+    }
+
+    @Test func presentationPreloadsFineGeometryThenBlendsToExactRenderedTouchdown() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: field.spacingMeters)
+        let plans = planner.focusedPlans(
+            focusEastMeters: 2,
+            focusNorthMeters: 2,
+            altitudeMeters: 20
+        )
+        let parentPlan = try #require(plans.first { $0.sampleSpacingMeters == 0.5 })
+        let finePlan = try #require(plans.first { $0.sampleSpacingMeters == 0.125 })
+        let sampler = LMProgressiveTerrainSurfaceSampler(
+            heightField: field,
+            planner: planner
+        )
+        let east = finePlan.centerEastMeters
+        let north = finePlan.centerNorthMeters
+        let parent = try #require(sampler.renderedElevation(
+            eastMeters: east,
+            northMeters: north,
+            plan: parentPlan
+        ))
+        let fine = try #require(sampler.renderedElevation(
+            eastMeters: east,
+            northMeters: north,
+            plan: finePlan
+        ))
+        let preloaded = try #require(sampler.sample(
+            eastMeters: east,
+            northMeters: north,
+            altitudeMeters: 50,
+            activePlans: plans
+        ))
+        let halfway = try #require(sampler.sample(
+            eastMeters: east,
+            northMeters: north,
+            altitudeMeters: 32.5,
+            activePlans: plans
+        ))
+        let touchdown = try #require(sampler.sample(
+            eastMeters: east,
+            northMeters: north,
+            altitudeMeters: 0,
+            activePlans: plans
+        ))
+
+        #expect(preloaded.sampleSpacingMeters == 0.125)
+        #expect(preloaded.presentationBlend == 0)
+        #expect(abs(preloaded.presentationElevationMeters - parent) < 1e-6)
+        #expect(abs(halfway.presentationBlend - 0.5) < 1e-9)
+        #expect(abs(
+            halfway.presentationElevationMeters - (parent + (fine - parent) * 0.5)
+        ) < 1e-6)
+        #expect(touchdown.presentationBlend == 1)
+        #expect(abs(touchdown.presentationElevationMeters - fine) < 1e-6)
+        #expect(abs(touchdown.renderedElevationMeters - fine) < 1e-6)
     }
 
     @Test func terminalVelocityPrefetchesTheNextFineTileBeforeCrossing() {

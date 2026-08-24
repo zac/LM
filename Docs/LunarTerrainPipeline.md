@@ -27,10 +27,11 @@ byte ranges are pinned in
   per source post). A 16.384 km bias collar registers its inner boundary to
   the medium field. This covers the geometric horizon throughout P64-P66.
 - **Terminal residual:** below 250 m altitude, a deterministic 0.5 m grid adds
-  bounded sub-resolution morphology. Below 40 m, a nested 0.125 m landing tile
-  resolves craterlets down to 0.25 m diameter. Both layers morph to their
-  parent geometry through an edge collar and remain exactly anchored at every
-  2 m measured post.
+  bounded sub-resolution morphology. Below 60 m, a nested 0.125 m landing tile
+  preloads craterlets down to 0.25 m diameter. Each level contributes only its
+  new spatial band and morphs that band to the actual rendered parent through
+  an edge collar. Parent and child boundaries therefore remain identical even
+  where their tile edges coincide.
 - **Appearance:** the WAC empirical mosaic supplies photometrically normalized
   broad reflectance at about 99.7 m/pixel in the near and medium bands and
   473.8 m/pixel in the far band. The near texture adds only bounded,
@@ -38,7 +39,12 @@ byte ranges are pinned in
   NAC observations. That detail fades to zero through the outer 128 m collar,
   and the far WAC band is registered to the medium boundary. Textures encode a
   linear 643 nm reflectance proxy as sRGB; mission lighting and mesh normals
-  remain dynamic in RealityKit. Diagnostic hillshade is never surface color.
+  remain dynamic in RealityKit. Source-backed terrain has exactly one
+  mission-oriented directional light at 10.77 degrees elevation, exposed at
+  25,000 RealityKit lux to retain relief without clipping the black-sky
+  composition. A bounded texture-derived floor prevents fully shadowed texels
+  from quantizing to black without replacing the low-Sun PBR response.
+  Diagnostic hillshade is never surface color.
 
 The runtime coordinate convention is +X north, +Y up, and -Z east. The cockpit
 stays fixed around the wearer while the lunar world receives the inverse
@@ -90,15 +96,21 @@ Primary morphology constraints:
 
 The flight/contact surface intentionally remains measured interpolation only.
 Synthesized relief can improve parallax, shadows, and optical flow without
-silently changing the AGC trajectory, landing result, or contact gate. A future
-hazard-aware surface model must be introduced as a separately validated physics
-feature rather than inheriting visual displacement by accident.
+silently changing the AGC trajectory, landing result, or contact gate. The
+landing tile is resident by 60 m, begins contributing to the cockpit's visual
+surface datum at 40 m, and reaches the exact rendered surface by 25 m. At
+touchdown, the ground under the fixed cockpit and the dust origin therefore
+agree with the visible mesh while the contact decision remains measured. A
+future hazard-aware surface model must be introduced as a separately validated
+physics feature rather than inheriting visual displacement by accident.
 
 The terminal planner retains both the tile under the LM and the tile at a
 six-second velocity projection. This normally prefetches one neighboring
 0.125 m tile before a 16 m boundary crossing. The coarser parent remains
-resident throughout, so cancellation or slow generation degrades detail rather
-than exposing a coverage hole.
+resident throughout. Each stable tile ID owns its generation task and token;
+request churn cancels only obsolete IDs and cannot repeatedly restart a still
+required under-vehicle tile. Cancellation or slow generation therefore
+degrades detail rather than exposing a coverage hole.
 
 ## Reproduction
 
@@ -116,6 +128,9 @@ All nested meshes use power-of-two-plus-one grids with shared boundary lines:
 2,048 m, 16,384 m, and 262,144 m. Outer tiles punch exact square holes for
 their inner tiles. Height values on each shared boundary are identical before
 quantization, preventing overlaps, gaps, and vertical steps.
+Measured and progressive triangles use upward-facing geometric winding that is
+regression-tested against their vertex normals, allowing RealityKit's default
+back-face culling without creating a black nadir coverage hole.
 
 ## Next fidelity layers
 
