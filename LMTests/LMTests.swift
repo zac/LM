@@ -826,13 +826,19 @@ struct LandingPointDesignatorTests {
     @Test func everyFlightScaleMarkStaysInsideBothPanes() {
         for pane in LMLPDPane.allCases {
             let corners = lpd.windowCorners(on: pane)
-            for elevation in LMLandingPointDesignator.elevationDegrees {
+            for elevation in LMLandingPointDesignator.elevationMarkDegrees {
                 #expect(point(
                     lpd.point(elevationDegrees: Double(elevation), on: pane),
                     isInsideTriangle: corners
                 ))
+                let endpoints = lpd.elevationTickEndpoints(
+                    elevationDegrees: elevation,
+                    on: pane
+                )
+                #expect(point(endpoints.start, isInsideTriangle: corners))
+                #expect(point(endpoints.end, isInsideTriangle: corners))
             }
-            for azimuth in LMLandingPointDesignator.azimuthDegrees {
+            for azimuth in LMLandingPointDesignator.azimuthMarkDegrees {
                 #expect(point(
                     lpd.point(
                         elevationDegrees: 0,
@@ -841,6 +847,12 @@ struct LandingPointDesignatorTests {
                     ),
                     isInsideTriangle: corners
                 ))
+                let endpoints = lpd.azimuthTickEndpoints(
+                    azimuthDegrees: azimuth,
+                    on: pane
+                )
+                #expect(point(endpoints.start, isInsideTriangle: corners))
+                #expect(point(endpoints.end, isInsideTriangle: corners))
             }
         }
     }
@@ -851,6 +863,22 @@ struct LandingPointDesignatorTests {
                 eyeMeters: lpd.commanderEyeMeters,
                 elevationDegrees: angle
             ) < 0.0005)
+        }
+    }
+
+    @Test func completeTickGeometryCollimatesAcrossBothPanes() {
+        for elevation in LMLandingPointDesignator.elevationMarkDegrees {
+            let inner = lpd.elevationTickEndpoints(elevationDegrees: elevation, on: .inner)
+            let outer = lpd.elevationTickEndpoints(elevationDegrees: elevation, on: .outer)
+            expectSameSightRay(inner.start, outer.start)
+            expectSameSightRay(inner.end, outer.end)
+        }
+
+        for azimuth in LMLandingPointDesignator.azimuthMarkDegrees {
+            let inner = lpd.azimuthTickEndpoints(azimuthDegrees: azimuth, on: .inner)
+            let outer = lpd.azimuthTickEndpoints(azimuthDegrees: azimuth, on: .outer)
+            expectSameSightRay(inner.start, outer.start)
+            expectSameSightRay(inner.end, outer.end)
         }
     }
 
@@ -872,8 +900,10 @@ struct LandingPointDesignatorTests {
     }
 
     @Test func apollo11ScaleAndRedesignationIncrementsStayMissionSpecific() {
-        #expect(LMLandingPointDesignator.elevationDegrees == Array(0...60))
-        #expect(LMLandingPointDesignator.azimuthDegrees == Array(-10...10))
+        #expect(LMLandingPointDesignator.elevationMarkDegrees == Array(
+            stride(from: 0, through: 60, by: 2)
+        ))
+        #expect(LMLandingPointDesignator.azimuthMarkDegrees == [-10, -5, 0, 5, 10])
         #expect(LMLandingPointDesignator.horizontalScaleElevations == [0])
         #expect(LMLandingPointDesignator.apollo11InPlaneRedesignationDegrees == 0.5)
         #expect(LMLandingPointDesignator.apollo11CrossRangeRedesignationDegrees == 2)
@@ -923,6 +953,12 @@ struct LandingPointDesignatorTests {
         let u = 1 - v - w
         let tolerance: Float = -0.0001
         return u >= tolerance && v >= tolerance && w >= tolerance
+    }
+
+    private func expectSameSightRay(_ inner: SIMD3<Float>, _ outer: SIMD3<Float>) {
+        let innerDirection = simd_normalize(inner - lpd.commanderEyeMeters)
+        let outerDirection = simd_normalize(outer - lpd.commanderEyeMeters)
+        #expect(simd_dot(innerDirection, outerDirection) > 0.999_999)
     }
 }
 

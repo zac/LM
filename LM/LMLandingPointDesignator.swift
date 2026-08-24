@@ -58,11 +58,21 @@ struct LMLandingPointDesignator: Sendable {
         .lower: SIMD2(-5, -65),
     ]
 
-    static let elevationDegrees = Array(0...60)
-    static let azimuthDegrees = Array(-10...10)
+    /// Figure T30915-38 marks the vertical landing scale every 2 degrees and
+    /// the horizontal cross-range scale every 5 degrees.
+    static let elevationMarkDegrees = Array(stride(from: 0, through: 60, by: 2))
+    static let azimuthMarkDegrees = Array(stride(from: -10, through: 10, by: 5))
     static let horizontalScaleElevations = [0]
     static let apollo11InPlaneRedesignationDegrees = 0.5
     static let apollo11CrossRangeRedesignationDegrees = 2.0
+
+    /// Angular half-spans digitized from the relative mark proportions in
+    /// T30915-38. Angular construction keeps the complete colored marks, not
+    /// only their centers, collimated through both panes at the design eye.
+    static let elevationMajorTickHalfSpanDegrees = 1.2
+    static let elevationMinorTickHalfSpanDegrees = 0.7
+    static let azimuthMajorTickHalfSpanDegrees = 0.9
+    static let azimuthMinorTickHalfSpanDegrees = 0.6
 
     /// Scene placement of the flight design eye. The source body-station datum
     /// is retained separately so an artist cabin can be checked without making
@@ -136,6 +146,49 @@ struct LMLandingPointDesignator: Sendable {
             direction: sightDirectionVector(
                 elevationDegrees: elevationDegrees,
                 azimuthDegrees: azimuthDegrees
+            )
+        )
+    }
+
+    func elevationTickEndpoints(
+        elevationDegrees: Int,
+        on pane: LMLPDPane
+    ) -> (start: SIMD3<Float>, end: SIMD3<Float>) {
+        let halfSpan = elevationDegrees.isMultiple(of: 10)
+            ? Self.elevationMajorTickHalfSpanDegrees
+            : Self.elevationMinorTickHalfSpanDegrees
+        return (
+            point(
+                elevationDegrees: Double(elevationDegrees),
+                azimuthDegrees: -halfSpan,
+                on: pane
+            ),
+            point(
+                elevationDegrees: Double(elevationDegrees),
+                azimuthDegrees: halfSpan,
+                on: pane
+            )
+        )
+    }
+
+    func azimuthTickEndpoints(
+        azimuthDegrees: Int,
+        scaleElevationDegrees: Int = 0,
+        on pane: LMLPDPane
+    ) -> (start: SIMD3<Float>, end: SIMD3<Float>) {
+        let halfSpan = azimuthDegrees.isMultiple(of: 10)
+            ? Self.azimuthMajorTickHalfSpanDegrees
+            : Self.azimuthMinorTickHalfSpanDegrees
+        return (
+            point(
+                elevationDegrees: Double(scaleElevationDegrees) - halfSpan,
+                azimuthDegrees: Double(azimuthDegrees),
+                on: pane
+            ),
+            point(
+                elevationDegrees: Double(scaleElevationDegrees) + halfSpan,
+                azimuthDegrees: Double(azimuthDegrees),
+                on: pane
             )
         )
     }

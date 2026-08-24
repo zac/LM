@@ -527,41 +527,37 @@ final class LMCommanderStationScene {
 
     private func makeLandingPointDesignatorMesh(pane: LMLPDPane) throws -> MeshResource {
         var segments = [(SIMD3<Float>, SIMD3<Float>)]()
-        for elevation in 0..<60 {
-            segments.append((
-                landingPointDesignator.point(elevationDegrees: Double(elevation), on: pane),
-                landingPointDesignator.point(elevationDegrees: Double(elevation + 1), on: pane)
-            ))
-        }
-        for elevation in LMLandingPointDesignator.elevationDegrees {
-            let center = landingPointDesignator.point(elevationDegrees: Double(elevation), on: pane)
-            let halfWidth: Float = elevation.isMultiple(of: 10) ? 0.030
-                : elevation.isMultiple(of: 5) ? 0.019 : 0.010
-            segments.append((center - SIMD3(halfWidth, 0, 0), center + SIMD3(halfWidth, 0, 0)))
+        segments.append((
+            landingPointDesignator.point(elevationDegrees: 0, on: pane),
+            landingPointDesignator.point(elevationDegrees: 60, on: pane)
+        ))
+        for elevation in LMLandingPointDesignator.elevationMarkDegrees {
+            let endpoints = landingPointDesignator.elevationTickEndpoints(
+                elevationDegrees: elevation,
+                on: pane
+            )
+            segments.append((endpoints.start, endpoints.end))
         }
         for elevation in LMLandingPointDesignator.horizontalScaleElevations {
-            for azimuth in -10..<10 {
-                segments.append((
-                    landingPointDesignator.point(
-                        elevationDegrees: Double(elevation),
-                        azimuthDegrees: Double(azimuth),
-                        on: pane
-                    ),
-                    landingPointDesignator.point(
-                        elevationDegrees: Double(elevation),
-                        azimuthDegrees: Double(azimuth + 1),
-                        on: pane
-                    )
-                ))
-            }
-            for azimuth in LMLandingPointDesignator.azimuthDegrees {
-                let center = landingPointDesignator.point(
+            segments.append((
+                landingPointDesignator.point(
                     elevationDegrees: Double(elevation),
-                    azimuthDegrees: Double(azimuth),
+                    azimuthDegrees: -10,
+                    on: pane
+                ),
+                landingPointDesignator.point(
+                    elevationDegrees: Double(elevation),
+                    azimuthDegrees: 10,
                     on: pane
                 )
-                let halfHeight: Float = azimuth.isMultiple(of: 5) ? 0.016 : 0.009
-                segments.append((center - SIMD3(0, halfHeight, 0), center + SIMD3(0, halfHeight, 0)))
+            ))
+            for azimuth in LMLandingPointDesignator.azimuthMarkDegrees {
+                let endpoints = landingPointDesignator.azimuthTickEndpoints(
+                    azimuthDegrees: azimuth,
+                    scaleElevationDegrees: elevation,
+                    on: pane
+                )
+                segments.append((endpoints.start, endpoints.end))
             }
         }
 
