@@ -27,7 +27,10 @@ byte ranges are pinned in
   per source post). A 16.384 km bias collar registers its inner boundary to
   the medium field. This covers the geometric horizon throughout P64-P66.
 - **Terminal residual:** below 250 m altitude, a deterministic 0.5 m grid adds
-  a bounded residual that is exactly zero at every 2 m measured post.
+  bounded sub-resolution morphology. Below 40 m, a nested 0.125 m landing tile
+  resolves craterlets down to 0.25 m diameter. Both layers morph to their
+  parent geometry through an edge collar and remain exactly anchored at every
+  2 m measured post.
 - **Appearance:** the WAC empirical mosaic supplies photometrically normalized
   broad reflectance at about 99.7 m/pixel in the near and medium bands and
   473.8 m/pixel in the far band. The near texture adds only bounded,
@@ -62,6 +65,41 @@ focus, and descent-engine dust all consume the aligned terrain position. A
 fixture regression test prevents regenerated P66 data from silently moving the
 calibration point.
 
+## Synthesized terminal geology
+
+`LMLunarGeologyModel` replaces generic value noise with deterministic crater
+morphology. Its cumulative diameter distribution uses the Surveyor steady-state
+small-crater exponent of -2; generated diameters are restricted to 0.22–1.8 m,
+inside the published Surveyor 0.13–3 m observational range and below the 2 m
+LROC geometry posts. Profiles include age-dependent bowls, elliptical forms,
+broken raised rims, and weak directional ejecta. Apollo 11 site reporting
+constrains the qualitative context: the immediate landing region was relatively
+free of rocks but covered with craters from roughly 100 ft to less than 1 ft.
+
+Feature coordinates, crater ages, ellipticity, rim breakup, and ejecta are
+synthesized, versioned by `surveyor-steady-state-microcraters-v1`, and are not
+claimed as measured Apollo 11 features. A bilinear post-anchoring correction
+keeps the residual continuous across measured cell boundaries and exactly zero
+at every LROC post. The visual residual is smoothly bounded to 0.24 m.
+
+Primary morphology constraints:
+
+- https://www.usgs.gov/publications/physical-characteristics-lunar-regolith-determined-surveyor-television-observations
+- https://www.usgs.gov/publications/observations-lunar-regolith-and-earth-television-camera-surveyor-7
+- https://ntrs.nasa.gov/api/citations/19700000726/downloads/19700000726.pdf
+
+The flight/contact surface intentionally remains measured interpolation only.
+Synthesized relief can improve parallax, shadows, and optical flow without
+silently changing the AGC trajectory, landing result, or contact gate. A future
+hazard-aware surface model must be introduced as a separately validated physics
+feature rather than inheriting visual displacement by accident.
+
+The terminal planner retains both the tile under the LM and the tile at a
+six-second velocity projection. This normally prefetches one neighboring
+0.125 m tile before a 16 m boundary crossing. The coarser parent remains
+resident throughout, so cancellation or slow generation degrades detail rather
+than exposing a coverage hole.
+
 ## Reproduction
 
 `Tools/TerrainGenerator` verifies the 118 MB NAC GeoTIFF by byte count and
@@ -88,12 +126,18 @@ quantization, preventing overlaps, gaps, and vertical steps.
    than keeping the full near-field mesh resident.
 3. Move dense terrain updates to RealityKit `LowLevelMesh` and Metal compute
    after measuring the current CPU mesh path on Vision Pro.
-4. Add deterministic, geology-conditioned microcraters, rim breakup, ejecta,
-   and instanced blocks. Each generated feature must retain provenance as
-   synthesized detail and must not alter measured macro relief.
-5. Separate visual displacement from the conservative landing-contact mesh and
-   validate both across the complete P64-to-contact trajectory.
+4. Add geology-conditioned instanced fragments and the documented boulder field
+   north of Eagle without placing invented landing hazards in the immediate
+   rock-poor touchdown zone.
+5. Validate visual displacement and conservative contact across the complete
+   P64-to-contact trajectory, including tile-generation time and visible edge
+   transitions on Vision Pro.
 
 The terrain milestone is complete only when an Apollo 11 descent can move from
 high altitude to contact without coverage gaps, coordinate drift, visible LOD
 popping, or a frame-time/comfort regression on Vision Pro.
+
+For rapid simulator validation, launch with
+`--terminal-descent-cockpit --cockpit-start-p65`. This retains the real bundled
+P65 checkpoint and live Luminary/contact path while reaching the 0.5 m and
+0.125 m LOD thresholds without replaying the full P64 approach.

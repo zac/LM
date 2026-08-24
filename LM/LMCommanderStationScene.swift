@@ -114,7 +114,7 @@ final class LMCommanderStationScene {
         guard let state else { return }
         lastVehicleState = state
         let terrainPosition = terrainPosition(for: state.positionMeters)
-        let surfaceElevation = terrainHeightField?.relativeElevation(
+        let surfaceElevation = terrainHeightField?.conservativeContactElevation(
             eastMeters: terrainPosition.y,
             northMeters: terrainPosition.x
         ) ?? 0
@@ -125,6 +125,8 @@ final class LMCommanderStationScene {
         ))
         requestProgressiveTerrain(
             around: terrainPosition,
+            velocityNorthMetersPerSecond: state.velocityMetersPerSecond.x,
+            velocityEastMetersPerSecond: state.velocityMetersPerSecond.y,
             altitudeMeters: state.altitudeMeters
         )
     }
@@ -153,6 +155,8 @@ final class LMCommanderStationScene {
 
     private func requestProgressiveTerrain(
         around terrainPosition: LMVector3D,
+        velocityNorthMetersPerSecond: Double,
+        velocityEastMetersPerSecond: Double,
         altitudeMeters: Double
     ) {
         guard let heightField = terrainHeightField,
@@ -160,13 +164,18 @@ final class LMCommanderStationScene {
               let terrainAlbedoTexture else { return }
         let plans = LMProgressiveTerrainPlanner(
             sourceSpacingMeters: heightField.spacingMeters
-        ).focusedPlans(
+        ).prefetchedPlans(
             focusEastMeters: terrainPosition.y,
             focusNorthMeters: terrainPosition.x,
+            velocityEastMetersPerSecond: velocityEastMetersPerSecond,
+            velocityNorthMetersPerSecond: velocityNorthMetersPerSecond,
             altitudeMeters: altitudeMeters
         )
         let requestedIDs = Set(plans.map(\.id))
         guard requestedIDs != requestedTerrainTileIDs else { return }
+        logger.info(
+            "Terrain LOD request count=\(plans.count, privacy: .public) altitude=\(altitudeMeters, privacy: .public)m model=\(LMLunarGeologyModel.modelID, privacy: .public)"
+        )
         requestedTerrainTileIDs = requestedIDs
         terrainRefreshTask?.cancel()
         terrainRefreshTask = Task { @MainActor [weak self] in
@@ -178,6 +187,7 @@ final class LMCommanderStationScene {
                     replacements[plan.id] = existing
                 } else {
                     do {
+                        let generationStarted = Date()
                         if let entity = try await Apollo11TerrainResource
                             .makeProgressiveTileEntity(
                                 heightField: heightField,
@@ -185,6 +195,13 @@ final class LMCommanderStationScene {
                                 albedoTexture: terrainAlbedoTexture
                             ) {
                             replacements[plan.id] = entity
+                            let elapsedMilliseconds = Int(
+                                Date().timeIntervalSince(generationStarted) * 1_000
+                            )
+                            let samples = Int(plan.sizeMeters / plan.sampleSpacingMeters) + 1
+                            self.logger.info(
+                                "Terrain tile ready L\(plan.id.level, privacy: .public) E\(plan.id.eastIndex, privacy: .public) N\(plan.id.northIndex, privacy: .public) spacing=\(plan.sampleSpacingMeters, privacy: .public)m vertices=\(samples * samples, privacy: .public) generation=\(elapsedMilliseconds, privacy: .public)ms"
+                            )
                         }
                     } catch {
                         self.logger.error(
@@ -195,6 +212,12 @@ final class LMCommanderStationScene {
             }
             guard !Task.isCancelled,
                   self.requestedTerrainTileIDs == requestedIDs else { return }
+            let retiredCount = self.progressiveTerrainEntities.keys.filter {
+                replacements[$0] == nil
+            }.count
+            let addedCount = replacements.keys.filter {
+                self.progressiveTerrainEntities[$0] == nil
+            }.count
             for (id, entity) in self.progressiveTerrainEntities where replacements[id] == nil {
                 entity.removeFromParent()
             }
@@ -202,6 +225,9 @@ final class LMCommanderStationScene {
                 terrainEnvironment.addChild(entity)
             }
             self.progressiveTerrainEntities = replacements
+            self.logger.info(
+                "Terrain LOD active=\(replacements.count, privacy: .public) added=\(addedCount, privacy: .public) retired=\(retiredCount, privacy: .public)"
+            )
         }
     }
 
@@ -293,7 +319,7 @@ final class LMCommanderStationScene {
 
         dustCloud.isEnabled = true
         let terrainPosition = terrainPosition(for: state.positionMeters)
-        let surfaceElevation = terrainHeightField?.relativeElevation(
+        let surfaceElevation = terrainHeightField?.conservativeContactElevation(
             eastMeters: terrainPosition.y,
             northMeters: terrainPosition.x
         ) ?? 0

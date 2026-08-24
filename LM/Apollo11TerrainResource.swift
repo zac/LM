@@ -34,6 +34,23 @@ struct Apollo11TerrainHeightField: Equatable, Sendable {
         let south = value(x0, y1) + (value(x1, y1) - value(x0, y1)) * tx
         return north + (south - north) * ty
     }
+
+    /// The simulation/contact surface remains measured interpolation only.
+    /// Procedural crater relief is visual evidence, never a hidden landing aid
+    /// or hazard in the flight model.
+    func conservativeContactElevation(
+        eastMeters: Double,
+        northMeters: Double
+    ) -> Float? {
+        relativeElevation(eastMeters: eastMeters, northMeters: northMeters)
+    }
+}
+
+struct LMProgressiveTerrainMeshData: Sendable {
+    let positions: [SIMD3<Float>]
+    let normals: [SIMD3<Float>]
+    let textureCoordinates: [SIMD2<Float>]
+    let indices: [UInt32]
 }
 
 enum Apollo11TerrainResource {
@@ -75,11 +92,41 @@ enum Apollo11TerrainResource {
         plan: LMTerrainTilePlan,
         albedoTexture: TextureResource
     ) async throws -> ModelEntity? {
+        let generationTask = Task.detached(priority: .userInitiated) {
+            try makeProgressiveTileMeshData(
+                heightField: heightField,
+                plan: plan
+            )
+        }
+        let data = try await withTaskCancellationHandler(
+            operation: { try await generationTask.value },
+            onCancel: { generationTask.cancel() }
+        )
+        guard let data else { return nil }
+
+        var descriptor = MeshDescriptor(name: "Progressive LROC tile")
+        descriptor.positions = MeshBuffers.Positions(data.positions)
+        descriptor.normals = MeshBuffers.Normals(data.normals)
+        descriptor.textureCoordinates = MeshBuffers.TextureCoordinates(data.textureCoordinates)
+        descriptor.primitives = .triangles(data.indices)
+        let mesh = try MeshResource.generate(from: [descriptor])
+        let material = LMTerrainWorld.terrainMaterial(texture: albedoTexture)
+        let entity = ModelEntity(mesh: mesh, materials: [material])
+        entity.name = "LROC progressive \(LMLunarGeologyModel.modelID) L\(plan.id.level) E\(plan.id.eastIndex) N\(plan.id.northIndex) \(plan.sampleSpacingMeters)m"
+        return entity
+    }
+
+    nonisolated static func makeProgressiveTileMeshData(
+        heightField: Apollo11TerrainHeightField,
+        plan: LMTerrainTilePlan
+    ) throws -> LMProgressiveTerrainMeshData? {
         let tileSize = plan.sizeMeters
         let sampleSpacing = plan.sampleSpacingMeters
         let sampleCount = Int(tileSize / sampleSpacing) + 1
         let sampler = LMProgressiveTerrainSampler(heightField: heightField)
         let halfSize = tileSize / 2
+        let parentSpacing = min(heightField.spacingMeters, sampleSpacing * 4)
+        let morphWidth = min(tileSize / 4, parentSpacing * 4)
 
         var positions = [SIMD3<Float>]()
         var textureCoordinates = [SIMD2<Float>]()
@@ -93,19 +140,34 @@ enum Apollo11TerrainResource {
             requestedSpacingMeters: sampleSpacing
         )
         for row in 0..<sampleCount {
+            try Task.checkCancellation()
             let north = plan.centerNorthMeters + halfSize - Double(row) * sampleSpacing
             for column in 0..<sampleCount {
                 let east = plan.centerEastMeters - halfSize + Double(column) * sampleSpacing
-                guard let sample = sampler.sample(
+                guard let fineSample = sampler.sample(
                     eastMeters: east,
                     northMeters: north,
                     requestedSpacingMeters: sampleSpacing
+                ), let parentSample = sampler.sample(
+                    eastMeters: east,
+                    northMeters: north,
+                    requestedSpacingMeters: parentSpacing
                 ) else {
                     return nil
                 }
+                let boundaryDistance = min(
+                    Double(row) * sampleSpacing,
+                    Double(column) * sampleSpacing,
+                    Double(sampleCount - 1 - row) * sampleSpacing,
+                    Double(sampleCount - 1 - column) * sampleSpacing
+                )
+                let morph = smoothstep(boundaryDistance / morphWidth)
+                let elevation = parentSample.elevationMeters
+                    + (fineSample.elevationMeters - parentSample.elevationMeters) * Float(morph)
+                    + layerOffset * Float(morph)
                 positions.append(SIMD3(
                     Float(north),
-                    sample.elevationMeters + layerOffset,
+                    elevation,
                     Float(-east)
                 ))
                 textureCoordinates.append(textureCoordinate(
@@ -149,16 +211,12 @@ enum Apollo11TerrainResource {
             }
         }
 
-        var descriptor = MeshDescriptor(name: "Progressive LROC tile")
-        descriptor.positions = MeshBuffers.Positions(positions)
-        descriptor.normals = MeshBuffers.Normals(normals)
-        descriptor.textureCoordinates = MeshBuffers.TextureCoordinates(textureCoordinates)
-        descriptor.primitives = .triangles(indices)
-        let mesh = try MeshResource.generate(from: [descriptor])
-        let material = LMTerrainWorld.terrainMaterial(texture: albedoTexture)
-        let entity = ModelEntity(mesh: mesh, materials: [material])
-        entity.name = "LROC progressive L\(plan.id.level) E\(plan.id.eastIndex) N\(plan.id.northIndex) \(sampleSpacing)m"
-        return entity
+        return LMProgressiveTerrainMeshData(
+            positions: positions,
+            normals: normals,
+            textureCoordinates: textureCoordinates,
+            indices: indices
+        )
     }
 
     /// North-up image rows run from north at v=0 to south at v=1, matching
@@ -175,11 +233,16 @@ enum Apollo11TerrainResource {
         )
     }
 
-    private static func layerOffsetMeters(
+    private nonisolated static func layerOffsetMeters(
         sourceSpacingMeters: Double,
         requestedSpacingMeters: Double
     ) -> Float {
         Float(max(log2(sourceSpacingMeters / requestedSpacingMeters), 1) * 0.004)
+    }
+
+    private nonisolated static func smoothstep(_ value: Double) -> Double {
+        let clamped = min(max(value, 0), 1)
+        return clamped * clamped * (3 - 2 * clamped)
     }
 
     private nonisolated static func terrainResourceURL(

@@ -1078,18 +1078,103 @@ struct ProgressiveLunarTerrainTests {
         #expect(measuredPost.elevationMeters == measuredPost.measuredElevationMeters)
         #expect(measuredPost.provenance == .measuredWithProceduralSubresolution)
 
-        let subPost = try #require(sampler.sample(
-            eastMeters: 1,
-            northMeters: 1,
-            requestedSpacingMeters: 0.5
-        ))
+        let subPost = try #require(stride(from: -7.75, through: 7.75, by: 0.25)
+            .lazy
+            .flatMap { north in
+                stride(from: -7.75, through: 7.75, by: 0.25).lazy.map { east in
+                    sampler.sample(
+                        eastMeters: east,
+                        northMeters: north,
+                        requestedSpacingMeters: 0.125
+                    )
+                }
+            }
+            .compactMap { $0 }
+            .first { abs($0.proceduralResidualMeters) > 1e-5 })
         #expect(abs(subPost.proceduralResidualMeters) <= sampler.maximumResidualMeters)
-        #expect(abs(subPost.proceduralResidualMeters) > 1e-7)
+        #expect(abs(subPost.proceduralResidualMeters) > 1e-5)
         #expect(abs(
             subPost.elevationMeters
                 - subPost.measuredElevationMeters
                 - subPost.proceduralResidualMeters
         ) < 1e-6)
+    }
+
+    @Test func geologyModelPinsSurveyorDistributionAndProducesCraterMorphology() throws {
+        #expect(LMLunarGeologyModel.modelID == "surveyor-steady-state-microcraters-v1")
+        #expect(LMLunarGeologyModel.cumulativeCraterDiameterExponent == -2)
+        #expect(LMLunarGeologyModel.minimumCraterDiameterMeters >= 0.13)
+        #expect(LMLunarGeologyModel.maximumCraterDiameterMeters <= 3)
+        #expect(LMLunarGeologyModel.surveyorSourceURL.contains("usgs.gov"))
+        #expect(LMLunarGeologyModel.apollo11SourceURL.contains("nasa.gov"))
+
+        let crater = LMLunarGeologyModel.Crater(
+            eastMeters: 0,
+            northMeters: 0,
+            diameterMeters: 1,
+            aspectRatio: 1,
+            rotationRadians: 0,
+            sharpness: 0.8,
+            rimPhase: 0,
+            rimLobes: 5,
+            ejectaPhase: 0
+        )
+        let center = LMLunarGeologyModel.craterReliefMeters(
+            eastMeters: 0,
+            northMeters: 0,
+            crater: crater
+        )
+        let rim = LMLunarGeologyModel.craterReliefMeters(
+            eastMeters: 0.5,
+            northMeters: 0,
+            crater: crater
+        )
+        let outside = LMLunarGeologyModel.craterReliefMeters(
+            eastMeters: 1,
+            northMeters: 0,
+            crater: crater
+        )
+        #expect(center < -0.09)
+        #expect(rim > 0.02)
+        #expect(outside == 0)
+    }
+
+    @Test func postAnchoringIsContinuousAcrossMeasuredCellBoundaries() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let sampler = LMProgressiveTerrainSampler(heightField: field)
+        let epsilon = 1e-6
+        let west = try #require(sampler.sample(
+            eastMeters: -epsilon,
+            northMeters: 1.13,
+            requestedSpacingMeters: 0.125
+        ))
+        let east = try #require(sampler.sample(
+            eastMeters: epsilon,
+            northMeters: 1.13,
+            requestedSpacingMeters: 0.125
+        ))
+        #expect(abs(west.proceduralResidualMeters - east.proceduralResidualMeters) < 1e-4)
+    }
+
+    @Test func synthesizedReliefNeverChangesConservativeContactElevation() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let sampler = LMProgressiveTerrainSampler(heightField: field)
+        let contact = try #require(field.conservativeContactElevation(
+            eastMeters: 0.75,
+            northMeters: -0.75
+        ))
+        let measured = try #require(field.relativeElevation(
+            eastMeters: 0.75,
+            northMeters: -0.75
+        ))
+        let visual = try #require(sampler.sample(
+            eastMeters: 0.75,
+            northMeters: -0.75,
+            requestedSpacingMeters: 0.125
+        ))
+        #expect(contact == measured)
+        #expect(visual.measuredElevationMeters == contact)
+        #expect(abs(visual.elevationMeters - contact) <= sampler.maximumResidualMeters)
     }
 
     @Test func proceduralResidualIsDeterministicAndNeverFillsUnknownCoverage() throws {
@@ -1162,6 +1247,14 @@ struct ProgressiveLunarTerrainTests {
         #expect(terminal.map(\.sampleSpacingMeters) == [0.5])
         #expect(terminal.allSatisfy { $0.containsProceduralSubresolution })
 
+        let landing = planner.focusedPlans(
+            focusEastMeters: -547,
+            focusNorthMeters: 732,
+            altitudeMeters: 20
+        )
+        #expect(landing.map(\.sampleSpacingMeters) == [0.5, 0.125])
+        #expect(landing.map(\.sizeMeters) == [64, 16])
+
         let manifestSpacing = 2.000_000_000_000_6
         let manifestPlanner = LMProgressiveTerrainPlanner(
             sourceSpacingMeters: manifestSpacing
@@ -1176,6 +1269,63 @@ struct ProgressiveLunarTerrainTests {
             focusNorthMeters: 732
         ).first { $0.sampleSpacingMeters == 2 })
         #expect(!measuredScalePlan.containsProceduralSubresolution)
+    }
+
+    @Test func finerLandingTileMorphsExactlyToItsParentAtTheBoundary() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let plan = LMTerrainTilePlan(
+            id: .init(level: 1, eastIndex: 0, northIndex: 0),
+            centerEastMeters: 0,
+            centerNorthMeters: 0,
+            sizeMeters: 16,
+            sampleSpacingMeters: 0.125,
+            containsProceduralSubresolution: true
+        )
+        let generatedMesh = try Apollo11TerrainResource.makeProgressiveTileMeshData(
+            heightField: field,
+            plan: plan
+        )
+        let mesh = try #require(generatedMesh)
+        let samples = 129
+        #expect(mesh.positions.count == samples * samples)
+        #expect(mesh.indices.count == (samples - 1) * (samples - 1) * 6)
+
+        let parentSampler = LMProgressiveTerrainSampler(heightField: field)
+        for column in stride(from: 0, through: samples - 1, by: 16) {
+            let east = -8 + Double(column) * 0.125
+            let parent = try #require(parentSampler.sample(
+                eastMeters: east,
+                northMeters: 8,
+                requestedSpacingMeters: 0.5
+            ))
+            #expect(abs(mesh.positions[column].y - parent.elevationMeters) < 1e-6)
+        }
+    }
+
+    @Test func terminalVelocityPrefetchesTheNextFineTileBeforeCrossing() {
+        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: 2)
+        let stationary = planner.prefetchedPlans(
+            focusEastMeters: 12,
+            focusNorthMeters: 2,
+            velocityEastMetersPerSecond: 0,
+            velocityNorthMetersPerSecond: 0,
+            altitudeMeters: 20
+        )
+        let moving = planner.prefetchedPlans(
+            focusEastMeters: 12,
+            focusNorthMeters: 2,
+            velocityEastMetersPerSecond: 2,
+            velocityNorthMetersPerSecond: 0,
+            altitudeMeters: 20
+        )
+        let stationaryFine = stationary.filter { $0.sampleSpacingMeters == 0.125 }
+        let movingFine = moving.filter { $0.sampleSpacingMeters == 0.125 }
+
+        #expect(stationaryFine.count == 1)
+        #expect(movingFine.count == 2)
+        #expect(Set(moving.map(\.id)).count == moving.count)
+        #expect(movingFine.first?.id.eastIndex == 0)
+        #expect(movingFine.last?.id.eastIndex == 1)
     }
 
     @Test func focusedTileChangesOnlyWhenItsOwnBoundaryIsCrossed() {

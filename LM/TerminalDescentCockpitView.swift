@@ -210,7 +210,11 @@ struct TerminalDescentCockpitView: View {
             audioController.isEnabled = audioEnabled
             audioController.start()
             if appModel.session.canStart {
-                appModel.session.start(from: .p64Approach)
+                let startPoint: PoweredDescentSession.StartPoint = ProcessInfo
+                    .processInfo.arguments.contains("--cockpit-start-p65")
+                    ? .p65TerminalDescent
+                    : .p64Approach
+                appModel.session.start(from: startPoint)
             }
             updateExperience()
             do {
