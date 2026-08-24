@@ -17,7 +17,7 @@ struct LMCockpitValidationRecorder: Equatable, Sendable {
         case attitudeHold
         case p66
         case oneHundredFeet
-        case fiftyFeet
+        case fortyFeet
         case contact
         case softLanding
         case comfortConfirmed
@@ -40,7 +40,7 @@ struct LMCockpitValidationRecorder: Equatable, Sendable {
             case .attitudeHold: "ATT HOLD"
             case .p66: "P66 live"
             case .oneHundredFeet: "100 feet"
-            case .fiftyFeet: "50 feet"
+            case .fortyFeet: "40 feet"
             case .contact: "Contact"
             case .softLanding: "Soft landing"
             case .comfortConfirmed: "Comfort confirmed"
@@ -83,8 +83,16 @@ struct LMCockpitValidationRecorder: Equatable, Sendable {
                 completed.insert(.p66)
             case .oneHundredFeet:
                 completed.insert(.oneHundredFeet)
-            case .fiftyFeet:
-                completed.insert(.fiftyFeet)
+            case .fortyFeet:
+                completed.insert(.fortyFeet)
+            case .threeHundredFeet,
+                 .twoHundredTwentyFeet,
+                 .twoHundredFeet,
+                 .oneHundredSixtyFeet,
+                 .oneHundredTwentyFeet,
+                 .seventyFiveFeet,
+                 .thirtyFeet:
+                break
             case .contact:
                 completed.insert(.contact)
             case .softLanding:

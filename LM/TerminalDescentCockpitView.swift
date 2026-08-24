@@ -376,6 +376,8 @@ struct TerminalDescentCockpitView: View {
             program: session.programNumber,
             landingPointDisplayActive: session.isLandingPointDisplayActive,
             altitudeMeters: session.vehicleState?.altitudeMeters,
+            verticalSpeedMetersPerSecond: session.vehicleState?.verticalSpeedMetersPerSecond,
+            downrangeSpeedMetersPerSecond: session.vehicleState?.velocityMetersPerSecond.y,
             outcome: session.vehicleState?.flightOutcome,
             hasSurfaceContact: session.vehicleState?.surfaceContact != nil
         )
@@ -401,6 +403,7 @@ struct TerminalDescentCockpitView: View {
     private func restartExperience() {
         cuePresentationTask?.cancel()
         activeCue = nil
+        audioController.resetCallouts()
         experienceDirector.reset()
         validationRecorder.resetForRun()
         appModel.session.restart()

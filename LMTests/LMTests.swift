@@ -1179,7 +1179,7 @@ struct SpatialCockpitControlTests {
 
 @Suite("Cockpit experience events")
 struct CockpitExperienceEventTests {
-    @Test func phaseAndAltitudeCalloutsFireOnlyAtTheirRealGates() {
+    @Test func phaseCalloutsFireOnlyAtTheirRealGates() {
         var director = LMCockpitExperienceDirector()
 
         let prematureP64 = director.consume(
@@ -1201,31 +1201,77 @@ struct CockpitExperienceEventTests {
 
         let p65 = director.consume(
             program: 65,
-            altitudeMeters: 43.8,
+            altitudeMeters: nil,
             outcome: .inFlight,
             hasSurfaceContact: false
         )
         #expect(p65.map(\.id) == [.p65])
 
-        let oneHundred = director.consume(
-            program: 65,
-            altitudeMeters: 30,
-            outcome: .inFlight,
-            hasSurfaceContact: false
-        )
-        #expect(oneHundred.map(\.id) == [.oneHundredFeet])
-
-        let fifty = director.consume(
+        let p66 = director.consume(
             program: 66,
-            altitudeMeters: 15,
+            altitudeMeters: nil,
             outcome: .inFlight,
             hasSurfaceContact: false
         )
-        #expect(fifty.map(\.id) == [.p66, .fiftyFeet])
+        #expect(p66.map(\.id) == [.p66])
 
         let duplicates = director.consume(
             program: 66,
-            altitudeMeters: 10,
+            altitudeMeters: nil,
+            outcome: .inFlight,
+            hasSurfaceContact: false
+        )
+        #expect(duplicates.isEmpty)
+    }
+
+    @Test func apollo11AltitudeCalloutsUseLiveRatesAtDescendingThresholdCrossings() {
+        var director = LMCockpitExperienceDirector()
+        let metersPerFoot = 0.3048
+
+        _ = director.consume(
+            program: 66,
+            altitudeMeters: 301 * metersPerFoot,
+            verticalSpeedMetersPerSecond: -3.5 * metersPerFoot,
+            downrangeSpeedMetersPerSecond: 47 * metersPerFoot,
+            outcome: .inFlight,
+            hasSurfaceContact: false
+        )
+
+        let thresholds: [(feet: Double, event: LMCockpitExperienceDirector.Event)] = [
+            (299, .threeHundredFeet),
+            (219, .twoHundredTwentyFeet),
+            (199, .twoHundredFeet),
+            (159, .oneHundredSixtyFeet),
+            (119, .oneHundredTwentyFeet),
+            (99, .oneHundredFeet),
+            (74, .seventyFiveFeet),
+            (39, .fortyFeet),
+            (29, .thirtyFeet),
+        ]
+        var observed = [LMCockpitExperienceDirector.Event]()
+        var firstCallout: LMCockpitCue?
+        for threshold in thresholds {
+            let cues = director.consume(
+                program: 66,
+                altitudeMeters: threshold.feet * metersPerFoot,
+                verticalSpeedMetersPerSecond: -3.5 * metersPerFoot,
+                downrangeSpeedMetersPerSecond: 47 * metersPerFoot,
+                outcome: .inFlight,
+                hasSurfaceContact: false
+            )
+            firstCallout = firstCallout ?? cues.first { $0.id == .threeHundredFeet }
+            observed.append(contentsOf: cues.map(\.id).filter { $0 != .p66 })
+        }
+
+        #expect(observed == thresholds.map(\.event))
+        #expect(firstCallout?.title == "300 FT · DOWN 3.5 · FWD 47")
+        #expect(firstCallout?.spokenText == "300 feet. Down 3.5. 47 forward.")
+
+        let duplicates = director.consume(
+            program: 66,
+            altitudeMeters: 20 * metersPerFoot,
+            verticalSpeedMetersPerSecond: -3.5 * metersPerFoot,
+            downrangeSpeedMetersPerSecond: 47 * metersPerFoot,
             outcome: .inFlight,
             hasSurfaceContact: false
         )
@@ -1301,7 +1347,7 @@ struct CockpitHeadsetValidationTests {
         recorder.observe(events: [
             .p66,
             .oneHundredFeet,
-            .fiftyFeet,
+            .fortyFeet,
             .contact,
             .softLanding,
         ])

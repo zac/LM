@@ -21,6 +21,7 @@ final class LMCockpitAudioController {
     private let engine = AVAudioEngine()
     private let enginePlayer = AVAudioPlayerNode()
     private let cuePlayer = AVAudioPlayerNode()
+    private let calloutSpeaker = AVSpeechSynthesizer()
     private let format = AVAudioFormat(standardFormatWithSampleRate: 48_000, channels: 1)!
 
     private var started = false
@@ -32,6 +33,7 @@ final class LMCockpitAudioController {
             enginePlayer.volume = isEnabled ? enginePlayer.volume : 0
             if !isEnabled {
                 cuePlayer.stop()
+                calloutSpeaker.stopSpeaking(at: .immediate)
             }
         }
     }
@@ -77,6 +79,15 @@ final class LMCockpitAudioController {
 
     func play(_ cue: LMCockpitCue) {
         guard isEnabled else { return }
+        if let spokenText = cue.spokenText {
+            let utterance = AVSpeechUtterance(string: spokenText)
+            utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+            utterance.rate = 0.48
+            utterance.pitchMultiplier = 0.88
+            utterance.volume = 0.82
+            calloutSpeaker.speak(utterance)
+            return
+        }
         let tone: CueTone
         switch cue.kind {
         case .phase: tone = .phase
@@ -95,10 +106,15 @@ final class LMCockpitAudioController {
 
     func stop() {
         enginePlayer.stop()
-        cuePlayer.stop()
+        resetCallouts()
         engine.stop()
         started = false
         previousRCSCount = 0
+    }
+
+    func resetCallouts() {
+        cuePlayer.stop()
+        calloutSpeaker.stopSpeaking(at: .immediate)
     }
 
     private func makeRumbleBuffer() -> AVAudioPCMBuffer {
