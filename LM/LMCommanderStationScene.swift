@@ -21,6 +21,7 @@ final class LMCommanderStationScene {
     let acaHandle = ModelEntity()
     let rodSwitch = ModelEntity()
     let attitudeModeSwitch = ModelEntity()
+    let landingPointCalledAngleMarker = ModelEntity()
 
     private let instrumentMount = Entity()
     private let proceduralCabin = Entity()
@@ -46,6 +47,7 @@ final class LMCommanderStationScene {
 
         root.addChild(proceduralCabin)
         buildCabin()
+        buildLandingPointCalledAngleMarker()
         buildPhysicalControls()
         buildProvisionalSurface()
         buildDustCloud()
@@ -131,6 +133,21 @@ final class LMCommanderStationScene {
         )
     }
 
+    func setLandingPointCalledAngle(
+        _ angleDegrees: Double?,
+        trainingOverlayVisible: Bool
+    ) {
+        guard trainingOverlayVisible, let angleDegrees else {
+            landingPointCalledAngleMarker.isEnabled = false
+            return
+        }
+        landingPointCalledAngleMarker.position = landingPointDesignator.point(
+            elevationDegrees: min(max(angleDegrees, 0), 60),
+            on: .inner
+        ) + landingPointDesignator.panePlane(.inner).normalTowardEye * 0.004
+        landingPointCalledAngleMarker.isEnabled = true
+    }
+
     func updateDust(
         state: LMVehicleStateSnapshot?,
         commands: LMVehicleSnapshot?
@@ -192,26 +209,11 @@ final class LMCommanderStationScene {
         addBox(size: SIMD3(0.12, 1.80, 1.35), position: SIMD3(0.92, 1.02, -0.12), material: dark, name: "LMP sidewall")
         addBox(size: SIMD3(1.75, 0.12, 1.30), position: SIMD3(0, 1.98, -0.12), material: dark, name: "Overhead")
 
-        // Window frames leave the forward view physically open. Their splayed
-        // lower rails capture the LM's characteristic triangular sight picture.
-        addBox(size: SIMD3(0.09, 0.88, 0.09), position: SIMD3(-0.72, 1.46, -0.79), material: aluminum, name: "Left window post")
-        addBox(size: SIMD3(0.09, 0.88, 0.09), position: SIMD3(0.72, 1.46, -0.79), material: aluminum, name: "Right window post")
-        addBox(size: SIMD3(1.52, 0.08, 0.09), position: SIMD3(0, 1.88, -0.79), material: aluminum, name: "Window header")
-        addBox(
-            size: SIMD3(0.74, 0.08, 0.09),
-            position: SIMD3(-0.37, 1.13, -0.79),
-            orientation: simd_quatf(angle: -.pi / 9, axis: SIMD3(0, 0, 1)),
-            material: aluminum,
-            name: "Commander window sill"
-        )
-        addBox(
-            size: SIMD3(0.74, 0.08, 0.09),
-            position: SIMD3(0.37, 1.13, -0.79),
-            orientation: simd_quatf(angle: .pi / 9, axis: SIMD3(0, 0, 1)),
-            material: aluminum,
-            name: "LMP window sill"
-        )
-        addBox(size: SIMD3(0.10, 0.78, 0.12), position: SIMD3(0, 1.48, -0.76), material: aluminum, name: "Center window post")
+        // These rails follow the source-calibrated oblique window plane rather
+        // than a facade-parallel approximation. The LMP aperture is mirrored
+        // only for the procedural fallback; the artist asset contract carries
+        // separate flight-station transforms.
+        buildForwardWindowFrames(material: aluminum)
 
         buildLandingPointDesignator()
     }
@@ -232,6 +234,21 @@ final class LMCommanderStationScene {
             proceduralCabin.addChild(entity)
             addLandingPointDesignatorLabels(pane: pane, color: color)
         }
+    }
+
+    private func buildLandingPointCalledAngleMarker() {
+        landingPointCalledAngleMarker.name = "Training LPD called-angle marker"
+        landingPointCalledAngleMarker.model = ModelComponent(
+            mesh: .generateSphere(radius: 0.007),
+            materials: [UnlitMaterial(color: UIColor(
+                red: 1,
+                green: 0.78,
+                blue: 0.12,
+                alpha: 0.92
+            ))]
+        )
+        landingPointCalledAngleMarker.isEnabled = false
+        root.addChild(landingPointCalledAngleMarker)
     }
 
     private func makeLandingPointDesignatorMesh(pane: LMLPDPane) throws -> MeshResource {
@@ -277,9 +294,11 @@ final class LMCommanderStationScene {
         var positions = [SIMD3<Float>]()
         var indices = [UInt32]()
         let halfThickness: Float = 0.00085
+        let paneNormal = landingPointDesignator.panePlane(pane).normalTowardEye
         for (start, end) in segments {
             let direction = simd_normalize(end - start)
-            let perpendicular = SIMD3(-direction.y, direction.x, 0) * halfThickness
+            let perpendicular = simd_normalize(simd_cross(paneNormal, direction))
+                * halfThickness
             let base = UInt32(positions.count)
             positions.append(contentsOf: [
                 start - perpendicular,
@@ -297,6 +316,8 @@ final class LMCommanderStationScene {
     }
 
     private func addLandingPointDesignatorLabels(pane: LMLPDPane, color: UIColor) {
+        let basis = landingPointDesignator.paneBasis(pane)
+        let orientation = landingPointDesignator.paneOrientation(pane)
         for elevation in stride(from: 0, through: 60, by: 10) {
             let mesh = MeshResource.generateText(
                 "\(elevation)",
@@ -311,8 +332,62 @@ final class LMCommanderStationScene {
             label.position = landingPointDesignator.point(
                 elevationDegrees: Double(elevation),
                 on: pane
-            ) + SIMD3(0.036, -0.010, 0.0005)
+            ) + basis.right * 0.036 - basis.up * 0.010 + basis.normal * 0.0005
+            label.orientation = orientation
             proceduralCabin.addChild(label)
+        }
+
+        for elevation in LMLandingPointDesignator.horizontalScaleElevations {
+            for azimuth in stride(from: -10, through: 10, by: 5) {
+                let mesh = MeshResource.generateText(
+                    "\(abs(azimuth))",
+                    extrusionDepth: 0.0002,
+                    font: .monospacedDigitSystemFont(ofSize: 0.018, weight: .medium),
+                    containerFrame: .zero,
+                    alignment: .center,
+                    lineBreakMode: .byClipping
+                )
+                let label = ModelEntity(mesh: mesh, materials: [UnlitMaterial(color: color)])
+                label.name = "LPD \(pane) E\(elevation) A\(azimuth) label"
+                label.position = landingPointDesignator.point(
+                    elevationDegrees: Double(elevation),
+                    azimuthDegrees: Double(azimuth),
+                    on: pane
+                ) + basis.up * 0.020 + basis.normal * 0.0005
+                label.orientation = orientation
+                proceduralCabin.addChild(label)
+            }
+        }
+    }
+
+    private func buildForwardWindowFrames(material: SimpleMaterial) {
+        let commanderCorners = landingPointDesignator.windowCorners(on: .inner)
+        addWindowFrame(
+            corners: commanderCorners,
+            material: material,
+            namePrefix: "Commander window"
+        )
+        addWindowFrame(
+            corners: commanderCorners.map { SIMD3(-$0.x, $0.y, $0.z) },
+            material: material,
+            namePrefix: "LMP window"
+        )
+    }
+
+    private func addWindowFrame(
+        corners: [SIMD3<Float>],
+        material: SimpleMaterial,
+        namePrefix: String
+    ) {
+        precondition(corners.count == 3)
+        for index in corners.indices {
+            addBeam(
+                from: corners[index],
+                to: corners[(index + 1) % corners.count],
+                thickness: 0.055,
+                material: material,
+                name: "\(namePrefix) rail \(index + 1)"
+            )
         }
     }
 
@@ -454,6 +529,28 @@ final class LMCommanderStationScene {
         entity.name = name
         entity.position = position
         entity.orientation = orientation
+        proceduralCabin.addChild(entity)
+    }
+
+    private func addBeam(
+        from start: SIMD3<Float>,
+        to end: SIMD3<Float>,
+        thickness: Float,
+        material: SimpleMaterial,
+        name: String
+    ) {
+        let delta = end - start
+        let length = simd_length(delta)
+        let entity = ModelEntity(
+            mesh: .generateBox(size: SIMD3(thickness, thickness, length)),
+            materials: [material]
+        )
+        entity.name = name
+        entity.position = (start + end) / 2
+        entity.orientation = simd_quatf(
+            from: SIMD3<Float>(0, 0, 1),
+            to: delta / length
+        )
         proceduralCabin.addChild(entity)
     }
 }

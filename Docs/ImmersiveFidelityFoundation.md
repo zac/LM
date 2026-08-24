@@ -35,4 +35,4 @@ Primary sources:
 - https://www.nasa.gov/wp-content/uploads/static/history/alsj/a11/a11.landing.html
 - https://www.nasa.gov/wp-content/uploads/static/history/alsj/LM10HandbookVol1.pdf
 
-The angular model is source-backed. The provisional eye point and pane positions in `LMLandingPointDesignator` are deliberately isolated constants. They must be replaced only from a traceable Grumman drawing, calibrated artifact survey, or equivalent primary measurement, followed by on-head collimation validation.
+The design eye and window plane are now reconstructed from Grumman course 30915 figures T30915-30, T30915-38, and T30915-39 together with the 25 by 28 by 24 inch pane in NASA TN D-7439. `CommanderWindowCalibration.md` records the coordinate mapping, figure readings, hashes, reconstruction, and artist tolerances. The inter-pane separation and plotted corner readings remain explicit measurement gates until a dimensioned production drawing or calibrated artifact survey supersedes them, followed by on-head collimation validation.

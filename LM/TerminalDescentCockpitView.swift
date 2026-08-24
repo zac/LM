@@ -272,6 +272,11 @@ struct TerminalDescentCockpitView: View {
         station.setACAVisual(appModel.session.aca)
         station.setRODVisual(appModel.session.rodSwitchPosition)
         station.setAttitudeHoldVisual(appModel.session.attitudeMode == .attitudeHold)
+        station.setLandingPointCalledAngle(
+            appModel.session.landingPointLookAngleDegrees.map(Double.init),
+            trainingOverlayVisible: trainingOverlayEnabled
+                && appModel.session.isLandingPointDisplayActive
+        )
         station.updateDust(
             state: appModel.session.vehicleState,
             commands: appModel.session.vehicleCommands

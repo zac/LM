@@ -715,6 +715,73 @@ struct ProgressiveLunarTerrainTests {
 struct LandingPointDesignatorTests {
     let lpd = LMLandingPointDesignator()
 
+    @Test func grummanDesignEyeMapsIntoTheSceneDatum() {
+        #expect(simd_distance(
+            lpd.scenePoint(sourceBodyInches: LMLandingPointDesignator.sourceDesignEyeInches),
+            lpd.commanderEyeMeters
+        ) < 1e-6)
+        #expect(LMLandingPointDesignator.sourceDesignEyeInches == SIMD3<Float>(
+            279.25,
+            22,
+            54
+        ))
+    }
+
+    @Test func reconstructedWindowMatchesPhysicalSidesAndDesignEyeEnvelope() {
+        let outboard = lpd.windowCorner(.upperOutboard, on: .inner)
+        let inboard = lpd.windowCorner(.upperInboard, on: .inner)
+        let lower = lpd.windowCorner(.lower, on: .inner)
+        let expected = LMLandingPointDesignator.windowSideLengthsMeters
+
+        #expect(abs(simd_distance(outboard, inboard) - expected.x) < 0.000_01)
+        #expect(abs(simd_distance(inboard, lower) - expected.y) < 0.000_01)
+        #expect(abs(simd_distance(lower, outboard) - expected.z) < 0.000_01)
+
+        for corner in LMLPDWindowCorner.allCases {
+            let actual = lpd.sourceVisualAnglesDegrees(
+                for: lpd.windowCorner(corner, on: .inner)
+            )
+            let source = LMLandingPointDesignator.sourceCornerVisualAnglesDegrees[corner]!
+            #expect(abs(actual.x - source.x) < 0.000_1)
+            #expect(abs(actual.y - source.y) < 0.000_1)
+        }
+    }
+
+    @Test func paneIsObliqueAndOuterMarksRemainOnTheSameSightRays() {
+        let plane = lpd.panePlane(.inner)
+        let sceneForward = SIMD3<Float>(0, 0, 1)
+        #expect(simd_dot(plane.normalTowardEye, sceneForward) < 0.9)
+
+        for corner in LMLPDWindowCorner.allCases {
+            let inner = lpd.windowCorner(corner, on: .inner) - lpd.commanderEyeMeters
+            let outer = lpd.windowCorner(corner, on: .outer) - lpd.commanderEyeMeters
+            #expect(simd_length(outer) > simd_length(inner))
+            #expect(simd_dot(simd_normalize(inner), simd_normalize(outer)) > 0.999_999)
+        }
+    }
+
+    @Test func everyFlightScaleMarkStaysInsideBothPanes() {
+        for pane in LMLPDPane.allCases {
+            let corners = lpd.windowCorners(on: pane)
+            for elevation in LMLandingPointDesignator.elevationDegrees {
+                #expect(point(
+                    lpd.point(elevationDegrees: Double(elevation), on: pane),
+                    isInsideTriangle: corners
+                ))
+            }
+            for azimuth in LMLandingPointDesignator.azimuthDegrees {
+                #expect(point(
+                    lpd.point(
+                        elevationDegrees: 0,
+                        azimuthDegrees: Double(azimuth),
+                        on: pane
+                    ),
+                    isInsideTriangle: corners
+                ))
+            }
+        }
+    }
+
     @Test func dualPaneMarksCollimateAtTheCommanderEye() {
         for angle in [0.0, 10, 30, 47, 60] {
             #expect(lpd.alignmentErrorRadians(
@@ -744,9 +811,45 @@ struct LandingPointDesignatorTests {
     @Test func apollo11ScaleAndRedesignationIncrementsStayMissionSpecific() {
         #expect(LMLandingPointDesignator.elevationDegrees == Array(0...60))
         #expect(LMLandingPointDesignator.azimuthDegrees == Array(-10...10))
-        #expect(LMLandingPointDesignator.horizontalScaleElevations == [0, 50])
+        #expect(LMLandingPointDesignator.horizontalScaleElevations == [0])
         #expect(LMLandingPointDesignator.apollo11InPlaneRedesignationDegrees == 0.5)
         #expect(LMLandingPointDesignator.apollo11CrossRangeRedesignationDegrees == 2)
+    }
+
+    @Test @MainActor func trainingCueSelectsTheLiveN64MarkWithoutMovingTheGrid() {
+        let station = LMCommanderStationScene()
+        let expected = lpd.point(elevationDegrees: 47, on: .inner)
+            + lpd.panePlane(.inner).normalTowardEye * 0.004
+
+        station.setLandingPointCalledAngle(47, trainingOverlayVisible: true)
+        #expect(station.landingPointCalledAngleMarker.isEnabled)
+        #expect(simd_distance(
+            station.landingPointCalledAngleMarker.position,
+            expected
+        ) < 0.000_01)
+
+        station.setLandingPointCalledAngle(47, trainingOverlayVisible: false)
+        #expect(!station.landingPointCalledAngleMarker.isEnabled)
+    }
+
+    private func point(
+        _ point: SIMD3<Float>,
+        isInsideTriangle corners: [SIMD3<Float>]
+    ) -> Bool {
+        let edge0 = corners[1] - corners[0]
+        let edge1 = corners[2] - corners[0]
+        let offset = point - corners[0]
+        let dot00 = simd_dot(edge0, edge0)
+        let dot01 = simd_dot(edge0, edge1)
+        let dot11 = simd_dot(edge1, edge1)
+        let dot20 = simd_dot(offset, edge0)
+        let dot21 = simd_dot(offset, edge1)
+        let denominator = dot00 * dot11 - dot01 * dot01
+        let v = (dot11 * dot20 - dot01 * dot21) / denominator
+        let w = (dot00 * dot21 - dot01 * dot20) / denominator
+        let u = 1 - v - w
+        let tolerance: Float = -0.0001
+        return u >= tolerance && v >= tolerance && w >= tolerance
     }
 }
 
@@ -754,9 +857,22 @@ struct LandingPointDesignatorTests {
 struct ArtistCockpitAssetContractTests {
     @Test @MainActor func completeIdentityScaledAssetPassesValidation() {
         let root = Entity()
+        let lpd = LMLandingPointDesignator()
         for node in LMCockpitAssetContract.Node.allCases {
             let entity = Entity()
             entity.name = node.rawValue
+            switch node {
+            case .commanderEye:
+                entity.position = lpd.commanderEyeMeters
+            case .commanderWindowInner:
+                entity.position = lpd.panePlane(.inner).referencePointMeters
+                entity.orientation = lpd.paneOrientation(.inner)
+            case .commanderWindowOuter:
+                entity.position = lpd.panePlane(.outer).referencePointMeters
+                entity.orientation = lpd.paneOrientation(.outer)
+            default:
+                break
+            }
             root.addChild(entity)
         }
 
@@ -771,6 +887,20 @@ struct ArtistCockpitAssetContractTests {
         #expect(issues.contains(.rootScaleMustBeIdentity))
         #expect(issues.contains(.missingNode(.commanderEye)))
         #expect(issues.contains(.missingNode(.landingPointDesignatorOuter)))
+    }
+
+    @Test @MainActor func opticalDatumsMustMatchTheFlightCalibration() {
+        let root = Entity()
+        for node in LMCockpitAssetContract.Node.allCases {
+            let entity = Entity()
+            entity.name = node.rawValue
+            root.addChild(entity)
+        }
+
+        let issues = LMCockpitAssetContract.validate(root)
+        #expect(issues.contains(.nodePositionOutsideTolerance(.commanderEye)))
+        #expect(issues.contains(.nodePositionOutsideTolerance(.commanderWindowInner)))
+        #expect(issues.contains(.nodeNormalOutsideTolerance(.commanderWindowInner)))
     }
 }
 
