@@ -1,3 +1,4 @@
+import AGC
 import LMCore
 import OSLog
 import RealityKit
@@ -24,8 +25,10 @@ final class LMCommanderStationScene {
     let rodSwitch = ModelEntity()
     let attitudeModeSwitch = ModelEntity()
     let landingPointCalledAngleMarker = ModelEntity()
+    let dskyFaceRoot = Entity()
 
-    private let instrumentMount = Entity()
+    private let fdaiMount = Entity()
+    private let dskyDisplayMount = Entity()
     private let proceduralCabin = Entity()
     private let provisionalTerrain = Entity()
     private let dustCloud = Entity()
@@ -43,16 +46,25 @@ final class LMCommanderStationScene {
     private var terrainRefreshTask: Task<Void, Never>?
     private var artistCabin: Entity?
     private var lastVehicleState: LMVehicleStateSnapshot?
+    private var dskyKeyEntitiesByRawValue = [Int: ModelEntity]()
+    private var dskyKeyRestPositions = [Int: SIMD3<Float>]()
+    private var dskyKeyResetTasks = [Int: Task<Void, Never>]()
     private let acaNeutralPosition = SIMD3<Float>(-0.49, 0.50, -0.37)
     private let rodNeutralPosition = SIMD3<Float>(0.43, 0.58, -0.49)
     private let attitudeModeAutomaticPosition = SIMD3<Float>(0.48, 0.78, -0.675)
+    private let panelInstrumentOrientation = simd_quatf(
+        angle: -.pi / 10,
+        axis: SIMD3(1, 0, 0)
+    )
 
     init() {
         commanderEntryAnchor.name = "Commander entry head anchor"
         commanderEntryAnchor.anchoring.trackingMode = .once
         root.name = "LM Commander Station"
         lunarWorld.name = "Lunar World"
-        instrumentMount.name = "Commander Instruments"
+        fdaiMount.name = LMCockpitAssetContract.Node.fdaiMount.rawValue
+        dskyFaceRoot.name = LMCockpitAssetContract.Node.dskyMount.rawValue
+        dskyDisplayMount.name = LMCockpitAssetContract.Node.dskyDisplayMount.rawValue
         proceduralCabin.name = "Procedural cabin fallback"
         provisionalTerrain.name = "Provisional terrain"
         dustCloud.name = "Descent engine dust"
@@ -67,21 +79,34 @@ final class LMCommanderStationScene {
         root.addChild(proceduralCabin)
         buildCabin()
         buildLandingPointCalledAngleMarker()
+        buildPhysicalDSKY()
         buildPhysicalControls()
         buildProvisionalSurface()
         buildDustCloud()
 
         root.addChild(lunarWorld)
-        root.addChild(instrumentMount)
+        root.addChild(fdaiMount)
     }
 
-    func mountInstruments(_ entity: Entity) {
+    func mountFDAI(_ entity: Entity) {
         guard entity.parent == nil else { return }
-        entity.name = "FDAI and DSKY"
-        entity.position = SIMD3(-0.16, 0.82, -0.69)
-        entity.orientation = simd_quatf(angle: -.pi / 10, axis: SIMD3(1, 0, 0))
+        entity.name = "Commander FDAI"
+        entity.position = SIMD3(-0.30, 0.88, -0.675)
+        entity.orientation = panelInstrumentOrientation
         entity.scale = SIMD3(repeating: 0.00058)
-        instrumentMount.addChild(entity)
+        fdaiMount.addChild(entity)
+    }
+
+    func mountDSKYDisplay(_ entity: Entity) {
+        guard entity.parent == nil else { return }
+        entity.name = "Live Apollo 11 DSKY display"
+        entity.position = SIMD3(
+            LMDSKYGeometry.displayCenterMeters.x,
+            LMDSKYGeometry.displayCenterMeters.y,
+            0.012
+        )
+        entity.scale = SIMD3(repeating: 0.00035)
+        dskyDisplayMount.addChild(entity)
     }
 
     func apply(_ state: LMVehicleStateSnapshot?) {
@@ -451,6 +476,180 @@ final class LMCommanderStationScene {
                 thickness: 0.055,
                 material: material,
                 name: "\(namePrefix) rail \(index + 1)"
+            )
+        }
+    }
+
+    private func buildPhysicalDSKY() {
+        let faceMaterial = SimpleMaterial(
+            color: UIColor(red: 0.20, green: 0.205, blue: 0.18, alpha: 1),
+            roughness: 0.66,
+            isMetallic: true
+        )
+        let keyMaterial = SimpleMaterial(
+            color: UIColor(red: 0.69, green: 0.70, blue: 0.64, alpha: 1),
+            roughness: 0.50,
+            isMetallic: false
+        )
+        let screwMaterial = SimpleMaterial(
+            color: UIColor(red: 0.40, green: 0.42, blue: 0.39, alpha: 1),
+            roughness: 0.34,
+            isMetallic: true
+        )
+        let faceDepth: Float = 0.012
+        let keyDepth: Float = 0.008
+
+        dskyFaceRoot.position = SIMD3(-0.07, 0.735, -0.665)
+        dskyFaceRoot.orientation = panelInstrumentOrientation
+
+        let face = ModelEntity(
+            mesh: .generateBox(size: SIMD3(
+                LMDSKYGeometry.faceWidthMeters,
+                LMDSKYGeometry.faceHeightMeters,
+                faceDepth
+            )),
+            materials: [faceMaterial]
+        )
+        face.name = LMCockpitAssetContract.Node.dskyFace.rawValue
+        dskyFaceRoot.addChild(face)
+
+        let apertureBacking = ModelEntity(
+            mesh: .generateBox(size: SIMD3(
+                LMDSKYGeometry.innerFaceWidthMeters,
+                LMDSKYGeometry.displayHeightInches * LMDSKYGeometry.metersPerInch,
+                0.002
+            )),
+            materials: [SimpleMaterial(color: .black, roughness: 0.9, isMetallic: false)]
+        )
+        apertureBacking.name = "DSKY display aperture"
+        apertureBacking.position = SIMD3(
+            LMDSKYGeometry.displayCenterMeters.x,
+            LMDSKYGeometry.displayCenterMeters.y,
+            faceDepth / 2 + 0.001
+        )
+        dskyFaceRoot.addChild(apertureBacking)
+
+        dskyFaceRoot.addChild(dskyDisplayMount)
+
+        for placement in LMDSKYGeometry.keyPlacements {
+            let key = ModelEntity(
+                mesh: .generateBox(size: SIMD3(
+                    placement.sizeMeters.x,
+                    placement.sizeMeters.y,
+                    keyDepth
+                )),
+                materials: [keyMaterial]
+            )
+            key.name = LMDSKYGeometry.artistNodeName(for: placement.code)
+            var position = LMDSKYGeometry.faceLocalPosition(for: placement)
+            position.z = faceDepth / 2 + keyDepth / 2 + 0.001
+            key.position = position
+            key.components.set(InputTargetComponent())
+            key.components.set(HoverEffectComponent())
+            key.components.set(CollisionComponent(shapes: [
+                .generateBox(size: SIMD3(
+                    placement.sizeMeters.x + 0.006,
+                    placement.sizeMeters.y + 0.006,
+                    0.020
+                )),
+            ]))
+            addDSKYKeyLabel(placement.code, to: key, size: placement.sizeMeters, depth: keyDepth)
+            dskyFaceRoot.addChild(key)
+            dskyKeyEntitiesByRawValue[placement.code.rawValue] = key
+            dskyKeyRestPositions[placement.code.rawValue] = position
+        }
+
+        let screwInset: Float = 0.012
+        for (index, point) in [
+            SIMD2(-LMDSKYGeometry.faceWidthMeters / 2 + screwInset,
+                  LMDSKYGeometry.faceHeightMeters / 2 - screwInset),
+            SIMD2(LMDSKYGeometry.faceWidthMeters / 2 - screwInset,
+                  LMDSKYGeometry.faceHeightMeters / 2 - screwInset),
+            SIMD2(-LMDSKYGeometry.faceWidthMeters / 2 + screwInset,
+                  -LMDSKYGeometry.faceHeightMeters / 2 + screwInset),
+            SIMD2(LMDSKYGeometry.faceWidthMeters / 2 - screwInset,
+                  -LMDSKYGeometry.faceHeightMeters / 2 + screwInset),
+            SIMD2(-LMDSKYGeometry.faceWidthMeters / 2 + screwInset, 0),
+            SIMD2(LMDSKYGeometry.faceWidthMeters / 2 - screwInset, 0),
+        ].enumerated() {
+            let screw = ModelEntity(
+                mesh: .generateCylinder(height: 0.003, radius: 0.0036),
+                materials: [screwMaterial]
+            )
+            screw.name = "DSKY face screw \(index + 1)"
+            screw.position = SIMD3(point.x, point.y, faceDepth / 2 + 0.0015)
+            screw.orientation = simd_quatf(angle: .pi / 2, axis: SIMD3(1, 0, 0))
+            dskyFaceRoot.addChild(screw)
+        }
+
+        root.addChild(dskyFaceRoot)
+    }
+
+    private func addDSKYKeyLabel(
+        _ code: DSKYKeyCode,
+        to key: ModelEntity,
+        size: SIMD2<Float>,
+        depth: Float
+    ) {
+        let text = switch code {
+        case .keyRelease: "KEY\nREL"
+        default: code.label
+        }
+        let fontSize: CGFloat = text.count <= 2 ? 0.0115 : 0.0053
+        let mesh = MeshResource.generateText(
+            text,
+            extrusionDepth: 0.00015,
+            font: .systemFont(ofSize: fontSize, weight: .semibold),
+            containerFrame: CGRect(
+                x: 0,
+                y: 0,
+                width: CGFloat(size.x),
+                height: CGFloat(size.y)
+            ),
+            alignment: .center,
+            lineBreakMode: .byWordWrapping
+        )
+        let label = ModelEntity(mesh: mesh, materials: [UnlitMaterial(color: .black)])
+        label.name = "\(code.label) legend"
+        label.position = SIMD3(-size.x / 2, -size.y / 2, depth / 2 + 0.0003)
+        key.addChild(label)
+    }
+
+    var dskyKeyEntities: [ModelEntity] {
+        LMDSKYGeometry.keyPlacements.compactMap {
+            dskyKeyEntitiesByRawValue[$0.code.rawValue]
+        }
+    }
+
+    func dskyKeyCode(for entity: Entity) -> DSKYKeyCode? {
+        dskyKeyEntitiesByRawValue.first { _, keyEntity in
+            keyEntity === entity
+        }.flatMap { DSKYKeyCode(rawValue: $0.key) }
+    }
+
+    func animateDSKYKeyPress(_ code: DSKYKeyCode) {
+        let rawValue = code.rawValue
+        guard let key = dskyKeyEntitiesByRawValue[rawValue],
+              let restPosition = dskyKeyRestPositions[rawValue] else { return }
+
+        dskyKeyResetTasks[rawValue]?.cancel()
+        key.stopAllAnimations(recursive: false)
+        var pressedPosition = restPosition
+        pressedPosition.z -= 0.003
+        key.move(
+            to: Transform(translation: pressedPosition),
+            relativeTo: dskyFaceRoot,
+            duration: 0.035,
+            timingFunction: .easeInOut
+        )
+        dskyKeyResetTasks[rawValue] = Task { @MainActor [weak self, weak key] in
+            try? await Task.sleep(for: .milliseconds(90))
+            guard !Task.isCancelled, let self, let key else { return }
+            key.move(
+                to: Transform(translation: restPosition),
+                relativeTo: self.dskyFaceRoot,
+                duration: 0.065,
+                timingFunction: .easeInOut
             )
         }
     }

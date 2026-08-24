@@ -1,9 +1,11 @@
+import AGC
 import Foundation
 
 struct LMCockpitValidationRecorder: Equatable, Sendable {
     enum Requirement: String, CaseIterable, Identifiable, Sendable {
         case terrainLoaded
         case p64LPD
+        case dskyPRO
         case p65
         case acaPitch
         case acaYaw
@@ -26,6 +28,7 @@ struct LMCockpitValidationRecorder: Equatable, Sendable {
             switch self {
             case .terrainLoaded: "LROC terrain"
             case .p64LPD: "P64 N64 / LPD"
+            case .dskyPRO: "DSKY PRO"
             case .p65: "P65 live"
             case .acaPitch: "ACA pitch"
             case .acaYaw: "ACA yaw"
@@ -130,6 +133,12 @@ struct LMCockpitValidationRecorder: Equatable, Sendable {
 
     mutating func observeDirectAttitudeHold() {
         completed.insert(.attitudeHold)
+    }
+
+    mutating func observeDirectDSKY(_ key: DSKYKeyCode) {
+        if key == .pro {
+            completed.insert(.dskyPRO)
+        }
     }
 
     mutating func confirmComfort() {

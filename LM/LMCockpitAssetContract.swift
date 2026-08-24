@@ -1,4 +1,5 @@
 import Foundation
+import AGC
 import RealityKit
 
 enum LMCockpitAssetContract {
@@ -15,7 +16,10 @@ enum LMCockpitAssetContract {
         case landingPointDesignatorInner = "LPD_Inner"
         case landingPointDesignatorOuter = "LPD_Outer"
         case panelOne = "Panel_1"
-        case instrumentMount = "FDAI_DSKY_Mount"
+        case fdaiMount = "FDAI_Mount"
+        case dskyMount = "DSKY_Mount"
+        case dskyFace = "DSKY_Face"
+        case dskyDisplayMount = "DSKY_Display_Mount"
         case acaPivot = "ACA_Pivot"
         case rodPivot = "ROD_Pivot"
         case attitudeHoldPivot = "ATT_HOLD_Pivot"
@@ -26,6 +30,7 @@ enum LMCockpitAssetContract {
         case rootScaleMustBeIdentity
         case nodePositionOutsideTolerance(Node)
         case nodeNormalOutsideTolerance(Node)
+        case missingDSKYKey(Int)
     }
 
     @MainActor
@@ -43,6 +48,11 @@ enum LMCockpitAssetContract {
                 ? ValidationIssue.missingNode(node)
                 : nil
         }
+        issues.append(contentsOf: LMDSKYGeometry.keyPlacements.compactMap { placement in
+            entity.findEntity(named: LMDSKYGeometry.artistNodeName(for: placement.code)) == nil
+                ? ValidationIssue.missingDSKYKey(placement.code.rawValue)
+                : nil
+        })
         let scale = entity.scale(relativeTo: nil)
         if simd_distance(scale, SIMD3<Float>(repeating: 1)) > 0.0001 {
             issues.append(ValidationIssue.rootScaleMustBeIdentity)

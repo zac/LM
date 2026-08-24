@@ -34,30 +34,43 @@ struct TerminalDescentCockpitView: View {
     var body: some View {
         RealityView { content, attachments in
             content.add(station.commanderEntryAnchor)
-            if let instruments = attachments.entity(for: "commander-instruments") {
-                station.mountInstruments(instruments)
+            if let fdai = attachments.entity(for: "commander-fdai") {
+                station.mountFDAI(fdai)
+            }
+            if let dskyDisplay = attachments.entity(for: "commander-dsky-display") {
+                station.mountDSKYDisplay(dskyDisplay)
             }
             applySceneState()
         } update: { _, attachments in
-            if let instruments = attachments.entity(for: "commander-instruments") {
-                station.mountInstruments(instruments)
+            if let fdai = attachments.entity(for: "commander-fdai") {
+                station.mountFDAI(fdai)
+            }
+            if let dskyDisplay = attachments.entity(for: "commander-dsky-display") {
+                station.mountDSKYDisplay(dskyDisplay)
             }
             applySceneState()
         } attachments: {
-            Attachment(id: "commander-instruments") {
-                HStack(alignment: .top, spacing: 12) {
-                    FDAIPanel(session: appModel.session)
-                        .frame(width: 230)
-                    DSKYPanel(session: appModel.session, showsScripts: false)
-                        .frame(width: 430)
-                }
-                .padding(8)
+            Attachment(id: "commander-fdai") {
+                FDAIPanel(session: appModel.session)
+                    .frame(width: 230)
+                    .padding(8)
+                    .background(Color.black.opacity(0.94))
+            }
+            Attachment(id: "commander-dsky-display") {
+                DSKYPanel(
+                    session: appModel.session,
+                    showsScripts: false,
+                    showsKeypad: false,
+                    presentsFlightFace: true
+                )
+                .frame(width: 420, height: 250)
                 .background(Color.black.opacity(0.94))
             }
         }
         .gesture(acaGesture)
         .simultaneousGesture(rodGesture)
         .simultaneousGesture(attitudeModeGesture)
+        .simultaneousGesture(dskyGesture)
         .ornament(attachmentAnchor: .scene(.bottom)) {
             VStack(spacing: 8) {
                 HStack(spacing: 10) {
@@ -296,6 +309,17 @@ struct TerminalDescentCockpitView: View {
                 if selectsP66 {
                     recordValidation { $0.observeDirectAttitudeHold() }
                 }
+            }
+    }
+
+    private var dskyGesture: some Gesture {
+        SpatialTapGesture()
+            .targetedToAnyEntity()
+            .onEnded { value in
+                guard let key = station.dskyKeyCode(for: value.entity) else { return }
+                station.animateDSKYKeyPress(key)
+                appModel.session.sendDSKYKey(key)
+                recordValidation { $0.observeDirectDSKY(key) }
             }
     }
 

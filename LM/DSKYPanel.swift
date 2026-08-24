@@ -47,17 +47,46 @@ struct DSKYKeyButtonStyle: ButtonStyle {
 struct DSKYPanel: View {
     @Bindable var session: PoweredDescentSession
     var showsScripts = true
+    var showsKeypad = true
+    var presentsFlightFace = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            display
-            if showsScripts {
-                scripts
+        Group {
+            if presentsFlightFace {
+                flightDisplay
+                    .padding(10)
+                    .background(Color.black.opacity(0.98))
+            } else {
+                VStack(alignment: .leading, spacing: 14) {
+                    display
+                    if showsScripts {
+                        scripts
+                    }
+                    if showsKeypad {
+                        keypad
+                    }
+                }
+                .padding(16)
+                .background(
+                    Color.black.opacity(0.82),
+                    in: RoundedRectangle(cornerRadius: 16, style: .continuous)
+                )
             }
-            keypad
         }
-        .padding(16)
-        .background(Color.black.opacity(0.82), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+
+    @ViewBuilder
+    private var flightDisplay: some View {
+        if let dsky = session.dsky {
+            HStack(alignment: .top, spacing: 16) {
+                indicatorGrid(state: dsky)
+                registerDisplay(state: dsky)
+            }
+        } else {
+            Text(session.loadMessage)
+                .font(.caption.monospaced())
+                .foregroundStyle(.secondary)
+        }
     }
 
     @ViewBuilder
@@ -103,16 +132,21 @@ struct DSKYPanel: View {
         VStack(spacing: 8) {
             ForEach(Array(keypadRows.enumerated()), id: \.offset) { _, row in
                 HStack(spacing: 8) {
-                    ForEach(row) { key in
-                        Button {
-                            session.sendDSKYKey(key.code)
-                        } label: {
-                            Text(key.label)
-                                .font(.headline)
+                    ForEach(Array(row.enumerated()), id: \.offset) { _, key in
+                        if let key {
+                            Button {
+                                session.sendDSKYKey(key.code)
+                            } label: {
+                                Text(key.label)
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity, minHeight: 40)
+                            }
+                            .buttonStyle(DSKYKeyButtonStyle(accent: key.accent))
+                            .disabled(session.snapshot == nil)
+                        } else {
+                            Color.clear
                                 .frame(maxWidth: .infinity, minHeight: 40)
                         }
-                        .buttonStyle(DSKYKeyButtonStyle(accent: key.accent))
-                        .disabled(session.snapshot == nil)
                     }
                 }
             }
@@ -182,38 +216,13 @@ struct DSKYPanel: View {
         }
     }
 
-    private var keypadRows: [[DSKYKeyItem]] {
-        [
-            [
-                DSKYKeyItem(code: .verb, accent: true),
-                DSKYKeyItem(code: .noun, accent: true),
-                DSKYKeyItem(code: .pro, accent: true),
-                DSKYKeyItem(code: .keyRelease, accent: true)
-            ],
-            [
-                DSKYKeyItem(code: .digit7, accent: false),
-                DSKYKeyItem(code: .digit8, accent: false),
-                DSKYKeyItem(code: .digit9, accent: false),
-                DSKYKeyItem(code: .plus, accent: true)
-            ],
-            [
-                DSKYKeyItem(code: .digit4, accent: false),
-                DSKYKeyItem(code: .digit5, accent: false),
-                DSKYKeyItem(code: .digit6, accent: false),
-                DSKYKeyItem(code: .minus, accent: true)
-            ],
-            [
-                DSKYKeyItem(code: .digit1, accent: false),
-                DSKYKeyItem(code: .digit2, accent: false),
-                DSKYKeyItem(code: .digit3, accent: false),
-                DSKYKeyItem(code: .enter, accent: true)
-            ],
-            [
-                DSKYKeyItem(code: .clear, accent: true),
-                DSKYKeyItem(code: .digit0, accent: false),
-                DSKYKeyItem(code: .reset, accent: true)
-            ]
-        ]
+    private var keypadRows: [[DSKYKeyItem?]] {
+        LMDSKYGeometry.fallbackRows.enumerated().map { rowIndex, row in
+            let items = row.map { key in
+                DSKYKeyItem(code: key, accent: key.label.first?.isNumber != true)
+            }
+            return rowIndex == 2 ? [nil] + items + [nil] : items
+        }
     }
 
     private var indicatorRows: [(left: Int?, right: Int?)] {

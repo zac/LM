@@ -926,6 +926,38 @@ struct LandingPointDesignatorTests {
     }
 }
 
+@Suite("Apollo 11 LM DSKY geometry")
+struct Apollo11LMDSKYGeometryTests {
+    @Test func faceEnvelopeAndNineteenKeyLayoutMatchTheMITDrawing() {
+        #expect(LMDSKYGeometry.sourceAssembly == "2003994-091")
+        #expect(LMDSKYGeometry.sourceOutlineDrawing == "2003956 Rev B")
+        #expect(abs(LMDSKYGeometry.faceWidthMeters - 0.206_349_6) < 0.000_001)
+        #expect(abs(LMDSKYGeometry.faceHeightMeters - 0.203_2) < 0.000_001)
+        #expect(abs(LMDSKYGeometry.maximumDepthMeters - 0.175_514) < 0.000_001)
+        #expect(LMDSKYGeometry.keyPlacements.count == 19)
+        #expect(
+            Set(LMDSKYGeometry.keyPlacements.map(\.code.rawValue))
+                == Set(DSKYKeyCode.allCases.map(\.rawValue))
+        )
+        #expect(LMDSKYGeometry.fallbackRows == [
+            [.verb, .plus, .digit7, .digit8, .digit9, .clear, .enter],
+            [.noun, .minus, .digit4, .digit5, .digit6, .pro, .reset],
+            [.digit0, .digit1, .digit2, .digit3, .keyRelease],
+        ])
+    }
+
+    @Test @MainActor func proceduralStationMakesEveryDSKYKeyAnInputTarget() {
+        let station = LMCommanderStationScene()
+
+        #expect(station.dskyKeyEntities.count == 19)
+        for entity in station.dskyKeyEntities {
+            #expect(entity.components[InputTargetComponent.self] != nil)
+            #expect(entity.components[CollisionComponent.self] != nil)
+            #expect(station.dskyKeyCode(for: entity) != nil)
+        }
+    }
+}
+
 @Suite("Artist cockpit asset contract")
 struct ArtistCockpitAssetContractTests {
     @Test @MainActor func completeIdentityScaledAssetPassesValidation() {
@@ -948,6 +980,11 @@ struct ArtistCockpitAssetContractTests {
             }
             root.addChild(entity)
         }
+        for placement in LMDSKYGeometry.keyPlacements {
+            let key = Entity()
+            key.name = LMDSKYGeometry.artistNodeName(for: placement.code)
+            root.addChild(key)
+        }
 
         #expect(LMCockpitAssetContract.validate(root).isEmpty)
     }
@@ -960,6 +997,7 @@ struct ArtistCockpitAssetContractTests {
         #expect(issues.contains(.rootScaleMustBeIdentity))
         #expect(issues.contains(.missingNode(.commanderEye)))
         #expect(issues.contains(.missingNode(.landingPointDesignatorOuter)))
+        #expect(issues.contains(.missingDSKYKey(DSKYKeyCode.pro.rawValue)))
     }
 
     @Test @MainActor func opticalDatumsMustMatchTheFlightCalibration() {
@@ -1102,11 +1140,23 @@ struct CockpitExperienceEventTests {
 
 @Suite("Cockpit headset validation")
 struct CockpitHeadsetValidationTests {
+    @Test func onlyPhysicalPROCompletesTheDSKYGate() {
+        var recorder = LMCockpitValidationRecorder()
+
+        recorder.observeDirectDSKY(.verb)
+        recorder.observeDirectDSKY(.enter)
+        #expect(!recorder.completed.contains(.dskyPRO))
+
+        recorder.observeDirectDSKY(.pro)
+        #expect(recorder.completed.contains(.dskyPRO))
+    }
+
     @Test func directControlsAndFlightEventsCompleteEveryGate() {
         var recorder = LMCockpitValidationRecorder()
 
         recorder.observeTerrainLoaded()
         recorder.observe(events: [.p64, .p65])
+        recorder.observeDirectDSKY(.pro)
         recorder.observeDirectACA(.init(pitch: 0.3, yaw: 0, roll: 0))
         recorder.observeDirectACA(.init(pitch: 0, yaw: -0.3, roll: 0.3))
         recorder.observeDirectACARelease()
