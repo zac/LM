@@ -709,6 +709,69 @@ struct ProgressiveLunarTerrainTests {
         #expect(first.contains { !$0.containsProceduralSubresolution })
         #expect(Set(first.map(\.id)).count == first.count)
     }
+
+    @Test func altitudePolicyStreamsOnlyUsefulNestedDetail() throws {
+        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: 8)
+
+        #expect(planner.focusedPlans(
+            focusEastMeters: -547,
+            focusNorthMeters: 732,
+            altitudeMeters: 15_000
+        ).isEmpty)
+
+        let approach = planner.focusedPlans(
+            focusEastMeters: -547,
+            focusNorthMeters: 732,
+            altitudeMeters: 2_000
+        )
+        #expect(approach.map(\.sampleSpacingMeters) == [2])
+
+        let terminal = planner.focusedPlans(
+            focusEastMeters: -547,
+            focusNorthMeters: 732,
+            altitudeMeters: 100
+        )
+        #expect(terminal.map(\.sampleSpacingMeters) == [0.5, 2])
+        #expect(terminal.allSatisfy { $0.containsProceduralSubresolution })
+
+        let manifestSpacing = 8.000_000_000_002_4
+        let manifestPlanner = LMProgressiveTerrainPlanner(
+            sourceSpacingMeters: manifestSpacing
+        )
+        #expect(manifestPlanner.focusedPlans(
+            focusEastMeters: -547,
+            focusNorthMeters: 732,
+            altitudeMeters: 100
+        ).map(\.sampleSpacingMeters) == [0.5, 2])
+        let measuredScalePlan = try #require(manifestPlanner.plan(
+            focusEastMeters: -547,
+            focusNorthMeters: 732
+        ).first { $0.sampleSpacingMeters == 8 })
+        #expect(!measuredScalePlan.containsProceduralSubresolution)
+    }
+
+    @Test func focusedTileChangesOnlyWhenItsOwnBoundaryIsCrossed() {
+        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: 8)
+        let first = planner.focusedPlans(
+            focusEastMeters: 31,
+            focusNorthMeters: 31,
+            altitudeMeters: 100
+        )
+        let same = planner.focusedPlans(
+            focusEastMeters: 63.9,
+            focusNorthMeters: 63.9,
+            altitudeMeters: 100
+        )
+        let crossed = planner.focusedPlans(
+            focusEastMeters: 64.1,
+            focusNorthMeters: 64.1,
+            altitudeMeters: 100
+        )
+
+        #expect(first.map(\.id) == same.map(\.id))
+        #expect(first.first?.id != crossed.first?.id)
+        #expect(first.last?.id == crossed.last?.id)
+    }
 }
 
 @Suite("Landing Point Designator")

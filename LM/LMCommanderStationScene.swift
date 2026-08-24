@@ -1,4 +1,5 @@
 import LMCore
+import OSLog
 import RealityKit
 import SwiftUI
 import UIKit
@@ -31,7 +32,15 @@ final class LMCommanderStationScene {
     private let mapper = LMCockpitWorldMapper.fullScale
     private let controlMapper = LMSpatialControlMapper()
     private let landingPointDesignator = LMLandingPointDesignator()
+    private let logger = Logger(
+        subsystem: Bundle.main.bundleIdentifier ?? "io.positron.LM",
+        category: "ProgressiveTerrain"
+    )
     private var terrainHeightField: Apollo11TerrainHeightField?
+    private var terrainEnvironment: Entity?
+    private var progressiveTerrainEntities = [LMTerrainTileID: ModelEntity]()
+    private var requestedTerrainTileIDs = Set<LMTerrainTileID>()
+    private var terrainRefreshTask: Task<Void, Never>?
     private var artistCabin: Entity?
     private var lastVehicleState: LMVehicleStateSnapshot?
     private let acaNeutralPosition = SIMD3<Float>(-0.49, 0.50, -0.37)
@@ -86,19 +95,64 @@ final class LMCommanderStationScene {
             from: state,
             surfaceElevationMeters: Double(surfaceElevation)
         ))
+        requestProgressiveTerrain(around: state)
     }
 
     func loadApollo11Terrain() async throws {
         let heightField = try Apollo11TerrainResource.loadHeightField()
         let terrain = try await Apollo11TerrainResource.makeEntity(
-            heightField: heightField,
-            nearFieldCenterEastMeters: lastVehicleState?.positionMeters.x,
-            nearFieldCenterNorthMeters: lastVehicleState?.positionMeters.y
+            heightField: heightField
         )
         terrainHeightField = heightField
+        terrainEnvironment = terrain
         provisionalTerrain.removeFromParent()
         lunarWorld.addChild(terrain)
         apply(lastVehicleState)
+    }
+
+    private func requestProgressiveTerrain(around state: LMVehicleStateSnapshot) {
+        guard let heightField = terrainHeightField, let terrainEnvironment else { return }
+        let plans = LMProgressiveTerrainPlanner(
+            sourceSpacingMeters: heightField.manifest.meshSpacingMeters
+        ).focusedPlans(
+            focusEastMeters: state.positionMeters.x,
+            focusNorthMeters: state.positionMeters.y,
+            altitudeMeters: state.altitudeMeters
+        )
+        let requestedIDs = Set(plans.map(\.id))
+        guard requestedIDs != requestedTerrainTileIDs else { return }
+        requestedTerrainTileIDs = requestedIDs
+        terrainRefreshTask?.cancel()
+        terrainRefreshTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            var replacements = [LMTerrainTileID: ModelEntity]()
+            for plan in plans {
+                guard !Task.isCancelled else { return }
+                if let existing = self.progressiveTerrainEntities[plan.id] {
+                    replacements[plan.id] = existing
+                } else {
+                    do {
+                        if let entity = try await Apollo11TerrainResource
+                            .makeProgressiveTileEntity(heightField: heightField, plan: plan) {
+                            replacements[plan.id] = entity
+                        }
+                    } catch {
+                        self.logger.error(
+                            "Terrain tile L\(plan.id.level) E\(plan.id.eastIndex) N\(plan.id.northIndex) failed: \(error.localizedDescription, privacy: .public)"
+                        )
+                    }
+                }
+            }
+            guard !Task.isCancelled,
+                  self.requestedTerrainTileIDs == requestedIDs else { return }
+            for (id, entity) in self.progressiveTerrainEntities where replacements[id] == nil {
+                entity.removeFromParent()
+            }
+            for (id, entity) in replacements where self.progressiveTerrainEntities[id] == nil {
+                terrainEnvironment.addChild(entity)
+            }
+            self.progressiveTerrainEntities = replacements
+        }
     }
 
     @discardableResult

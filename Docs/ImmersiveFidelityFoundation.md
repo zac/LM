@@ -14,7 +14,7 @@ The commander's window is a flight instrument. The LPD must remain two physical 
 
 Measured LROC elevation is authoritative. `LMProgressiveTerrainSampler` may synthesize only the spatial frequencies below the loaded source post spacing. Its residual is deterministic, bounded, and zero at measured posts. Procedural relief must be labeled as synthesized in diagnostics and must disappear automatically when a higher-resolution measured source is installed.
 
-The renderer consumes stable `LMTerrainTileID` values from `LMProgressiveTerrainPlanner`. That boundary allows the current RealityKit mesh implementation to evolve toward streamed real-data tiles, Metal tessellation, or another renderer without changing the terrain truth model.
+The renderer consumes stable `LMTerrainTileID` values from `LMProgressiveTerrainPlanner`. The measured 8 m regional mesh remains resident. Below 2.5 km altitude, a moving 2 m tile adds bounded sub-resolution relief; below 250 m, a nested 0.5 m tile appears under the vehicle. Tiles swap only when the vehicle crosses their own stable boundaries, and stale asynchronous generations are discarded. This is the first live clipmap path and allows the RealityKit mesh implementation to evolve toward streamed real-data tiles, Metal tessellation, or another renderer without changing the terrain truth model.
 
 Near-term data path:
 

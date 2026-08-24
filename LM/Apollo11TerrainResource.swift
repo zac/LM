@@ -139,9 +139,7 @@ enum Apollo11TerrainResource {
     @MainActor
     static func makeEntity(
         heightField: Apollo11TerrainHeightField,
-        bundle: Bundle = .main,
-        nearFieldCenterEastMeters: Double? = nil,
-        nearFieldCenterNorthMeters: Double? = nil
+        bundle: Bundle = .main
     ) async throws -> Entity {
         let manifest = heightField.manifest
         let heights = heightField.heights
@@ -234,30 +232,18 @@ enum Apollo11TerrainResource {
         entity.name = "LROC Apollo 11 landing-site terrain"
         root.addChild(entity)
 
-        if let nearFieldCenterEastMeters, let nearFieldCenterNorthMeters,
-           let nearField = try makeProgressiveNearFieldEntity(
-                heightField: heightField,
-                centerEastMeters: nearFieldCenterEastMeters,
-                centerNorthMeters: nearFieldCenterNorthMeters,
-                material: material
-           ) {
-            root.addChild(nearField)
-        }
         return root
     }
 
     @MainActor
-    private static func makeProgressiveNearFieldEntity(
+    static func makeProgressiveTileEntity(
         heightField: Apollo11TerrainHeightField,
-        centerEastMeters: Double,
-        centerNorthMeters: Double,
-        material: UnlitMaterial
-    ) throws -> ModelEntity? {
-        let tileSize = 320.0
-        let sampleSpacing = 2.0
+        plan: LMTerrainTilePlan,
+        bundle: Bundle = .main
+    ) async throws -> ModelEntity? {
+        let tileSize = plan.sizeMeters
+        let sampleSpacing = plan.sampleSpacingMeters
         let sampleCount = Int(tileSize / sampleSpacing) + 1
-        let snappedEast = (floor(centerEastMeters / 64) + 0.5) * 64
-        let snappedNorth = (floor(centerNorthMeters / 64) + 0.5) * 64
         let sampler = LMProgressiveTerrainSampler(heightField: heightField)
         let halfSize = tileSize / 2
 
@@ -269,10 +255,14 @@ enum Apollo11TerrainResource {
         let manifest = heightField.manifest
         let measuredHalfWidth = Double(manifest.meshWidth - 1) * manifest.meshSpacingMeters / 2
         let measuredHalfDepth = Double(manifest.meshHeight - 1) * manifest.meshSpacingMeters / 2
+        let layerOffset = layerOffsetMeters(
+            sourceSpacingMeters: manifest.meshSpacingMeters,
+            requestedSpacingMeters: sampleSpacing
+        )
         for row in 0..<sampleCount {
-            let north = snappedNorth + halfSize - Double(row) * sampleSpacing
+            let north = plan.centerNorthMeters + halfSize - Double(row) * sampleSpacing
             for column in 0..<sampleCount {
-                let east = snappedEast - halfSize + Double(column) * sampleSpacing
+                let east = plan.centerEastMeters - halfSize + Double(column) * sampleSpacing
                 guard let sample = sampler.sample(
                     eastMeters: east,
                     northMeters: north,
@@ -282,7 +272,7 @@ enum Apollo11TerrainResource {
                 }
                 positions.append(SIMD3(
                     Float(east),
-                    sample.elevationMeters + 0.008,
+                    sample.elevationMeters + layerOffset,
                     Float(-north)
                 ))
                 textureCoordinates.append(SIMD2(
@@ -324,14 +314,30 @@ enum Apollo11TerrainResource {
             }
         }
 
-        var descriptor = MeshDescriptor(name: "Progressive LROC near field")
+        var descriptor = MeshDescriptor(name: "Progressive LROC tile")
         descriptor.positions = MeshBuffers.Positions(positions)
         descriptor.normals = MeshBuffers.Normals(normals)
         descriptor.textureCoordinates = MeshBuffers.TextureCoordinates(textureCoordinates)
         descriptor.primitives = .triangles(indices)
         let mesh = try MeshResource.generate(from: [descriptor])
+        let texture = try await TextureResource(
+            named: "Apollo11TerrainHillshade",
+            in: bundle
+        )
+        var material = UnlitMaterial()
+        material.color = .init(
+            tint: UIColor(white: 0.62, alpha: 1),
+            texture: .init(texture)
+        )
         let entity = ModelEntity(mesh: mesh, materials: [material])
-        entity.name = "LROC measured terrain with deterministic sub-resolution detail"
+        entity.name = "LROC progressive L\(plan.id.level) E\(plan.id.eastIndex) N\(plan.id.northIndex) \(sampleSpacing)m"
         return entity
+    }
+
+    private static func layerOffsetMeters(
+        sourceSpacingMeters: Double,
+        requestedSpacingMeters: Double
+    ) -> Float {
+        Float(max(log2(sourceSpacingMeters / requestedSpacingMeters), 1) * 0.004)
     }
 }
