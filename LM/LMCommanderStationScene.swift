@@ -6,12 +6,11 @@ import SwiftUI
 import UIKit
 import simd
 
-/// A focused, life-size approximation of the commander's powered-descent station.
+/// A life-size, source-backed blockout of the commander's powered-descent station.
 ///
-/// This milestone intentionally models only the load-bearing sight picture:
-/// forward triangular windows, the commander's instrument shelf, side structure,
-/// overhead structure, and the lunar exterior. Geometry is procedural so layout
-/// can be iterated on-device before committing to a heavyweight cabin asset.
+/// Controlled cabin dimensions, panel relationships, and optical datums are kept
+/// separate from digitized panel envelopes so the procedural scene and a future
+/// production asset share one physical coordinate system.
 @MainActor
 final class LMCommanderStationScene {
     enum AssetError: Error {
@@ -49,13 +48,10 @@ final class LMCommanderStationScene {
     private var dskyKeyEntitiesByRawValue = [Int: ModelEntity]()
     private var dskyKeyRestPositions = [Int: SIMD3<Float>]()
     private var dskyKeyResetTasks = [Int: Task<Void, Never>]()
-    private let acaNeutralPosition = SIMD3<Float>(-0.49, 0.50, -0.37)
-    private let rodNeutralPosition = SIMD3<Float>(0.43, 0.58, -0.49)
-    private let attitudeModeAutomaticPosition = SIMD3<Float>(0.48, 0.78, -0.675)
-    private let panelInstrumentOrientation = simd_quatf(
-        angle: -.pi / 10,
-        axis: SIMD3(1, 0, 0)
-    )
+    private let acaNeutralPosition = LMCommanderStationGeometry.acaPivotPositionMeters
+    private let rodNeutralPosition = LMCommanderStationGeometry.rodPivotPositionMeters
+    private let attitudeModeAutomaticPosition =
+        LMCommanderStationGeometry.attitudeHoldPivotPositionMeters
 
     init() {
         commanderEntryAnchor.name = "Commander entry head anchor"
@@ -63,9 +59,16 @@ final class LMCommanderStationScene {
         root.name = "LM Commander Station"
         lunarWorld.name = "Lunar World"
         fdaiMount.name = LMCockpitAssetContract.Node.fdaiMount.rawValue
+        fdaiMount.position = LMCommanderStationGeometry.fdaiMountPositionMeters
+        fdaiMount.orientation = LMCommanderStationGeometry.fdaiMountOrientation
         dskyFaceRoot.name = LMCockpitAssetContract.Node.dskyMount.rawValue
         dskyDisplayMount.name = LMCockpitAssetContract.Node.dskyDisplayMount.rawValue
-        proceduralCabin.name = "Procedural cabin fallback"
+        dskyDisplayMount.position = SIMD3(
+            LMDSKYGeometry.displayCenterMeters.x,
+            LMDSKYGeometry.displayCenterMeters.y,
+            0
+        )
+        proceduralCabin.name = LMCockpitAssetContract.Node.cabinRoot.rawValue
         provisionalTerrain.name = "Provisional terrain"
         dustCloud.name = "Descent engine dust"
 
@@ -91,8 +94,8 @@ final class LMCommanderStationScene {
     func mountFDAI(_ entity: Entity) {
         guard entity.parent == nil else { return }
         entity.name = "Commander FDAI"
-        entity.position = SIMD3(-0.30, 0.88, -0.675)
-        entity.orientation = panelInstrumentOrientation
+        entity.position = .zero
+        entity.orientation = simd_quatf(angle: 0, axis: SIMD3(0, 1, 0))
         entity.scale = SIMD3(repeating: 0.00058)
         fdaiMount.addChild(entity)
     }
@@ -100,11 +103,7 @@ final class LMCommanderStationScene {
     func mountDSKYDisplay(_ entity: Entity) {
         guard entity.parent == nil else { return }
         entity.name = "Live Apollo 11 DSKY display"
-        entity.position = SIMD3(
-            LMDSKYGeometry.displayCenterMeters.x,
-            LMDSKYGeometry.displayCenterMeters.y,
-            0.012
-        )
+        entity.position = SIMD3(0, 0, 0.012)
         entity.scale = SIMD3(repeating: 0.00035)
         dskyDisplayMount.addChild(entity)
     }
@@ -216,7 +215,7 @@ final class LMCommanderStationScene {
     func setAttitudeHoldVisual(_ isAttitudeHold: Bool) {
         attitudeModeSwitch.position = attitudeModeAutomaticPosition
             + SIMD3(0, isAttitudeHold ? 0.028 : 0, 0)
-        attitudeModeSwitch.orientation = simd_quatf(
+        attitudeModeSwitch.orientation = LMCommanderStationGeometry.attitudeHoldOrientation * simd_quatf(
             angle: isAttitudeHold ? -.pi / 7 : .pi / 7,
             axis: SIMD3(1, 0, 0)
         )
@@ -291,12 +290,27 @@ final class LMCommanderStationScene {
             isMetallic: true
         )
 
-        addBox(size: SIMD3(1.36, 0.44, 0.09), position: SIMD3(0, 0.83, -0.72), material: panel, name: "Panel 1")
-        addBox(size: SIMD3(1.62, 0.08, 0.32), position: SIMD3(0, 0.59, -0.51), material: dark, name: "Glare shield")
-        addBox(size: SIMD3(1.75, 0.08, 1.50), position: SIMD3(0, 0.10, -0.05), material: dark, name: "Cabin floor")
-        addBox(size: SIMD3(0.12, 1.80, 1.35), position: SIMD3(-0.92, 1.02, -0.12), material: dark, name: "Commander sidewall")
-        addBox(size: SIMD3(0.12, 1.80, 1.35), position: SIMD3(0.92, 1.02, -0.12), material: dark, name: "LMP sidewall")
-        addBox(size: SIMD3(1.75, 0.12, 1.30), position: SIMD3(0, 1.98, -0.12), material: dark, name: "Overhead")
+        buildCabinShell(material: dark)
+        for surface in LMCommanderStationGeometry.reconstructedSurfaces {
+            let material = switch surface.id {
+            case .panelOne, .panelTwo, .panelThree, .panelFour, .panelFive, .panelSix:
+                panel
+            default:
+                dark
+            }
+            addBox(
+                size: surface.sizeMeters,
+                position: surface.centerMeters,
+                orientation: surface.orientation,
+                material: material,
+                name: surface.id.rawValue
+            )
+        }
+
+        buildForwardFaceStructure(material: aluminum)
+        buildDeckDetails(material: panel)
+        buildPanelDetails(panelMaterial: dark, switchMaterial: aluminum)
+        installProceduralDatumNodes()
 
         // These rails follow the source-calibrated oblique window plane rather
         // than a facade-parallel approximation. The LMP aperture is mirrored
@@ -305,6 +319,170 @@ final class LMCommanderStationScene {
         buildForwardWindowFrames(material: aluminum)
 
         buildLandingPointDesignator()
+    }
+
+    private func buildCabinShell(material: SimpleMaterial) {
+        let shell = Entity()
+        shell.name = LMCockpitAssetContract.Node.cabinShell.rawValue
+        proceduralCabin.addChild(shell)
+        for segment in LMCommanderStationGeometry.shellSegments {
+            let entity = ModelEntity(
+                mesh: .generateBox(size: segment.sizeMeters),
+                materials: [material]
+            )
+            entity.name = String(format: "Cabin shell segment %02d", segment.id + 1)
+            entity.position = segment.centerMeters
+            entity.orientation = segment.orientation
+            shell.addChild(entity)
+        }
+    }
+
+    private func buildForwardFaceStructure(material: SimpleMaterial) {
+        addBeam(
+            from: SIMD3(-0.79, 0.14, -0.62),
+            to: SIMD3(-0.86, 2.03, -0.60),
+            thickness: 0.065,
+            material: material,
+            name: "Commander forward structural beam"
+        )
+        addBeam(
+            from: SIMD3(0.79, 0.14, -0.62),
+            to: SIMD3(0.86, 2.03, -0.60),
+            thickness: 0.065,
+            material: material,
+            name: "LMP forward structural beam"
+        )
+
+        let hatch = LMCommanderStationGeometry.surface(.forwardHatch)
+        let halfWidth = hatch.sizeMeters.x / 2
+        let halfHeight = hatch.sizeMeters.y / 2
+        let z = hatch.centerMeters.z + hatch.sizeMeters.z / 2 + 0.012
+        let corners = [
+            SIMD3(-halfWidth, hatch.centerMeters.y + halfHeight, z),
+            SIMD3(halfWidth, hatch.centerMeters.y + halfHeight, z),
+            SIMD3(halfWidth, hatch.centerMeters.y - halfHeight, z),
+            SIMD3(-halfWidth, hatch.centerMeters.y - halfHeight, z),
+        ]
+        for index in corners.indices {
+            addBeam(
+                from: corners[index],
+                to: corners[(index + 1) % corners.count],
+                thickness: 0.030,
+                material: material,
+                name: "Forward hatch frame \(index + 1)"
+            )
+        }
+    }
+
+    private func buildDeckDetails(material: SimpleMaterial) {
+        let deck = LMCommanderStationGeometry.surface(.cabinDeck)
+        let deckTopY = deck.centerMeters.y + deck.sizeMeters.z / 2
+        for index in 0..<12 {
+            let fraction = (Float(index) + 0.5) / 12
+            let z = deck.centerMeters.z + deck.sizeMeters.y * (fraction - 0.5)
+            addBox(
+                size: SIMD3(deck.sizeMeters.x * 0.91, 0.004, 0.022),
+                position: SIMD3(0, deckTopY + 0.002, z),
+                material: material,
+                name: "Deck Velcro pile strip \(index + 1)"
+            )
+        }
+    }
+
+    private func buildPanelDetails(
+        panelMaterial: SimpleMaterial,
+        switchMaterial: SimpleMaterial
+    ) {
+        let panelOneLayout: [(SIMD2<Float>, SIMD2<Float>)] = [
+            (SIMD2(-0.10, 0.14), SIMD2(0.13, 0.075)),
+            (SIMD2(0.09, 0.14), SIMD2(0.13, 0.075)),
+            (SIMD2(-0.10, -0.09), SIMD2(0.13, 0.12)),
+            (SIMD2(0.09, -0.09), SIMD2(0.13, 0.12)),
+        ]
+        for panelID in [
+            LMCommanderStationGeometry.SurfaceID.panelOne,
+            .panelTwo,
+        ] {
+            for (index, detail) in panelOneLayout.enumerated() {
+                addPanelDetail(
+                    on: panelID,
+                    center: detail.0,
+                    size: detail.1,
+                    depth: 0.010,
+                    material: panelMaterial,
+                    name: "\(panelID.rawValue) instrument bay \(index + 1)"
+                )
+            }
+        }
+
+        for index in 0..<12 {
+            addPanelDetail(
+                on: .panelThree,
+                center: SIMD2(-0.385 + Float(index) * 0.07, 0),
+                size: SIMD2(0.026, 0.052),
+                depth: 0.012,
+                material: index.isMultiple(of: 3) ? switchMaterial : panelMaterial,
+                name: "Panel 3 control \(index + 1)"
+            )
+        }
+
+        for panelID in [
+            LMCommanderStationGeometry.SurfaceID.panelFive,
+            .panelSix,
+        ] {
+            for row in 0..<2 {
+                for column in 0..<4 {
+                    addPanelDetail(
+                        on: panelID,
+                        center: SIMD2(-0.105 + Float(column) * 0.07, -0.055 + Float(row) * 0.11),
+                        size: SIMD2(0.025, 0.045),
+                        depth: 0.010,
+                        material: panelMaterial,
+                        name: "\(panelID.rawValue) control R\(row + 1)C\(column + 1)"
+                    )
+                }
+            }
+        }
+    }
+
+    private func addPanelDetail(
+        on surfaceID: LMCommanderStationGeometry.SurfaceID,
+        center: SIMD2<Float>,
+        size: SIMD2<Float>,
+        depth: Float,
+        material: SimpleMaterial,
+        name: String
+    ) {
+        let surface = LMCommanderStationGeometry.surface(surfaceID)
+        addBox(
+            size: SIMD3(size.x, size.y, depth),
+            position: surface.scenePoint(local: SIMD3(
+                center.x,
+                center.y,
+                surface.sizeMeters.z / 2 + depth / 2 + 0.001
+            )),
+            orientation: surface.orientation,
+            material: material,
+            name: name
+        )
+    }
+
+    private func installProceduralDatumNodes() {
+        let eye = Entity()
+        eye.name = LMCockpitAssetContract.Node.commanderEye.rawValue
+        eye.position = landingPointDesignator.commanderEyeMeters
+        proceduralCabin.addChild(eye)
+
+        for (node, pane) in [
+            (LMCockpitAssetContract.Node.commanderWindowInner, LMLPDPane.inner),
+            (.commanderWindowOuter, .outer),
+        ] {
+            let datum = Entity()
+            datum.name = node.rawValue
+            datum.position = landingPointDesignator.panePlane(pane).referencePointMeters
+            datum.orientation = landingPointDesignator.paneOrientation(pane)
+            proceduralCabin.addChild(datum)
+        }
     }
 
     private func buildLandingPointDesignator() {
@@ -499,8 +677,8 @@ final class LMCommanderStationScene {
         let faceDepth: Float = 0.012
         let keyDepth: Float = 0.008
 
-        dskyFaceRoot.position = SIMD3(-0.07, 0.735, -0.665)
-        dskyFaceRoot.orientation = panelInstrumentOrientation
+        dskyFaceRoot.position = LMCommanderStationGeometry.dskyMountPositionMeters
+        dskyFaceRoot.orientation = LMCommanderStationGeometry.dskyMountOrientation
 
         let face = ModelEntity(
             mesh: .generateBox(size: SIMD3(
@@ -677,7 +855,7 @@ final class LMCommanderStationScene {
             material: housing,
             name: "ACA pedestal"
         )
-        acaHandle.name = "Attitude Controller Assembly"
+        acaHandle.name = LMCockpitAssetContract.Node.acaPivot.rawValue
         acaHandle.model = ModelComponent(
             mesh: .generateCylinder(height: 0.25, radius: 0.028),
             materials: [handleMaterial]
@@ -696,7 +874,7 @@ final class LMCommanderStationScene {
             material: housing,
             name: "ROD switch pedestal"
         )
-        rodSwitch.name = "Rate of Descent switch"
+        rodSwitch.name = LMCockpitAssetContract.Node.rodPivot.rawValue
         rodSwitch.model = ModelComponent(
             mesh: .generateBox(size: SIMD3(0.10, 0.10, 0.08)),
             materials: [switchMaterial]
@@ -709,12 +887,13 @@ final class LMCommanderStationScene {
         ]))
         root.addChild(rodSwitch)
 
-        attitudeModeSwitch.name = "Mode Control attitude hold"
+        attitudeModeSwitch.name = LMCockpitAssetContract.Node.attitudeHoldPivot.rawValue
         attitudeModeSwitch.model = ModelComponent(
             mesh: .generateBox(size: SIMD3(0.08, 0.13, 0.055)),
             materials: [switchMaterial]
         )
         attitudeModeSwitch.position = attitudeModeAutomaticPosition
+        attitudeModeSwitch.orientation = LMCommanderStationGeometry.attitudeHoldOrientation
         attitudeModeSwitch.components.set(InputTargetComponent())
         attitudeModeSwitch.components.set(HoverEffectComponent())
         attitudeModeSwitch.components.set(CollisionComponent(shapes: [

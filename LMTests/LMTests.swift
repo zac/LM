@@ -926,6 +926,67 @@ struct LandingPointDesignatorTests {
     }
 }
 
+@Suite("Apollo 11 commander-station geometry")
+struct Apollo11CommanderStationGeometryTests {
+    @Test func primarySourceDimensionsRemainExplicitAndUnscaled() {
+        #expect(LMCommanderStationGeometry.operationsHandbookSource.contains("LM 10"))
+        #expect(LMCommanderStationGeometry.newsReferenceSource.contains("Apollo News Reference"))
+        #expect(abs(LMCommanderStationGeometry.crewCompartmentDiameterMeters - 2.336_8) < 0.000_001)
+        #expect(abs(LMCommanderStationGeometry.crewCompartmentDepthMeters - 1.066_8) < 0.000_001)
+        #expect(abs(LMCommanderStationGeometry.flightStationCenterlineSeparationMeters - 1.117_6) < 0.000_001)
+        #expect(abs(LMCommanderStationGeometry.deckWidthMeters - 1.397) < 0.000_001)
+        #expect(abs(LMCommanderStationGeometry.deckDepthMeters - 0.914_4) < 0.000_001)
+        #expect(abs(LMCommanderStationGeometry.mainPanelSandwichDepthMeters - 0.050_8) < 0.000_001)
+    }
+
+    @Test func panelRelationshipsFollowTheOperationsHandbook() {
+        let one = LMCommanderStationGeometry.surface(.panelOne)
+        let two = LMCommanderStationGeometry.surface(.panelTwo)
+        let three = LMCommanderStationGeometry.surface(.panelThree)
+        let four = LMCommanderStationGeometry.surface(.panelFour)
+
+        #expect(one.pitchDegrees == -10)
+        #expect(two.pitchDegrees == -10)
+        #expect(three.pitchDegrees == -45)
+        #expect(four.pitchDegrees == -45)
+        #expect(one.sizeMeters.z == LMCommanderStationGeometry.mainPanelSandwichDepthMeters)
+        #expect(two.sizeMeters.z == LMCommanderStationGeometry.mainPanelSandwichDepthMeters)
+        #expect(one.centerMeters.x == -two.centerMeters.x)
+        #expect(one.centerMeters.y == two.centerMeters.y)
+        #expect(three.sizeMeters.x >= one.sizeMeters.x + two.sizeMeters.x)
+        #expect(four.centerMeters.x == 0)
+        #expect(four.centerMeters.y < three.centerMeters.y)
+    }
+
+    @Test func flightStationsAndFlightDSKYFitTheReconstructedBlockout() {
+        #expect(abs(
+            LMCommanderStationGeometry.lmpStationCenterXMeters
+                - LMCommanderStationGeometry.commanderStationCenterXMeters
+                - LMCommanderStationGeometry.flightStationCenterlineSeparationMeters
+        ) < 0.000_001)
+
+        let panelFour = LMCommanderStationGeometry.surface(.panelFour)
+        #expect(LMDSKYGeometry.faceWidthMeters < panelFour.sizeMeters.x)
+        #expect(LMDSKYGeometry.faceHeightMeters < panelFour.sizeMeters.y)
+        #expect(LMCommanderStationGeometry.shellSegments.count == 10)
+        #expect(LMCommanderStationGeometry.shellSegments.allSatisfy {
+            abs($0.sizeMeters.z - LMCommanderStationGeometry.crewCompartmentDepthMeters) < 0.000_001
+        })
+    }
+
+    @Test @MainActor func proceduralStationPublishesEveryArtistContractNode() {
+        let station = LMCommanderStationScene()
+        for node in LMCockpitAssetContract.Node.allCases {
+            #expect(station.root.findEntity(named: node.rawValue) != nil)
+        }
+        for placement in LMDSKYGeometry.keyPlacements {
+            #expect(station.root.findEntity(
+                named: LMDSKYGeometry.artistNodeName(for: placement.code)
+            ) != nil)
+        }
+    }
+}
+
 @Suite("Apollo 11 LM DSKY geometry")
 struct Apollo11LMDSKYGeometryTests {
     @Test func faceEnvelopeAndNineteenKeyLayoutMatchTheMITDrawing() {
@@ -975,8 +1036,25 @@ struct ArtistCockpitAssetContractTests {
             case .commanderWindowOuter:
                 entity.position = lpd.panePlane(.outer).referencePointMeters
                 entity.orientation = lpd.paneOrientation(.outer)
+            case .fdaiMount:
+                entity.position = LMCommanderStationGeometry.fdaiMountPositionMeters
+                entity.orientation = LMCommanderStationGeometry.fdaiMountOrientation
+            case .dskyMount:
+                entity.position = LMCommanderStationGeometry.dskyMountPositionMeters
+                entity.orientation = LMCommanderStationGeometry.dskyMountOrientation
+            case .acaPivot:
+                entity.position = LMCommanderStationGeometry.acaPivotPositionMeters
+            case .rodPivot:
+                entity.position = LMCommanderStationGeometry.rodPivotPositionMeters
+            case .attitudeHoldPivot:
+                entity.position = LMCommanderStationGeometry.attitudeHoldPivotPositionMeters
+                entity.orientation = LMCommanderStationGeometry.attitudeHoldOrientation
             default:
-                break
+                if let surfaceID = LMCommanderStationGeometry.SurfaceID(rawValue: node.rawValue) {
+                    let surface = LMCommanderStationGeometry.surface(surfaceID)
+                    entity.position = surface.centerMeters
+                    entity.orientation = surface.orientation
+                }
             }
             root.addChild(entity)
         }
