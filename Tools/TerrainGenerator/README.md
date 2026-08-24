@@ -1,28 +1,35 @@
 # Apollo 11 terrain generator
 
-This tool turns the official LROC `NAC_DTM_APOLLO11` GeoTIFF and hillshade
-into the compact, offline assets bundled by the LM app. It crops a 2.048 km
-east-west by 4.096 km north-south area around the Apollo 11 landing coordinate,
-preserves true vertical scale, and samples the 2 m DTM at 8 m mesh spacing. The
-longer approach axis keeps the checkpoint-resumed landing inside sourced relief
-through contact instead of exposing the edge of the DTM crop.
+This tool converts the source-pinned LROC `NAC_DTM_APOLLO11` v1.9 GeoTIFF
+into the measured terrain foundation bundled by the LM app:
 
-The source files are intentionally not checked in. Download these products from
-the LROC PDS archive:
+- a 2 m/post, 2.046 km near-field tile around the Apollo 11 retroreflector;
+- a curvature-corrected 32 m/post, 16.352 km horizon tile;
+- lossless 16-bit centimeter height maps; and
+- a manifest containing the source URL and checksum, PDS projection, landing
+  origin, sampling, mission-sun geometry, encodings, and generator checksum.
+  No wall-clock timestamp is emitted, so identical inputs produce identical
+  committed assets.
 
-- `NAC_DTM_APOLLO11.TIF`
-- `NAC_DTM_APOLLO11_SHADE.TIF`
-- `NAC_DTM_APOLLO11.LBL`
-- `NAC_DTM_APOLLO11_README.TXT`
+The committed albedo images are deliberately flat neutral regolith. The PDS
+volume does not contain a photometric orthophoto, so diagnostic hillshade is
+not represented as measured albedo. Orthophoto ingestion will be added only
+after a source and its registration are pinned.
 
-Run:
+The 118 MB source file remains outside Git. Download
+`NAC_DTM_APOLLO11.TIF` from the URL recorded in
+`LM/Terrain/TerrainManifest.json`; the generator rejects a file whose byte
+count or SHA-256 does not match the pinned product. The matching PDS label is
+committed next to the generator and is independently checked before output.
+
+Run from the repository root:
 
 ```sh
-swift run Apollo11TerrainGenerator \
-  /path/to/NAC_DTM_APOLLO11.TIF \
-  /path/to/NAC_DTM_APOLLO11_SHADE.TIF \
-  ../../LM
+swift run --package-path Tools/TerrainGenerator Apollo11TerrainGenerator \
+  --dtm /path/to/NAC_DTM_APOLLO11.TIF \
+  --out LM/Terrain
 ```
 
-The generated manifest records the exact source hashes, crop, coordinate,
-spacing, height encoding, and axis convention used by the runtime mesh.
+The runtime retains measured heights at their native 2 m spacing. Below the
+terminal-detail altitude, deterministic procedural residuals add only the
+sub-resolution frequency band and remain exactly zero at every measured post.

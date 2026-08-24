@@ -601,49 +601,128 @@ struct CockpitWorldMappingTests {
     }
 }
 
-@Suite("Apollo 11 terrain assets")
-struct Apollo11TerrainAssetTests {
-    @Test func manifestPinsTheOfficialLROCProductAndApollo11Site() throws {
-        let manifest = try Apollo11TerrainResource.loadManifest()
+@Suite("Source-backed terrain tiles")
+struct SourceBackedTerrainTileTests {
+    @Test func manifestPinsMeasuredNearAndHorizonCoverage() throws {
+        let manifest = try LMTerrainManifest.load()
+        #expect(manifest.schemaVersion == LMTerrainManifest.schemaVersion)
+        #expect(manifest.scenarioID == "apollo11-source-backed-foundation")
+        #expect(abs(manifest.landingOrigin.latitudeDegrees - 0.673433) < 1e-9)
+        #expect(abs(manifest.landingOrigin.longitudeDegrees - 23.473113) < 1e-9)
+        #expect(abs(manifest.projection.sphereRadiusMeters - 1_737_400) < 1)
+        #expect(manifest.projection.sourceSamples == 2_111)
+        #expect(manifest.projection.sourceLines == 13_978)
+        #expect(manifest.toolSHA256 == "6259140d6add545a2ebc4d1a4e1a7a558af72d8393fe4f8332a924e42a070f79")
 
-        #expect(manifest.productID == "NAC_DTM_APOLLO11")
-        #expect(manifest.sourceDTMSHA256 == "920da622e3d7c3f047c67a970b5429aaadf00f886804e3fc6c72f6e5298043e9")
-        #expect(manifest.sourceHillshadeSHA256 == "a47fbe33a371fb0a5a823f1af6729888fa8bc9e0614a9acb3bd4784b29a974e3")
-        #expect(abs(manifest.landingLatitudeDegrees - 0.67409) < 1e-8)
-        #expect(abs(manifest.landingLongitudeDegrees - 23.47298) < 1e-8)
-        #expect(manifest.schemaVersion == 2)
-        #expect(manifest.cropWidthPixels == 1_025)
-        #expect(manifest.cropHeightPixels == 2_049)
+        let source = try #require(manifest.sources.first)
+        #expect(source.productId == "NAC_DTM_APOLLO11")
+        #expect(source.role == "geometry")
+        #expect(source.sha256 == "920da622e3d7c3f047c67a970b5429aaadf00f886804e3fc6c72f6e5298043e9")
+
+        let near = try #require(manifest.tile(id: LMTerrainWorld.nearFieldTileID))
+        #expect(near.postsPerSide == 1_024)
+        #expect(abs(near.postSpacingMeters - 2) < 1e-9)
+        #expect(near.curvatureCorrected)
+
+        let horizon = try #require(manifest.tile(id: LMTerrainWorld.horizonTileID))
+        #expect(horizon.postsPerSide == 512)
+        #expect(abs(horizon.postSpacingMeters - 32) < 1e-9)
+        #expect(horizon.extentMeters > 16_000)
+        #expect(horizon.curvatureCorrected)
     }
 
-    @Test func heightmapMatchesManifestAndIsCenteredOnTheLandingPost() throws {
-        let manifest = try Apollo11TerrainResource.loadManifest()
-        let heights = try Apollo11TerrainResource.loadHeights(manifest: manifest)
+    @Test func nativeNearFieldDrivesTheProductionSampler() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        #expect(field.width == 1_024)
+        #expect(field.height == 1_024)
+        #expect(abs(field.spacingMeters - 2) < 1e-9)
+        #expect(field.heights.count == 1_024 * 1_024)
+        #expect(field.heights.allSatisfy { $0.isFinite })
 
-        #expect(heights.count == manifest.meshWidth * manifest.meshHeight)
-        #expect(manifest.meshWidth == 257)
-        #expect(manifest.meshHeight == 513)
-        #expect(abs(manifest.meshSpacingMeters - 8) < 1e-6)
-        let center = heights[(manifest.meshHeight / 2) * manifest.meshWidth + manifest.meshWidth / 2]
-        #expect(abs(center) < 1e-6)
-        let allFinite = heights.allSatisfy { $0.isFinite }
-        #expect(allFinite)
+        let origin = try #require(field.relativeElevation(eastMeters: 0, northMeters: 0))
+        #expect(abs(origin) < 5)
+        #expect(field.relativeElevation(eastMeters: 757, northMeters: -540) != nil)
+    }
 
-        let field = Apollo11TerrainHeightField(manifest: manifest, heights: heights)
-        #expect(abs(try #require(field.relativeElevation(eastMeters: 0, northMeters: 0))) < 1e-6)
-        #expect(field.relativeElevation(eastMeters: -547, northMeters: 732) != nil)
+    @Test func measuredMeshUsesNorthUpAndEastBackCoordinates() throws {
+        let posts = 8
+        let spacing = 2.0
+        let tile = LMTerrainManifest.Tile(
+            id: "test",
+            postsPerSide: posts,
+            postSpacingMeters: spacing,
+            extentMeters: Double(posts - 1) * spacing,
+            zeroPointMeters: 0,
+            minimumHeightMeters: 0,
+            maximumHeightMeters: 10,
+            curvatureCorrected: false,
+            edgeHandling: nil,
+            heightFile: "test-height.png",
+            albedoFile: "test-albedo.png",
+            heightEncoding: .init(format: "PNG_GRAYSCALE_16LE", centimetersPerCount: 1, detail: ""),
+            albedoEncoding: .init(format: "PNG_RGB_8", detail: ""),
+            detail: nil
+        )
+        var counts = [UInt16](repeating: 0, count: posts * posts)
+        for column in 0..<posts { counts[column] = 1_000 }
+        let map = LMTerrainHeightMap(width: posts, height: posts, counts: counts)
+        let grid = try LMTerrainMeshBuilder.grid(tile: tile, heightMap: map)
+
+        let halfSpan = Float(Double(posts - 1) / 2 * spacing)
+        let northeast = grid.positions[posts - 1]
+        #expect(abs(northeast.x - halfSpan) < 1e-4)
+        #expect(abs(northeast.z + halfSpan) < 1e-4)
+        #expect(abs(northeast.y - 10) < 0.02)
+        #expect(grid.normals[(posts - 1) * posts + posts - 1].y > 0.95)
+    }
+
+    @Test func measuredMeshNormalsFollowNorthAndEastSlopes() throws {
+        let posts = 8
+        let spacing = 2.0
+        let tile = LMTerrainManifest.Tile(
+            id: "slope-test",
+            postsPerSide: posts,
+            postSpacingMeters: spacing,
+            extentMeters: Double(posts - 1) * spacing,
+            zeroPointMeters: 0,
+            minimumHeightMeters: 0,
+            maximumHeightMeters: 100,
+            curvatureCorrected: false,
+            edgeHandling: nil,
+            heightFile: "test-height.png",
+            albedoFile: "test-albedo.png",
+            heightEncoding: .init(format: "PNG_GRAYSCALE_16LE", centimetersPerCount: 1, detail: ""),
+            albedoEncoding: .init(format: "PNG_RGB_8", detail: ""),
+            detail: nil
+        )
+        let halfSpan = Double(posts - 1) * spacing / 2
+        var counts = [UInt16](repeating: 0, count: posts * posts)
+        for row in 0..<posts {
+            let north = halfSpan - Double(row) * spacing
+            for column in 0..<posts {
+                let east = Double(column) * spacing - halfSpan
+                let heightMeters = 50 + 0.5 * north + 0.25 * east
+                counts[row * posts + column] = UInt16((heightMeters * 100).rounded())
+            }
+        }
+        let map = LMTerrainHeightMap(width: posts, height: posts, counts: counts)
+        let grid = try LMTerrainMeshBuilder.grid(tile: tile, heightMap: map)
+        let normal = grid.normals[3 * posts + 3]
+        let expected = simd_normalize(SIMD3<Float>(-0.5, 1, 0.25))
+
+        #expect(simd_distance(normal, expected) < 1e-5)
     }
 }
 
 @Suite("Progressive lunar terrain")
 struct ProgressiveLunarTerrainTests {
     @Test func measuredPostsRemainExactAndProceduralDetailIsBounded() throws {
-        let field = try Apollo11TerrainResource.loadHeightField()
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
         let sampler = LMProgressiveTerrainSampler(heightField: field)
 
         let measuredPost = try #require(sampler.sample(
-            eastMeters: 0,
-            northMeters: 0,
+            eastMeters: -1,
+            northMeters: 1,
             requestedSpacingMeters: 0.5
         ))
         #expect(abs(measuredPost.proceduralResidualMeters) < 1e-7)
@@ -651,8 +730,8 @@ struct ProgressiveLunarTerrainTests {
         #expect(measuredPost.provenance == .measuredWithProceduralSubresolution)
 
         let subPost = try #require(sampler.sample(
-            eastMeters: 3.25,
-            northMeters: 2.75,
+            eastMeters: 0,
+            northMeters: 0,
             requestedSpacingMeters: 0.5
         ))
         #expect(abs(subPost.proceduralResidualMeters) <= sampler.maximumResidualMeters)
@@ -665,7 +744,7 @@ struct ProgressiveLunarTerrainTests {
     }
 
     @Test func proceduralResidualIsDeterministicAndNeverFillsUnknownCoverage() throws {
-        let field = try Apollo11TerrainResource.loadHeightField()
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
         let first = LMProgressiveTerrainSampler(heightField: field)
         let second = LMProgressiveTerrainSampler(heightField: field)
 
@@ -686,11 +765,11 @@ struct ProgressiveLunarTerrainTests {
     }
 
     @Test func coarseRequestsReturnOnlyMeasuredInterpolation() throws {
-        let field = try Apollo11TerrainResource.loadHeightField()
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
         let sample = try #require(LMProgressiveTerrainSampler(heightField: field).sample(
             eastMeters: 11,
             northMeters: 17,
-            requestedSpacingMeters: field.manifest.meshSpacingMeters
+            requestedSpacingMeters: field.spacingMeters
         ))
 
         #expect(sample.provenance == .measuredInterpolated)
@@ -698,7 +777,7 @@ struct ProgressiveLunarTerrainTests {
     }
 
     @Test func tileIDsStayStableUntilTheFocusCrossesATileBoundary() throws {
-        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: 8)
+        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: 2)
         let first = planner.plan(focusEastMeters: -547, focusNorthMeters: 732)
         let sameTile = planner.plan(focusEastMeters: -546.5, focusNorthMeters: 732.5)
         let crossed = planner.plan(focusEastMeters: -511.5, focusNorthMeters: 732.5)
@@ -711,7 +790,7 @@ struct ProgressiveLunarTerrainTests {
     }
 
     @Test func altitudePolicyStreamsOnlyUsefulNestedDetail() throws {
-        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: 8)
+        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: 2)
 
         #expect(planner.focusedPlans(
             focusEastMeters: -547,
@@ -724,17 +803,17 @@ struct ProgressiveLunarTerrainTests {
             focusNorthMeters: 732,
             altitudeMeters: 2_000
         )
-        #expect(approach.map(\.sampleSpacingMeters) == [2])
+        #expect(approach.isEmpty)
 
         let terminal = planner.focusedPlans(
             focusEastMeters: -547,
             focusNorthMeters: 732,
             altitudeMeters: 100
         )
-        #expect(terminal.map(\.sampleSpacingMeters) == [0.5, 2])
+        #expect(terminal.map(\.sampleSpacingMeters) == [0.5])
         #expect(terminal.allSatisfy { $0.containsProceduralSubresolution })
 
-        let manifestSpacing = 8.000_000_000_002_4
+        let manifestSpacing = 2.000_000_000_000_6
         let manifestPlanner = LMProgressiveTerrainPlanner(
             sourceSpacingMeters: manifestSpacing
         )
@@ -742,16 +821,16 @@ struct ProgressiveLunarTerrainTests {
             focusEastMeters: -547,
             focusNorthMeters: 732,
             altitudeMeters: 100
-        ).map(\.sampleSpacingMeters) == [0.5, 2])
+        ).map(\.sampleSpacingMeters) == [0.5])
         let measuredScalePlan = try #require(manifestPlanner.plan(
             focusEastMeters: -547,
             focusNorthMeters: 732
-        ).first { $0.sampleSpacingMeters == 8 })
+        ).first { $0.sampleSpacingMeters == 2 })
         #expect(!measuredScalePlan.containsProceduralSubresolution)
     }
 
     @Test func focusedTileChangesOnlyWhenItsOwnBoundaryIsCrossed() {
-        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: 8)
+        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: 2)
         let first = planner.focusedPlans(
             focusEastMeters: 31,
             focusNorthMeters: 31,
@@ -768,9 +847,9 @@ struct ProgressiveLunarTerrainTests {
             altitudeMeters: 100
         )
 
+        #expect(first.count == 1)
         #expect(first.map(\.id) == same.map(\.id))
         #expect(first.first?.id != crossed.first?.id)
-        #expect(first.last?.id == crossed.last?.id)
     }
 }
 

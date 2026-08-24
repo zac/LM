@@ -44,7 +44,7 @@ struct LMProgressiveTerrainSampler: Sendable {
             return nil
         }
 
-        let sourceSpacing = heightField.manifest.meshSpacingMeters
+        let sourceSpacing = heightField.spacingMeters
         guard requestedSpacingMeters < sourceSpacing else {
             return LMResolvedTerrainSample(
                 measuredElevationMeters: measured,
@@ -68,9 +68,9 @@ struct LMProgressiveTerrainSampler: Sendable {
     }
 
     private func anchoredResidual(eastMeters: Double, northMeters: Double) -> Float {
-        let spacing = heightField.manifest.meshSpacingMeters
-        let halfWidth = Double(heightField.manifest.meshWidth - 1) * spacing / 2
-        let halfDepth = Double(heightField.manifest.meshHeight - 1) * spacing / 2
+        let spacing = heightField.spacingMeters
+        let halfWidth = Double(heightField.width - 1) * spacing / 2
+        let halfDepth = Double(heightField.height - 1) * spacing / 2
         let column = (eastMeters + halfWidth) / spacing
         let row = (halfDepth - northMeters) / spacing
         let columnFraction = column - floor(column)

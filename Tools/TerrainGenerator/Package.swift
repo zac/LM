@@ -11,6 +11,9 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "Apollo11TerrainGenerator",
+            resources: [
+                .copy("NAC_DTM_APOLLO11.LBL")
+            ],
             linkerSettings: [
                 .linkedFramework("CoreGraphics"),
                 .linkedFramework("ImageIO")

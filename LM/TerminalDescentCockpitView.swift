@@ -216,7 +216,7 @@ struct TerminalDescentCockpitView: View {
             do {
                 let artistCabinLoaded = try await station.loadArtistCabinIfAvailable()
                 try await station.loadApollo11Terrain()
-                terrainStatus = "LROC 8 m measured · dynamic 2 m / 0.5 m near field"
+                terrainStatus = "LROC 2 m measured near · 32 m source-constrained horizon · dynamic 0.5 m terminal detail"
                 recordValidation { $0.observeTerrainLoaded() }
                 logger.info("Apollo 11 LROC terrain loaded; artist cabin: \(artistCabinLoaded)")
             } catch {

@@ -1,0 +1,102 @@
+{
+  "landingOrigin" : {
+    "detail" : "Apollo 11 retroreflector alignment; heights are relative to the DTM elevation sampled at this point.",
+    "latitudeDegrees" : 0.67343299999999995,
+    "longitudeDegrees" : 23.473113000000001
+  },
+  "landingOriginElevationMeters" : -1928.037353515625,
+  "projection" : {
+    "latitudeType" : "PLANETOCENTRIC",
+    "mapProjectionType" : "EQUIRECTANGULAR",
+    "positiveLongitudeDirection" : "EAST",
+    "sourceEasternmostLongitude" : 23.511529599999999,
+    "sourceLines" : 13978,
+    "sourceMaximumLatitude" : 1.2365387999999999,
+    "sourceMetersPerPost" : 2.0000000000006,
+    "sourceMinimumLatitude" : 0.31460900000000003,
+    "sourceSamples" : 2111,
+    "sourceWesternmostLongitude" : 23.372275800000001,
+    "sphereRadiusMeters" : 1737400
+  },
+  "scenarioID" : "apollo11-source-backed-foundation",
+  "schemaVersion" : 1,
+  "sources" : [
+    {
+      "bytes" : 118142727,
+      "detail" : "LROC NAC DTM. The companion photometric orthophoto (NAC_ANAPOLLO11.EOR) is not present in volume LROLRC_2001; committed albedo layers are flat neutral regolith until a pinned orthophoto source is added, and the mission-sun DirectionalLight shades the mesh normals. Per-tile hillshade PNGs are regenerable diagnostics.",
+      "id" : "nac-dtm-apollo11",
+      "labelURL" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/SDP\/NAC_DTM\/APOLLO11\/NAC_DTM_APOLLO11.LBL",
+      "productId" : "NAC_DTM_APOLLO11",
+      "productVersion" : "v1.9",
+      "role" : "geometry",
+      "sha256" : "920da622e3d7c3f047c67a970b5429aaadf00f886804e3fc6c72f6e5298043e9",
+      "url" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/SDP\/NAC_DTM\/APOLLO11\/NAC_DTM_APOLLO11.TIF"
+    }
+  ],
+  "sun" : {
+    "azimuthDegreesClockwiseFromNorth" : 276.39999999999998,
+    "detail" : "Mission-appropriate low sun at touchdown; azimuth approximated west-southwest.",
+    "elevationDegrees" : 10.77
+  },
+  "tiles" : [
+    {
+      "albedoEncoding" : {
+        "detail" : "Flat neutral regolith (RGB 140). Shading is applied in-engine from tile mesh normals under the mission sun.",
+        "format" : "PNG_RGB_8"
+      },
+      "albedoFile" : "near-field-albedo.png",
+      "curvatureCorrected" : true,
+      "curvatureFormula" : "z -= r*r \/ (2 * sphereRadiusMeters)",
+      "detail" : "Dense near field around Tranquility Base.",
+      "edgeHandling" : "clamped-extrapolation",
+      "extentMeters" : 2046,
+      "heightEncoding" : {
+        "centimetersPerCount" : 1,
+        "detail" : "Counts are centimeters above the tile minimum; add zeroPointMeters for meters above the landing-origin elevation.",
+        "format" : "PNG_GRAYSCALE_16LE",
+        "zeroPointMeters" : "<tile minimum height relative to landing origin>"
+      },
+      "heightFile" : "near-field-height.png",
+      "hillshadeEncoding" : {
+        "detail" : "Diagnostic lambertian hillshade under the mission sun; not consumed by the app.",
+        "format" : "PNG_RGB_8"
+      },
+      "id" : "near-field",
+      "maximumHeightMeters" : 22.721743162938335,
+      "minimumHeightMeters" : -38.511054449176932,
+      "postSpacingMeters" : 2,
+      "postsPerSide" : 1024,
+      "zeroPointMeters" : -38.511054449176932
+    },
+    {
+      "albedoEncoding" : {
+        "detail" : "Flat neutral regolith (RGB 140). Shading is applied in-engine from tile mesh normals under the mission sun.",
+        "format" : "PNG_RGB_8"
+      },
+      "albedoFile" : "horizon-albedo.png",
+      "curvatureCorrected" : true,
+      "curvatureFormula" : "z -= r*r \/ (2 * sphereRadiusMeters)",
+      "detail" : "Lower-resolution relief for the far field and skyline.",
+      "edgeHandling" : "clamped-extrapolation",
+      "extentMeters" : 16352,
+      "heightEncoding" : {
+        "centimetersPerCount" : 1,
+        "detail" : "Counts are centimeters above the tile minimum; add zeroPointMeters for meters above the landing-origin elevation.",
+        "format" : "PNG_GRAYSCALE_16LE",
+        "zeroPointMeters" : "<tile minimum height relative to landing origin>"
+      },
+      "heightFile" : "horizon-height.png",
+      "hillshadeEncoding" : {
+        "detail" : "Diagnostic lambertian hillshade under the mission sun; not consumed by the app.",
+        "format" : "PNG_RGB_8"
+      },
+      "id" : "horizon",
+      "maximumHeightMeters" : 82.378622534817652,
+      "minimumHeightMeters" : -108.54160100828645,
+      "postSpacingMeters" : 32,
+      "postsPerSide" : 512,
+      "zeroPointMeters" : -108.54160100828645
+    }
+  ],
+  "toolSHA256" : "6259140d6add545a2ebc4d1a4e1a7a558af72d8393fe4f8332a924e42a070f79"
+}

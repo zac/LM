@@ -112,8 +112,8 @@ final class LMCommanderStationScene {
         guard let state else { return }
         lastVehicleState = state
         let surfaceElevation = terrainHeightField?.relativeElevation(
-            eastMeters: state.positionMeters.x,
-            northMeters: state.positionMeters.y
+            eastMeters: state.positionMeters.y,
+            northMeters: state.positionMeters.x
         ) ?? 0
         lunarWorld.transform = Transform(matrix: mapper.lunarWorldMatrix(
             from: state,
@@ -123,10 +123,8 @@ final class LMCommanderStationScene {
     }
 
     func loadApollo11Terrain() async throws {
-        let heightField = try Apollo11TerrainResource.loadHeightField()
-        let terrain = try await Apollo11TerrainResource.makeEntity(
-            heightField: heightField
-        )
+        let heightField = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let terrain = try await LMTerrainWorld.load().worldRoot
         terrainHeightField = heightField
         terrainEnvironment = terrain
         provisionalTerrain.removeFromParent()
@@ -137,10 +135,10 @@ final class LMCommanderStationScene {
     private func requestProgressiveTerrain(around state: LMVehicleStateSnapshot) {
         guard let heightField = terrainHeightField, let terrainEnvironment else { return }
         let plans = LMProgressiveTerrainPlanner(
-            sourceSpacingMeters: heightField.manifest.meshSpacingMeters
+            sourceSpacingMeters: heightField.spacingMeters
         ).focusedPlans(
-            focusEastMeters: state.positionMeters.x,
-            focusNorthMeters: state.positionMeters.y,
+            focusEastMeters: state.positionMeters.y,
+            focusNorthMeters: state.positionMeters.x,
             altitudeMeters: state.altitudeMeters
         )
         let requestedIDs = Set(plans.map(\.id))
@@ -267,8 +265,8 @@ final class LMCommanderStationScene {
 
         dustCloud.isEnabled = true
         let surfaceElevation = terrainHeightField?.relativeElevation(
-            eastMeters: state.positionMeters.x,
-            northMeters: state.positionMeters.y
+            eastMeters: state.positionMeters.y,
+            northMeters: state.positionMeters.x
         ) ?? 0
         dustCloud.position = mapper.realityPosition(from: LMVector3D(
             x: state.positionMeters.x,

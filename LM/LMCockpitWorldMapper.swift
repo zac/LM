@@ -18,7 +18,7 @@ struct LMCockpitWorldMapper: Equatable, Sendable {
         position: LMVector3D,
         attitude: LMQuaternion
     ) -> simd_float4x4 {
-        var matrix = simd_float4x4(LMWorldMapper.tabletop.orientation(from: attitude))
+        var matrix = simd_float4x4(LMWorldMapper.attitudeOrientation(from: attitude))
         let translation = realityPosition(from: position)
         matrix.columns.3 = SIMD4(translation.x, translation.y, translation.z, 1)
         return matrix
