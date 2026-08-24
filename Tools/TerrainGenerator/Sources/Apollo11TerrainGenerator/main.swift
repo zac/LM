@@ -7,15 +7,16 @@ import UniformTypeIdentifiers
 //
 // Source-pinned pipeline: reads the LROC NAC DTM product for the Apollo 11
 // landing site (NAC_DTM_APOLLO11, volume LROLRC_2001), verifies it against the
-// committed PDS label, and emits two georeferenced tiles — a dense near-field
-// tile around Tranquility Base and a coarser horizon tile — plus a provenance
-// manifest recording source URLs, SHA-256 checksums, projection, sampling, and
-// the landing origin.
+// committed PDS labels, and emits three nested georeferenced tiles: a dense
+// LROC NAC near field, a SLDEM2015 medium field, and a global SLDEM2015 far
+// field. The manifest records source URLs, exact byte-range checksums,
+// projection, sampling, boundary registration, and the landing origin.
 //
 // Usage:
-//   swift Tools/TerrainGenerator/main.swift \
+//   swift run --package-path Tools/TerrainGenerator Apollo11TerrainGenerator \
 //     --dtm Tools/TerrainGenerator/cache/NAC_DTM_APOLLO11.TIF \
-//     [--ortho path/to/orthophoto] \
+//     --sldem-medium Tools/TerrainGenerator/cache/SLDEM2015_512_APOLLO11_ROWS_14874_15156_FLOAT.bin \
+//     --sldem-far Tools/TerrainGenerator/cache/SLDEM2015_128_APOLLO11_ROWS_7038_8150_FLOAT.bin \
 //     --out LM/Terrain
 
 // MARK: - Pinned sources (Docs/visionOS Immersive.md)
@@ -24,18 +25,47 @@ struct PinnedSource {
     let url: String
     let sha256: String?
     let bytes: Int?
+    let sourceBytes: Int?
+    let byteRangeStart: Int?
+    let byteRangeEnd: Int?
 }
 
 let pinnedDTM = PinnedSource(
     url: "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO11/NAC_DTM_APOLLO11.TIF",
     sha256: "920da622e3d7c3f047c67a970b5429aaadf00f886804e3fc6c72f6e5298043e9",
-    bytes: 118_142_727
+    bytes: 118_142_727,
+    sourceBytes: 118_142_727,
+    byteRangeStart: nil,
+    byteRangeEnd: nil
 )
 let pinnedLabel = PinnedSource(
     url: "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO11/NAC_DTM_APOLLO11.LBL",
     sha256: nil,
-    bytes: nil
+    bytes: nil,
+    sourceBytes: nil,
+    byteRangeStart: nil,
+    byteRangeEnd: nil
 )
+
+let sldemBaseURL = "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/sldem2015"
+let pinnedSLDEMMedium = PinnedSource(
+    url: "\(sldemBaseURL)/tiles/float_img/sldem2015_512_00n_30n_000_045_float.img",
+    sha256: "9ef0cf5d054c295d21b02ccf463c0f246dc78871c344f4fe01c5f077ba8d7698",
+    bytes: 26_081_280,
+    sourceBytes: 1_415_577_600,
+    byteRangeStart: 1_370_787_840,
+    byteRangeEnd: 1_396_869_119
+)
+let pinnedSLDEMMediumLabelURL = "\(sldemBaseURL)/tiles/float_img/sldem2015_512_00n_30n_000_045_float.lbl"
+let pinnedSLDEMFar = PinnedSource(
+    url: "\(sldemBaseURL)/global/float_img/sldem2015_128_60s_60n_000_360_float.img",
+    sha256: "f02bb39e4b11f664a77ce3ed8ab0f12087fd89a01d534942564fba5d643122f9",
+    bytes: 205_148_160,
+    sourceBytes: 2_831_155_200,
+    byteRangeStart: 1_297_244_160,
+    byteRangeEnd: 1_502_392_319
+)
+let pinnedSLDEMFarLabelURL = "\(sldemBaseURL)/global/float_img/sldem2015_128_60s_60n_000_360_float.lbl"
 
 /// Apollo 11 retroreflector (LRR-3) alignment per Docs/visionOS Immersive.md.
 let siteLatitudeDegrees = 0.673_433
@@ -58,17 +88,37 @@ let lunarRadiusMeters = 1_737_400.0
 let sunElevationDegrees = 10.77
 let sunAzimuthDegreesClockwiseFromNorth = 276.4
 
-let nearTilePosts = 1024
+let nearTilePosts = 1025
 let nearTilePostSpacingMeters = 2.0
-let horizonTilePosts = 512
-let horizonTilePostSpacingMeters = 32.0
+let mediumTilePosts = 513
+let mediumTilePostSpacingMeters = 32.0
+let farTilePosts = 513
+let farTilePostSpacingMeters = 512.0
+
+let sldemMediumRows = 15_360
+let sldemMediumSamples = 23_040
+let sldemMediumResolutionPixelsPerDegree = 512.0
+let sldemMediumMaximumLatitude = 30.0
+let sldemMediumWesternmostLongitude = 0.0
+let sldemMediumRowStart = 14_874
+let sldemMediumRowEnd = 15_156
+let sldemMediumMetersPerPost = 59.225_293_8
+
+let sldemFarRows = 15_360
+let sldemFarSamples = 46_080
+let sldemFarResolutionPixelsPerDegree = 128.0
+let sldemFarMaximumLatitude = 60.0
+let sldemFarWesternmostLongitude = 0.0
+let sldemFarRowStart = 7_038
+let sldemFarRowEnd = 8_150
+let sldemFarMetersPerPost = 236.901
 
 // MARK: - Manifest model (mirrored by LM/LM/LMTerrainManifest.swift)
 
 func manifestJSON() -> [String: Any] {
     [
         "schemaVersion": 1,
-        "scenarioID": "apollo11-source-backed-foundation",
+        "scenarioID": "apollo11-progressive-real-data-terrain",
         "landingOrigin": [
             "latitudeDegrees": siteLatitudeDegrees,
             "longitudeDegrees": siteLongitudeDegrees,
@@ -103,12 +153,69 @@ func manifestJSON() -> [String: Any] {
                 "productVersion": "v1.9",
                 "labelURL": pinnedLabel.url,
                 "detail": "LROC NAC DTM. The companion photometric orthophoto (NAC_ANAPOLLO11.EOR) is not present in volume LROLRC_2001; committed albedo layers are flat neutral regolith until a pinned orthophoto source is added, and the mission-sun DirectionalLight shades the mesh normals. Per-tile hillshade PNGs are regenerable diagnostics."
-            ]
+            ],
+            sourceManifest(
+                id: "sldem2015-512-apollo11-slab",
+                role: "medium-field-geometry",
+                source: pinnedSLDEMMedium,
+                productID: "SLDEM2015_512_00N_30N_000_045_FLOAT",
+                labelURL: pinnedSLDEMMediumLabelURL,
+                rowStart: sldemMediumRowStart,
+                rowEnd: sldemMediumRowEnd,
+                rowBytes: sldemMediumSamples * MemoryLayout<Float>.size,
+                resolution: sldemMediumResolutionPixelsPerDegree,
+                detail: "Exact PDS byte-range slab covering the 16.384 km Apollo 11 medium field. Native SLDEM2015 posts are about 59.2 m at the equator; the 32 m render grid interpolates this source and is boundary-registered to the measured NAC tile."
+            ),
+            sourceManifest(
+                id: "sldem2015-128-apollo11-slab",
+                role: "far-field-geometry",
+                source: pinnedSLDEMFar,
+                productID: "SLDEM2015_128_60S_60N_000_360_FLOAT",
+                labelURL: pinnedSLDEMFarLabelURL,
+                rowStart: sldemFarRowStart,
+                rowEnd: sldemFarRowEnd,
+                rowBytes: sldemFarSamples * MemoryLayout<Float>.size,
+                resolution: sldemFarResolutionPixelsPerDegree,
+                detail: "Exact PDS byte-range slab covering the 262.144 km Apollo 11 far field. Native SLDEM2015 posts are about 236.9 m at the equator; the 512 m render grid is boundary-registered to the medium field."
+            )
         ],
         "tiles": [
             nearManifestTile(),
-            horizonManifestTile()
+            mediumManifestTile(),
+            farManifestTile()
         ]
+    ]
+}
+
+func sourceManifest(
+    id: String,
+    role: String,
+    source: PinnedSource,
+    productID: String,
+    labelURL: String,
+    rowStart: Int,
+    rowEnd: Int,
+    rowBytes: Int,
+    resolution: Double,
+    detail: String
+) -> [String: Any] {
+    [
+        "id": id,
+        "role": role,
+        "url": source.url,
+        "sha256": source.sha256 ?? "",
+        "bytes": source.bytes ?? 0,
+        "sourceBytes": source.sourceBytes ?? 0,
+        "byteRangeStart": source.byteRangeStart ?? 0,
+        "byteRangeEnd": source.byteRangeEnd ?? 0,
+        "sourceRowStart": rowStart,
+        "sourceRowEnd": rowEnd,
+        "sourceRowBytes": rowBytes,
+        "mapResolutionPixelsPerDegree": resolution,
+        "productId": productID,
+        "productVersion": "V2.0",
+        "labelURL": labelURL,
+        "detail": detail
     ]
 }
 
@@ -117,28 +224,64 @@ func nearManifestTile() -> [String: Any] {
         id: "near-field",
         posts: nearTilePosts,
         postSpacing: nearTilePostSpacingMeters,
+        sourceIDs: ["nac-dtm-apollo11"],
+        nativeSourceSpacing: dtmMetersPerPost,
+        centimetersPerCount: 1,
+        edgeHandling: "measured",
+        transitionWidth: nil,
         detail: "Dense near field around Tranquility Base."
     )
 }
 
-func horizonManifestTile() -> [String: Any] {
+func mediumManifestTile() -> [String: Any] {
     tileManifest(
-        id: "horizon",
-        posts: horizonTilePosts,
-        postSpacing: horizonTilePostSpacingMeters,
-        detail: "Lower-resolution relief for the far field and skyline."
+        id: "medium-field",
+        posts: mediumTilePosts,
+        postSpacing: mediumTilePostSpacingMeters,
+        sourceIDs: ["nac-dtm-apollo11", "sldem2015-512-apollo11-slab"],
+        nativeSourceSpacing: sldemMediumMetersPerPost,
+        centimetersPerCount: 1,
+        edgeHandling: "inner-boundary-registered-bias-blend",
+        transitionWidth: 1_024,
+        detail: "SLDEM2015 medium field on a 32 m render grid; the inner collar is registered to the measured NAC boundary."
     )
 }
 
-func tileManifest(id: String, posts: Int, postSpacing: Double, detail: String) -> [String: Any] {
-    [
+func farManifestTile() -> [String: Any] {
+    tileManifest(
+        id: "far-field",
+        posts: farTilePosts,
+        postSpacing: farTilePostSpacingMeters,
+        sourceIDs: ["sldem2015-512-apollo11-slab", "sldem2015-128-apollo11-slab"],
+        nativeSourceSpacing: sldemFarMetersPerPost,
+        centimetersPerCount: 25,
+        edgeHandling: "inner-boundary-registered-bias-blend",
+        transitionWidth: 16_384,
+        detail: "Global SLDEM2015 far field covering 262.144 km on a 512 m render grid; the inner collar is registered to the medium field."
+    )
+}
+
+func tileManifest(
+    id: String,
+    posts: Int,
+    postSpacing: Double,
+    sourceIDs: [String],
+    nativeSourceSpacing: Double,
+    centimetersPerCount: Int,
+    edgeHandling: String,
+    transitionWidth: Double?,
+    detail: String
+) -> [String: Any] {
+    var manifest: [String: Any] = [
         "id": id,
         "postsPerSide": posts,
         "postSpacingMeters": postSpacing,
         "extentMeters": Double(posts - 1) * postSpacing,
+        "sourceIDs": sourceIDs,
+        "nativeSourceSpacingMeters": nativeSourceSpacing,
         "heightEncoding": [
             "format": "PNG_GRAYSCALE_16LE",
-            "centimetersPerCount": 1,
+            "centimetersPerCount": centimetersPerCount,
             "zeroPointMeters": "<tile minimum height relative to landing origin>",
             "detail": "Counts are centimeters above the tile minimum; add zeroPointMeters for meters above the landing-origin elevation."
         ],
@@ -152,9 +295,13 @@ func tileManifest(id: String, posts: Int, postSpacing: Double, detail: String) -
         ],
         "curvatureCorrected": true,
         "curvatureFormula": "z -= r*r / (2 * sphereRadiusMeters)",
-        "edgeHandling": "clamped-extrapolation",
+        "edgeHandling": edgeHandling,
         "detail": detail
     ]
+    if let transitionWidth {
+        manifest["transitionWidthMeters"] = transitionWidth
+    }
+    return manifest
 }
 
 // MARK: - PDS label parsing and verification
@@ -199,6 +346,40 @@ func verifyLabel(_ labels: [String: String]) throws {
         // keyword, so absence is acceptable.
         _ = noData
     }
+}
+
+func verifySLDEMLabel(
+    _ labels: [String: String],
+    productID: String,
+    lines: Int,
+    samples: Int,
+    resolution: Double,
+    maximumLatitude: Double,
+    minimumLatitude: Double,
+    westernmostLongitude: Double,
+    easternmostLongitude: Double
+) throws {
+    func expect(_ key: String, _ expected: Double) throws {
+        guard let text = labels[key], let value = Double(text) else {
+            throw TerrainError("SLDEM label missing or unparsable: \(key)")
+        }
+        if abs(value - expected) > abs(expected) * 1e-9 + 1e-9 {
+            throw TerrainError("SLDEM label \(key)=\(value) does not match pinned \(expected)")
+        }
+    }
+    guard labels["PRODUCT_ID"] == productID else {
+        throw TerrainError("SLDEM label PRODUCT_ID does not match \(productID)")
+    }
+    try expect("LINES", Double(lines))
+    try expect("LINE_SAMPLES", Double(samples))
+    try expect("MAP_RESOLUTION", resolution)
+    try expect("MAXIMUM_LATITUDE", maximumLatitude)
+    try expect("MINIMUM_LATITUDE", minimumLatitude)
+    try expect("WESTERNMOST_LONGITUDE", westernmostLongitude)
+    try expect("EASTERNMOST_LONGITUDE", easternmostLongitude)
+    try expect("SAMPLE_BITS", 32)
+    try expect("SCALING_FACTOR", 1)
+    try expect("OFFSET", 1_737.4)
 }
 
 struct TerrainError: Error, CustomStringConvertible {
@@ -373,6 +554,95 @@ struct GridSampler {
     }
 }
 
+/// A contiguous set of complete rows fetched with one HTTP byte-range request
+/// from a PDS PC_REAL SLDEM2015 product. Samples remain in their source pixel
+/// registration and are converted from kilometers to meters only at lookup.
+struct SLDEMFloatSlab {
+    let sourceWidth: Int
+    let sourceRowStart: Int
+    let sourceRowEnd: Int
+    let resolutionPixelsPerDegree: Double
+    let maximumLatitudeDegrees: Double
+    let westernmostLongitudeDegrees: Double
+    let samples: [Float]
+
+    static func load(
+        contentsOf url: URL,
+        source: PinnedSource,
+        sourceWidth: Int,
+        sourceRowStart: Int,
+        sourceRowEnd: Int,
+        resolutionPixelsPerDegree: Double,
+        maximumLatitudeDegrees: Double,
+        westernmostLongitudeDegrees: Double
+    ) throws -> SLDEMFloatSlab {
+        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+        let byteCount = attributes[.size] as? Int ?? 0
+        guard byteCount == source.bytes else {
+            throw TerrainError("SLDEM slab size \(byteCount) != pinned \(source.bytes ?? 0)")
+        }
+        let digest = try sha256Hex(contentsOf: url)
+        guard digest == source.sha256 else {
+            throw TerrainError("SLDEM slab SHA-256 mismatch: \(digest)")
+        }
+        let expectedRows = sourceRowEnd - sourceRowStart + 1
+        let expectedFloats = expectedRows * sourceWidth
+        guard byteCount == expectedFloats * MemoryLayout<Float>.size else {
+            throw TerrainError("SLDEM slab dimensions do not match its byte range")
+        }
+        let data = try Data(contentsOf: url, options: [.mappedIfSafe])
+        var samples = [Float](repeating: 0, count: expectedFloats)
+        _ = samples.withUnsafeMutableBytes { destination in
+            data.copyBytes(to: destination)
+        }
+        guard samples.allSatisfy({ $0.isFinite && $0 > -20 && $0 < 20 }) else {
+            throw TerrainError("SLDEM slab contains invalid kilometer heights")
+        }
+        print("verified SLDEM slab checksum \(digest.prefix(16))…")
+        return SLDEMFloatSlab(
+            sourceWidth: sourceWidth,
+            sourceRowStart: sourceRowStart,
+            sourceRowEnd: sourceRowEnd,
+            resolutionPixelsPerDegree: resolutionPixelsPerDegree,
+            maximumLatitudeDegrees: maximumLatitudeDegrees,
+            westernmostLongitudeDegrees: westernmostLongitudeDegrees,
+            samples: samples
+        )
+    }
+
+    func elevationMeters(latitudeDegrees: Double, longitudeDegrees: Double) throws -> Double {
+        // PDS pixel registration: the first center is half a post inside the
+        // declared maximum latitude and westernmost longitude.
+        let globalLine = (maximumLatitudeDegrees - latitudeDegrees)
+            * resolutionPixelsPerDegree - 0.5
+        let globalSample = (longitudeDegrees - westernmostLongitudeDegrees)
+            * resolutionPixelsPerDegree - 0.5
+        guard globalLine >= Double(sourceRowStart),
+              globalLine <= Double(sourceRowEnd),
+              globalSample >= 0,
+              globalSample <= Double(sourceWidth - 1) else {
+            throw TerrainError(
+                String(format: "SLDEM slab misses lat %.6f lon %.6f", latitudeDegrees, longitudeDegrees)
+            )
+        }
+        let localLine = globalLine - Double(sourceRowStart)
+        let line0 = Int(floor(localLine))
+        let sample0 = Int(floor(globalSample))
+        let line1 = min(line0 + 1, sourceRowEnd - sourceRowStart)
+        let sample1 = min(sample0 + 1, sourceWidth - 1)
+        let lineFraction = localLine - Double(line0)
+        let sampleFraction = globalSample - Double(sample0)
+        func value(line: Int, sample: Int) -> Double {
+            Double(samples[line * sourceWidth + sample])
+        }
+        let top = value(line: line0, sample: sample0) * (1 - sampleFraction)
+            + value(line: line0, sample: sample1) * sampleFraction
+        let bottom = value(line: line1, sample: sample0) * (1 - sampleFraction)
+            + value(line: line1, sample: sample1) * sampleFraction
+        return (top * (1 - lineFraction) + bottom * lineFraction) * 1_000.0
+    }
+}
+
 // MARK: - Tile generation
 
 struct TileResult {
@@ -388,69 +658,99 @@ func metersPerDegree(latitudeDegrees: Double) -> (north: Double, east: Double) {
     return (north, east)
 }
 
+func siteCoordinates(northMeters: Double, eastMeters: Double) -> (latitude: Double, longitude: Double) {
+    let scale = metersPerDegree(latitudeDegrees: siteLatitudeDegrees)
+    return (
+        siteLatitudeDegrees + northMeters / scale.north,
+        siteLongitudeDegrees + eastMeters / scale.east
+    )
+}
+
+func curvatureDrop(northMeters: Double, eastMeters: Double) -> Double {
+    (northMeters * northMeters + eastMeters * eastMeters) / (2.0 * lunarRadiusMeters)
+}
+
+func nacRelativeElevation(
+    northMeters: Double,
+    eastMeters: Double,
+    sampler: GridSampler,
+    siteElevationMeters: Double
+) throws -> Double {
+    let coordinate = siteCoordinates(northMeters: northMeters, eastMeters: eastMeters)
+    let line = (dtmMaximumLatitude - coordinate.latitude)
+        / (dtmMaximumLatitude - dtmMinimumLatitude) * Double(dtmLines - 1)
+    let sample = (coordinate.longitude - dtmWesternmostLongitude)
+        / (dtmEasternmostLongitude - dtmWesternmostLongitude) * Double(dtmSamples - 1)
+    guard line >= 0, line <= Double(dtmLines - 1),
+          sample >= 0, sample <= Double(dtmSamples - 1) else {
+        throw TerrainError(
+            String(format: "NAC DTM misses lat %.6f lon %.6f", coordinate.latitude, coordinate.longitude)
+        )
+    }
+    let elevation = sampler.bilinear(lineF: line, sampleF: sample)
+        ?? sampler.nearestValid(line: Int(line.rounded()), sample: Int(sample.rounded()))
+    guard let elevation else {
+        throw TerrainError("NAC DTM contains no valid sample at the requested coordinate")
+    }
+    return Double(elevation) - siteElevationMeters
+        - curvatureDrop(northMeters: northMeters, eastMeters: eastMeters)
+}
+
+func sldemRelativeElevation(
+    northMeters: Double,
+    eastMeters: Double,
+    slab: SLDEMFloatSlab,
+    siteElevationMeters: Double
+) throws -> Double {
+    let coordinate = siteCoordinates(northMeters: northMeters, eastMeters: eastMeters)
+    return try slab.elevationMeters(
+        latitudeDegrees: coordinate.latitude,
+        longitudeDegrees: coordinate.longitude
+    ) - siteElevationMeters - curvatureDrop(northMeters: northMeters, eastMeters: eastMeters)
+}
+
+/// Preserve the entire inner tile boundary exactly, then fade only the outer
+/// source's vertical bias over a collar. This prevents cracks or steps without
+/// inventing high-frequency relief or changing either source away from the
+/// registration band.
+func boundaryRegisteredElevation(
+    northMeters: Double,
+    eastMeters: Double,
+    innerHalfExtentMeters: Double,
+    transitionWidthMeters: Double,
+    innerElevation: (_ northMeters: Double, _ eastMeters: Double) throws -> Double,
+    outerElevation: (_ northMeters: Double, _ eastMeters: Double) throws -> Double
+) throws -> Double {
+    let boundaryNorth = min(max(northMeters, -innerHalfExtentMeters), innerHalfExtentMeters)
+    let boundaryEast = min(max(eastMeters, -innerHalfExtentMeters), innerHalfExtentMeters)
+    let distance = hypot(northMeters - boundaryNorth, eastMeters - boundaryEast)
+    if distance == 0 {
+        return try innerElevation(northMeters, eastMeters)
+    }
+    let boundaryBias = try innerElevation(boundaryNorth, boundaryEast)
+        - outerElevation(boundaryNorth, boundaryEast)
+    let normalized = min(max(distance / transitionWidthMeters, 0), 1)
+    let smooth = normalized * normalized * (3 - 2 * normalized)
+    return try outerElevation(northMeters, eastMeters) + boundaryBias * (1 - smooth)
+}
+
 func generateTile(
     id: String,
     posts: Int,
     postSpacing: Double,
-    sampler: GridSampler,
-    siteLine: Double,
-    siteSample: Double,
-    siteElevation: Double,
+    centimetersPerCount: Int,
+    relativeElevation: (_ northMeters: Double, _ eastMeters: Double) throws -> Double,
     sunENU: (x: Double, y: Double, z: Double),
     outDir: URL
 ) throws -> TileResult {
-    let mDeg = metersPerDegree(latitudeDegrees: siteLatitudeDegrees)
     let halfExtent = Double(posts - 1) / 2.0 * postSpacing
     var heights = [Double](repeating: 0, count: posts * posts)
-    // The wide horizon tile repeatedly clamps many samples to the same DTM
-    // boundary posts. Cache NoData repair at those integer boundary locations
-    // instead of repeating an expanding-ring search for every output column.
-    var nearestValidCache = [Int: Float]()
 
     for row in 0..<posts {
         let northOffset = halfExtent - Double(row) * postSpacing
         for column in 0..<posts {
             let eastOffset = Double(column) * postSpacing - halfExtent
-            let lat = siteLatitudeDegrees + northOffset / mDeg.north
-            let lon = siteLongitudeDegrees + eastOffset / mDeg.east
-            let lineF = (dtmMaximumLatitude - lat)
-                / (dtmMaximumLatitude - dtmMinimumLatitude)
-                * Double(dtmLines - 1)
-            let sampleF = (lon - dtmWesternmostLongitude)
-                / (dtmEasternmostLongitude - dtmWesternmostLongitude)
-                * Double(dtmSamples - 1)
-            // Beyond the DTM footprint the nearest covered elevation is held
-            // (clamped extrapolation); the curvature term still drops distant
-            // ground below the skyline.
-            let clampedLine = min(max(lineF, 0), Double(dtmLines - 1))
-            let clampedSample = min(max(sampleF, 0), Double(dtmSamples - 1))
-            let nearestLine = Int(clampedLine.rounded())
-            let nearestSample = Int(clampedSample.rounded())
-            let cacheKey = nearestLine * dtmSamples + nearestSample
-            let value: Float?
-            if let bilinear = sampler.bilinear(
-                lineF: clampedLine,
-                sampleF: clampedSample
-            ) {
-                value = bilinear
-            } else if let cached = nearestValidCache[cacheKey] {
-                value = cached
-            } else {
-                let repaired = sampler.nearestValid(
-                    line: nearestLine,
-                    sample: nearestSample
-                )
-                if let repaired {
-                    nearestValidCache[cacheKey] = repaired
-                }
-                value = repaired
-            }
-            guard let value else {
-                throw TerrainError("\(id): no valid DTM coverage at lat \(lat), lon \(lon)")
-            }
-            let radiusSquared = northOffset * northOffset + eastOffset * eastOffset
-            let curvatureDrop = radiusSquared / (2.0 * lunarRadiusMeters)
-            heights[row * posts + column] = Double(value) - siteElevation - curvatureDrop
+            heights[row * posts + column] = try relativeElevation(northOffset, eastOffset)
         }
     }
 
@@ -460,8 +760,13 @@ func generateTile(
     // Height PNG: 16-bit gray, centimeters above the tile minimum.
     var heightPixels = [UInt16](repeating: 0, count: posts * posts)
     for i in heights.indices {
-        let centimeters = ((heights[i] - minHeight) * 100.0).rounded()
-        heightPixels[i] = UInt16(max(0, min(65_535, centimeters)))
+        let counts = ((heights[i] - minHeight) * 100.0 / Double(centimetersPerCount)).rounded()
+        guard counts <= Double(UInt16.max) else {
+            throw TerrainError(
+                "\(id): height span exceeds UInt16 at \(centimetersPerCount) cm/count"
+            )
+        }
+        heightPixels[i] = UInt16(max(0, counts))
     }
     try writeGray16PNG(
         pixels: heightPixels,
@@ -475,7 +780,7 @@ func generateTile(
     // The hillshade is still written beside the manifest as a diagnostic.
     var shadePixels = [UInt8](repeating: 0, count: posts * posts * 3)
     var albedoPixels = [UInt8](repeating: 0, count: posts * posts * 3)
-    let normalScale = 100.0 / postSpacing
+    let inverseCentralDifferenceSpan = 1.0 / (2.0 * postSpacing)
     for row in 0..<posts {
         for column in 0..<posts {
             let p = (row * posts + column) * 3
@@ -484,9 +789,11 @@ func generateTile(
             albedoPixels[p + 2] = 140
             let l = min(max(row, 1), posts - 2)
             let s = min(max(column, 1), posts - 2)
-            let dzdnorth = -(heights[(l - 1) * posts + s] - heights[(l + 1) * posts + s]) * normalScale
-            let dzdeast = (heights[l * posts + s + 1] - heights[l * posts + s - 1]) * normalScale
-            var normal = SIMD3(dzdnorth, dzdeast, 1.0)
+            let northSlope = (heights[(l - 1) * posts + s] - heights[(l + 1) * posts + s])
+                * inverseCentralDifferenceSpan
+            let eastSlope = (heights[l * posts + s + 1] - heights[l * posts + s - 1])
+                * inverseCentralDifferenceSpan
+            var normal = SIMD3(-northSlope, -eastSlope, 1.0)
             normal = simd_normalize(normal)
             let lambert = max(Double(simd_dot(normal, SIMD3(sunENU.x, sunENU.y, sunENU.z))), 0)
             let shade = UInt8(max(0, min(255, ((0.16 + 0.84 * pow(lambert, 1.15)) * 255.0).rounded())))
@@ -597,6 +904,8 @@ func writePNG(_ image: CGImage, to url: URL) throws {
 
 func run() throws {
     var dtmPath: URL?
+    var sldemMediumPath: URL?
+    var sldemFarPath: URL?
     var outDir = URL(fileURLWithPath: "LM/Terrain")
     var arguments = Array(CommandLine.arguments.dropFirst())
     while !arguments.isEmpty {
@@ -606,14 +915,21 @@ func run() throws {
         switch arguments[0] {
         case "--dtm":
             dtmPath = URL(fileURLWithPath: arguments[1]); arguments.removeFirst(2)
+        case "--sldem-medium":
+            sldemMediumPath = URL(fileURLWithPath: arguments[1]); arguments.removeFirst(2)
+        case "--sldem-far":
+            sldemFarPath = URL(fileURLWithPath: arguments[1]); arguments.removeFirst(2)
         case "--out":
             outDir = URL(fileURLWithPath: arguments[1]); arguments.removeFirst(2)
         default:
             throw TerrainError("unknown argument \(arguments[0])")
         }
     }
-    guard let dtmPath else {
-        throw TerrainError("usage: Apollo11TerrainGenerator --dtm <NAC_DTM_APOLLO11.TIF> --out <dir>")
+    guard let dtmPath, let sldemMediumPath, let sldemFarPath else {
+        throw TerrainError(
+            "usage: Apollo11TerrainGenerator --dtm <NAC_DTM_APOLLO11.TIF> "
+                + "--sldem-medium <SLDEM512-row-slab> --sldem-far <SLDEM128-row-slab> --out <dir>"
+        )
     }
 
     // Verify the download against the pinned checksum before anything else.
@@ -637,7 +953,38 @@ func run() throws {
     }
     let labelText = try String(contentsOf: labelURL, encoding: .utf8)
     try verifyLabel(parseLabel(labelText))
-    print("label constants verified")
+    guard let mediumLabelURL = Bundle.module.url(
+        forResource: "SLDEM2015_512_00N_30N_000_045_FLOAT",
+        withExtension: "LBL"
+    ), let farLabelURL = Bundle.module.url(
+        forResource: "SLDEM2015_128_60S_60N_000_360_FLOAT",
+        withExtension: "LBL"
+    ) else {
+        throw TerrainError("bundled SLDEM2015 labels are missing")
+    }
+    try verifySLDEMLabel(
+        parseLabel(try String(contentsOf: mediumLabelURL, encoding: .utf8)),
+        productID: "SLDEM2015_512_00N_30N_000_045_FLOAT",
+        lines: sldemMediumRows,
+        samples: sldemMediumSamples,
+        resolution: sldemMediumResolutionPixelsPerDegree,
+        maximumLatitude: 30,
+        minimumLatitude: 0,
+        westernmostLongitude: 0,
+        easternmostLongitude: 45
+    )
+    try verifySLDEMLabel(
+        parseLabel(try String(contentsOf: farLabelURL, encoding: .utf8)),
+        productID: "SLDEM2015_128_60S_60N_000_360_FLOAT",
+        lines: sldemFarRows,
+        samples: sldemFarSamples,
+        resolution: sldemFarResolutionPixelsPerDegree,
+        maximumLatitude: 60,
+        minimumLatitude: -60,
+        westernmostLongitude: 0,
+        easternmostLongitude: 360
+    )
+    print("PDS label constants verified")
 
     print("reading \(dtmPath.path)…")
     let tif = try FloatGeoTIFF.load(contentsOf: dtmPath)
@@ -645,6 +992,26 @@ func run() throws {
         throw TerrainError("DTM dimensions \(tif.width)x\(tif.height) != label")
     }
     let sampler = GridSampler(tif: tif)
+    let mediumSlab = try SLDEMFloatSlab.load(
+        contentsOf: sldemMediumPath,
+        source: pinnedSLDEMMedium,
+        sourceWidth: sldemMediumSamples,
+        sourceRowStart: sldemMediumRowStart,
+        sourceRowEnd: sldemMediumRowEnd,
+        resolutionPixelsPerDegree: sldemMediumResolutionPixelsPerDegree,
+        maximumLatitudeDegrees: sldemMediumMaximumLatitude,
+        westernmostLongitudeDegrees: sldemMediumWesternmostLongitude
+    )
+    let farSlab = try SLDEMFloatSlab.load(
+        contentsOf: sldemFarPath,
+        source: pinnedSLDEMFar,
+        sourceWidth: sldemFarSamples,
+        sourceRowStart: sldemFarRowStart,
+        sourceRowEnd: sldemFarRowEnd,
+        resolutionPixelsPerDegree: sldemFarResolutionPixelsPerDegree,
+        maximumLatitudeDegrees: sldemFarMaximumLatitude,
+        westernmostLongitudeDegrees: sldemFarWesternmostLongitude
+    )
 
     let siteSample = (siteLongitudeDegrees - dtmWesternmostLongitude)
         / (dtmEasternmostLongitude - dtmWesternmostLongitude) * Double(dtmSamples - 1)
@@ -653,7 +1020,20 @@ func run() throws {
     guard let siteElevation = sampler.bilinear(lineF: siteLine, sampleF: siteSample) else {
         throw TerrainError("landing origin has no valid DTM elevation")
     }
-    print(String(format: "site pixel (%.1f, %.1f), elevation %.2f m", siteSample, siteLine, siteElevation))
+    let mediumSiteElevation = try mediumSlab.elevationMeters(
+        latitudeDegrees: siteLatitudeDegrees,
+        longitudeDegrees: siteLongitudeDegrees
+    )
+    let farSiteElevation = try farSlab.elevationMeters(
+        latitudeDegrees: siteLatitudeDegrees,
+        longitudeDegrees: siteLongitudeDegrees
+    )
+    print(String(
+        format: "landing origin elevations: NAC %.2f m, SLDEM512 %.2f m, SLDEM128 %.2f m",
+        siteElevation,
+        mediumSiteElevation,
+        farSiteElevation
+    ))
 
     let elevationRadians = sunElevationDegrees * .pi / 180.0
     let azimuthRadians = sunAzimuthDegreesClockwiseFromNorth * .pi / 180.0
@@ -665,35 +1045,90 @@ func run() throws {
 
     try FileManager.default.createDirectory(at: outDir, withIntermediateDirectories: true)
 
+    let nearElevation: (Double, Double) throws -> Double = { north, east in
+        try nacRelativeElevation(
+            northMeters: north,
+            eastMeters: east,
+            sampler: sampler,
+            siteElevationMeters: Double(siteElevation)
+        )
+    }
+    let mediumSourceElevation: (Double, Double) throws -> Double = { north, east in
+        try sldemRelativeElevation(
+            northMeters: north,
+            eastMeters: east,
+            slab: mediumSlab,
+            siteElevationMeters: mediumSiteElevation
+        )
+    }
+    let mediumElevation: (Double, Double) throws -> Double = { north, east in
+        try boundaryRegisteredElevation(
+            northMeters: north,
+            eastMeters: east,
+            innerHalfExtentMeters: Double(nearTilePosts - 1) * nearTilePostSpacingMeters / 2,
+            transitionWidthMeters: 1_024,
+            innerElevation: nearElevation,
+            outerElevation: mediumSourceElevation
+        )
+    }
+    let farSourceElevation: (Double, Double) throws -> Double = { north, east in
+        try sldemRelativeElevation(
+            northMeters: north,
+            eastMeters: east,
+            slab: farSlab,
+            siteElevationMeters: farSiteElevation
+        )
+    }
+    let farElevation: (Double, Double) throws -> Double = { north, east in
+        try boundaryRegisteredElevation(
+            northMeters: north,
+            eastMeters: east,
+            innerHalfExtentMeters: Double(mediumTilePosts - 1) * mediumTilePostSpacingMeters / 2,
+            transitionWidthMeters: 16_384,
+            innerElevation: mediumElevation,
+            outerElevation: farSourceElevation
+        )
+    }
+
     let near = try generateTile(
         id: "near-field",
         posts: nearTilePosts,
         postSpacing: nearTilePostSpacingMeters,
-        sampler: sampler,
-        siteLine: siteLine,
-        siteSample: siteSample,
-        siteElevation: Double(siteElevation),
+        centimetersPerCount: 1,
+        relativeElevation: nearElevation,
         sunENU: sunENU,
         outDir: outDir
     )
-    let horizon = try generateTile(
-        id: "horizon",
-        posts: horizonTilePosts,
-        postSpacing: horizonTilePostSpacingMeters,
-        sampler: sampler,
-        siteLine: siteLine,
-        siteSample: siteSample,
-        siteElevation: Double(siteElevation),
+    let medium = try generateTile(
+        id: "medium-field",
+        posts: mediumTilePosts,
+        postSpacing: mediumTilePostSpacingMeters,
+        centimetersPerCount: 1,
+        relativeElevation: mediumElevation,
+        sunENU: sunENU,
+        outDir: outDir
+    )
+    let far = try generateTile(
+        id: "far-field",
+        posts: farTilePosts,
+        postSpacing: farTilePostSpacingMeters,
+        centimetersPerCount: 25,
+        relativeElevation: farElevation,
         sunENU: sunENU,
         outDir: outDir
     )
 
     var manifest = manifestJSON()
     manifest["landingOriginElevationMeters"] = Double(siteElevation)
+    manifest["sourceLandingOriginElevationsMeters"] = [
+        "nac-dtm-apollo11": Double(siteElevation),
+        "sldem2015-512-apollo11-slab": mediumSiteElevation,
+        "sldem2015-128-apollo11-slab": farSiteElevation
+    ]
     manifest["toolSHA256"] = try sha256Hex(
         contentsOf: URL(fileURLWithPath: #filePath)
     )
-    for (index, result) in [near, horizon].enumerated() {
+    for (index, result) in [near, medium, far].enumerated() {
         var tile = manifest["tiles"] as! [[String: Any]]
         tile[index]["zeroPointMeters"] = result.zeroPointMeters
         tile[index]["minimumHeightMeters"] = result.minimumHeightMeters
@@ -709,7 +1144,7 @@ func run() throws {
     jsonData.append(0x0A)
     try jsonData.write(to: outDir.appendingPathComponent("TerrainManifest.json"))
 
-    for result in [near, horizon] {
+    for result in [near, medium, far] {
         print(String(format: "%@: heights %.1f…%.1f m (zero %.1f m)", result.name, result.minimumHeightMeters, result.maximumHeightMeters, result.zeroPointMeters))
     }
     print("wrote \(outDir.path)")

@@ -1,32 +1,60 @@
 # Apollo 11 terrain generator
 
-This tool converts the source-pinned LROC `NAC_DTM_APOLLO11` v1.9 GeoTIFF
-into the measured terrain foundation bundled by the LM app:
+This tool combines the source-pinned LROC `NAC_DTM_APOLLO11` v1.9 GeoTIFF
+with LOLA/SELENE `SLDEM2015` V2.0 into the progressive terrain foundation
+bundled by the LM app:
 
-- a 2 m/post, 2.046 km near-field tile around the Apollo 11 retroreflector;
-- a curvature-corrected 32 m/post, 16.352 km horizon tile;
-- lossless 16-bit centimeter height maps; and
-- a manifest containing the source URL and checksum, PDS projection, landing
-  origin, sampling, mission-sun geometry, encodings, and generator checksum.
+- a measured 2 m/post, 2.048 km near-field tile around the Apollo 11
+  retroreflector;
+- a 32 m render grid over 16.384 km constrained by native ~59.2 m SLDEM;
+- a 512 m far grid over 262.144 km sampled from native ~236.9 m SLDEM;
+- manifest-scaled 16-bit height maps; and
+- a manifest containing source URLs, exact byte ranges and checksums, PDS
+  projections, landing origin, sampling, boundary registration, mission-sun
+  geometry, encodings, and generator checksum.
   No wall-clock timestamp is emitted, so identical inputs produce identical
   committed assets.
+
+The far field uses 25 centimeters per UInt16 count because lunar curvature
+across 262 km spans more than 10 km. The near and medium fields retain one
+centimeter per count.
 
 The committed albedo images are deliberately flat neutral regolith. The PDS
 volume does not contain a photometric orthophoto, so diagnostic hillshade is
 not represented as measured albedo. Orthophoto ingestion will be added only
 after a source and its registration are pinned.
 
-The 118 MB source file remains outside Git. Download
+The source rasters remain outside Git. Download
 `NAC_DTM_APOLLO11.TIF` from the URL recorded in
 `LM/Terrain/TerrainManifest.json`; the generator rejects a file whose byte
-count or SHA-256 does not match the pinned product. The matching PDS label is
-committed next to the generator and is independently checked before output.
+count or SHA-256 does not match the pinned product.
+
+Only the rows needed for the Apollo 11 corridor are fetched from the two large
+SLDEM files. Create `Tools/TerrainGenerator/cache`, then run:
+
+```sh
+curl -L --fail \
+  --range 1370787840-1396869119 \
+  --output Tools/TerrainGenerator/cache/SLDEM2015_512_APOLLO11_ROWS_14874_15156_FLOAT.bin \
+  https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/sldem2015/tiles/float_img/sldem2015_512_00n_30n_000_045_float.img
+
+curl -L --fail \
+  --range 1297244160-1502392319 \
+  --output Tools/TerrainGenerator/cache/SLDEM2015_128_APOLLO11_ROWS_7038_8150_FLOAT.bin \
+  https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/sldem2015/global/float_img/sldem2015_128_60s_60n_000_360_float.img
+```
+
+The generator rejects either slab unless its byte count and SHA-256 match the
+manifested range. The three matching PDS labels are committed next to the
+generator and independently checked before output.
 
 Run from the repository root:
 
 ```sh
 swift run --package-path Tools/TerrainGenerator Apollo11TerrainGenerator \
   --dtm /path/to/NAC_DTM_APOLLO11.TIF \
+  --sldem-medium /path/to/SLDEM2015_512_APOLLO11_ROWS_14874_15156_FLOAT.bin \
+  --sldem-far /path/to/SLDEM2015_128_APOLLO11_ROWS_7038_8150_FLOAT.bin \
   --out LM/Terrain
 ```
 

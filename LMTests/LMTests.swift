@@ -603,45 +603,173 @@ struct CockpitWorldMappingTests {
 
 @Suite("Source-backed terrain tiles")
 struct SourceBackedTerrainTileTests {
-    @Test func manifestPinsMeasuredNearAndHorizonCoverage() throws {
+    @Test func manifestPinsMeasuredNearAndProgressiveSLDEMCoverage() throws {
         let manifest = try LMTerrainManifest.load()
         #expect(manifest.schemaVersion == LMTerrainManifest.schemaVersion)
-        #expect(manifest.scenarioID == "apollo11-source-backed-foundation")
+        #expect(manifest.scenarioID == "apollo11-progressive-real-data-terrain")
         #expect(abs(manifest.landingOrigin.latitudeDegrees - 0.673433) < 1e-9)
         #expect(abs(manifest.landingOrigin.longitudeDegrees - 23.473113) < 1e-9)
         #expect(abs(manifest.projection.sphereRadiusMeters - 1_737_400) < 1)
         #expect(manifest.projection.sourceSamples == 2_111)
         #expect(manifest.projection.sourceLines == 13_978)
-        #expect(manifest.toolSHA256 == "6259140d6add545a2ebc4d1a4e1a7a558af72d8393fe4f8332a924e42a070f79")
+        #expect(manifest.toolSHA256 == "3b1f051e45278cb7f6f6b6c1b0d5b9999aaaa2c54821de74ef62d25daa2139a3")
 
-        let source = try #require(manifest.sources.first)
-        #expect(source.productId == "NAC_DTM_APOLLO11")
-        #expect(source.role == "geometry")
-        #expect(source.sha256 == "920da622e3d7c3f047c67a970b5429aaadf00f886804e3fc6c72f6e5298043e9")
+        let nac = try #require(manifest.sources.first { $0.id == "nac-dtm-apollo11" })
+        #expect(nac.productId == "NAC_DTM_APOLLO11")
+        #expect(nac.role == "geometry")
+        #expect(nac.sha256 == "920da622e3d7c3f047c67a970b5429aaadf00f886804e3fc6c72f6e5298043e9")
+
+        let mediumSource = try #require(manifest.sources.first {
+            $0.id == "sldem2015-512-apollo11-slab"
+        })
+        #expect(mediumSource.productId == "SLDEM2015_512_00N_30N_000_045_FLOAT")
+        #expect(mediumSource.bytes == 26_081_280)
+        #expect(mediumSource.sourceBytes == 1_415_577_600)
+        #expect(mediumSource.byteRangeStart == 1_370_787_840)
+        #expect(mediumSource.byteRangeEnd == 1_396_869_119)
+        #expect(mediumSource.sourceRowStart == 14_874)
+        #expect(mediumSource.sourceRowEnd == 15_156)
+        #expect(mediumSource.sha256 == "9ef0cf5d054c295d21b02ccf463c0f246dc78871c344f4fe01c5f077ba8d7698")
+
+        let farSource = try #require(manifest.sources.first {
+            $0.id == "sldem2015-128-apollo11-slab"
+        })
+        #expect(farSource.productId == "SLDEM2015_128_60S_60N_000_360_FLOAT")
+        #expect(farSource.bytes == 205_148_160)
+        #expect(farSource.sourceBytes == 2_831_155_200)
+        #expect(farSource.byteRangeStart == 1_297_244_160)
+        #expect(farSource.byteRangeEnd == 1_502_392_319)
+        #expect(farSource.sourceRowStart == 7_038)
+        #expect(farSource.sourceRowEnd == 8_150)
+        #expect(farSource.sha256 == "f02bb39e4b11f664a77ce3ed8ab0f12087fd89a01d534942564fba5d643122f9")
 
         let near = try #require(manifest.tile(id: LMTerrainWorld.nearFieldTileID))
-        #expect(near.postsPerSide == 1_024)
+        #expect(near.postsPerSide == 1_025)
+        #expect(near.extentMeters == 2_048)
         #expect(abs(near.postSpacingMeters - 2) < 1e-9)
-        #expect(near.curvatureCorrected)
+        #expect(near.heightEncoding.centimetersPerCount == 1)
+        #expect(near.sourceIDs == ["nac-dtm-apollo11"])
 
-        let horizon = try #require(manifest.tile(id: LMTerrainWorld.horizonTileID))
-        #expect(horizon.postsPerSide == 512)
-        #expect(abs(horizon.postSpacingMeters - 32) < 1e-9)
-        #expect(horizon.extentMeters > 16_000)
-        #expect(horizon.curvatureCorrected)
+        let medium = try #require(manifest.tile(id: LMTerrainWorld.mediumFieldTileID))
+        #expect(medium.postsPerSide == 513)
+        #expect(medium.extentMeters == 16_384)
+        #expect(abs(medium.postSpacingMeters - 32) < 1e-9)
+        #expect(abs((medium.nativeSourceSpacingMeters ?? 0) - 59.2252938) < 1e-8)
+        #expect(medium.transitionWidthMeters == 1_024)
+        #expect(medium.heightEncoding.centimetersPerCount == 1)
+
+        let far = try #require(manifest.tile(id: LMTerrainWorld.farFieldTileID))
+        #expect(far.postsPerSide == 513)
+        #expect(far.extentMeters == 262_144)
+        #expect(abs(far.postSpacingMeters - 512) < 1e-9)
+        #expect(abs((far.nativeSourceSpacingMeters ?? 0) - 236.901) < 1e-8)
+        #expect(far.transitionWidthMeters == 16_384)
+        #expect(far.heightEncoding.centimetersPerCount == 25)
+        #expect(far.maximumHeightMeters - far.minimumHeightMeters > 10_000)
+
+        let p64Altitude = try PoweredDescentSession.bundledP64Checkpoint().vehicleState.altitudeMeters
+        let geometricHorizon = sqrt(
+            2 * manifest.projection.sphereRadiusMeters * p64Altitude
+                + p64Altitude * p64Altitude
+        )
+        #expect(far.extentMeters / 2 > geometricHorizon)
     }
 
     @Test func nativeNearFieldDrivesTheProductionSampler() throws {
         let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
-        #expect(field.width == 1_024)
-        #expect(field.height == 1_024)
+        #expect(field.width == 1_025)
+        #expect(field.height == 1_025)
         #expect(abs(field.spacingMeters - 2) < 1e-9)
-        #expect(field.heights.count == 1_024 * 1_024)
+        #expect(field.heights.count == 1_025 * 1_025)
         #expect(field.heights.allSatisfy { $0.isFinite })
 
         let origin = try #require(field.relativeElevation(eastMeters: 0, northMeters: 0))
         #expect(abs(origin) < 5)
         #expect(field.relativeElevation(eastMeters: 757, northMeters: -540) != nil)
+    }
+
+    @Test func nestedTerrainBandsShareQuantizedBoundaryHeights() throws {
+        let manifest = try LMTerrainManifest.load()
+        let near = try #require(manifest.tile(id: LMTerrainWorld.nearFieldTileID))
+        let medium = try #require(manifest.tile(id: LMTerrainWorld.mediumFieldTileID))
+        let far = try #require(manifest.tile(id: LMTerrainWorld.farFieldTileID))
+        let nearMap = try heightMap(for: near)
+        let mediumMap = try heightMap(for: medium)
+        let farMap = try heightMap(for: far)
+
+        // The 2,048 m NAC boundary lands on medium indices 224...288.
+        for index in 0...64 {
+            let nearIndex = index * 16
+            let mediumIndex = 224 + index
+            try expectSameHeight(nearMap, near, 0, nearIndex, mediumMap, medium, 224, mediumIndex, 0.02)
+            try expectSameHeight(nearMap, near, 1_024, nearIndex, mediumMap, medium, 288, mediumIndex, 0.02)
+            try expectSameHeight(nearMap, near, nearIndex, 0, mediumMap, medium, mediumIndex, 224, 0.02)
+            try expectSameHeight(nearMap, near, nearIndex, 1_024, mediumMap, medium, mediumIndex, 288, 0.02)
+        }
+
+        // The 16,384 m medium boundary lands on far indices 240...272.
+        for index in 0...32 {
+            let mediumIndex = index * 16
+            let farIndex = 240 + index
+            try expectSameHeight(mediumMap, medium, 0, mediumIndex, farMap, far, 240, farIndex, 0.27)
+            try expectSameHeight(mediumMap, medium, 512, mediumIndex, farMap, far, 272, farIndex, 0.27)
+            try expectSameHeight(mediumMap, medium, mediumIndex, 0, farMap, far, farIndex, 240, 0.27)
+            try expectSameHeight(mediumMap, medium, mediumIndex, 512, farMap, far, farIndex, 272, 0.27)
+        }
+    }
+
+    @Test func nestedMeshHolesEndOnSharedGridLines() throws {
+        let manifest = try LMTerrainManifest.load()
+        let medium = try #require(manifest.tile(id: LMTerrainWorld.mediumFieldTileID))
+        let far = try #require(manifest.tile(id: LMTerrainWorld.farFieldTileID))
+        let mediumGrid = try LMTerrainMeshBuilder.grid(
+            tile: medium,
+            heightMap: heightMap(for: medium),
+            holeHalfExtentMeters: 1_024
+        )
+        let farGrid = try LMTerrainMeshBuilder.grid(
+            tile: far,
+            heightMap: heightMap(for: far),
+            holeHalfExtentMeters: 8_192
+        )
+        #expect(mediumGrid.triangles.count == (512 * 512 - 64 * 64) * 6)
+        #expect(farGrid.triangles.count == (512 * 512 - 32 * 32) * 6)
+    }
+
+    private func heightMap(for tile: LMTerrainManifest.Tile) throws -> LMTerrainHeightMap {
+        let name = (tile.heightFile as NSString).deletingPathExtension
+        let ext = (tile.heightFile as NSString).pathExtension
+        let url = try #require(
+            Bundle.main.url(forResource: name, withExtension: ext, subdirectory: "Terrain")
+                ?? Bundle.main.url(forResource: name, withExtension: ext)
+        )
+        return try LMTerrainHeightMap.load(contentsOf: url)
+    }
+
+    private func expectSameHeight(
+        _ firstMap: LMTerrainHeightMap,
+        _ firstTile: LMTerrainManifest.Tile,
+        _ firstRow: Int,
+        _ firstColumn: Int,
+        _ secondMap: LMTerrainHeightMap,
+        _ secondTile: LMTerrainManifest.Tile,
+        _ secondRow: Int,
+        _ secondColumn: Int,
+        _ tolerance: Double
+    ) throws {
+        let first = firstMap.heightMeters(
+            atPost: firstRow,
+            column: firstColumn,
+            zeroPointMeters: firstTile.zeroPointMeters,
+            centimetersPerCount: firstTile.heightEncoding.centimetersPerCount
+        )
+        let second = secondMap.heightMeters(
+            atPost: secondRow,
+            column: secondColumn,
+            zeroPointMeters: secondTile.zeroPointMeters,
+            centimetersPerCount: secondTile.heightEncoding.centimetersPerCount
+        )
+        #expect(abs(first - second) <= tolerance)
     }
 
     @Test func measuredMeshUsesNorthUpAndEastBackCoordinates() throws {
@@ -657,6 +785,9 @@ struct SourceBackedTerrainTileTests {
             maximumHeightMeters: 10,
             curvatureCorrected: false,
             edgeHandling: nil,
+            sourceIDs: nil,
+            nativeSourceSpacingMeters: nil,
+            transitionWidthMeters: nil,
             heightFile: "test-height.png",
             albedoFile: "test-albedo.png",
             heightEncoding: .init(format: "PNG_GRAYSCALE_16LE", centimetersPerCount: 1, detail: ""),
@@ -689,6 +820,9 @@ struct SourceBackedTerrainTileTests {
             maximumHeightMeters: 100,
             curvatureCorrected: false,
             edgeHandling: nil,
+            sourceIDs: nil,
+            nativeSourceSpacingMeters: nil,
+            transitionWidthMeters: nil,
             heightFile: "test-height.png",
             albedoFile: "test-albedo.png",
             heightEncoding: .init(format: "PNG_GRAYSCALE_16LE", centimetersPerCount: 1, detail: ""),
@@ -721,8 +855,8 @@ struct ProgressiveLunarTerrainTests {
         let sampler = LMProgressiveTerrainSampler(heightField: field)
 
         let measuredPost = try #require(sampler.sample(
-            eastMeters: -1,
-            northMeters: 1,
+            eastMeters: 0,
+            northMeters: 0,
             requestedSpacingMeters: 0.5
         ))
         #expect(abs(measuredPost.proceduralResidualMeters) < 1e-7)
@@ -730,8 +864,8 @@ struct ProgressiveLunarTerrainTests {
         #expect(measuredPost.provenance == .measuredWithProceduralSubresolution)
 
         let subPost = try #require(sampler.sample(
-            eastMeters: 0,
-            northMeters: 0,
+            eastMeters: 1,
+            northMeters: 1,
             requestedSpacingMeters: 0.5
         ))
         #expect(abs(subPost.proceduralResidualMeters) <= sampler.maximumResidualMeters)

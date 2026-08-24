@@ -50,9 +50,8 @@ struct LMFullDescentMapper: Equatable {
     }
 }
 
-/// Assembles the full-immersion exterior scene: near-field and horizon terrain
-/// tiles, the mission sun, and a faint ambient floor so shadowed regolith
-/// never goes fully black on device.
+/// Assembles the full-immersion exterior scene: nested near, medium, and far
+/// terrain bands plus the mission sun.
 @MainActor
 enum LMTerrainWorld {
     struct Assembly {
@@ -66,7 +65,8 @@ enum LMTerrainWorld {
     }
 
     nonisolated static let nearFieldTileID = "near-field"
-    nonisolated static let horizonTileID = "horizon"
+    nonisolated static let mediumFieldTileID = "medium-field"
+    nonisolated static let farFieldTileID = "far-field"
 
     static func load(bundle: Bundle = .main) async throws -> Assembly {
         let manifest = try LMTerrainManifest.load(bundle: bundle)
@@ -75,19 +75,25 @@ enum LMTerrainWorld {
         worldRoot.name = "TerrainWorld"
 
         let nearTile = try requireTile(manifest, id: nearFieldTileID)
-        let horizonTile = try requireTile(manifest, id: horizonTileID)
-        // Punch the near field out of the horizon ring so the two tiles never
-        // overlap; the horizon resumes one post spacing beyond the near edge.
-        let holeExtent = nearTile.extentMeters / 2.0 + horizonTile.postSpacingMeters
+        let mediumTile = try requireTile(manifest, id: mediumFieldTileID)
+        let farTile = try requireTile(manifest, id: farFieldTileID)
+        // Each power-of-two-plus-one grid shares its inner boundary exactly
+        // with the next denser tile. Punch nested square holes at those grid
+        // lines so the bands neither overlap nor leave a geometric gap.
+        let bands = [
+            (tile: nearTile, holeHalfExtent: 0.0),
+            (tile: mediumTile, holeHalfExtent: nearTile.extentMeters / 2.0),
+            (tile: farTile, holeHalfExtent: mediumTile.extentMeters / 2.0),
+        ]
 
-        for (tile, hole) in [(nearTile, 0.0), (horizonTile, holeExtent)] {
+        for (tile, hole) in bands {
             let heightURL = try resourceURL(bundle: bundle, file: tile.heightFile)
             let albedoURL = try resourceURL(bundle: bundle, file: tile.albedoFile)
             let heightMap = try LMTerrainHeightMap.load(contentsOf: heightURL)
             let grid = try LMTerrainMeshBuilder.grid(
                 tile: tile,
                 heightMap: heightMap,
-                holeExtentMeters: hole
+                holeHalfExtentMeters: hole
             )
             let mesh = try LMTerrainMeshBuilder.mesh(from: grid)
             let texture = try await TextureResource(contentsOf: albedoURL)

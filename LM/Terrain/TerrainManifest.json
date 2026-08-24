@@ -18,8 +18,13 @@
     "sourceWesternmostLongitude" : 23.372275800000001,
     "sphereRadiusMeters" : 1737400
   },
-  "scenarioID" : "apollo11-source-backed-foundation",
+  "scenarioID" : "apollo11-progressive-real-data-terrain",
   "schemaVersion" : 1,
+  "sourceLandingOriginElevationsMeters" : {
+    "nac-dtm-apollo11" : -1928.037353515625,
+    "sldem2015-128-apollo11-slab" : -1926.1782513219268,
+    "sldem2015-512-apollo11-slab" : -1929.2543969619676
+  },
   "sources" : [
     {
       "bytes" : 118142727,
@@ -31,6 +36,42 @@
       "role" : "geometry",
       "sha256" : "920da622e3d7c3f047c67a970b5429aaadf00f886804e3fc6c72f6e5298043e9",
       "url" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/SDP\/NAC_DTM\/APOLLO11\/NAC_DTM_APOLLO11.TIF"
+    },
+    {
+      "byteRangeEnd" : 1396869119,
+      "byteRangeStart" : 1370787840,
+      "bytes" : 26081280,
+      "detail" : "Exact PDS byte-range slab covering the 16.384 km Apollo 11 medium field. Native SLDEM2015 posts are about 59.2 m at the equator; the 32 m render grid interpolates this source and is boundary-registered to the measured NAC tile.",
+      "id" : "sldem2015-512-apollo11-slab",
+      "labelURL" : "https:\/\/pds-geosciences.wustl.edu\/lro\/lro-l-lola-3-rdr-v1\/lrolol_1xxx\/data\/sldem2015\/tiles\/float_img\/sldem2015_512_00n_30n_000_045_float.lbl",
+      "mapResolutionPixelsPerDegree" : 512,
+      "productId" : "SLDEM2015_512_00N_30N_000_045_FLOAT",
+      "productVersion" : "V2.0",
+      "role" : "medium-field-geometry",
+      "sha256" : "9ef0cf5d054c295d21b02ccf463c0f246dc78871c344f4fe01c5f077ba8d7698",
+      "sourceBytes" : 1415577600,
+      "sourceRowBytes" : 92160,
+      "sourceRowEnd" : 15156,
+      "sourceRowStart" : 14874,
+      "url" : "https:\/\/pds-geosciences.wustl.edu\/lro\/lro-l-lola-3-rdr-v1\/lrolol_1xxx\/data\/sldem2015\/tiles\/float_img\/sldem2015_512_00n_30n_000_045_float.img"
+    },
+    {
+      "byteRangeEnd" : 1502392319,
+      "byteRangeStart" : 1297244160,
+      "bytes" : 205148160,
+      "detail" : "Exact PDS byte-range slab covering the 262.144 km Apollo 11 far field. Native SLDEM2015 posts are about 236.9 m at the equator; the 512 m render grid is boundary-registered to the medium field.",
+      "id" : "sldem2015-128-apollo11-slab",
+      "labelURL" : "https:\/\/pds-geosciences.wustl.edu\/lro\/lro-l-lola-3-rdr-v1\/lrolol_1xxx\/data\/sldem2015\/global\/float_img\/sldem2015_128_60s_60n_000_360_float.lbl",
+      "mapResolutionPixelsPerDegree" : 128,
+      "productId" : "SLDEM2015_128_60S_60N_000_360_FLOAT",
+      "productVersion" : "V2.0",
+      "role" : "far-field-geometry",
+      "sha256" : "f02bb39e4b11f664a77ce3ed8ab0f12087fd89a01d534942564fba5d643122f9",
+      "sourceBytes" : 2831155200,
+      "sourceRowBytes" : 184320,
+      "sourceRowEnd" : 8150,
+      "sourceRowStart" : 7038,
+      "url" : "https:\/\/pds-geosciences.wustl.edu\/lro\/lro-l-lola-3-rdr-v1\/lrolol_1xxx\/data\/sldem2015\/global\/float_img\/sldem2015_128_60s_60n_000_360_float.img"
     }
   ],
   "sun" : {
@@ -48,8 +89,8 @@
       "curvatureCorrected" : true,
       "curvatureFormula" : "z -= r*r \/ (2 * sphereRadiusMeters)",
       "detail" : "Dense near field around Tranquility Base.",
-      "edgeHandling" : "clamped-extrapolation",
-      "extentMeters" : 2046,
+      "edgeHandling" : "measured",
+      "extentMeters" : 2048,
       "heightEncoding" : {
         "centimetersPerCount" : 1,
         "detail" : "Counts are centimeters above the tile minimum; add zeroPointMeters for meters above the landing-origin elevation.",
@@ -62,41 +103,86 @@
         "format" : "PNG_RGB_8"
       },
       "id" : "near-field",
-      "maximumHeightMeters" : 22.721743162938335,
-      "minimumHeightMeters" : -38.511054449176932,
+      "maximumHeightMeters" : 22.773787621882015,
+      "minimumHeightMeters" : -38.516862353701114,
+      "nativeSourceSpacingMeters" : 2.0000000000006,
       "postSpacingMeters" : 2,
-      "postsPerSide" : 1024,
-      "zeroPointMeters" : -38.511054449176932
+      "postsPerSide" : 1025,
+      "sourceIDs" : [
+        "nac-dtm-apollo11"
+      ],
+      "zeroPointMeters" : -38.516862353701114
     },
     {
       "albedoEncoding" : {
         "detail" : "Flat neutral regolith (RGB 140). Shading is applied in-engine from tile mesh normals under the mission sun.",
         "format" : "PNG_RGB_8"
       },
-      "albedoFile" : "horizon-albedo.png",
+      "albedoFile" : "medium-field-albedo.png",
       "curvatureCorrected" : true,
       "curvatureFormula" : "z -= r*r \/ (2 * sphereRadiusMeters)",
-      "detail" : "Lower-resolution relief for the far field and skyline.",
-      "edgeHandling" : "clamped-extrapolation",
-      "extentMeters" : 16352,
+      "detail" : "SLDEM2015 medium field on a 32 m render grid; the inner collar is registered to the measured NAC boundary.",
+      "edgeHandling" : "inner-boundary-registered-bias-blend",
+      "extentMeters" : 16384,
       "heightEncoding" : {
         "centimetersPerCount" : 1,
         "detail" : "Counts are centimeters above the tile minimum; add zeroPointMeters for meters above the landing-origin elevation.",
         "format" : "PNG_GRAYSCALE_16LE",
         "zeroPointMeters" : "<tile minimum height relative to landing origin>"
       },
-      "heightFile" : "horizon-height.png",
+      "heightFile" : "medium-field-height.png",
       "hillshadeEncoding" : {
         "detail" : "Diagnostic lambertian hillshade under the mission sun; not consumed by the app.",
         "format" : "PNG_RGB_8"
       },
-      "id" : "horizon",
-      "maximumHeightMeters" : 82.378622534817652,
-      "minimumHeightMeters" : -108.54160100828645,
+      "id" : "medium-field",
+      "maximumHeightMeters" : 155.2629819169606,
+      "minimumHeightMeters" : -144.8503491613001,
+      "nativeSourceSpacingMeters" : 59.225293800000003,
       "postSpacingMeters" : 32,
-      "postsPerSide" : 512,
-      "zeroPointMeters" : -108.54160100828645
+      "postsPerSide" : 513,
+      "sourceIDs" : [
+        "nac-dtm-apollo11",
+        "sldem2015-512-apollo11-slab"
+      ],
+      "transitionWidthMeters" : 1024,
+      "zeroPointMeters" : -144.8503491613001
+    },
+    {
+      "albedoEncoding" : {
+        "detail" : "Flat neutral regolith (RGB 140). Shading is applied in-engine from tile mesh normals under the mission sun.",
+        "format" : "PNG_RGB_8"
+      },
+      "albedoFile" : "far-field-albedo.png",
+      "curvatureCorrected" : true,
+      "curvatureFormula" : "z -= r*r \/ (2 * sphereRadiusMeters)",
+      "detail" : "Global SLDEM2015 far field covering 262.144 km on a 512 m render grid; the inner collar is registered to the medium field.",
+      "edgeHandling" : "inner-boundary-registered-bias-blend",
+      "extentMeters" : 262144,
+      "heightEncoding" : {
+        "centimetersPerCount" : 25,
+        "detail" : "Counts are centimeters above the tile minimum; add zeroPointMeters for meters above the landing-origin elevation.",
+        "format" : "PNG_GRAYSCALE_16LE",
+        "zeroPointMeters" : "<tile minimum height relative to landing origin>"
+      },
+      "heightFile" : "far-field-height.png",
+      "hillshadeEncoding" : {
+        "detail" : "Diagnostic lambertian hillshade under the mission sun; not consumed by the app.",
+        "format" : "PNG_RGB_8"
+      },
+      "id" : "far-field",
+      "maximumHeightMeters" : 256.47310099462436,
+      "minimumHeightMeters" : -10470.86870527425,
+      "nativeSourceSpacingMeters" : 236.90100000000001,
+      "postSpacingMeters" : 512,
+      "postsPerSide" : 513,
+      "sourceIDs" : [
+        "sldem2015-512-apollo11-slab",
+        "sldem2015-128-apollo11-slab"
+      ],
+      "transitionWidthMeters" : 16384,
+      "zeroPointMeters" : -10470.86870527425
     }
   ],
-  "toolSHA256" : "6259140d6add545a2ebc4d1a4e1a7a558af72d8393fe4f8332a924e42a070f79"
+  "toolSHA256" : "3b1f051e45278cb7f6f6b6c1b0d5b9999aaaa2c54821de74ef62d25daa2139a3"
 }

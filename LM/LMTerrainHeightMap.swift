@@ -12,8 +12,14 @@ struct LMTerrainHeightMap: Equatable {
     /// Row-major big-endian-decoded counts, top row first.
     let counts: [UInt16]
 
-    func heightMeters(atPost row: Int, column: Int, zeroPointMeters: Double) -> Double {
-        zeroPointMeters + Double(counts[row * width + column]) / 100.0
+    func heightMeters(
+        atPost row: Int,
+        column: Int,
+        zeroPointMeters: Double,
+        centimetersPerCount: Int
+    ) -> Double {
+        zeroPointMeters
+            + Double(counts[row * width + column]) * Double(centimetersPerCount) / 100.0
     }
 
     /// Decode a PNG grayscale 16-bit file without losing precision. The image

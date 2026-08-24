@@ -62,8 +62,9 @@ enum Apollo11TerrainResource {
             throw ResourceError.invalidDimensions
         }
 
+        let metersPerCount = Double(near.heightEncoding.centimetersPerCount) / 100
         let heights = map.counts.map {
-            Float(near.zeroPointMeters + Double($0) / 100)
+            Float(near.zeroPointMeters + Double($0) * metersPerCount)
         }
         return Apollo11TerrainHeightField(tile: near, heights: heights)
     }

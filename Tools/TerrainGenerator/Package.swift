@@ -12,7 +12,9 @@ let package = Package(
         .executableTarget(
             name: "Apollo11TerrainGenerator",
             resources: [
-                .copy("NAC_DTM_APOLLO11.LBL")
+                .copy("NAC_DTM_APOLLO11.LBL"),
+                .copy("SLDEM2015_128_60S_60N_000_360_FLOAT.LBL"),
+                .copy("SLDEM2015_512_00N_30N_000_045_FLOAT.LBL")
             ],
             linkerSettings: [
                 .linkedFramework("CoreGraphics"),

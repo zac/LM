@@ -2,8 +2,8 @@ import Foundation
 import LMCore
 
 /// Decoded `TerrainManifest.json` produced by `Tools/TerrainGenerator`.
-/// Every field traces to the pinned LROC NAC DTM source recorded in the
-/// manifest itself.
+/// Every field traces to a pinned LROC NAC or LOLA/SELENE source recorded in
+/// the manifest itself.
 struct LMTerrainManifest: Equatable, Decodable {
     struct LandingOrigin: Equatable, Decodable {
         let latitudeDegrees: Double
@@ -36,6 +36,14 @@ struct LMTerrainManifest: Equatable, Decodable {
         let role: String
         let url: String
         let sha256: String
+        let bytes: Int?
+        let sourceBytes: Int?
+        let byteRangeStart: Int?
+        let byteRangeEnd: Int?
+        let sourceRowStart: Int?
+        let sourceRowEnd: Int?
+        let sourceRowBytes: Int?
+        let mapResolutionPixelsPerDegree: Double?
         let productId: String
         let productVersion: String
         let labelURL: String
@@ -63,6 +71,9 @@ struct LMTerrainManifest: Equatable, Decodable {
         let maximumHeightMeters: Double
         let curvatureCorrected: Bool
         let edgeHandling: String?
+        let sourceIDs: [String]?
+        let nativeSourceSpacingMeters: Double?
+        let transitionWidthMeters: Double?
         let heightFile: String
         let albedoFile: String
         let heightEncoding: HeightEncoding

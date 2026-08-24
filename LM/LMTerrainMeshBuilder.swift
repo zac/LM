@@ -22,13 +22,12 @@ enum LMTerrainMeshBuilder {
         var triangles: [UInt32]
     }
 
-    /// Build grid vertices for a tile. `holeExtentMeters` skips quads whose
-    /// centers lie inside that square (used to punch the near-field hole in
-    /// the horizon ring so the two tiles never overlap).
+    /// Build grid vertices for a tile. `holeHalfExtentMeters` skips quads whose
+    /// centers lie inside an exactly aligned nested-tile boundary.
     static func grid(
         tile: LMTerrainManifest.Tile,
         heightMap: LMTerrainHeightMap,
-        holeExtentMeters: Double = 0
+        holeHalfExtentMeters: Double = 0
     ) throws -> VertexData {
         guard heightMap.width == tile.postsPerSide,
               heightMap.height == tile.postsPerSide else {
@@ -37,7 +36,7 @@ enum LMTerrainMeshBuilder {
         let posts = tile.postsPerSide
         let spacing = Float(tile.postSpacingMeters)
         let halfExtent = Float(tile.extentMeters) / 2.0
-        let holeLimit = Float(holeExtentMeters)
+        let holeLimit = Float(holeHalfExtentMeters)
 
         var data = VertexData(
             positions: [],
@@ -56,7 +55,8 @@ enum LMTerrainMeshBuilder {
                 let height = Float(heightMap.heightMeters(
                     atPost: row,
                     column: column,
-                    zeroPointMeters: tile.zeroPointMeters
+                    zeroPointMeters: tile.zeroPointMeters,
+                    centimetersPerCount: tile.heightEncoding.centimetersPerCount
                 ))
                 data.positions.append(SIMD3(north, height, -east))
                 data.texCoords.append(SIMD2(
