@@ -31,7 +31,6 @@ final class LMCommanderStationScene {
     private let cabinFrame = Entity()
     private let fdaiMount = Entity()
     private let dskyDisplayMount = Entity()
-    private let missionControlPanelMount = Entity()
     private let proceduralCabin = Entity()
     private let provisionalTerrain = Entity()
     private let dustCloud = Entity()
@@ -56,6 +55,7 @@ final class LMCommanderStationScene {
     private var lastTerrainPresentationBlendBucket: Int?
     private var artistCabin: Entity?
     private var exteriorLunarModule: Entity?
+    private var fdaiBall: Entity?
     private var lastVehicleState: LMVehicleStateSnapshot?
     private var dskyKeyEntitiesByRawValue = [Int: ModelEntity]()
     private var dskyKeyRestPositions = [Int: SIMD3<Float>]()
@@ -82,18 +82,6 @@ final class LMCommanderStationScene {
             LMDSKYGeometry.displayCenterMeters.y,
             0
         )
-        missionControlPanelMount.name = "Mission control panel mount"
-        missionControlPanelMount.position =
-            LMCommanderStationGeometry.missionControlPanelPositionMeters
-        missionControlPanelMount.orientation = simd_quatf(
-            from: SIMD3<Float>(0, 0, 1),
-            to: simd_normalize(
-                LMLandingPointDesignator().commanderEyeMeters
-                    + LMCommanderStationGeometry.comfortableEntryOffsetFromDesignEyeMeters
-                    - LMCommanderStationGeometry.missionControlPanelPositionMeters
-            )
-        )
-        missionControlPanelMount.isEnabled = false
         proceduralCabin.name = LMCockpitAssetContract.Node.cabinRoot.rawValue
         provisionalTerrain.name = "Provisional terrain"
         dustCloud.name = "Descent engine dust"
@@ -116,16 +104,17 @@ final class LMCommanderStationScene {
 
         root.addChild(lunarWorld)
         cabinFrame.addChild(fdaiMount)
-        cabinFrame.addChild(missionControlPanelMount)
+        buildPhysicalFDAI()
     }
 
     func mountFDAI(_ entity: Entity) {
         guard entity.parent == nil else { return }
         entity.name = "Commander FDAI"
-        entity.position = .zero
+        entity.position = SIMD3(0, 0, 0.004)
         entity.orientation = simd_quatf(angle: 0, axis: SIMD3(0, 1, 0))
-        entity.scale = SIMD3(repeating: 0.00072)
+        entity.scale = SIMD3(repeating: 0.00095)
         fdaiMount.addChild(entity)
+        logger.notice("Mounted live FDAI flight face")
     }
 
     func mountDSKYDisplay(_ entity: Entity) {
@@ -134,18 +123,7 @@ final class LMCommanderStationScene {
         entity.position = SIMD3(0, 0, 0.012)
         entity.scale = SIMD3(repeating: 0.00035)
         dskyDisplayMount.addChild(entity)
-    }
-
-    func mountMissionControlPanel(_ entity: Entity) {
-        guard entity.parent == nil else { return }
-        entity.name = "Cockpit mission control"
-        entity.position = .zero
-        entity.scale = SIMD3(repeating: 0.00082)
-        missionControlPanelMount.addChild(entity)
-    }
-
-    func setMissionControlPanelVisible(_ visible: Bool) {
-        missionControlPanelMount.isEnabled = visible
+        logger.notice("Mounted live DSKY display")
     }
 
     /// Loads the existing full LM art around the flight-datum cockpit. The
@@ -203,6 +181,10 @@ final class LMCommanderStationScene {
     func apply(_ state: LMVehicleStateSnapshot?) {
         guard let state else { return }
         lastVehicleState = state
+        fdaiBall?.orientation = FDAIOrientation.ballOrientation(
+            for: state.attitude,
+            relativeTo: FDAIOrientation.poweredDescentReferenceAttitude
+        )
         let terrainPosition = terrainPosition(for: state.positionMeters)
         let surfaceSample = progressiveSurfaceSample(
             at: terrainPosition,
@@ -567,6 +549,7 @@ final class LMCommanderStationScene {
         buildForwardFaceStructure(material: aluminum)
         buildDeckDetails(material: panel)
         buildPanelDetails(panelMaterial: dark, switchMaterial: aluminum)
+        buildFDAIBezel(panelMaterial: dark, rimMaterial: aluminum)
         installProceduralDatumNodes()
 
         // These rails follow the source-calibrated oblique window plane rather
@@ -592,6 +575,169 @@ final class LMCommanderStationScene {
             entity.orientation = segment.orientation
             shell.addChild(entity)
         }
+
+        let radius = LMCommanderStationGeometry.crewCompartmentDiameterMeters / 2
+        for (name, x) in [
+            ("Commander lower pressure wall", -radius),
+            ("LMP lower pressure wall", radius),
+        ] {
+            let wall = ModelEntity(
+                mesh: .generateBox(size: SIMD3(
+                    LMCommanderStationGeometry.shellThicknessMeters,
+                    LMCommanderStationGeometry.shellLowerSideHeightMeters,
+                    LMCommanderStationGeometry.crewCompartmentDepthMeters
+                )),
+                materials: [material]
+            )
+            wall.name = name
+            wall.position = SIMD3(
+                x,
+                LMCommanderStationGeometry.shellFloorCenterMeters.y
+                    + LMCommanderStationGeometry.shellLowerSideHeightMeters / 2,
+                LMCommanderStationGeometry.shellCenterZMeters
+            )
+            shell.addChild(wall)
+        }
+
+        let floor = ModelEntity(
+            mesh: .generateBox(size: LMCommanderStationGeometry.shellFloorSizeMeters),
+            materials: [material]
+        )
+        floor.name = "Pressure vessel floor"
+        floor.position = LMCommanderStationGeometry.shellFloorCenterMeters
+        shell.addChild(floor)
+
+        let aftBulkhead = ModelEntity(
+            mesh: .generateBox(size: SIMD3(
+                LMCommanderStationGeometry.shellBulkheadSizeMeters.x,
+                LMCommanderStationGeometry.shellBulkheadSizeMeters.y,
+                LMCommanderStationGeometry.shellThicknessMeters
+            )),
+            materials: [material]
+        )
+        aftBulkhead.name = "Aft pressure bulkhead"
+        aftBulkhead.position = LMCommanderStationGeometry.shellAftBulkheadCenterMeters
+        shell.addChild(aftBulkhead)
+
+        do {
+            let forwardBulkhead = ModelEntity(
+                mesh: try makeForwardPressureBulkheadMesh(),
+                materials: [material]
+            )
+            forwardBulkhead.name = "Forward pressure bulkhead"
+            shell.addChild(forwardBulkhead)
+        } catch {
+            logger.fault(
+                "Forward pressure bulkhead mesh failed: \(error.localizedDescription, privacy: .public)"
+            )
+        }
+    }
+
+    /// Builds an opaque forward cabin face with only the two flight-window
+    /// apertures omitted. The bulkhead is triangulated around the exact
+    /// source-calibrated pane silhouettes so their edges remain smooth.
+    private func makeForwardPressureBulkheadMesh() throws -> MeshResource {
+        let diameter = LMCommanderStationGeometry.crewCompartmentDiameterMeters
+        let radius = diameter / 2
+        let minX = -radius
+        let minY = LMCommanderStationGeometry.shellCenterYMeters - radius
+        let maxX = radius
+        let maxY = LMCommanderStationGeometry.shellCenterYMeters + radius
+        let z = LMCommanderStationGeometry.shellForwardBulkheadZMeters
+        let commanderWindow = landingPointDesignator.windowCorners(on: .inner).map {
+            SIMD2<Float>($0.x, $0.y)
+        }
+        let lmpWindow = commanderWindow.map { SIMD2<Float>(-$0.x, $0.y) }
+        var positions = [SIMD3<Float>]()
+        var indices = [UInt32]()
+
+        func appendPolygon(_ suppliedPoints: [SIMD2<Float>]) {
+            guard suppliedPoints.count >= 3 else { return }
+            let signedArea = suppliedPoints.indices.reduce(Float.zero) { partial, index in
+                let next = suppliedPoints[(index + 1) % suppliedPoints.count]
+                let point = suppliedPoints[index]
+                return partial + point.x * next.y - next.x * point.y
+            }
+            var points = suppliedPoints
+            if signedArea < 0 {
+                points.reverse()
+            }
+            let base = UInt32(positions.count)
+            positions.append(contentsOf: points.map { SIMD3($0.x, $0.y, z) })
+            for index in 1..<(points.count - 1) {
+                indices.append(contentsOf: [
+                    base,
+                    base + UInt32(index),
+                    base + UInt32(index + 1),
+                ])
+            }
+        }
+
+        let commanderMinX = commanderWindow.map(\.x).min()!
+        let commanderMaxX = commanderWindow.map(\.x).max()!
+        let windowMinY = commanderWindow.map(\.y).min()!
+        let windowMaxY = commanderWindow.map(\.y).max()!
+        let lmpMinX = lmpWindow.map(\.x).min()!
+        let lmpMaxX = lmpWindow.map(\.x).max()!
+
+        // Five rectangles close the pressure wall outside the two window boxes.
+        appendPolygon([
+            SIMD2(minX, windowMaxY), SIMD2(maxX, windowMaxY),
+            SIMD2(maxX, maxY), SIMD2(minX, maxY),
+        ])
+        appendPolygon([
+            SIMD2(minX, minY), SIMD2(maxX, minY),
+            SIMD2(maxX, windowMinY), SIMD2(minX, windowMinY),
+        ])
+        appendPolygon([
+            SIMD2(minX, windowMinY), SIMD2(commanderMinX, windowMinY),
+            SIMD2(commanderMinX, windowMaxY), SIMD2(minX, windowMaxY),
+        ])
+        appendPolygon([
+            SIMD2(commanderMaxX, windowMinY), SIMD2(lmpMinX, windowMinY),
+            SIMD2(lmpMinX, windowMaxY), SIMD2(commanderMaxX, windowMaxY),
+        ])
+        appendPolygon([
+            SIMD2(lmpMaxX, windowMinY), SIMD2(maxX, windowMinY),
+            SIMD2(maxX, windowMaxY), SIMD2(lmpMaxX, windowMaxY),
+        ])
+
+        appendBulkheadAroundWindow(
+            commanderWindow,
+            appendPolygon: appendPolygon
+        )
+        appendBulkheadAroundWindow(
+            lmpWindow,
+            appendPolygon: appendPolygon
+        )
+
+        var descriptor = MeshDescriptor(name: "LM forward pressure bulkhead")
+        descriptor.positions = MeshBuffers.Positions(positions)
+        descriptor.primitives = .triangles(indices)
+        return try MeshResource.generate(from: [descriptor])
+    }
+
+    private func appendBulkheadAroundWindow(
+        _ triangle: [SIMD2<Float>],
+        appendPolygon: ([SIMD2<Float>]) -> Void
+    ) {
+        precondition(triangle.count == 3)
+        let minX = triangle.map(\.x).min()!
+        let maxX = triangle.map(\.x).max()!
+        let minY = triangle.map(\.y).min()!
+        let maxY = triangle.map(\.y).max()!
+        let topLeft = SIMD2<Float>(minX, maxY)
+        let topRight = SIMD2<Float>(maxX, maxY)
+        let bottomRight = SIMD2<Float>(maxX, minY)
+        let bottomLeft = SIMD2<Float>(minX, minY)
+        let upperOutboard = triangle.min(by: { $0.x < $1.x })!
+        let upperInboard = triangle.max(by: { $0.x < $1.x })!
+        let lower = triangle.min(by: { $0.y < $1.y })!
+
+        appendPolygon([topLeft, topRight, upperInboard, upperOutboard])
+        appendPolygon([topRight, bottomRight, lower, upperInboard])
+        appendPolygon([bottomRight, bottomLeft, upperOutboard, lower])
+        appendPolygon([bottomLeft, topLeft, upperOutboard])
     }
 
     private func buildForwardFaceStructure(material: SimpleMaterial) {
@@ -699,6 +845,39 @@ final class LMCommanderStationScene {
                     )
                 }
             }
+        }
+    }
+
+    private func buildFDAIBezel(
+        panelMaterial: SimpleMaterial,
+        rimMaterial: SimpleMaterial
+    ) {
+        let panel = LMCommanderStationGeometry.surface(.panelOne)
+        let center = SIMD2<Float>(-0.055, -0.015)
+        let aperture: Float = 0.205
+        let rim: Float = 0.016
+        let faceOffset = panel.sizeMeters.z / 2 + 0.012
+
+        addBox(
+            size: SIMD3(aperture, aperture, 0.008),
+            position: panel.scenePoint(local: SIMD3(center.x, center.y, faceOffset - 0.005)),
+            orientation: panel.orientation,
+            material: panelMaterial,
+            name: "Commander FDAI aperture"
+        )
+        for (name, localCenter, size) in [
+            ("FDAI top bezel", SIMD2(center.x, center.y + aperture / 2 + rim / 2), SIMD2(aperture + rim * 2, rim)),
+            ("FDAI bottom bezel", SIMD2(center.x, center.y - aperture / 2 - rim / 2), SIMD2(aperture + rim * 2, rim)),
+            ("FDAI left bezel", SIMD2(center.x - aperture / 2 - rim / 2, center.y), SIMD2(rim, aperture)),
+            ("FDAI right bezel", SIMD2(center.x + aperture / 2 + rim / 2, center.y), SIMD2(rim, aperture)),
+        ] {
+            addBox(
+                size: SIMD3(size.x, size.y, 0.012),
+                position: panel.scenePoint(local: SIMD3(localCenter.x, localCenter.y, faceOffset)),
+                orientation: panel.orientation,
+                material: rimMaterial,
+                name: name
+            )
         }
     }
 
@@ -1016,6 +1195,40 @@ final class LMCommanderStationScene {
         cabinFrame.addChild(dskyFaceRoot)
     }
 
+    private func buildPhysicalFDAI() {
+        guard let instrument = try? Entity.load(
+            named: "FDAI",
+            in: realityKitContentBundle
+        ) else {
+            logger.error("Could not load the physical FDAI ball")
+            return
+        }
+        instrument.name = "Physical FDAI ball"
+        instrument.position = SIMD3(0, 0, -0.040)
+        instrument.orientation = FDAIOrientation.ballOrientation(
+            for: FDAIOrientation.poweredDescentReferenceAttitude,
+            relativeTo: FDAIOrientation.poweredDescentReferenceAttitude
+        )
+        fdaiMount.addChild(instrument)
+        fdaiBall = instrument
+
+        let reticleMaterial = UnlitMaterial(color: .white)
+        for (name, position, size) in [
+            ("FDAI fixed left wing", SIMD3<Float>(-0.066, 0, 0.055), SIMD3<Float>(0.050, 0.003, 0.002)),
+            ("FDAI fixed right wing", SIMD3<Float>(0.066, 0, 0.055), SIMD3<Float>(0.050, 0.003, 0.002)),
+            ("FDAI fixed upper index", SIMD3<Float>(0, 0.077, 0.055), SIMD3<Float>(0.003, 0.026, 0.002)),
+            ("FDAI fixed lower index", SIMD3<Float>(0, -0.077, 0.055), SIMD3<Float>(0.003, 0.026, 0.002)),
+        ] {
+            let marker = ModelEntity(
+                mesh: .generateBox(size: size),
+                materials: [reticleMaterial]
+            )
+            marker.name = name
+            marker.position = position
+            fdaiMount.addChild(marker)
+        }
+    }
+
     private func addDSKYKeyLabel(
         _ code: DSKYKeyCode,
         to key: ModelEntity,
@@ -1053,9 +1266,25 @@ final class LMCommanderStationScene {
     }
 
     func dskyKeyCode(for entity: Entity) -> DSKYKeyCode? {
-        dskyKeyEntitiesByRawValue.first { _, keyEntity in
-            keyEntity === entity
-        }.flatMap { DSKYKeyCode(rawValue: $0.key) }
+        var candidate: Entity? = entity
+        while let current = candidate {
+            if let rawValue = dskyKeyEntitiesByRawValue.first(where: { _, keyEntity in
+                keyEntity === current
+            })?.key {
+                return DSKYKeyCode(rawValue: rawValue)
+            }
+            candidate = current.parent
+        }
+        return nil
+    }
+
+    func isMissionControlButton(_ entity: Entity) -> Bool {
+        var candidate: Entity? = entity
+        while let current = candidate {
+            if current === missionControlButton { return true }
+            candidate = current.parent
+        }
+        return false
     }
 
     func animateDSKYKeyPress(_ code: DSKYKeyCode) {

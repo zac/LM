@@ -1671,7 +1671,7 @@ struct LandingPointDesignatorTests {
         #expect(!station.landingPointCalledAngleMarker.isEnabled)
     }
 
-    @Test @MainActor func commanderEntryPlacementStartsAftOfTheOpticalDesignEye() {
+    @Test @MainActor func commanderEntryPlacementStartsAtDesignEyeHeightAndSlightlyAft() {
         let station = LMCommanderStationScene()
 
         #expect(station.root.parent === station.commanderEntryAnchor)
@@ -1680,10 +1680,13 @@ struct LandingPointDesignatorTests {
             .zero
         ) < 1e-6)
         #expect(
-            LMCommanderStationGeometry.comfortableEntryOffsetFromDesignEyeMeters.z > 0.40
+            LMCommanderStationGeometry.comfortableEntryOffsetFromDesignEyeMeters.z >= 0.50
         )
         #expect(
-            LMCommanderStationGeometry.comfortableEntryOffsetFromDesignEyeMeters.y < 0
+            LMCommanderStationGeometry.comfortableEntryOffsetFromDesignEyeMeters.z <= 0.60
+        )
+        #expect(
+            abs(LMCommanderStationGeometry.comfortableEntryOffsetFromDesignEyeMeters.y) < 0.001
         )
     }
 
@@ -1749,6 +1752,22 @@ struct Apollo11CommanderStationGeometryTests {
         #expect(four.centerMeters.y < three.centerMeters.y)
     }
 
+    @Test func standingPanelStackKeepsUpperInstrumentsAtEyeLevelAndControlsAtWaist() {
+        let eye = LMLandingPointDesignator().commanderEyeMeters
+        let one = LMCommanderStationGeometry.surface(.panelOne)
+        let three = LMCommanderStationGeometry.surface(.panelThree)
+        let four = LMCommanderStationGeometry.surface(.panelFour)
+        let five = LMCommanderStationGeometry.surface(.panelFive)
+
+        #expect(abs(one.centerMeters.y - eye.y) < 0.30)
+        #expect(one.centerMeters.y > three.centerMeters.y)
+        #expect(three.centerMeters.y > four.centerMeters.y)
+        #expect(five.centerMeters.y >= 0.80)
+        #expect(five.centerMeters.y <= 1.0)
+        #expect(LMCommanderStationGeometry.acaPivotPositionMeters.y >= 0.85)
+        #expect(LMCommanderStationGeometry.acaPivotPositionMeters.y <= 1.0)
+    }
+
     @Test func flightStationsAndFlightDSKYFitTheReconstructedBlockout() {
         #expect(abs(
             LMCommanderStationGeometry.lmpStationCenterXMeters
@@ -1788,6 +1807,22 @@ struct Apollo11CommanderStationGeometryTests {
             ) != nil)
         }
     }
+
+    @Test @MainActor func proceduralPressureVesselClosesEverySurfaceExceptTheWindows() {
+        let station = LMCommanderStationScene()
+
+        #expect(station.root.findEntity(named: "Pressure vessel floor") != nil)
+        #expect(station.root.findEntity(named: "Aft pressure bulkhead") != nil)
+        #expect(station.root.findEntity(named: "Forward pressure bulkhead") != nil)
+        #expect(station.root.findEntity(named: "Commander lower pressure wall") != nil)
+        #expect(station.root.findEntity(named: "LMP lower pressure wall") != nil)
+        #expect(station.root.findEntity(
+            named: LMCockpitAssetContract.Node.commanderWindowInner.rawValue
+        ) != nil)
+        #expect(station.root.findEntity(
+            named: LMCockpitAssetContract.Node.commanderWindowOuter.rawValue
+        ) != nil)
+    }
 }
 
 @Suite("Apollo 11 LM DSKY geometry")
@@ -1819,6 +1854,22 @@ struct Apollo11LMDSKYGeometryTests {
             #expect(entity.components[CollisionComponent.self] != nil)
             #expect(station.dskyKeyCode(for: entity) != nil)
         }
+    }
+
+    @Test @MainActor func dskyAndMissionHitTestingAcceptsAuthoredChildGeometry() {
+        let station = LMCommanderStationScene()
+        let proKey = station.dskyKeyEntities.first {
+            station.dskyKeyCode(for: $0) == .pro
+        }
+        #expect(proKey != nil)
+
+        let keyLegend = Entity()
+        proKey?.addChild(keyLegend)
+        #expect(station.dskyKeyCode(for: keyLegend) == .pro)
+
+        let missionLegend = Entity()
+        station.missionControlButton.addChild(missionLegend)
+        #expect(station.isMissionControlButton(missionLegend))
     }
 }
 

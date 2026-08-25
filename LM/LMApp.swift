@@ -6,7 +6,10 @@ struct LMApp: App {
 
     var body: some Scene {
         WindowGroup(id: viewModel.descentConsoleWindowID) {
-            if ProcessInfo.processInfo.arguments.contains("--fdai-preview") {
+            if ProcessInfo.processInfo.arguments.contains("--mission-control-preview") {
+                CockpitMissionControlWindow()
+                    .environment(viewModel)
+            } else if ProcessInfo.processInfo.arguments.contains("--fdai-preview") {
                 FDAITexturePreviewView()
             } else {
                 PoweredDescentView()
@@ -14,6 +17,13 @@ struct LMApp: App {
             }
         }
         .defaultSize(width: 980, height: 720)
+
+        WindowGroup(id: viewModel.cockpitMissionControlWindowID) {
+            CockpitMissionControlWindow()
+                .environment(viewModel)
+        }
+        .defaultSize(width: 560, height: 300)
+        .windowResizability(.contentSize)
 
         WindowGroup(id: "menu") {
             MainMenuView()
@@ -55,6 +65,9 @@ struct LMApp: App {
                     viewModel.cockpitSpaceState = .closed
                 }
         }
-        .immersionStyle(selection: .constant(.full), in: .full)
+        // The closed pressure cabin supplies visual occlusion while mixed
+        // immersion allows native mission-control windows to coexist with the
+        // physical cockpit controls.
+        .immersionStyle(selection: .constant(.mixed), in: .mixed)
     }
 }

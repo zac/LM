@@ -108,49 +108,49 @@ enum LMCommanderStationGeometry {
         Surface(
             id: .panelOne,
             sizeMeters: SIMD3(0.48, 0.50, mainPanelSandwichDepthMeters),
-            centerMeters: SIMD3(-0.245, 1.045, -0.535),
+            centerMeters: SIMD3(-0.245, 1.55, -0.535),
             pitchDegrees: -mainPanelForwardCantDegrees
         ),
         Surface(
             id: .panelTwo,
             sizeMeters: SIMD3(0.48, 0.50, mainPanelSandwichDepthMeters),
-            centerMeters: SIMD3(0.245, 1.045, -0.535),
+            centerMeters: SIMD3(0.245, 1.55, -0.535),
             pitchDegrees: -mainPanelForwardCantDegrees
         ),
         Surface(
             id: .panelThree,
             sizeMeters: SIMD3(0.97, 0.18, 0.040),
-            centerMeters: SIMD3(0, 0.735, -0.540),
+            centerMeters: SIMD3(0, 1.245, -0.540),
             pitchDegrees: -centerPanelDownAndAftSlopeDegrees
         ),
         Surface(
             id: .panelFour,
             sizeMeters: SIMD3(0.40, 0.34, 0.040),
-            centerMeters: SIMD3(0, 0.535, -0.435),
+            centerMeters: SIMD3(0, 1.015, -0.435),
             pitchDegrees: -centerPanelDownAndAftSlopeDegrees
         ),
         Surface(
             id: .panelFive,
             sizeMeters: SIMD3(0.34, 0.31, 0.038),
-            centerMeters: SIMD3(commanderStationCenterXMeters, 0.46, -0.30),
+            centerMeters: SIMD3(commanderStationCenterXMeters, 0.88, -0.30),
             pitchDegrees: -75
         ),
         Surface(
             id: .panelSix,
             sizeMeters: SIMD3(0.34, 0.31, 0.038),
-            centerMeters: SIMD3(lmpStationCenterXMeters, 0.46, -0.30),
+            centerMeters: SIMD3(lmpStationCenterXMeters, 0.88, -0.30),
             pitchDegrees: -75
         ),
         Surface(
             id: .commanderGlareShield,
             sizeMeters: SIMD3(0.57, 0.15, 0.040),
-            centerMeters: SIMD3(-0.47, 1.315, -0.465),
+            centerMeters: SIMD3(-0.47, 1.345, -0.465),
             pitchDegrees: -70
         ),
         Surface(
             id: .lmpGlareShield,
             sizeMeters: SIMD3(0.57, 0.15, 0.040),
-            centerMeters: SIMD3(0.47, 1.315, -0.465),
+            centerMeters: SIMD3(0.47, 1.345, -0.465),
             pitchDegrees: -70
         ),
     ]
@@ -174,7 +174,7 @@ enum LMCommanderStationGeometry {
     // MARK: - Instrument and interaction datums
 
     static let fdaiMountPositionMeters = surface(.panelOne).scenePoint(
-        local: SIMD3(-0.055, -0.015, surface(.panelOne).sizeMeters.z / 2 + 0.008)
+        local: SIMD3(-0.055, -0.015, surface(.panelOne).sizeMeters.z / 2 + 0.016)
     )
     static let fdaiMountOrientation = surface(.panelOne).orientation
 
@@ -195,10 +195,12 @@ enum LMCommanderStationGeometry {
     /// registration value so replacing the art does not move flight datums.
     static let cabinFrameOffsetMeters = SIMD3<Float>(-0.025, 1.981, -0.298)
 
-    /// Enter slightly aft and below the optical design eye so the full panel
-    /// stack is visible immediately. The wearer can lean forward into the
-    /// source-backed design eye when using the Landing Point Designator.
-    static let comfortableEntryOffsetFromDesignEyeMeters = SIMD3<Float>(0, -0.42, 0.50)
+    /// Enter at the source-backed design-eye height and half a meter aft. This
+    /// keeps the virtual deck 1.78 m below the wearer's eyes, a plausible fit
+    /// for a standing 6 ft 1 in astronaut, while leaving a short lean into the
+    /// exact Landing Point Designator collimation point without beginning with
+    /// the wearer's face against the forward window.
+    static let comfortableEntryOffsetFromDesignEyeMeters = SIMD3<Float>(0, 0, 0.55)
 
     static let comfortableEntryEyeMeters =
         cabinFrameOffsetMeters
@@ -212,11 +214,7 @@ enum LMCommanderStationGeometry {
     )
     static let missionControlButtonOrientation = surface(.panelFive).orientation
 
-    /// Floating panel position is deliberately aft/outboard of the flight
-    /// controls so it can be read without covering the DSKY, FDAI, or window.
-    static let missionControlPanelPositionMeters = SIMD3<Float>(-0.92, 1.38, -0.02)
-
-    static let acaPivotPositionMeters = SIMD3<Float>(-0.49, 0.50, -0.37)
+    static let acaPivotPositionMeters = SIMD3<Float>(-0.49, 0.92, -0.37)
 
     /// The spring-return DES RATE switch is 1S5 on Panel 5. Each throw supplies
     /// one Channel 16 pulse and changes commanded descent rate by 1 ft/s.
@@ -246,6 +244,24 @@ enum LMCommanderStationGeometry {
     static let shellCenterYMeters: Float = 1.10
     static let shellCenterZMeters: Float = -0.12
     static let shellThicknessMeters: Float = 0.035
+    static let shellFloorCenterMeters = SIMD3<Float>(0, 0.055, shellCenterZMeters)
+    static let shellFloorSizeMeters = SIMD3<Float>(
+        crewCompartmentDiameterMeters,
+        shellThicknessMeters,
+        crewCompartmentDepthMeters
+    )
+    static let shellLowerSideHeightMeters: Float = shellCenterYMeters - shellFloorCenterMeters.y
+    static let shellAftBulkheadCenterMeters = SIMD3<Float>(
+        0,
+        shellCenterYMeters,
+        shellCenterZMeters + crewCompartmentDepthMeters / 2
+    )
+    static let shellForwardBulkheadZMeters =
+        shellCenterZMeters - crewCompartmentDepthMeters / 2
+    static let shellBulkheadSizeMeters = SIMD2<Float>(
+        crewCompartmentDiameterMeters,
+        crewCompartmentDiameterMeters
+    )
 
     static let shellSegments: [ShellSegment] = {
         let radius = crewCompartmentDiameterMeters / 2

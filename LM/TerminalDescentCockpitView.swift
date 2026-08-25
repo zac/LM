@@ -6,6 +6,7 @@ struct TerminalDescentCockpitView: View {
     @Environment(MainMenuViewModel.self) private var appModel
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
     @Environment(\.openWindow) private var openWindow
+    @Environment(\.dismissWindow) private var dismissWindow
     @Environment(\.scenePhase) private var scenePhase
     @State private var station = LMCommanderStationScene()
     @State private var didStart = false
@@ -15,7 +16,6 @@ struct TerminalDescentCockpitView: View {
     @State private var showsFallbackControls = false
     @State private var showsValidationChecklist = false
     @State private var showsEyeAlignmentGuide = true
-    @State private var showsMissionControl = false
     @State private var trainingOverlayEnabled = true
     @State private var audioEnabled = true
     @State private var experienceDirector = LMCockpitExperienceDirector()
@@ -41,9 +41,6 @@ struct TerminalDescentCockpitView: View {
             if let dskyDisplay = attachments.entity(for: "commander-dsky-display") {
                 station.mountDSKYDisplay(dskyDisplay)
             }
-            if let missionControl = attachments.entity(for: "cockpit-mission-control") {
-                station.mountMissionControlPanel(missionControl)
-            }
             applySceneState()
         } update: { _, attachments in
             if let fdai = attachments.entity(for: "commander-fdai") {
@@ -51,9 +48,6 @@ struct TerminalDescentCockpitView: View {
             }
             if let dskyDisplay = attachments.entity(for: "commander-dsky-display") {
                 station.mountDSKYDisplay(dskyDisplay)
-            }
-            if let missionControl = attachments.entity(for: "cockpit-mission-control") {
-                station.mountMissionControlPanel(missionControl)
             }
             applySceneState()
         } attachments: {
@@ -71,15 +65,11 @@ struct TerminalDescentCockpitView: View {
                 .frame(width: 420, height: 250)
                 .background(Color.black.opacity(0.94))
             }
-            Attachment(id: "cockpit-mission-control") {
-                missionControlPanel
-            }
         }
         .gesture(acaGesture)
         .simultaneousGesture(rodGesture)
         .simultaneousGesture(attitudeModeGesture)
-        .simultaneousGesture(dskyGesture)
-        .simultaneousGesture(missionControlGesture)
+        .simultaneousGesture(cockpitTapGesture)
         .ornament(attachmentAnchor: .scene(.bottom)) {
             VStack(spacing: 8) {
                 HStack(spacing: 10) {
@@ -131,6 +121,13 @@ struct TerminalDescentCockpitView: View {
                                 : "checklist"
                         )
                     }
+
+                    Button {
+                        presentMissionControlWindow()
+                    } label: {
+                        Label("Mission", systemImage: "waveform.path.ecg")
+                    }
+                    .accessibilityIdentifier("cockpit-mission-control-toggle")
 
                     Button {
                         audioEnabled.toggle()
@@ -225,9 +222,12 @@ struct TerminalDescentCockpitView: View {
                     : .p64Approach
                 appModel.session.start(from: startPoint)
             }
-            showsMissionControl = ProcessInfo.processInfo.arguments.contains(
-                "--show-cockpit-mission-control"
-            )
+            if ProcessInfo.processInfo.arguments.contains("--show-cockpit-mission-control") {
+                // Scene activation and the immersive transition must settle
+                // before visionOS will honor an openWindow request.
+                try? await Task.sleep(for: .seconds(1))
+                presentMissionControlWindow()
+            }
             updateExperience()
             do {
                 try station.loadExteriorLunarModule()
@@ -332,22 +332,21 @@ struct TerminalDescentCockpitView: View {
             }
     }
 
-    private var dskyGesture: some Gesture {
+    private var cockpitTapGesture: some Gesture {
         SpatialTapGesture()
             .targetedToAnyEntity()
             .onEnded { value in
-                guard let key = station.dskyKeyCode(for: value.entity) else { return }
-                station.animateDSKYKeyPress(key)
-                appModel.session.sendDSKYKey(key)
-                recordValidation { $0.observeDirectDSKY(key) }
-            }
-    }
-
-    private var missionControlGesture: some Gesture {
-        SpatialTapGesture()
-            .targetedToEntity(station.missionControlButton)
-            .onEnded { _ in
-                showsMissionControl.toggle()
+                if let key = station.dskyKeyCode(for: value.entity) {
+                    logger.notice("Physical DSKY key: \(key.label, privacy: .public)")
+                    station.animateDSKYKeyPress(key)
+                    appModel.session.sendDSKYKey(key)
+                    recordValidation { $0.observeDirectDSKY(key) }
+                    return
+                }
+                if station.isMissionControlButton(value.entity) {
+                    logger.notice("Physical mission control button")
+                    presentMissionControlWindow()
+                }
             }
     }
 
@@ -365,7 +364,6 @@ struct TerminalDescentCockpitView: View {
             state: appModel.session.vehicleState,
             commands: appModel.session.vehicleCommands
         )
-        station.setMissionControlPanelVisible(showsMissionControl)
     }
 
     private func applyROD(_ position: PoweredDescentSession.RODSwitchPosition) {
@@ -436,83 +434,14 @@ struct TerminalDescentCockpitView: View {
     }
 
     private func leaveCockpit() {
+        dismissWindow(id: appModel.cockpitMissionControlWindowID)
         appModel.session.stop()
         Task { await dismissImmersiveSpace() }
     }
 
-    private var missionControlPanel: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Label("MISSION CONTROL", systemImage: "waveform.path.ecg")
-                    .font(.headline.monospaced())
-                Spacer()
-                Button {
-                    showsMissionControl = false
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                }
-                .buttonStyle(.plain)
-            }
-
-            HStack(spacing: 18) {
-                missionReadout("PROGRAM", appModel.session.programNumber.map { "P\($0)" } ?? "P--")
-                missionReadout(
-                    "ALTITUDE",
-                    String(
-                        format: "%.0f ft",
-                        (appModel.session.vehicleState?.altitudeMeters ?? 0) * 3.280_839_895
-                    )
-                )
-                missionReadout(
-                    "VERTICAL",
-                    String(
-                        format: "%+.1f ft/s",
-                        (appModel.session.vehicleState?.verticalSpeedMetersPerSecond ?? 0)
-                            * 3.280_839_895
-                    )
-                )
-            }
-
-            HStack(spacing: 10) {
-                Button {
-                    appModel.session.togglePause()
-                } label: {
-                    Label(
-                        appModel.session.isPaused ? "Resume" : "Pause",
-                        systemImage: appModel.session.isPaused ? "play.fill" : "pause.fill"
-                    )
-                }
-                .disabled(!appModel.session.canPause)
-
-                Button {
-                    restartExperience()
-                } label: {
-                    Label("Restart", systemImage: "arrow.counterclockwise")
-                }
-
-                Button {
-                    leaveCockpit()
-                } label: {
-                    Label("Exit", systemImage: "rectangle.portrait.and.arrow.right")
-                }
-            }
-            .buttonStyle(.bordered)
-        }
-        .frame(width: 430)
-        .padding(16)
-        .glassBackgroundEffect()
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel("Mission control panel")
-    }
-
-    private func missionReadout(_ label: String, _ value: String) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(label)
-                .font(.caption2.monospaced())
-                .foregroundStyle(.secondary)
-            Text(value)
-                .font(.headline.monospacedDigit())
-        }
+    private func presentMissionControlWindow() {
+        logger.notice("Presenting native mission control window")
+        openWindow(id: appModel.cockpitMissionControlWindowID)
     }
 
     private func cueColor(_ cue: LMCockpitCue) -> Color {
@@ -643,6 +572,93 @@ struct TerminalDescentCockpitView: View {
         }
         if validationRecorder.isComplete && previous.count != validationRecorder.totalCount {
             logger.notice("Headset validation pass: \(validationRecorder.summary(), privacy: .public)")
+        }
+    }
+}
+
+struct CockpitMissionControlWindow: View {
+    @Environment(MainMenuViewModel.self) private var appModel
+    @Environment(\.dismissWindow) private var dismissWindow
+    @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            HStack {
+                Label("MISSION CONTROL", systemImage: "waveform.path.ecg")
+                    .font(.headline.monospaced())
+                Spacer()
+                Button {
+                    dismissWindow(id: appModel.cockpitMissionControlWindowID)
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Close mission control")
+            }
+
+            HStack(spacing: 28) {
+                readout("PROGRAM", appModel.session.programNumber.map { "P\($0)" } ?? "P--")
+                readout(
+                    "ALTITUDE",
+                    String(
+                        format: "%.0f ft",
+                        (appModel.session.vehicleState?.altitudeMeters ?? 0) * 3.280_839_895
+                    )
+                )
+                readout(
+                    "VERTICAL",
+                    String(
+                        format: "%+.1f ft/s",
+                        (appModel.session.vehicleState?.verticalSpeedMetersPerSecond ?? 0)
+                            * 3.280_839_895
+                    )
+                )
+            }
+
+            HStack(spacing: 12) {
+                Button {
+                    appModel.session.togglePause()
+                } label: {
+                    Label(
+                        appModel.session.isPaused ? "Resume" : "Pause",
+                        systemImage: appModel.session.isPaused ? "play.fill" : "pause.fill"
+                    )
+                }
+                .disabled(!appModel.session.canPause)
+                .accessibilityIdentifier("mission-control-pause")
+
+                Button {
+                    appModel.session.restart()
+                } label: {
+                    Label("Restart", systemImage: "arrow.counterclockwise")
+                }
+                .accessibilityIdentifier("mission-control-restart")
+
+                Button(role: .destructive) {
+                    dismissWindow(id: appModel.cockpitMissionControlWindowID)
+                    appModel.session.stop()
+                    Task { await dismissImmersiveSpace() }
+                } label: {
+                    Label("Exit", systemImage: "rectangle.portrait.and.arrow.right")
+                }
+                .accessibilityIdentifier("mission-control-exit")
+            }
+            .buttonStyle(.bordered)
+        }
+        .padding(22)
+        .frame(width: 560, height: 300)
+        .glassBackgroundEffect()
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Mission control panel")
+    }
+
+    private func readout(_ label: String, _ value: String) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(label)
+                .font(.caption2.monospaced())
+                .foregroundStyle(.secondary)
+            Text(value)
+                .font(.title3.monospacedDigit())
         }
     }
 }
