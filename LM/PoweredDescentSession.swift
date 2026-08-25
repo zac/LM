@@ -43,6 +43,7 @@ final class PoweredDescentSession {
 
     private(set) var status: Status = .unloaded
     private(set) var isRunning = false
+    private(set) var isPaused = false
     private(set) var snapshot: LMSimulationSnapshot?
     private(set) var replayFrame: LMFlightReplayFrame?
     private(set) var recording: LMFlightRecording?
@@ -113,6 +114,7 @@ final class PoweredDescentSession {
 
     var canStart: Bool { runtime != nil && !isRunning && replayTask == nil }
     var canStop: Bool { isRunning || replayTask != nil }
+    var canPause: Bool { isRunning || replayTask != nil }
     var canReset: Bool { runtime != nil }
     var canReplay: Bool { recording?.frames.isEmpty == false && !isRunning && replayTask == nil }
 
@@ -252,6 +254,7 @@ final class PoweredDescentSession {
         lastStartPoint = startPoint
         replayFrame = nil
         recordedFrames.removeAll(keepingCapacity: true)
+        isPaused = false
         isRunning = true
         status = .running
         loopTask = Task { @MainActor [weak self] in
@@ -286,7 +289,7 @@ final class PoweredDescentSession {
             }
             var last = CACurrentMediaTime()
             while !Task.isCancelled, self.runID == runID {
-                if !self.isSceneActive {
+                if !self.isSceneActive || self.isPaused {
                     try? await Task.sleep(for: .milliseconds(100))
                     last = CACurrentMediaTime()
                     continue
@@ -340,6 +343,7 @@ final class PoweredDescentSession {
         snapshotTask?.cancel()
         snapshotTask = nil
         replayFrame = nil
+        isPaused = false
         releaseCrewControls()
         if isRunning {
             finishRecording()
@@ -379,6 +383,21 @@ final class PoweredDescentSession {
     func restart() {
         stop()
         start(from: lastStartPoint)
+    }
+
+    func pause() {
+        guard canPause else { return }
+        isPaused = true
+        releaseCrewControls()
+    }
+
+    func resume() {
+        guard canPause else { return }
+        isPaused = false
+    }
+
+    func togglePause() {
+        isPaused ? resume() : pause()
     }
 
     func sendDSKYKey(_ key: DSKYKeyCode) {
@@ -519,12 +538,21 @@ final class PoweredDescentSession {
         let rate = max(0.25, speed)
         let modeLabel = recording.controlMode == .astronautP66 ? "P66 crew" : "automatic"
         status = .replaying
+        isPaused = false
         loadMessage = "Replay · " + modeLabel + " · " + rate.formatted() + "×"
         replayTask = Task { @MainActor [weak self] in
             guard let self else { return }
-            let start = CACurrentMediaTime()
+            var elapsed = 0.0
+            var last = CACurrentMediaTime()
             while !Task.isCancelled {
-                let elapsed = (CACurrentMediaTime() - start) * rate
+                if !self.isSceneActive || self.isPaused {
+                    try? await Task.sleep(for: .milliseconds(100))
+                    last = CACurrentMediaTime()
+                    continue
+                }
+                let now = CACurrentMediaTime()
+                elapsed += (now - last) * rate
+                last = now
                 self.replayFrame = replay.frame(at: elapsed)
                 if elapsed >= recording.durationSeconds { break }
                 try? await Task.sleep(for: .milliseconds(16))

@@ -504,6 +504,22 @@ struct PoweredDescentCheckpointSessionTests {
         #expect(session.rodSwitchPosition == .neutral)
     }
 
+    @Test @MainActor func missionPauseFreezesTheRunAndNeutralizesMomentaryControls() {
+        let session = PoweredDescentSession()
+        session.start(from: .p65TerminalDescent)
+        session.setACA(pitch: 0.7, yaw: -0.4, roll: 0.2)
+        session.setROD(.descendPlus, held: true)
+
+        session.pause()
+
+        #expect(session.isPaused)
+        #expect(session.aca == .neutral)
+        #expect(session.rodSwitchPosition == .neutral)
+        session.resume()
+        #expect(!session.isPaused)
+        session.stop()
+    }
+
     @MainActor
     private func waitUntil(
         _ label: String,
@@ -615,6 +631,7 @@ struct SourceBackedTerrainTileTests {
         #expect(simd_dot(illuminationDirection, expectedDirection) > 0.999_99)
         #expect(illuminationDirection.y < 0)
         #expect(LMTerrainWorld.missionSunIlluminanceLux == 25_000)
+        #expect(LMTerrainWorld.missionShadowMaximumDistanceMeters >= 100)
         #expect(LMTerrainWorld.regolithExposureFloor > 0)
         #expect(LMTerrainWorld.regolithExposureFloor < 1)
     }
@@ -1134,12 +1151,13 @@ struct ProgressiveLunarTerrainTests {
     }
 
     @Test func geologyModelPinsSurveyorDistributionAndProducesCraterMorphology() throws {
-        #expect(LMLunarGeologyModel.modelID == "surveyor-steady-state-microcraters-v1")
+        #expect(LMLunarGeologyModel.modelID == "surveyor-degraded-microrelief-v2")
         #expect(LMLunarGeologyModel.cumulativeCraterDiameterExponent == -2)
         #expect(LMLunarGeologyModel.minimumCraterDiameterMeters >= 0.13)
         #expect(LMLunarGeologyModel.maximumCraterDiameterMeters <= 3)
         #expect(LMLunarGeologyModel.surveyorSourceURL.contains("usgs.gov"))
         #expect(LMLunarGeologyModel.apollo11SourceURL.contains("nasa.gov"))
+        #expect(LMLunarGeologyModel(seed: 0).candidateAcceptance < 0.25)
 
         let crater = LMLunarGeologyModel.Crater(
             eastMeters: 0,
@@ -1167,8 +1185,8 @@ struct ProgressiveLunarTerrainTests {
             northMeters: 0,
             crater: crater
         )
-        #expect(center < -0.09)
-        #expect(rim > 0.02)
+        #expect(center < -0.06)
+        #expect(rim > 0.008)
         #expect(outside == 0)
     }
 
@@ -1653,14 +1671,20 @@ struct LandingPointDesignatorTests {
         #expect(!station.landingPointCalledAngleMarker.isEnabled)
     }
 
-    @Test @MainActor func commanderEntryPlacementMapsDesignEyeToHeadAnchorOrigin() {
+    @Test @MainActor func commanderEntryPlacementStartsAftOfTheOpticalDesignEye() {
         let station = LMCommanderStationScene()
 
         #expect(station.root.parent === station.commanderEntryAnchor)
         #expect(simd_distance(
-            station.root.position + lpd.commanderEyeMeters,
+            station.root.position + LMCommanderStationGeometry.comfortableEntryEyeMeters,
             .zero
         ) < 1e-6)
+        #expect(
+            LMCommanderStationGeometry.comfortableEntryOffsetFromDesignEyeMeters.z > 0.40
+        )
+        #expect(
+            LMCommanderStationGeometry.comfortableEntryOffsetFromDesignEyeMeters.y < 0
+        )
     }
 
     private func point(

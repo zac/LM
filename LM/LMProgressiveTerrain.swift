@@ -116,10 +116,10 @@ struct LMProgressiveTerrainSampler: Sendable {
 /// ellipticity, rim breakup, and ejecta below are synthesized and must never be
 /// presented as surveyed Apollo 11 topography.
 struct LMLunarGeologyModel: Equatable, Sendable {
-    static let modelID = "surveyor-steady-state-microcraters-v1"
+    static let modelID = "surveyor-degraded-microrelief-v2"
     static let cumulativeCraterDiameterExponent = -2.0
     static let minimumCraterDiameterMeters = 0.22
-    static let maximumCraterDiameterMeters = 1.8
+    static let maximumCraterDiameterMeters = 1.2
     static let surveyorSourceURL =
         "https://www.usgs.gov/publications/physical-characteristics-lunar-regolith-determined-surveyor-television-observations"
     static let apollo11SourceURL =
@@ -128,7 +128,10 @@ struct LMLunarGeologyModel: Equatable, Sendable {
     let seed: UInt64
     let cellSizeMeters = 2.0
     let candidatesPerCell = 2
-    let candidateAcceptance = 0.82
+    /// Surveyor constrains the size-frequency slope but not a normalization for
+    /// this exact site. Keep synthesized fresh/degraded bowls sparse enough that
+    /// measured LROC morphology, not repeated circles, dominates the view.
+    let candidateAcceptance = 0.18
 
     func visualReliefMeters(
         eastMeters: Double,
@@ -141,7 +144,11 @@ struct LMLunarGeologyModel: Equatable, Sendable {
         )
         let eastCell = Int64(floor(eastMeters / cellSizeMeters))
         let northCell = Int64(floor(northMeters / cellSizeMeters))
-        var relief = 0.0
+        var relief = regolithReliefMeters(
+            eastMeters: eastMeters,
+            northMeters: northMeters,
+            requestedSpacingMeters: requestedSpacingMeters
+        )
 
         for northOffset in -1...1 {
             for eastOffset in -1...1 {
@@ -201,7 +208,7 @@ struct LMLunarGeologyModel: Equatable, Sendable {
             diameterMeters: diameter,
             aspectRatio: 0.76 + unit(cellEast, cellNorth, candidate, 4) * 0.24,
             rotationRadians: unit(cellEast, cellNorth, candidate, 5) * 2 * .pi,
-            sharpness: 0.20 + unit(cellEast, cellNorth, candidate, 6) * 0.80,
+            sharpness: 0.08 + unit(cellEast, cellNorth, candidate, 6) * 0.48,
             rimPhase: unit(cellEast, cellNorth, candidate, 7) * 2 * .pi,
             rimLobes: 3 + Int(unit(cellEast, cellNorth, candidate, 8) * 5),
             ejectaPhase: unit(cellEast, cellNorth, candidate, 9) * 2 * .pi
@@ -224,8 +231,8 @@ struct LMLunarGeologyModel: Equatable, Sendable {
         guard normalizedRadius < 1.65 else { return 0 }
 
         let angle = atan2(localY, localX)
-        let depth = crater.diameterMeters * (0.035 + crater.sharpness * 0.085)
-        let rimHeight = crater.diameterMeters * (0.010 + crater.sharpness * 0.024)
+        let depth = crater.diameterMeters * (0.025 + crater.sharpness * 0.060)
+        let rimHeight = crater.diameterMeters * (0.006 + crater.sharpness * 0.014)
         let rimBreakup = 0.78 + 0.22 * sin(
             Double(crater.rimLobes) * angle + crater.rimPhase
         )
@@ -247,10 +254,62 @@ struct LMLunarGeologyModel: Equatable, Sendable {
                 0.5 + 0.5 * cos(5 * angle + crater.ejectaPhase),
                 3
             )
-            relief += crater.diameterMeters * 0.008 * crater.sharpness
+            relief += crater.diameterMeters * 0.0035 * crater.sharpness
                 * ejectaEnvelope * rays
         }
         return relief
+    }
+
+    /// Continuous, deterministic regolith relief prevents sub-resolution
+    /// detail from reading as a field of stamped crater decals. It is strictly
+    /// visual synthesis; `LMProgressiveTerrainSampler` subtracts its bilinear
+    /// value at each measured post, preserving every LROC datum exactly.
+    private func regolithReliefMeters(
+        eastMeters: Double,
+        northMeters: Double,
+        requestedSpacingMeters: Double
+    ) -> Double {
+        guard requestedSpacingMeters <= 0.5 else { return 0 }
+        var relief = valueNoise(
+            eastMeters: eastMeters,
+            northMeters: northMeters,
+            wavelengthMeters: 1.1,
+            property: 31
+        ) * 0.014
+        if requestedSpacingMeters <= 0.25 {
+            relief += valueNoise(
+                eastMeters: eastMeters,
+                northMeters: northMeters,
+                wavelengthMeters: 0.34,
+                property: 47
+            ) * 0.0045
+        }
+        return relief
+    }
+
+    private func valueNoise(
+        eastMeters: Double,
+        northMeters: Double,
+        wavelengthMeters: Double,
+        property: UInt64
+    ) -> Double {
+        let east = eastMeters / wavelengthMeters
+        let north = northMeters / wavelengthMeters
+        let eastCell = Int64(floor(east))
+        let northCell = Int64(floor(north))
+        let eastBlend = Self.smoothstep(east - floor(east))
+        let northBlend = Self.smoothstep(north - floor(north))
+
+        func signed(_ x: Int64, _ y: Int64) -> Double {
+            unit(x, y, 0, property) * 2 - 1
+        }
+        let northwest = signed(eastCell, northCell)
+        let northeast = signed(eastCell + 1, northCell)
+        let southwest = signed(eastCell, northCell + 1)
+        let southeast = signed(eastCell + 1, northCell + 1)
+        let northValue = northwest + (northeast - northwest) * eastBlend
+        let southValue = southwest + (southeast - southwest) * eastBlend
+        return northValue + (southValue - northValue) * northBlend
     }
 
     private func unit(

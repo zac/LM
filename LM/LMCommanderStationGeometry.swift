@@ -183,6 +183,39 @@ enum LMCommanderStationGeometry {
     )
     static let dskyMountOrientation = surface(.panelFour).orientation
 
+    // MARK: - Immersive assembly and crew entry
+
+    /// The bundled lander was authored at approximately full Apollo scale but
+    /// its ascent-stage pressure shell is 2.67 m wide. Scale it to the
+    /// handbook's controlled 92-inch crew-compartment diameter.
+    static let exteriorModelScale: Float = crewCompartmentDiameterMeters / 2.67
+
+    /// Aligns the procedural crew-compartment datum with the ascent-stage shell
+    /// in the bundled `lunarlander` hierarchy. This remains an explicit asset
+    /// registration value so replacing the art does not move flight datums.
+    static let cabinFrameOffsetMeters = SIMD3<Float>(-0.025, 1.981, -0.298)
+
+    /// Enter slightly aft and below the optical design eye so the full panel
+    /// stack is visible immediately. The wearer can lean forward into the
+    /// source-backed design eye when using the Landing Point Designator.
+    static let comfortableEntryOffsetFromDesignEyeMeters = SIMD3<Float>(0, -0.42, 0.50)
+
+    static let comfortableEntryEyeMeters =
+        cabinFrameOffsetMeters
+        + LMLandingPointDesignator().commanderEyeMeters
+        + comfortableEntryOffsetFromDesignEyeMeters
+
+    /// A reconstructed, clearly non-flight mission-management control placed
+    /// on the otherwise sparse lower-right region of Panel 5.
+    static let missionControlButtonPositionMeters = surface(.panelFive).scenePoint(
+        local: SIMD3(0.085, -0.065, surface(.panelFive).sizeMeters.z / 2 + 0.024)
+    )
+    static let missionControlButtonOrientation = surface(.panelFive).orientation
+
+    /// Floating panel position is deliberately aft/outboard of the flight
+    /// controls so it can be read without covering the DSKY, FDAI, or window.
+    static let missionControlPanelPositionMeters = SIMD3<Float>(-0.92, 1.38, -0.02)
+
     static let acaPivotPositionMeters = SIMD3<Float>(-0.49, 0.50, -0.37)
 
     /// The spring-return DES RATE switch is 1S5 on Panel 5. Each throw supplies

@@ -2,6 +2,7 @@ import AGC
 import LMCore
 import OSLog
 import RealityKit
+import RealityKitContent
 import SwiftUI
 import UIKit
 import simd
@@ -23,11 +24,14 @@ final class LMCommanderStationScene {
     let acaHandle = ModelEntity()
     let rodSwitch = ModelEntity()
     let attitudeModeSwitch = ModelEntity()
+    let missionControlButton = ModelEntity()
     let landingPointCalledAngleMarker = ModelEntity()
     let dskyFaceRoot = Entity()
 
+    private let cabinFrame = Entity()
     private let fdaiMount = Entity()
     private let dskyDisplayMount = Entity()
+    private let missionControlPanelMount = Entity()
     private let proceduralCabin = Entity()
     private let provisionalTerrain = Entity()
     private let dustCloud = Entity()
@@ -51,6 +55,7 @@ final class LMCommanderStationScene {
     private var terrainGenerationTokens = [LMTerrainTileID: UUID]()
     private var lastTerrainPresentationBlendBucket: Int?
     private var artistCabin: Entity?
+    private var exteriorLunarModule: Entity?
     private var lastVehicleState: LMVehicleStateSnapshot?
     private var dskyKeyEntitiesByRawValue = [Int: ModelEntity]()
     private var dskyKeyRestPositions = [Int: SIMD3<Float>]()
@@ -65,6 +70,8 @@ final class LMCommanderStationScene {
         commanderEntryAnchor.anchoring.trackingMode = .once
         root.name = "LM Commander Station"
         lunarWorld.name = "Lunar World"
+        cabinFrame.name = "LM cabin datum frame"
+        cabinFrame.position = LMCommanderStationGeometry.cabinFrameOffsetMeters
         fdaiMount.name = LMCockpitAssetContract.Node.fdaiMount.rawValue
         fdaiMount.position = LMCommanderStationGeometry.fdaiMountPositionMeters
         fdaiMount.orientation = LMCommanderStationGeometry.fdaiMountOrientation
@@ -75,27 +82,41 @@ final class LMCommanderStationScene {
             LMDSKYGeometry.displayCenterMeters.y,
             0
         )
+        missionControlPanelMount.name = "Mission control panel mount"
+        missionControlPanelMount.position =
+            LMCommanderStationGeometry.missionControlPanelPositionMeters
+        missionControlPanelMount.orientation = simd_quatf(
+            from: SIMD3<Float>(0, 0, 1),
+            to: simd_normalize(
+                LMLandingPointDesignator().commanderEyeMeters
+                    + LMCommanderStationGeometry.comfortableEntryOffsetFromDesignEyeMeters
+                    - LMCommanderStationGeometry.missionControlPanelPositionMeters
+            )
+        )
+        missionControlPanelMount.isEnabled = false
         proceduralCabin.name = LMCockpitAssetContract.Node.cabinRoot.rawValue
         provisionalTerrain.name = "Provisional terrain"
         dustCloud.name = "Descent engine dust"
 
         // Capture the wearer's entry pose once, then keep the vehicle fixed in
-        // world space. Offsetting the cabin by the optical datum puts the
-        // calibrated CDR design eye at the captured head origin without
-        // head-locking the cabin during flight.
-        root.position = -landingPointDesignator.commanderEyeMeters
+        // world space. Start aft of the optical datum so the panel stack is
+        // visible; leaning forward still reaches the exact flight design eye.
+        root.position = -LMCommanderStationGeometry.comfortableEntryEyeMeters
         commanderEntryAnchor.addChild(root)
 
-        root.addChild(proceduralCabin)
+        root.addChild(cabinFrame)
+        cabinFrame.addChild(proceduralCabin)
         buildCabin()
         buildLandingPointCalledAngleMarker()
         buildPhysicalDSKY()
         buildPhysicalControls()
+        setDynamicShadowCasting(in: cabinFrame)
         buildProvisionalSurface()
         buildDustCloud()
 
         root.addChild(lunarWorld)
-        root.addChild(fdaiMount)
+        cabinFrame.addChild(fdaiMount)
+        cabinFrame.addChild(missionControlPanelMount)
     }
 
     func mountFDAI(_ entity: Entity) {
@@ -103,7 +124,7 @@ final class LMCommanderStationScene {
         entity.name = "Commander FDAI"
         entity.position = .zero
         entity.orientation = simd_quatf(angle: 0, axis: SIMD3(0, 1, 0))
-        entity.scale = SIMD3(repeating: 0.00058)
+        entity.scale = SIMD3(repeating: 0.00072)
         fdaiMount.addChild(entity)
     }
 
@@ -113,6 +134,70 @@ final class LMCommanderStationScene {
         entity.position = SIMD3(0, 0, 0.012)
         entity.scale = SIMD3(repeating: 0.00035)
         dskyDisplayMount.addChild(entity)
+    }
+
+    func mountMissionControlPanel(_ entity: Entity) {
+        guard entity.parent == nil else { return }
+        entity.name = "Cockpit mission control"
+        entity.position = .zero
+        entity.scale = SIMD3(repeating: 0.00082)
+        missionControlPanelMount.addChild(entity)
+    }
+
+    func setMissionControlPanelVisible(_ visible: Bool) {
+        missionControlPanelMount.isEnabled = visible
+    }
+
+    /// Loads the existing full LM art around the flight-datum cockpit. The
+    /// terrain remains a sibling so vehicle/world mapping is unaffected.
+    func loadExteriorLunarModule() throws {
+        guard exteriorLunarModule == nil else { return }
+        let scene = try Entity.load(named: "lm", in: realityKitContentBundle)
+        guard let authoredLander = scene.findEntity(named: "lunarlander") else { return }
+
+        let lander = authoredLander.clone(recursive: true)
+        lander.name = "Flight-scale lunar module exterior"
+        lander.transform = Transform(matrix: authoredLander.transformMatrix(relativeTo: scene))
+        // The bundled art's monolithic ascent-stage skin has no interior and
+        // cuts through the reconstructed pressure cabin when viewed from the
+        // design station. Keep the landing gear, descent stage, and low external
+        // appendages, while the source-backed cabin supplies the crew-visible
+        // ascent-stage surfaces.
+        lander.findEntity(named: "polySurfac")?.isEnabled = false
+        suppressAuthoredAscentGeometry(in: lander, relativeTo: lander)
+        setDynamicShadowCasting(in: lander)
+
+        let registration = Entity()
+        registration.name = "LM exterior asset registration"
+        registration.scale = SIMD3(repeating: LMCommanderStationGeometry.exteriorModelScale)
+        registration.orientation = simd_quatf(angle: .pi, axis: SIMD3<Float>(0, 1, 0))
+        registration.addChild(lander)
+        root.addChild(registration)
+        exteriorLunarModule = registration
+    }
+
+    private func setDynamicShadowCasting(in entity: Entity) {
+        if entity.components[ModelComponent.self] != nil {
+            entity.components.set(DynamicLightShadowComponent(castsShadow: true))
+        }
+        for child in entity.children {
+            setDynamicShadowCasting(in: child)
+        }
+    }
+
+    /// The existing model is useful for the descent stage and landing gear but
+    /// was never authored as a walkable cabin. Remove objects wholly above the
+    /// ascent/descent interface; otherwise antennas and closed outer panels are
+    /// visible from inside the reconstructed pressure vessel.
+    private func suppressAuthoredAscentGeometry(in entity: Entity, relativeTo root: Entity) {
+        for child in entity.children {
+            let bounds = child.visualBounds(relativeTo: root)
+            if !bounds.isEmpty, bounds.min.y > 2.05 {
+                child.isEnabled = false
+            } else {
+                suppressAuthoredAscentGeometry(in: child, relativeTo: root)
+            }
+        }
     }
 
     func apply(_ state: LMVehicleStateSnapshot?) {
@@ -349,7 +434,7 @@ final class LMCommanderStationScene {
         }
         artistCabin?.removeFromParent()
         cabin.name = LMCockpitAssetContract.Node.cabinRoot.rawValue
-        root.addChild(cabin)
+        cabinFrame.addChild(cabin)
         artistCabin = cabin
         proceduralCabin.isEnabled = false
         return true
@@ -687,7 +772,7 @@ final class LMCommanderStationScene {
             ))]
         )
         landingPointCalledAngleMarker.isEnabled = false
-        root.addChild(landingPointCalledAngleMarker)
+        cabinFrame.addChild(landingPointCalledAngleMarker)
     }
 
     private func makeLandingPointDesignatorMesh(pane: LMLPDPane) throws -> MeshResource {
@@ -928,7 +1013,7 @@ final class LMCommanderStationScene {
             dskyFaceRoot.addChild(screw)
         }
 
-        root.addChild(dskyFaceRoot)
+        cabinFrame.addChild(dskyFaceRoot)
     }
 
     private func addDSKYKeyLabel(
@@ -1031,7 +1116,7 @@ final class LMCommanderStationScene {
         acaHandle.components.set(CollisionComponent(shapes: [
             .generateBox(size: SIMD3(0.13, 0.29, 0.13))
         ]))
-        root.addChild(acaHandle)
+        cabinFrame.addChild(acaHandle)
 
         let panelFive = LMCommanderStationGeometry.surface(.panelFive)
         let rodBasePosition = panelFive.scenePoint(local: SIMD3(
@@ -1055,7 +1140,7 @@ final class LMCommanderStationScene {
             .generateBox(size: SIMD3(0.075, 0.12, 0.10))
         ]))
         setRODVisual(.neutral)
-        root.addChild(rodSwitch)
+        cabinFrame.addChild(rodSwitch)
         addDescentRateSwitchLegend(on: panelFive)
 
         attitudeModeSwitch.name = LMCockpitAssetContract.Node.attitudeHoldPivot.rawValue
@@ -1071,7 +1156,46 @@ final class LMCommanderStationScene {
             .generateBox(size: SIMD3(0.16, 0.20, 0.12))
         ]))
         setAttitudeHoldVisual(false)
-        root.addChild(attitudeModeSwitch)
+        cabinFrame.addChild(attitudeModeSwitch)
+
+        missionControlButton.name = "MISSION CONTROL"
+        missionControlButton.model = ModelComponent(
+            mesh: .generateBox(size: SIMD3(0.105, 0.052, 0.022), cornerRadius: 0.006),
+            materials: [SimpleMaterial(
+                color: UIColor(red: 0.58, green: 0.20, blue: 0.10, alpha: 1),
+                roughness: 0.55,
+                isMetallic: false
+            )]
+        )
+        missionControlButton.position =
+            LMCommanderStationGeometry.missionControlButtonPositionMeters
+        missionControlButton.orientation =
+            LMCommanderStationGeometry.missionControlButtonOrientation
+        missionControlButton.components.set(InputTargetComponent())
+        missionControlButton.components.set(HoverEffectComponent())
+        missionControlButton.components.set(CollisionComponent(shapes: [
+            .generateBox(size: SIMD3(0.13, 0.08, 0.06))
+        ]))
+        addMissionControlButtonLegend()
+        cabinFrame.addChild(missionControlButton)
+    }
+
+    private func addMissionControlButtonLegend() {
+        let mesh = MeshResource.generateText(
+            "MISSION",
+            extrusionDepth: 0.00015,
+            font: .systemFont(ofSize: 0.010, weight: .bold),
+            containerFrame: CGRect(x: 0, y: 0, width: 0.095, height: 0.025),
+            alignment: .center,
+            lineBreakMode: .byClipping
+        )
+        let legend = ModelEntity(
+            mesh: mesh,
+            materials: [UnlitMaterial(color: .white)]
+        )
+        legend.name = "MISSION button legend"
+        legend.position = SIMD3(-0.0475, -0.0125, 0.0112)
+        missionControlButton.addChild(legend)
     }
 
     private func addACAHandleGeometry(
@@ -1158,7 +1282,7 @@ final class LMCommanderStationScene {
             panel.sizeMeters.z / 2 + 0.017
         ))
         legend.orientation = panel.orientation
-        root.addChild(legend)
+        cabinFrame.addChild(legend)
     }
 
     private func buildDustCloud() {

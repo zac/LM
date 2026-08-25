@@ -51,33 +51,45 @@ enum FDAIOrientation {
 
 struct FDAIPanel: View {
     @Bindable var session: PoweredDescentSession
+    var presentsFlightFace = false
 
     var body: some View {
-        VStack(spacing: 10) {
-            HStack(spacing: 8) {
-                Text("FDAI")
-                    .font(.caption.weight(.semibold))
-                Spacer()
-                Circle()
-                    .fill(vehicleAttitude == nil ? Color.orange : Color.green)
-                    .frame(width: 7, height: 7)
-                Text(vehicleAttitude == nil ? "NO ATT" : "ATT")
-                    .font(.caption2.monospaced())
-                    .foregroundStyle(.secondary)
+        Group {
+            if presentsFlightFace {
+                FDAIInstrument(ballOrientation: ballRotation)
+                    .frame(width: 205, height: 205)
+                    .allowsHitTesting(false)
+            } else {
+                VStack(spacing: 10) {
+                    HStack(spacing: 8) {
+                        Text("FDAI")
+                            .font(.caption.weight(.semibold))
+                        Spacer()
+                        Circle()
+                            .fill(vehicleAttitude == nil ? Color.orange : Color.green)
+                            .frame(width: 7, height: 7)
+                        Text(vehicleAttitude == nil ? "NO ATT" : "ATT")
+                            .font(.caption2.monospaced())
+                            .foregroundStyle(.secondary)
+                    }
+
+                    FDAIInstrument(ballOrientation: ballRotation)
+                        .frame(width: 205, height: 205)
+                        .offset(x: 44, y: 4)
+                        .allowsHitTesting(false)
+
+                    Text(attitudeSummary)
+                        .font(.caption2.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+                .padding(14)
+                .background(
+                    Color.black.opacity(0.82),
+                    in: RoundedRectangle(cornerRadius: 16, style: .continuous)
+                )
             }
-
-            FDAIInstrument(ballOrientation: ballRotation)
-                .frame(width: 205, height: 205)
-                .offset(x: 44, y: 4)
-                .allowsHitTesting(false)
-
-            Text(attitudeSummary)
-                .font(.caption2.monospacedDigit())
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
         }
-        .padding(14)
-        .background(Color.black.opacity(0.82), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Flight director attitude indicator")
         .accessibilityValue(attitudeSummary)

@@ -59,6 +59,10 @@ enum LMTerrainWorld {
     /// reflectance-calibrated terrain against a black immersive sky.
     nonisolated static let missionSunIlluminanceLux: Float = 25_000
 
+    /// Covers the terminal-descent altitude range where the lander's cast
+    /// shadow becomes a useful, physically grounded height cue.
+    nonisolated static let missionShadowMaximumDistanceMeters: Float = 120
+
     /// A restrained texture-derived exposure floor keeps shadowed regolith
     /// readable in an unlit immersive sky while the mission sun still supplies
     /// the dominant directional relief. This is deliberately below 1 so it
@@ -122,6 +126,12 @@ enum LMTerrainWorld {
         let sun = DirectionalLight()
         sun.name = "MissionSun"
         sun.light.intensity = missionSunIlluminanceLux
+        sun.shadow = DirectionalLightComponent.Shadow(
+            shadowProjection: .automatic(
+                maximumDistance: missionShadowMaximumDistanceMeters
+            ),
+            depthBias: 1
+        )
         sun.orientation = LMFullDescentMapper.sunLightOrientation(from: manifest)
         worldRoot.addChild(sun)
 
