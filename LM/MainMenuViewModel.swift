@@ -20,5 +20,10 @@ class MainMenuViewModel {
     var immersiveSpaceState = ImmersiveSpaceState.closed
     var descentSpaceState = ImmersiveSpaceState.closed
     var cockpitSpaceState = ImmersiveSpaceState.closed
+    var cockpitRecenterRequest = 0
     var session = PoweredDescentSession()
+
+    func requestCockpitRecenter() {
+        cockpitRecenterRequest &+= 1
+    }
 }

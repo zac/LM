@@ -11,6 +11,7 @@ struct TerminalDescentCockpitView: View {
     @State private var station = LMCommanderStationScene()
     @State private var didStart = false
     @State private var terrainStatus = "Loading Apollo 11 terrain…"
+    @State private var recenterGeneration = 0
     @State private var acaGestureOrigin: SIMD3<Float>?
     @State private var rodGestureOrigin: SIMD3<Float>?
     @State private var showsFallbackControls = false
@@ -42,7 +43,14 @@ struct TerminalDescentCockpitView: View {
                 station.mountDSKYDisplay(dskyDisplay)
             }
             applySceneState()
-        } update: { _, attachments in
+        } update: { content, attachments in
+            _ = recenterGeneration
+            for retiredAnchor in station.takeRetiredCommanderEntryAnchors() {
+                content.remove(retiredAnchor)
+            }
+            if !content.entities.contains(where: { $0 === station.commanderEntryAnchor }) {
+                content.add(station.commanderEntryAnchor)
+            }
             if let fdai = attachments.entity(for: "commander-fdai") {
                 station.mountFDAI(fdai)
             }
@@ -128,6 +136,13 @@ struct TerminalDescentCockpitView: View {
                         Label("Mission", systemImage: "waveform.path.ecg")
                     }
                     .accessibilityIdentifier("cockpit-mission-control-toggle")
+
+                    Button {
+                        appModel.requestCockpitRecenter()
+                    } label: {
+                        Label("Recenter cockpit", systemImage: "viewfinder.circle")
+                    }
+                    .accessibilityIdentifier("cockpit-recenter")
 
                     Button {
                         audioEnabled.toggle()
@@ -222,6 +237,10 @@ struct TerminalDescentCockpitView: View {
                     : .p64Approach
                 appModel.session.start(from: startPoint)
             }
+            if ProcessInfo.processInfo.arguments.contains("--cockpit-recenter-after-launch") {
+                try? await Task.sleep(for: .milliseconds(500))
+                appModel.requestCockpitRecenter()
+            }
             if ProcessInfo.processInfo.arguments.contains("--show-cockpit-mission-control") {
                 // Scene activation and the immersive transition must settle
                 // before visionOS will honor an openWindow request.
@@ -249,6 +268,9 @@ struct TerminalDescentCockpitView: View {
             if phase != .active {
                 releaseSpatialControls()
             }
+        }
+        .onChange(of: appModel.cockpitRecenterRequest) { _, _ in
+            recenterCockpit()
         }
         .onChange(of: acaGestureIsActive) { wasActive, isActive in
             if wasActive && !isActive {
@@ -444,6 +466,14 @@ struct TerminalDescentCockpitView: View {
         openWindow(id: appModel.cockpitMissionControlWindowID)
     }
 
+    private func recenterCockpit() {
+        releaseSpatialControls()
+        station.recenterAtCurrentHeadPose()
+        recenterGeneration &+= 1
+        showsEyeAlignmentGuide = true
+        logger.notice("Recentered cockpit at the current commander head pose")
+    }
+
     private func cueColor(_ cue: LMCockpitCue) -> Color {
         switch cue.kind {
         case .phase, .altitude:
@@ -633,6 +663,13 @@ struct CockpitMissionControlWindow: View {
                     Label("Restart", systemImage: "arrow.counterclockwise")
                 }
                 .accessibilityIdentifier("mission-control-restart")
+
+                Button {
+                    appModel.requestCockpitRecenter()
+                } label: {
+                    Label("Recenter", systemImage: "viewfinder.circle")
+                }
+                .accessibilityIdentifier("mission-control-recenter")
 
                 Button(role: .destructive) {
                     dismissWindow(id: appModel.cockpitMissionControlWindowID)

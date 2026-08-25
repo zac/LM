@@ -1690,6 +1690,30 @@ struct LandingPointDesignatorTests {
         )
     }
 
+    @Test @MainActor func cockpitRecenterReplacesTheOneShotHeadAnchorWithoutRebuildingTheScene() {
+        let station = LMCommanderStationScene()
+        let originalAnchor = station.commanderEntryAnchor
+        let originalRoot = station.root
+        let originalLunarWorld = station.lunarWorld
+
+        station.recenterAtCurrentHeadPose()
+
+        #expect(station.commanderEntryAnchor !== originalAnchor)
+        #expect(station.root === originalRoot)
+        #expect(station.lunarWorld === originalLunarWorld)
+        #expect(station.root.parent === station.commanderEntryAnchor)
+        #expect(originalAnchor.children.isEmpty)
+        #expect(simd_distance(
+            station.root.position + LMCommanderStationGeometry.comfortableEntryEyeMeters,
+            .zero
+        ) < 1e-6)
+
+        let retired = station.takeRetiredCommanderEntryAnchors()
+        #expect(retired.count == 1)
+        #expect(retired.first === originalAnchor)
+        #expect(station.takeRetiredCommanderEntryAnchors().isEmpty)
+    }
+
     private func point(
         _ point: SIMD3<Float>,
         isInsideTriangle corners: [SIMD3<Float>]

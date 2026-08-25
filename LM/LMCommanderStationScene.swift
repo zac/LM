@@ -18,7 +18,7 @@ final class LMCommanderStationScene {
         case invalidArtistCabin([LMCockpitAssetContract.ValidationIssue])
     }
 
-    let commanderEntryAnchor = AnchorEntity(.head)
+    private(set) var commanderEntryAnchor = AnchorEntity(.head)
     let root = Entity()
     let lunarWorld = Entity()
     let acaHandle = ModelEntity()
@@ -56,6 +56,7 @@ final class LMCommanderStationScene {
     private var artistCabin: Entity?
     private var exteriorLunarModule: Entity?
     private var fdaiBall: Entity?
+    private var retiredCommanderEntryAnchors = [AnchorEntity]()
     private var lastVehicleState: LMVehicleStateSnapshot?
     private var dskyKeyEntitiesByRawValue = [Int: ModelEntity]()
     private var dskyKeyRestPositions = [Int: SIMD3<Float>]()
@@ -115,6 +116,26 @@ final class LMCommanderStationScene {
         entity.scale = SIMD3(repeating: 0.00095)
         fdaiMount.addChild(entity)
         logger.notice("Mounted live FDAI flight face")
+    }
+
+    /// Re-captures the current headset pose while preserving the live vehicle,
+    /// terrain, instruments, and control entities under `root`.
+    func recenterAtCurrentHeadPose() {
+        let retiredAnchor = commanderEntryAnchor
+        root.removeFromParent()
+        retiredCommanderEntryAnchors.append(retiredAnchor)
+
+        let newAnchor = AnchorEntity(.head)
+        newAnchor.name = "Commander recentered head anchor"
+        newAnchor.anchoring.trackingMode = .once
+        root.position = -LMCommanderStationGeometry.comfortableEntryEyeMeters
+        newAnchor.addChild(root)
+        commanderEntryAnchor = newAnchor
+    }
+
+    func takeRetiredCommanderEntryAnchors() -> [AnchorEntity] {
+        defer { retiredCommanderEntryAnchors.removeAll(keepingCapacity: true) }
+        return retiredCommanderEntryAnchors
     }
 
     func mountDSKYDisplay(_ entity: Entity) {
