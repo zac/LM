@@ -107,13 +107,16 @@ final class LMCommanderStationScene {
         buildLandingPointCalledAngleMarker()
         buildPhysicalDSKY()
         buildPhysicalControls()
-        // The cabin's layered panel faces generated moving shadow-map acne on
-        // Vision Pro. Keep only the pressure shell as the ascent-stage shadow
-        // silhouette; the exterior model supplies the descent stage and legs.
+        // RealityKit models cast dynamic-light shadows by default, even when
+        // they have no DynamicLightShadowComponent. Explicitly opt every
+        // layered cabin model out before restoring the pressure shell as the
+        // ascent-stage silhouette; otherwise the close, overlapping panel
+        // faces quantize into moving light/dark blocks on Vision Pro.
+        setDynamicShadowCasting(false, in: proceduralCabin)
         if let shell = proceduralCabin.findEntity(
             named: LMCockpitAssetContract.Node.cabinShell.rawValue
         ) {
-            setDynamicShadowCasting(in: shell)
+            setDynamicShadowCasting(true, in: shell)
         }
         buildProvisionalSurface()
         buildDustCloud()
@@ -213,7 +216,7 @@ final class LMCommanderStationScene {
         // ascent-stage surfaces.
         lander.findEntity(named: "polySurfac")?.isEnabled = false
         suppressAuthoredAscentGeometry(in: lander, relativeTo: lander)
-        setDynamicShadowCasting(in: lander)
+        setDynamicShadowCasting(true, in: lander)
 
         let registration = Entity()
         registration.name = "LM exterior asset registration"
@@ -224,12 +227,12 @@ final class LMCommanderStationScene {
         exteriorLunarModule = registration
     }
 
-    private func setDynamicShadowCasting(in entity: Entity) {
+    private func setDynamicShadowCasting(_ castsShadow: Bool, in entity: Entity) {
         if entity.components[ModelComponent.self] != nil {
-            entity.components.set(DynamicLightShadowComponent(castsShadow: true))
+            entity.components.set(DynamicLightShadowComponent(castsShadow: castsShadow))
         }
         for child in entity.children {
-            setDynamicShadowCasting(in: child)
+            setDynamicShadowCasting(castsShadow, in: child)
         }
     }
 
@@ -618,23 +621,25 @@ final class LMCommanderStationScene {
     }
 
     private func buildCabin() {
-        let dark = SimpleMaterial(
-            color: UIColor(red: 0.105, green: 0.115, blue: 0.105, alpha: 1),
-            roughness: 0.78,
-            isMetallic: false
+        let dark = UnlitMaterial(
+            color: UIColor(red: 0.105, green: 0.115, blue: 0.105, alpha: 1)
         )
-        let panel = SimpleMaterial(
-            color: UIColor(red: 0.19, green: 0.205, blue: 0.18, alpha: 1),
-            roughness: 0.68,
-            isMetallic: false
+        let pressureShell = UnlitMaterial(
+            color: UIColor(red: 0.105, green: 0.115, blue: 0.105, alpha: 1)
         )
-        let aluminum = SimpleMaterial(
-            color: UIColor(red: 0.49, green: 0.50, blue: 0.46, alpha: 1),
-            roughness: 0.48,
-            isMetallic: true
+        let panel = UnlitMaterial(
+            color: UIColor(red: 0.19, green: 0.205, blue: 0.18, alpha: 1)
+        )
+        let aluminum = UnlitMaterial(
+            color: UIColor(red: 0.49, green: 0.50, blue: 0.46, alpha: 1)
         )
 
-        buildCabinShell(material: dark)
+        // This procedural blockout has no separate lightmapped interior mesh.
+        // Keep its broad crew-visible finishes stable instead of letting the
+        // low lunar sun project a moving terrain-scale shadow map across faces
+        // only millimeters apart. A production cabin can replace these with
+        // baked/PBR interior materials and a separate exterior shadow mesh.
+        buildCabinShell(material: pressureShell)
         for surface in LMCommanderStationGeometry.reconstructedSurfaces {
             let material = switch surface.id {
             case .panelOne, .panelTwo, .panelThree, .panelFour, .panelFive, .panelSix:
@@ -666,7 +671,7 @@ final class LMCommanderStationScene {
         buildLandingPointDesignator()
     }
 
-    private func buildCabinShell(material: SimpleMaterial) {
+    private func buildCabinShell(material: UnlitMaterial) {
         let shell = Entity()
         shell.name = LMCockpitAssetContract.Node.cabinShell.rawValue
         proceduralCabin.addChild(shell)
@@ -845,7 +850,7 @@ final class LMCommanderStationScene {
         appendPolygon([bottomLeft, topLeft, upperOutboard])
     }
 
-    private func buildForwardFaceStructure(material: SimpleMaterial) {
+    private func buildForwardFaceStructure(material: any RealityKit.Material) {
         addBeam(
             from: SIMD3(-0.79, 0.14, -0.62),
             to: SIMD3(-0.86, 2.03, -0.60),
@@ -882,7 +887,7 @@ final class LMCommanderStationScene {
         }
     }
 
-    private func buildDeckDetails(material: SimpleMaterial) {
+    private func buildDeckDetails(material: any RealityKit.Material) {
         let deck = LMCommanderStationGeometry.surface(.cabinDeck)
         let deckTopY = deck.centerMeters.y + deck.sizeMeters.z / 2
         for index in 0..<12 {
@@ -898,8 +903,8 @@ final class LMCommanderStationScene {
     }
 
     private func buildPanelDetails(
-        panelMaterial: SimpleMaterial,
-        switchMaterial: SimpleMaterial
+        panelMaterial: any RealityKit.Material,
+        switchMaterial: any RealityKit.Material
     ) {
         let panelOneLayout: [(SIMD2<Float>, SIMD2<Float>)] = [
             (SIMD2(-0.10, 0.14), SIMD2(0.13, 0.075)),
@@ -954,8 +959,8 @@ final class LMCommanderStationScene {
     }
 
     private func buildFDAIBezel(
-        panelMaterial: SimpleMaterial,
-        rimMaterial: SimpleMaterial
+        panelMaterial: any RealityKit.Material,
+        rimMaterial: any RealityKit.Material
     ) {
         let panel = LMCommanderStationGeometry.surface(.panelOne)
         let center = SIMD2<Float>(-0.055, -0.015)
@@ -991,7 +996,7 @@ final class LMCommanderStationScene {
         center: SIMD2<Float>,
         size: SIMD2<Float>,
         depth: Float,
-        material: SimpleMaterial,
+        material: any RealityKit.Material,
         name: String
     ) {
         let surface = LMCommanderStationGeometry.surface(surfaceID)
@@ -1164,7 +1169,7 @@ final class LMCommanderStationScene {
         }
     }
 
-    private func buildForwardWindowFrames(material: SimpleMaterial) {
+    private func buildForwardWindowFrames(material: any RealityKit.Material) {
         let commanderCorners = landingPointDesignator.windowCorners(on: .inner)
         addWindowFrame(
             corners: commanderCorners,
@@ -1180,7 +1185,7 @@ final class LMCommanderStationScene {
 
     private func addWindowFrame(
         corners: [SIMD3<Float>],
-        material: SimpleMaterial,
+        material: any RealityKit.Material,
         namePrefix: String
     ) {
         precondition(corners.count == 3)
@@ -1780,7 +1785,7 @@ final class LMCommanderStationScene {
         size: SIMD3<Float>,
         position: SIMD3<Float>,
         orientation: simd_quatf = simd_quatf(angle: 0, axis: SIMD3(0, 1, 0)),
-        material: SimpleMaterial,
+        material: any RealityKit.Material,
         name: String
     ) {
         let entity = ModelEntity(mesh: .generateBox(size: size), materials: [material])
@@ -1794,7 +1799,7 @@ final class LMCommanderStationScene {
         from start: SIMD3<Float>,
         to end: SIMD3<Float>,
         thickness: Float,
-        material: SimpleMaterial,
+        material: any RealityKit.Material,
         name: String
     ) {
         let delta = end - start

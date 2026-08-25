@@ -1861,17 +1861,23 @@ struct Apollo11CommanderStationGeometryTests {
         ) != nil)
     }
 
-    @Test @MainActor func onlyTheCabinShellCastsTheProceduralAscentStageShadow() throws {
+    @Test @MainActor func proceduralCabinUsesStableInteriorShadowPolicy() throws {
         let station = LMCommanderStationScene()
         let panel = try #require(station.root.findEntity(named: "Panel_1"))
         let shellSegment = try #require(
             station.root.findEntity(named: "Cabin shell segment 01")
         )
+        let panelModel = try #require(panel.components[ModelComponent.self])
+        let shellModel = try #require(shellSegment.components[ModelComponent.self])
 
-        #expect(panel.components[DynamicLightShadowComponent.self] == nil)
+        #expect(
+            panel.components[DynamicLightShadowComponent.self]?.castsShadow == false
+        )
         #expect(
             shellSegment.components[DynamicLightShadowComponent.self]?.castsShadow == true
         )
+        #expect(panelModel.materials.allSatisfy { $0 is UnlitMaterial })
+        #expect(shellModel.materials.allSatisfy { $0 is UnlitMaterial })
     }
 }
 
