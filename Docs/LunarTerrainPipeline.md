@@ -112,6 +112,30 @@ request churn cancels only obsolete IDs and cannot repeatedly restart a still
 required under-vehicle tile. Cancellation or slow generation therefore
 degrades detail rather than exposing a coverage hole.
 
+### Source-constrained rock fragments
+
+`LMLunarRockFieldModel` adds a deterministic visual fragment layer versioned as
+`apollo11-source-constrained-rock-field-v1`. NASA SP-214 reports that Eagle's
+immediate region was relatively free of rocks, while a field several hundred
+feet north contained boulders a meter or larger across. It also records rocks
+resting on the surface, partly buried, and exposed nearly flush with the soil.
+
+The runtime therefore protects a 25 m radius around Eagle from invented rocks,
+places only sparse sub-meter fragments from 25 to 105 m, and synthesizes a
+broad meter-class field 90 to 180 m north. The primary report does not survey
+individual coordinates, so none of these fragment positions are presented as
+mapped Apollo 11 rocks. Six shared faceted meshes, bounded burial, pose, and
+reflectance variation supply silhouettes and low-Sun shadows without repeated
+smooth spheres. Rock bases sample the measured 2 m NAC height field. They have
+no collision component and cannot change contact, guidance, or landing outcome.
+Meter-class boulders remain visible throughout P64; sub-meter fragments pass a
+bounded altitude/detail gate and progressively appear below roughly 400 m to
+avoid distant sub-pixel shimmer.
+
+Primary constraint:
+
+- https://ntrs.nasa.gov/api/citations/19700000726/downloads/19700000726.pdf
+
 ## Reproduction
 
 `Tools/TerrainGenerator` verifies the 118 MB NAC GeoTIFF by byte count and
@@ -141,12 +165,12 @@ back-face culling without creating a black nadir coverage hole.
    than keeping the full near-field mesh resident.
 3. Move dense terrain updates to RealityKit `LowLevelMesh` and Metal compute
    after measuring the current CPU mesh path on Vision Pro.
-4. Add geology-conditioned instanced fragments and the documented boulder field
-   north of Eagle without placing invented landing hazards in the immediate
-   rock-poor touchdown zone.
-5. Validate visual displacement and conservative contact across the complete
-   P64-to-contact trajectory, including tile-generation time and visible edge
-   transitions on Vision Pro.
+4. Replace the qualitatively constrained northern boulder field with surveyed
+   photogrammetric/LROC fragment coordinates when a versioned point dataset is
+   available, retaining the synthesized distribution only as a fallback.
+5. Validate visual displacement, rock silhouettes, and conservative contact
+   across the complete P64-to-contact trajectory, including tile-generation
+   time and visible edge transitions on Vision Pro.
 
 The terrain milestone is complete only when an Apollo 11 descent can move from
 high altitude to contact without coverage gaps, coordinate drift, visible LOD

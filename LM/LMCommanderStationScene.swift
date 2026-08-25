@@ -47,6 +47,7 @@ final class LMCommanderStationScene {
     private var terrainHeightField: Apollo11TerrainHeightField?
     private var terrainFrameAlignment: LMTerrainFrameAlignment?
     private var terrainEnvironment: Entity?
+    private var terrainRockField: Entity?
     private var terrainSun: DirectionalLight?
     private var terrainAlbedoTexture: TextureResource?
     private var progressiveTerrainEntities = [LMTerrainTileID: ModelEntity]()
@@ -254,6 +255,7 @@ final class LMCommanderStationScene {
             for: state.attitude
         )
         updateMissionShadow(altitudeMeters: state.altitudeMeters)
+        updateRockDetail(altitudeMeters: state.altitudeMeters)
         let terrainPosition = terrainPosition(for: state.positionMeters)
         let surfaceSample = progressiveSurfaceSample(
             at: terrainPosition,
@@ -298,6 +300,16 @@ final class LMCommanderStationScene {
         terrainEnvironment = terrain
         terrainSun = assembly.sun
         terrainAlbedoTexture = assembly.nearAlbedoTexture
+        terrainRockField?.removeFromParent()
+        let rockField = try LMLunarRockFieldResource.makeEntity(
+            heightField: heightField,
+            eagleTerrainPosition: terrainFrameAlignment?.terrainReferenceTouchdown ?? .zero
+        )
+        terrain.addChild(rockField)
+        terrainRockField = rockField
+        logger.info(
+            "Terrain rock field ready count=\(rockField.children.count, privacy: .public) model=\(LMLunarRockFieldModel.modelID, privacy: .public)"
+        )
         provisionalTerrain.removeFromParent()
         lunarWorld.addChild(terrain)
         apply(lastVehicleState)
@@ -314,6 +326,16 @@ final class LMCommanderStationScene {
         terrainSun.shadow = LMTerrainWorld.missionShadow(
             altitudeMeters: altitudeMeters
         )
+    }
+
+    private func updateRockDetail(altitudeMeters: Double) {
+        guard let terrainRockField else { return }
+        for rock in terrainRockField.children {
+            rock.isEnabled = LMLunarRockDetailPolicy.isVisible(
+                maximumDimensionMeters: max(rock.scale.x, rock.scale.z),
+                altitudeMeters: altitudeMeters
+            )
+        }
     }
 
     private func terrainPosition(for guidancePosition: LMVector3D) -> LMVector3D {
