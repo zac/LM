@@ -3,6 +3,8 @@ import SwiftUI
 @main
 struct LMApp: App {
     @State private var viewModel = MainMenuViewModel()
+    @State private var cockpitImmersionStyle: any ImmersionStyle =
+        LMCockpitImmersionPolicy.style
 
     var body: some Scene {
         WindowGroup(id: viewModel.descentConsoleWindowID) {
@@ -58,6 +60,7 @@ struct LMApp: App {
         ImmersiveSpace(id: viewModel.cockpitSpaceID) {
             TerminalDescentCockpitView()
                 .environment(viewModel)
+                .upperLimbVisibility(.visible)
                 .onAppear {
                     viewModel.cockpitSpaceState = .open
                 }
@@ -65,9 +68,9 @@ struct LMApp: App {
                     viewModel.cockpitSpaceState = .closed
                 }
         }
-        // The closed pressure cabin supplies visual occlusion while mixed
-        // immersion allows native mission-control windows to coexist with the
-        // physical cockpit controls.
-        .immersionStyle(selection: .constant(.mixed), in: .mixed)
+        // A sealed pressure cabin cannot reveal passthrough through its window
+        // apertures. Full immersion turns passthrough off; visionOS continues
+        // to present this app's native mission-control windows in front.
+        .immersionStyle(selection: $cockpitImmersionStyle, in: .full)
     }
 }
