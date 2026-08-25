@@ -12,12 +12,6 @@ enum FDAIOrientation {
         axis: SIMD3<Float>(0, 1, 0)
     )
 
-    /// This simulation begins at PDI with the LM already pitched 95° in its
-    /// site-local world frame. The FDAI is referenced to the inertial platform,
-    /// so that world-frame setup attitude must not be painted onto the ball.
-    static let poweredDescentReferenceAttitude =
-        LMPoweredDescentScenario.apollo11SourceBacked.initialState.attitude
-
     static func relativeAttitude(
         _ attitude: LMQuaternion,
         reference: LMQuaternion
@@ -25,15 +19,30 @@ enum FDAIOrientation {
         reference.conjugated.multiplied(by: attitude).normalized()
     }
 
-    /// The FDAI ball is an inertial reference inside the spacecraft, so it moves
-    /// opposite the reference-relative vehicle attitude while the bezel stays fixed.
+    /// The FDAI ball is driven from the IMU CDUs through the Gimbal Angle
+    /// Sequence Transformation Assembly (GASTA). The stable platform's outer,
+    /// middle, and inner gimbals drive the FDAI's Z, X, and Y axes respectively.
+    /// Applying the simulation quaternion directly rotates the red yaw poles
+    /// into view during normal landing pitch and falsely depicts gimbal lock.
     static func ballOrientation(
         for attitude: LMQuaternion,
         relativeTo reference: LMQuaternion = .identity
     ) -> simd_quatf {
         let relative = relativeAttitude(attitude, reference: reference)
-        let vehicleOrientation = LMWorldMapper.tabletop.orientation(from: relative)
-        return simd_normalize(vehicleOrientation.inverse * textureAlignment)
+        let cdu = LMIMUGimbalMap.cduRadians(from: relative)
+        let fdaiOuter = simd_quatf(
+            angle: Float(-cdu.x),
+            axis: SIMD3<Float>(0, 0, 1)
+        )
+        let fdaiMiddle = simd_quatf(
+            angle: Float(-cdu.z),
+            axis: SIMD3<Float>(1, 0, 0)
+        )
+        let fdaiInner = simd_quatf(
+            angle: Float(-cdu.y),
+            axis: SIMD3<Float>(0, 1, 0)
+        )
+        return simd_normalize(fdaiOuter * fdaiMiddle * fdaiInner * textureAlignment)
     }
 
     /// NASA P/Q/R gimbal degrees (CDUX/CDUY/CDUZ), expressed relative to the
@@ -101,16 +110,14 @@ struct FDAIPanel: View {
 
     private var ballRotation: simd_quatf {
         FDAIOrientation.ballOrientation(
-            for: vehicleAttitude ?? FDAIOrientation.poweredDescentReferenceAttitude,
-            relativeTo: FDAIOrientation.poweredDescentReferenceAttitude
+            for: vehicleAttitude ?? .identity
         )
     }
 
     private var attitudeSummary: String {
         guard let attitude = vehicleAttitude else { return "attitude unavailable" }
         let gimbals = FDAIOrientation.nasaGimbalDegrees(
-            for: attitude,
-            relativeTo: FDAIOrientation.poweredDescentReferenceAttitude
+            for: attitude
         )
         return String(
             format: "ΔP %+.0f°  ΔQ %+.0f°  ΔR %+.0f°",

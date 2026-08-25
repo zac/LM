@@ -77,7 +77,11 @@ struct LMLandingPointDesignator: Sendable {
     /// Scene placement of the flight design eye. The source body-station datum
     /// is retained separately so an artist cabin can be checked without making
     /// scene origin placement part of the spacecraft definition.
-    let commanderEyeMeters = SIMD3<Float>(-0.36, 1.78, -0.38)
+    let commanderEyeMeters = SIMD3<Float>(
+        LMCommanderStationGeometry.commanderStationCenterXMeters,
+        1.78,
+        -0.38
+    )
 
     /// The exact flight cavity depth is not present in the cited drawings. Keep
     /// this isolated and conspicuous until an artifact survey or dimensioned

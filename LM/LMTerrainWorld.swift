@@ -59,9 +59,11 @@ enum LMTerrainWorld {
     /// reflectance-calibrated terrain against a black immersive sky.
     nonisolated static let missionSunIlluminanceLux: Float = 25_000
 
-    /// Covers the terminal-descent altitude range where the lander's cast
-    /// shadow becomes a useful, physically grounded height cue.
-    nonisolated static let missionShadowMaximumDistanceMeters: Float = 120
+    /// Keep the terminal-descent shadow map tightly fitted around the lander.
+    /// A 120 m fixed projection made each shadow texel several times larger
+    /// than necessary during the final tens of meters and blurred the LM shape.
+    nonisolated static let missionShadowMinimumDistanceMeters: Float = 12
+    nonisolated static let missionShadowMaximumDistanceMeters: Float = 45
 
     /// A restrained texture-derived exposure floor keeps shadowed regolith
     /// readable in an unlit immersive sky while the mission sun still supplies
@@ -126,12 +128,7 @@ enum LMTerrainWorld {
         let sun = DirectionalLight()
         sun.name = "MissionSun"
         sun.light.intensity = missionSunIlluminanceLux
-        sun.shadow = DirectionalLightComponent.Shadow(
-            shadowProjection: .automatic(
-                maximumDistance: missionShadowMaximumDistanceMeters
-            ),
-            depthBias: 1
-        )
+        sun.shadow = missionShadow(altitudeMeters: nil)
         sun.orientation = LMFullDescentMapper.sunLightOrientation(from: manifest)
         worldRoot.addChild(sun)
 
@@ -157,6 +154,26 @@ enum LMTerrainWorld {
         material.emissiveColor = .init(color: .white, texture: reflectance)
         material.emissiveIntensity = regolithExposureFloor
         return material
+    }
+
+    nonisolated static func missionShadowDistance(altitudeMeters: Double?) -> Float {
+        guard let altitudeMeters else { return missionShadowMaximumDistanceMeters }
+        let fitted = Float(max(0, altitudeMeters)) * 1.35 + 8
+        return min(
+            missionShadowMaximumDistanceMeters,
+            max(missionShadowMinimumDistanceMeters, fitted)
+        )
+    }
+
+    nonisolated static func missionShadow(
+        altitudeMeters: Double?
+    ) -> DirectionalLightComponent.Shadow {
+        DirectionalLightComponent.Shadow(
+            shadowProjection: .automatic(
+                maximumDistance: missionShadowDistance(altitudeMeters: altitudeMeters)
+            ),
+            depthBias: 1
+        )
     }
 
     static func worldTransform(for state: LMVehicleStateSnapshot?) -> Transform {

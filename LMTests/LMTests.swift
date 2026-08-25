@@ -111,20 +111,21 @@ struct LMTests {
         #expect(abs(pose.position.z) < 1e-5)
     }
 
-    @Test func fdaiBallCounterRotatesAgainstVehicleAttitude() {
-        let angle = Float(30.0 * .pi / 180.0)
+    @Test func fdaiGASTAMapsSimulationPitchToTheFDAIInnerGimbal() {
+        let angle = 30.0 * .pi / 180.0
         let attitude = LMQuaternion.fromAxisAngle(
             axis: LMVector3D(x: 1),
-            radians: Double(angle)
+            radians: angle
         )
         let neutral = FDAIOrientation.ballOrientation(for: .identity)
         let rotated = FDAIOrientation.ballOrientation(for: attitude)
         let relative = simd_normalize(rotated * neutral.inverse)
-        let movedUp = relative.act(SIMD3<Float>(0, 1, 0))
+        let redYawPole = rotated.act(SIMD3<Float>(0, 1, 0))
 
-        #expect(abs(movedUp.x) < 1e-5)
-        #expect(abs(movedUp.y - cos(angle)) < 1e-5)
-        #expect(abs(movedUp.z + sin(angle)) < 1e-5)
+        #expect(abs(relative.angle - Float(angle)) < 1e-5)
+        #expect(abs(redYawPole.x) < 1e-5)
+        #expect(abs(redYawPole.y - 1) < 1e-5)
+        #expect(abs(redYawPole.z) < 1e-5)
     }
 
     @Test func fdaiCaptionUsesNASAGimbalsForPDIPitch() {
@@ -138,17 +139,21 @@ struct LMTests {
         #expect(abs(gimbals.r) < 2)
     }
 
-    @Test func fdaiStartsAtItsPoweredDescentInertialReference() {
-        let pdi = FDAIOrientation.poweredDescentReferenceAttitude
-        let orientation = FDAIOrientation.ballOrientation(for: pdi, relativeTo: pdi)
-        let redPole = orientation.act(SIMD3<Float>(0, 1, 0))
-        let gimbals = FDAIOrientation.nasaGimbalDegrees(for: pdi, relativeTo: pdi)
+    @Test func fdaiKeepsTheRedGimbalLockPoleOutOfNormalPoweredDescentView() throws {
+        let pdi = LMPoweredDescentScenario.apollo11SourceBacked.initialState.attitude
+        let pdiOrientation = FDAIOrientation.ballOrientation(for: pdi)
+        let pdiRedPole = pdiOrientation.act(SIMD3<Float>(0, 1, 0))
+        let terminal = try PoweredDescentSession.bundledP65Checkpoint().vehicleState.attitude
+        let terminalRedPole = FDAIOrientation.ballOrientation(for: terminal)
+            .act(SIMD3<Float>(0, 1, 0))
+        let gimbals = FDAIOrientation.nasaGimbalDegrees(for: pdi)
 
-        #expect(abs(redPole.x) < 1e-5)
-        #expect(abs(redPole.y - 1) < 1e-5)
-        #expect(abs(redPole.z) < 1e-5)
+        #expect(abs(pdiRedPole.x) < 1e-5)
+        #expect(abs(pdiRedPole.y - 1) < 1e-5)
+        #expect(abs(pdiRedPole.z) < 1e-5)
+        #expect(terminalRedPole.y > 0.99)
         #expect(abs(gimbals.p) < 1e-5)
-        #expect(abs(gimbals.q) < 1e-5)
+        #expect(abs(gimbals.q - 95) < 0.5)
         #expect(abs(gimbals.r) < 1e-5)
     }
 
@@ -631,7 +636,11 @@ struct SourceBackedTerrainTileTests {
         #expect(simd_dot(illuminationDirection, expectedDirection) > 0.999_99)
         #expect(illuminationDirection.y < 0)
         #expect(LMTerrainWorld.missionSunIlluminanceLux == 25_000)
-        #expect(LMTerrainWorld.missionShadowMaximumDistanceMeters >= 100)
+        #expect(LMTerrainWorld.missionShadowMinimumDistanceMeters == 12)
+        #expect(LMTerrainWorld.missionShadowMaximumDistanceMeters == 45)
+        #expect(LMTerrainWorld.missionShadowDistance(altitudeMeters: 0) == 12)
+        #expect(LMTerrainWorld.missionShadowDistance(altitudeMeters: 20) == 35)
+        #expect(LMTerrainWorld.missionShadowDistance(altitudeMeters: 100) == 45)
         #expect(LMTerrainWorld.regolithExposureFloor > 0)
         #expect(LMTerrainWorld.regolithExposureFloor < 1)
     }
@@ -1534,6 +1543,10 @@ struct LandingPointDesignatorTests {
             22,
             54
         ))
+        #expect(abs(
+            lpd.commanderEyeMeters.x
+                - LMCommanderStationGeometry.commanderStationCenterXMeters
+        ) < 0.000_001)
     }
 
     @Test func reconstructedWindowMatchesPhysicalSidesAndDesignEyeEnvelope() {
@@ -1847,6 +1860,19 @@ struct Apollo11CommanderStationGeometryTests {
             named: LMCockpitAssetContract.Node.commanderWindowOuter.rawValue
         ) != nil)
     }
+
+    @Test @MainActor func onlyTheCabinShellCastsTheProceduralAscentStageShadow() throws {
+        let station = LMCommanderStationScene()
+        let panel = try #require(station.root.findEntity(named: "Panel_1"))
+        let shellSegment = try #require(
+            station.root.findEntity(named: "Cabin shell segment 01")
+        )
+
+        #expect(panel.components[DynamicLightShadowComponent.self] == nil)
+        #expect(
+            shellSegment.components[DynamicLightShadowComponent.self]?.castsShadow == true
+        )
+    }
 }
 
 @Suite("Apollo 11 LM DSKY geometry")
@@ -1878,6 +1904,35 @@ struct Apollo11LMDSKYGeometryTests {
             #expect(entity.components[CollisionComponent.self] != nil)
             #expect(station.dskyKeyCode(for: entity) != nil)
         }
+    }
+
+    @Test @MainActor func physicalDSKYMirrorsLiveRegistersAndAnnunciators() {
+        let station = LMCommanderStationScene()
+        let snapshot = DSKYSnapshot(
+            r1: "+00123",
+            r2: "-00456",
+            r3: "+07890",
+            verb: "06",
+            noun: "64",
+            mode: "65",
+            compActy: true,
+            indicators: [14: true, 27: true]
+        )
+
+        station.applyDSKY(snapshot)
+        let displayed = station.physicalDSKYDisplayedText
+
+        #expect(station.physicalDSKYDisplayEntityNames == [
+            "DSKY annunciator legends",
+            "DSKY illuminated annunciators",
+            "DSKY physical registers",
+        ])
+        #expect(displayed.registers.contains("PROG 65"))
+        #expect(displayed.registers.contains("VERB 06  NOUN 64"))
+        #expect(displayed.registers.contains("+00123"))
+        #expect(displayed.annunciators.contains("COMP ACTY"))
+        #expect(displayed.annunciators.contains("KEY REL"))
+        #expect(displayed.annunciators.contains("VEL"))
     }
 
     @Test @MainActor func dskyAndMissionHitTestingAcceptsAuthoredChildGeometry() {

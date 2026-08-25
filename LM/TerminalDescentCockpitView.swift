@@ -374,6 +374,7 @@ struct TerminalDescentCockpitView: View {
 
     private func applySceneState() {
         station.apply(appModel.session.vehicleState)
+        station.applyDSKY(appModel.session.dsky)
         station.setACAVisual(appModel.session.aca)
         station.setRODVisual(appModel.session.rodSwitchPosition)
         station.setAttitudeHoldVisual(appModel.session.attitudeMode == .attitudeHold)

@@ -31,6 +31,9 @@ final class LMCommanderStationScene {
     private let cabinFrame = Entity()
     private let fdaiMount = Entity()
     private let dskyDisplayMount = Entity()
+    private let physicalDSKYAnnunciatorLegends = ModelEntity()
+    private let physicalDSKYAnnunciatorLights = ModelEntity()
+    private let physicalDSKYRegisters = ModelEntity()
     private let proceduralCabin = Entity()
     private let provisionalTerrain = Entity()
     private let dustCloud = Entity()
@@ -44,6 +47,7 @@ final class LMCommanderStationScene {
     private var terrainHeightField: Apollo11TerrainHeightField?
     private var terrainFrameAlignment: LMTerrainFrameAlignment?
     private var terrainEnvironment: Entity?
+    private var terrainSun: DirectionalLight?
     private var terrainAlbedoTexture: TextureResource?
     private var progressiveTerrainEntities = [LMTerrainTileID: ModelEntity]()
     private var progressiveTerrainPlans = [LMTerrainTileID: LMTerrainTilePlan]()
@@ -53,6 +57,7 @@ final class LMCommanderStationScene {
     private var terrainGenerationTasks = [LMTerrainTileID: Task<Void, Never>]()
     private var terrainGenerationTokens = [LMTerrainTileID: UUID]()
     private var lastTerrainPresentationBlendBucket: Int?
+    private var lastMissionShadowDistanceMeters: Float?
     private var artistCabin: Entity?
     private var exteriorLunarModule: Entity?
     private var fdaiBall: Entity?
@@ -61,6 +66,8 @@ final class LMCommanderStationScene {
     private var dskyKeyEntitiesByRawValue = [Int: ModelEntity]()
     private var dskyKeyRestPositions = [Int: SIMD3<Float>]()
     private var dskyKeyResetTasks = [Int: Task<Void, Never>]()
+    private var lastPhysicalDSKYSignature: String?
+    private var lastPhysicalDSKYHeader: String?
     private let acaNeutralPosition = LMCommanderStationGeometry.acaPivotPositionMeters
     private let rodNeutralPosition = LMCommanderStationGeometry.rodPivotPositionMeters
     private let attitudeModeAutomaticPosition =
@@ -99,7 +106,14 @@ final class LMCommanderStationScene {
         buildLandingPointCalledAngleMarker()
         buildPhysicalDSKY()
         buildPhysicalControls()
-        setDynamicShadowCasting(in: cabinFrame)
+        // The cabin's layered panel faces generated moving shadow-map acne on
+        // Vision Pro. Keep only the pressure shell as the ascent-stage shadow
+        // silhouette; the exterior model supplies the descent stage and legs.
+        if let shell = proceduralCabin.findEntity(
+            named: LMCockpitAssetContract.Node.cabinShell.rawValue
+        ) {
+            setDynamicShadowCasting(in: shell)
+        }
         buildProvisionalSurface()
         buildDustCloud()
 
@@ -145,6 +159,40 @@ final class LMCommanderStationScene {
         entity.scale = SIMD3(repeating: 0.00035)
         dskyDisplayMount.addChild(entity)
         logger.notice("Mounted live DSKY display")
+    }
+
+    /// Keeps the flight display readable when RealityView has not mounted its
+    /// SwiftUI attachment yet. The physical text sits behind that attachment,
+    /// so the live SwiftUI face remains the preferred presentation while both
+    /// renderers consume the same immutable AGC snapshot.
+    func applyDSKY(_ snapshot: DSKYSnapshot?) {
+        let presentation = LMPhysicalDSKYPresentation(snapshot: snapshot)
+        guard presentation.signature != lastPhysicalDSKYSignature else { return }
+        lastPhysicalDSKYSignature = presentation.signature
+
+        updatePhysicalDSKYText(
+            physicalDSKYAnnunciatorLights,
+            text: presentation.activeAnnunciatorText,
+            size: physicalDSKYAnnunciatorSize,
+            fontSize: 0.00355,
+            color: UIColor(red: 1.0, green: 0.78, blue: 0.22, alpha: 1),
+            weight: .semibold,
+            alignment: .left
+        )
+        updatePhysicalDSKYText(
+            physicalDSKYRegisters,
+            text: presentation.registerText,
+            size: physicalDSKYRegisterSize,
+            fontSize: 0.0092,
+            color: UIColor(red: 0.62, green: 1.0, blue: 0.49, alpha: 1),
+            weight: .medium,
+            alignment: .center
+        )
+
+        if presentation.header != lastPhysicalDSKYHeader {
+            lastPhysicalDSKYHeader = presentation.header
+            logger.notice("Physical DSKY display \(presentation.header, privacy: .public)")
+        }
     }
 
     /// Loads the existing full LM art around the flight-datum cockpit. The
@@ -203,9 +251,9 @@ final class LMCommanderStationScene {
         guard let state else { return }
         lastVehicleState = state
         fdaiBall?.orientation = FDAIOrientation.ballOrientation(
-            for: state.attitude,
-            relativeTo: FDAIOrientation.poweredDescentReferenceAttitude
+            for: state.attitude
         )
+        updateMissionShadow(altitudeMeters: state.altitudeMeters)
         let terrainPosition = terrainPosition(for: state.positionMeters)
         let surfaceSample = progressiveSurfaceSample(
             at: terrainPosition,
@@ -248,10 +296,24 @@ final class LMCommanderStationScene {
             )
         }
         terrainEnvironment = terrain
+        terrainSun = assembly.sun
         terrainAlbedoTexture = assembly.nearAlbedoTexture
         provisionalTerrain.removeFromParent()
         lunarWorld.addChild(terrain)
         apply(lastVehicleState)
+    }
+
+    private func updateMissionShadow(altitudeMeters: Double) {
+        guard let terrainSun else { return }
+        let distance = LMTerrainWorld.missionShadowDistance(
+            altitudeMeters: altitudeMeters
+        )
+        guard lastMissionShadowDistanceMeters.map({ abs($0 - distance) >= 0.5 })
+                ?? true else { return }
+        lastMissionShadowDistanceMeters = distance
+        terrainSun.shadow = LMTerrainWorld.missionShadow(
+            altitudeMeters: altitudeMeters
+        )
     }
 
     private func terrainPosition(for guidancePosition: LMVector3D) -> LMVector3D {
@@ -1160,6 +1222,8 @@ final class LMCommanderStationScene {
         )
         dskyFaceRoot.addChild(apertureBacking)
 
+        buildPhysicalDSKYReadout(faceDepth: faceDepth)
+
         dskyFaceRoot.addChild(dskyDisplayMount)
 
         for placement in LMDSKYGeometry.keyPlacements {
@@ -1216,6 +1280,101 @@ final class LMCommanderStationScene {
         cabinFrame.addChild(dskyFaceRoot)
     }
 
+    private var physicalDSKYDisplaySize: SIMD2<Float> {
+        SIMD2(
+            LMDSKYGeometry.innerFaceWidthMeters - 0.010,
+            LMDSKYGeometry.displayHeightInches * LMDSKYGeometry.metersPerInch - 0.010
+        )
+    }
+
+    private var physicalDSKYAnnunciatorSize: SIMD2<Float> {
+        SIMD2(physicalDSKYDisplaySize.x * 0.36, physicalDSKYDisplaySize.y)
+    }
+
+    private var physicalDSKYRegisterSize: SIMD2<Float> {
+        SIMD2(physicalDSKYDisplaySize.x * 0.61, physicalDSKYDisplaySize.y)
+    }
+
+    private func buildPhysicalDSKYReadout(faceDepth: Float) {
+        let annunciatorSize = physicalDSKYAnnunciatorSize
+        let gap = physicalDSKYDisplaySize.x * 0.03
+        let leftEdge = LMDSKYGeometry.displayCenterMeters.x
+            - physicalDSKYDisplaySize.x / 2
+        let bottomEdge = LMDSKYGeometry.displayCenterMeters.y
+            - physicalDSKYDisplaySize.y / 2
+        let textZ = faceDepth / 2 + 0.0031
+
+        physicalDSKYAnnunciatorLegends.name = "DSKY annunciator legends"
+        physicalDSKYAnnunciatorLegends.position = SIMD3(leftEdge, bottomEdge, textZ)
+        updatePhysicalDSKYText(
+            physicalDSKYAnnunciatorLegends,
+            text: LMPhysicalDSKYPresentation.annunciatorLegendText,
+            size: annunciatorSize,
+            fontSize: 0.00355,
+            color: UIColor(red: 0.19, green: 0.27, blue: 0.18, alpha: 1),
+            weight: .regular,
+            alignment: .left
+        )
+        dskyFaceRoot.addChild(physicalDSKYAnnunciatorLegends)
+
+        physicalDSKYAnnunciatorLights.name = "DSKY illuminated annunciators"
+        physicalDSKYAnnunciatorLights.position = SIMD3(leftEdge, bottomEdge, textZ + 0.0002)
+        dskyFaceRoot.addChild(physicalDSKYAnnunciatorLights)
+
+        physicalDSKYRegisters.name = "DSKY physical registers"
+        physicalDSKYRegisters.position = SIMD3(
+            leftEdge + annunciatorSize.x + gap,
+            bottomEdge,
+            textZ + 0.0001
+        )
+        dskyFaceRoot.addChild(physicalDSKYRegisters)
+        applyDSKY(nil)
+    }
+
+    private func updatePhysicalDSKYText(
+        _ entity: ModelEntity,
+        text: String,
+        size: SIMD2<Float>,
+        fontSize: CGFloat,
+        color: UIColor,
+        weight: UIFont.Weight,
+        alignment: CTTextAlignment
+    ) {
+        let mesh = MeshResource.generateText(
+            text,
+            extrusionDepth: 0.00010,
+            font: .monospacedSystemFont(ofSize: fontSize, weight: weight),
+            containerFrame: CGRect(
+                x: 0,
+                y: 0,
+                width: CGFloat(size.x),
+                height: CGFloat(size.y)
+            ),
+            alignment: alignment,
+            lineBreakMode: .byClipping
+        )
+        entity.model = ModelComponent(
+            mesh: mesh,
+            materials: [UnlitMaterial(color: color)]
+        )
+    }
+
+    var physicalDSKYDisplayEntityNames: [String] {
+        [
+            physicalDSKYAnnunciatorLegends.name,
+            physicalDSKYAnnunciatorLights.name,
+            physicalDSKYRegisters.name,
+        ]
+    }
+
+    var physicalDSKYDisplayedText: (registers: String, annunciators: String) {
+        let parts = lastPhysicalDSKYSignature?.components(separatedBy: "\u{1F}") ?? []
+        return (
+            registers: parts.first ?? "",
+            annunciators: parts.count > 1 ? parts[1] : ""
+        )
+    }
+
     private func buildPhysicalFDAI() {
         guard let instrument = try? Entity.load(
             named: "FDAI",
@@ -1227,8 +1386,7 @@ final class LMCommanderStationScene {
         instrument.name = "Physical FDAI ball"
         instrument.position = SIMD3(0, 0, -0.040)
         instrument.orientation = FDAIOrientation.ballOrientation(
-            for: FDAIOrientation.poweredDescentReferenceAttitude,
-            relativeTo: FDAIOrientation.poweredDescentReferenceAttitude
+            for: .identity
         )
         fdaiMount.addChild(instrument)
         fdaiBall = instrument
