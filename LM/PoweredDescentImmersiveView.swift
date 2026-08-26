@@ -57,7 +57,7 @@ struct PoweredDescentImmersiveView: View {
         let mapper = LMWorldMapper.tabletop
         let program = appModel.session.programNumber
         if let state = appModel.session.vehicleState {
-            module.apply(siState: state, mapper: mapper, program: program)
+            module.apply(siState: state, mapper: mapper, program: program, floorY: 0)
             rangeStrip.apply(
                 downrangeMeters: state.downrangeMeters,
                 mapper: mapper,

@@ -24,7 +24,9 @@ final class LunarModuleModel {
     private var plumeEntity: Entity?
     private var dpsBellEntity: Entity?
     private var dpsBellBaseOrientation = simd_quatf()
-    private var dpsPlumeBaseOrientation = simd_quatf()
+    private var dpsBellPivotPosition = SIMD3<Float>.zero
+    private var dpsPlumeBaseOffset = SIMD3<Float>.zero
+    private var modelGeometryBounds: BoundingBox?
     private var activeJets: Set<RCSThruster> = []
     private let thrusterForceMagnitude: Float = 445.0  // ≈100 lbf
     private let minimumPulseDuration: Float = 0.05     // 50 ms pulse
@@ -33,7 +35,7 @@ final class LunarModuleModel {
     private var inertiaTensor: SIMD3<Float> = SIMD3<Float>(repeating: 1.0)
     private var centerOfMassOffset: SIMD3<Float> = .zero
     
-    private let thrusterDirections: [RCSThruster: SIMD3<Float>] = [
+    static let thrusterDirections: [RCSThruster: SIMD3<Float>] = [
         // Quad 1
         .A1U: SIMD3<Float>(0, 1, 0),   // Up
         .A1F: SIMD3<Float>(0, 0, -1),  // Forward
@@ -58,17 +60,53 @@ final class LunarModuleModel {
         .B4U: SIMD3<Float>(0, 1, 0),   // Up
         .B4F: SIMD3<Float>(0, 0, -1)   // Forward
     ]
+
+    static let thrusterEntityNames: [String: RCSThruster] = [
+        "group13_g5": .A1U,
+        "group13_g7": .A1F,
+        "group13_g6": .B1L,
+        "group13_g4": .B1D,
+
+        "group13_10": .A2A,
+        "group13_g8": .A2D,
+        "group13_g9": .B2U,
+        "group13_11": .B2L,
+
+        "group13_12": .A3U,
+        "group13_13": .A3R,
+        "group13_14": .B3A,
+        "group13_p1": .B3D,
+
+        "group13_g2": .A4R,
+        "group13_g1": .A4D,
+        "group13_gr": .B4U,
+        "group13_g3": .B4F
+    ]
     
     init(mode: LunarModuleFlightMode = .impulseSandbox) {
         self.mode = mode
         loadModel()
     }
 
-    func apply(siState: LMVehicleStateSnapshot, mapper: LMWorldMapper, program: Int? = nil) {
+    func apply(
+        siState: LMVehicleStateSnapshot,
+        mapper: LMWorldMapper,
+        program: Int? = nil,
+        floorY: Float? = nil
+    ) {
         guard let physicsEntity else { return }
         let pose = mapper.pose(from: siState, program: program)
-        physicsEntity.position = pose.position
         physicsEntity.orientation = pose.orientation
+        if let floorY, let modelGeometryBounds {
+            physicsEntity.position = Self.position(
+                pose.position,
+                keeping: modelGeometryBounds,
+                orientation: pose.orientation,
+                above: floorY
+            )
+        } else {
+            physicsEntity.position = pose.position
+        }
         applyDPSGimbal(
             pitchRadians: siState.dpsPitchGimbalRadians,
             rollRadians: siState.dpsRollGimbalRadians
@@ -201,13 +239,15 @@ final class LunarModuleModel {
             let physicsRootEntity = ModelEntity()
             physicsRootEntity.name = "LunarModuleRoot"
             physicsRootEntity.addChild(landerClone)
+            modelGeometryBounds = landerClone.visualBounds(relativeTo: physicsRootEntity)
 
-            if let dpsBell = physicsRootEntity.findEntity(named: "group13_p2") {
+            if let dpsBell = physicsRootEntity.findEntity(named: "group13_pC") {
                 dpsBellEntity = dpsBell
-                dpsBellBaseOrientation = dpsBell.orientation
+                dpsBellBaseOrientation = dpsBell.orientation(relativeTo: physicsRootEntity)
+                dpsBellPivotPosition = dpsBell.position(relativeTo: physicsRootEntity)
             } else {
                 dpsBellEntity = nil
-                print("WARNING: DPS engine bell entity group13_p2 not found")
+                print("WARNING: DPS engine bell entity group13_pC not found")
             }
             
             rootEntity.addChild(physicsRootEntity)
@@ -252,43 +292,19 @@ final class LunarModuleModel {
     }
     
     private func configureThrusters(on physicsRootEntity: ModelEntity) {
-        let thrusterMapping: [String: RCSThruster] = [
-            "group13_g5": .A1U,
-            "group13_g7": .A1F,
-            "group13_g6": .B1L,
-            "group13_g4": .B1D,
-            
-            "group13_10": .A2A,
-            "group13_g8": .A2D,
-            "group13_g9": .B2U,
-            "group13_11": .B2L,
-            
-            "group13_12": .A3U,
-            "group13_13": .A3R,
-            "group13_14": .B3A,
-            "group13_p1": .B3D,
-            
-            "group13_g2": .A4R,
-            "group13_g1": .A4D,
-            "group13_gr": .B4U,
-            "group13_g3": .B4F
-        ]
-        
-        for (groupName, thruster) in thrusterMapping {
+        for (groupName, thruster) in Self.thrusterEntityNames {
             guard
                 let thrusterEntity = physicsRootEntity.findEntity(named: groupName),
-                let direction = thrusterDirections[thruster]
+                let direction = Self.thrusterDirections[thruster]
             else {
                 print("Missing thruster entity or direction for \(groupName)")
                 continue
             }
             
-            let localPosition = thrusterEntity.position(relativeTo: physicsRootEntity)
-            let approximateDirection = simd_normalize(direction)
-            let thrusterOrientation = thrusterEntity.orientation(relativeTo: physicsRootEntity)
-            let localDirection = resolvedThrusterDirection(approximate: approximateDirection,
-                                                           orientation: thrusterOrientation)
+            let localDirection = simd_normalize(direction)
             let exhaust = simd_normalize(-localDirection)
+            let nozzleBounds = thrusterEntity.visualBounds(relativeTo: physicsRootEntity)
+            let localPosition = Self.effectAnchor(in: nozzleBounds, direction: exhaust)
             let plume = makeExhaustPlume(
                 name: "rcs-plume-\(thruster.rawValue)",
                 length: 0.055,
@@ -300,8 +316,9 @@ final class LunarModuleModel {
                 lifeSpan: 0.18,
                 particleSize: 0.004
             )
+            plume.position = localPosition
             plume.orientation = rotationAligningPositiveY(to: exhaust)
-            thrusterEntity.addChild(plume)
+            physicsRootEntity.addChild(plume)
 
             thrusters[thruster] = RCSThrusterData(
                 thruster: thruster,
@@ -325,11 +342,18 @@ final class LunarModuleModel {
             lifeSpan: 0.28,
             particleSize: 0.012
         )
-        plume.orientation = rotationAligningPositiveY(to: SIMD3(0, -1, 0))
-        plume.position = SIMD3(0, -0.08, 0)
+        let baseExhaust = SIMD3<Float>(0, -1, 0)
+        if let dpsBellEntity {
+            let bellBounds = dpsBellEntity.visualBounds(relativeTo: physicsRootEntity)
+            plume.position = Self.effectAnchor(in: bellBounds, direction: baseExhaust)
+            dpsPlumeBaseOffset = plume.position - dpsBellPivotPosition
+        } else {
+            plume.position = SIMD3(0, -0.14, 0)
+            dpsPlumeBaseOffset = plume.position
+        }
+        plume.orientation = rotationAligningPositiveY(to: baseExhaust)
         physicsRootEntity.addChild(plume)
         plumeEntity = plume
-        dpsPlumeBaseOrientation = plume.orientation
     }
 
     private func applyDPSGimbal(pitchRadians: Double, rollRadians: Double) {
@@ -347,7 +371,8 @@ final class LunarModuleModel {
             to: exhaustDirection
         )
         dpsBellEntity?.orientation = gimbal * dpsBellBaseOrientation
-        plumeEntity?.orientation = gimbal * dpsPlumeBaseOrientation
+        plumeEntity?.position = dpsBellPivotPosition + gimbal.act(dpsPlumeBaseOffset)
+        plumeEntity?.orientation = rotationAligningPositiveY(to: exhaustDirection)
     }
 
     private func makeExhaustPlume(
@@ -364,24 +389,30 @@ final class LunarModuleModel {
         let root = Entity()
         root.name = name
 
-        let envelopeMesh = MeshResource.generateCone(height: length, radius: radius)
+        let envelopeMesh = makeTaperedPlumeMesh(
+            name: "\(name)-envelope-mesh",
+            length: length,
+            startRadius: radius * 0.08,
+            endRadius: radius
+        )
         let envelopeCone = ModelEntity(
             mesh: envelopeMesh,
             materials: [UnlitMaterial(color: envelope)]
         )
         envelopeCone.name = "\(name)-envelope"
-        envelopeCone.orientation = simd_quatf(angle: .pi, axis: SIMD3(1, 0, 0))
-        envelopeCone.position = SIMD3(0, length * 0.5, 0)
         root.addChild(envelopeCone)
 
-        let coreMesh = MeshResource.generateCone(height: length * 0.72, radius: radius * 0.38)
+        let coreMesh = makeTaperedPlumeMesh(
+            name: "\(name)-core-mesh",
+            length: length * 0.72,
+            startRadius: radius * 0.04,
+            endRadius: radius * 0.38
+        )
         let coreCone = ModelEntity(
             mesh: coreMesh,
             materials: [UnlitMaterial(color: core)]
         )
         coreCone.name = "\(name)-core"
-        coreCone.orientation = simd_quatf(angle: .pi, axis: SIMD3(1, 0, 0))
-        coreCone.position = SIMD3(0, length * 0.36, 0)
         root.addChild(coreCone)
 
         var particles = ParticleEmitterComponent.Presets.sparks
@@ -404,6 +435,43 @@ final class LunarModuleModel {
 
         setExhaustFiring(root, firing: false)
         return root
+    }
+
+    private func makeTaperedPlumeMesh(
+        name: String,
+        length: Float,
+        startRadius: Float,
+        endRadius: Float,
+        segments: Int = 20
+    ) -> MeshResource {
+        var positions: [SIMD3<Float>] = []
+        var indices: [UInt32] = []
+        positions.reserveCapacity(segments * 2)
+        indices.reserveCapacity(segments * 6)
+
+        for segment in 0..<segments {
+            let angle = Float(segment) / Float(segments) * 2 * .pi
+            let radial = SIMD2<Float>(cos(angle), sin(angle))
+            positions.append(SIMD3(radial.x * startRadius, 0, radial.y * startRadius))
+            positions.append(SIMD3(radial.x * endRadius, length, radial.y * endRadius))
+        }
+
+        for segment in 0..<segments {
+            let next = (segment + 1) % segments
+            let start = UInt32(segment * 2)
+            let end = start + 1
+            let nextStart = UInt32(next * 2)
+            let nextEnd = nextStart + 1
+            indices.append(contentsOf: [start, end, nextStart, end, nextEnd, nextStart])
+        }
+
+        var descriptor = MeshDescriptor(name: name)
+        descriptor.positions = MeshBuffers.Positions(positions)
+        descriptor.primitives = .triangles(indices)
+        if let mesh = try? MeshResource.generate(from: [descriptor]) {
+            return mesh
+        }
+        return MeshResource.generateCone(height: length, radius: endRadius)
     }
 
     private func setExhaustFiring(_ plume: Entity, firing: Bool) {
@@ -444,35 +512,37 @@ final class LunarModuleModel {
     private func rotationAligningPositiveY(to direction: SIMD3<Float>) -> simd_quatf {
         rotationAligningReferenceAxis(SIMD3<Float>(0, 1, 0), to: direction)
     }
-    
-    private func resolvedThrusterDirection(approximate: SIMD3<Float>, orientation: simd_quatf) -> SIMD3<Float> {
-        let approx = simd_length(approximate) > 0 ? simd_normalize(approximate) : SIMD3<Float>(0, 1, 0)
-        let candidateAxes: [SIMD3<Float>] = [
-            SIMD3<Float>(1, 0, 0),
-            SIMD3<Float>(-1, 0, 0),
-            SIMD3<Float>(0, 1, 0),
-            SIMD3<Float>(0, -1, 0),
-            SIMD3<Float>(0, 0, 1),
-            SIMD3<Float>(0, 0, -1)
-        ]
-        
-        var bestDirection = approx
-        var bestDot: Float = -Float.greatestFiniteMagnitude
-        
-        for axis in candidateAxes {
-            let rotated = orientation.act(axis)
-            let normalized = simd_length(rotated) > 0 ? simd_normalize(rotated) : rotated
-            let dot = simd_dot(normalized, approx)
-            if dot > bestDot {
-                bestDot = dot
-                bestDirection = normalized
+
+    static func effectAnchor(in bounds: BoundingBox, direction: SIMD3<Float>) -> SIMD3<Float> {
+        let normalized = simd_length(direction) > 0 ? simd_normalize(direction) : SIMD3<Float>(0, 1, 0)
+        let halfExtents = bounds.extents * 0.5
+        let epsilon: Float = 1e-5
+        return bounds.center + SIMD3(
+            abs(normalized.x) < epsilon ? 0 : (normalized.x > 0 ? halfExtents.x : -halfExtents.x),
+            abs(normalized.y) < epsilon ? 0 : (normalized.y > 0 ? halfExtents.y : -halfExtents.y),
+            abs(normalized.z) < epsilon ? 0 : (normalized.z > 0 ? halfExtents.z : -halfExtents.z)
+        )
+    }
+
+    static func position(
+        _ proposedPosition: SIMD3<Float>,
+        keeping bounds: BoundingBox,
+        orientation: simd_quatf,
+        above floorY: Float
+    ) -> SIMD3<Float> {
+        let halfExtents = bounds.extents * 0.5
+        var lowestOffset = Float.greatestFiniteMagnitude
+        for x in [-halfExtents.x, halfExtents.x] {
+            for y in [-halfExtents.y, halfExtents.y] {
+                for z in [-halfExtents.z, halfExtents.z] {
+                    let corner = bounds.center + SIMD3(x, y, z)
+                    lowestOffset = min(lowestOffset, orientation.act(corner).y)
+                }
             }
         }
-        
-        if bestDot < 0 {
-            return -bestDirection
-        }
-        
-        return simd_normalize(bestDirection)
+
+        var constrained = proposedPosition
+        constrained.y = max(constrained.y, floorY - lowestOffset)
+        return constrained
     }
 }

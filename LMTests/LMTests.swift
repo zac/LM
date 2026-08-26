@@ -178,6 +178,73 @@ struct LMTests {
         #expect(Set(LMRCSJetMapping.table.values).count == LMRCSJet.allCases.count)
         #expect(Set(LMRCSJetMapping.table.keys) == Set(LMRCSJet.allCases))
     }
+
+    @Test func effectAnchorUsesTheNozzleFaceWithoutDriftingAcrossOtherAxes() {
+        let bounds = BoundingBox(
+            min: SIMD3<Float>(-1, -2, -3),
+            max: SIMD3<Float>(1, 2, 3)
+        )
+
+        #expect(LunarModuleModel.effectAnchor(in: bounds, direction: SIMD3(0, -1, 0)) == SIMD3(0, -2, 0))
+        #expect(LunarModuleModel.effectAnchor(in: bounds, direction: SIMD3(1, 0, 0)) == SIMD3(1, 0, 0))
+        #expect(LunarModuleModel.effectAnchor(in: bounds, direction: SIMD3(0, 0, 1)) == SIMD3(0, 0, 3))
+    }
+
+    @Test func tabletopContactConstraintKeepsEveryRotatedModelCornerAboveThePad() {
+        let bounds = BoundingBox(
+            min: SIMD3<Float>(-0.16, -0.16, -0.16),
+            max: SIMD3<Float>(0.16, 0.10, 0.16)
+        )
+        let orientation = simd_quatf(angle: .pi / 5, axis: simd_normalize(SIMD3<Float>(1, 0, 1)))
+        let position = LunarModuleModel.position(
+            .zero,
+            keeping: bounds,
+            orientation: orientation,
+            above: 0
+        )
+
+        for x in [bounds.min.x, bounds.max.x] {
+            for y in [bounds.min.y, bounds.max.y] {
+                for z in [bounds.min.z, bounds.max.z] {
+                    let worldY = position.y + orientation.act(SIMD3(x, y, z)).y
+                    #expect(worldY >= -1e-6)
+                }
+            }
+        }
+    }
+
+    @Test @MainActor func loadedLMAnchorsDPSAndRCSPlumesToTheirRealNozzleMeshes() throws {
+        let model = LunarModuleModel(mode: .kinematicGuidance)
+        let root = model.rootEntity
+        let bell = try #require(root.findEntity(named: "group13_pC"))
+        let dpsPlume = try #require(root.findEntity(named: "DPSPlume"))
+        let bellBounds = bell.visualBounds(relativeTo: root)
+
+        #expect(abs(dpsPlume.position(relativeTo: root).y - bellBounds.min.y) < 1e-5)
+        #expect(dpsPlume.parent?.name == "LunarModuleRoot")
+        #expect(simd_dot(
+            dpsPlume.orientation(relativeTo: root).act(SIMD3<Float>(0, 1, 0)),
+            SIMD3<Float>(0, -1, 0)
+        ) > 0.999)
+
+        for (entityName, thruster) in LunarModuleModel.thrusterEntityNames {
+            let nozzle = try #require(root.findEntity(named: entityName))
+            let plume = try #require(root.findEntity(named: "rcs-plume-\(thruster.rawValue)"))
+            let thrustDirection = try #require(LunarModuleModel.thrusterDirections[thruster])
+            let exhaustDirection = -simd_normalize(thrustDirection)
+            let expectedAnchor = LunarModuleModel.effectAnchor(
+                in: nozzle.visualBounds(relativeTo: root),
+                direction: exhaustDirection
+            )
+
+            #expect(simd_distance(plume.position(relativeTo: root), expectedAnchor) < 1e-5)
+            #expect(plume.parent?.name == "LunarModuleRoot")
+            #expect(simd_dot(
+                plume.orientation(relativeTo: root).act(SIMD3<Float>(0, 1, 0)),
+                exhaustDirection
+            ) > 0.999)
+        }
+    }
 }
 
 @Suite("ACA analog input mapping")
