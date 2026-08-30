@@ -1,0 +1,21 @@
+{
+  "batch_size": 4,
+  "bilinear_gradient_error": 0.013252711311603585,
+  "bilinear_psnr_db": 37.73612314005589,
+  "blocks": 4,
+  "device": "mps",
+  "features": 24,
+  "gradient_error_reduction": 0.0009880412835627794,
+  "model_gradient_error": 0.012264670028040806,
+  "model_id": "lunar-terrain-sr-nac-v2",
+  "model_psnr_db": 39.82933138429962,
+  "parameter_count": 88993,
+  "preview_sha256": "dbbf9be47cda64b836e95a8bbc3b7a5bec15e330a350ade63b45440396e73271",
+  "psnr_gain_db": 2.0932082442437334,
+  "seed": 111969,
+  "source": "paired-nac:NAC_DTM_APOLLO11_M150361817_50CM_ROWS_32100_36197.bin+NAC_DTM_APOLLO11_M150368601_50CM_ROWS_32100_36197.bin",
+  "steps": 5000,
+  "training_seconds": 49.46523645799607,
+  "validation_crop_count": 12,
+  "weights_sha256": "6f43d86fdc7621fdaaad93c65a9df246f52f27550f979872bfce26c22e483416"
+}

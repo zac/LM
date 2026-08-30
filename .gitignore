@@ -15,5 +15,7 @@ xcuserdata/
 # Swift Package Manager
 .build/
 Tools/TerrainGenerator/cache/
+Tools/NeuralTerrain/output/
+Tools/NeuralTerrain/checkpoints/
 # macOS
 .DS_Store
