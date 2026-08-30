@@ -34,21 +34,14 @@ struct Apollo11TerrainHeightField: Equatable, Sendable {
         let south = value(x0, y1) + (value(x1, y1) - value(x0, y1)) * tx
         return north + (south - north) * ty
     }
-
-    /// The simulation/contact surface remains measured interpolation only.
-    /// Procedural crater relief is visual evidence, never a hidden landing aid
-    /// or hazard in the flight model.
-    func conservativeContactElevation(
-        eastMeters: Double,
-        northMeters: Double
-    ) -> Float? {
-        relativeElevation(eastMeters: eastMeters, northMeters: northMeters)
-    }
 }
 
 struct LMProgressiveTerrainMeshData: Sendable {
     let positions: [SIMD3<Float>]
     let normals: [SIMD3<Float>]
+    let tangents: [SIMD3<Float>]
+    let bitangents: [SIMD3<Float>]
+    /// Tile-local 0...1 coordinates for the tile's own baked detail textures.
     let textureCoordinates: [SIMD2<Float>]
     let indices: [UInt32]
 }
@@ -86,34 +79,129 @@ enum Apollo11TerrainResource {
         return Apollo11TerrainHeightField(tile: near, heights: heights)
     }
 
+    struct ProgressiveTileBuild: Sendable {
+        let mesh: LMProgressiveTerrainMeshData
+        let detail: LMTerrainTileDetailTextures
+        let meshMilliseconds: Int
+        let detailMilliseconds: Int
+    }
+
+    struct ProgressiveTileGenerationMetrics: Equatable, Sendable {
+        let meshMilliseconds: Int
+        let detailMilliseconds: Int
+        let realizationMilliseconds: Int
+    }
+
+    struct ProgressiveTileEntityBuild {
+        let entity: ModelEntity
+        let metrics: ProgressiveTileGenerationMetrics
+    }
+
     @MainActor
     static func makeProgressiveTileEntity(
         heightField: Apollo11TerrainHeightField,
         plan: LMTerrainTilePlan,
-        albedoTexture: TextureResource
+        albedoField: LMMeasuredAlbedoField?
     ) async throws -> ModelEntity? {
+        try await makeProgressiveTileEntityBuild(
+            heightField: heightField,
+            plan: plan,
+            albedoField: albedoField
+        )?.entity
+    }
+
+    @MainActor
+    static func makeProgressiveTileEntityBuild(
+        heightField: Apollo11TerrainHeightField,
+        plan: LMTerrainTilePlan,
+        albedoField: LMMeasuredAlbedoField?
+    ) async throws -> ProgressiveTileEntityBuild? {
         let generationTask = Task.detached(priority: .userInitiated) {
-            try makeProgressiveTileMeshData(
+            // Geometry and appearance consume the same plan but do not depend
+            // on one another. Structured child tasks keep cancellation intact
+            // while allowing the two CPU-heavy products to use separate cores.
+            async let timedMesh = timedProgressiveTileMesh(
                 heightField: heightField,
                 plan: plan
             )
+            async let timedDetail = timedProgressiveTileDetail(
+                plan: plan,
+                albedoField: albedoField
+            )
+            let meshResult = try await timedMesh
+            let detailResult = try await timedDetail
+            guard let mesh = meshResult.value else {
+                return ProgressiveTileBuild?.none
+            }
+            return ProgressiveTileBuild(
+                mesh: mesh,
+                detail: detailResult.value,
+                meshMilliseconds: meshResult.milliseconds,
+                detailMilliseconds: detailResult.milliseconds
+            )
         }
-        let data = try await withTaskCancellationHandler(
+        let build = try await withTaskCancellationHandler(
             operation: { try await generationTask.value },
             onCancel: { generationTask.cancel() }
         )
-        guard let data else { return nil }
+        guard let build else { return nil }
+        let data = build.mesh
 
+        let realizationStarted = ContinuousClock.now
         var descriptor = MeshDescriptor(name: "Progressive LROC tile")
         descriptor.positions = MeshBuffers.Positions(data.positions)
         descriptor.normals = MeshBuffers.Normals(data.normals)
+        descriptor.tangents = MeshBuffers.Tangents(data.tangents)
+        descriptor.bitangents = MeshBuffers.Tangents(data.bitangents)
         descriptor.textureCoordinates = MeshBuffers.TextureCoordinates(data.textureCoordinates)
         descriptor.primitives = .triangles(data.indices)
         let mesh = try MeshResource.generate(from: [descriptor])
-        let material = LMTerrainWorld.terrainMaterial(texture: albedoTexture)
+        let material = try LMTerrainWorld.detailTerrainMaterial(build.detail)
         let entity = ModelEntity(mesh: mesh, materials: [material])
-        entity.name = "LROC progressive \(LMLunarGeologyModel.modelID) L\(plan.id.level) E\(plan.id.eastIndex) N\(plan.id.northIndex) \(plan.sampleSpacingMeters)m"
-        return entity
+        entity.name = "LROC progressive \(LMLunarGeologyModel.modelID) + \(LMTerrainTileDetailBaker.modelID) L\(plan.id.level) E\(plan.id.eastIndex) N\(plan.id.northIndex) \(plan.sampleSpacingMeters)m"
+        return ProgressiveTileEntityBuild(
+            entity: entity,
+            metrics: ProgressiveTileGenerationMetrics(
+                meshMilliseconds: build.meshMilliseconds,
+                detailMilliseconds: build.detailMilliseconds,
+                realizationMilliseconds: milliseconds(
+                    realizationStarted.duration(to: .now)
+                )
+            )
+        )
+    }
+
+    nonisolated private static func milliseconds(
+        _ duration: ContinuousClock.Duration
+    ) -> Int {
+        Int(
+            duration.components.seconds * 1_000
+                + duration.components.attoseconds / 1_000_000_000_000_000
+        )
+    }
+
+    nonisolated private static func timedProgressiveTileMesh(
+        heightField: Apollo11TerrainHeightField,
+        plan: LMTerrainTilePlan
+    ) throws -> (value: LMProgressiveTerrainMeshData?, milliseconds: Int) {
+        let started = ContinuousClock.now
+        let value = try makeProgressiveTileMeshData(
+            heightField: heightField,
+            plan: plan
+        )
+        return (value, milliseconds(started.duration(to: .now)))
+    }
+
+    nonisolated private static func timedProgressiveTileDetail(
+        plan: LMTerrainTilePlan,
+        albedoField: LMMeasuredAlbedoField?
+    ) throws -> (value: LMTerrainTileDetailTextures, milliseconds: Int) {
+        let started = ContinuousClock.now
+        let value = try LMTerrainTileDetailBaker.bake(
+            plan: plan,
+            albedoField: albedoField
+        )
+        return (value, milliseconds(started.duration(to: .now)))
     }
 
     nonisolated static func makeProgressiveTileMeshData(
@@ -123,9 +211,11 @@ enum Apollo11TerrainResource {
         let tileSize = plan.sizeMeters
         let sampleSpacing = plan.sampleSpacingMeters
         let sampleCount = Int(tileSize / sampleSpacing) + 1
+        // Precompute the geology once for this tile. The surface is unchanged;
+        // only the number of times the generator hash runs is.
         let surfaceSampler = LMProgressiveTerrainSurfaceSampler(
             heightField: heightField
-        )
+        ).prepared(for: plan)
         let halfSize = tileSize / 2
 
         var positions = [SIMD3<Float>]()
@@ -133,8 +223,6 @@ enum Apollo11TerrainResource {
         positions.reserveCapacity(sampleCount * sampleCount)
         textureCoordinates.reserveCapacity(sampleCount * sampleCount)
 
-        let measuredHalfWidth = Double(heightField.width - 1) * heightField.spacingMeters / 2
-        let measuredHalfDepth = Double(heightField.height - 1) * heightField.spacingMeters / 2
         for row in 0..<sampleCount {
             try Task.checkCancellation()
             let north = plan.centerNorthMeters + halfSize - Double(row) * sampleSpacing
@@ -152,16 +240,16 @@ enum Apollo11TerrainResource {
                     elevation,
                     Float(-east)
                 ))
-                textureCoordinates.append(textureCoordinate(
-                    eastMeters: east,
-                    northMeters: north,
-                    measuredHalfWidth: measuredHalfWidth,
-                    measuredHalfDepth: measuredHalfDepth
+                textureCoordinates.append(SIMD2(
+                    Float(column) / Float(sampleCount - 1),
+                    Float(row) / Float(sampleCount - 1)
                 ))
             }
         }
 
         var normals = [SIMD3<Float>](repeating: SIMD3(0, 1, 0), count: positions.count)
+        var tangents = [SIMD3<Float>](repeating: SIMD3(0, 0, -1), count: positions.count)
+        var bitangents = [SIMD3<Float>](repeating: SIMD3(-1, 0, 0), count: positions.count)
         for row in 0..<sampleCount {
             for column in 0..<sampleCount {
                 let leftColumn = max(column - 1, 0)
@@ -172,9 +260,18 @@ enum Apollo11TerrainResource {
                 let right = positions[row * sampleCount + rightColumn]
                 let north = positions[northRow * sampleCount + column]
                 let south = positions[southRow * sampleCount + column]
-                normals[row * sampleCount + column] = simd_normalize(
-                    simd_cross(right - left, south - north)
+                let index = row * sampleCount + column
+                let normal = simd_normalize(simd_cross(right - left, south - north))
+                normals[index] = normal
+                // u runs east (RealityKit -Z) and v runs south (-X). Orthogonalize
+                // the tangent against the vertex normal so the baked tangent-space
+                // normal map lands in the same basis the baker assumed.
+                let rawTangent = SIMD3<Float>(0, 0, -1)
+                let tangent = simd_normalize(
+                    rawTangent - normal * simd_dot(normal, rawTangent)
                 )
+                tangents[index] = tangent
+                bitangents[index] = simd_cross(normal, tangent)
             }
         }
 
@@ -196,22 +293,10 @@ enum Apollo11TerrainResource {
         return LMProgressiveTerrainMeshData(
             positions: positions,
             normals: normals,
+            tangents: tangents,
+            bitangents: bitangents,
             textureCoordinates: textureCoordinates,
             indices: indices
-        )
-    }
-
-    /// North-up image rows run from north at v=0 to south at v=1, matching
-    /// `LMTerrainMeshBuilder` and the generator's row-major PDS sampling.
-    nonisolated static func textureCoordinate(
-        eastMeters: Double,
-        northMeters: Double,
-        measuredHalfWidth: Double,
-        measuredHalfDepth: Double
-    ) -> SIMD2<Float> {
-        SIMD2(
-            Float((eastMeters + measuredHalfWidth) / (measuredHalfWidth * 2)),
-            Float((measuredHalfDepth - northMeters) / (measuredHalfDepth * 2))
         )
     }
 

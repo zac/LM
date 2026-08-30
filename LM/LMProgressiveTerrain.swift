@@ -21,15 +21,36 @@ struct LMProgressiveTerrainSampler: Sendable {
     let heightField: Apollo11TerrainHeightField
     let geology: LMLunarGeologyModel
     let maximumResidualMeters: Float
+    /// Optional memoization of the geology cells over a bounded work region.
+    /// It changes nothing about the surface, only how often the hash runs.
+    let craterField: LMLunarGeologyCraterField?
 
     init(
         heightField: Apollo11TerrainHeightField,
         seed: UInt64 = 0x4C_52_4F_43_41_31_31,
-        maximumResidualMeters: Float = 0.24
+        maximumResidualMeters: Float = 0.24,
+        craterField: LMLunarGeologyCraterField? = nil
     ) {
         self.heightField = heightField
         geology = LMLunarGeologyModel(seed: seed)
         self.maximumResidualMeters = maximumResidualMeters
+        self.craterField = craterField
+    }
+
+    /// A sampler that has precomputed the geology over one region.
+    func prepared(
+        eastMetersRange: ClosedRange<Double>,
+        northMetersRange: ClosedRange<Double>
+    ) -> LMProgressiveTerrainSampler {
+        LMProgressiveTerrainSampler(
+            heightField: heightField,
+            seed: geology.seed,
+            maximumResidualMeters: maximumResidualMeters,
+            craterField: geology.craterField(
+                eastMetersRange: eastMetersRange,
+                northMetersRange: northMetersRange
+            )
+        )
     }
 
     func sample(
@@ -94,7 +115,8 @@ struct LMProgressiveTerrainSampler: Sendable {
             geology.visualReliefMeters(
                 eastMeters: east,
                 northMeters: north,
-                requestedSpacingMeters: requestedSpacingMeters
+                requestedSpacingMeters: requestedSpacingMeters,
+                craterField: craterField
             )
         }
 
@@ -136,7 +158,8 @@ struct LMLunarGeologyModel: Equatable, Sendable {
     func visualReliefMeters(
         eastMeters: Double,
         northMeters: Double,
-        requestedSpacingMeters: Double
+        requestedSpacingMeters: Double,
+        craterField: LMLunarGeologyCraterField? = nil
     ) -> Double {
         let minimumRenderableDiameter = max(
             Self.minimumCraterDiameterMeters,
@@ -155,7 +178,8 @@ struct LMLunarGeologyModel: Equatable, Sendable {
                 let cellEast = eastCell + Int64(eastOffset)
                 let cellNorth = northCell + Int64(northOffset)
                 for candidate in 0..<candidatesPerCell {
-                    guard let crater = crater(
+                    guard let crater = resolvedCrater(
+                        craterField,
                         cellEast: cellEast,
                         cellNorth: cellNorth,
                         candidate: candidate
@@ -171,6 +195,69 @@ struct LMLunarGeologyModel: Equatable, Sendable {
             }
         }
         return relief
+    }
+
+    /// A precomputed cell if the field covers it, otherwise the on-demand
+    /// derivation. Both paths produce the same crater.
+    private func resolvedCrater(
+        _ field: LMLunarGeologyCraterField?,
+        cellEast: Int64,
+        cellNorth: Int64,
+        candidate: Int
+    ) -> Crater? {
+        if let field, let cached = field.crater(
+            cellEast: cellEast,
+            cellNorth: cellNorth,
+            candidate: candidate
+        ) {
+            return cached
+        }
+        return crater(cellEast: cellEast, cellNorth: cellNorth, candidate: candidate)
+    }
+
+    /// Precompute every candidate crater over a bounded region.
+    ///
+    /// Each sample otherwise re-derives the nine surrounding cells from the
+    /// hash, and a single tile evaluates the relief field tens of thousands of
+    /// times through the parent chain and the anchoring correction. The values
+    /// are identical to the on-demand path; only the work is shared.
+    func craterField(
+        eastMetersRange: ClosedRange<Double>,
+        northMetersRange: ClosedRange<Double>,
+        haloCells: Int = 2
+    ) -> LMLunarGeologyCraterField {
+        let minimumEastCell = Int64(floor(eastMetersRange.lowerBound / cellSizeMeters))
+            - Int64(haloCells)
+        let maximumEastCell = Int64(floor(eastMetersRange.upperBound / cellSizeMeters))
+            + Int64(haloCells)
+        let minimumNorthCell = Int64(floor(northMetersRange.lowerBound / cellSizeMeters))
+            - Int64(haloCells)
+        let maximumNorthCell = Int64(floor(northMetersRange.upperBound / cellSizeMeters))
+            + Int64(haloCells)
+        let eastCount = Int(maximumEastCell - minimumEastCell) + 1
+        let northCount = Int(maximumNorthCell - minimumNorthCell) + 1
+
+        var craters = [Crater?]()
+        craters.reserveCapacity(eastCount * northCount * candidatesPerCell)
+        for northIndex in 0..<northCount {
+            for eastIndex in 0..<eastCount {
+                for candidate in 0..<candidatesPerCell {
+                    craters.append(crater(
+                        cellEast: minimumEastCell + Int64(eastIndex),
+                        cellNorth: minimumNorthCell + Int64(northIndex),
+                        candidate: candidate
+                    ))
+                }
+            }
+        }
+        return LMLunarGeologyCraterField(
+            minimumEastCell: minimumEastCell,
+            minimumNorthCell: minimumNorthCell,
+            eastCellCount: eastCount,
+            northCellCount: northCount,
+            candidatesPerCell: candidatesPerCell,
+            craters: craters
+        )
     }
 
     struct Crater: Equatable, Sendable {
@@ -333,6 +420,39 @@ struct LMLunarGeologyModel: Equatable, Sendable {
     private static func smoothstep(_ value: Double) -> Double {
         let clamped = min(max(value, 0), 1)
         return clamped * clamped * (3 - 2 * clamped)
+    }
+}
+
+/// Craters precomputed over a bounded block of generator cells.
+///
+/// Outside the block the lookup returns `nil` twice over: it cannot tell
+/// "no crater" from "not covered", so callers fall back to the model's
+/// on-demand derivation, which produces the same values.
+struct LMLunarGeologyCraterField: Sendable {
+    let minimumEastCell: Int64
+    let minimumNorthCell: Int64
+    let eastCellCount: Int
+    let northCellCount: Int
+    let candidatesPerCell: Int
+    let craters: [LMLunarGeologyModel.Crater?]
+
+    func covers(cellEast: Int64, cellNorth: Int64) -> Bool {
+        cellEast >= minimumEastCell
+            && cellNorth >= minimumNorthCell
+            && cellEast < minimumEastCell + Int64(eastCellCount)
+            && cellNorth < minimumNorthCell + Int64(northCellCount)
+    }
+
+    func crater(
+        cellEast: Int64,
+        cellNorth: Int64,
+        candidate: Int
+    ) -> LMLunarGeologyModel.Crater?? {
+        guard covers(cellEast: cellEast, cellNorth: cellNorth) else { return nil }
+        let eastIndex = Int(cellEast - minimumEastCell)
+        let northIndex = Int(cellNorth - minimumNorthCell)
+        let offset = (northIndex * eastCellCount + eastIndex) * candidatesPerCell + candidate
+        return .some(craters[offset])
     }
 }
 
@@ -567,13 +687,32 @@ struct LMProgressiveTerrainSurfaceSampler: Sendable {
 
     init(
         heightField: Apollo11TerrainHeightField,
-        planner: LMProgressiveTerrainPlanner? = nil
+        planner: LMProgressiveTerrainPlanner? = nil,
+        terrainSampler: LMProgressiveTerrainSampler? = nil
     ) {
         self.heightField = heightField
         self.planner = planner ?? LMProgressiveTerrainPlanner(
             sourceSpacingMeters: heightField.spacingMeters
         )
-        terrainSampler = LMProgressiveTerrainSampler(heightField: heightField)
+        self.terrainSampler = terrainSampler
+            ?? LMProgressiveTerrainSampler(heightField: heightField)
+    }
+
+    /// A sampler that has precomputed the geology over one tile, including the
+    /// margin its parent chain and post-anchoring correction reach into.
+    func prepared(for plan: LMTerrainTilePlan) -> LMProgressiveTerrainSurfaceSampler {
+        let margin = heightField.spacingMeters * 2
+        let reach = plan.sizeMeters / 2 + margin
+        let eastRange = (plan.centerEastMeters - reach)...(plan.centerEastMeters + reach)
+        let northRange = (plan.centerNorthMeters - reach)...(plan.centerNorthMeters + reach)
+        return LMProgressiveTerrainSurfaceSampler(
+            heightField: heightField,
+            planner: planner,
+            terrainSampler: terrainSampler.prepared(
+                eastMetersRange: eastRange,
+                northMetersRange: northRange
+            )
+        )
     }
 
     func sample(

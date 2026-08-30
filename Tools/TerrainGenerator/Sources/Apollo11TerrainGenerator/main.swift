@@ -418,7 +418,7 @@ func nearManifestTile() -> [String: Any] {
             "nac-ortho-m150361817-50cm-slab",
             "nac-ortho-m150368601-50cm-slab",
         ],
-        albedoEdgeHandling: "wac-base-with-nac-high-pass-edge-fade",
+        albedoEdgeHandling: "wac-base-with-radial-nac-high-pass-fade",
         edgeHandling: "measured",
         transitionWidth: nil,
         detail: "Dense near field around Tranquility Base."
@@ -1109,8 +1109,11 @@ func sampledAlbedoField(
 
 /// Build a near-field reflectance texture from normalized WAC broad tone and
 /// only the locally high-passed, exposure-normalized detail shared by the two
-/// registered 0.5 m NAC orthophotos. The detail fades to exactly zero in a
-/// 128 m boundary collar, so the near tile meets the medium WAC texture.
+/// registered 0.5 m NAC orthophotos. The high-frequency residual is strongest
+/// at the landing-site origin and fades radially to exactly zero at the first
+/// near-tile edge. A radial footprint avoids exposing the square NAC crop in
+/// regional views while preserving essentially all source detail across the
+/// terminal landing area.
 func nearAlbedoField(
     orthoA: NACOrthoSlab,
     orthoB: NACOrthoSlab,
@@ -1213,10 +1216,12 @@ func nearAlbedoField(
             ), 1.8)
             let north = halfExtent - Double(row) * spacing
             let east = Double(column) * spacing - halfExtent
-            let edgeDistance = Double(min(row, column, size - 1 - row, size - 1 - column))
-                * spacing
-            let normalizedEdge = min(max(edgeDistance / 128.0, 0), 1)
-            let edgeWeight = normalizedEdge * normalizedEdge * (3 - 2 * normalizedEdge)
+            let normalizedInterior = max(
+                0,
+                1 - hypot(north, east) / halfExtent
+            )
+            let edgeWeight = normalizedInterior * normalizedInterior
+                * (3 - 2 * normalizedInterior)
             let detailMultiplier = exp(highFrequency * 0.18 * edgeWeight)
             reflectance[row * size + column] = Float(
                 try broadReflectance(north, east) * detailMultiplier

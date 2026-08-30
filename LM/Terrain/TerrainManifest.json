@@ -188,11 +188,11 @@
       "albedoEncoding" : {
         "colorSpace" : "sRGB encoding of a linear 643 nm reflectance proxy",
         "detail" : "Photometrically normalized WAC reflectance supplies broad tone. The near band adds bounded, exposure-normalized 0.5 m NAC high-frequency contrast while retaining the WAC value at its boundary. Mission lighting remains dynamic in-engine.",
-        "edgeHandling" : "wac-base-with-nac-high-pass-edge-fade",
+        "edgeHandling" : "wac-base-with-radial-nac-high-pass-fade",
         "format" : "PNG_RGB_8",
-        "maximumLinearReflectance" : 0.082616530358791351,
+        "maximumLinearReflectance" : 0.076185381481307851,
         "metersPerTexel" : 0.5,
-        "minimumLinearReflectance" : 0.034333404153585434,
+        "minimumLinearReflectance" : 0.035601314875020343,
         "sourceIDs" : [
           "wac-emp-643nm-304p-apollo11-slab",
           "nac-ortho-m150361817-50cm-slab",
@@ -323,5 +323,5 @@
       "zeroPointMeters" : -10470.86870527425
     }
   ],
-  "toolSHA256" : "c566f8da637b0ed0eb753068bd8f4fbd3978edd9faea1e1bb4583c31bf6d7660"
+  "toolSHA256" : "5557700b33229e4e153e09e4c4489bfa871984f7053fccf2fc2509ceea61fb52"
 }

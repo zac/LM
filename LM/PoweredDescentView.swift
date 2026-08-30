@@ -6,6 +6,7 @@ struct PoweredDescentView: View {
     @Environment(\.openImmersiveSpace) private var openImmersiveSpace
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
     @Environment(\.dismissWindow) private var dismissWindow
+    @Environment(\.openWindow) private var openWindow
     @Environment(\.scenePhase) private var scenePhase
     @State private var didLaunchReplayFixture = false
 
@@ -37,6 +38,17 @@ struct PoweredDescentView: View {
             .navigationTitle("Powered Descent")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
+                    Button("Lunar Explorer") {
+                        Task { await toggleLunarExplorerSpace() }
+                    }
+                    .accessibilityIdentifier("open-lunar-explorer")
+                    .disabled(
+                        appModel.lunarExplorerSpaceState == .inTransition
+                            || appModel.cockpitSpaceState != .closed
+                            || appModel.descentSpaceState != .closed
+                    )
+                }
+                ToolbarItem(placement: .primaryAction) {
                     NavigationLink("RCS sandbox") {
                         LunarLanderSimulationView()
                     }
@@ -50,6 +62,13 @@ struct PoweredDescentView: View {
         .task {
             let arguments = ProcessInfo.processInfo.arguments
             guard !didLaunchReplayFixture else { return }
+
+            if arguments.contains("--lunar-explorer") {
+                didLaunchReplayFixture = true
+                appModel.lunarExplorerSession.configure(arguments: arguments)
+                await toggleLunarExplorerSpace()
+                return
+            }
 
             if arguments.contains("--terminal-descent-cockpit") {
                 didLaunchReplayFixture = true
@@ -271,6 +290,27 @@ struct PoweredDescentView: View {
                 fallthrough
             @unknown default:
                 appModel.descentSpaceState = .closed
+            }
+        case .inTransition:
+            break
+        }
+    }
+
+    private func toggleLunarExplorerSpace() async {
+        switch appModel.lunarExplorerSpaceState {
+        case .open:
+            appModel.lunarExplorerSpaceState = .inTransition
+            await dismissImmersiveSpace()
+        case .closed:
+            appModel.lunarExplorerSpaceState = .inTransition
+            switch await openImmersiveSpace(id: appModel.lunarExplorerSpaceID) {
+            case .opened:
+                openWindow(id: appModel.lunarExplorerControlsWindowID)
+                dismissWindow(id: appModel.descentConsoleWindowID)
+            case .userCancelled, .error:
+                fallthrough
+            @unknown default:
+                appModel.lunarExplorerSpaceState = .closed
             }
         case .inTransition:
             break

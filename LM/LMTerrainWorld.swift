@@ -1,5 +1,7 @@
+import CoreGraphics
 import Foundation
 import LMCore
+import Metal
 import RealityKit
 import simd
 
@@ -115,7 +117,10 @@ enum LMTerrainWorld {
                 holeHalfExtentMeters: hole
             )
             let mesh = try LMTerrainMeshBuilder.mesh(from: grid)
-            let texture = try await TextureResource(contentsOf: albedoURL)
+            let texture = try await TextureResource(
+                contentsOf: albedoURL,
+                options: terrainTextureCreateOptions(semantic: .color)
+            )
             if tile.id == nearFieldTileID {
                 nearAlbedoTexture = texture
             }
@@ -143,9 +148,43 @@ enum LMTerrainWorld {
         )
     }
 
+    /// Material for a fine clipmap tile that has baked its own appearance.
+    ///
+    /// The tile carries a resampled slice of the measured reflectance and a
+    /// tangent-space normal map for the sub-triangle regolith, both addressed
+    /// by tile-local UVs. RealityKit's PBR materials expose a single texture
+    /// coordinate buffer, so baking per tile is what makes a normal map
+    /// possible at all without giving up the measured albedo underneath it.
+    static func detailTerrainMaterial(
+        _ detail: LMTerrainTileDetailTextures
+    ) throws -> PhysicallyBasedMaterial {
+        guard let albedoImage = LMTerrainTileDetailBaker.image(
+            from: detail.albedo,
+            resolution: detail.resolution,
+            colorSpace: CGColorSpaceCreateDeviceRGB()
+        ), let normalImage = LMTerrainTileDetailBaker.image(
+            from: detail.normal,
+            resolution: detail.resolution,
+            colorSpace: CGColorSpaceCreateDeviceRGB()
+        ) else {
+            throw WorldError.missingTile("tile detail textures")
+        }
+        let albedo = try TextureResource.generate(
+            from: albedoImage,
+            options: terrainTextureCreateOptions(semantic: .color)
+        )
+        let normal = try TextureResource.generate(
+            from: normalImage,
+            options: terrainTextureCreateOptions(semantic: .normal)
+        )
+        var material = terrainMaterial(texture: albedo)
+        material.normal = .init(texture: terrainTexture(normal))
+        return material
+    }
+
     static func terrainMaterial(texture: TextureResource) -> PhysicallyBasedMaterial {
         var material = PhysicallyBasedMaterial()
-        let reflectance = MaterialParameters.Texture(texture)
+        let reflectance = terrainTexture(texture)
         material.baseColor = .init(tint: .white, texture: reflectance)
         material.roughness = .init(floatLiteral: 0.96)
         material.metallic = .init(floatLiteral: 0)
@@ -154,6 +193,37 @@ enum LMTerrainWorld {
         material.emissiveColor = .init(color: .white, texture: reflectance)
         material.emissiveIntensity = regolithExposureFloor
         return material
+    }
+
+    /// Terrain is commonly viewed at a grazing angle with radically different
+    /// texel densities in adjacent measured bands. Make the sampling contract
+    /// explicit so the dense NAC texture minifies through a full mip chain and
+    /// blends smoothly toward the WAC parent instead of reading as a sharp
+    /// rectangular card at regional scale.
+    static func terrainTextureCreateOptions(
+        semantic: TextureResource.Semantic
+    ) -> TextureResource.CreateOptions {
+        TextureResource.CreateOptions(
+            semantic: semantic,
+            mipmapsMode: .allocateAndGenerateAll
+        )
+    }
+
+    static func terrainTexture(
+        _ texture: TextureResource
+    ) -> MaterialParameters.Texture {
+        MaterialParameters.Texture(texture, sampler: terrainTextureSampler())
+    }
+
+    static func terrainTextureSampler() -> MaterialParameters.Texture.Sampler {
+        let descriptor = MTLSamplerDescriptor()
+        descriptor.minFilter = .linear
+        descriptor.magFilter = .linear
+        descriptor.mipFilter = .linear
+        descriptor.maxAnisotropy = 8
+        descriptor.sAddressMode = .clampToEdge
+        descriptor.tAddressMode = .clampToEdge
+        return MaterialParameters.Texture.Sampler(descriptor)
     }
 
     nonisolated static func missionShadowDistance(altitudeMeters: Double?) -> Float {
