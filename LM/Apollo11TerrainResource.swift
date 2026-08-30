@@ -50,8 +50,12 @@ enum Apollo11TerrainResource {
     /// Shared process-local cache. A neural generator can replace the
     /// procedural producer here once its compiled model is bundled.
     nonisolated static let detailPipeline = LMTerrainDetailPipeline(
-        generator: LMProceduralTerrainDetailGenerator()
+        generator: LMAutomaticTerrainDetailGenerator()
     )
+
+    nonisolated static func prepareTerrainDetail() async {
+        await detailPipeline.prepare()
+    }
 
     enum ResourceError: Error, Equatable {
         case missingResource(String)

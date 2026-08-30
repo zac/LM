@@ -133,6 +133,40 @@ request churn cancels only obsolete IDs and cannot repeatedly restart a still
 required under-vehicle tile. Cancellation or slow generation therefore
 degrades detail rather than exposing a coverage hole.
 
+### Neural appearance reconstruction
+
+Fine-tile albedo can now pass through `LunarTerrainSR`, a compact 4x Core ML
+model, after the deterministic procedural bake. The model consumes one
+128 x 128 reflectance plane and reconstructs a 512 x 512 plane; the existing
+procedural normal map remains authoritative. A smooth outer collar restores
+the exact procedural albedo on all four tile edges, so neighboring tiles cannot
+open a neural seam. Model loading or prediction failure falls back to the
+complete procedural tile, and cancellation still belongs to the requesting
+stable tile ID.
+
+The bundled `lunar-terrain-sr-nac-v2` model has 88,993 parameters and occupies
+about 204 KB as a Core ML package. Training uses the two repository-pinned,
+registered 0.5 m NAC observations. Their independent exposures are normalized
+before averaging, then low-resolution inputs are produced by 4x area
+downsampling and 8-bit quantization. The western 75 percent of the valid source
+footprint is used for training and the eastern 25 percent for validation.
+Export is quality-gated against bilinear scaling.
+
+The accepted 5,000-step run improved held-out PSNR from 37.736 dB to 39.829 dB
+(+2.093 dB) and reduced gradient error from 0.013253 to 0.012265 across 12
+geographically held-out crops. On the development Mac, direct Core ML
+prediction measured about 845 ms on the first compile/load and 1.8-2.4 ms once
+warm. Terrain loading therefore prewarms the model concurrently. The visionOS
+Simulator's complete unoptimized seam-safe tile test remains about 5.1 seconds
+because it also performs the existing procedural 512 x 512 bake and Swift
+pixel conversion; that number is not model inference latency and still needs a
+Release build measurement on Vision Pro.
+
+Generated tiles use the existing 32 MB byte-bounded LRU cache, keyed by model
+version, tile ID, tile size, and sample spacing. A 512 x 512 albedo-plus-normal
+entry costs about 2 MB, so only the local working set is retained. The app does
+not bake or ship a global pyramid of reconstructed textures.
+
 ### Source-constrained rock fragments
 
 `LMLunarRockFieldModel` adds a deterministic visual fragment layer versioned as
@@ -215,6 +249,22 @@ which over the final few meters differs from the moon-fixed arc by far less
 than the honeycomb stroke it is resolving.
 
 ## Reproduction
+
+`Tools/NeuralTerrain/train.py` trains and exports the compact appearance model.
+With the two pinned NAC slabs in `Tools/TerrainGenerator/cache`, run:
+
+```sh
+uv run --with-requirements Tools/NeuralTerrain/requirements.txt \
+  python Tools/NeuralTerrain/train.py \
+  --steps 5000 --batch-size 4 --features 24 --blocks 4 \
+  --validation-crops 12 \
+  --output-dir Tools/NeuralTerrain/output/nac-production \
+  --export-coreml LM/LunarTerrainSR.mlpackage
+```
+
+The ignored output directory receives the checkpoint, metrics JSON, and a
+four-panel held-out preview. Core ML export is refused unless PSNR gains at
+least 0.5 dB over bilinear and gradient error also improves.
 
 `Tools/TerrainGenerator` verifies the 118 MB NAC GeoTIFF by byte count and
 SHA-256. It also verifies two contiguous SLDEM2015 geometry slabs, two 69 MB

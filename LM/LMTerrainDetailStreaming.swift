@@ -9,10 +9,16 @@ import Foundation
 protocol LMTerrainDetailGenerating: Sendable {
     var modelID: String { get }
 
+    func prepare() async
+
     func generate(
         plan: LMTerrainTilePlan,
         albedoField: LMMeasuredAlbedoField?
     ) async throws -> LMTerrainTileDetailTextures
+}
+
+extension LMTerrainDetailGenerating {
+    func prepare() async {}
 }
 
 struct LMProceduralTerrainDetailGenerator: LMTerrainDetailGenerating {
@@ -145,6 +151,10 @@ struct LMTerrainDetailPipeline: Sendable {
     ) {
         self.generator = generator
         self.cache = cache
+    }
+
+    func prepare() async {
+        await generator.prepare()
     }
 
     func textures(

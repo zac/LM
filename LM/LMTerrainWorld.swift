@@ -89,6 +89,8 @@ enum LMTerrainWorld {
     nonisolated static let farFieldTileID = "far-field"
 
     static func load(bundle: Bundle = .main) async throws -> Assembly {
+        async let terrainDetailPreparation: Void =
+            Apollo11TerrainResource.prepareTerrainDetail()
         let manifest = try LMTerrainManifest.load(bundle: bundle)
 
         let worldRoot = Entity()
@@ -140,6 +142,7 @@ enum LMTerrainWorld {
         guard let nearAlbedoTexture else {
             throw WorldError.missingTile(nearFieldTileID)
         }
+        await terrainDetailPreparation
         return Assembly(
             worldRoot: worldRoot,
             sun: sun,

@@ -4,6 +4,60 @@ import Testing
 
 @Suite("Streaming terrain detail")
 struct LMTerrainDetailStreamingTests {
+    @Test func pipelinePreparationWarmsGenerator() async {
+        let generator = CountingDetailGenerator(modelID: "test-detail-v1")
+        let pipeline = LMTerrainDetailPipeline(generator: generator)
+
+        await pipeline.prepare()
+
+        #expect(await generator.prepareCount() == 1)
+    }
+
+    @Test func bundledCoreMLModelGeneratesSeamSafeTile() async throws {
+        let generator = try LMCoreMLTerrainDetailGenerator()
+        let preparationStarted = ContinuousClock.now
+        await generator.prepare()
+        let preparationElapsed = milliseconds(
+            preparationStarted.duration(to: .now)
+        )
+        let plan = tilePlan(eastIndex: 4)
+        let procedural = try LMTerrainTileDetailBaker.bake(
+            plan: plan,
+            albedoField: nil
+        )
+        let started = ContinuousClock.now
+        let generated = try await generator.generate(
+            plan: plan,
+            albedoField: nil
+        )
+        let coldElapsed = milliseconds(started.duration(to: .now))
+        let inferenceMilliseconds = try await generator.predictionMilliseconds(
+            iterations: 4
+        )
+
+        #expect(generated.resolution == 512)
+        #expect(generated.albedo.count == 512 * 512 * 4)
+        #expect(generated.normal == procedural.normal)
+        #expect(edgesMatch(generated.albedo, procedural.albedo, resolution: 512))
+        let interiorChangedPixels = changedPixelCount(
+            generated.albedo,
+            procedural.albedo,
+            resolution: 512,
+            inset: 64
+        )
+        #expect(interiorChangedPixels > 1_000)
+        #expect(Swift.stride(
+            from: 3,
+            to: generated.albedo.count,
+            by: 4
+        ).allSatisfy { generated.albedo[$0] == 255 })
+        #expect(coldElapsed < 8_000)
+        #expect((inferenceMilliseconds.dropFirst().min() ?? .max) < 100)
+        print("coreml_terrain_preparation_ms=\(preparationElapsed)")
+        print("coreml_terrain_cold_generation_ms=\(coldElapsed)")
+        print("coreml_terrain_inference_ms=\(inferenceMilliseconds)")
+    }
+
     @Test func repeatedTileUsesBoundedMemoryCache() async throws {
         let generator = CountingDetailGenerator(modelID: "test-detail-v1")
         let cache = LMTerrainDetailCache(byteLimit: 64)
@@ -86,14 +140,65 @@ struct LMTerrainDetailStreamingTests {
             containsProceduralSubresolution: true
         )
     }
+
+    private func milliseconds(_ duration: ContinuousClock.Duration) -> Int {
+        Int(
+            duration.components.seconds * 1_000
+                + duration.components.attoseconds / 1_000_000_000_000_000
+        )
+    }
+
+    private func edgesMatch(
+        _ first: [UInt8],
+        _ second: [UInt8],
+        resolution: Int
+    ) -> Bool {
+        for coordinate in 0..<resolution {
+            let offsets = [
+                coordinate * 4,
+                ((resolution - 1) * resolution + coordinate) * 4,
+                (coordinate * resolution) * 4,
+                (coordinate * resolution + resolution - 1) * 4,
+            ]
+            for offset in offsets where !first[offset..<(offset + 4)].elementsEqual(
+                second[offset..<(offset + 4)]
+            ) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private func changedPixelCount(
+        _ first: [UInt8],
+        _ second: [UInt8],
+        resolution: Int,
+        inset: Int
+    ) -> Int {
+        var count = 0
+        for row in inset..<(resolution - inset) {
+            for column in inset..<(resolution - inset) {
+                let offset = (row * resolution + column) * 4
+                if first[offset] != second[offset] {
+                    count += 1
+                }
+            }
+        }
+        return count
+    }
 }
 
 private actor CountingDetailGenerator: LMTerrainDetailGenerating {
     nonisolated let modelID: String
     private var generationCount = 0
+    private var preparationCount = 0
 
     init(modelID: String) {
         self.modelID = modelID
+    }
+
+    func prepare() {
+        preparationCount += 1
     }
 
     func generate(
@@ -112,5 +217,9 @@ private actor CountingDetailGenerator: LMTerrainDetailGenerating {
 
     func count() -> Int {
         generationCount
+    }
+
+    func prepareCount() -> Int {
+        preparationCount
     }
 }
