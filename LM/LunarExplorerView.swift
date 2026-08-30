@@ -198,6 +198,12 @@ struct LunarExplorerControls: View {
                 } ?? "none"
             )
             diagnosticRow(
+                "Detail source",
+                session.diagnostics.latestGenerationMetrics.map {
+                    "\($0.detailModelID) / \($0.detailCacheHit ? "cache" : "generated")"
+                } ?? "none"
+            )
+            diagnosticRow(
                 "Focus offset",
                 String(
                     format: "N %.0f m  E %.0f m",

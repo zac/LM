@@ -47,6 +47,12 @@ struct LMProgressiveTerrainMeshData: Sendable {
 }
 
 enum Apollo11TerrainResource {
+    /// Shared process-local cache. A neural generator can replace the
+    /// procedural producer here once its compiled model is bundled.
+    nonisolated static let detailPipeline = LMTerrainDetailPipeline(
+        generator: LMProceduralTerrainDetailGenerator()
+    )
+
     enum ResourceError: Error, Equatable {
         case missingResource(String)
         case invalidDimensions
@@ -82,6 +88,8 @@ enum Apollo11TerrainResource {
     struct ProgressiveTileBuild: Sendable {
         let mesh: LMProgressiveTerrainMeshData
         let detail: LMTerrainTileDetailTextures
+        let detailModelID: String
+        let detailCacheHit: Bool
         let meshMilliseconds: Int
         let detailMilliseconds: Int
     }
@@ -90,6 +98,8 @@ enum Apollo11TerrainResource {
         let meshMilliseconds: Int
         let detailMilliseconds: Int
         let realizationMilliseconds: Int
+        let detailModelID: String
+        let detailCacheHit: Bool
     }
 
     struct ProgressiveTileEntityBuild {
@@ -135,7 +145,9 @@ enum Apollo11TerrainResource {
             }
             return ProgressiveTileBuild(
                 mesh: mesh,
-                detail: detailResult.value,
+                detail: detailResult.value.textures,
+                detailModelID: detailResult.value.modelID,
+                detailCacheHit: detailResult.value.cacheHit,
                 meshMilliseconds: meshResult.milliseconds,
                 detailMilliseconds: detailResult.milliseconds
             )
@@ -158,7 +170,7 @@ enum Apollo11TerrainResource {
         let mesh = try MeshResource.generate(from: [descriptor])
         let material = try LMTerrainWorld.detailTerrainMaterial(build.detail)
         let entity = ModelEntity(mesh: mesh, materials: [material])
-        entity.name = "LROC progressive \(LMLunarGeologyModel.modelID) + \(LMTerrainTileDetailBaker.modelID) L\(plan.id.level) E\(plan.id.eastIndex) N\(plan.id.northIndex) \(plan.sampleSpacingMeters)m"
+        entity.name = "LROC progressive \(LMLunarGeologyModel.modelID) + \(build.detailModelID) L\(plan.id.level) E\(plan.id.eastIndex) N\(plan.id.northIndex) \(plan.sampleSpacingMeters)m"
         return ProgressiveTileEntityBuild(
             entity: entity,
             metrics: ProgressiveTileGenerationMetrics(
@@ -166,7 +178,9 @@ enum Apollo11TerrainResource {
                 detailMilliseconds: build.detailMilliseconds,
                 realizationMilliseconds: milliseconds(
                     realizationStarted.duration(to: .now)
-                )
+                ),
+                detailModelID: build.detailModelID,
+                detailCacheHit: build.detailCacheHit
             )
         )
     }
@@ -195,13 +209,12 @@ enum Apollo11TerrainResource {
     nonisolated private static func timedProgressiveTileDetail(
         plan: LMTerrainTilePlan,
         albedoField: LMMeasuredAlbedoField?
-    ) throws -> (value: LMTerrainTileDetailTextures, milliseconds: Int) {
-        let started = ContinuousClock.now
-        let value = try LMTerrainTileDetailBaker.bake(
+    ) async throws -> (value: LMTerrainDetailPipeline.Product, milliseconds: Int) {
+        let value = try await detailPipeline.textures(
             plan: plan,
             albedoField: albedoField
         )
-        return (value, milliseconds(started.duration(to: .now)))
+        return (value, value.generationMilliseconds)
     }
 
     nonisolated static func makeProgressiveTileMeshData(
