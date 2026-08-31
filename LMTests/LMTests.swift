@@ -1911,7 +1911,13 @@ struct ProgressiveLunarTerrainTests {
                 && $0.id.northIndex == west.id.northIndex
         })
         let sharedEast = west.centerEastMeters + west.sizeMeters / 2
-        let sharedNorth = west.centerNorthMeters
+        // Sample the shared edge away from a measured post. Tile boundaries and
+        // centers both land on even metres, which are exactly 2 m LROC posts,
+        // and the anchoring contract forces the procedural residual to zero
+        // there at every level. On a post the fine surface therefore equals its
+        // parent by construction, so the detail assertion below would hold no
+        // matter how much detail the level actually contributes.
+        let sharedNorth = west.centerNorthMeters + 1
         let sampler = LMProgressiveTerrainSurfaceSampler(
             heightField: field,
             planner: planner
