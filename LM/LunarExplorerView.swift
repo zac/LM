@@ -215,6 +215,20 @@ struct LunarExplorerControls: View {
                 Text(sunAngleCaption)
                     .monospacedDigit()
             }
+
+            Picker("Tone", selection: $session.presentationGrade) {
+                ForEach(LMTerrainPresentationGrade.allCases) { grade in
+                    Text(grade.title).tag(grade)
+                }
+            }
+            .pickerStyle(.segmented)
+
+            if session.presentationGrade == .photographic {
+                LabeledContent("Earthshine") {
+                    Text(earthshineCaption)
+                        .monospacedDigit()
+                }
+            }
         }
     }
 
@@ -244,6 +258,15 @@ struct LunarExplorerControls: View {
             elevation,
             elevation < 0 ? "  (night)" : ""
         )
+    }
+
+    private var earthshineCaption: String {
+        guard let fraction = session.diagnostics.earthIlluminatedFraction else {
+            return "pending"
+        }
+        // Earth and Moon show each other opposite phases, so a full Earth
+        // hangs over a lunar night.
+        return String(format: "Earth %.0f%% lit", fraction * 100)
     }
 
     private var diagnosticRows: some View {

@@ -137,6 +137,62 @@ struct LMLunarEphemerisTests {
         }
     }
 
+    /// The photographic grade trades the flat exposure floor for a directional
+    /// earthshine fill and exposes for the highlights instead. The calibrated
+    /// grade has to stay bit-for-bit what every capture baseline was measured
+    /// against.
+    @Test func photographicGradeChangesToneWithoutDisturbingTheCalibratedOne() {
+        #expect(
+            LMTerrainWorld.photographicSunIlluminanceScale(grade: .calibrated) == 1
+        )
+        #expect(
+            LMTerrainWorld.photographicSunIlluminanceScale(grade: .photographic) > 1
+        )
+        for elevation in stride(from: 1.0, through: 89.0, by: 2.0) {
+            let calibrated = LMTerrainWorld.missionSunIlluminance(
+                elevationDegrees: elevation,
+                grade: .calibrated
+            )
+            #expect(
+                calibrated
+                    == LMTerrainWorld.missionSunIlluminance(
+                        elevationDegrees: elevation
+                    )
+            )
+            #expect(
+                LMTerrainWorld.missionSunIlluminance(
+                    elevationDegrees: elevation,
+                    grade: .photographic
+                ) > calibrated
+            )
+        }
+
+        // Earthshine exists only in the photographic grade; the calibrated
+        // grade's flat floor already lifts its shadows.
+        #expect(
+            LMTerrainWorld.earthshineIlluminance(
+                sunIlluminanceLux: 25_000,
+                illuminatedFraction: 1,
+                grade: .calibrated
+            ) == 0
+        )
+        // It scales with Earth's phase, so it is brightest over a lunar night.
+        let full = LMTerrainWorld.earthshineIlluminance(
+            sunIlluminanceLux: 25_000,
+            illuminatedFraction: 1,
+            grade: .photographic
+        )
+        let crescent = LMTerrainWorld.earthshineIlluminance(
+            sunIlluminanceLux: 25_000,
+            illuminatedFraction: 0.25,
+            grade: .photographic
+        )
+        #expect(full > crescent)
+        #expect(crescent > 0)
+        // And it stays far below the direct beam at every phase.
+        #expect(full < 25_000 * 0.1)
+    }
+
     /// The Earth hangs high over the near-side landing site and stays there;
     /// this is the direction the earthshine fill light comes from.
     @Test func earthStaysHighAndNearlyFixedOverTranquilityBase() {

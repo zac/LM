@@ -18,6 +18,8 @@ final class LunarExplorerScene {
     )
     private var terrainEnvironment: Entity?
     private var terrainSun: DirectionalLight?
+    private var terrainEarthshine: DirectionalLight?
+    private var activeGrade: LMTerrainPresentationGrade?
     private var terrainRockField: Entity?
     private var heightField: Apollo11TerrainHeightField?
     private var albedoField: LMMeasuredAlbedoField?
@@ -62,6 +64,10 @@ final class LunarExplorerScene {
         let detailMode = session.detailMode
         let detailPipeline = pipeline(for: detailMode)
         activeDetailMode = detailMode
+        // The base bands bake their materials during load, so the grade has to
+        // be in force before it starts rather than patched afterwards.
+        activeGrade = session.presentationGrade
+        LMTerrainWorld.presentationGrade = session.presentationGrade
         loadTask = Task { @MainActor [weak self] in
             guard let self else { return }
             do {
@@ -91,6 +97,7 @@ final class LunarExplorerScene {
                 self.siteCoordinate = assembly.manifest.landingOriginCoordinate
                 self.terrainEnvironment = assembly.worldRoot
                 self.terrainSun = assembly.sun
+                self.terrainEarthshine = assembly.earthshine
                 self.terrainRockField = rocks
                 self.isLoaded = true
                 self.loadTask = nil
@@ -116,6 +123,15 @@ final class LunarExplorerScene {
 
         if activeDetailMode != session.detailMode {
             activateDetailMode(session.detailMode, session: session)
+        }
+
+        // The exposure floor is baked into each tile material, so a grade
+        // change has to discard and regenerate resident tiles rather than
+        // leaving a mix of two tonal treatments on screen.
+        if activeGrade != session.presentationGrade {
+            activeGrade = session.presentationGrade
+            LMTerrainWorld.presentationGrade = session.presentationGrade
+            applyExposureFloorToResidentMaterials()
         }
 
         updateRockDetail(altitudeMeters: session.altitudeMeters)
@@ -336,18 +352,31 @@ final class LunarExplorerScene {
     private func updateMissionSun(_ session: LunarExplorerSession) {
         guard let siteCoordinate, let terrainSun else { return }
         let date = session.sunDate
+        let grade = session.presentationGrade
         let sun = LMLunarEphemeris.sunAngles(at: date, site: siteCoordinate)
         terrainSun.orientation = LMFullDescentMapper.sunLightOrientation(from: sun)
         // Re-expose for the new solar elevation. Without this the surface
         // clips to white within a few days of the landing, because flat ground
         // takes the beam scaled by sin(elevation).
-        terrainSun.light.intensity = LMTerrainWorld.missionSunIlluminance(
-            elevationDegrees: sun.elevationDegrees
+        let sunIlluminance = LMTerrainWorld.missionSunIlluminance(
+            elevationDegrees: sun.elevationDegrees,
+            grade: grade
+        )
+        terrainSun.light.intensity = sunIlluminance
+
+        let earth = LMLunarEphemeris.earthAngles(at: date, site: siteCoordinate)
+        let illuminatedFraction = LMLunarEphemeris
+            .earthIlluminatedFractionFromMoon(at: date)
+        terrainEarthshine?.orientation = LMFullDescentMapper
+            .sunLightOrientation(from: earth)
+        terrainEarthshine?.light.intensity = LMTerrainWorld.earthshineIlluminance(
+            sunIlluminanceLux: sunIlluminance,
+            illuminatedFraction: illuminatedFraction,
+            grade: grade
         )
         session.diagnostics.sunAzimuthDegrees = sun.azimuthDegreesClockwiseFromNorth
         session.diagnostics.sunElevationDegrees = sun.elevationDegrees
-        session.diagnostics.earthIlluminatedFraction = LMLunarEphemeris
-            .earthIlluminatedFractionFromMoon(at: date)
+        session.diagnostics.earthIlluminatedFraction = illuminatedFraction
     }
 
     private func updateRockDetail(altitudeMeters: Double) {
@@ -369,6 +398,38 @@ final class LunarExplorerScene {
         let pipeline = mode.makePipeline()
         detailPipelines[mode] = pipeline
         return pipeline
+    }
+
+    /// Retunes every resident terrain material to the current grade in place.
+    ///
+    /// The exposure floor is the only grade-dependent material property, so
+    /// patching it costs nothing next to discarding and re-baking tiles — and
+    /// unlike a progressive-tile rebuild it also reaches the measured base
+    /// bands, which are built once at load and would otherwise keep the old
+    /// tone under the new one.
+    private func applyExposureFloorToResidentMaterials() {
+        guard let terrainEnvironment else { return }
+        applyExposureFloor(LMTerrainWorld.exposureFloor, to: terrainEnvironment)
+    }
+
+    private func applyExposureFloor(_ floor: Float, to entity: Entity) {
+        if var model = entity.components[ModelComponent.self] {
+            var didChange = false
+            model.materials = model.materials.map { material in
+                guard var physical = material as? PhysicallyBasedMaterial else {
+                    return material
+                }
+                physical.emissiveIntensity = floor
+                didChange = true
+                return physical
+            }
+            if didChange {
+                entity.components.set(model)
+            }
+        }
+        for child in entity.children {
+            applyExposureFloor(floor, to: child)
+        }
     }
 
     private func activateDetailMode(

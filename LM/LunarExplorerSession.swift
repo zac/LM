@@ -169,6 +169,9 @@ final class LunarExplorerSession {
     /// away no matter how far the terminator has been swept.
     var sunAnchorDate = LunarExplorerSession.apollo11TouchdownUTC
     var sunOffsetHours = 0.0
+    /// Tonal presentation. Changing this rebuilds resident tiles, because the
+    /// exposure floor is baked into each tile's material.
+    var presentationGrade: LMTerrainPresentationGrade = .calibrated
     var diagnosticsVisible = true
     var diagnostics = Diagnostics()
 
@@ -243,6 +246,11 @@ final class LunarExplorerSession {
                 in: argument
             ), let mode = LMTerrainDetailMode(rawValue: value) {
                 detailMode = mode
+            } else if let value = value(
+                after: "--lunar-explorer-grade=",
+                in: argument
+            ), let grade = LMTerrainPresentationGrade(rawValue: value) {
+                presentationGrade = grade
             } else if let value = value(
                 after: "--lunar-explorer-sun-offset-hours=",
                 in: argument

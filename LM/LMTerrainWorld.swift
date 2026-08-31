@@ -70,6 +70,28 @@ struct LMFullDescentMapper: Equatable {
     }
 }
 
+/// How the terrain is presented tonally.
+///
+/// `calibrated` is the long-standing look every capture baseline was measured
+/// against: a flat exposure floor lifts every shadow so the whole surface sits
+/// in a narrow mid-grey band. `photographic` removes that floor, fills shadows
+/// with a faint directional earthshine instead, and exposes for the sunlit
+/// highlights — the way a modern high-dynamic-range camera or a dark-adapted
+/// eye actually sees a 4-to-8-percent-albedo surface under a black sky.
+enum LMTerrainPresentationGrade: String, CaseIterable, Identifiable, Sendable {
+    case calibrated
+    case photographic
+
+    var id: Self { self }
+
+    var title: String {
+        switch self {
+        case .calibrated: "Calibrated"
+        case .photographic: "Photographic"
+        }
+    }
+}
+
 /// Assembles the full-immersion exterior scene: nested near, medium, and far
 /// terrain bands plus the mission sun.
 @MainActor
@@ -108,13 +130,74 @@ enum LMTerrainWorld {
     /// the reference elevation this returns exactly the pinned value, so
     /// mission-time renders are unchanged.
     nonisolated static func missionSunIlluminance(
-        elevationDegrees: Double
+        elevationDegrees: Double,
+        grade: LMTerrainPresentationGrade = .calibrated
     ) -> Float {
         let reference = sin(referenceSunElevationDegrees * .pi / 180)
         let target = missionSunIlluminanceLux * Float(reference)
         let sine = Float(sin(max(elevationDegrees, 0) * .pi / 180))
-        guard sine > 0 else { return maximumMissionSunIlluminanceLux }
-        return min(target / sine, maximumMissionSunIlluminanceLux)
+        let scale = photographicSunIlluminanceScale(grade: grade)
+        guard sine > 0 else { return maximumMissionSunIlluminanceLux * scale }
+        return min(target / sine, maximumMissionSunIlluminanceLux) * scale
+    }
+
+    /// The photographic grade drops the flat exposure floor, which was
+    /// contributing roughly half of every rendered level. The direct beam has
+    /// to make that up for sunlit ground, which is exactly the trade a
+    /// photographer makes: expose for the highlights and let the shadows go.
+    nonisolated static func photographicSunIlluminanceScale(
+        grade: LMTerrainPresentationGrade
+    ) -> Float {
+        switch grade {
+        case .calibrated: 1
+        case .photographic: 2.0
+        }
+    }
+
+    /// Earthshine as a fraction of the direct beam.
+    ///
+    /// Physically this is nearer one part in ten thousand, which would render
+    /// as pure black. What a long exposure or a dark-adapted eye actually
+    /// resolves on the lunar night side is far more than the raw ratio implies,
+    /// so this is deliberately a perceptual value: enough to keep shape in the
+    /// shadows, far too little to compete with the Sun.
+    nonisolated static let earthshineIlluminanceFraction: Float = 0.02
+
+    /// Earth hangs nearly fixed over the near side and shows the Moon the
+    /// opposite phase, so this peaks over a lunar night — which is precisely
+    /// when a shadow needs the fill.
+    nonisolated static func earthshineIlluminance(
+        sunIlluminanceLux: Float,
+        illuminatedFraction: Double,
+        grade: LMTerrainPresentationGrade
+    ) -> Float {
+        guard grade == .photographic else { return 0 }
+        return sunIlluminanceLux * earthshineIlluminanceFraction
+            * Float(min(max(illuminatedFraction, 0), 1))
+    }
+
+    /// Sunlight reflected off Earth's oceans and atmosphere arrives noticeably
+    /// cooler than direct sunlight.
+    nonisolated static let earthshineColor = LMTerrainWorld.Color(
+        red: 0.72,
+        green: 0.80,
+        blue: 1.0,
+        alpha: 1
+    )
+
+    typealias Color = PhysicallyBasedMaterial.Color
+
+    /// Presentation grade in force. Materials read the exposure floor from
+    /// here, so changing it requires rebuilding resident tiles.
+    static var presentationGrade: LMTerrainPresentationGrade = .calibrated
+
+    /// The flat emissive lift applied to every terrain material. The
+    /// photographic grade removes it so shadows can actually be dark.
+    static var exposureFloor: Float {
+        switch presentationGrade {
+        case .calibrated: regolithExposureFloor
+        case .photographic: 0
+        }
     }
 
     /// Keep the terminal-descent shadow map tightly fitted around the lander.
@@ -133,6 +216,9 @@ enum LMTerrainWorld {
     struct Assembly {
         let worldRoot: Entity
         let sun: DirectionalLight
+        /// Faint fill from the Earth's direction. Dark in the calibrated
+        /// grade, where the flat exposure floor already lifts every shadow.
+        let earthshine: DirectionalLight
         let manifest: LMTerrainManifest
         let nearAlbedoTexture: TextureResource
     }
@@ -233,6 +319,17 @@ enum LMTerrainWorld {
         sun.orientation = LMFullDescentMapper.sunLightOrientation(from: manifest)
         worldRoot.addChild(sun)
 
+        // Earthshine casts no shadows of its own: it is an area source two
+        // degrees wide, so its own shadowing is far too soft to model with a
+        // second shadow map, and stacking one would darken the very shadows it
+        // exists to fill.
+        let earthshine = DirectionalLight()
+        earthshine.name = "Earthshine"
+        earthshine.light.color = earthshineColor
+        earthshine.light.intensity = 0
+        earthshine.shadow = nil
+        worldRoot.addChild(earthshine)
+
         guard let nearAlbedoTexture else {
             throw WorldError.missingTile(nearFieldTileID)
         }
@@ -240,6 +337,7 @@ enum LMTerrainWorld {
         return Assembly(
             worldRoot: worldRoot,
             sun: sun,
+            earthshine: earthshine,
             manifest: manifest,
             nearAlbedoTexture: nearAlbedoTexture
         )
@@ -276,7 +374,7 @@ enum LMTerrainWorld {
             material.roughness = .init(floatLiteral: 0.96)
             material.metallic = .init(floatLiteral: 0)
             material.emissiveColor = .init(color: tint)
-            material.emissiveIntensity = regolithExposureFloor
+            material.emissiveIntensity = exposureFloor
             return material
         }
         guard let albedoImage = LMTerrainTileDetailBaker.image(
@@ -406,7 +504,7 @@ enum LMTerrainWorld {
             material.roughness = .init(floatLiteral: 0.96)
             material.metallic = .init(floatLiteral: 0)
             material.emissiveColor = .init(color: .init(white: 0.25, alpha: 1))
-            material.emissiveIntensity = regolithExposureFloor
+            material.emissiveIntensity = exposureFloor
             return material
         }
         let reflectance = terrainTexture(texture)
@@ -416,7 +514,7 @@ enum LMTerrainWorld {
         // RealityKit multiplies the emissive texture by this color. Be
         // explicit: the initializer's black default would erase the texture.
         material.emissiveColor = .init(color: .white, texture: reflectance)
-        material.emissiveIntensity = regolithExposureFloor
+        material.emissiveIntensity = exposureFloor
         return material
     }
 
