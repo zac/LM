@@ -68,7 +68,10 @@ struct LMCockpitExperienceDirector: Equatable, Sendable {
         verticalSpeedMetersPerSecond: Double? = nil,
         downrangeSpeedMetersPerSecond: Double? = nil,
         outcome: LMFlightOutcome?,
-        hasSurfaceContact: Bool
+        hasSurfaceContact: Bool,
+        landingFailure: LMLandingGearFailure? = nil,
+        surfaceContact: LMSurfaceContactSnapshot? = nil,
+        landingGear: LMLandingGearState? = nil
     ) -> [LMCockpitCue] {
         var cues = [LMCockpitCue]()
 
@@ -144,7 +147,10 @@ struct LMCockpitExperienceDirector: Equatable, Sendable {
             emit(
                 .hardLanding,
                 title: "HARD LANDING",
-                detail: "The vehicle is intact, but touchdown exceeded soft-landing limits.",
+                detail: Self.hardLandingDetail(
+                    contact: surfaceContact,
+                    gear: landingGear
+                ),
                 kind: .warning,
                 spokenText: "Touchdown. Hard landing.",
                 into: &cues
@@ -153,7 +159,7 @@ struct LMCockpitExperienceDirector: Equatable, Sendable {
             emit(
                 .crashed,
                 title: "VEHICLE LOST",
-                detail: "Touchdown exceeded the modeled landing-gear envelope.",
+                detail: Self.failureDetail(landingFailure),
                 kind: .failure,
                 spokenText: "Vehicle lost.",
                 into: &cues
@@ -163,6 +169,59 @@ struct LMCockpitExperienceDirector: Equatable, Sendable {
         }
 
         return cues
+    }
+
+    /// Name what actually put the touchdown outside soft-landing limits, since
+    /// arriving fast, arriving sideways, and settling onto a slope are three
+    /// different pieces of news for the crew.
+    private static func hardLandingDetail(
+        contact: LMSurfaceContactSnapshot?,
+        gear: LMLandingGearState?
+    ) -> String {
+        var exceeded = [String]()
+        if let contact {
+            if contact.verticalSpeedMetersPerSecond
+                > LMLandingContactCriteria.softVerticalSpeedMetersPerSecond {
+                exceeded.append(String(
+                    format: "%.1f ft/s descent",
+                    contact.verticalSpeedMetersPerSecond / 0.3048
+                ))
+            }
+            if contact.horizontalSpeedMetersPerSecond
+                > LMLandingContactCriteria.softHorizontalSpeedMetersPerSecond {
+                exceeded.append(String(
+                    format: "%.1f ft/s lateral",
+                    contact.horizontalSpeedMetersPerSecond / 0.3048
+                ))
+            }
+            if contact.tiltRadians > LMLandingContactCriteria.softTiltRadians {
+                exceeded.append(String(
+                    format: "%.1f° off the local surface",
+                    contact.tiltRadians * 180 / .pi
+                ))
+            }
+        }
+        let stroke = gear?.maximumStrokeMeters ?? 0
+        if stroke > 0.01 {
+            exceeded.append(String(format: "%.0f cm of strut crush", stroke * 100))
+        }
+        guard !exceeded.isEmpty else {
+            return "The vehicle is intact, but touchdown exceeded soft-landing limits."
+        }
+        return "Eagle is intact. Touchdown was outside soft limits: "
+            + exceeded.joined(separator: ", ") + "."
+    }
+
+    /// Say what actually destroyed the vehicle rather than one generic line.
+    private static func failureDetail(_ failure: LMLandingGearFailure?) -> String {
+        switch failure {
+        case .tipOver:
+            "The vehicle rolled past its footpad support and tipped over."
+        case .strutBottomed:
+            "A primary strut ran out of crushable honeycomb on touchdown."
+        case .contactEnvelopeExceeded, nil:
+            "Touchdown exceeded the modeled landing-gear velocity and tilt envelope."
+        }
     }
 
     private mutating func emitTelemetryCallout(

@@ -15,5 +15,9 @@ xcuserdata/
 # Swift Package Manager
 .build/
 Tools/TerrainGenerator/cache/
+Tools/NeuralTerrain/output/
+Tools/NeuralTerrain/checkpoints/
+# Generated capture/QA screenshots (Tools/CaptureLunarExplorerAB.sh output)
+Artifacts/
 # macOS
 .DS_Store

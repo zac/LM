@@ -26,7 +26,7 @@ struct LunarCoordinates {
 }
 
 struct EarthMoonSystem {
-    static let moonRadius: Double = 1738000.0 // meters
+    static let moonRadius = LMSelenographicCoordinateSystem.meanEarthPolarRadiusMeters
     static let earthMoonDistance: Double = 384400000.0 // meters
 
     static func earthPosition(relativeToMoon moonPosition: SIMD3<Double>) -> SIMD3<Double>  {

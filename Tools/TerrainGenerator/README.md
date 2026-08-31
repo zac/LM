@@ -94,3 +94,31 @@ swift run --package-path Tools/TerrainGenerator Apollo11TerrainGenerator \
 The runtime retains measured heights at their native 2 m spacing. Below the
 terminal-detail altitude, deterministic procedural residuals add only the
 sub-resolution frequency band and remain exactly zero at every measured post.
+
+## Photo-derived crater candidate catalog
+
+Workstream A in `Docs/TerrainRealismPlan.md` starts with a deterministic,
+offline detector over the registered near-field reflectance. The detector
+correlates the image with the runtime crater morphology shaded under the
+source observation's acquisition illumination, then writes a versioned JSON
+candidate catalog and a contrast-enhanced review overlay. Supply the source
+solar geometry explicitly; the Apollo simulation's mission-sun direction is
+not a substitute for LROC acquisition geometry:
+
+```sh
+uv run --with-requirements Tools/TerrainGenerator/crater-requirements.txt \
+  python Tools/TerrainGenerator/detect_craters.py \
+  --albedo LM/Terrain/near-field-albedo.png \
+  --sun-elevation <source-degrees> \
+  --sun-azimuth <source-degrees-clockwise-from-north> \
+  --out /tmp/apollo11-crater-candidates.json \
+  --preview /tmp/apollo11-crater-candidates.png
+```
+
+The source solar geometry and every detection threshold are recorded in the
+JSON output for auditability. The output is intentionally marked `candidate`.
+Do not copy it into
+`LM/Terrain`, load it at runtime, or bump the geology model version until the
+overlay has been visually reviewed against the registered NAC imagery. An
+accepted catalog must also be pinned in `TerrainManifest.json` with both NAC
+source IDs and the detector version.

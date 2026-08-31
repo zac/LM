@@ -112,6 +112,14 @@ final class PoweredDescentSession {
         return measurement.altitudeMeters
     }
 
+    /// Install the terrain the landing gear touches. The cockpit scene calls
+    /// this whenever clipmap residency changes, so the physics surface is always
+    /// the surface currently being drawn.
+    func setLandingSurface(_ surface: (any LMLandingSurfaceModel)?) {
+        guard let runtime else { return }
+        Task { await runtime.setLandingSurface(surface) }
+    }
+
     var canStart: Bool { runtime != nil && !isRunning && replayTask == nil }
     var canStop: Bool { isRunning || replayTask != nil }
     var canPause: Bool { isRunning || replayTask != nil }
@@ -625,5 +633,18 @@ extension LMVehicleSnapshot {
     /// resolve that latched command as a physically stopped engine.
     func isMainEngineProducingThrust(outcome: LMFlightOutcome?) -> Bool {
         outcome?.isTerminal != true && mainEngineOn && !mainEngineOff
+    }
+
+    /// Once the vehicle is settled on its gear the dynamics stop propagating
+    /// thrust, and once a footpad is loaded the descent engine is no longer
+    /// flying the vehicle. Presentation and audio follow the state, not the
+    /// latched command bit.
+    func isMainEngineProducingThrust(state: LMVehicleStateSnapshot?) -> Bool {
+        guard isMainEngineProducingThrust(outcome: state?.flightOutcome) else {
+            return false
+        }
+        // The dynamics stop the descent engine at footpad contact, modeling the
+        // crew's ENGINE STOP. Presentation and audio follow the state.
+        return state?.surfaceContact == nil
     }
 }

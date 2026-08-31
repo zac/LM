@@ -39,6 +39,29 @@ struct LMTerrainManifest: Equatable, Decodable {
         let detail: String
     }
 
+    struct CraterCatalog: Equatable, Decodable {
+        struct DetectionParameters: Equatable, Decodable {
+            let metersPerPixel: Double
+            let minimumDiameterMeters: Double
+            let maximumDiameterMeters: Double
+            let diameterSteps: Int
+            let minimumScore: Double
+            let coverageRadiusMeters: Double
+            let maximumCandidates: Int
+            let sunElevationDegrees: Double
+            let sunAzimuthDegreesClockwiseFromNorth: Double
+        }
+
+        let file: String
+        let catalogID: String
+        let generatorVersion: String
+        let sha256: String
+        let detectorSHA256: String
+        let sourceIDs: [String]
+        let detectionParameters: DetectionParameters
+        let detail: String
+    }
+
     struct Source: Equatable, Decodable {
         let id: String
         let role: String
@@ -126,11 +149,12 @@ struct LMTerrainManifest: Equatable, Decodable {
     let landingOriginElevationMeters: Double
     let projection: Projection
     let sun: Sun
+    let craterCatalog: CraterCatalog?
     let sources: [Source]
     let tiles: [Tile]
     let toolSHA256: String
 
-    static let schemaVersion = 2
+    static let schemaVersion = 3
 
     static let eagleLandmarkID = "apollo11-lm-eagle"
 
@@ -142,19 +166,41 @@ struct LMTerrainManifest: Equatable, Decodable {
         landmarks.first { $0.id == id }
     }
 
+    var selenographicCoordinateSystem: LMSelenographicCoordinateSystem {
+        LMSelenographicCoordinateSystem(
+            datumRadiusMeters: projection.sphereRadiusMeters
+        )
+    }
+
+    var landingOriginCoordinate: LMSelenographicCoordinate {
+        LMSelenographicCoordinate(
+            latitudeDegrees: landingOrigin.latitudeDegrees,
+            longitudeDegrees: landingOrigin.longitudeDegrees,
+            heightMeters: landingOriginElevationMeters
+        )
+    }
+
+    var landingLocalFrame: LMSelenographicLocalFrame {
+        selenographicCoordinateSystem.localFrame(at: landingOriginCoordinate)
+    }
+
     /// Local tangent-plane position relative to `landingOrigin`, matching the
     /// terrain mesh's +x north, +y east convention.
     func localPosition(of landmark: Landmark) -> LMVector3D {
-        let degreesToRadians = Double.pi / 180
-        let originLatitude = landingOrigin.latitudeDegrees * degreesToRadians
-        let landmarkLatitude = landmark.latitudeDegrees * degreesToRadians
-        let latitudeDelta = landmarkLatitude - originLatitude
-        let longitudeDelta = (landmark.longitudeDegrees - landingOrigin.longitudeDegrees)
-            * degreesToRadians
-        let meanLatitude = (originLatitude + landmarkLatitude) / 2
+        let position = selenographicCoordinateSystem.sitePosition(
+            for: LMSelenographicCoordinate(
+                latitudeDegrees: landmark.latitudeDegrees,
+                longitudeDegrees: landmark.longitudeDegrees,
+                heightMeters: landingOriginElevationMeters
+            ),
+            relativeTo: landingOriginCoordinate
+        )
         return LMVector3D(
-            x: latitudeDelta * projection.sphereRadiusMeters,
-            y: longitudeDelta * projection.sphereRadiusMeters * cos(meanLatitude),
+            x: position.northMeters,
+            y: position.eastMeters,
+            // The existing site terrain is planar around the datum elevation.
+            // Preserve that calibrated vertical frame rather than introducing
+            // the Moon's radial curvature as local relief.
             z: 0
         )
     }

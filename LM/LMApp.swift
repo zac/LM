@@ -27,6 +27,13 @@ struct LMApp: App {
         .defaultSize(width: 560, height: 300)
         .windowResizability(.contentSize)
 
+        WindowGroup(id: viewModel.lunarExplorerControlsWindowID) {
+            LunarExplorerControlsWindow()
+                .environment(viewModel)
+        }
+        .defaultSize(width: 420, height: 690)
+        .windowResizability(.contentSize)
+
         WindowGroup(id: "menu") {
             MainMenuView()
                 .environment(viewModel)
@@ -41,6 +48,18 @@ struct LMApp: App {
                 }
                 .onDisappear {
                     viewModel.immersiveSpaceState = .closed
+                }
+        }
+        .immersionStyle(selection: .constant(.full), in: .full)
+
+        ImmersiveSpace(id: viewModel.lunarExplorerSpaceID) {
+            LunarExplorerView()
+                .environment(viewModel)
+                .onAppear {
+                    viewModel.lunarExplorerSpaceState = .open
+                }
+                .onDisappear {
+                    viewModel.lunarExplorerSpaceState = .closed
                 }
         }
         .immersionStyle(selection: .constant(.full), in: .full)

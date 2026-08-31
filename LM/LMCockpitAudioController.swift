@@ -59,11 +59,11 @@ final class LMCockpitAudioController {
         }
     }
 
-    func update(commands: LMVehicleSnapshot?, outcome: LMFlightOutcome?) {
+    func update(commands: LMVehicleSnapshot?, state: LMVehicleStateSnapshot?) {
         start()
         guard started else { return }
 
-        let engineOn = commands?.isMainEngineProducingThrust(outcome: outcome) == true
+        let engineOn = commands?.isMainEngineProducingThrust(state: state) == true
         let thrust = engineOn ? (commands?.dps.commandedThrustNewtons ?? 0) : 0
         let normalizedThrust = Float(min(max(thrust / 46_710, 0), 1))
         enginePlayer.volume = isEnabled && engineOn

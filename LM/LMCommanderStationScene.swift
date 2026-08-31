@@ -49,7 +49,19 @@ final class LMCommanderStationScene {
     private var terrainEnvironment: Entity?
     private var terrainRockField: Entity?
     private var terrainSun: DirectionalLight?
-    private var terrainAlbedoTexture: TextureResource?
+    /// CPU copy of the measured reflectance so each fine tile can bake its own
+    /// slice instead of sharing the 2 km near-field atlas at 0.5 m per texel.
+    private var terrainAlbedoField: LMMeasuredAlbedoField?
+    /// Terrain elevation under Eagle. The lunar world is offset by this
+    /// constant so the mesh sits at its true relief; it is no longer pinned to
+    /// whatever happens to be under the vehicle.
+    private var terrainDatumElevationMeters: Double = 0
+    private var contactSurface: LMTerrainContactSurface?
+    private var contactSurfaceTask: Task<Void, Never>?
+    private var contactSurfacePlans: [LMTerrainTileID] = []
+    /// Publishes the surface the landing gear touches. The view forwards it to
+    /// the simulation so physics and rendering share one ground.
+    var onContactSurfaceChange: ((LMTerrainContactSurface?) -> Void)?
     private var progressiveTerrainEntities = [LMTerrainTileID: ModelEntity]()
     private var progressiveTerrainPlans = [LMTerrainTileID: LMTerrainTilePlan]()
     private var requestedTerrainTileIDs = Set<LMTerrainTileID>()
@@ -264,22 +276,20 @@ final class LMCommanderStationScene {
             at: terrainPosition,
             altitudeMeters: state.altitudeMeters
         )
-        let surfaceElevation = surfaceSample?.presentationElevationMeters
-            ?? terrainHeightField?.conservativeContactElevation(
-                eastMeters: terrainPosition.y,
-                northMeters: terrainPosition.x
-            )
-            ?? 0
         if let surfaceSample {
             logTerrainPresentationIfNeeded(
                 surfaceSample,
                 altitudeMeters: state.altitudeMeters
             )
         }
+        // The world sits at its true relief around a fixed datum under Eagle.
+        // Pinning it to the local surface used to slide the whole moon
+        // vertically as the vehicle crossed relief, and made every touchdown
+        // land on a flat plane no matter what was drawn underneath it.
         lunarWorld.transform = Transform(matrix: mapper.lunarWorldMatrix(
             position: terrainPosition,
             attitude: state.attitude,
-            surfaceElevationMeters: Double(surfaceElevation)
+            surfaceElevationMeters: terrainDatumElevationMeters
         ))
         requestProgressiveTerrain(
             around: terrainPosition,
@@ -287,6 +297,60 @@ final class LMCommanderStationScene {
             velocityEastMetersPerSecond: state.velocityMetersPerSecond.y,
             altitudeMeters: state.altitudeMeters
         )
+        refreshContactSurfaceIfNeeded(
+            around: terrainPosition,
+            altitudeMeters: state.altitudeMeters
+        )
+    }
+
+    /// Keep a contact patch resident around the vehicle once the gear is within
+    /// a few seconds of the ground. Generation runs off the main actor because
+    /// it evaluates the same recursive clipmap surface a tile mesh does.
+    private func refreshContactSurfaceIfNeeded(
+        around terrainPosition: LMVector3D,
+        altitudeMeters: Double
+    ) {
+        guard let heightField = terrainHeightField else { return }
+        guard altitudeMeters <= LMTerrainContactSurfaceBuilder.buildAltitudeMeters else {
+            return
+        }
+        let plans = Array(progressiveTerrainPlans.values)
+        let planIDs = plans.map(\.id).sorted {
+            ($0.level, $0.eastIndex, $0.northIndex)
+                < ($1.level, $1.eastIndex, $1.northIndex)
+        }
+        if let contactSurface, planIDs == contactSurfacePlans {
+            let drift = hypot(
+                terrainPosition.y - contactSurface.centerEastMeters,
+                terrainPosition.x - contactSurface.centerNorthMeters
+            )
+            guard drift > LMTerrainContactSurfaceBuilder.rebuildDriftMeters else {
+                return
+            }
+        }
+        guard contactSurfaceTask == nil else { return }
+
+        contactSurfacePlans = planIDs
+        let alignment = terrainFrameAlignment
+        contactSurfaceTask = Task { @MainActor [weak self] in
+            let generation = Task.detached(priority: .userInitiated) {
+                try LMTerrainContactSurfaceBuilder.build(
+                    heightField: heightField,
+                    alignment: alignment,
+                    activePlans: plans,
+                    altitudeMeters: altitudeMeters,
+                    centerTerrainEastMeters: terrainPosition.y,
+                    centerTerrainNorthMeters: terrainPosition.x
+                )
+            }
+            defer { self?.contactSurfaceTask = nil }
+            guard let surface = try? await generation.value, let self else { return }
+            self.contactSurface = surface
+            self.onContactSurfaceChange?(surface)
+            self.logger.info(
+                "Contact surface ready spacing=\(surface.spacingMeters, privacy: .public)m posts=\(surface.columns * surface.rows, privacy: .public) datum=\(self.terrainDatumElevationMeters, privacy: .public)m"
+            )
+        }
     }
 
     func loadApollo11Terrain() async throws {
@@ -302,7 +366,14 @@ final class LMCommanderStationScene {
         }
         terrainEnvironment = terrain
         terrainSun = assembly.sun
-        terrainAlbedoTexture = assembly.nearAlbedoTexture
+        terrainAlbedoField = try? LMMeasuredAlbedoField.load(tile: heightField.tile)
+        if terrainAlbedoField == nil {
+            logger.error("Measured albedo unavailable; tiles bake procedural contrast only")
+        }
+        let eagle = terrainFrameAlignment?.terrainReferenceTouchdown ?? .zero
+        terrainDatumElevationMeters = Double(
+            heightField.relativeElevation(eastMeters: eagle.y, northMeters: eagle.x) ?? 0
+        )
         terrainRockField?.removeFromParent()
         let rockField = try LMLunarRockFieldResource.makeEntity(
             heightField: heightField,
@@ -352,8 +423,8 @@ final class LMCommanderStationScene {
         altitudeMeters: Double
     ) {
         guard let heightField = terrainHeightField,
-              let terrainEnvironment,
-              let terrainAlbedoTexture else { return }
+              let terrainEnvironment else { return }
+        let albedoField = terrainAlbedoField
         let planner = LMProgressiveTerrainPlanner(
             sourceSpacingMeters: heightField.spacingMeters
         )
@@ -369,19 +440,23 @@ final class LMCommanderStationScene {
             velocityNorthMetersPerSecond: velocityNorthMetersPerSecond,
             altitudeMeters: altitudeMeters
         )
-        let requestedIDs = Set(plans.map(\.id))
+        let nextRequestedPlans = Dictionary(
+            uniqueKeysWithValues: plans.map { ($0.id, $0) }
+        )
+        let requestedIDs = Set(nextRequestedPlans.keys)
         let requiredIDs = Set(requiredPlans.map(\.id))
-        guard requestedIDs != requestedTerrainTileIDs
+        guard nextRequestedPlans != requestedTerrainPlans
                 || requiredIDs != requiredTerrainTileIDs else { return }
         logger.info(
             "Terrain LOD request count=\(plans.count, privacy: .public) required=\(requiredPlans.count, privacy: .public) altitude=\(altitudeMeters, privacy: .public)m model=\(LMLunarGeologyModel.modelID, privacy: .public)"
         )
+        let previousRequestedPlans = requestedTerrainPlans
         requestedTerrainTileIDs = requestedIDs
-        requestedTerrainPlans = Dictionary(uniqueKeysWithValues: plans.map { ($0.id, $0) })
+        requestedTerrainPlans = nextRequestedPlans
         requiredTerrainTileIDs = requiredIDs
 
-        let cancelledIDs = terrainGenerationTasks.keys.filter {
-            requestedTerrainPlans[$0] == nil
+        let cancelledIDs = Array(terrainGenerationTasks.keys).filter {
+            requestedTerrainPlans[$0] != previousRequestedPlans[$0]
         }
         for id in cancelledIDs {
             terrainGenerationTasks[id]?.cancel()
@@ -390,7 +465,7 @@ final class LMCommanderStationScene {
         }
         retireUndesiredTerrainEntities()
 
-        for plan in plans where progressiveTerrainEntities[plan.id] == nil
+        for plan in plans where progressiveTerrainPlans[plan.id] != plan
             && terrainGenerationTasks[plan.id] == nil {
             let token = UUID()
             terrainGenerationTokens[plan.id] = token
@@ -401,13 +476,15 @@ final class LMCommanderStationScene {
                     let entity = try await Apollo11TerrainResource.makeProgressiveTileEntity(
                         heightField: heightField,
                         plan: plan,
-                        albedoTexture: terrainAlbedoTexture
+                        activePlans: plans,
+                        albedoField: albedoField
                     )
                     guard self.finishTerrainGeneration(plan.id, token: token),
                           !Task.isCancelled,
                           self.requestedTerrainPlans[plan.id] == plan,
                           let entity else { return }
                     terrainEnvironment.addChild(entity)
+                    self.progressiveTerrainEntities[plan.id]?.removeFromParent()
                     self.progressiveTerrainEntities[plan.id] = entity
                     self.progressiveTerrainPlans[plan.id] = plan
                     let elapsedMilliseconds = Int(
@@ -450,7 +527,10 @@ final class LMCommanderStationScene {
     @discardableResult
     private func retireUndesiredTerrainEntities() -> Int {
         let activeIDs = Set(progressiveTerrainEntities.keys)
-        guard requiredTerrainTileIDs.isSubset(of: activeIDs) else { return 0 }
+        guard requiredTerrainTileIDs.isSubset(of: activeIDs),
+              requestedTerrainPlans.allSatisfy({
+                  progressiveTerrainPlans[$0.key] == $0.value
+              }) else { return 0 }
         let retiredIDs = activeIDs.subtracting(requestedTerrainTileIDs)
         for id in retiredIDs {
             progressiveTerrainEntities.removeValue(forKey: id)?.removeFromParent()
@@ -583,6 +663,7 @@ final class LMCommanderStationScene {
     ) {
         guard let state,
               state.flightOutcome == .inFlight,
+              state.surfaceContact == nil,
               state.altitudeMeters < 35,
               commands?.mainEngineOn == true,
               commands?.mainEngineOff != true else {
@@ -601,11 +682,17 @@ final class LMCommanderStationScene {
 
         dustCloud.isEnabled = true
         let terrainPosition = terrainPosition(for: state.positionMeters)
-        let surfaceElevation = progressiveSurfaceSample(
-            at: terrainPosition,
-            altitudeMeters: state.altitudeMeters
-        )?.renderedElevationMeters
-            ?? terrainHeightField?.conservativeContactElevation(
+        let surfaceElevation = contactSurface.map {
+            Float($0.referenceElevationMeters) + Float($0.surfaceHeightMeters(
+                northMeters: state.positionMeters.x,
+                eastMeters: state.positionMeters.y
+            ))
+        }
+            ?? progressiveSurfaceSample(
+                at: terrainPosition,
+                altitudeMeters: state.altitudeMeters
+            )?.renderedElevationMeters
+            ?? terrainHeightField?.relativeElevation(
                 eastMeters: terrainPosition.y,
                 northMeters: terrainPosition.x
             )

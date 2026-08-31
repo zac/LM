@@ -1,4 +1,27 @@
 {
+  "craterCatalog" : {
+    "catalogID" : "apollo11-near-field-nac-craters-v1",
+    "detectionParameters" : {
+      "coverageRadiusMeters" : 900,
+      "diameterSteps" : 9,
+      "maximumCandidates" : 1200,
+      "maximumDiameterMeters" : 8,
+      "metersPerPixel" : 0.5,
+      "minimumDiameterMeters" : 2,
+      "minimumScore" : 0.69999999999999996,
+      "sunAzimuthDegreesClockwiseFromNorth" : 270.57233946410002,
+      "sunElevationDegrees" : 26.941222345699999
+    },
+    "detail" : "Human-reviewed deterministic crater correlations from the registered 0.5 m NAC composite. The catalog adds bounded sub-DTM geometry only; the measured height field remains exact at every 2 m post.",
+    "detectorSHA256" : "d01e3ed540e29a54bde5afc283688bd38b0f0013b0317d1b395608e34a839558",
+    "file" : "apollo11-nac-craters-v1.json",
+    "generatorVersion" : "nac-parametric-correlation-v1",
+    "sha256" : "b2bdfada9d6df68623dcfd8c99a5b7b7d1bc2c6000b997d04afd80a79a6e630f",
+    "sourceIDs" : [
+      "nac-ortho-m150361817-50cm-slab",
+      "nac-ortho-m150368601-50cm-slab"
+    ]
+  },
   "landingOrigin" : {
     "detail" : "Apollo 11 retroreflector alignment; heights are relative to the DTM elevation sampled at this point.",
     "latitudeDegrees" : 0.67343299999999995,
@@ -28,7 +51,7 @@
     "sphereRadiusMeters" : 1737400
   },
   "scenarioID" : "apollo11-progressive-real-data-terrain",
-  "schemaVersion" : 2,
+  "schemaVersion" : 3,
   "sourceLandingOriginElevationsMeters" : {
     "nac-dtm-apollo11" : -1928.037353515625,
     "sldem2015-128-apollo11-slab" : -1926.1782513219268,
@@ -188,11 +211,11 @@
       "albedoEncoding" : {
         "colorSpace" : "sRGB encoding of a linear 643 nm reflectance proxy",
         "detail" : "Photometrically normalized WAC reflectance supplies broad tone. The near band adds bounded, exposure-normalized 0.5 m NAC high-frequency contrast while retaining the WAC value at its boundary. Mission lighting remains dynamic in-engine.",
-        "edgeHandling" : "wac-base-with-nac-high-pass-edge-fade",
+        "edgeHandling" : "wac-base-with-radial-nac-high-pass-fade",
         "format" : "PNG_RGB_8",
-        "maximumLinearReflectance" : 0.082616530358791351,
+        "maximumLinearReflectance" : 0.076185381481307851,
         "metersPerTexel" : 0.5,
-        "minimumLinearReflectance" : 0.034333404153585434,
+        "minimumLinearReflectance" : 0.035601314875020343,
         "sourceIDs" : [
           "wac-emp-643nm-304p-apollo11-slab",
           "nac-ortho-m150361817-50cm-slab",
@@ -323,5 +346,5 @@
       "zeroPointMeters" : -10470.86870527425
     }
   ],
-  "toolSHA256" : "c566f8da637b0ed0eb753068bd8f4fbd3978edd9faea1e1bb4583c31bf6d7660"
+  "toolSHA256" : "a28aa919fb35c72ab7997f8f97eae1ce709245712c41d270a4510b540415a278"
 }

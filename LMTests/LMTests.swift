@@ -693,6 +693,24 @@ struct CockpitWorldMappingTests {
 
 @Suite("Source-backed terrain tiles")
 struct SourceBackedTerrainTileTests {
+    @Test @MainActor func terrainSamplingMinifiesDenseBandsWithoutAliasing() {
+        let colorOptions = LMTerrainWorld.terrainTextureCreateOptions(
+            semantic: .color
+        )
+        #expect(colorOptions.semantic == .color)
+        #expect(colorOptions.mipmapsMode == .allocateAndGenerateAll)
+
+        let sampler = LMTerrainWorld.terrainTextureSampler()
+        sampler.access { descriptor in
+            #expect(descriptor.minFilter == .linear)
+            #expect(descriptor.magFilter == .linear)
+            #expect(descriptor.mipFilter == .linear)
+            #expect(descriptor.maxAnisotropy == 8)
+            #expect(descriptor.sAddressMode == .clampToEdge)
+            #expect(descriptor.tAddressMode == .clampToEdge)
+        }
+    }
+
     @Test func missionSunDirectionAndExposureFloorPreserveLowSunRelief() throws {
         let manifest = try LMTerrainManifest.load()
         let illuminationDirection = LMFullDescentMapper
@@ -712,6 +730,182 @@ struct SourceBackedTerrainTileTests {
         #expect(LMTerrainWorld.regolithExposureFloor < 1)
     }
 
+    @Test func missionSunMeanGeometryShadingDoesNotNeedGlobalLODGain() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let sun = LMFullDescentMapper.sunDirection(from: try LMTerrainManifest.load())
+        let centers: [(east: Double, north: Double)] = [
+            (-4.336, 19.619),
+            (-20, 4),
+            (12, 36),
+            (28, 12),
+        ]
+
+        func meanShading(spacing: Double, level: Int) throws -> Double {
+            var total = Double.zero
+            var count = 0
+            for center in centers {
+                let plan = LMTerrainTilePlan(
+                    id: .init(level: level, eastIndex: 0, northIndex: 0),
+                    centerEastMeters: center.east,
+                    centerNorthMeters: center.north,
+                    sizeMeters: 16,
+                    sampleSpacingMeters: spacing,
+                    containsProceduralSubresolution: spacing < field.spacingMeters,
+                    transitionEdges: []
+                )
+                let generated = try Apollo11TerrainResource.makeProgressiveTileMeshData(
+                    heightField: field,
+                    plan: plan,
+                    activePlans: [plan]
+                )
+                let mesh = try #require(generated)
+                let posts = Int(plan.sizeMeters / spacing) + 1
+                for row in 1..<(posts - 1) {
+                    for column in 1..<(posts - 1) {
+                        let normal = mesh.normals[row * posts + column]
+                        total += Double(max(simd_dot(normal, sun), 0))
+                        count += 1
+                    }
+                }
+            }
+            return total / Double(count)
+        }
+
+        let measured = try meanShading(spacing: 2, level: 2)
+        let terminal = try meanShading(spacing: 0.5, level: 0)
+        let landing = try meanShading(spacing: 0.125, level: 1)
+        #expect(measured > 0)
+        #expect(terminal > 0)
+        #expect(landing > 0)
+        #expect(abs(measured / terminal - 1) < 0.005)
+        #expect(abs(measured / landing - 1) < 0.005)
+    }
+
+    @Test func progressiveMeshCarriesItsSunIndependentAddedReliefDistribution() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let plan = LMTerrainTilePlan(
+            id: .init(level: 1, eastIndex: 0, northIndex: 0),
+            centerEastMeters: -4.336,
+            centerNorthMeters: 19.619,
+            sizeMeters: 16,
+            sampleSpacingMeters: 0.125,
+            containsProceduralSubresolution: true,
+            transitionEdges: []
+        )
+        let generated = try Apollo11TerrainResource.makeProgressiveTileMeshData(
+            heightField: field,
+            plan: plan,
+            activePlans: [plan]
+        )
+        let mesh = try #require(generated)
+        let posts = Int(plan.sizeMeters / plan.sampleSpacingMeters) + 1
+        let distribution = mesh.addedReliefNormalDistribution
+
+        #expect(distribution.sampleCount == posts * posts)
+        #expect(distribution.counts.reduce(0, +) == UInt32(posts * posts))
+        #expect(distribution != .flat)
+        let overhead = distribution.meanLambertianResponse(
+            sunDirectionTangentSpace: SIMD3(0, 0, 1)
+        )
+        let grazing = distribution.meanLambertianResponse(
+            sunDirectionTangentSpace: simd_normalize(SIMD3(0.8, 0, 0.6))
+        )
+        #expect(overhead > 0.9)
+        #expect(grazing > 0)
+        #expect(grazing < overhead)
+    }
+
+    @Test func explorerLandingTileMissionSunShadingVariationNeedsNoPerTileGain() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: field.spacingMeters)
+        let focusEast = -4.336
+        let focusNorth = 19.619
+        let forward = planner.prefetchedPlans(
+            focusEastMeters: focusEast,
+            focusNorthMeters: focusNorth,
+            velocityEastMetersPerSecond: 48.0 / 6.0,
+            velocityNorthMetersPerSecond: 0,
+            altitudeMeters: 2
+        )
+        let rear = planner.focusedPlans(
+            focusEastMeters: focusEast - 32,
+            focusNorthMeters: focusNorth,
+            altitudeMeters: 2
+        )
+        let plans = planner.mergedPlans(forward + rear)
+        let surface = LMProgressiveTerrainSurfaceSampler(
+            heightField: field,
+            planner: planner
+        )
+        let sun = LMFullDescentMapper.sunDirection(from: try LMTerrainManifest.load())
+
+        func shading(
+            east: Double,
+            north: Double,
+            plan: LMTerrainTilePlan
+        ) -> Double? {
+            let step = plan.sampleSpacingMeters
+            guard let west = surface.renderedElevation(
+                eastMeters: east - step,
+                northMeters: north,
+                plan: plan,
+                activePlans: plans
+            ), let eastHeight = surface.renderedElevation(
+                eastMeters: east + step,
+                northMeters: north,
+                plan: plan,
+                activePlans: plans
+            ), let south = surface.renderedElevation(
+                eastMeters: east,
+                northMeters: north - step,
+                plan: plan,
+                activePlans: plans
+            ), let northHeight = surface.renderedElevation(
+                eastMeters: east,
+                northMeters: north + step,
+                plan: plan,
+                activePlans: plans
+            ) else { return nil }
+            let eastSlope = (eastHeight - west) / Float(2 * step)
+            let northSlope = (northHeight - south) / Float(2 * step)
+            let normal = simd_normalize(SIMD3<Float>(-northSlope, 1, eastSlope))
+            return Double(max(simd_dot(normal, sun), 0))
+        }
+
+        var ratios = [Double]()
+        for child in plans where child.sampleSpacingMeters == 0.125 {
+            let parent = try #require(surface.parentPlan(
+                for: child,
+                eastMeters: child.centerEastMeters,
+                northMeters: child.centerNorthMeters,
+                activePlans: plans
+            ))
+            var childTotal = Double.zero
+            var parentTotal = Double.zero
+            var count = 0
+            for northOffset in -3...3 {
+                for eastOffset in -3...3 {
+                    let east = child.centerEastMeters + Double(eastOffset)
+                    let north = child.centerNorthMeters + Double(northOffset)
+                    guard let childShade = shading(east: east, north: north, plan: child),
+                          let parentShade = shading(east: east, north: north, plan: parent) else {
+                        continue
+                    }
+                    childTotal += childShade
+                    parentTotal += parentShade
+                    count += 1
+                }
+            }
+            #expect(count > 0)
+            ratios.append(parentTotal / childTotal)
+        }
+
+        #expect(!ratios.isEmpty)
+        #expect(ratios.allSatisfy { abs($0 - 1) < 0.02 })
+        let meanRatio = ratios.reduce(0, +) / Double(ratios.count)
+        #expect(abs(meanRatio - 1) < 0.005)
+    }
+
     @Test func manifestPinsMeasuredNearAndProgressiveSLDEMCoverage() throws {
         let manifest = try LMTerrainManifest.load()
         #expect(manifest.schemaVersion == LMTerrainManifest.schemaVersion)
@@ -729,7 +923,16 @@ struct SourceBackedTerrainTileTests {
         #expect(manifest.projection.sourceSamples == 2_111)
         #expect(manifest.projection.sourceLines == 13_978)
         #expect(manifest.sources.count == 8)
-        #expect(manifest.toolSHA256 == "c566f8da637b0ed0eb753068bd8f4fbd3978edd9faea1e1bb4583c31bf6d7660")
+        #expect(manifest.toolSHA256 == "a28aa919fb35c72ab7997f8f97eae1ce709245712c41d270a4510b540415a278")
+        let craterCatalog = try #require(manifest.craterCatalog)
+        #expect(craterCatalog.file == "apollo11-nac-craters-v1.json")
+        #expect(craterCatalog.catalogID == "apollo11-near-field-nac-craters-v1")
+        #expect(craterCatalog.generatorVersion == "nac-parametric-correlation-v1")
+        #expect(craterCatalog.sha256 == "b2bdfada9d6df68623dcfd8c99a5b7b7d1bc2c6000b997d04afd80a79a6e630f")
+        #expect(craterCatalog.detectorSHA256 == "d01e3ed540e29a54bde5afc283688bd38b0f0013b0317d1b395608e34a839558")
+        #expect(craterCatalog.detectionParameters.maximumCandidates == 1_200)
+        #expect(craterCatalog.detectionParameters.minimumDiameterMeters == 2)
+        #expect(craterCatalog.detectionParameters.maximumDiameterMeters == 8)
 
         let nac = try #require(manifest.sources.first { $0.id == "nac-dtm-apollo11" })
         #expect(nac.productId == "NAC_DTM_APOLLO11")
@@ -822,7 +1025,7 @@ struct SourceBackedTerrainTileTests {
             "nac-ortho-m150361817-50cm-slab",
             "nac-ortho-m150368601-50cm-slab",
         ])
-        #expect(near.albedoEncoding.edgeHandling == "wac-base-with-nac-high-pass-edge-fade")
+        #expect(near.albedoEncoding.edgeHandling == "wac-base-with-radial-nac-high-pass-fade")
         #expect((near.albedoEncoding.maximumLinearReflectance ?? 0)
             - (near.albedoEncoding.minimumLinearReflectance ?? 0) > 0.04)
 
@@ -931,6 +1134,41 @@ struct SourceBackedTerrainTileTests {
             expectSameAlbedo(medium, 512, mediumIndex, far, 272, farIndex)
             expectSameAlbedo(medium, mediumIndex, 0, far, farIndex, 240)
             expectSameAlbedo(medium, mediumIndex, 512, far, farIndex, 272)
+        }
+    }
+
+    @Test func nearAlbedoKeepsLandingDetailWithoutExposingSquareCrop() throws {
+        let manifest = try LMTerrainManifest.load()
+        let nearTile = try #require(manifest.tile(id: LMTerrainWorld.nearFieldTileID))
+        let mediumTile = try #require(manifest.tile(id: LMTerrainWorld.mediumFieldTileID))
+        let near = try albedoImage(for: nearTile)
+        let medium = try albedoImage(for: mediumTile)
+
+        // At the landing-site origin the 0.5 m NAC residual remains plainly
+        // present over the WAC parent value.
+        let centerResidual = abs(Int(near[2_048, 2_048]) - Int(medium[256, 256]))
+        #expect(centerResidual >= 8)
+
+        // At equal-radius samples near the first tile edge, and outside the
+        // inscribed radial footprint, the result has returned to the WAC
+        // parent. A square edge-distance mask would retain detail at the
+        // diagonal sample and make the crop visible in regional views.
+        let handoffSamples = [
+            (nearRow: 2_048, nearColumn: 3_968, mediumRow: 256, mediumColumn: 286),
+            (nearRow: 2_048, nearColumn: 128, mediumRow: 256, mediumColumn: 226),
+            (nearRow: 128, nearColumn: 2_048, mediumRow: 226, mediumColumn: 256),
+            (nearRow: 3_968, nearColumn: 2_048, mediumRow: 286, mediumColumn: 256),
+            (nearRow: 512, nearColumn: 512, mediumRow: 232, mediumColumn: 232),
+        ]
+        for sample in handoffSamples {
+            expectSameAlbedo(
+                near,
+                sample.nearRow,
+                sample.nearColumn,
+                medium,
+                sample.mediumRow,
+                sample.mediumColumn
+            )
         }
     }
 
@@ -1131,23 +1369,6 @@ struct SourceBackedTerrainTileTests {
         #expect(grid.normals[(posts - 1) * posts + posts - 1].y > 0.95)
     }
 
-    @Test func progressiveTextureCoordinatesMatchNorthUpMeasuredTiles() {
-        let northwest = Apollo11TerrainResource.textureCoordinate(
-            eastMeters: -1_024,
-            northMeters: 1_024,
-            measuredHalfWidth: 1_024,
-            measuredHalfDepth: 1_024
-        )
-        let southeast = Apollo11TerrainResource.textureCoordinate(
-            eastMeters: 1_024,
-            northMeters: -1_024,
-            measuredHalfWidth: 1_024,
-            measuredHalfDepth: 1_024
-        )
-        #expect(northwest == SIMD2<Float>(0, 0))
-        #expect(southeast == SIMD2<Float>(1, 1))
-    }
-
     @Test func measuredMeshNormalsFollowNorthAndEastSlopes() throws {
         let posts = 8
         let spacing = 2.0
@@ -1186,6 +1407,84 @@ struct SourceBackedTerrainTileTests {
         let expected = simd_normalize(SIMD3<Float>(-0.5, 1, 0.25))
 
         #expect(simd_distance(normal, expected) < 1e-5)
+    }
+
+    @Test func measuredGeometryAndNormalLODHandOffRadiallyToParent() throws {
+        func tile(id: String, posts: Int, spacing: Double) -> LMTerrainManifest.Tile {
+            LMTerrainManifest.Tile(
+                id: id,
+                postsPerSide: posts,
+                postSpacingMeters: spacing,
+                extentMeters: Double(posts - 1) * spacing,
+                zeroPointMeters: 0,
+                minimumHeightMeters: 0,
+                maximumHeightMeters: 100,
+                curvatureCorrected: false,
+                edgeHandling: nil,
+                sourceIDs: nil,
+                nativeSourceSpacingMeters: nil,
+                transitionWidthMeters: nil,
+                heightFile: "test-height.png",
+                albedoFile: "test-albedo.png",
+                heightEncoding: .init(
+                    format: "PNG_GRAYSCALE_16LE",
+                    centimetersPerCount: 1,
+                    detail: ""
+                ),
+                albedoEncoding: .init(format: "PNG_RGB_8", detail: ""),
+                detail: nil
+            )
+        }
+        func heightMap(
+            tile: LMTerrainManifest.Tile,
+            northSlope: Double,
+            eastSlope: Double
+        ) -> LMTerrainHeightMap {
+            let posts = tile.postsPerSide
+            let spacing = tile.postSpacingMeters
+            let halfExtent = tile.extentMeters / 2
+            var counts = [UInt16](repeating: 0, count: posts * posts)
+            for row in 0..<posts {
+                let north = halfExtent - Double(row) * spacing
+                for column in 0..<posts {
+                    let east = Double(column) * spacing - halfExtent
+                    let height = 50 + northSlope * north + eastSlope * east
+                    counts[row * posts + column] = UInt16((height * 100).rounded())
+                }
+            }
+            return LMTerrainHeightMap(width: posts, height: posts, counts: counts)
+        }
+
+        let parentTile = tile(id: "parent", posts: 5, spacing: 2)
+        let childTile = tile(id: "child", posts: 5, spacing: 1)
+        let parent = try LMTerrainMeshBuilder.grid(
+            tile: parentTile,
+            heightMap: heightMap(tile: parentTile, northSlope: 0.2, eastSlope: 0.1)
+        )
+        let child = try LMTerrainMeshBuilder.grid(
+            tile: childTile,
+            heightMap: heightMap(tile: childTile, northSlope: 0.8, eastSlope: -0.3)
+        )
+        let morphed = try LMTerrainMeshBuilder.morphToParent(
+            child: child,
+            parent: parent,
+            parentTile: parentTile,
+            childHalfExtentMeters: childTile.extentMeters / 2
+        )
+
+        #expect(morphed.triangles == child.triangles)
+        let parentNormal = simd_normalize(SIMD3<Float>(-0.2, 1, 0.1))
+        let childNormal = simd_normalize(SIMD3<Float>(-0.8, 1, -0.3))
+        let northEdge = 2
+        let halfRadius = 1 * childTile.postsPerSide + 2
+        let center = 2 * childTile.postsPerSide + 2
+        #expect(abs(morphed.positions[northEdge].y - 50.4) < 1e-5)
+        #expect(morphed.positions[center] == child.positions[center])
+        #expect(abs(morphed.positions[halfRadius].y - 50.5) < 1e-5)
+        #expect(simd_distance(morphed.normals[northEdge], parentNormal) < 1e-5)
+        #expect(simd_distance(morphed.normals[center], childNormal) < 1e-5)
+        let halfwayNormal = simd_normalize(parentNormal + (childNormal - parentNormal) * 0.5)
+        #expect(simd_distance(morphed.normals[halfRadius], halfwayNormal) < 1e-5)
     }
 }
 
@@ -1227,7 +1526,7 @@ struct ProgressiveLunarTerrainTests {
     }
 
     @Test func geologyModelPinsSurveyorDistributionAndProducesCraterMorphology() throws {
-        #expect(LMLunarGeologyModel.modelID == "surveyor-degraded-microrelief-v2")
+        #expect(LMLunarGeologyModel.modelID == "surveyor-degraded-microrelief-v3")
         #expect(LMLunarGeologyModel.cumulativeCraterDiameterExponent == -2)
         #expect(LMLunarGeologyModel.minimumCraterDiameterMeters >= 0.13)
         #expect(LMLunarGeologyModel.maximumCraterDiameterMeters <= 3)
@@ -1283,13 +1582,12 @@ struct ProgressiveLunarTerrainTests {
         #expect(abs(west.proceduralResidualMeters - east.proceduralResidualMeters) < 1e-4)
     }
 
-    @Test func synthesizedReliefNeverChangesConservativeContactElevation() throws {
+    /// Procedural relief now reaches the landing-gear contact surface, but it
+    /// still has to stay separable: the measured LROC value must remain
+    /// readable on its own so a regenerated DTM can replace it.
+    @Test func synthesizedReliefStaysSeparableFromTheMeasuredElevation() throws {
         let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
         let sampler = LMProgressiveTerrainSampler(heightField: field)
-        let contact = try #require(field.conservativeContactElevation(
-            eastMeters: 0.75,
-            northMeters: -0.75
-        ))
         let measured = try #require(field.relativeElevation(
             eastMeters: 0.75,
             northMeters: -0.75
@@ -1299,9 +1597,13 @@ struct ProgressiveLunarTerrainTests {
             northMeters: -0.75,
             requestedSpacingMeters: 0.125
         ))
-        #expect(contact == measured)
-        #expect(visual.measuredElevationMeters == contact)
-        #expect(abs(visual.elevationMeters - contact) <= sampler.maximumResidualMeters)
+        #expect(visual.measuredElevationMeters == measured)
+        #expect(visual.proceduralResidualMeters != 0)
+        #expect(
+            visual.elevationMeters
+                == visual.measuredElevationMeters + visual.proceduralResidualMeters
+        )
+        #expect(abs(visual.elevationMeters - measured) <= sampler.maximumResidualMeters)
     }
 
     @Test func proceduralResidualIsDeterministicAndNeverFillsUnknownCoverage() throws {
@@ -1379,7 +1681,10 @@ struct ProgressiveLunarTerrainTests {
             focusNorthMeters: 732,
             altitudeMeters: 50
         )
-        #expect(landingPreload.map(\.sampleSpacingMeters) == [0.5, 0.125])
+        #expect(landingPreload.contains { $0.sampleSpacingMeters == 0.5 })
+        // The 16 m landing safety radius intentionally covers a bounded 3x3
+        // working set around this off-center focus.
+        #expect(landingPreload.filter { $0.sampleSpacingMeters == 0.125 }.count == 9)
 
         let aboveLandingPreload = planner.focusedPlans(
             focusEastMeters: -547,
@@ -1393,8 +1698,8 @@ struct ProgressiveLunarTerrainTests {
             focusNorthMeters: 732,
             altitudeMeters: 20
         )
-        #expect(landing.map(\.sampleSpacingMeters) == [0.5, 0.125])
-        #expect(landing.map(\.sizeMeters) == [64, 16])
+        #expect(Set(landing.map(\.sampleSpacingMeters)) == Set([0.5, 0.125]))
+        #expect(Set(landing.map(\.sizeMeters)) == Set([64, 16]))
 
         let manifestSpacing = 2.000_000_000_000_6
         let manifestPlanner = LMProgressiveTerrainPlanner(
@@ -1489,6 +1794,232 @@ struct ProgressiveLunarTerrainTests {
         }
     }
 
+    @Test func landingPerimeterNormalsMatchRenderedParent() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: field.spacingMeters)
+        let plans = planner.focusedPlans(
+            focusEastMeters: 2,
+            focusNorthMeters: 2,
+            altitudeMeters: 20
+        )
+        let sampler = LMProgressiveTerrainSurfaceSampler(
+            heightField: field,
+            planner: planner
+        )
+        let finePlan = try #require(plans.first {
+            $0.sampleSpacingMeters == 0.125 && !$0.transitionEdges.isEmpty
+        })
+        let parentPlan = try #require(sampler.parentPlan(
+            for: finePlan,
+            eastMeters: finePlan.centerEastMeters,
+            northMeters: finePlan.centerNorthMeters,
+            activePlans: plans
+        ))
+        let generatedFine = try Apollo11TerrainResource.makeProgressiveTileMeshData(
+            heightField: field,
+            plan: finePlan,
+            activePlans: plans
+        )
+        let generatedParent = try Apollo11TerrainResource.makeProgressiveTileMeshData(
+            heightField: field,
+            plan: parentPlan,
+            activePlans: plans
+        )
+        let fine = try #require(generatedFine)
+        let parent = try #require(generatedParent)
+
+        func normal(
+            plan: LMTerrainTilePlan,
+            mesh: LMProgressiveTerrainMeshData,
+            east: Double,
+            north: Double
+        ) -> SIMD3<Float> {
+            let samples = Int(plan.sizeMeters / plan.sampleSpacingMeters) + 1
+            let halfSize = plan.sizeMeters / 2
+            let column = Int(((east - (plan.centerEastMeters - halfSize))
+                / plan.sampleSpacingMeters).rounded())
+            let row = Int(((plan.centerNorthMeters + halfSize - north)
+                / plan.sampleSpacingMeters).rounded())
+            return mesh.normals[row * samples + column]
+        }
+
+        let halfSize = finePlan.sizeMeters / 2
+        let samples = Int(finePlan.sizeMeters / finePlan.sampleSpacingMeters) + 1
+        var dots = [Float]()
+        for index in stride(from: 0, through: samples - 1, by: 4) {
+            let east = finePlan.centerEastMeters - halfSize
+                + Double(index) * finePlan.sampleSpacingMeters
+            let north = finePlan.centerNorthMeters + halfSize
+                - Double(index) * finePlan.sampleSpacingMeters
+            if finePlan.transitionEdges.contains(.north) {
+                dots.append(simd_dot(
+                    normal(plan: finePlan, mesh: fine, east: east,
+                           north: finePlan.centerNorthMeters + halfSize),
+                    normal(plan: parentPlan, mesh: parent, east: east,
+                           north: finePlan.centerNorthMeters + halfSize)
+                ))
+            }
+            if finePlan.transitionEdges.contains(.south) {
+                dots.append(simd_dot(
+                    normal(plan: finePlan, mesh: fine, east: east,
+                           north: finePlan.centerNorthMeters - halfSize),
+                    normal(plan: parentPlan, mesh: parent, east: east,
+                           north: finePlan.centerNorthMeters - halfSize)
+                ))
+            }
+            if finePlan.transitionEdges.contains(.west) {
+                dots.append(simd_dot(
+                    normal(plan: finePlan, mesh: fine,
+                           east: finePlan.centerEastMeters - halfSize, north: north),
+                    normal(plan: parentPlan, mesh: parent,
+                           east: finePlan.centerEastMeters - halfSize, north: north)
+                ))
+            }
+            if finePlan.transitionEdges.contains(.east) {
+                dots.append(simd_dot(
+                    normal(plan: finePlan, mesh: fine,
+                           east: finePlan.centerEastMeters + halfSize, north: north),
+                    normal(plan: parentPlan, mesh: parent,
+                           east: finePlan.centerEastMeters + halfSize, north: north)
+                ))
+            }
+        }
+
+        #expect(!dots.isEmpty)
+        #expect(dots.allSatisfy { $0 > 0.999_9 })
+    }
+
+    @Test func adjacentFineTilesKeepFullDetailAcrossTheirSharedEdge() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: field.spacingMeters)
+        let plans = planner.focusedPlans(
+            focusEastMeters: 12,
+            focusNorthMeters: 2,
+            altitudeMeters: 20
+        )
+        let fine = plans.filter { $0.sampleSpacingMeters == 0.125 }
+        let west = try #require(fine.first { candidate in
+            fine.contains {
+                $0.id.level == candidate.id.level
+                    && $0.id.eastIndex == candidate.id.eastIndex + 1
+                    && $0.id.northIndex == candidate.id.northIndex
+            }
+        })
+        let east = try #require(fine.first {
+            $0.id.level == west.id.level
+                && $0.id.eastIndex == west.id.eastIndex + 1
+                && $0.id.northIndex == west.id.northIndex
+        })
+        let sharedEast = west.centerEastMeters + west.sizeMeters / 2
+        let sharedNorth = west.centerNorthMeters
+        let sampler = LMProgressiveTerrainSurfaceSampler(
+            heightField: field,
+            planner: planner
+        )
+        let westHeight = try #require(sampler.renderedElevation(
+            eastMeters: sharedEast,
+            northMeters: sharedNorth,
+            plan: west,
+            activePlans: plans
+        ))
+        let eastHeight = try #require(sampler.renderedElevation(
+            eastMeters: sharedEast,
+            northMeters: sharedNorth,
+            plan: east,
+            activePlans: plans
+        ))
+        let parent = try #require(sampler.parentPlan(
+            for: west,
+            eastMeters: sharedEast,
+            northMeters: sharedNorth,
+            activePlans: plans
+        ))
+        let parentHeight = try #require(sampler.renderedElevation(
+            eastMeters: sharedEast,
+            northMeters: sharedNorth,
+            plan: parent,
+            activePlans: plans
+        ))
+
+        #expect(!west.transitionEdges.contains(.east))
+        #expect(!east.transitionEdges.contains(.west))
+        #expect(abs(westHeight - eastHeight) < 1e-6)
+        #expect(abs(westHeight - parentHeight) > 1e-5)
+
+        let generatedWestMesh = try Apollo11TerrainResource
+            .makeProgressiveTileMeshData(
+            heightField: field,
+            plan: west,
+            activePlans: plans
+        )
+        let generatedEastMesh = try Apollo11TerrainResource
+            .makeProgressiveTileMeshData(
+            heightField: field,
+            plan: east,
+            activePlans: plans
+        )
+        let westMesh = try #require(generatedWestMesh)
+        let eastMesh = try #require(generatedEastMesh)
+        let sampleCount = Int(west.sizeMeters / west.sampleSpacingMeters) + 1
+        let midpointRow = sampleCount / 2
+        let westIndex = midpointRow * sampleCount + sampleCount - 1
+        let eastIndex = midpointRow * sampleCount
+        #expect(abs(
+            westMesh.positions[westIndex].y - eastMesh.positions[eastIndex].y
+        ) < 1e-6)
+        #expect(simd_dot(
+            westMesh.normals[westIndex],
+            eastMesh.normals[eastIndex]
+        ) > 0.999_99)
+    }
+
+    @Test func finerResidentTilesReplaceCoveredParentTriangles() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let plans = LMProgressiveTerrainPlanner(
+            sourceSpacingMeters: field.spacingMeters
+        ).focusedPlans(
+            focusEastMeters: 2,
+            focusNorthMeters: 2,
+            altitudeMeters: 20
+        )
+        let finePlans = plans.filter { $0.sampleSpacingMeters == 0.125 }
+        let parentPlan = try #require(plans.first { candidate in
+            guard candidate.sampleSpacingMeters == 0.5 else { return false }
+            let halfSize = candidate.sizeMeters / 2
+            return finePlans.contains {
+                $0.centerEastMeters > candidate.centerEastMeters - halfSize
+                    && $0.centerEastMeters < candidate.centerEastMeters + halfSize
+                    && $0.centerNorthMeters > candidate.centerNorthMeters - halfSize
+                    && $0.centerNorthMeters < candidate.centerNorthMeters + halfSize
+            }
+        })
+        let generated = try Apollo11TerrainResource.makeProgressiveTileMeshData(
+            heightField: field,
+            plan: parentPlan,
+            activePlans: plans
+        )
+        let mesh = try #require(generated)
+        let sampleCount = Int(parentPlan.sizeMeters / parentPlan.sampleSpacingMeters) + 1
+        let completeIndexCount = (sampleCount - 1) * (sampleCount - 1) * 6
+
+        #expect(mesh.indices.count < completeIndexCount)
+        for triangle in stride(from: 0, to: mesh.indices.count, by: 3) {
+            let first = mesh.positions[Int(mesh.indices[triangle])]
+            let second = mesh.positions[Int(mesh.indices[triangle + 1])]
+            let third = mesh.positions[Int(mesh.indices[triangle + 2])]
+            let center = (first + second + third) / 3
+            let east = -Double(center.z)
+            let north = Double(center.x)
+            #expect(!finePlans.contains { fine in
+                let halfSize = fine.sizeMeters / 2
+                return east > fine.centerEastMeters - halfSize
+                    && east < fine.centerEastMeters + halfSize
+                    && north > fine.centerNorthMeters - halfSize
+                    && north < fine.centerNorthMeters + halfSize
+            })
+        }
+    }
+
     @Test func presentationPreloadsFineGeometryThenBlendsToExactRenderedTouchdown() throws {
         let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
         let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: field.spacingMeters)
@@ -1508,12 +2039,14 @@ struct ProgressiveLunarTerrainTests {
         let parent = try #require(sampler.renderedElevation(
             eastMeters: east,
             northMeters: north,
-            plan: parentPlan
+            plan: parentPlan,
+            activePlans: plans
         ))
         let fine = try #require(sampler.renderedElevation(
             eastMeters: east,
             northMeters: north,
-            plan: finePlan
+            plan: finePlan,
+            activePlans: plans
         ))
         let preloaded = try #require(sampler.sample(
             eastMeters: east,
@@ -1546,7 +2079,7 @@ struct ProgressiveLunarTerrainTests {
         #expect(abs(touchdown.renderedElevationMeters - fine) < 1e-6)
     }
 
-    @Test func terminalVelocityPrefetchesTheNextFineTileBeforeCrossing() {
+    @Test func terminalVelocityPrefetchesBeyondTheCurrentSafetyFootprint() {
         let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: 2)
         let stationary = planner.prefetchedPlans(
             focusEastMeters: 12,
@@ -1558,21 +2091,160 @@ struct ProgressiveLunarTerrainTests {
         let moving = planner.prefetchedPlans(
             focusEastMeters: 12,
             focusNorthMeters: 2,
-            velocityEastMetersPerSecond: 2,
+            velocityEastMetersPerSecond: 4,
             velocityNorthMetersPerSecond: 0,
             altitudeMeters: 20
         )
         let stationaryFine = stationary.filter { $0.sampleSpacingMeters == 0.125 }
         let movingFine = moving.filter { $0.sampleSpacingMeters == 0.125 }
 
-        #expect(stationaryFine.count == 1)
-        #expect(movingFine.count == 2)
+        #expect(stationaryFine.count == 9)
+        #expect(movingFine.count == 15)
         #expect(Set(moving.map(\.id)).count == moving.count)
-        #expect(movingFine.first?.id.eastIndex == 0)
-        #expect(movingFine.last?.id.eastIndex == 1)
+        #expect(movingFine.first?.id.eastIndex == -1)
+        #expect(movingFine.last?.id.eastIndex == 3)
+
+        let movingByID = Dictionary(
+            uniqueKeysWithValues: movingFine.map { ($0.id, $0) }
+        )
+        for plan in movingFine {
+            let eastNeighborID = LMTerrainTileID(
+                level: plan.id.level,
+                eastIndex: plan.id.eastIndex + 1,
+                northIndex: plan.id.northIndex
+            )
+            if let eastNeighbor = movingByID[eastNeighborID] {
+                #expect(!plan.transitionEdges.contains(.east))
+                #expect(!eastNeighbor.transitionEdges.contains(.west))
+            } else {
+                #expect(plan.transitionEdges.contains(.east))
+            }
+        }
     }
 
-    @Test func focusedTileChangesOnlyWhenItsOwnBoundaryIsCrossed() {
+    @Test func explorerViewProjectionKeepsAContiguousLandingViewCorridor() {
+        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: 2)
+        let forward = planner.prefetchedPlans(
+            focusEastMeters: -4.336,
+            focusNorthMeters: 19.619,
+            velocityEastMetersPerSecond: 48.0 / 6.0,
+            velocityNorthMetersPerSecond: 0,
+            altitudeMeters: 2
+        )
+        let rear = planner.focusedPlans(
+            focusEastMeters: -4.336 - 32,
+            focusNorthMeters: 19.619,
+            altitudeMeters: 2
+        )
+        let plans = planner.mergedPlans(forward + rear)
+        let landing = plans.filter { $0.sampleSpacingMeters == 0.125 }
+
+        #expect(landing.count == 24)
+        #expect(Set(landing.map(\.id.eastIndex)) == Set(-4...3))
+        #expect(Set(landing.map(\.id.northIndex)) == Set(0...2))
+        let byID = Dictionary(uniqueKeysWithValues: landing.map { ($0.id, $0) })
+        for plan in landing where plan.id.eastIndex < 3 {
+            let east = LMTerrainTileID(
+                level: plan.id.level,
+                eastIndex: plan.id.eastIndex + 1,
+                northIndex: plan.id.northIndex
+            )
+            #expect(!plan.transitionEdges.contains(.east))
+            #expect(!byID[east]!.transitionEdges.contains(.west))
+        }
+    }
+
+    @Test func coarserResidencyEnclosesFinerFootprintByItsOwnMorphCollar() {
+        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: 2)
+        // The terminal level's outer morph collar hands off to the measured
+        // source over this width; the landing footprint must never reach it.
+        let terminalCollarMeters = min(64.0 / 4, 2.0 * 8)
+        // Foci deliberately include positions right at and just across 64 m
+        // tile boundaries, where equal per-level radii used to leave the two
+        // footprints ending on the same line.
+        let foci: [(east: Double, north: Double)] = [
+            (-4.336, 19.619),
+            (0.5, 63.5),
+            (-64.0, 128.0),
+            (31.9, -0.1),
+            (-547, 732),
+        ]
+        for focus in foci {
+            let plans = planner.prefetchedPlans(
+                focusEastMeters: focus.east,
+                focusNorthMeters: focus.north,
+                velocityEastMetersPerSecond: 48.0 / 6.0,
+                velocityNorthMetersPerSecond: 0,
+                altitudeMeters: 2
+            )
+            let terminal = plans.filter { $0.sampleSpacingMeters == 0.5 }
+            func terminalCovers(east: Double, north: Double) -> Bool {
+                terminal.contains { plan in
+                    abs(east - plan.centerEastMeters) <= plan.sizeMeters / 2
+                        && abs(north - plan.centerNorthMeters) <= plan.sizeMeters / 2
+                }
+            }
+            for plan in plans where plan.sampleSpacingMeters == 0.125 {
+                let reach = plan.sizeMeters / 2 + terminalCollarMeters
+                for (east, north) in [
+                    (plan.centerEastMeters - reach, plan.centerNorthMeters - reach),
+                    (plan.centerEastMeters - reach, plan.centerNorthMeters + reach),
+                    (plan.centerEastMeters + reach, plan.centerNorthMeters - reach),
+                    (plan.centerEastMeters + reach, plan.centerNorthMeters + reach),
+                    (plan.centerEastMeters - reach, plan.centerNorthMeters),
+                    (plan.centerEastMeters + reach, plan.centerNorthMeters),
+                    (plan.centerEastMeters, plan.centerNorthMeters - reach),
+                    (plan.centerEastMeters, plan.centerNorthMeters + reach),
+                ] {
+                    #expect(
+                        terminalCovers(east: east, north: north),
+                        "landing tile \(plan.id) collar point (\(east), \(north)) has no terminal parent at focus \(focus)"
+                    )
+                }
+            }
+        }
+    }
+
+    @Test func focusedTilesMorphOnlyAtTheResidencyFootprintPerimeter() {
+        let plans = LMProgressiveTerrainPlanner(
+            sourceSpacingMeters: 2
+        ).focusedPlans(
+            focusEastMeters: 12,
+            focusNorthMeters: 2,
+            altitudeMeters: 20
+        )
+        let byID = Dictionary(uniqueKeysWithValues: plans.map { ($0.id, $0) })
+
+        for plan in plans {
+            let neighbors: [(LMTerrainTileEdges, LMTerrainTileID)] = [
+                (.west, .init(
+                    level: plan.id.level,
+                    eastIndex: plan.id.eastIndex - 1,
+                    northIndex: plan.id.northIndex
+                )),
+                (.east, .init(
+                    level: plan.id.level,
+                    eastIndex: plan.id.eastIndex + 1,
+                    northIndex: plan.id.northIndex
+                )),
+                (.south, .init(
+                    level: plan.id.level,
+                    eastIndex: plan.id.eastIndex,
+                    northIndex: plan.id.northIndex - 1
+                )),
+                (.north, .init(
+                    level: plan.id.level,
+                    eastIndex: plan.id.eastIndex,
+                    northIndex: plan.id.northIndex + 1
+                )),
+            ]
+            for (edge, neighborID) in neighbors {
+                #expect(plan.transitionEdges.contains(edge) == (byID[neighborID] == nil))
+            }
+        }
+    }
+
+    @Test func focusedFootprintChangesOnlyWhenItsSafetyBoundaryIsCrossed() {
         let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: 2)
         let first = planner.focusedPlans(
             focusEastMeters: 31,
@@ -1580,19 +2252,54 @@ struct ProgressiveLunarTerrainTests {
             altitudeMeters: 100
         )
         let same = planner.focusedPlans(
-            focusEastMeters: 63.9,
-            focusNorthMeters: 63.9,
+            focusEastMeters: 40,
+            focusNorthMeters: 40,
             altitudeMeters: 100
         )
         let crossed = planner.focusedPlans(
-            focusEastMeters: 64.1,
-            focusNorthMeters: 64.1,
+            focusEastMeters: 49,
+            focusNorthMeters: 49,
             altitudeMeters: 100
         )
 
         #expect(first.count == 1)
         #expect(first.map(\.id) == same.map(\.id))
-        #expect(first.first?.id != crossed.first?.id)
+        #expect(crossed.count == 4)
+        #expect(Set(first.map(\.id)) != Set(crossed.map(\.id)))
+    }
+
+    @Test func eagleLandingFootprintStaysInsideResidentFineTiles() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let frame = try LMTerrainFrameAlignment(manifest: LMTerrainManifest.load())
+        let eagle = frame.terrainReferenceTouchdown
+        let plans = LMProgressiveTerrainPlanner(
+            sourceSpacingMeters: field.spacingMeters
+        ).focusedPlans(
+            focusEastMeters: eagle.y,
+            focusNorthMeters: eagle.x,
+            altitudeMeters: 20
+        )
+        let terminal = plans.filter { $0.sampleSpacingMeters == 0.5 }
+        let landing = plans.filter { $0.sampleSpacingMeters == 0.125 }
+
+        // Four terminal tiles: the parent level now encloses the landing
+        // footprint by its own 16 m morph collar instead of ending on
+        // whatever 64 m line quantization happened to pick. The landing
+        // level keeps the same bounded 3x3 safety set as every other
+        // off-center 16 m focus.
+        #expect(terminal.count == 4)
+        #expect(landing.count == 9)
+        for northOffset in [-7.0, 0, 7.0] {
+            for eastOffset in [-7.0, 0, 7.0] {
+                #expect(landing.contains {
+                    let half = $0.sizeMeters / 2
+                    return eagle.y + eastOffset >= $0.centerEastMeters - half
+                        && eagle.y + eastOffset <= $0.centerEastMeters + half
+                        && eagle.x + northOffset >= $0.centerNorthMeters - half
+                        && eagle.x + northOffset <= $0.centerNorthMeters + half
+                })
+            }
+        }
     }
 }
 
@@ -2378,5 +3085,709 @@ struct CockpitHeadsetValidationTests {
         #expect(recorder.terminalResult == nil)
         recorder.observeDirectACARelease()
         #expect(!recorder.completed.contains(.acaNeutral))
+    }
+}
+
+@Suite("Terrain-relative landing")
+struct TerrainRelativeLandingTests {
+    private func heightField() throws -> Apollo11TerrainHeightField {
+        try Apollo11TerrainResource.loadSourceBackedHeightField()
+    }
+
+    private func alignment() throws -> LMTerrainFrameAlignment {
+        try LMTerrainFrameAlignment(manifest: LMTerrainManifest.load())
+    }
+
+    private func contactSurface(
+        activePlans: [LMTerrainTilePlan] = [],
+        altitudeMeters: Double = 20
+    ) throws -> LMTerrainContactSurface {
+        let field = try heightField()
+        let frame = try alignment()
+        return try LMTerrainContactSurfaceBuilder.build(
+            heightField: field,
+            alignment: frame,
+            activePlans: activePlans,
+            altitudeMeters: altitudeMeters,
+            centerTerrainEastMeters: frame.terrainReferenceTouchdown.y,
+            centerTerrainNorthMeters: frame.terrainReferenceTouchdown.x
+        )
+    }
+
+    @Test func contactSurfaceIsZeroAtTheNominalTouchdownPoint() throws {
+        let frame = try alignment()
+        let surface = try contactSurface()
+        let nominal = LMTerrainFrameAlignment.nominalP66GuidanceTouchdown
+        let height = surface.surfaceHeightMeters(
+            northMeters: nominal.x,
+            eastMeters: nominal.y
+        )
+        // Referencing heights to the terrain under Eagle is what keeps the
+        // bundled trajectories landing at guidance altitude zero.
+        #expect(abs(height) < 0.02)
+        #expect(surface.referenceElevationMeters != 0)
+        _ = frame
+    }
+
+    @Test func contactSurfaceReproducesMeasuredReliefAwayFromTheDatum() throws {
+        let field = try heightField()
+        let frame = try alignment()
+        let surface = try contactSurface()
+        let nominal = LMTerrainFrameAlignment.nominalP66GuidanceTouchdown
+
+        // Sample a few meters away and compare against the measured height
+        // field read directly, in terrain coordinates.
+        for offset in [-12.0, -5.0, 5.0, 12.0] {
+            let north = nominal.x + offset
+            let terrain = frame.terrainPosition(
+                from: LMVector3D(x: north, y: nominal.y, z: 0)
+            )
+            let measured = try #require(field.relativeElevation(
+                eastMeters: terrain.y,
+                northMeters: terrain.x
+            ))
+            let expected = Double(measured - surface.referenceElevationMeters)
+            let actual = surface.surfaceHeightMeters(
+                northMeters: north,
+                eastMeters: nominal.y
+            )
+            // With no procedural plans active the patch is pure measured relief.
+            #expect(abs(actual - expected) < 0.02)
+        }
+    }
+
+    @Test func proceduralCraterReliefReachesTheContactSurface() throws {
+        let field = try heightField()
+        let frame = try alignment()
+        let eagle = frame.terrainReferenceTouchdown
+        let landingPlan = LMProgressiveTerrainPlanner(
+            sourceSpacingMeters: field.spacingMeters
+        ).focusedPlans(
+            focusEastMeters: eagle.y,
+            focusNorthMeters: eagle.x,
+            altitudeMeters: 20
+        )
+        #expect(!landingPlan.isEmpty)
+
+        let measuredOnly = try contactSurface()
+        let withProcedural = try contactSurface(activePlans: landingPlan)
+        let nominal = LMTerrainFrameAlignment.nominalP66GuidanceTouchdown
+
+        var maximumDifference = 0.0
+        for northOffset in stride(from: -6.0, through: 6.0, by: 0.25) {
+            for eastOffset in stride(from: -6.0, through: 6.0, by: 0.25) {
+                let north = nominal.x + northOffset
+                let east = nominal.y + eastOffset
+                let difference = abs(
+                    withProcedural.surfaceHeightMeters(northMeters: north, eastMeters: east)
+                        - measuredOnly.surfaceHeightMeters(northMeters: north, eastMeters: east)
+                )
+                maximumDifference = max(maximumDifference, difference)
+            }
+        }
+        // Sub-resolution morphology is visible to the gear but stays inside the
+        // bounded residual the geology model is allowed to add.
+        #expect(maximumDifference > 0.01)
+        #expect(maximumDifference < 0.30)
+    }
+
+    @Test func contactSurfaceSlopeIsRealisticForTheMareSite() throws {
+        let surface = try contactSurface()
+        let nominal = LMTerrainFrameAlignment.nominalP66GuidanceTouchdown
+        let normal = surface.surfaceNormal(
+            northMeters: nominal.x,
+            eastMeters: nominal.y
+        )
+        let slopeDegrees = acos(min(max(normal.z, -1), 1)) * 180 / .pi
+        #expect(slopeDegrees >= 0)
+        #expect(slopeDegrees < LMLandingGearGeometry.criticalTiltRadians * 180 / .pi)
+    }
+
+    @Test func gearSettlesOnRealTerrainWithoutFloatingOrSinking() throws {
+        let surface = try contactSurface()
+        let nominal = LMTerrainFrameAlignment.nominalP66GuidanceTouchdown
+        let mass = LMLandingGearGeometry.designTouchdownMassKilograms
+        let gravity = LMVehicleConfiguration.sourceBackedDefault
+            .lunarGravityMetersPerSecondSquared.value
+        let inertia = LMInertiaMap.diagonalInertiaKilogramMetersSquared(massKilograms: mass)
+
+        // The reference point is the uncompressed footpad plane, so this is a
+        // vehicle a few centimeters above the ground at a nominal descent rate.
+        var position = LMVector3D(x: nominal.x, y: nominal.y, z: 0.05)
+        var velocity = LMVector3D(z: -0.5)
+        var attitude = LMQuaternion.identity
+        var angularVelocity = LMVector3D.zero
+        var gear = LMLandingGearState()
+        var settled = false
+
+        for _ in 0..<1_800 {
+            let result = LMLandingGearDynamics.integrate(
+                positionMeters: position,
+                velocityMetersPerSecond: velocity,
+                attitude: attitude,
+                angularVelocityRadiansPerSecond: angularVelocity,
+                massKilograms: mass,
+                inertiaKilogramMetersSquared: inertia,
+                accelerationMetersPerSecondSquared: LMVector3D(z: -gravity),
+                angularAccelerationRadiansPerSecondSquared: .zero,
+                gear: gear,
+                surface: surface,
+                deltaTime: 1.0 / 60.0
+            )
+            position = result.positionMeters
+            velocity = result.velocityMetersPerSecond
+            attitude = result.attitude
+            angularVelocity = result.angularVelocityRadiansPerSecond
+            gear = result.gear
+            if result.isSettled { settled = true; break }
+        }
+
+        #expect(settled)
+        #expect(gear.failure == nil)
+
+        // Real LROC relief across the 9.4 m gear span means the vehicle does not
+        // arrive on a plane. Some pads carry it, others end up clear of the
+        // ground, and none of them passes through the surface.
+        var loaded = 0
+        var clear = 0
+        for leg in LMLandingGearLeg.allCases {
+            let snapshot = try #require(gear.snapshot(leg))
+            let pad = LMLandingGearGeometry.footpadBody(
+                leg,
+                strokeMeters: snapshot.strokeMeters
+            )
+            let world = position + attitude.rotated(pad)
+            let ground = surface.surfaceHeightMeters(
+                northMeters: world.x,
+                eastMeters: world.y
+            )
+            let clearance = world.z - ground
+            if snapshot.isInContact {
+                loaded += 1
+                // A loaded pad is sitting in the print it pushed into the soil.
+                #expect(clearance < 0)
+                #expect(
+                    clearance
+                        >= -(snapshot.regolithPenetrationMeters
+                            + LMLandingGearDynamics.regolithBearingLoadNewtons
+                            / LMLandingGearDynamics.padStiffnessNewtonsPerMeter
+                            + 0.01)
+                )
+            } else {
+                clear += 1
+            }
+            // Nothing hangs implausibly far off the ground it landed on.
+            #expect(clearance < 0.5)
+        }
+        #expect(loaded >= 2)
+        #expect(loaded + clear == LMLandingGearLeg.allCases.count)
+
+        // Resting attitude follows the terrain instead of staying artificially
+        // level, but the mare under Eagle is nowhere near the tip-over limit.
+        let localUp = surface.surfaceNormal(
+            northMeters: position.x,
+            eastMeters: position.y
+        )
+        let tilt = LMLandingGearDynamics.tiltRadians(attitude: attitude, localUp: localUp)
+        #expect(tilt < LMLandingGearGeometry.criticalTiltRadians / 2)
+
+        let levelTilt = LMLandingGearDynamics.tiltRadians(
+            attitude: .identity,
+            localUp: LMVector3D(z: 1)
+        )
+        let settledTilt = LMLandingGearDynamics.tiltRadians(
+            attitude: attitude,
+            localUp: LMVector3D(z: 1)
+        )
+        #expect(settledTilt > levelTilt)
+    }
+}
+
+@Suite("Terrain detail textures")
+struct TerrainDetailTextureTests {
+    @Test func jointMicrotextureSamplingMatchesIndependentChannels() {
+        let microtexture = LMRegolithMicrotextureModel()
+        let craterlets = microtexture.craterletField(
+            eastMetersRange: -2...3,
+            northMetersRange: -3...2
+        )
+        let samples = [
+            SIMD2<Double>(-1.75, -2.25),
+            SIMD2<Double>(-0.13, 0.27),
+            SIMD2<Double>(0, 0),
+            SIMD2<Double>(1.43, -1.17),
+            SIMD2<Double>(2.81, 1.64),
+        ]
+
+        for sampleSpacing in [0, 0.03125, 0.125, 0.5] {
+            for sample in samples {
+                let combined = microtexture.appearanceSample(
+                    eastMeters: sample.x,
+                    northMeters: sample.y,
+                    sampleSpacingMeters: sampleSpacing,
+                    craterlets: craterlets
+                )
+                let relief = microtexture.reliefMeters(
+                    eastMeters: sample.x,
+                    northMeters: sample.y,
+                    sampleSpacingMeters: sampleSpacing,
+                    craterlets: craterlets
+                )
+                let reflectance = microtexture.reflectanceModulation(
+                    eastMeters: sample.x,
+                    northMeters: sample.y,
+                    sampleSpacingMeters: sampleSpacing,
+                    craterlets: craterlets
+                )
+                #expect(combined.reliefMeters == relief)
+                #expect(combined.reflectanceModulation == reflectance)
+            }
+        }
+    }
+
+    @Test func microtextureSuppressesFeaturesBelowTheTexelFootprint() {
+        let microtexture = LMRegolithMicrotextureModel()
+        var fineReliefEnergy = 0.0
+        var coarseReliefEnergy = 0.0
+        var fineReflectanceEnergy = 0.0
+        var coarseReflectanceEnergy = 0.0
+
+        for northIndex in 0..<24 {
+            for eastIndex in 0..<24 {
+                let east = 1.25 + Double(eastIndex) * 0.037
+                let north = -2.5 + Double(northIndex) * 0.041
+                let fine = microtexture.appearanceSample(
+                    eastMeters: east,
+                    northMeters: north,
+                    sampleSpacingMeters: 0.03125
+                )
+                let coarse = microtexture.appearanceSample(
+                    eastMeters: east,
+                    northMeters: north,
+                    sampleSpacingMeters: 0.5
+                )
+                fineReliefEnergy += fine.reliefMeters * fine.reliefMeters
+                coarseReliefEnergy += coarse.reliefMeters * coarse.reliefMeters
+                let fineReflectance = fine.reflectanceModulation - 1
+                let coarseReflectance = coarse.reflectanceModulation - 1
+                fineReflectanceEnergy += fineReflectance * fineReflectance
+                coarseReflectanceEnergy += coarseReflectance * coarseReflectance
+            }
+        }
+
+        #expect(fineReliefEnergy > 0)
+        #expect(fineReflectanceEnergy > 0)
+        #expect(coarseReliefEnergy < fineReliefEnergy * 0.01)
+        #expect(coarseReflectanceEnergy < fineReflectanceEnergy * 0.01)
+    }
+
+    private func landingPlan() throws -> LMTerrainTilePlan {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let frame = try LMTerrainFrameAlignment(manifest: LMTerrainManifest.load())
+        let eagle = frame.terrainReferenceTouchdown
+        let plans = LMProgressiveTerrainPlanner(
+            sourceSpacingMeters: field.spacingMeters
+        ).focusedPlans(
+            focusEastMeters: eagle.y,
+            focusNorthMeters: eagle.x,
+            altitudeMeters: 20
+        )
+        return try #require(plans.min { $0.sampleSpacingMeters < $1.sampleSpacingMeters })
+    }
+
+    @Test func measuredAlbedoIsLoadedAtHalfMeterResolution() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let albedo = try LMMeasuredAlbedoField.load(tile: field.tile)
+        #expect(albedo.width == 4_097)
+        #expect(albedo.height == 4_097)
+        let reflectance = try #require(albedo.reflectance(eastMeters: 0, northMeters: 0))
+        #expect(reflectance > 0)
+        #expect(reflectance < 1)
+        #expect(albedo.reflectance(eastMeters: 5_000, northMeters: 0) == nil)
+    }
+
+    @Test func bakedDetailIsFinerThanBothTheMeshAndTheSourceTexture() throws {
+        let plan = try landingPlan()
+        let texelSpacing = plan.sizeMeters
+            / Double(LMTerrainTileDetailBaker.resolution - 1)
+        // Finer than the 0.125 m triangles and far finer than 0.5 m NAC texels.
+        #expect(texelSpacing < plan.sampleSpacingMeters)
+        #expect(texelSpacing < 0.5)
+    }
+
+    @Test func bakedNormalDistributionCanBeReusedForAnySunDirection() throws {
+        let detail = try LMTerrainTileDetailBaker.bake(
+            plan: landingPlan(),
+            albedoField: nil,
+            resolution: 64
+        )
+        let distribution = detail.normalDistribution
+        let overhead = distribution.meanLambertianResponse(
+            sunDirectionTangentSpace: SIMD3<Float>(0, 0, 1)
+        )
+        let grazingEast = distribution.meanLambertianResponse(
+            sunDirectionTangentSpace: simd_normalize(SIMD3<Float>(1, 0, 0.2))
+        )
+
+        #expect(distribution.sampleCount == 64 * 64)
+        #expect(distribution.counts.reduce(0) { $0 + Int($1) } == 64 * 64)
+        #expect(overhead > 0.9)
+        #expect(grazingEast > 0)
+        #expect(grazingEast < overhead)
+    }
+
+    @Test func renderingGutterKeepsSamplingInsideRepeatedBoundaryTexels() {
+        let resolution = LMTerrainTileDetailBaker.resolution
+        var albedo = [UInt8](repeating: 0, count: resolution * resolution * 4)
+        var normal = [UInt8](repeating: 0, count: resolution * resolution * 4)
+
+        func setPixel(
+            _ bytes: inout [UInt8],
+            column: Int,
+            row: Int,
+            value: (UInt8, UInt8, UInt8, UInt8)
+        ) {
+            let offset = (row * resolution + column) * 4
+            bytes[offset] = value.0
+            bytes[offset + 1] = value.1
+            bytes[offset + 2] = value.2
+            bytes[offset + 3] = value.3
+        }
+
+        setPixel(&albedo, column: 0, row: 0, value: (11, 12, 13, 14))
+        setPixel(
+            &albedo,
+            column: resolution - 1,
+            row: resolution - 1,
+            value: (21, 22, 23, 24)
+        )
+        setPixel(&normal, column: 0, row: 0, value: (31, 32, 33, 34))
+        setPixel(
+            &normal,
+            column: resolution - 1,
+            row: resolution - 1,
+            value: (41, 42, 43, 44)
+        )
+
+        let padded = LMTerrainTileDetailBaker.addingSamplingGutter(
+            to: LMTerrainTileDetailTextures(
+                resolution: resolution,
+                albedo: albedo,
+                normal: normal
+            )
+        )
+        let gutter = LMTerrainTileDetailBaker.samplingGutterTexels
+        let renderingResolution = LMTerrainTileDetailBaker.renderingResolution
+
+        func pixel(_ bytes: [UInt8], column: Int, row: Int) -> [UInt8] {
+            let offset = (row * renderingResolution + column) * 4
+            return Array(bytes[offset..<(offset + 4)])
+        }
+
+        #expect(padded.resolution == renderingResolution)
+        #expect(padded.normalDistribution == .flat)
+        #expect(pixel(padded.albedo, column: 0, row: 0) == [11, 12, 13, 14])
+        #expect(pixel(padded.albedo, column: gutter, row: gutter) == [11, 12, 13, 14])
+        #expect(pixel(padded.normal, column: 0, row: 0) == [31, 32, 33, 34])
+        #expect(pixel(padded.normal, column: gutter, row: gutter) == [31, 32, 33, 34])
+        #expect(pixel(
+            padded.albedo,
+            column: renderingResolution - 1,
+            row: renderingResolution - 1
+        ) == [21, 22, 23, 24])
+        #expect(pixel(
+            padded.normal,
+            column: renderingResolution - 1,
+            row: renderingResolution - 1
+        ) == [41, 42, 43, 44])
+
+        let minimumUV = LMTerrainTileDetailBaker.renderingTextureCoordinate(
+            contentFraction: 0
+        )
+        let maximumUV = LMTerrainTileDetailBaker.renderingTextureCoordinate(
+            contentFraction: 1
+        )
+        #expect(minimumUV > 0)
+        #expect(maximumUV < 1)
+        #expect(abs(
+            minimumUV * Float(renderingResolution - 1) - Float(gutter)
+        ) < 0.0001)
+        #expect(abs(
+            maximumUV * Float(renderingResolution - 1)
+                - Float(gutter + resolution - 1)
+        ) < 0.0001)
+    }
+
+    @Test func bakedNormalsAreUnitLengthAndFadeFlatAtTheTileEdge() throws {
+        let plan = try landingPlan()
+        // Bake near the shipping density: at 0.25 m texels the centimetre-scale
+        // microtexture aliases away and the test would measure nothing.
+        let resolution = 256
+        let detail = try LMTerrainTileDetailBaker.bake(
+            plan: plan,
+            albedoField: nil,
+            resolution: resolution
+        )
+        #expect(detail.resolution == resolution)
+        #expect(detail.normal.count == resolution * resolution * 4)
+
+        func normal(column: Int, row: Int) -> SIMD3<Float> {
+            let offset = (row * resolution + column) * 4
+            return SIMD3(
+                Float(detail.normal[offset]) / 255 * 2 - 1,
+                Float(detail.normal[offset + 1]) / 255 * 2 - 1,
+                Float(detail.normal[offset + 2]) / 255 * 2 - 1
+            )
+        }
+
+        for row in stride(from: 0, to: resolution, by: 7) {
+            for column in stride(from: 0, to: resolution, by: 7) {
+                let length = simd_length(normal(column: column, row: row))
+                #expect(abs(length - 1) < 0.02)
+            }
+        }
+
+        // The outer collar hands off to the coarser parent surface, so the
+        // baked detail has to vanish there rather than end on a hard seam.
+        let corner = normal(column: 0, row: 0)
+        #expect(abs(corner.x) < 0.01)
+        #expect(abs(corner.y) < 0.01)
+        #expect(corner.z > 0.99)
+
+        let interior = (0..<resolution).flatMap { row in
+            (0..<resolution).map { column in
+                simd_length(SIMD2(normal(column: column, row: row).x,
+                                  normal(column: column, row: row).y))
+            }
+        }.max() ?? 0
+        #expect(interior > 0.05)
+    }
+
+    @Test func adjacentProceduralTexturesMatchExactlyAtTheirSharedWorldEdge() throws {
+        let resolution = 64
+        let west = LMTerrainTilePlan(
+            id: .init(level: 1, eastIndex: 0, northIndex: 0),
+            centerEastMeters: 8,
+            centerNorthMeters: 8,
+            sizeMeters: 16,
+            sampleSpacingMeters: 0.125,
+            containsProceduralSubresolution: true,
+            transitionEdges: [.west, .south, .north]
+        )
+        let east = LMTerrainTilePlan(
+            id: .init(level: 1, eastIndex: 1, northIndex: 0),
+            centerEastMeters: 24,
+            centerNorthMeters: 8,
+            sizeMeters: 16,
+            sampleSpacingMeters: 0.125,
+            containsProceduralSubresolution: true,
+            transitionEdges: [.east, .south, .north]
+        )
+        let westDetail = try LMTerrainTileDetailBaker.bake(
+            plan: west,
+            albedoField: nil,
+            resolution: resolution
+        )
+        let eastDetail = try LMTerrainTileDetailBaker.bake(
+            plan: east,
+            albedoField: nil,
+            resolution: resolution
+        )
+
+        for row in 0..<resolution {
+            let westOffset = (row * resolution + resolution - 1) * 4
+            let eastOffset = row * resolution * 4
+            #expect(westDetail.albedo[westOffset..<(westOffset + 4)]
+                .elementsEqual(eastDetail.albedo[eastOffset..<(eastOffset + 4)]))
+            #expect(westDetail.normal[westOffset..<(westOffset + 4)]
+                .elementsEqual(eastDetail.normal[eastOffset..<(eastOffset + 4)]))
+        }
+    }
+
+    @Test func bakedAlbedoTracksMeasuredReflectanceWithBoundedContrast() throws {
+        let plan = try landingPlan()
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let albedoField = try LMMeasuredAlbedoField.load(tile: field.tile)
+        let detail = try LMTerrainTileDetailBaker.bake(
+            plan: plan,
+            albedoField: albedoField,
+            resolution: 64
+        )
+
+        let measured = try #require(albedoField.reflectance(
+            eastMeters: plan.centerEastMeters,
+            northMeters: plan.centerNorthMeters
+        ))
+        var minimum = 1.0
+        var maximum = 0.0
+        for index in stride(from: 0, to: detail.albedo.count, by: 4) {
+            let value = Double(detail.albedo[index]) / 255
+            minimum = min(minimum, value)
+            maximum = max(maximum, value)
+        }
+        // Procedural contrast modulates the measured reflectance; it never
+        // replaces it, so the baked range brackets the source value.
+        #expect(minimum < Double(measured))
+        #expect(maximum > Double(measured))
+        #expect(minimum > Double(measured) * 0.7)
+        // Byte quantization plus sampling the exact tile boundary can exceed
+        // the nominal 1.35 modulation by one output step.
+        #expect(maximum < Double(measured) * 1.4)
+    }
+
+    @Test func microtextureNeverReachesTheGeometryOrContactSurface() throws {
+        let microtexture = LMRegolithMicrotextureModel()
+        var maximumRelief = 0.0
+        for north in stride(from: 0.0, through: 4.0, by: 0.03) {
+            for east in stride(from: 0.0, through: 4.0, by: 0.03) {
+                maximumRelief = max(
+                    maximumRelief,
+                    abs(microtexture.reliefMeters(eastMeters: east, northMeters: north))
+                )
+            }
+        }
+        #expect(maximumRelief > 0.001)
+        #expect(maximumRelief <= LMRegolithMicrotextureModel.maximumReliefMeters + 1e-9)
+
+        // The height field the gear touches is built from the geology model
+        // alone, so appearance micro-relief can never move a footpad.
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let sampler = LMProgressiveTerrainSurfaceSampler(heightField: field)
+        let sample = try #require(sampler.sample(
+            eastMeters: 3,
+            northMeters: 3,
+            altitudeMeters: 20,
+            activePlans: []
+        ))
+        #expect(sample.renderedElevationMeters == sample.measuredElevationMeters)
+    }
+
+    @Test func craterFieldMemoizationDoesNotChangeTheSurface() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let plan = try landingPlan()
+        let plain = LMProgressiveTerrainSurfaceSampler(heightField: field)
+        let prepared = plain.prepared(for: plan)
+        let step = plan.sizeMeters / 32
+
+        for row in 0...32 {
+            let north = plan.centerNorthMeters - plan.sizeMeters / 2 + Double(row) * step
+            for column in 0...32 {
+                let east = plan.centerEastMeters - plan.sizeMeters / 2 + Double(column) * step
+                let a = plain.renderedElevation(
+                    eastMeters: east,
+                    northMeters: north,
+                    plan: plan
+                )
+                let b = prepared.renderedElevation(
+                    eastMeters: east,
+                    northMeters: north,
+                    plan: plan
+                )
+                #expect(a == b)
+            }
+        }
+    }
+}
+
+@Suite("Terrain-relative descent")
+struct TerrainRelativeDescentTests {
+    /// Fly the bundled P65 checkpoint live, with the landing gear touching the
+    /// same terrain the clipmap draws, and report what the gear did.
+    ///
+    /// This is the end-to-end check that the contact surface, the gear model,
+    /// and the AGC still compose: the vehicle has to reach the ground, stop,
+    /// and stay stopped rather than being flown off it again by guidance that
+    /// references altitude to a sphere.
+    @Test @MainActor func bundledP65CheckpointLandsOnTheDrawnTerrain() async throws {
+        let checkpoint = try PoweredDescentSession.bundledP65Checkpoint()
+        let binURL = try #require(
+            Bundle.main.url(forResource: "Luminary099", withExtension: "bin")
+        )
+        let runtime = try LMSimulationRuntime(binFile: binURL, scenario: .apollo11SourceBacked)
+        let heightField = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let alignment = try LMTerrainFrameAlignment(manifest: LMTerrainManifest.load())
+        let planner = LMProgressiveTerrainPlanner(
+            sourceSpacingMeters: heightField.spacingMeters
+        )
+
+        var snapshot = try await runtime.restore(from: checkpoint)
+        var surface: LMTerrainContactSurface?
+        let deadline = snapshot.timeSeconds + 300
+
+        while snapshot.timeSeconds < deadline,
+              !snapshot.vehicleState.flightOutcome.isTerminal {
+            let state = snapshot.vehicleState
+            let terrain = alignment.terrainPosition(from: state.positionMeters)
+            if state.altitudeMeters <= LMTerrainContactSurfaceBuilder.buildAltitudeMeters {
+                let drift = surface.map {
+                    hypot(
+                        terrain.y - $0.centerEastMeters,
+                        terrain.x - $0.centerNorthMeters
+                    )
+                } ?? .infinity
+                if drift > LMTerrainContactSurfaceBuilder.rebuildDriftMeters {
+                    let plans = planner.focusedPlans(
+                        focusEastMeters: terrain.y,
+                        focusNorthMeters: terrain.x,
+                        altitudeMeters: state.altitudeMeters
+                    )
+                    surface = try LMTerrainContactSurfaceBuilder.build(
+                        heightField: heightField,
+                        alignment: alignment,
+                        activePlans: plans,
+                        altitudeMeters: state.altitudeMeters,
+                        centerTerrainEastMeters: terrain.y,
+                        centerTerrainNorthMeters: terrain.x
+                    )
+                    await runtime.setLandingSurface(surface)
+                }
+            }
+            snapshot = await runtime.step(
+                deltaTime: LMSimulationPace.acceleratedDeltaSeconds,
+                input: .autoLand(from: state)
+            )
+        }
+
+        let final = snapshot.vehicleState
+        let contact = try #require(final.surfaceContact)
+        let gear = try #require(final.landingGear)
+        let ground = try #require(surface)
+
+        // It reached the ground and stopped there.
+        #expect(final.flightOutcome.isTerminal)
+        #expect(gear.isProbeContact)
+        #expect(gear.isAnyFootpadInContact)
+        #expect(final.velocityMetersPerSecond.magnitude < 0.2)
+
+        // It touched down where the terrain actually is, not at the sphere.
+        // The live P65 arc lands well off Eagle, where the mare is meters away
+        // from the guidance datum, which is exactly what the old spherical
+        // contact test could not represent.
+        let touchdownHeight = ground.surfaceHeightMeters(
+            northMeters: final.positionMeters.x,
+            eastMeters: final.positionMeters.y
+        )
+        #expect(abs(final.positionMeters.z - touchdownHeight) < 0.5)
+
+        // Arrival was inside the gear's rated envelope, and the honeycomb took
+        // the part of it that the regolith could not.
+        #expect(
+            contact.horizontalSpeedMetersPerSecond
+                <= LMLandingContactCriteria.maximumHorizontalSpeedMetersPerSecond
+        )
+        #expect(
+            contact.verticalSpeedMetersPerSecond
+                <= LMLandingContactCriteria.maximumVerticalSpeedMetersPerSecond(
+                    horizontalSpeedMetersPerSecond: contact.horizontalSpeedMetersPerSecond
+                )
+        )
+        #expect(gear.failure == nil)
+        #expect(final.flightOutcome != .crashed)
+        #expect(gear.maximumStrokeMeters < LMLandingGearGeometry.primaryStrutStrokeMeters)
+
+        // The descent engine is not still flying a vehicle that has landed.
+        #expect(
+            snapshot.vehicleCommands.isMainEngineProducingThrust(state: final) == false
+        )
     }
 }

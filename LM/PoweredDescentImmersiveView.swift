@@ -67,7 +67,7 @@ struct PoweredDescentImmersiveView: View {
         if let commands = appModel.session.vehicleCommands {
             module.setActiveJets(LMRCSJetMapping.thrusters(from: commands.rcsJets))
             let engineOn = commands.isMainEngineProducingThrust(
-                outcome: appModel.session.vehicleState?.flightOutcome
+                state: appModel.session.vehicleState
             )
             module.setDPSThrust(newtons: commands.dps.commandedThrustNewtons, engineOn: engineOn)
         }

@@ -33,6 +33,7 @@ struct MainMenuView: View {
                 .padding(.bottom)
 
                 NewGameButton()
+                LunarExplorerButton()
                 PoweredDescentSpaceButton()
 
                 NavigationLink(destination: LunarLanderSimulationView()) {

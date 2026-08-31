@@ -1,5 +1,7 @@
+import CoreGraphics
 import Foundation
 import LMCore
+import Metal
 import RealityKit
 import simd
 
@@ -70,6 +72,7 @@ enum LMTerrainWorld {
     /// the dominant directional relief. This is deliberately below 1 so it
     /// cannot flatten the low-Sun topography into an unlit texture.
     nonisolated static let regolithExposureFloor: Float = 0.08
+    @MainActor private static var tileEdgeOpacityTextures = [Int: TextureResource]()
 
     struct Assembly {
         let worldRoot: Entity
@@ -86,7 +89,15 @@ enum LMTerrainWorld {
     nonisolated static let mediumFieldTileID = "medium-field"
     nonisolated static let farFieldTileID = "far-field"
 
-    static func load(bundle: Bundle = .main) async throws -> Assembly {
+    static func load(
+        bundle: Bundle = .main,
+        detailPipeline: LMTerrainDetailPipeline = Apollo11TerrainResource
+            .detailPipeline
+    ) async throws -> Assembly {
+        async let terrainDetailPreparation: Void =
+            Apollo11TerrainResource.prepareTerrainDetail(
+                pipeline: detailPipeline
+            )
         let manifest = try LMTerrainManifest.load(bundle: bundle)
 
         let worldRoot = Entity()
@@ -95,27 +106,59 @@ enum LMTerrainWorld {
         let nearTile = try requireTile(manifest, id: nearFieldTileID)
         let mediumTile = try requireTile(manifest, id: mediumFieldTileID)
         let farTile = try requireTile(manifest, id: farFieldTileID)
+        let nearHeightMap = try LMTerrainHeightMap.load(
+            contentsOf: resourceURL(bundle: bundle, file: nearTile.heightFile)
+        )
+        let mediumHeightMap = try LMTerrainHeightMap.load(
+            contentsOf: resourceURL(bundle: bundle, file: mediumTile.heightFile)
+        )
+        let farHeightMap = try LMTerrainHeightMap.load(
+            contentsOf: resourceURL(bundle: bundle, file: farTile.heightFile)
+        )
+
         // Each power-of-two-plus-one grid shares its inner boundary exactly
         // with the next denser tile. Punch nested square holes at those grid
         // lines so the bands neither overlap nor leave a geometric gap.
+        let farGrid = try LMTerrainMeshBuilder.grid(
+            tile: farTile,
+            heightMap: farHeightMap,
+            holeHalfExtentMeters: mediumTile.extentMeters / 2
+        )
+        let rawMediumGrid = try LMTerrainMeshBuilder.grid(
+            tile: mediumTile,
+            heightMap: mediumHeightMap,
+            holeHalfExtentMeters: nearTile.extentMeters / 2
+        )
+        let mediumGrid = try LMTerrainMeshBuilder.morphToParent(
+            child: rawMediumGrid,
+            parent: farGrid,
+            parentTile: farTile,
+            childHalfExtentMeters: mediumTile.extentMeters / 2
+        )
+        let rawNearGrid = try LMTerrainMeshBuilder.grid(
+            tile: nearTile,
+            heightMap: nearHeightMap
+        )
+        let nearGrid = try LMTerrainMeshBuilder.morphToParent(
+            child: rawNearGrid,
+            parent: mediumGrid,
+            parentTile: mediumTile,
+            childHalfExtentMeters: nearTile.extentMeters / 2
+        )
         let bands = [
-            (tile: nearTile, holeHalfExtent: 0.0),
-            (tile: mediumTile, holeHalfExtent: nearTile.extentMeters / 2.0),
-            (tile: farTile, holeHalfExtent: mediumTile.extentMeters / 2.0),
+            (tile: nearTile, grid: nearGrid),
+            (tile: mediumTile, grid: mediumGrid),
+            (tile: farTile, grid: farGrid),
         ]
         var nearAlbedoTexture: TextureResource?
 
-        for (tile, hole) in bands {
-            let heightURL = try resourceURL(bundle: bundle, file: tile.heightFile)
+        for (tile, grid) in bands {
             let albedoURL = try resourceURL(bundle: bundle, file: tile.albedoFile)
-            let heightMap = try LMTerrainHeightMap.load(contentsOf: heightURL)
-            let grid = try LMTerrainMeshBuilder.grid(
-                tile: tile,
-                heightMap: heightMap,
-                holeHalfExtentMeters: hole
-            )
             let mesh = try LMTerrainMeshBuilder.mesh(from: grid)
-            let texture = try await TextureResource(contentsOf: albedoURL)
+            let texture = try await TextureResource(
+                contentsOf: albedoURL,
+                options: terrainTextureCreateOptions(semantic: .color)
+            )
             if tile.id == nearFieldTileID {
                 nearAlbedoTexture = texture
             }
@@ -135,6 +178,7 @@ enum LMTerrainWorld {
         guard let nearAlbedoTexture else {
             throw WorldError.missingTile(nearFieldTileID)
         }
+        await terrainDetailPreparation
         return Assembly(
             worldRoot: worldRoot,
             sun: sun,
@@ -143,9 +187,171 @@ enum LMTerrainWorld {
         )
     }
 
+    /// Material for a fine clipmap tile that has baked its own appearance.
+    ///
+    /// The tile carries a resampled slice of the measured reflectance and a
+    /// tangent-space normal map for the sub-triangle regolith, both addressed
+    /// by tile-local UVs. RealityKit's PBR materials expose a single texture
+    /// coordinate buffer, so baking per tile is what makes a normal map
+    /// possible at all without giving up the measured albedo underneath it.
+    @MainActor static func detailTerrainMaterial(
+        _ detail: LMTerrainTileDetailTextures,
+        plan: LMTerrainTilePlan
+    ) throws -> PhysicallyBasedMaterial {
+        // Capture-only residency map: paint each progressive tile a flat color
+        // keyed by its level and grid parity so a screenshot attributes every
+        // rendered rectangle to one concrete tile. Never set for production or
+        // interactive launches.
+        if ProcessInfo.processInfo.arguments.contains(
+            "--lunar-explorer-tile-tint=id"
+        ) {
+            var material = PhysicallyBasedMaterial()
+            let hue = 0.13 + Double(plan.id.level) * 0.23
+            let parity = Double((plan.id.eastIndex & 1) + (plan.id.northIndex & 1))
+            let tint = PhysicallyBasedMaterial.Color(
+                hue: hue.truncatingRemainder(dividingBy: 1),
+                saturation: 0.85,
+                brightness: 0.45 + parity * 0.25,
+                alpha: 1
+            )
+            material.baseColor = .init(tint: tint)
+            material.roughness = .init(floatLiteral: 0.96)
+            material.metallic = .init(floatLiteral: 0)
+            material.emissiveColor = .init(color: tint)
+            material.emissiveIntensity = regolithExposureFloor
+            return material
+        }
+        guard let albedoImage = LMTerrainTileDetailBaker.image(
+            from: detail.albedo,
+            resolution: detail.resolution,
+            colorSpace: CGColorSpaceCreateDeviceRGB()
+        ) else {
+            throw WorldError.missingTile("tile detail textures")
+        }
+        let albedo = try TextureResource(
+            image: albedoImage,
+            options: terrainTextureCreateOptions(semantic: .color)
+        )
+        var material = terrainMaterial(texture: albedo)
+        // Repeatable Explorer captures can isolate the reflectance/geometry
+        // path from tangent-space normal realization. This is deliberately an
+        // opt-out launch diagnostic; production and interactive launches keep
+        // the exact shipping material unless the explicit argument is present.
+        if !ProcessInfo.processInfo.arguments.contains(
+            "--lunar-explorer-normal-maps=off"
+        ) {
+            guard let normalImage = LMTerrainTileDetailBaker.image(
+                from: detail.normal,
+                resolution: detail.resolution,
+                colorSpace: CGColorSpaceCreateDeviceRGB()
+            ) else {
+                throw WorldError.missingTile("tile detail normal texture")
+            }
+            let normal = try TextureResource(
+                image: normalImage,
+                options: terrainTextureCreateOptions(semantic: .normal)
+            )
+            material.normal = .init(texture: terrainTexture(normal))
+        }
+        // Keep every tile on the same opaque render path. Geometry, albedo,
+        // and normals already converge to the exact rendered parent through
+        // the full-width perimeter morph. A texture-opacity collar routed the
+        // outer tiles through RealityKit's transparent pass and exposed them
+        // as rectangular cards even where their sampled opacity was nearly 1.
+        return material
+    }
+
+    @MainActor private static func tileEdgeOpacityTexture(
+        resolution: Int,
+        transitionEdges: LMTerrainTileEdges
+    ) throws -> TextureResource? {
+        guard !transitionEdges.isEmpty else { return nil }
+        let key = (resolution << 8) | Int(transitionEdges.rawValue)
+        if let texture = tileEdgeOpacityTextures[key] {
+            return texture
+        }
+        guard let image = tileEdgeOpacityImage(
+            resolution: resolution,
+            transitionEdges: transitionEdges
+        ) else {
+            return nil
+        }
+        let texture = try TextureResource(
+            image: image,
+            options: TextureResource.CreateOptions(
+                semantic: .scalar,
+                mipmapsMode: .none
+            )
+        )
+        tileEdgeOpacityTextures[key] = texture
+        return texture
+    }
+
+    /// Fade a child tile into its measured parent through the same collar used
+    /// by its procedural relief and albedo. This removes coplanar color/depth
+    /// contention at the exact edge while keeping the parent available for a
+    /// continuous transition between independently resident neighbors.
+    nonisolated private static func tileEdgeOpacityImage(
+        resolution: Int,
+        transitionEdges: LMTerrainTileEdges
+    ) -> CGImage? {
+        let collar = max(
+            1.0,
+            Double(resolution) * LMTerrainTileDetailBaker.edgeFadeFraction
+        )
+        var values = [UInt8](repeating: 255, count: resolution * resolution)
+        for row in 0..<resolution {
+            for column in 0..<resolution {
+                var distances = [Int]()
+                distances.reserveCapacity(4)
+                if transitionEdges.contains(.west) {
+                    distances.append(column)
+                }
+                if transitionEdges.contains(.east) {
+                    distances.append(resolution - 1 - column)
+                }
+                if transitionEdges.contains(.north) {
+                    distances.append(row)
+                }
+                if transitionEdges.contains(.south) {
+                    distances.append(resolution - 1 - row)
+                }
+                let distance = Double(distances.min() ?? resolution)
+                let normalized = min(max(distance / collar, 0), 1)
+                let fade = normalized * normalized * (3 - 2 * normalized)
+                values[row * resolution + column] = UInt8((fade * 255).rounded())
+            }
+        }
+        let data = Data(values)
+        guard let provider = CGDataProvider(data: data as CFData) else { return nil }
+        return CGImage(
+            width: resolution,
+            height: resolution,
+            bitsPerComponent: 8,
+            bitsPerPixel: 8,
+            bytesPerRow: resolution,
+            space: CGColorSpaceCreateDeviceGray(),
+            bitmapInfo: CGBitmapInfo(rawValue: 0),
+            provider: provider,
+            decode: nil,
+            shouldInterpolate: true,
+            intent: .defaultIntent
+        )
+    }
+
     static func terrainMaterial(texture: TextureResource) -> PhysicallyBasedMaterial {
         var material = PhysicallyBasedMaterial()
-        let reflectance = MaterialParameters.Texture(texture)
+        if ProcessInfo.processInfo.arguments.contains(
+            "--lunar-explorer-terrain-reflectance=constant"
+        ) {
+            material.baseColor = .init(tint: .init(white: 0.25, alpha: 1))
+            material.roughness = .init(floatLiteral: 0.96)
+            material.metallic = .init(floatLiteral: 0)
+            material.emissiveColor = .init(color: .init(white: 0.25, alpha: 1))
+            material.emissiveIntensity = regolithExposureFloor
+            return material
+        }
+        let reflectance = terrainTexture(texture)
         material.baseColor = .init(tint: .white, texture: reflectance)
         material.roughness = .init(floatLiteral: 0.96)
         material.metallic = .init(floatLiteral: 0)
@@ -154,6 +360,37 @@ enum LMTerrainWorld {
         material.emissiveColor = .init(color: .white, texture: reflectance)
         material.emissiveIntensity = regolithExposureFloor
         return material
+    }
+
+    /// Terrain is commonly viewed at a grazing angle with radically different
+    /// texel densities in adjacent measured bands. Make the sampling contract
+    /// explicit so the dense NAC texture minifies through a full mip chain and
+    /// blends smoothly toward the WAC parent instead of reading as a sharp
+    /// rectangular card at regional scale.
+    static func terrainTextureCreateOptions(
+        semantic: TextureResource.Semantic
+    ) -> TextureResource.CreateOptions {
+        TextureResource.CreateOptions(
+            semantic: semantic,
+            mipmapsMode: .allocateAndGenerateAll
+        )
+    }
+
+    static func terrainTexture(
+        _ texture: TextureResource
+    ) -> MaterialParameters.Texture {
+        MaterialParameters.Texture(texture, sampler: terrainTextureSampler())
+    }
+
+    static func terrainTextureSampler() -> MaterialParameters.Texture.Sampler {
+        let descriptor = MTLSamplerDescriptor()
+        descriptor.minFilter = .linear
+        descriptor.magFilter = .linear
+        descriptor.mipFilter = .linear
+        descriptor.maxAnisotropy = 8
+        descriptor.sAddressMode = .clampToEdge
+        descriptor.tAddressMode = .clampToEdge
+        return MaterialParameters.Texture.Sampler(descriptor)
     }
 
     nonisolated static func missionShadowDistance(altitudeMeters: Double?) -> Float {

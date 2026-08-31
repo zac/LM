@@ -109,6 +109,96 @@ enum LMTerrainMeshBuilder {
         return data
     }
 
+    /// Hand a measured child band to its coarser parent before the child's
+    /// square tile edge is reached.
+    ///
+    /// The source-conditioned albedo uses the same landing-centered radial
+    /// smoothstep. Matching both height and vertex-normal LOD prevents the 2 m
+    /// NAC mesh from reading as a rectangular card against the 32 m SLDEM
+    /// parent and makes every child edge equal the parent's bilinear surface.
+    /// Source samples remain untouched in the assets; only the outer render
+    /// collar is geomorphed, well outside the Apollo 11 terminal site.
+    static func morphToParent(
+        child: VertexData,
+        parent: VertexData,
+        parentTile: LMTerrainManifest.Tile,
+        childHalfExtentMeters: Double
+    ) throws -> VertexData {
+        let parentPosts = parentTile.postsPerSide
+        guard parent.normals.count == parentPosts * parentPosts,
+              child.positions.count == child.normals.count else {
+            throw MeshError.dimensionMismatch
+        }
+        let parentHalfExtent = Float(parentTile.extentMeters / 2)
+        let parentSpacing = Float(parentTile.postSpacingMeters)
+        let childHalfExtent = Float(childHalfExtentMeters)
+        guard childHalfExtent > 0 else { return child }
+
+        func parentSample(
+            north: Float,
+            east: Float
+        ) -> (height: Float, normal: SIMD3<Float>) {
+            let column = min(
+                max((east + parentHalfExtent) / parentSpacing, 0),
+                Float(parentPosts - 1)
+            )
+            let row = min(
+                max((parentHalfExtent - north) / parentSpacing, 0),
+                Float(parentPosts - 1)
+            )
+            let column0 = Int(column.rounded(.down))
+            let row0 = Int(row.rounded(.down))
+            let column1 = min(column0 + 1, parentPosts - 1)
+            let row1 = min(row0 + 1, parentPosts - 1)
+            let eastBlend = column - Float(column0)
+            let southBlend = row - Float(row0)
+            let northWest = parent.normals[row0 * parentPosts + column0]
+            let northEast = parent.normals[row0 * parentPosts + column1]
+            let southWest = parent.normals[row1 * parentPosts + column0]
+            let southEast = parent.normals[row1 * parentPosts + column1]
+            let northNormal = northWest + (northEast - northWest) * eastBlend
+            let southNormal = southWest + (southEast - southWest) * eastBlend
+            let northWestHeight = parent.positions[row0 * parentPosts + column0].y
+            let northEastHeight = parent.positions[row0 * parentPosts + column1].y
+            let southWestHeight = parent.positions[row1 * parentPosts + column0].y
+            let southEastHeight = parent.positions[row1 * parentPosts + column1].y
+            let northHeight = northWestHeight
+                + (northEastHeight - northWestHeight) * eastBlend
+            let southHeight = southWestHeight
+                + (southEastHeight - southWestHeight) * eastBlend
+            return (
+                northHeight + (southHeight - northHeight) * southBlend,
+                simd_normalize(
+                    northNormal + (southNormal - northNormal) * southBlend
+                )
+            )
+        }
+
+        var result = child
+        for index in result.positions.indices {
+            let position = result.positions[index]
+            let north = position.x
+            let east = -position.z
+            let radius = hypot(north, east)
+            let normalizedInterior = min(
+                max(1 - radius / childHalfExtent, 0),
+                1
+            )
+            let detailWeight = normalizedInterior * normalizedInterior
+                * (3 - 2 * normalizedInterior)
+            guard detailWeight < 1 else { continue }
+            let coarse = parentSample(north: north, east: east)
+            let detailedHeight = result.positions[index].y
+            result.positions[index].y = coarse.height
+                + (detailedHeight - coarse.height) * detailWeight
+            let detailedNormal = result.normals[index]
+            result.normals[index] = simd_normalize(
+                coarse.normal + (detailedNormal - coarse.normal) * detailWeight
+            )
+        }
+        return result
+    }
+
     /// Convert grid vertex data into a RealityKit mesh.
     static func mesh(from data: VertexData) throws -> MeshResource {
         var descriptor = MeshDescriptor(name: "terrain")

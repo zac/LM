@@ -224,12 +224,43 @@ let nearAlbedoTexels = 4_097
 let mediumAlbedoTexels = mediumTilePosts
 let farAlbedoTexels = farTilePosts
 
+let craterCatalogFileName = "apollo11-nac-craters-v1.json"
+let craterCatalogID = "apollo11-near-field-nac-craters-v1"
+let craterCatalogGeneratorVersion = "nac-parametric-correlation-v1"
+let craterCatalogSHA256 =
+    "b2bdfada9d6df68623dcfd8c99a5b7b7d1bc2c6000b997d04afd80a79a6e630f"
+let craterDetectorSHA256 =
+    "d01e3ed540e29a54bde5afc283688bd38b0f0013b0317d1b395608e34a839558"
+
 // MARK: - Manifest model (mirrored by LM/LM/LMTerrainManifest.swift)
 
 func manifestJSON() -> [String: Any] {
     [
-        "schemaVersion": 2,
+        "schemaVersion": 3,
         "scenarioID": "apollo11-progressive-real-data-terrain",
+        "craterCatalog": [
+            "file": craterCatalogFileName,
+            "catalogID": craterCatalogID,
+            "generatorVersion": craterCatalogGeneratorVersion,
+            "sha256": craterCatalogSHA256,
+            "detectorSHA256": craterDetectorSHA256,
+            "sourceIDs": [
+                "nac-ortho-m150361817-50cm-slab",
+                "nac-ortho-m150368601-50cm-slab"
+            ],
+            "detectionParameters": [
+                "metersPerPixel": 0.5,
+                "minimumDiameterMeters": 2.0,
+                "maximumDiameterMeters": 8.0,
+                "diameterSteps": 9,
+                "minimumScore": 0.70,
+                "coverageRadiusMeters": 900.0,
+                "maximumCandidates": 1_200,
+                "sunElevationDegrees": 26.941_222_345_7,
+                "sunAzimuthDegreesClockwiseFromNorth": 270.572_339_464_1
+            ],
+            "detail": "Human-reviewed deterministic crater correlations from the registered 0.5 m NAC composite. The catalog adds bounded sub-DTM geometry only; the measured height field remains exact at every 2 m post."
+        ],
         "landingOrigin": [
             "latitudeDegrees": siteLatitudeDegrees,
             "longitudeDegrees": siteLongitudeDegrees,
@@ -418,7 +449,7 @@ func nearManifestTile() -> [String: Any] {
             "nac-ortho-m150361817-50cm-slab",
             "nac-ortho-m150368601-50cm-slab",
         ],
-        albedoEdgeHandling: "wac-base-with-nac-high-pass-edge-fade",
+        albedoEdgeHandling: "wac-base-with-radial-nac-high-pass-fade",
         edgeHandling: "measured",
         transitionWidth: nil,
         detail: "Dense near field around Tranquility Base."
@@ -1109,8 +1140,11 @@ func sampledAlbedoField(
 
 /// Build a near-field reflectance texture from normalized WAC broad tone and
 /// only the locally high-passed, exposure-normalized detail shared by the two
-/// registered 0.5 m NAC orthophotos. The detail fades to exactly zero in a
-/// 128 m boundary collar, so the near tile meets the medium WAC texture.
+/// registered 0.5 m NAC orthophotos. The high-frequency residual is strongest
+/// at the landing-site origin and fades radially to exactly zero at the first
+/// near-tile edge. A radial footprint avoids exposing the square NAC crop in
+/// regional views while preserving essentially all source detail across the
+/// terminal landing area.
 func nearAlbedoField(
     orthoA: NACOrthoSlab,
     orthoB: NACOrthoSlab,
@@ -1213,10 +1247,12 @@ func nearAlbedoField(
             ), 1.8)
             let north = halfExtent - Double(row) * spacing
             let east = Double(column) * spacing - halfExtent
-            let edgeDistance = Double(min(row, column, size - 1 - row, size - 1 - column))
-                * spacing
-            let normalizedEdge = min(max(edgeDistance / 128.0, 0), 1)
-            let edgeWeight = normalizedEdge * normalizedEdge * (3 - 2 * normalizedEdge)
+            let normalizedInterior = max(
+                0,
+                1 - hypot(north, east) / halfExtent
+            )
+            let edgeWeight = normalizedInterior * normalizedInterior
+                * (3 - 2 * normalizedInterior)
             let detailMultiplier = exp(highFrequency * 0.18 * edgeWeight)
             reflectance[row * size + column] = Float(
                 try broadReflectance(north, east) * detailMultiplier

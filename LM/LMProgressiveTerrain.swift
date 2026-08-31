@@ -21,15 +21,41 @@ struct LMProgressiveTerrainSampler: Sendable {
     let heightField: Apollo11TerrainHeightField
     let geology: LMLunarGeologyModel
     let maximumResidualMeters: Float
+    /// Optional memoization of the geology cells over a bounded work region.
+    /// It changes nothing about the surface, only how often the hash runs.
+    let craterField: LMLunarGeologyCraterField?
 
     init(
         heightField: Apollo11TerrainHeightField,
         seed: UInt64 = 0x4C_52_4F_43_41_31_31,
-        maximumResidualMeters: Float = 0.24
+        maximumResidualMeters: Float = 0.24,
+        craterCatalog: LMLunarCraterCatalog? = nil,
+        craterField: LMLunarGeologyCraterField? = nil
     ) {
         self.heightField = heightField
-        geology = LMLunarGeologyModel(seed: seed)
+        geology = LMLunarGeologyModel(
+            seed: seed,
+            craterCatalog: craterCatalog ?? heightField.craterCatalog
+        )
         self.maximumResidualMeters = maximumResidualMeters
+        self.craterField = craterField
+    }
+
+    /// A sampler that has precomputed the geology over one region.
+    func prepared(
+        eastMetersRange: ClosedRange<Double>,
+        northMetersRange: ClosedRange<Double>
+    ) -> LMProgressiveTerrainSampler {
+        LMProgressiveTerrainSampler(
+            heightField: heightField,
+            seed: geology.seed,
+            maximumResidualMeters: maximumResidualMeters,
+            craterCatalog: geology.craterCatalog,
+            craterField: geology.craterField(
+                eastMetersRange: eastMetersRange,
+                northMetersRange: northMetersRange
+            )
+        )
     }
 
     func sample(
@@ -94,7 +120,8 @@ struct LMProgressiveTerrainSampler: Sendable {
             geology.visualReliefMeters(
                 eastMeters: east,
                 northMeters: north,
-                requestedSpacingMeters: requestedSpacingMeters
+                requestedSpacingMeters: requestedSpacingMeters,
+                craterField: craterField
             )
         }
 
@@ -116,7 +143,7 @@ struct LMProgressiveTerrainSampler: Sendable {
 /// ellipticity, rim breakup, and ejecta below are synthesized and must never be
 /// presented as surveyed Apollo 11 topography.
 struct LMLunarGeologyModel: Equatable, Sendable {
-    static let modelID = "surveyor-degraded-microrelief-v2"
+    static let modelID = "surveyor-degraded-microrelief-v3"
     static let cumulativeCraterDiameterExponent = -2.0
     static let minimumCraterDiameterMeters = 0.22
     static let maximumCraterDiameterMeters = 1.2
@@ -126,6 +153,8 @@ struct LMLunarGeologyModel: Equatable, Sendable {
         "https://ntrs.nasa.gov/api/citations/19700000726/downloads/19700000726.pdf"
 
     let seed: UInt64
+    let craterCatalog: LMLunarCraterCatalog?
+    private let craterCatalogIndex: LMLunarCraterCatalogIndex?
     let cellSizeMeters = 2.0
     let candidatesPerCell = 2
     /// Surveyor constrains the size-frequency slope but not a normalization for
@@ -133,10 +162,29 @@ struct LMLunarGeologyModel: Equatable, Sendable {
     /// measured LROC morphology, not repeated circles, dominates the view.
     let candidateAcceptance = 0.18
 
+    init(
+        seed: UInt64 = 0x4C_52_4F_43_41_31_31,
+        craterCatalog: LMLunarCraterCatalog? = nil
+    ) {
+        self.seed = seed
+        self.craterCatalog = craterCatalog
+        craterCatalogIndex = craterCatalog.map {
+            LMLunarCraterCatalogIndex(catalog: $0)
+        }
+    }
+
+    /// Includes the frozen detector version when a photo-derived catalog is
+    /// active, so geometry caches cannot mix catalog realizations.
+    var versionedModelID: String {
+        guard let craterCatalog else { return Self.modelID }
+        return "\(Self.modelID)+\(craterCatalog.versionedModelID)"
+    }
+
     func visualReliefMeters(
         eastMeters: Double,
         northMeters: Double,
-        requestedSpacingMeters: Double
+        requestedSpacingMeters: Double,
+        craterField: LMLunarGeologyCraterField? = nil
     ) -> Double {
         let minimumRenderableDiameter = max(
             Self.minimumCraterDiameterMeters,
@@ -150,12 +198,27 @@ struct LMLunarGeologyModel: Equatable, Sendable {
             requestedSpacingMeters: requestedSpacingMeters
         )
 
+        if let craterCatalogIndex {
+            for crater in craterCatalogIndex.cratersAffecting(
+                eastMeters: eastMeters,
+                northMeters: northMeters,
+                minimumDiameterMeters: minimumRenderableDiameter
+            ) {
+                relief += Self.craterReliefMeters(
+                    eastMeters: eastMeters,
+                    northMeters: northMeters,
+                    crater: crater
+                )
+            }
+        }
+
         for northOffset in -1...1 {
             for eastOffset in -1...1 {
                 let cellEast = eastCell + Int64(eastOffset)
                 let cellNorth = northCell + Int64(northOffset)
                 for candidate in 0..<candidatesPerCell {
-                    guard let crater = crater(
+                    guard let crater = resolvedCrater(
+                        craterField,
                         cellEast: cellEast,
                         cellNorth: cellNorth,
                         candidate: candidate
@@ -171,6 +234,78 @@ struct LMLunarGeologyModel: Equatable, Sendable {
             }
         }
         return relief
+    }
+
+    /// A precomputed cell if the field covers it, otherwise the on-demand
+    /// derivation. Both paths produce the same crater.
+    func resolvedCrater(
+        _ field: LMLunarGeologyCraterField?,
+        cellEast: Int64,
+        cellNorth: Int64,
+        candidate: Int
+    ) -> Crater? {
+        let crater: Crater?
+        if let field, let cached = field.crater(
+            cellEast: cellEast,
+            cellNorth: cellNorth,
+            candidate: candidate
+        ) {
+            crater = cached
+        } else {
+            crater = self.crater(
+                cellEast: cellEast,
+                cellNorth: cellNorth,
+                candidate: candidate
+            )
+        }
+        guard let crater else { return nil }
+        guard craterCatalogIndex?.overlapsHashCrater(crater) != true else { return nil }
+        return crater
+    }
+
+    /// Precompute every candidate crater over a bounded region.
+    ///
+    /// Each sample otherwise re-derives the nine surrounding cells from the
+    /// hash, and a single tile evaluates the relief field tens of thousands of
+    /// times through the parent chain and the anchoring correction. The values
+    /// are identical to the on-demand path; only the work is shared.
+    func craterField(
+        eastMetersRange: ClosedRange<Double>,
+        northMetersRange: ClosedRange<Double>,
+        haloCells: Int = 2
+    ) -> LMLunarGeologyCraterField {
+        let minimumEastCell = Int64(floor(eastMetersRange.lowerBound / cellSizeMeters))
+            - Int64(haloCells)
+        let maximumEastCell = Int64(floor(eastMetersRange.upperBound / cellSizeMeters))
+            + Int64(haloCells)
+        let minimumNorthCell = Int64(floor(northMetersRange.lowerBound / cellSizeMeters))
+            - Int64(haloCells)
+        let maximumNorthCell = Int64(floor(northMetersRange.upperBound / cellSizeMeters))
+            + Int64(haloCells)
+        let eastCount = Int(maximumEastCell - minimumEastCell) + 1
+        let northCount = Int(maximumNorthCell - minimumNorthCell) + 1
+
+        var craters = [Crater?]()
+        craters.reserveCapacity(eastCount * northCount * candidatesPerCell)
+        for northIndex in 0..<northCount {
+            for eastIndex in 0..<eastCount {
+                for candidate in 0..<candidatesPerCell {
+                    craters.append(crater(
+                        cellEast: minimumEastCell + Int64(eastIndex),
+                        cellNorth: minimumNorthCell + Int64(northIndex),
+                        candidate: candidate
+                    ))
+                }
+            }
+        }
+        return LMLunarGeologyCraterField(
+            minimumEastCell: minimumEastCell,
+            minimumNorthCell: minimumNorthCell,
+            eastCellCount: eastCount,
+            northCellCount: northCount,
+            candidatesPerCell: candidatesPerCell,
+            craters: craters
+        )
     }
 
     struct Crater: Equatable, Sendable {
@@ -336,10 +471,58 @@ struct LMLunarGeologyModel: Equatable, Sendable {
     }
 }
 
+/// Craters precomputed over a bounded block of generator cells.
+///
+/// Outside the block the lookup returns `nil` twice over: it cannot tell
+/// "no crater" from "not covered", so callers fall back to the model's
+/// on-demand derivation, which produces the same values.
+struct LMLunarGeologyCraterField: Sendable {
+    let minimumEastCell: Int64
+    let minimumNorthCell: Int64
+    let eastCellCount: Int
+    let northCellCount: Int
+    let candidatesPerCell: Int
+    let craters: [LMLunarGeologyModel.Crater?]
+
+    func covers(cellEast: Int64, cellNorth: Int64) -> Bool {
+        cellEast >= minimumEastCell
+            && cellNorth >= minimumNorthCell
+            && cellEast < minimumEastCell + Int64(eastCellCount)
+            && cellNorth < minimumNorthCell + Int64(northCellCount)
+    }
+
+    func crater(
+        cellEast: Int64,
+        cellNorth: Int64,
+        candidate: Int
+    ) -> LMLunarGeologyModel.Crater?? {
+        guard covers(cellEast: cellEast, cellNorth: cellNorth) else { return nil }
+        let eastIndex = Int(cellEast - minimumEastCell)
+        let northIndex = Int(cellNorth - minimumNorthCell)
+        let offset = (northIndex * eastCellCount + eastIndex) * candidatesPerCell + candidate
+        return .some(craters[offset])
+    }
+}
+
 struct LMTerrainTileID: Hashable, Sendable {
     let level: Int
     let eastIndex: Int
     let northIndex: Int
+}
+
+/// Edges where a fine terrain footprint meets its coarser parent.
+///
+/// Adjacent tiles at the same level deliberately omit their shared edge. This
+/// lets a residency footprint behave as one continuous clipmap patch while
+/// retaining the parent morph only around the outside perimeter.
+struct LMTerrainTileEdges: OptionSet, Hashable, Sendable {
+    let rawValue: UInt8
+
+    static let west = Self(rawValue: 1 << 0)
+    static let east = Self(rawValue: 1 << 1)
+    static let south = Self(rawValue: 1 << 2)
+    static let north = Self(rawValue: 1 << 3)
+    static let all: Self = [.west, .east, .south, .north]
 }
 
 struct LMTerrainTilePlan: Equatable, Sendable {
@@ -349,6 +532,37 @@ struct LMTerrainTilePlan: Equatable, Sendable {
     let sizeMeters: Double
     let sampleSpacingMeters: Double
     let containsProceduralSubresolution: Bool
+    let transitionEdges: LMTerrainTileEdges
+
+    init(
+        id: LMTerrainTileID,
+        centerEastMeters: Double,
+        centerNorthMeters: Double,
+        sizeMeters: Double,
+        sampleSpacingMeters: Double,
+        containsProceduralSubresolution: Bool,
+        transitionEdges: LMTerrainTileEdges = .all
+    ) {
+        self.id = id
+        self.centerEastMeters = centerEastMeters
+        self.centerNorthMeters = centerNorthMeters
+        self.sizeMeters = sizeMeters
+        self.sampleSpacingMeters = sampleSpacingMeters
+        self.containsProceduralSubresolution = containsProceduralSubresolution
+        self.transitionEdges = transitionEdges
+    }
+
+    func withTransitionEdges(_ transitionEdges: LMTerrainTileEdges) -> Self {
+        Self(
+            id: id,
+            centerEastMeters: centerEastMeters,
+            centerNorthMeters: centerNorthMeters,
+            sizeMeters: sizeMeters,
+            sampleSpacingMeters: sampleSpacingMeters,
+            containsProceduralSubresolution: containsProceduralSubresolution,
+            transitionEdges: transitionEdges
+        )
+    }
 }
 
 /// Selects only the sub-resolution detail that can contribute at the current
@@ -448,7 +662,7 @@ struct LMProgressiveTerrainPlanner: Sendable {
     }
 
     func plan(focusEastMeters: Double, focusNorthMeters: Double) -> [LMTerrainTilePlan] {
-        levels.enumerated().flatMap { levelIndex, level in
+        let plans = levels.enumerated().flatMap { levelIndex, level in
             let focusEastIndex = Int(floor(focusEastMeters / level.tileSizeMeters))
             let focusNorthIndex = Int(floor(focusNorthMeters / level.tileSizeMeters))
             return (-level.radiusInTiles...level.radiusInTiles).flatMap { northOffset in
@@ -471,11 +685,16 @@ struct LMProgressiveTerrainPlanner: Sendable {
                 }
             }
         }
+        return applyingFootprintPerimeter(to: plans)
     }
 
-    /// One nested tile per useful detail level. These plans are cheap enough to
-    /// regenerate as the vehicle crosses a tile boundary while the measured
-    /// regional mesh remains the immutable coverage underneath.
+    /// A compact safety footprint per useful detail level. Keeping only the
+    /// tile containing the vehicle put Eagle within roughly one footpad radius
+    /// of two landing-tile edges, so the level's outer morph collar was visible
+    /// through the window and could split the gear across two LODs. The bounded
+    /// footprint below requests adjacent tiles only when the inspection/contact
+    /// radius reaches an edge. It normally retains two to six tiles across the
+    /// active levels instead of a fixed 3x3 neighborhood.
     func focusedPlans(
         focusEastMeters: Double,
         focusNorthMeters: Double,
@@ -488,33 +707,104 @@ struct LMProgressiveTerrainPlanner: Sendable {
             return []
         }
 
-        return levels.enumerated().compactMap { levelIndex, level in
-            guard level.sampleSpacingMeters >= finestSpacing,
-                  level.sampleSpacingMeters
-                    < sourceSpacingMeters - Self.spacingToleranceMeters else {
-                return nil
+        let coverageRadii = coverageRadiiMeters(finestSpacing: finestSpacing)
+        let plans = levels.enumerated().flatMap { levelIndex, level in
+            guard let coverageRadius = coverageRadii[levelIndex] else {
+                return [LMTerrainTilePlan]()
             }
-            let eastIndex = Int(floor(focusEastMeters / level.tileSizeMeters))
-            let northIndex = Int(floor(focusNorthMeters / level.tileSizeMeters))
-            return LMTerrainTilePlan(
-                id: .init(
-                    level: levelIndex,
-                    eastIndex: eastIndex,
-                    northIndex: northIndex
-                ),
-                centerEastMeters: (Double(eastIndex) + 0.5) * level.tileSizeMeters,
-                centerNorthMeters: (Double(northIndex) + 0.5) * level.tileSizeMeters,
-                sizeMeters: level.tileSizeMeters,
-                sampleSpacingMeters: level.sampleSpacingMeters,
-                containsProceduralSubresolution: true
-            )
+            let epsilon = Self.spacingToleranceMeters
+            let minimumEastIndex = Int(floor(
+                (focusEastMeters - coverageRadius + epsilon) / level.tileSizeMeters
+            ))
+            let maximumEastIndex = Int(floor(
+                (focusEastMeters + coverageRadius - epsilon) / level.tileSizeMeters
+            ))
+            let minimumNorthIndex = Int(floor(
+                (focusNorthMeters - coverageRadius + epsilon) / level.tileSizeMeters
+            ))
+            let maximumNorthIndex = Int(floor(
+                (focusNorthMeters + coverageRadius - epsilon) / level.tileSizeMeters
+            ))
+            return (minimumNorthIndex...maximumNorthIndex).flatMap { northIndex in
+                (minimumEastIndex...maximumEastIndex).map { eastIndex in
+                    LMTerrainTilePlan(
+                        id: .init(
+                            level: levelIndex,
+                            eastIndex: eastIndex,
+                            northIndex: northIndex
+                        ),
+                        centerEastMeters: (Double(eastIndex) + 0.5)
+                            * level.tileSizeMeters,
+                        centerNorthMeters: (Double(northIndex) + 0.5)
+                            * level.tileSizeMeters,
+                        sizeMeters: level.tileSizeMeters,
+                        sampleSpacingMeters: level.sampleSpacingMeters,
+                        containsProceduralSubresolution: true
+                    )
+                }
+            }
         }
+        return applyingFootprintPerimeter(to: plans)
     }
 
-    /// Keeps the tile under the vehicle and the tile at a short predicted
-    /// position resident. Terminal horizontal rates are low enough that this
-    /// normally adds only one 0.125 m tile, but it removes the parent-only gap
-    /// observed when generation began after a 16 m boundary crossing.
+    /// Sixteen meters encloses the 9.4 m LM gear footprint and keeps the landing
+    /// level's forward handoff outside the oblique cockpit/explorer ground view.
+    /// At Eagle, a 12 m radius ended only 12.4 m north of the focus and exposed
+    /// the landing-to-terminal appearance falloff in the surface preset. The
+    /// larger radius adds one 16 m row there while remaining inside the 32 MB
+    /// detail-cache working set.
+    /// The terminal level gets a wider collar because it is visible over a
+    /// larger footprint. A landing focus normally retains a 3x3 set of nine
+    /// tiles instead of exposing a 16 m tile boundary inside the inspected
+    /// region.
+    ///
+    /// Every coarser active level must additionally enclose the finer level's
+    /// footprint by at least its own outer morph collar. Equal radii left the
+    /// nesting to tile quantization: whenever the focus sat near a 64 m
+    /// boundary, the terminal and landing footprints ended on the same line,
+    /// stacking both collars there so the full sub-source relief and detail
+    /// handed off to the bare 2 m mesh across a single 4 m band. Tile-tint
+    /// residency captures show exactly that landing-to-nothing edge as the
+    /// strongest rectangular card in the surface preset.
+    private func coverageRadiiMeters(finestSpacing: Double) -> [Int: Double] {
+        let active = levels.enumerated()
+            .filter { _, level in
+                level.sampleSpacingMeters >= finestSpacing
+                    && level.sampleSpacingMeters
+                        < sourceSpacingMeters - Self.spacingToleranceMeters
+            }
+            .sorted { $0.element.sampleSpacingMeters < $1.element.sampleSpacingMeters }
+        var radii = [Int: Double]()
+        var finerRadius: Double?
+        for (position, entry) in active.enumerated() {
+            let level = entry.element
+            let base = min(
+                level.tileSizeMeters,
+                max(16, level.sampleSpacingMeters * 32)
+            )
+            var radius = base
+            if let finerRadius {
+                // Mirror the renderer's morph width for this level: its parent
+                // is the next coarser active level, or the measured source.
+                let parentSpacing = position + 1 < active.count
+                    ? active[position + 1].element.sampleSpacingMeters
+                    : sourceSpacingMeters
+                let morphWidth = min(
+                    level.tileSizeMeters / 4,
+                    parentSpacing * 8
+                )
+                radius = max(base, finerRadius + morphWidth)
+            }
+            radii[entry.offset] = radius
+            finerRadius = radius
+        }
+        return radii
+    }
+
+    /// Keeps both the current safety footprint and the six-second projected
+    /// footprint resident. Their overlap normally makes this much smaller than
+    /// two complete neighborhoods while removing the parent-only gap observed
+    /// when generation began after a 16 m boundary crossing.
     func prefetchedPlans(
         focusEastMeters: Double,
         focusNorthMeters: Double,
@@ -538,8 +828,60 @@ struct LMProgressiveTerrainPlanner: Sendable {
             altitudeMeters: altitudeMeters,
             policy: policy
         )
+        return mergedPlans(current + predicted)
+    }
+
+    /// Merges independently projected residency samples into one continuous
+    /// footprint, then assigns transition ownership only at its final outer
+    /// edge. Explorer uses this for a view corridor; descent uses the same
+    /// operation for current and projected vehicle positions.
+    func mergedPlans(_ plans: [LMTerrainTilePlan]) -> [LMTerrainTilePlan] {
         var seen = Set<LMTerrainTileID>()
-        return (current + predicted).filter { seen.insert($0.id).inserted }
+        let union = plans.filter { seen.insert($0.id).inserted }
+        return applyingFootprintPerimeter(to: union)
+    }
+
+    /// Recomputes edge ownership after the final residency set is known. This
+    /// is particularly important for prefetching: the current and projected
+    /// footprints may overlap or touch, and their union must have one outer
+    /// perimeter rather than two independent fade collars.
+    private func applyingFootprintPerimeter(
+        to plans: [LMTerrainTilePlan]
+    ) -> [LMTerrainTilePlan] {
+        let residentIDs = Set(plans.map(\.id))
+        return plans.map { plan in
+            let id = plan.id
+            var edges: LMTerrainTileEdges = []
+            if !residentIDs.contains(.init(
+                level: id.level,
+                eastIndex: id.eastIndex - 1,
+                northIndex: id.northIndex
+            )) {
+                edges.insert(.west)
+            }
+            if !residentIDs.contains(.init(
+                level: id.level,
+                eastIndex: id.eastIndex + 1,
+                northIndex: id.northIndex
+            )) {
+                edges.insert(.east)
+            }
+            if !residentIDs.contains(.init(
+                level: id.level,
+                eastIndex: id.eastIndex,
+                northIndex: id.northIndex - 1
+            )) {
+                edges.insert(.south)
+            }
+            if !residentIDs.contains(.init(
+                level: id.level,
+                eastIndex: id.eastIndex,
+                northIndex: id.northIndex + 1
+            )) {
+                edges.insert(.north)
+            }
+            return plan.withTransitionEdges(edges)
+        }
     }
 }
 
@@ -567,13 +909,32 @@ struct LMProgressiveTerrainSurfaceSampler: Sendable {
 
     init(
         heightField: Apollo11TerrainHeightField,
-        planner: LMProgressiveTerrainPlanner? = nil
+        planner: LMProgressiveTerrainPlanner? = nil,
+        terrainSampler: LMProgressiveTerrainSampler? = nil
     ) {
         self.heightField = heightField
         self.planner = planner ?? LMProgressiveTerrainPlanner(
             sourceSpacingMeters: heightField.spacingMeters
         )
-        terrainSampler = LMProgressiveTerrainSampler(heightField: heightField)
+        self.terrainSampler = terrainSampler
+            ?? LMProgressiveTerrainSampler(heightField: heightField)
+    }
+
+    /// A sampler that has precomputed the geology over one tile, including the
+    /// margin its parent chain and post-anchoring correction reach into.
+    func prepared(for plan: LMTerrainTilePlan) -> LMProgressiveTerrainSurfaceSampler {
+        let margin = heightField.spacingMeters * 2
+        let reach = plan.sizeMeters / 2 + margin
+        let eastRange = (plan.centerEastMeters - reach)...(plan.centerEastMeters + reach)
+        let northRange = (plan.centerNorthMeters - reach)...(plan.centerNorthMeters + reach)
+        return LMProgressiveTerrainSurfaceSampler(
+            heightField: heightField,
+            planner: planner,
+            terrainSampler: terrainSampler.prepared(
+                eastMetersRange: eastRange,
+                northMetersRange: northRange
+            )
+        )
     }
 
     func sample(
@@ -603,7 +964,8 @@ struct LMProgressiveTerrainSurfaceSampler: Sendable {
         guard let rendered = renderedElevation(
             eastMeters: eastMeters,
             northMeters: northMeters,
-            plan: finestPlan
+            plan: finestPlan,
+            activePlans: activePlans
         ) else {
             return nil
         }
@@ -615,12 +977,14 @@ struct LMProgressiveTerrainSurfaceSampler: Sendable {
         let parent = parentPlan(
             for: finestPlan,
             eastMeters: eastMeters,
-            northMeters: northMeters
+            northMeters: northMeters,
+            activePlans: activePlans
         ).flatMap {
             renderedElevation(
                 eastMeters: eastMeters,
                 northMeters: northMeters,
-                plan: $0
+                plan: $0,
+                activePlans: activePlans
             )
         } ?? measured
         let presentation = parent + (rendered - parent) * Float(blend)
@@ -636,8 +1000,27 @@ struct LMProgressiveTerrainSurfaceSampler: Sendable {
     func renderedElevation(
         eastMeters: Double,
         northMeters: Double,
-        plan: LMTerrainTilePlan
+        plan: LMTerrainTilePlan,
+        activePlans: [LMTerrainTilePlan]? = nil
     ) -> Float? {
+        renderedElevationSample(
+            eastMeters: eastMeters,
+            northMeters: northMeters,
+            plan: plan,
+            activePlans: activePlans
+        )?.elevationMeters
+    }
+
+    /// Returns both the complete hierarchical surface and the exact height
+    /// band introduced by this plan relative to its live parent. The latter is
+    /// sun-independent and is the geometry-side input to radiance-conserving
+    /// LOD statistics.
+    func renderedElevationSample(
+        eastMeters: Double,
+        northMeters: Double,
+        plan: LMTerrainTilePlan,
+        activePlans: [LMTerrainTilePlan]? = nil
+    ) -> (elevationMeters: Float, levelContributionMeters: Float)? {
         guard contains(plan, eastMeters: eastMeters, northMeters: northMeters),
               let fine = terrainSampler.sample(
                   eastMeters: eastMeters,
@@ -650,7 +1033,8 @@ struct LMProgressiveTerrainSurfaceSampler: Sendable {
         let parent = parentPlan(
             for: plan,
             eastMeters: eastMeters,
-            northMeters: northMeters
+            northMeters: northMeters,
+            activePlans: activePlans
         )
         let parentSpacing = parent?.sampleSpacingMeters ?? heightField.spacingMeters
         guard let parentRaw = terrainSampler.sample(
@@ -664,30 +1048,74 @@ struct LMProgressiveTerrainSurfaceSampler: Sendable {
             renderedElevation(
                 eastMeters: eastMeters,
                 northMeters: northMeters,
-                plan: $0
+                plan: $0,
+                activePlans: activePlans
             )
         } ?? fine.measuredElevationMeters
-        let morphWidth = min(plan.sizeMeters / 4, parentSpacing * 4)
+        // Match the appearance handoff in the outer quarter of a prefetched
+        // perimeter tile. Most of the tile stays identical to its same-level
+        // neighbors, while the outside edge still reaches the exact parent.
+        let morphWidth = min(plan.sizeMeters / 4, parentSpacing * 8)
         let edgeDistance = distanceToEdge(
             plan,
             eastMeters: eastMeters,
             northMeters: northMeters
         )
         let morph = Self.smoothstep(edgeDistance / morphWidth)
-        let levelLift = Self.layerLiftMeters(
-            parentSpacingMeters: parentSpacing,
-            requestedSpacingMeters: plan.sampleSpacingMeters
-        )
         let levelContribution = fine.elevationMeters
             - parentRaw.elevationMeters
-            + levelLift
-        return parentRendered + levelContribution * Float(morph)
+        // Covered parent triangles are removed when a finer tile is resident,
+        // so the old millimeter-scale anti-z-fighting lift is both unnecessary
+        // and harmful here. Adding a constant lift inside every footprint made
+        // its morph collar a shallow rectangular ramp under the low mission sun
+        // and offset rendered terrain from the shared contact surface.
+        let realizedContribution = levelContribution * Float(morph)
+        return (
+            elevationMeters: parentRendered + realizedContribution,
+            levelContributionMeters: realizedContribution
+        )
+    }
+
+    /// Samples the same or next-coarser resident surface just beyond a tile
+    /// boundary. Mesh normals use this only for their perimeter vertices so
+    /// two adjacent tiles derive an identical central-difference slope instead
+    /// of each clamping to a different one-sided derivative.
+    func renderedElevationAround(
+        eastMeters: Double,
+        northMeters: Double,
+        referencePlan: LMTerrainTilePlan,
+        activePlans: [LMTerrainTilePlan]
+    ) -> Float? {
+        let candidate = activePlans
+            .filter {
+                $0.sampleSpacingMeters
+                    >= referencePlan.sampleSpacingMeters - Self.spacingToleranceMeters
+                    && contains(
+                        $0,
+                        eastMeters: eastMeters,
+                        northMeters: northMeters
+                    )
+            }
+            .min { $0.sampleSpacingMeters < $1.sampleSpacingMeters }
+        if let candidate {
+            return renderedElevation(
+                eastMeters: eastMeters,
+                northMeters: northMeters,
+                plan: candidate,
+                activePlans: activePlans
+            )
+        }
+        return heightField.relativeElevation(
+            eastMeters: eastMeters,
+            northMeters: northMeters
+        )
     }
 
     func parentPlan(
         for plan: LMTerrainTilePlan,
         eastMeters: Double,
-        northMeters: Double
+        northMeters: Double,
+        activePlans: [LMTerrainTilePlan]? = nil
     ) -> LMTerrainTilePlan? {
         guard let parent = planner.levels.enumerated()
             .filter({ _, level in
@@ -699,12 +1127,15 @@ struct LMProgressiveTerrainSurfaceSampler: Sendable {
             .min(by: { $0.element.sampleSpacingMeters < $1.element.sampleSpacingMeters }) else {
             return nil
         }
-        return tilePlan(
+        let fallback = tilePlan(
             levelIndex: parent.offset,
             level: parent.element,
             eastMeters: eastMeters,
             northMeters: northMeters
         )
+        return activePlans?.first(where: { candidate in
+            candidate.id == fallback.id
+        }) ?? fallback
     }
 
     private func tilePlan(
@@ -744,19 +1175,21 @@ struct LMProgressiveTerrainSurfaceSampler: Sendable {
         northMeters: Double
     ) -> Double {
         let halfSize = plan.sizeMeters / 2
-        return max(0, min(
-            eastMeters - (plan.centerEastMeters - halfSize),
-            plan.centerEastMeters + halfSize - eastMeters,
-            northMeters - (plan.centerNorthMeters - halfSize),
-            plan.centerNorthMeters + halfSize - northMeters
-        ))
-    }
-
-    private static func layerLiftMeters(
-        parentSpacingMeters: Double,
-        requestedSpacingMeters: Double
-    ) -> Float {
-        Float(max(log2(parentSpacingMeters / requestedSpacingMeters), 1) * 0.004)
+        var distances = [Double]()
+        distances.reserveCapacity(4)
+        if plan.transitionEdges.contains(.west) {
+            distances.append(eastMeters - (plan.centerEastMeters - halfSize))
+        }
+        if plan.transitionEdges.contains(.east) {
+            distances.append(plan.centerEastMeters + halfSize - eastMeters)
+        }
+        if plan.transitionEdges.contains(.south) {
+            distances.append(northMeters - (plan.centerNorthMeters - halfSize))
+        }
+        if plan.transitionEdges.contains(.north) {
+            distances.append(plan.centerNorthMeters + halfSize - northMeters)
+        }
+        return max(0, distances.min() ?? plan.sizeMeters)
     }
 
     private static func smoothstep(_ value: Double) -> Double {

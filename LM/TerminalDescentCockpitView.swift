@@ -227,6 +227,10 @@ struct TerminalDescentCockpitView: View {
         .task {
             guard !didStart else { return }
             didStart = true
+            // The gear touches exactly the surface the clipmap is drawing.
+            station.onContactSurfaceChange = { [session = appModel.session] surface in
+                session.setLandingSurface(surface)
+            }
             appModel.session.setSceneActive(scenePhase == .active)
             audioController.isEnabled = audioEnabled
             audioController.start()
@@ -417,7 +421,7 @@ struct TerminalDescentCockpitView: View {
         let session = appModel.session
         audioController.update(
             commands: session.vehicleCommands,
-            outcome: session.vehicleState?.flightOutcome
+            state: session.vehicleState
         )
         let cues = experienceDirector.consume(
             program: session.programNumber,
@@ -426,7 +430,11 @@ struct TerminalDescentCockpitView: View {
             verticalSpeedMetersPerSecond: session.vehicleState?.verticalSpeedMetersPerSecond,
             downrangeSpeedMetersPerSecond: session.vehicleState?.velocityMetersPerSecond.y,
             outcome: session.vehicleState?.flightOutcome,
-            hasSurfaceContact: session.vehicleState?.surfaceContact != nil
+            hasSurfaceContact: session.vehicleState?.landingGear?.isProbeContact
+                ?? (session.vehicleState?.surfaceContact != nil),
+            landingFailure: session.vehicleState?.landingGear?.failure,
+            surfaceContact: session.vehicleState?.surfaceContact,
+            landingGear: session.vehicleState?.landingGear
         )
         guard !cues.isEmpty else { return }
         recordValidation { $0.observe(events: cues.map(\.id)) }
