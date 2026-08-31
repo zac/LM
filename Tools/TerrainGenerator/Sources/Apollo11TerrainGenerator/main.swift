@@ -163,11 +163,18 @@ let dtmWesternmostLongitude = 23.372_275_8
 let dtmNoData: Float = -3.402_822_66e38
 let lunarRadiusMeters = 1_737_400.0
 
-/// Mission-appropriate sun at touchdown (1969-07-20T20:17:40Z): low sun out of
-/// the west-southwest. Elevation from ALSJ mission-planning data; azimuth is
-/// an approximation recorded in the manifest detail.
-let sunElevationDegrees = 10.77
-let sunAzimuthDegreesClockwiseFromNorth = 276.4
+/// Mission sun at touchdown (1969-07-20T20:17:40Z), from `LMLunarEphemeris`
+/// evaluated at the landing origin. Eagle landed in local morning with the Sun
+/// low in the east, which is what casts the long westward shadows across the
+/// approach.
+///
+/// The previous azimuth of 276.4 degrees was an approximation and pointed at
+/// the anti-solar direction, putting every shadow on the wrong side; it was
+/// close to this site's NAC *acquisition* azimuth, which is a separate thing.
+/// The elevation is unchanged within the ephemeris tolerance and still agrees
+/// with the 10.8 degrees the mission report quotes.
+let sunElevationDegrees = 10.689
+let sunAzimuthDegreesClockwiseFromNorth = 88.819
 
 let nearTilePosts = 1025
 let nearTilePostSpacingMeters = 2.0

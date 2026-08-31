@@ -120,6 +120,9 @@ struct LunarExplorerControls: View {
 
             Toggle("Mission shadows", isOn: $session.missionShadowsEnabled)
 
+            Divider()
+            lightingControls
+
             LabeledContent("Virtual altitude") {
                 Text(distance(session.altitudeMeters))
                     .monospacedDigit()
@@ -177,6 +180,70 @@ struct LunarExplorerControls: View {
         .padding(20)
         .frame(width: 390)
         .glassBackgroundEffect()
+    }
+
+    /// Time-driven mission lighting. The date sets the instant and the scrub
+    /// sweeps a lunation either side of it, so the terminator can be walked
+    /// across the site and returned to the landing in one tap.
+    private var lightingControls: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text("Sun")
+                    .font(.headline)
+                Spacer()
+                Button("Apollo 11 landing") {
+                    session.sunAnchorDate = LunarExplorerSession.apollo11TouchdownUTC
+                    session.sunOffsetHours = 0
+                }
+                .font(.caption)
+            }
+
+            DatePicker(
+                "Date (UTC)",
+                selection: $session.sunAnchorDate,
+                displayedComponents: [.date, .hourAndMinute]
+            )
+            .environment(\.timeZone, TimeZone(identifier: "UTC") ?? .gmt)
+
+            LabeledContent("Time offset") {
+                Text(sunOffsetCaption)
+                    .monospacedDigit()
+            }
+            Slider(value: $session.sunOffsetHours, in: Self.sunScrubRange)
+
+            LabeledContent("Sun") {
+                Text(sunAngleCaption)
+                    .monospacedDigit()
+            }
+        }
+    }
+
+    private static let sunScrubRange =
+        -LunarExplorerSession.sunScrubRangeHours
+            ... LunarExplorerSession.sunScrubRangeHours
+
+    private var sunOffsetCaption: String {
+        let hours = session.sunOffsetHours
+        if abs(hours) < 1 {
+            return String(format: "%+.0f min", hours * 60)
+        }
+        if abs(hours) < 48 {
+            return String(format: "%+.1f h", hours)
+        }
+        return String(format: "%+.1f days", hours / 24)
+    }
+
+    private var sunAngleCaption: String {
+        guard let azimuth = session.diagnostics.sunAzimuthDegrees,
+              let elevation = session.diagnostics.sunElevationDegrees else {
+            return "pending"
+        }
+        return String(
+            format: "az %.1f°  el %+.1f°%@",
+            azimuth,
+            elevation,
+            elevation < 0 ? "  (night)" : ""
+        )
     }
 
     private var diagnosticRows: some View {

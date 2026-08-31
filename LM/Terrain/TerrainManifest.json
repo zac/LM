@@ -202,9 +202,9 @@
     }
   ],
   "sun" : {
-    "azimuthDegreesClockwiseFromNorth" : 276.39999999999998,
-    "detail" : "Mission-appropriate low sun at touchdown; azimuth approximated west-southwest.",
-    "elevationDegrees" : 10.77
+    "azimuthDegreesClockwiseFromNorth" : 88.819000000000003,
+    "detail" : "Mission sun at touchdown from LMLunarEphemeris evaluated at the landing origin: a low Sun in the east in local morning. The former 276.4 degree azimuth was an approximation and pointed anti-solar.",
+    "elevationDegrees" : 10.689
   },
   "tiles" : [
     {

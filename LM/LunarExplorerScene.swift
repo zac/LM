@@ -23,6 +23,8 @@ final class LunarExplorerScene {
     private var albedoField: LMMeasuredAlbedoField?
     private var eagleTerrainPosition = LMVector3D.zero
     private var terrainDatumElevationMeters = 0.0
+    /// The site the ephemeris evaluates mission lighting for.
+    private var siteCoordinate: LMSelenographicCoordinate?
     private var progressiveEntities = [LMTerrainTileID: ModelEntity]()
     private var progressivePlans = [LMTerrainTileID: LMTerrainTilePlan]()
     private var requestedPlans = [LMTerrainTileID: LMTerrainTilePlan]()
@@ -86,6 +88,7 @@ final class LunarExplorerScene {
                 self.albedoField = try? LMMeasuredAlbedoField.load(tile: heightField.tile)
                 self.eagleTerrainPosition = eagle
                 self.terrainDatumElevationMeters = datum
+                self.siteCoordinate = assembly.manifest.landingOriginCoordinate
                 self.terrainEnvironment = assembly.worldRoot
                 self.terrainSun = assembly.sun
                 self.terrainRockField = rocks
@@ -119,6 +122,7 @@ final class LunarExplorerScene {
         terrainSun?.shadow = session.missionShadowsEnabled
             ? LMTerrainWorld.missionShadow(altitudeMeters: session.altitudeMeters)
             : nil
+        updateMissionSun(session)
 
         let focus = terrainFocus(session)
         requestProgressiveTerrain(
@@ -322,6 +326,22 @@ final class LunarExplorerScene {
             progressiveEntities.removeValue(forKey: id)?.removeFromParent()
             progressivePlans.removeValue(forKey: id)
         }
+    }
+
+    /// Points the mission sun where it actually was at the session's instant.
+    ///
+    /// The manifest pins a single touchdown direction; the ephemeris supplies
+    /// the same two angles for any date, so scrubbing time sweeps the real
+    /// terminator across the site instead of interpolating an invented one.
+    private func updateMissionSun(_ session: LunarExplorerSession) {
+        guard let siteCoordinate, let terrainSun else { return }
+        let date = session.sunDate
+        let sun = LMLunarEphemeris.sunAngles(at: date, site: siteCoordinate)
+        terrainSun.orientation = LMFullDescentMapper.sunLightOrientation(from: sun)
+        session.diagnostics.sunAzimuthDegrees = sun.azimuthDegreesClockwiseFromNorth
+        session.diagnostics.sunElevationDegrees = sun.elevationDegrees
+        session.diagnostics.earthIlluminatedFraction = LMLunarEphemeris
+            .earthIlluminatedFractionFromMoon(at: date)
     }
 
     private func updateRockDetail(altitudeMeters: Double) {

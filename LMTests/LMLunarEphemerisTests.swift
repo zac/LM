@@ -36,6 +36,29 @@ struct LMLunarEphemerisTests {
         )
     }
 
+    /// The manifest's pinned mission sun is now this ephemeris evaluated at
+    /// touchdown rather than a separately entered constant. Keeping the two
+    /// tied together is what stops the pinned value drifting again — an
+    /// earlier hand-entered azimuth pointed anti-solar and put every shadow in
+    /// the scene on the wrong side.
+    @Test func pinnedMissionSunMatchesTheEphemerisAtTouchdown() throws {
+        let manifest = try LMTerrainManifest.load()
+        let angles = LMLunarEphemeris.sunAngles(
+            at: touchdown,
+            site: manifest.landingOriginCoordinate
+        )
+
+        #expect(
+            abs(angles.elevationDegrees - manifest.sun.elevationDegrees) < 0.01
+        )
+        #expect(
+            abs(
+                angles.azimuthDegreesClockwiseFromNorth
+                    - manifest.sun.azimuthDegreesClockwiseFromNorth
+            ) < 0.01
+        )
+    }
+
     /// Landing happened in local morning with the Sun low in the east, which
     /// is what casts the long westward shadows across the approach.
     ///

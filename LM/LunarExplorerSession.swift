@@ -107,6 +107,11 @@ final class LunarExplorerSession {
         var requestedTileCount = 0
         var activeTileCount = 0
         var finestSpacingMeters: Double?
+        /// Live mission-sun geometry for the current instant, so the panel can
+        /// show what the ephemeris resolved rather than a pinned constant.
+        var sunAzimuthDegrees: Double?
+        var sunElevationDegrees: Double?
+        var earthIlluminatedFraction: Double?
         var latestGenerationMilliseconds: Int?
         var latestGenerationMetrics: Apollo11TerrainResource
             .ProgressiveTileGenerationMetrics?
@@ -119,6 +124,28 @@ final class LunarExplorerSession {
     static let minimumTiltDegrees = 18.0
     static let maximumTiltDegrees = 82.0
     static let maximumFocusOffsetMeters = 900.0
+    /// Eagle's touchdown. Named instants are just dates: the pinned mission
+    /// sun is this one evaluated through the ephemeris.
+    static let apollo11TouchdownUTC: Date = {
+        var components = DateComponents()
+        components.year = 1969
+        components.month = 7
+        components.day = 20
+        components.hour = 20
+        components.minute = 17
+        components.second = 40
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC") ?? .gmt
+        return calendar.date(from: components) ?? Date(timeIntervalSince1970: 0)
+    }()
+    /// A full lunation either way, so the terminator can be swept across the
+    /// site and back without touching the date picker.
+    static let sunScrubRangeHours = 360.0
+
+    /// The instant mission lighting is evaluated for.
+    var sunDate: Date {
+        sunAnchorDate.addingTimeInterval(sunOffsetHours * 3_600)
+    }
 
     static func presentsControls(arguments: [String]) -> Bool {
         !arguments.contains("--lunar-explorer-capture")
@@ -135,6 +162,13 @@ final class LunarExplorerSession {
     var focusNorthOffsetMeters = 0.0
     var focusEastOffsetMeters = 0.0
     var missionShadowsEnabled = true
+    /// Mission lighting is time-driven. The ephemeris evaluates the Sun for
+    /// this instant, so any date shows its own real illumination rather than a
+    /// single baked-in direction. The anchor is a named instant and the offset
+    /// is the scrub around it, which keeps "return to the landing" one tap
+    /// away no matter how far the terminator has been swept.
+    var sunAnchorDate = LunarExplorerSession.apollo11TouchdownUTC
+    var sunOffsetHours = 0.0
     var diagnosticsVisible = true
     var diagnostics = Diagnostics()
 
@@ -209,6 +243,14 @@ final class LunarExplorerSession {
                 in: argument
             ), let mode = LMTerrainDetailMode(rawValue: value) {
                 detailMode = mode
+            } else if let value = value(
+                after: "--lunar-explorer-sun-offset-hours=",
+                in: argument
+            ), let hours = Double(value), hours.isFinite {
+                sunOffsetHours = min(
+                    max(hours, -Self.sunScrubRangeHours),
+                    Self.sunScrubRangeHours
+                )
             } else if let value = value(
                 after: "--lunar-explorer-shadows=",
                 in: argument

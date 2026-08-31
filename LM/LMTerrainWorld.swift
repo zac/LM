@@ -50,6 +50,24 @@ struct LMFullDescentMapper: Equatable {
     static func sunLightOrientation(from manifest: LMTerrainManifest) -> simd_quatf {
         simd_quatf(from: SIMD3(0, 0, -1), to: -sunDirection(from: manifest))
     }
+
+    /// Sun direction for an arbitrary horizon-frame direction. The manifest
+    /// pins one instant; `LMLunarEphemeris` supplies the same two angles for
+    /// any date, which is what lets mission lighting move with time instead of
+    /// being a single baked-in constant.
+    static func sunDirection(from angles: LMHorizonAngles) -> SIMD3<Float> {
+        let elevation = angles.elevationDegrees * .pi / 180
+        let azimuth = angles.azimuthDegreesClockwiseFromNorth * .pi / 180
+        return LMWorldMapper.attitudeDirection(from: LMVector3D(
+            x: cos(elevation) * cos(azimuth),
+            y: cos(elevation) * sin(azimuth),
+            z: sin(elevation)
+        ))
+    }
+
+    static func sunLightOrientation(from angles: LMHorizonAngles) -> simd_quatf {
+        simd_quatf(from: SIMD3(0, 0, -1), to: -sunDirection(from: angles))
+    }
 }
 
 /// Assembles the full-immersion exterior scene: nested near, medium, and far
