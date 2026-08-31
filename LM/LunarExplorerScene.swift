@@ -338,6 +338,12 @@ final class LunarExplorerScene {
         let date = session.sunDate
         let sun = LMLunarEphemeris.sunAngles(at: date, site: siteCoordinate)
         terrainSun.orientation = LMFullDescentMapper.sunLightOrientation(from: sun)
+        // Re-expose for the new solar elevation. Without this the surface
+        // clips to white within a few days of the landing, because flat ground
+        // takes the beam scaled by sin(elevation).
+        terrainSun.light.intensity = LMTerrainWorld.missionSunIlluminance(
+            elevationDegrees: sun.elevationDegrees
+        )
         session.diagnostics.sunAzimuthDegrees = sun.azimuthDegreesClockwiseFromNorth
         session.diagnostics.sunElevationDegrees = sun.elevationDegrees
         session.diagnostics.earthIlluminatedFraction = LMLunarEphemeris

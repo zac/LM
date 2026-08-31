@@ -77,7 +77,45 @@ enum LMTerrainWorld {
     /// Renderer-space exposure for the mission sun. RealityKit measures this
     /// in lux; 25,000 preserves the low-Sun relief without clipping the
     /// reflectance-calibrated terrain against a black immersive sky.
+    ///
+    /// This is the reference exposure, defined at `referenceSunElevationDegrees`.
+    /// `missionSunIlluminance(elevationDegrees:)` is what the scene actually
+    /// installs.
     nonisolated static let missionSunIlluminanceLux: Float = 25_000
+
+    /// The elevation the reference exposure was tuned at: Eagle's touchdown.
+    nonisolated static let referenceSunElevationDegrees = 10.689
+
+    /// Ceiling for the low-Sun end of the exposure ramp, reached at about four
+    /// degrees of elevation. Past that the surface is allowed to fall into the
+    /// terminator instead of being pushed to a constant brightness, which is
+    /// both what a camera does and what makes a sunrise read as a sunrise.
+    nonisolated static let maximumMissionSunIlluminanceLux: Float = 60_000
+
+    /// Illuminance for the mission sun at a given solar elevation.
+    ///
+    /// A full-immersion RealityKit scene has no camera exposure control, so the
+    /// light's own intensity is the only exposure knob available. Holding it
+    /// fixed was correct while the Sun was a single pinned direction, but flat
+    /// ground receives the beam scaled by sin(elevation): three days after
+    /// touchdown that is four times brighter, and by local noon five times,
+    /// which clipped the surface to white as soon as the Sun became movable.
+    ///
+    /// Normalizing the product of illuminance and sin(elevation) holds sunlit
+    /// ground at a constant exposure the way a metering camera would, while
+    /// shadows, slopes, and crater relief keep their true relative contrast —
+    /// the low-Sun drama comes from long shadows, not from a dim surface. At
+    /// the reference elevation this returns exactly the pinned value, so
+    /// mission-time renders are unchanged.
+    nonisolated static func missionSunIlluminance(
+        elevationDegrees: Double
+    ) -> Float {
+        let reference = sin(referenceSunElevationDegrees * .pi / 180)
+        let target = missionSunIlluminanceLux * Float(reference)
+        let sine = Float(sin(max(elevationDegrees, 0) * .pi / 180))
+        guard sine > 0 else { return maximumMissionSunIlluminanceLux }
+        return min(target / sine, maximumMissionSunIlluminanceLux)
+    }
 
     /// Keep the terminal-descent shadow map tightly fitted around the lander.
     /// A 120 m fixed projection made each shadow texel several times larger
@@ -188,7 +226,9 @@ enum LMTerrainWorld {
 
         let sun = DirectionalLight()
         sun.name = "MissionSun"
-        sun.light.intensity = missionSunIlluminanceLux
+        sun.light.intensity = missionSunIlluminance(
+            elevationDegrees: manifest.sun.elevationDegrees
+        )
         sun.shadow = missionShadow(altitudeMeters: nil)
         sun.orientation = LMFullDescentMapper.sunLightOrientation(from: manifest)
         worldRoot.addChild(sun)

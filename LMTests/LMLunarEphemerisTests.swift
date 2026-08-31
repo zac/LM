@@ -90,6 +90,53 @@ struct LMLunarEphemerisTests {
         #expect(dayEarlier.elevationDegrees < 0)
     }
 
+    /// A movable Sun needs a movable exposure. Flat ground takes the beam
+    /// scaled by sin(elevation), so a fixed illuminance that suits the
+    /// mission's grazing Sun clips to white by mid-morning.
+    @Test func missionSunExposureTracksSolarElevation() throws {
+        let manifest = try LMTerrainManifest.load()
+
+        // The reference elevation must reproduce the pinned exposure exactly,
+        // so mission-time renders and every capture baseline are unchanged.
+        let atReference = LMTerrainWorld.missionSunIlluminance(
+            elevationDegrees: manifest.sun.elevationDegrees
+        )
+        #expect(
+            abs(atReference - LMTerrainWorld.missionSunIlluminanceLux)
+                / LMTerrainWorld.missionSunIlluminanceLux < 1e-5
+        )
+
+        // Sunlit ground holds a constant exposure across the usable range.
+        let reference = Double(LMTerrainWorld.missionSunIlluminanceLux)
+            * sin(manifest.sun.elevationDegrees * .pi / 180)
+        for elevation in stride(from: 6.0, through: 90.0, by: 0.5) {
+            let lit = Double(
+                LMTerrainWorld.missionSunIlluminance(elevationDegrees: elevation)
+            ) * sin(elevation * .pi / 180)
+            #expect(abs(lit - reference) / reference < 0.001)
+        }
+
+        // Near the terminator the ramp stops rather than chasing the sine to
+        // infinity, so a sunrise still reads as a sunrise.
+        #expect(
+            LMTerrainWorld.missionSunIlluminance(elevationDegrees: 0.05)
+                == LMTerrainWorld.maximumMissionSunIlluminanceLux
+        )
+        #expect(
+            LMTerrainWorld.missionSunIlluminance(elevationDegrees: -20)
+                <= LMTerrainWorld.maximumMissionSunIlluminanceLux
+        )
+        // Monotonic: a higher Sun never needs more light than a lower one.
+        for elevation in stride(from: 5.0, through: 89.0, by: 1.0) {
+            #expect(
+                LMTerrainWorld.missionSunIlluminance(elevationDegrees: elevation)
+                    >= LMTerrainWorld.missionSunIlluminance(
+                        elevationDegrees: elevation + 1
+                    )
+            )
+        }
+    }
+
     /// The Earth hangs high over the near-side landing site and stays there;
     /// this is the direction the earthshine fill light comes from.
     @Test func earthStaysHighAndNearlyFixedOverTranquilityBase() {
