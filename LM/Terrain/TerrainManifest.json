@@ -25,8 +25,8 @@
   "globe" : {
     "coordinateSystemName" : "IAU_ME",
     "detail" : "Whole-Moon map-scale presentation in the Mean Earth/Polar-axis frame. The WAC base remains unlit; a detrended LOLA normal field perturbs only the ephemeris terminator multiplier.",
-    "generatorSHA256" : "b0031f4f61bd62e71e8541f86476ebd51566be82cacde6517bfdd39096f273bf",
-    "generatorVersion" : "wac-global-morphologic-lola-normal-v2",
+    "generatorSHA256" : "1dcd7091ec5dcb370ece0196f02510d33aab48510a44f4ca7571a2b898567711",
+    "generatorVersion" : "wac-global-morphologic-lola-normal-jxl-v3",
     "materialMode" : "unlit-morphologic-map",
     "normalMap" : {
       "coordinateFrame" : "IAU_ME",
@@ -53,6 +53,22 @@
         "sha256" : "b799eab2d43f7a27799972d4ec4bc25cff06776ba14774e03e322cb7a7ea460e",
         "sourceID" : "wac-global-morphologic-16ppd",
         "width" : 5760
+      },
+      {
+        "codec" : "JPEG XL",
+        "codecEncoder" : "cjxl 0.12.0 effort 7",
+        "codecQuality" : 95,
+        "detail" : "Pinned offline 64 ppd WAC morphologic tier. The source transfer is unchanged and remains unlit; one-channel JPEG XL is visually transparent to the lossless grayscale PNG in fixed Simulator globe and orbit-overlap captures.",
+        "file" : "WACGlobal64PPD-q95.jxl",
+        "height" : 11520,
+        "id" : "wac-global-64ppd",
+        "losslessSourceBytes" : 128461405,
+        "losslessSourceSHA256" : "faead7d93e3ac1b16f30955419f4cbb2f1fbd1040dbc2913473ccd5f30df2420",
+        "mapResolutionPixelsPerDegree" : 64,
+        "metersPerPixel" : 473.80235037734,
+        "sha256" : "819ca84afedca9a5fe864a0a3a036bc6384a105f21135614c90808c184355841",
+        "sourceID" : "wac-global-morphologic-64ppd",
+        "width" : 23040
       }
     ]
   },
@@ -245,6 +261,18 @@
       "role" : "global-morphologic-map",
       "sha256" : "c75a49b48df0d1d8afad8f25e58332599e8383e4967424ffbb0ba38b0808b2b6",
       "url" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/BDR\/WAC_GLOBAL\/WAC_GLOBAL_E000N0000_016P.IMG"
+    },
+    {
+      "bytes" : 1061775360,
+      "detail" : "Global 53-70 degree-incidence WAC morphologic mosaic at 64 ppd with an attached PDS3 label. It is the pinned lossless source for the bundled one-channel JPEG XL tier and is not photometrically normalized surface albedo.",
+      "id" : "wac-global-morphologic-64ppd",
+      "labelURL" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/BDR\/WAC_GLOBAL\/WAC_GLOBAL_E000N0000_064P.IMG",
+      "mapResolutionPixelsPerDegree" : 64,
+      "productId" : "WAC_GLOBAL_E000N0000_064P",
+      "productVersion" : "v1.3",
+      "role" : "global-morphologic-map",
+      "sha256" : "bc1feab6e86ae2cf47798a4f00cdf7f5e73030fcbc2223fba7fab59a5a2a34ec",
+      "url" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/BDR\/WAC_GLOBAL\/WAC_GLOBAL_E000N0000_064P.IMG"
     },
     {
       "bytes" : 33177600,

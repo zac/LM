@@ -4,25 +4,60 @@ import Foundation
 import ImageIO
 import simd
 
-private enum WACGlobal16PPD {
-    static let productID = "WAC_GLOBAL_E000N0000_016P"
-    static let productVersion = "v1.3"
-    static let sourceURL =
-        "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/WAC_GLOBAL_E000N0000_016P.IMG"
-    static let sourceByteCount = 66_378_240
-    static let sourceSHA256 =
-        "c75a49b48df0d1d8afad8f25e58332599e8383e4967424ffbb0ba38b0808b2b6"
-    static let labelByteCount = 23_040
-    static let width = 5_760
-    static let height = 2_880
-    static let pixelsPerDegree = 16.0
-    static let metersPerPixel = 1_895.209_401_509_3
-    static let minimumLatitudeDegrees = -90.0
-    static let maximumLatitudeDegrees = 90.0
-    static let westernmostLongitudeDegrees = -180.0
-    static let easternmostLongitudeDegrees = 180.0
-    static let lunarRadiusMeters = 1_737_400.0
+private struct WACGlobalProduct {
+    let productID: String
+    let productVersion: String
+    let sourceURL: String
+    let sourceByteCount: Int
+    let sourceSHA256: String
+    let labelByteCount: Int
+    let width: Int
+    let height: Int
+    let pixelsPerDegree: Double
+    let metersPerPixel: Double
 
+    let minimumLatitudeDegrees = -90.0
+    let maximumLatitudeDegrees = 90.0
+    let westernmostLongitudeDegrees = -180.0
+    let easternmostLongitudeDegrees = 180.0
+    let lunarRadiusMeters = 1_737_400.0
+}
+
+private enum WACGlobalProducts {
+    static let sixteenPPD = WACGlobalProduct(
+        productID: "WAC_GLOBAL_E000N0000_016P",
+        productVersion: "v1.3",
+        sourceURL: "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/WAC_GLOBAL_E000N0000_016P.IMG",
+        sourceByteCount: 66_378_240,
+        sourceSHA256: "c75a49b48df0d1d8afad8f25e58332599e8383e4967424ffbb0ba38b0808b2b6",
+        labelByteCount: 23_040,
+        width: 5_760,
+        height: 2_880,
+        pixelsPerDegree: 16,
+        metersPerPixel: 1_895.209_401_509_3
+    )
+
+    static let sixtyFourPPD = WACGlobalProduct(
+        productID: "WAC_GLOBAL_E000N0000_064P",
+        productVersion: "v1.3",
+        sourceURL: "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/WAC_GLOBAL_E000N0000_064P.IMG",
+        sourceByteCount: 1_061_775_360,
+        sourceSHA256: "bc1feab6e86ae2cf47798a4f00cdf7f5e73030fcbc2223fba7fab59a5a2a34ec",
+        labelByteCount: 92_160,
+        width: 23_040,
+        height: 11_520,
+        pixelsPerDegree: 64,
+        metersPerPixel: 473.802_350_377_34
+    )
+
+    static let all = [sixteenPPD, sixtyFourPPD]
+
+    static func product(sourceByteCount: Int) -> WACGlobalProduct? {
+        all.first { $0.sourceByteCount == sourceByteCount }
+    }
+}
+
+private enum WACGlobalTransfer {
     /// Matches the fixed, source-preserving transfer used by the existing
     /// Apollo 11 terrain generator. The product contains a linear reflectance
     /// proxy; PNG stores its display-safe sRGB encoding without normalizing
@@ -74,7 +109,10 @@ private enum GeneratorError: LocalizedError {
         case .usage:
             return "Usage: GlobalLunarMosaicGenerator <WAC_GLOBAL...IMG> <output.png> [metadata.json] [--elevation <LDEM_16.IMG> --elevation-label <LDEM_16.LBL> --normal-output <normal.png>]"
         case .invalidSourceByteCount(let actual):
-            return "Expected \(WACGlobal16PPD.sourceByteCount) source bytes, received \(actual)."
+            let supported = WACGlobalProducts.all
+                .map { "\($0.productID)=\($0.sourceByteCount)" }
+                .joined(separator: ", ")
+            return "Unsupported WAC source byte count \(actual); expected one of \(supported)."
         case .invalidSourceHash(let actual):
             return "Pinned source SHA-256 mismatch: \(actual)"
         case .invalidLabel(let field):
@@ -180,8 +218,8 @@ private func sha256Hex(_ data: Data) -> String {
     SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
 }
 
-private func validateLabel(in source: Data) throws {
-    let labelData = source.prefix(WACGlobal16PPD.labelByteCount)
+private func validateLabel(in source: Data, product: WACGlobalProduct) throws {
+    let labelData = source.prefix(product.labelByteCount)
     guard let label = String(data: labelData, encoding: .ascii) else {
         throw GeneratorError.invalidLabel("ASCII encoding")
     }
@@ -197,16 +235,16 @@ private func validateLabel(in source: Data) throws {
     }
 
     let requiredFields = [
-        "PRODUCT_ID": WACGlobal16PPD.productID,
-        "PRODUCT_VERSION_ID": "\"\(WACGlobal16PPD.productVersion)\"",
-        "RECORD_BYTES": String(WACGlobal16PPD.labelByteCount),
+        "PRODUCT_ID": product.productID,
+        "PRODUCT_VERSION_ID": "\"\(product.productVersion)\"",
+        "RECORD_BYTES": String(product.labelByteCount),
         "LABEL_RECORDS": "1",
         "^IMAGE": "2",
         "MAP_PROJECTION_TYPE": "EQUIRECTANGULAR",
         "COORDINATE_SYSTEM_NAME": "PLANETOCENTRIC",
         "POSITIVE_LONGITUDE_DIRECTION": "EAST",
-        "LINES": String(WACGlobal16PPD.height),
-        "LINE_SAMPLES": String(WACGlobal16PPD.width),
+        "LINES": String(product.height),
+        "LINE_SAMPLES": String(product.width),
         "SAMPLE_TYPE": "PC_REAL",
         "SAMPLE_BITS": "32"
     ]
@@ -318,8 +356,8 @@ private func parseCommandLine() throws -> CommandOptions {
 
 private func linearReflectanceToSRGB8(_ reflectance: Float) -> UInt8 {
     let clamped = min(
-        max(Double(reflectance), WACGlobal16PPD.minimumLinearReflectance),
-        WACGlobal16PPD.maximumLinearReflectance
+        max(Double(reflectance), WACGlobalTransfer.minimumLinearReflectance),
+        WACGlobalTransfer.maximumLinearReflectance
     )
     let srgb = clamped <= 0.003_130_8
         ? clamped * 12.92
@@ -327,8 +365,11 @@ private func linearReflectanceToSRGB8(_ reflectance: Float) -> UInt8 {
     return UInt8((min(max(srgb, 0), 1) * 255).rounded())
 }
 
-private func decodePixels(_ source: Data) -> ([UInt8], PixelStatistics) {
-    let pixelCount = WACGlobal16PPD.width * WACGlobal16PPD.height
+private func decodePixels(
+    _ source: Data,
+    product: WACGlobalProduct
+) -> ([UInt8], PixelStatistics) {
+    let pixelCount = product.width * product.height
     var pixels = [UInt8](repeating: 0, count: pixelCount * 4)
     var validCount = 0
     var invalidCount = 0
@@ -338,7 +379,7 @@ private func decodePixels(_ source: Data) -> ([UInt8], PixelStatistics) {
 
     source.withUnsafeBytes { rawBytes in
         for pixelIndex in 0..<pixelCount {
-            let sourceOffset = WACGlobal16PPD.labelByteCount
+            let sourceOffset = product.labelByteCount
                 + pixelIndex * MemoryLayout<UInt32>.size
             let bits = rawBytes.loadUnaligned(fromByteOffset: sourceOffset, as: UInt32.self)
                 .littleEndian
@@ -352,7 +393,7 @@ private func decodePixels(_ source: Data) -> ([UInt8], PixelStatistics) {
                 maximum = max(maximum, Double(value))
                 sum += Double(value)
             } else {
-                reflectance = Float(WACGlobal16PPD.minimumLinearReflectance)
+                reflectance = Float(WACGlobalTransfer.minimumLinearReflectance)
                 invalidCount += 1
             }
 
@@ -530,20 +571,20 @@ private func run() throws {
     let options = try parseCommandLine()
 
     let source = try Data(contentsOf: options.sourceURL, options: .mappedIfSafe)
-    guard source.count == WACGlobal16PPD.sourceByteCount else {
+    guard let product = WACGlobalProducts.product(sourceByteCount: source.count) else {
         throw GeneratorError.invalidSourceByteCount(actual: source.count)
     }
     let sourceHash = sha256Hex(source)
-    guard sourceHash == WACGlobal16PPD.sourceSHA256 else {
+    guard sourceHash == product.sourceSHA256 else {
         throw GeneratorError.invalidSourceHash(actual: sourceHash)
     }
-    try validateLabel(in: source)
+    try validateLabel(in: source, product: product)
 
-    let (pixels, statistics) = decodePixels(source)
+    let (pixels, statistics) = decodePixels(source, product: product)
     try writePNG(
         pixels: pixels,
-        width: WACGlobal16PPD.width,
-        height: WACGlobal16PPD.height,
+        width: product.width,
+        height: product.height,
         colorSpace: CGColorSpace(name: CGColorSpace.sRGB)!,
         to: options.outputURL
     )
@@ -601,37 +642,37 @@ private func run() throws {
             : "wac-global-morphologic-lola-normal-v2",
         generatorSHA256: generatorHash,
         source: .init(
-            productID: WACGlobal16PPD.productID,
-            productVersion: WACGlobal16PPD.productVersion,
-            url: WACGlobal16PPD.sourceURL,
-            byteCount: WACGlobal16PPD.sourceByteCount,
-            sha256: WACGlobal16PPD.sourceSHA256,
+            productID: product.productID,
+            productVersion: product.productVersion,
+            url: product.sourceURL,
+            byteCount: product.sourceByteCount,
+            sha256: product.sourceSHA256,
             sampleType: "PC_REAL",
             sampleBits: 32
         ),
         elevationSource: elevationMetadata,
         texture: .init(
             file: options.outputURL.lastPathComponent,
-            width: WACGlobal16PPD.width,
-            height: WACGlobal16PPD.height,
+            width: product.width,
+            height: product.height,
             format: "RGBA8 PNG",
             colorSpace: "sRGB encoding of linear reflectance proxy",
             sha256: textureHash,
-            minimumLinearReflectance: WACGlobal16PPD.minimumLinearReflectance,
-            maximumLinearReflectance: WACGlobal16PPD.maximumLinearReflectance
+            minimumLinearReflectance: WACGlobalTransfer.minimumLinearReflectance,
+            maximumLinearReflectance: WACGlobalTransfer.maximumLinearReflectance
         ),
         normalMap: normalMetadata,
         projection: .init(
             mapProjectionType: "EQUIRECTANGULAR",
             latitudeType: "PLANETOCENTRIC",
             positiveLongitudeDirection: "EAST",
-            pixelsPerDegree: WACGlobal16PPD.pixelsPerDegree,
-            metersPerPixel: WACGlobal16PPD.metersPerPixel,
-            minimumLatitudeDegrees: WACGlobal16PPD.minimumLatitudeDegrees,
-            maximumLatitudeDegrees: WACGlobal16PPD.maximumLatitudeDegrees,
-            westernmostLongitudeDegrees: WACGlobal16PPD.westernmostLongitudeDegrees,
-            easternmostLongitudeDegrees: WACGlobal16PPD.easternmostLongitudeDegrees,
-            lunarRadiusMeters: WACGlobal16PPD.lunarRadiusMeters
+            pixelsPerDegree: product.pixelsPerDegree,
+            metersPerPixel: product.metersPerPixel,
+            minimumLatitudeDegrees: product.minimumLatitudeDegrees,
+            maximumLatitudeDegrees: product.maximumLatitudeDegrees,
+            westernmostLongitudeDegrees: product.westernmostLongitudeDegrees,
+            easternmostLongitudeDegrees: product.easternmostLongitudeDegrees,
+            lunarRadiusMeters: product.lunarRadiusMeters
         ),
         statistics: statistics
     )

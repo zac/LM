@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 import ImageIO
 import simd
@@ -83,24 +84,112 @@ struct LMLunarGlobeTests {
         #expect(simd_dot(seamWest, seamEast) > 0.98)
     }
 
-    @Test func bundledTextureMatchesTheManifestDimensions() throws {
+    @Test func bundledTexturesMatchManifestDimensionsAndHashes() throws {
         let manifest = try LMTerrainManifest.load()
-        let tier = try #require(manifest.globe.textureTiers.first)
-        let name = (tier.file as NSString).deletingPathExtension
-        let ext = (tier.file as NSString).pathExtension
-        let url = try #require(
-            Bundle.main.url(
-                forResource: name,
-                withExtension: ext,
-                subdirectory: "Terrain"
-            ) ?? Bundle.main.url(forResource: name, withExtension: ext)
+        for tier in manifest.globe.textureTiers {
+            let name = (tier.file as NSString).deletingPathExtension
+            let ext = (tier.file as NSString).pathExtension
+            let url = try #require(
+                Bundle.main.url(
+                    forResource: name,
+                    withExtension: ext,
+                    subdirectory: "Terrain"
+                ) ?? Bundle.main.url(forResource: name, withExtension: ext)
+            )
+            let source = try #require(CGImageSourceCreateWithURL(url as CFURL, nil))
+            let properties = try #require(
+                CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any]
+            )
+            #expect(properties[kCGImagePropertyPixelWidth] as? Int == tier.width)
+            #expect(properties[kCGImagePropertyPixelHeight] as? Int == tier.height)
+            // Xcode losslessly rewrites PNG resources while copying them into
+            // the product, so their installed file hash is not a provenance
+            // hash. JPEG XL is copied verbatim and must retain its manifest
+            // digest through the actual app-bundle path.
+            if tier.codec == "JPEG XL" {
+                let digest = SHA256.hash(
+                    data: try Data(contentsOf: url, options: .mappedIfSafe)
+                )
+                    .map { String(format: "%02x", $0) }
+                    .joined()
+                #expect(digest == tier.sha256)
+            }
+        }
+    }
+
+    @Test func manifestPinsTheOffline64PPDJXLTier() throws {
+        let manifest = try LMTerrainManifest.load()
+        let tier = try #require(
+            manifest.globe.textureTiers.first { $0.id == "wac-global-64ppd" }
         )
-        let source = try #require(CGImageSourceCreateWithURL(url as CFURL, nil))
-        let properties = try #require(
-            CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any]
+        let source = try #require(
+            manifest.sources.first { $0.id == tier.sourceID }
         )
-        #expect(properties[kCGImagePropertyPixelWidth] as? Int == tier.width)
-        #expect(properties[kCGImagePropertyPixelHeight] as? Int == tier.height)
+        #expect(tier.file == "WACGlobal64PPD-q95.jxl")
+        #expect(tier.width == 23_040)
+        #expect(tier.height == 11_520)
+        #expect(tier.mapResolutionPixelsPerDegree == 64)
+        #expect(tier.sha256 == "819ca84afedca9a5fe864a0a3a036bc6384a105f21135614c90808c184355841")
+        #expect(tier.codec == "JPEG XL")
+        #expect(tier.codecQuality == 95)
+        #expect(tier.codecEncoder == "cjxl 0.12.0 effort 7")
+        #expect(tier.losslessSourceSHA256 == "faead7d93e3ac1b16f30955419f4cbb2f1fbd1040dbc2913473ccd5f30df2420")
+        #expect(tier.losslessSourceBytes == 128_461_405)
+        #expect(source.productId == "WAC_GLOBAL_E000N0000_064P")
+        #expect(source.productVersion == "v1.3")
+        #expect(source.bytes == 1_061_775_360)
+        #expect(source.sha256 == "bc1feab6e86ae2cf47798a4f00cdf7f5e73030fcbc2223fba7fab59a5a2a34ec")
+    }
+
+    @Test func interactiveExplorerPrefers64WhileCapturesRetain16() throws {
+        let tiers = try LMTerrainManifest.load().globe.textureTiers
+        #expect(LMLunarGlobeResource.textureTier(
+            from: tiers,
+            arguments: ["LM", "--lunar-explorer"]
+        )?.id == "wac-global-64ppd")
+        #expect(LMLunarGlobeResource.textureLoadTiers(
+            from: tiers,
+            arguments: ["LM", "--lunar-explorer"]
+        ).map(\.id) == ["wac-global-64ppd", "wac-global-16ppd"])
+        #expect(LMLunarGlobeResource.textureLoadTiers(
+            from: tiers,
+            arguments: ["LM", "--lunar-explorer-capture"]
+        ).map(\.id) == ["wac-global-16ppd"])
+        #expect(LMLunarGlobeResource.textureLoadTiers(
+            from: tiers,
+            arguments: [
+                "LM",
+                "--lunar-globe-texture-tier=wac-global-64ppd"
+            ]
+        ).map(\.id) == ["wac-global-64ppd"])
+        #expect(LMLunarGlobeResource.textureTier(
+            from: tiers,
+            arguments: ["LM", "--lunar-explorer-capture"]
+        )?.id == "wac-global-16ppd")
+        #expect(LMLunarGlobeResource.textureTier(
+            from: tiers,
+            arguments: [
+                "LM",
+                "--lunar-explorer-capture",
+                "--lunar-globe-texture-tier=wac-global-64ppd"
+            ]
+        )?.id == "wac-global-64ppd")
+    }
+
+    @Test func captureTextureOverrideIsExplicitAndDefaultsToTheManifest() {
+        let bundled = "WACGlobal16PPD.png"
+        #expect(LMLunarGlobeResource.textureFile(
+            bundledFile: bundled,
+            arguments: ["LM", "--lunar-explorer-capture"]
+        ) == bundled)
+        #expect(LMLunarGlobeResource.textureFile(
+            bundledFile: bundled,
+            arguments: [
+                "LM",
+                "--lunar-explorer-capture",
+                "--lunar-globe-texture-override=WACGlobal64PPD-q68.heic"
+            ]
+        ) == "WACGlobal64PPD-q68.heic")
     }
 
     @Test func displayBasisUsesApollo11AsDiskCenter() throws {

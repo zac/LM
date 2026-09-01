@@ -115,19 +115,23 @@ Verified this session (2026-08-31):
   2 m/px is ~10^13 pixels — terabytes; no codec ships it. See §6.
 - Budget targets (verify, get sign-off before exceeding): ≤300 MB bundled
   base; streamed tiles cached with an LRU cap; everything hash-pinned.
-- **Measured globe-tier budget decision (2026-08-31).** The current Release
-  Simulator app is 334.9 MiB and is the owner-accepted baseline; the checked-in
-  terrain plus RealityKit source assets are 235.1 MiB. Scaling the committed
-  16 ppd PNG by pixel count estimates a full 64 ppd lossless PNG at 264.1 MiB,
-  which would put the Release app near 599 MiB. Therefore the ordinary bundled
-  base is frozen at the pinned 16 ppd globe and every finer globe tier must be
-  streamed, durable-cached content. Any future bundled addition requires owner
-  sign-off. One explicit measurement gate may supersede that choice: if a
-  pinned high-quality grayscale HEIC (or directly loadable equivalent) derived
-  from the 64 ppd lossless source is under approximately 80 MiB and visually
-  transparent under the §8/`TerrainRealismPlan` §7 protocol, it becomes the
-  bundled offline tier. The reusable streaming/cache layer still lands for
-  Stage 2 elevation and site products either way.
+- **Measured globe-tier budget decision (2026-08-31, resolved 2026-09-01).**
+  The current Release Simulator app is 334.9 MiB and is the owner-accepted
+  baseline; the checked-in terrain plus RealityKit source assets are 235.1
+  MiB. Scaling the committed 16 ppd PNG by pixel count estimated a full 64 ppd
+  lossless PNG at 264.1 MiB, which would put the Release app near 599 MiB. The
+  actual generated RGBA PNG is 223.8 MiB; its byte-identical one-channel
+  grayscale representation is 122.5 MiB. JPEG XL quality 95, encoded by
+  `cjxl 0.12.0` at effort 7, is 72.6 MiB and therefore clears the owner's
+  approximately 80 MiB exception gate. It is pinned as the bundled offline
+  64 ppd tier; the 16 ppd PNG remains the deterministic capture and fallback
+  base. Against the lossless 64 ppd PNG, fixed Simulator captures measure
+  64.75 dB PSNR / 0.0085% mean absolute error at whole-globe scale and 64.39
+  dB / 0.0090% in the 320 km globe-to-orbit overlap, with no visible codec or
+  tile seam. This explicitly flips the earlier stream-only decision while
+  retaining its budget boundary: any further bundled addition requires owner
+  sign-off. The reusable durable streaming/cache layer still lands for Stage
+  2 elevation and site products, but no shipping WAC texture depends on it.
 
 ## 4. The stages
 

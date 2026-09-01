@@ -107,6 +107,10 @@ curl -L --fail \
   https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/WAC_GLOBAL_E000N0000_016P.IMG
 
 curl -L --fail \
+  --output Tools/TerrainGenerator/cache/WAC_GLOBAL_E000N0000_064P.IMG \
+  https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/WAC_GLOBAL_E000N0000_064P.IMG
+
+curl -L --fail \
   --output Tools/TerrainGenerator/cache/LDEM_16.IMG \
   https://imbrium.mit.edu/DATA/LOLA_GDR/CYLINDRICAL/IMG/LDEM_16.IMG
 
@@ -134,6 +138,30 @@ depend on the source image's observed extrema. Xcode may losslessly rewrite
 PNG container metadata while copying resources; the manifest hash therefore
 pins the generated repository artifact, while runtime tests separately verify
 the bundled texture dimensions and manifest relationship.
+
+The same executable recognizes the independently pinned 64 ppd sibling by its
+exact byte count and hash. Its lossless output is converted to a one-channel
+PNG without changing a single displayed sample, then encoded with the pinned
+JPEG XL settings:
+
+```sh
+swift run --package-path Tools/TerrainGenerator GlobalLunarMosaicGenerator \
+  Tools/TerrainGenerator/cache/WAC_GLOBAL_E000N0000_064P.IMG \
+  /tmp/WACGlobal64PPD.png \
+  /tmp/WACGlobal64PPD.json
+
+magick /tmp/WACGlobal64PPD.png -alpha off -colorspace sRGB \
+  -colorspace Gray -depth 8 -define png:color-type=0 \
+  /tmp/WACGlobal64PPD-gray.png
+
+cjxl /tmp/WACGlobal64PPD-gray.png LM/Terrain/WACGlobal64PPD-q95.jxl \
+  --quality=95 --effort=7 --buffering=1
+```
+
+The accepted artifact was encoded by `cjxl 0.12.0`. Its hash, codec, quality,
+encoder, lossless grayscale PNG hash, and lossless byte count are all recorded
+in `TerrainManifest.json`. The full source product remains ignored; the
+bundled derivative is sufficient to build and run offline.
 
 The optional elevation arguments are all-or-nothing and independently verify
 the exact LDEM image and label. LDEM longitude is rotated from 0...360 east to

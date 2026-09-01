@@ -51,35 +51,110 @@ enum LMLunarGlobeResource {
         else {
             throw ResourceError.inconsistentDatum
         }
-        guard let tier = manifest.globe.textureTiers.first else {
+        let arguments = ProcessInfo.processInfo.arguments
+        let tiers = textureLoadTiers(
+            from: manifest.globe.textureTiers,
+            arguments: arguments
+        )
+        guard !tiers.isEmpty else {
             throw ResourceError.missingTextureTier
         }
-        guard manifest.sources.contains(where: { $0.id == tier.sourceID }) else {
-            throw ResourceError.missingSource(tier.sourceID)
-        }
-
-        let textureURL = try resourceURL(bundle: bundle, file: tier.file)
-        let texture = try await TextureResource(
-            contentsOf: textureURL,
-            options: LMTerrainWorld.terrainTextureCreateOptions(semantic: .color)
-        )
         let mesh = try globeMesh(
             radiusMeters: manifest.globe.radiusMeters,
             frontCoordinate: manifest.landingOriginCoordinate
         )
+        var lastTextureError: Error?
+        for tier in tiers {
+            guard manifest.sources.contains(where: { $0.id == tier.sourceID }) else {
+                throw ResourceError.missingSource(tier.sourceID)
+            }
+            let file = textureFile(bundledFile: tier.file, arguments: arguments)
+            do {
+                let textureURL = try resourceURL(bundle: bundle, file: file)
+                let texture = try await TextureResource(
+                    contentsOf: textureURL,
+                    options: LMTerrainWorld.terrainTextureCreateOptions(semantic: .color)
+                )
 
-        // Display the pinned morphologic product in its authored transfer
-        // function. Tone mapping here crushed the maria and ray systems even
-        // though no scene lighting was applied.
-        var material = UnlitMaterial(applyPostProcessToneMap: false)
-        material.color = .init(
-            tint: .white,
-            texture: globeTexture(texture)
-        )
+                // Display the pinned morphologic product in its authored
+                // transfer function. Tone mapping here crushed the maria and
+                // ray systems even though no scene lighting was applied.
+                var material = UnlitMaterial(applyPostProcessToneMap: false)
+                material.color = .init(
+                    tint: .white,
+                    texture: globeTexture(texture)
+                )
+                let entity = ModelEntity(mesh: mesh, materials: [material])
+                entity.name = "Pinned WAC global Moon [\(tier.id)]"
+                return entity
+            } catch {
+                lastTextureError = error
+            }
+        }
+        throw lastTextureError ?? ResourceError.missingTextureTier
+    }
 
-        let entity = ModelEntity(mesh: mesh, materials: [material])
-        entity.name = "Pinned WAC global Moon"
-        return entity
+    /// A capture-only escape hatch for codec A/B measurements. Production
+    /// launches always resolve the manifest-pinned file. Keeping this as a
+    /// file-name override (rather than a host path) proves that the candidate
+    /// survives the same app-bundle and RealityKit load path as shipping data.
+    nonisolated static func textureFile(
+        bundledFile: String,
+        arguments: [String]
+    ) -> String {
+        let prefix = "--lunar-globe-texture-override="
+        return arguments.first { $0.hasPrefix(prefix) }
+            .map { String($0.dropFirst(prefix.count)) }
+            ?? bundledFile
+    }
+
+    /// Interactive Explorer uses the finest bundled map. Deterministic
+    /// captures intentionally retain the original 16 ppd base unless a test
+    /// names a tier or file explicitly, preserving every accepted baseline.
+    nonisolated static func textureTier(
+        from tiers: [LMTerrainManifest.Globe.TextureTier],
+        arguments: [String]
+    ) -> LMTerrainManifest.Globe.TextureTier? {
+        let prefix = "--lunar-globe-texture-tier="
+        if let requestedID = arguments.first(where: { $0.hasPrefix(prefix) })
+            .map({ String($0.dropFirst(prefix.count)) }),
+           let requested = tiers.first(where: { $0.id == requestedID }) {
+            return requested
+        }
+        if arguments.contains("--lunar-explorer-capture") {
+            return tiers.min { lhs, rhs in
+                lhs.mapResolutionPixelsPerDegree < rhs.mapResolutionPixelsPerDegree
+            }
+        }
+        return tiers.max { lhs, rhs in
+            lhs.mapResolutionPixelsPerDegree < rhs.mapResolutionPixelsPerDegree
+        }
+    }
+
+    /// Production launches may fall back to the pinned 16 ppd base if a
+    /// platform cannot decode the high-resolution codec. Explicit capture
+    /// overrides never fall back: an A/B capture must fail honestly instead
+    /// of silently measuring a different asset.
+    nonisolated static func textureLoadTiers(
+        from tiers: [LMTerrainManifest.Globe.TextureTier],
+        arguments: [String]
+    ) -> [LMTerrainManifest.Globe.TextureTier] {
+        guard let preferred = textureTier(from: tiers, arguments: arguments) else {
+            return []
+        }
+        let isExplicit = arguments.contains { argument in
+            argument.hasPrefix("--lunar-globe-texture-tier=")
+                || argument.hasPrefix("--lunar-globe-texture-override=")
+        }
+        guard !isExplicit,
+              let base = tiers.min(by: {
+                  $0.mapResolutionPixelsPerDegree < $1.mapResolutionPixelsPerDegree
+              }),
+              base.id != preferred.id
+        else {
+            return [preferred]
+        }
+        return [preferred, base]
     }
 
     @MainActor

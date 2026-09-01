@@ -73,6 +73,11 @@ struct LMTerrainManifest: Equatable, Decodable {
             let sha256: String
             let sourceID: String
             let detail: String
+            let codec: String?
+            let codecQuality: Int?
+            let codecEncoder: String?
+            let losslessSourceSHA256: String?
+            let losslessSourceBytes: Int?
         }
 
         struct NormalMap: Equatable, Decodable {
