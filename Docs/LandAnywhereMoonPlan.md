@@ -227,26 +227,26 @@ below `1e-6` normalized residual. Continuous hand-gesture comfort still needs
 physical Vision Pro validation.
 
 The initial overlap still contained a tonal defect. Capture-only layer
-isolation at identical 210 km framing measured central mean linear luminance
-of 0.02361 for the baked WAC globe and 0.13449 for the live site: the globe
-was 82.44% darker, requiring a 5.70x linear-radiance match. An
+isolation at identical 210 km framing with the bundled 64 ppd JXL measured
+central mean linear luminance of 0.02351 for the baked WAC globe and 0.13449
+for the live site: the globe was 82.52% darker, an empirical 5.72x ratio. An
 extended-linear unlit tint now ramps from 1x to 5.70x over the existing
 330–240 km pre-handoff, before the site is visible. The corrected isolated
-globe measured 0.13455, +0.043% from the site.
+globe measured 0.13398, -0.376% from the site.
 
 RealityKit's subtree-opacity path exposed a separate compositing loss:
 complementary globe/site opacity produced a 22% mid-fade dip in linear
 luminance. The site now dissolves over an opaque globe backplate; the globe
 is removed only after the site is fully opaque. A bounded 10% sinusoidal
 globe compensation, zero at both endpoints, cancels the remaining transparent
-path loss. The final automatic 210 km overlap measures 0.13441, just -0.059%
+path loss. The final automatic 210 km overlap measures 0.13395, just -0.403%
 from the site endpoint. Site materials, terrain lighting, contact, and both
 presentation grades remain unchanged. Measurement captures:
 
-- `/private/tmp/LandAnywhere-handoff-210km-globe-only.png` — unmatched globe;
+- `/private/tmp/LandAnywhere-handoff-210km-64ppd-globe-unmatched.png` — unmatched 64 ppd JXL globe;
 - `/private/tmp/LandAnywhere-handoff-210km-site-only.png` — matched-scale site;
-- `/private/tmp/LandAnywhere-handoff-210km-globe-matched.png` — corrected globe;
-- `/private/tmp/LandAnywhere-handoff-210km-radiance-final.png` — final automatic overlap.
+- `/private/tmp/LandAnywhere-handoff-210km-64ppd-globe-matched.png` — corrected 64 ppd JXL globe;
+- `/private/tmp/LandAnywhere-handoff-210km-64ppd-radiance-final.png` — final automatic overlap.
 
 The same pass fixed a distinct near-surface ownership defect. Progressive
 children used to remove parent triangles while still transparent or before

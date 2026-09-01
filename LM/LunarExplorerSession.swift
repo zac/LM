@@ -144,8 +144,10 @@ final class LunarExplorerSession {
     static let globeSurfaceDepthMeters: Float = 2.17
     static let globeHandoffRampStartMetersAcross = 330_000.0
     static let globeHandoffOverscan = 1.4
-    /// Matched 210 km layer-isolation captures measured the globe at 0.02361
-    /// and the site at 0.13449 mean linear luminance. Raise only the
+    /// Matched 210 km layer-isolation captures with the bundled 64 ppd JXL
+    /// measured the globe at 0.02351 and the site at 0.13449 mean linear
+    /// luminance. The exact measured ratio was 5.72; the bounded 5.70x match
+    /// remains within the acceptance tolerance. Raise only the
     /// cartographic globe presentation before the crossfade; site materials
     /// remain the calibrated production terrain.
     static let globeSiteLinearRadianceMultiplier = 5.70
@@ -213,6 +215,9 @@ final class LunarExplorerSession {
     /// Capture-only layer isolation for measuring the globe/site handoff at
     /// identical camera scale. Normal launches always leave this nil.
     private(set) var capturePresentation: CapturePresentation?
+    /// Capture-only radiance bypass used to retain a before frame after the
+    /// shipping globe match is active.
+    private(set) var captureUnmatchedGlobeRadiance = false
 
     var logarithmicAltitude: Double {
         get { log10(altitudeMeters) }
@@ -255,6 +260,7 @@ final class LunarExplorerSession {
     /// both layers become visible. Keeping the actual crossfade endpoints at
     /// equal mean radiance prevents opacity itself from producing a flash.
     var globeHandoffLinearRadianceMultiplier: Double {
+        if captureUnmatchedGlobeRadiance { return 1 }
         let matched = 1 + (Self.globeSiteLinearRadianceMultiplier - 1)
             * globeHandoffRampProgress
         guard capturePresentation == nil else { return matched }
@@ -416,6 +422,9 @@ final class LunarExplorerSession {
                 in: argument
             ), isCapture, let presentation = CapturePresentation(rawValue: value) {
                 capturePresentation = presentation
+            } else if argument == "--lunar-explorer-capture-globe-radiance=unmatched",
+                      isCapture {
+                captureUnmatchedGlobeRadiance = true
             } else if let value = value(
                 after: "--lunar-explorer-sun-offset-hours=",
                 in: argument

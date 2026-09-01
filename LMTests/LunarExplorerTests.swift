@@ -194,6 +194,17 @@ struct LunarExplorerTests {
             "--lunar-explorer-capture-presentation=site",
         ])
         #expect(interactive.capturePresentation == nil)
+        #expect(!interactive.captureUnmatchedGlobeRadiance)
+
+        let unmatched = LunarExplorerSession()
+        unmatched.configure(arguments: [
+            "LM",
+            "--lunar-explorer-capture",
+            "--lunar-explorer-meters-across=210000",
+            "--lunar-explorer-capture-globe-radiance=unmatched",
+        ])
+        #expect(unmatched.captureUnmatchedGlobeRadiance)
+        #expect(unmatched.globeHandoffLinearRadianceMultiplier == 1)
     }
 
     @Test func launchArgumentsPinExactLODGateAltitudeAndFraming() {
