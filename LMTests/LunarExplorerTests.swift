@@ -165,20 +165,6 @@ struct LunarExplorerTests {
         ]))
     }
 
-    @Test func captureCanForceBundledOnlyResources() {
-        let session = LunarExplorerSession()
-        session.configure(arguments: [
-            "LM",
-            "--lunar-explorer-capture",
-            "--lunar-explorer-bundled-only",
-        ])
-        #expect(session.bundledOnly)
-
-        let interactive = LunarExplorerSession()
-        interactive.configure(arguments: ["LM", "--lunar-explorer"])
-        #expect(!interactive.bundledOnly)
-    }
-
     @Test func launchArgumentsPinExactLODGateAltitudeAndFraming() {
         let session = LunarExplorerSession()
 

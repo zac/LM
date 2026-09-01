@@ -276,17 +276,6 @@ struct LunarExplorerControls: View {
             diagnosticRow("Appearance", session.detailMode.title)
             diagnosticRow("Globe tier", session.diagnostics.globeTierState)
             diagnosticRow(
-                "Remote content",
-                session.bundledOnly ? "bundled-only" : "progressive enhancement"
-            )
-            diagnosticRow(
-                "Stream cache",
-                ByteCountFormatter.string(
-                    fromByteCount: Int64(session.diagnostics.remoteCacheByteCount),
-                    countStyle: .file
-                ) + " / \(session.diagnostics.remoteCacheEntryCount) items"
-            )
-            diagnosticRow(
                 "Tiles",
                 "\(session.diagnostics.activeTileCount) active / "
                     + "\(session.diagnostics.requestedTileCount) requested"

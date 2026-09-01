@@ -121,8 +121,6 @@ final class LunarExplorerSession {
         var latestGenerationMetrics: Apollo11TerrainResource
             .ProgressiveTileGenerationMetrics?
         var globeTierState = "pending"
-        var remoteCacheByteCount = 0
-        var remoteCacheEntryCount = 0
     }
 
     static let minimumAltitudeMeters = 1.5
@@ -197,9 +195,6 @@ final class LunarExplorerSession {
     var presentationGrade: LMTerrainPresentationGrade = .calibrated
     var diagnosticsVisible = true
     var diagnostics = Diagnostics()
-    /// Deterministic captures and offline QA can prohibit all remote fetches.
-    /// Warm durable resources remain readable; the bundled Moon always works.
-    var bundledOnly = false
 
     var logarithmicAltitude: Double {
         get { log10(altitudeMeters) }
@@ -325,7 +320,6 @@ final class LunarExplorerSession {
     /// and visual regression checks. Interactive navigation remains available
     /// after launch, but every named preset starts from the same terrain state.
     func configure(arguments: [String]) {
-        bundledOnly = arguments.contains("--lunar-explorer-bundled-only")
         var altitudeOverride: Double?
         var metersAcrossOverride: Double?
         var headingOverride: Double?

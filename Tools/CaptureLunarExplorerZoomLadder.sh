@@ -55,7 +55,6 @@ for stop in "${stops[@]}"; do
         "--lunar-explorer-meters-across=$width" \
         --lunar-explorer-detail=procedural \
         --lunar-explorer-capture \
-        --lunar-explorer-bundled-only \
         --lunar-globe-texture-tier=wac-global-64ppd >/dev/null
     sleep "$capture_wait_seconds"
     xcrun simctl io "$simulator_udid" screenshot "$screenshot" >/dev/null

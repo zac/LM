@@ -137,18 +137,13 @@ Verified this session (2026-08-31):
   asset and digest passed a generic visionOS arm64 Release build. Production
   load attempts 64 ppd first, logs any decode failure, and falls back to the
   pinned 16 ppd texture instead of failing the globe.
-- **Durable stream foundation (2026-09-01).** Remote scientific content uses a
-  data-agnostic request boundary populated directly from existing manifest
-  sources: URL, inclusive HTTP byte range, byte count, and SHA-256. A bounded
-  three-attempt loader verifies count and hash before exposing bytes, then
-  stores them in a content-addressed disk LRU with a documented 1 GiB default
-  cap. Hash failure is discarded; cancellation remains caller-owned; offline
-  or `--lunar-explorer-bundled-only` leaves the complete bundled Moon intact
-  without a prompt. The Explorer diagnostics report the bundled globe tier
-  and durable-cache bytes. Because the accepted 64 ppd WAC tier is bundled,
-  there is no shipping texture download or “Download full map” control; this
-  same tested boundary is reserved for Stage 2 elevation/site slabs, whose
-  format-specific conversion remains on the consumer side of the byte layer.
+- **Streaming is deferred to Stage 2.** The complete 64 ppd appearance map is
+  bundled, so Stage 1 has no remote tile consumer. Do not keep a speculative
+  loader or cache alive in the app. Build the PDS HTTP byte-range loader,
+  per-tile digest verification, persistent bounded LRU, and offline prefetch
+  with Stage 2's first streamed elevation slab. That implementation must use
+  the real source resolver and decoded elevation product in its tests rather
+  than an otherwise unused generic path.
 
 ## 4. The stages
 
@@ -289,11 +284,15 @@ anchor, floating tangent frame, whatever sources cover it."
    `LMSelenographicLocalFrame`. Re-anchoring is a coordinate translation of
    resident tiles, not a visual event; design it seam-free like every LOD
    gate and validate with the capture protocol.
-2. **Source resolver:** given an anchor, assemble the band stack from
+2. **Source resolver and streaming:** given an anchor, assemble the band stack from
    available pinned sources — streamed SLDEM/LOLA tiles for geometry, WAC
    (normalized where available) for reflectance, NAC site packs where they
-   exist (Stage 4). The manifest becomes a catalog of sources + coverage
-   rather than one site's fixed bands.
+   exist (Stage 4). Build the remote data path with this first real consumer:
+   fixed-record PDS HTTP byte ranges, a pinned digest per derived tile,
+   bounded retries, a persistent content-addressed LRU, and resumable prefetch
+   for offline use. The manifest becomes a catalog of sources + coverage
+   rather than one site's fixed bands. Format conversion belongs to the
+   elevation consumer, not the transport/cache layer.
 3. **Widen the amplification ladder:** today's progressive levels run
    0.5 m/0.125 m below a 2 m source. Extend upward (e.g. 128/32/8/2 m
    levels — the planner's `Level` list already sketches this) so each level
@@ -309,6 +308,15 @@ anchor, floating tangent frame, whatever sources cover it."
    work is plumbing anchors and sources through them, not new rendering.
 
 ### Stage 3 — Mushy-band quality (see §5)
+
+**Future calibrated color layer.** High-resolution morphology stays a single
+reflectance channel. Add color later as a separate, lower-resolution
+multispectral layer that can show broad basalt composition and optical
+maturity without changing relief detail. Candidate source families are LROC
+WAC multispectral color, Kaguya Multiband Imager, and Clementine UVVIS. Pin
+the selected products, calibration, registration, and derived texture just
+like geometry sources. Never fuse lossy chroma into high-resolution
+morphology, elevation, or normal maps, and never let it affect contact.
 
 ### Stage 4 — Site packs
 
