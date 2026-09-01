@@ -408,7 +408,13 @@ enum Apollo11TerrainResource {
                         contentFraction: Float(column) / Float(sampleCount - 1)
                     ),
                     LMTerrainTileDetailBaker.renderingTextureCoordinate(
-                        contentFraction: Float(row) / Float(sampleCount - 1)
+                        // Baked CGImage rows run north-to-south, while
+                        // RealityKit texture V runs bottom-to-top. Address the
+                        // northern image row at V=1 so every world edge meets
+                        // the corresponding neighbor instead of a vertically
+                        // mirrored sample from the opposite side of its tile.
+                        contentFraction: 1
+                            - Float(row) / Float(sampleCount - 1)
                     )
                 ))
             }

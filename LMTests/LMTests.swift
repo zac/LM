@@ -3867,6 +3867,111 @@ struct TerrainDetailTextureTests {
         }
     }
 
+    @Test func adjacentMeasuredAlbedoNarrowBandsRemainContinuous() throws {
+        let resolution = 128
+        let west = try landingPlan().withTransitionEdges([])
+        let east = LMTerrainTilePlan(
+            id: .init(
+                level: west.id.level,
+                eastIndex: west.id.eastIndex + 1,
+                northIndex: west.id.northIndex
+            ),
+            centerEastMeters: west.centerEastMeters + west.sizeMeters,
+            centerNorthMeters: west.centerNorthMeters,
+            sizeMeters: west.sizeMeters,
+            sampleSpacingMeters: west.sampleSpacingMeters,
+            containsProceduralSubresolution: true,
+            transitionEdges: []
+        )
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let measured = try LMMeasuredAlbedoField.load(tile: field.tile)
+        let westDetail = try LMTerrainTileDetailBaker.bake(
+            plan: west,
+            albedoField: measured,
+            resolution: resolution
+        )
+        let eastDetail = try LMTerrainTileDetailBaker.bake(
+            plan: east,
+            albedoField: measured,
+            resolution: resolution
+        )
+        let south = LMTerrainTilePlan(
+            id: .init(
+                level: west.id.level,
+                eastIndex: west.id.eastIndex,
+                northIndex: west.id.northIndex - 1
+            ),
+            centerEastMeters: west.centerEastMeters,
+            centerNorthMeters: west.centerNorthMeters - west.sizeMeters,
+            sizeMeters: west.sizeMeters,
+            sampleSpacingMeters: west.sampleSpacingMeters,
+            containsProceduralSubresolution: true,
+            transitionEdges: []
+        )
+        let southDetail = try LMTerrainTileDetailBaker.bake(
+            plan: south,
+            albedoField: measured,
+            resolution: resolution
+        )
+        func mean(_ detail: LMTerrainTileDetailTextures, columns: Range<Int>) -> Double {
+            var total = 0.0
+            var count = 0
+            for row in 0..<resolution {
+                for column in columns {
+                    total += Double(detail.albedo[(row * resolution + column) * 4]) / 255
+                    count += 1
+                }
+            }
+            return total / Double(count)
+        }
+        let westBand = mean(
+            westDetail,
+            columns: (resolution - 8)..<resolution
+        )
+        let eastBand = mean(eastDetail, columns: 0..<8)
+        #expect(abs(eastBand - westBand) / westBand < 0.005)
+
+        func mean(_ detail: LMTerrainTileDetailTextures, rows: Range<Int>) -> Double {
+            var total = 0.0
+            var count = 0
+            for row in rows {
+                for column in 0..<resolution {
+                    total += Double(detail.albedo[(row * resolution + column) * 4]) / 255
+                    count += 1
+                }
+            }
+            return total / Double(count)
+        }
+        let northSouthBand = mean(
+            westDetail,
+            rows: (resolution - 8)..<resolution
+        )
+        let southNorthBand = mean(southDetail, rows: 0..<8)
+        #expect(abs(southNorthBand - northSouthBand) / northSouthBand < 0.01)
+        for column in 0..<resolution {
+            let northOffset = ((resolution - 1) * resolution + column) * 4
+            let southOffset = column * 4
+            #expect(westDetail.albedo[northOffset..<(northOffset + 4)]
+                .elementsEqual(southDetail.albedo[southOffset..<(southOffset + 4)]))
+        }
+    }
+
+    @Test func progressiveTileUVsMapNorthImageRowsToTextureTop() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let plan = try landingPlan()
+        let mesh = try #require(
+            try Apollo11TerrainResource.makeProgressiveTileMeshData(
+                heightField: field,
+                plan: plan
+            )
+        )
+        let sampleCount = Int(plan.sizeMeters / plan.sampleSpacingMeters) + 1
+        let northWest = mesh.textureCoordinates[0]
+        let southWest = mesh.textureCoordinates[(sampleCount - 1) * sampleCount]
+        #expect(northWest.y > southWest.y)
+        #expect(abs(northWest.x - southWest.x) < 1e-6)
+    }
+
     @Test func bakedAlbedoTracksMeasuredReflectanceWithBoundedContrast() throws {
         let plan = try landingPlan()
         let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
