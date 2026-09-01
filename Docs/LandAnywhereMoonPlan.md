@@ -132,6 +132,18 @@ Verified this session (2026-08-31):
   retaining its budget boundary: any further bundled addition requires owner
   sign-off. The reusable durable streaming/cache layer still lands for Stage
   2 elevation and site products, but no shipping WAC texture depends on it.
+- **Durable stream foundation (2026-09-01).** Remote scientific content uses a
+  data-agnostic request boundary populated directly from existing manifest
+  sources: URL, inclusive HTTP byte range, byte count, and SHA-256. A bounded
+  three-attempt loader verifies count and hash before exposing bytes, then
+  stores them in a content-addressed disk LRU with a documented 1 GiB default
+  cap. Hash failure is discarded; cancellation remains caller-owned; offline
+  or `--lunar-explorer-bundled-only` leaves the complete bundled Moon intact
+  without a prompt. The Explorer diagnostics report the bundled globe tier
+  and durable-cache bytes. Because the accepted 64 ppd WAC tier is bundled,
+  there is no shipping texture download or “Download full map” control; this
+  same tested boundary is reserved for Stage 2 elevation/site slabs, whose
+  format-specific conversion remains on the consumer side of the byte layer.
 
 ## 4. The stages
 

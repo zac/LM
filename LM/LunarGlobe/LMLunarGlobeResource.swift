@@ -9,6 +9,12 @@ import UIKit
 /// contains illumination, so this first globe tier is emissive/unlit and is
 /// never shaded a second time by the Explorer's movable mission sun.
 enum LMLunarGlobeResource {
+    struct GlobeResource {
+        let entity: ModelEntity
+        let textureTier: LMTerrainManifest.Globe.TextureTier
+        let usedFallback: Bool
+    }
+
     /// A low-frequency black overlay whose opacity is `1 - illumination`.
     /// Alpha compositing it over the unlit WAC map is therefore exactly a
     /// brightness multiplier; it cannot introduce a second lighting model.
@@ -46,7 +52,7 @@ enum LMLunarGlobeResource {
     static func makeEntity(
         manifest: LMTerrainManifest,
         bundle: Bundle = .main
-    ) async throws -> ModelEntity {
+    ) async throws -> GlobeResource {
         guard abs(manifest.globe.radiusMeters - manifest.projection.sphereRadiusMeters) < 0.001
         else {
             throw ResourceError.inconsistentDatum
@@ -86,7 +92,11 @@ enum LMLunarGlobeResource {
                 )
                 let entity = ModelEntity(mesh: mesh, materials: [material])
                 entity.name = "Pinned WAC global Moon [\(tier.id)]"
-                return entity
+                return GlobeResource(
+                    entity: entity,
+                    textureTier: tier,
+                    usedFallback: tier.id != tiers[0].id
+                )
             } catch {
                 lastTextureError = error
             }

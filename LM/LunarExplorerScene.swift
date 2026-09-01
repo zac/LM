@@ -43,6 +43,7 @@ final class LunarExplorerScene {
     private weak var session: LunarExplorerSession?
     private var isLoaded = false
     private var loadTask: Task<Void, Never>?
+    private var remoteResourceCache: LMRemoteResourceDiskCache?
 
     init() {
         root.name = "Lunar Explorer"
@@ -63,6 +64,7 @@ final class LunarExplorerScene {
 
     func loadIfNeeded(session: LunarExplorerSession) {
         self.session = session
+        prepareRemoteCacheDiagnostics(session)
         guard !isLoaded, loadTask == nil else {
             apply(session)
             return
@@ -82,8 +84,11 @@ final class LunarExplorerScene {
                     let globe = try await LMLunarGlobeResource.makeEntity(
                         manifest: manifest
                     )
-                    self.globePresentationRoot.addChild(globe)
-                    self.globeEntity = globe
+                    self.globePresentationRoot.addChild(globe.entity)
+                    self.globeEntity = globe.entity
+                    session.diagnostics.globeTierState = "bundled "
+                        + "\(globe.textureTier.mapResolutionPixelsPerDegree) ppd"
+                        + (globe.usedFallback ? " fallback" : "")
                     let terminator = try LMLunarGlobeResource.makeTerminator(
                         manifest: manifest,
                         date: session.sunDate
@@ -615,12 +620,37 @@ final class LunarExplorerScene {
         )
     }
 
+    private func prepareRemoteCacheDiagnostics(_ session: LunarExplorerSession) {
+        guard remoteResourceCache == nil else { return }
+        do {
+            let cache = try LMRemoteResourceDiskCache()
+            remoteResourceCache = cache
+            Task { @MainActor [weak self, weak session] in
+                guard let self, let session else { return }
+                do {
+                    let statistics = try await cache.statistics()
+                    guard self.session === session else { return }
+                    session.diagnostics.remoteCacheByteCount = statistics.byteCount
+                    session.diagnostics.remoteCacheEntryCount = statistics.entryCount
+                } catch {
+                    // Disk cache failure is not a scene failure. The bundled
+                    // 16/64 ppd globe and measured Apollo 11 site stay usable.
+                    session.diagnostics.remoteCacheByteCount = 0
+                    session.diagnostics.remoteCacheEntryCount = 0
+                }
+            }
+        } catch {
+            session.diagnostics.remoteCacheByteCount = 0
+            session.diagnostics.remoteCacheEntryCount = 0
+        }
+    }
+
     private func sourceDescription(altitudeMeters: Double) -> String {
         if let session, session.presentsGlobe, session.presentsSite {
             return "Pinned WAC globe + Apollo 11 site crossfade"
         }
         if session?.presentsGlobe == true {
-            return "Pinned WAC_GLOBAL 16 ppd morphologic map"
+            return "Pinned WAC_GLOBAL 64 ppd morphologic map"
         }
         return switch altitudeMeters {
         case ...60:
