@@ -3635,6 +3635,8 @@ struct TerrainDetailTextureTests {
     }
 
     @Test func bakedNormalDistributionCanBeReusedForAnySunDirection() throws {
+        #expect(LMTerrainTileDetailBaker.modelID == "regolith-microtexture-v2")
+        #expect(LMTerrainTileDetailBaker.normalReliefScale == 0.30)
         let detail = try LMTerrainTileDetailBaker.bake(
             plan: landingPlan(),
             albedoField: nil,
@@ -3819,7 +3821,9 @@ struct TerrainDetailTextureTests {
                                   normal(column: column, row: row).y))
             }
         }.max() ?? 0
-        #expect(interior > 0.05)
+        // The restrained v2 realization still has a materially non-flat
+        // interior; its screen-space strength is intentionally below v1.
+        #expect(interior > 0.04)
     }
 
     @Test func adjacentProceduralTexturesMatchExactlyAtTheirSharedWorldEdge() throws {

@@ -17,7 +17,7 @@ import simd
 /// change a landing outcome. `LMLunarGeologyModel` remains the only procedural
 /// source of shape, and measured LROC posts remain authoritative above it.
 struct LMRegolithMicrotextureModel: Equatable, Sendable {
-    static let modelID = "regolith-microtexture-v1"
+    static let modelID = "regolith-microtexture-v2"
     /// Surveyor's small-crater size-frequency slope extended below the 0.22 m
     /// floor `LMLunarGeologyModel` uses for geometry. Nothing here is claimed
     /// as a surveyed Apollo 11 feature.
@@ -701,6 +701,15 @@ struct LMTerrainTileDetailTextures: Sendable {
 enum LMTerrainTileDetailBaker {
     static let modelID = LMRegolithMicrotextureModel.modelID
 
+    /// Convert centimetre-scale procedural relief into a restrained normal
+    /// response. The relief field remains at physical scale for deterministic
+    /// frequency matching, but realizing its full derivative in a tangent
+    /// normal map overstates grazing-light contrast after per-tile mipmapping:
+    /// distant 16 m tiles read as alternating dark cards. This factor affects
+    /// appearance normals only. It cannot change measured terrain, rocks,
+    /// contact, or the reflectance texture's preserved high-frequency detail.
+    static let normalReliefScale = 0.30
+
     /// Texel budget per tile. A 16 m tile bakes at about 3 cm per texel and a
     /// 64 m tile at about 12 cm, for 1 MB of RGBA per texture.
     static let resolution = 512
@@ -928,11 +937,12 @@ enum LMTerrainTileDetailBaker {
                 // Central differences on the padded relief grid. Row indices
                 // run north to south, so a positive row step is southward.
                 let gridIndex = (localRow + 1) * gridWidth + (column + 1)
-                let eastSlope = (relief[gridIndex + 1] - relief[gridIndex - 1])
-                    / (2 * texelSpacing)
+                let eastSlope = (
+                    relief[gridIndex + 1] - relief[gridIndex - 1]
+                ) / (2 * texelSpacing) * normalReliefScale
                 let northSlope = (
                     relief[gridIndex - gridWidth] - relief[gridIndex + gridWidth]
-                ) / (2 * texelSpacing)
+                ) / (2 * texelSpacing) * normalReliefScale
 
                 // Mesh tangent basis for this grid: T is east (RealityKit -Z),
                 // B is south (-X), N is up. Project the world normal
