@@ -10,6 +10,11 @@ import SwiftUI
 @MainActor
 @Observable
 final class LunarExplorerSession {
+    enum CapturePresentation: String {
+        case globe
+        case site
+    }
+
     enum NavigationMode: String, CaseIterable, Identifiable {
         case orbit
         case pan
@@ -139,6 +144,16 @@ final class LunarExplorerSession {
     static let globeSurfaceDepthMeters: Float = 2.17
     static let globeHandoffRampStartMetersAcross = 330_000.0
     static let globeHandoffOverscan = 1.4
+    /// Matched 210 km layer-isolation captures measured the globe at 0.02361
+    /// and the site at 0.13449 mean linear luminance. Raise only the
+    /// cartographic globe presentation before the crossfade; site materials
+    /// remain the calibrated production terrain.
+    static let globeSiteLinearRadianceMultiplier = 5.70
+    /// RealityKit composites subtree opacity through its transparent path,
+    /// which measured 4.9% low in linear luminance at the 210 km overlap even
+    /// after the two opaque endpoints matched. This bounded sinusoid is zero
+    /// at both endpoints and compensates only that mid-dissolve loss.
+    static let globeCrossfadeCompositingCompensation = 0.10
     static let siteCoverageOverscanEndMetersAcross = Preset.regional.metersAcross
     static let lunarGlobeRadiusMeters = 1_737_400.0
     /// The 262.144 km regional source cannot cover a wider view at matching
@@ -195,6 +210,9 @@ final class LunarExplorerSession {
     var presentationGrade: LMTerrainPresentationGrade = .calibrated
     var diagnosticsVisible = true
     var diagnostics = Diagnostics()
+    /// Capture-only layer isolation for measuring the globe/site handoff at
+    /// identical camera scale. Normal launches always leave this nil.
+    private(set) var capturePresentation: CapturePresentation?
 
     var logarithmicAltitude: Double {
         get { log10(altitudeMeters) }
@@ -230,14 +248,31 @@ final class LunarExplorerSession {
     /// visible. Both representations then retain identical screen scale while
     /// the finite regional patch covers the complete immersive view.
     var globeHandoffScaleMultiplier: Double {
+        1 + (Self.globeHandoffOverscan - 1) * globeHandoffRampProgress
+    }
+
+    /// Smoothly match the globe's baked WAC radiance to the live site before
+    /// both layers become visible. Keeping the actual crossfade endpoints at
+    /// equal mean radiance prevents opacity itself from producing a flash.
+    var globeHandoffLinearRadianceMultiplier: Double {
+        let matched = 1 + (Self.globeSiteLinearRadianceMultiplier - 1)
+            * globeHandoffRampProgress
+        guard capturePresentation == nil else { return matched }
+        let siteOpacity = automaticGlobeSiteBlend.siteOpacity
+        let compositingCompensation = 1
+            + Self.globeCrossfadeCompositingCompensation
+                * sin(.pi * siteOpacity)
+        return matched * compositingCompensation
+    }
+
+    private var globeHandoffRampProgress: Double {
         let span = Self.globeHandoffRampStartMetersAcross
             - Self.globeSiteBlendStartMetersAcross
         let linear = min(max(
             (Self.globeHandoffRampStartMetersAcross - metersAcross) / span,
             0
         ), 1)
-        let smooth = linear * linear * (3 - 2 * linear)
-        return 1 + (Self.globeHandoffOverscan - 1) * smooth
+        return linear * linear * (3 - 2 * linear)
     }
 
     /// Keep the finite regional mesh outside the camera frustum at Orbit,
@@ -265,6 +300,28 @@ final class LunarExplorerSession {
     /// camera/presentation concern and never changes the production terrain
     /// LOD selected by virtual altitude.
     var globeSiteBlend: GlobeSiteBlend {
+        let automatic = automaticGlobeSiteBlend
+        return switch capturePresentation {
+        case .globe:
+            GlobeSiteBlend(
+                progress: automatic.progress,
+                morphProgress: automatic.morphProgress,
+                globeOpacity: 1,
+                siteOpacity: 0
+            )
+        case .site:
+            GlobeSiteBlend(
+                progress: automatic.progress,
+                morphProgress: automatic.morphProgress,
+                globeOpacity: 0,
+                siteOpacity: 1
+            )
+        case nil:
+            automatic
+        }
+    }
+
+    private var automaticGlobeSiteBlend: GlobeSiteBlend {
         let span = Self.globeSiteBlendStartMetersAcross
             - Self.globeSiteBlendEndMetersAcross
         let linear = min(max(
@@ -278,12 +335,17 @@ final class LunarExplorerSession {
         // through one another as the patch grows to inspection scale.
         let fadeLinear = min(smooth * 2, 1)
         let siteOpacity = fadeLinear * fadeLinear * (3 - 2 * fadeLinear)
+        // Opacity components composite source-over; complementary alpha on
+        // two layers therefore reveals black behind them at mid-fade. Keep
+        // the globe opaque as the backplate while the registered site fades
+        // over it, then remove it only after the site is fully opaque.
+        let globeOpacity = siteOpacity >= 0.999 ? 0.0 : 1.0
         let morphLinear = min(max((smooth - 0.5) * 2, 0), 1)
         let morph = morphLinear * morphLinear * (3 - 2 * morphLinear)
         return GlobeSiteBlend(
             progress: smooth,
             morphProgress: morph,
-            globeOpacity: 1 - siteOpacity,
+            globeOpacity: globeOpacity,
             siteOpacity: siteOpacity
         )
     }
@@ -320,6 +382,7 @@ final class LunarExplorerSession {
     /// and visual regression checks. Interactive navigation remains available
     /// after launch, but every named preset starts from the same terrain state.
     func configure(arguments: [String]) {
+        let isCapture = arguments.contains("--lunar-explorer-capture")
         var altitudeOverride: Double?
         var metersAcrossOverride: Double?
         var headingOverride: Double?
@@ -348,6 +411,11 @@ final class LunarExplorerSession {
                 in: argument
             ), let grade = LMTerrainPresentationGrade(rawValue: value) {
                 presentationGrade = grade
+            } else if let value = value(
+                after: "--lunar-explorer-capture-presentation=",
+                in: argument
+            ), isCapture, let presentation = CapturePresentation(rawValue: value) {
+                capturePresentation = presentation
             } else if let value = value(
                 after: "--lunar-explorer-sun-offset-hours=",
                 in: argument

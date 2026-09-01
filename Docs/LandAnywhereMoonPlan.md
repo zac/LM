@@ -35,7 +35,7 @@ obeys. The three genuinely hard parts are §5 (mushy band), §4 stage 2
 | Elevation-tracking sun exposure | **Done** | `LMTerrainWorld.missionSunIlluminance(elevationDegrees:grade:)`; mission render pixel-identical. |
 | Photographic tone grade + earthshine | **Done** | Opt-in; calibrated grade pixel-identical. |
 | Global mosaic fetch/parse proven | **Done** | Source-validating 16 ppd generator, pinned PNG + provenance sidecar, and manifest schema v4 landed. |
-| Stage 1 globe | **In progress** | Complete offline 16/64 ppd WAC globe, ME orientation, Explorer `globe` preset, ephemeris terminator, pinned LOLA-derived ME normal field, durable scientific-resource cache, and a measured globe-to-site handoff landed. Globe-scale acceptance is green; near-surface radiance-conserving LOD and physical Vision Pro comfort remain. |
+| Stage 1 globe | **In progress** | Complete offline 16/64 ppd WAC globe, ME orientation, Explorer `globe` preset, ephemeris terminator, pinned LOLA-derived ME normal field, and a radiance-matched globe-to-site handoff landed. Globe/site and near-surface radiance acceptance are green; the final zoom ladder and physical Vision Pro comfort remain. |
 | Stage 2 re-anchorable terrain | Not started | §4. The land-anywhere milestone. |
 | Stage 3 mushy-band quality | Not started | §5. |
 | Stage 4 site packs | Not started | §4. |
@@ -226,6 +226,28 @@ double-render artifact. The exact coordinate-authority center ray remains
 below `1e-6` normalized residual. Continuous hand-gesture comfort still needs
 physical Vision Pro validation.
 
+The initial overlap still contained a tonal defect. Capture-only layer
+isolation at identical 210 km framing measured central mean linear luminance
+of 0.02361 for the baked WAC globe and 0.13449 for the live site: the globe
+was 82.44% darker, requiring a 5.70x linear-radiance match. An
+extended-linear unlit tint now ramps from 1x to 5.70x over the existing
+330–240 km pre-handoff, before the site is visible. The corrected isolated
+globe measured 0.13455, +0.043% from the site.
+
+RealityKit's subtree-opacity path exposed a separate compositing loss:
+complementary globe/site opacity produced a 22% mid-fade dip in linear
+luminance. The site now dissolves over an opaque globe backplate; the globe
+is removed only after the site is fully opaque. A bounded 10% sinusoidal
+globe compensation, zero at both endpoints, cancels the remaining transparent
+path loss. The final automatic 210 km overlap measures 0.13441, just -0.059%
+from the site endpoint. Site materials, terrain lighting, contact, and both
+presentation grades remain unchanged. Measurement captures:
+
+- `/private/tmp/LandAnywhere-handoff-210km-globe-only.png` — unmatched globe;
+- `/private/tmp/LandAnywhere-handoff-210km-site-only.png` — matched-scale site;
+- `/private/tmp/LandAnywhere-handoff-210km-globe-matched.png` — corrected globe;
+- `/private/tmp/LandAnywhere-handoff-210km-radiance-final.png` — final automatic overlap.
+
 The same pass fixed a distinct near-surface ownership defect. Progressive
 children used to remove parent triangles while still transparent or before
 their asynchronous bake completed, revealing the black immersive background.
@@ -240,16 +262,15 @@ working set rather than 78 MiB. Captures
 `/private/tmp/LandAnywhere-probe-39m-atomic-settled.png` confirm the black
 holes are gone at both fine-detail opacity gates.
 
-Those near-surface frames still expose a narrower, measured blocker: generated
-tiles have a different grazing-incidence radiance distribution from their
-measured parent, so their rectangular footprints remain perceptible after the
-geometry is correct. That is the outstanding radiance-conserving LOD work in
-`Docs/TerrainRealismPlan.md` Workstream B1. Stage 1 is therefore not marked
-complete and the automated ladder in
-`Tools/CaptureLunarExplorerZoomLadder.sh` is not an acceptance artifact yet.
-This slice deliberately leaves site materials, calibrated grade, contact, and
-existing capture baselines unchanged until B1 can be measured and fixed as a
-material handoff rather than hidden with geometry overlap.
+The apparent near-surface radiance blocker was also remeasured after the
+hierarchy and ownership corrections. The earlier 5–6% figure compared broad,
+geologically different footprints. Adjacent 8–30 px bands at the actual
+terminal/landing edge measure -0.155% calibrated, -0.120% photographic, and
++0.794% with constant reflectance and normal maps disabled. Full-resolution
+touchdown normal distributions independently predict a 0.03% response change.
+Applying the proposed material gain would therefore manufacture a seam; no
+site material or cache key changed. The repeatable protocol and captures are
+recorded in `Docs/TerrainRealismPlan.md` Workstream B1.
 
 A textured sphere with LOD texture swap — deliberately not a chunked
 quad-sphere; at globe scale a sphere mesh + good textures is enough, and

@@ -165,6 +165,37 @@ struct LunarExplorerTests {
         ]))
     }
 
+    @Test func captureCanIsolateGlobeAndSiteAtIdenticalFraming() {
+        let globe = LunarExplorerSession()
+        globe.configure(arguments: [
+            "LM",
+            "--lunar-explorer-capture",
+            "--lunar-explorer-meters-across=210000",
+            "--lunar-explorer-capture-presentation=globe",
+        ])
+        #expect(globe.capturePresentation == .globe)
+        #expect(globe.globeSiteBlend.globeOpacity == 1)
+        #expect(globe.globeSiteBlend.siteOpacity == 0)
+
+        let site = LunarExplorerSession()
+        site.configure(arguments: [
+            "LM",
+            "--lunar-explorer-capture",
+            "--lunar-explorer-meters-across=210000",
+            "--lunar-explorer-capture-presentation=site",
+        ])
+        #expect(site.capturePresentation == .site)
+        #expect(site.globeSiteBlend.globeOpacity == 0)
+        #expect(site.globeSiteBlend.siteOpacity == 1)
+
+        let interactive = LunarExplorerSession()
+        interactive.configure(arguments: [
+            "LM",
+            "--lunar-explorer-capture-presentation=site",
+        ])
+        #expect(interactive.capturePresentation == nil)
+    }
+
     @Test func launchArgumentsPinExactLODGateAltitudeAndFraming() {
         let session = LunarExplorerSession()
 
@@ -211,12 +242,17 @@ struct LunarExplorerTests {
         let session = LunarExplorerSession()
         session.metersAcross = 330_000
         #expect(session.globeHandoffScaleMultiplier == 1)
+        #expect(session.globeHandoffLinearRadianceMultiplier == 1)
         #expect(!session.presentsSite)
 
         session.metersAcross = 240_000
         #expect(
             session.globeHandoffScaleMultiplier
                 == LunarExplorerSession.globeHandoffOverscan
+        )
+        #expect(
+            session.globeHandoffLinearRadianceMultiplier
+                == LunarExplorerSession.globeSiteLinearRadianceMultiplier
         )
         #expect(!session.presentsSite)
 
@@ -227,6 +263,11 @@ struct LunarExplorerTests {
         )
         #expect(session.presentsSite)
         #expect(session.presentsGlobe)
+        #expect(session.globeSiteBlend.globeOpacity == 1)
+        #expect(
+            session.globeHandoffLinearRadianceMultiplier
+                > LunarExplorerSession.globeSiteLinearRadianceMultiplier
+        )
 
         session.metersAcross = LunarExplorerSession.Preset.orbit.metersAcross
         #expect(

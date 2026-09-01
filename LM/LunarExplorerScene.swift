@@ -22,6 +22,7 @@ final class LunarExplorerScene {
     private var measuredNearFieldGrid: LMTerrainMeshBuilder.VertexData?
     private var measuredNearFieldMask = Set<LMTerrainTileID>()
     private var globeEntity: ModelEntity?
+    private var appliedGlobeLinearRadianceMultiplier: Double?
     private var globeTerminator: LMLunarGlobeResource.TerminatorResource?
     private var globeTerminatorDate: Date?
     private var terrainSun: DirectionalLight?
@@ -211,6 +212,7 @@ final class LunarExplorerScene {
     }
 
     private func updatePresentationTransform(_ session: LunarExplorerSession) {
+        updateGlobeRadiance(session)
         let siteScale = session.presentationScale
         let blend = session.globeSiteBlend
         globePresentationRoot.scale = SIMD3(
@@ -314,6 +316,29 @@ final class LunarExplorerScene {
             Float(-terrainDatumElevationMeters),
             Float(focus.y)
         )
+    }
+
+    /// RealityKit's unlit base-color tint is evaluated in linear space. An
+    /// extended-linear color preserves a multiplier above one without
+    /// changing the texture, its transfer function, or the terminator shell.
+    private func updateGlobeRadiance(_ session: LunarExplorerSession) {
+        let multiplier = session.globeHandoffLinearRadianceMultiplier
+        guard appliedGlobeLinearRadianceMultiplier != multiplier,
+              let globeEntity,
+              var model = globeEntity.components[ModelComponent.self],
+              var material = model.materials.first as? UnlitMaterial,
+              let colorSpace = CGColorSpace(
+                  name: CGColorSpace.extendedLinearSRGB
+              ),
+              let tint = CGColor(
+                  colorSpace: colorSpace,
+                  components: [multiplier, multiplier, multiplier, 1]
+              )
+        else { return }
+        material.color.tint = UIColor(cgColor: tint)
+        model.materials[0] = material
+        globeEntity.components.set(model)
+        appliedGlobeLinearRadianceMultiplier = multiplier
     }
 
     /// Projects the Apollo surface point onto a nearer plane without changing
