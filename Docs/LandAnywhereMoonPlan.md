@@ -35,7 +35,7 @@ obeys. The three genuinely hard parts are §5 (mushy band), §4 stage 2
 | Elevation-tracking sun exposure | **Done** | `LMTerrainWorld.missionSunIlluminance(elevationDegrees:grade:)`; mission render pixel-identical. |
 | Photographic tone grade + earthshine | **Done** | Opt-in; calibrated grade pixel-identical. |
 | Global mosaic fetch/parse proven | **Done** | Source-validating 16 ppd generator, pinned PNG + provenance sidecar, and manifest schema v4 landed. |
-| Stage 1 globe | **In progress** | 16 ppd unlit WAC sphere, ME orientation, Explorer `globe` preset, and ephemeris terminator multiplier landed. 64 ppd, elevation normal, lat/lon navigation, and globe-to-site crossfade remain. |
+| Stage 1 globe | **In progress** | 16 ppd unlit WAC sphere, ME orientation, Explorer `globe` preset, ephemeris terminator, and pinned LOLA-derived ME normal field landed. 64 ppd, lat/lon navigation, and globe-to-site crossfade remain. |
 | Stage 2 re-anchorable terrain | Not started | §4. The land-anywhere milestone. |
 | Stage 3 mushy-band quality | Not started | §5. |
 | Stage 4 site packs | Not started | §4. |
@@ -123,7 +123,7 @@ Verified this session (2026-08-31):
 Progress landed 2026-08-31: `GlobalLunarMosaicGenerator` validates the exact
 source byte count, SHA-256, attached PDS label, projection, dimensions, sample
 type, and longitude convention before producing the committed 5,760×2,880
-sRGB texture and provenance JSON. Manifest schema 4 pins that output and its
+sRGB texture and provenance JSON. Manifest schema 5 pins that output and its
 source. `LMLunarGlobeResource` builds a tessellated sphere through the shared
 ME coordinate authority, centers Apollo 11 without a guessed rotation, and
 uses the baked-shading mosaic as unlit map color. The Explorer now has a
@@ -146,6 +146,24 @@ darkening among changed pixels); seven days later the ephemeris moved that
 terminator off the same visible half and the capture there was pixel-identical
 to the pre-terminator globe. This preserves the WAC product's baked relief
 while making the session date legible at map scale.
+
+The generator now also pins the 33,177,600-byte LOLA `LDEM_16` V3.1 image and
+5,121-byte label, rotates its 0...360° east cylindrical grid into the shared
+-180...+180° ME convention, differentiates only height above the 1,737,400 m
+reference sphere, and emits a 5,760×2,880 signed ME-vector normal PNG. A
+five-degree polar reliability taper removes the cylindrical coordinate
+singularity without altering any measured site geometry. At 1/16-resolution
+measurement, radial-normal dot product was 0.9980 median (0.9262 p01); the
+first/last longitude columns averaged 0.9830 dot, within ordinary adjacent
+terrain variation, and both sampled cap rows stayed within 0.001 of their
+expected polar z direction. Runtime downsamples that field once and uses it
+only inside the existing unlit terminator multiplier. The final settled
+Simulator frame is
+`/tmp/LandAnywhere-Stage1-lola-normal-terminator-final.png`. Against the
+analytic-normal touchdown capture, LOLA relief changed 82,470 of 8,294,400
+pixels (0.994285%); changed channels moved 3.8816/255 on average with a
+22/255 maximum. The rendered near-side geography remains registered and no
+normal-induced wrap or polar band is visible.
 
 A textured sphere with LOD texture swap — deliberately not a chunked
 quad-sphere; at globe scale a sphere mesh + good textures is enough, and

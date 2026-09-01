@@ -244,20 +244,30 @@ let wacGlobal16PPDSourceSHA256 =
     "c75a49b48df0d1d8afad8f25e58332599e8383e4967424ffbb0ba38b0808b2b6"
 let wacGlobal16PPDTextureSHA256 =
     "b799eab2d43f7a27799972d4ec4bc25cff06776ba14774e03e322cb7a7ea460e"
+let lolaLDEM16URL =
+    "https://imbrium.mit.edu/DATA/LOLA_GDR/CYLINDRICAL/IMG/LDEM_16.IMG"
+let lolaLDEM16LabelURL =
+    "https://imbrium.mit.edu/DATA/LOLA_GDR/CYLINDRICAL/IMG/LDEM_16.LBL"
+let lolaLDEM16SourceSHA256 =
+    "a511e40d7a3ea3275945b4da2a1df377133264fab0be94b7434b1cf8907254cb"
+let lolaLDEM16LabelSHA256 =
+    "9aef29463ccc6ed3a3fbe0df3ecd830a99c69e16b564f455507dee2697096579"
+let lolaLDEM16NormalSHA256 =
+    "bd70494eb4194aca023e4f4f724cc7a6d11a4b23148f4519192715694dd34696"
 let globalLunarMosaicGeneratorSHA256 =
-    "6289e0ef7e02730b2ec424b2000ac6e9619967c6f16b212eb37c498183baaf32"
+    "b0031f4f61bd62e71e8541f86476ebd51566be82cacde6517bfdd39096f273bf"
 
 // MARK: - Manifest model (mirrored by LM/LM/LMTerrainManifest.swift)
 
 func manifestJSON() -> [String: Any] {
     [
-        "schemaVersion": 4,
+        "schemaVersion": 5,
         "scenarioID": "apollo11-progressive-real-data-terrain",
         "globe": [
             "coordinateSystemName": "IAU_ME",
             "radiusMeters": lunarRadiusMeters,
             "materialMode": "unlit-morphologic-map",
-            "generatorVersion": "wac-global-morphologic-v1",
+            "generatorVersion": "wac-global-morphologic-lola-normal-v2",
             "generatorSHA256": globalLunarMosaicGeneratorSHA256,
             "textureTiers": [
                 [
@@ -272,7 +282,20 @@ func manifestJSON() -> [String: Any] {
                     "detail": "Pinned global WAC morphologic base. Illumination is baked into this map, so it is rendered unlit rather than double-shaded by the movable mission sun."
                 ]
             ],
-            "detail": "Whole-Moon map-scale presentation in the Mean Earth/Polar-axis frame. Texture tiers are replaceable without changing the coordinate authority or site terrain."
+            "normalMap": [
+                "id": "lola-ldem-16ppd-me-normal",
+                "file": "LOLALDEM16MENormal.png",
+                "width": 5_760,
+                "height": 2_880,
+                "mapResolutionPixelsPerDegree": 16.0,
+                "metersPerPixel": 1_895.209_401_509_3,
+                "sha256": lolaLDEM16NormalSHA256,
+                "sourceID": "lola-ldem-16ppd-global",
+                "coordinateFrame": "IAU_ME",
+                "encoding": "linear RGB maps normalized ME x/y/z from [-1,1] to [0,1]",
+                "detail": "Detrended radial normal plus central-difference LDEM_16 relief. Used only to perturb the ephemeris terminator multiplier; never as a second PBR lighting pass."
+            ],
+            "detail": "Whole-Moon map-scale presentation in the Mean Earth/Polar-axis frame. The WAC base remains unlit; a detrended LOLA normal field perturbs only the ephemeris terminator multiplier."
         ],
         "craterCatalog": [
             "file": craterCatalogFileName,
@@ -436,6 +459,20 @@ func manifestJSON() -> [String: Any] {
                 "productVersion": "v1.3",
                 "labelURL": wacGlobal16PPDURL,
                 "detail": "Global 53-70 degree-incidence WAC morphologic mosaic with an attached PDS3 label. It is the pinned source for the unlit globe base and is not photometrically normalized surface albedo."
+            ],
+            [
+                "id": "lola-ldem-16ppd-global",
+                "role": "global-elevation-normal-source",
+                "url": lolaLDEM16URL,
+                "sha256": lolaLDEM16SourceSHA256,
+                "bytes": 33_177_600,
+                "mapResolutionPixelsPerDegree": 16.0,
+                "productId": "LDEM_16",
+                "productVersion": "V3.1",
+                "labelURL": lolaLDEM16LabelURL,
+                "labelSHA256": lolaLDEM16LabelSHA256,
+                "labelBytes": 5_121,
+                "detail": "Global 16 ppd LOLA height above the 1,737,400 m reference sphere in the Mean Earth/Polar-axis frame. The pinned image is used only to derive the globe normal field; it does not replace measured site geometry, contact, or landing physics."
             ]
         ],
         "tiles": [

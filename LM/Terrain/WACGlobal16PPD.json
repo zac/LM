@@ -1,6 +1,26 @@
 {
-  "generatorSHA256" : "6289e0ef7e02730b2ec424b2000ac6e9619967c6f16b212eb37c498183baaf32",
-  "generatorVersion" : "wac-global-morphologic-v1",
+  "elevationSource" : {
+    "byteCount" : 33177600,
+    "productID" : "LDEM_16",
+    "productVersion" : "V3.1",
+    "sampleBits" : 16,
+    "sampleType" : "LSB_INTEGER meters above the 1,737,400 m reference sphere",
+    "sha256" : "a511e40d7a3ea3275945b4da2a1df377133264fab0be94b7434b1cf8907254cb",
+    "url" : "https://imbrium.mit.edu/DATA/LOLA_GDR/CYLINDRICAL/IMG/LDEM_16.IMG"
+  },
+  "generatorSHA256" : "b0031f4f61bd62e71e8541f86476ebd51566be82cacde6517bfdd39096f273bf",
+  "generatorVersion" : "wac-global-morphologic-lola-normal-v2",
+  "normalMap" : {
+    "coordinateFrame" : "IAU_ME",
+    "detail" : "Detrended radial normal plus central-difference LDEM relief. Used only to perturb the ephemeris terminator multiplier; never as a second PBR lighting pass.",
+    "encoding" : "linear RGB maps normalized ME x/y/z from [-1,1] to [0,1]",
+    "file" : "LOLALDEM16MENormal.png",
+    "format" : "RGBA8 PNG",
+    "height" : 2880,
+    "sha256" : "bd70494eb4194aca023e4f4f724cc7a6d11a4b23148f4519192715694dd34696",
+    "sourceID" : "lola-ldem-16ppd-global",
+    "width" : 5760
+  },
   "projection" : {
     "easternmostLongitudeDegrees" : 180,
     "latitudeType" : "PLANETOCENTRIC",
@@ -13,7 +33,7 @@
     "positiveLongitudeDirection" : "EAST",
     "westernmostLongitudeDegrees" : -180
   },
-  "schemaVersion" : 1,
+  "schemaVersion" : 2,
   "source" : {
     "byteCount" : 66378240,
     "productID" : "WAC_GLOBAL_E000N0000_016P",

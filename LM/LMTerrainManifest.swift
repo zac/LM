@@ -75,12 +75,27 @@ struct LMTerrainManifest: Equatable, Decodable {
             let detail: String
         }
 
+        struct NormalMap: Equatable, Decodable {
+            let id: String
+            let file: String
+            let width: Int
+            let height: Int
+            let mapResolutionPixelsPerDegree: Double
+            let metersPerPixel: Double
+            let sha256: String
+            let sourceID: String
+            let coordinateFrame: String
+            let encoding: String
+            let detail: String
+        }
+
         let coordinateSystemName: String
         let radiusMeters: Double
         let materialMode: String
         let generatorVersion: String
         let generatorSHA256: String
         let textureTiers: [TextureTier]
+        let normalMap: NormalMap
         let detail: String
     }
 
@@ -101,6 +116,8 @@ struct LMTerrainManifest: Equatable, Decodable {
         let productId: String
         let productVersion: String
         let labelURL: String
+        let labelSHA256: String?
+        let labelBytes: Int?
         let detail: String
     }
 
@@ -177,7 +194,7 @@ struct LMTerrainManifest: Equatable, Decodable {
     let tiles: [Tile]
     let toolSHA256: String
 
-    static let schemaVersion = 4
+    static let schemaVersion = 5
 
     static let eagleLandmarkID = "apollo11-lm-eagle"
 

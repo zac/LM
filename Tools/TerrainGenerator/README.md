@@ -105,6 +105,14 @@ product into the ignored cache:
 curl -L --fail \
   --output Tools/TerrainGenerator/cache/WAC_GLOBAL_E000N0000_016P.IMG \
   https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/WAC_GLOBAL_E000N0000_016P.IMG
+
+curl -L --fail \
+  --output Tools/TerrainGenerator/cache/LDEM_16.IMG \
+  https://imbrium.mit.edu/DATA/LOLA_GDR/CYLINDRICAL/IMG/LDEM_16.IMG
+
+curl -L --fail \
+  --output Tools/TerrainGenerator/cache/LDEM_16.LBL \
+  https://imbrium.mit.edu/DATA/LOLA_GDR/CYLINDRICAL/IMG/LDEM_16.LBL
 ```
 
 Then regenerate the bundled map and provenance sidecar:
@@ -113,7 +121,10 @@ Then regenerate the bundled map and provenance sidecar:
 swift run --package-path Tools/TerrainGenerator GlobalLunarMosaicGenerator \
   Tools/TerrainGenerator/cache/WAC_GLOBAL_E000N0000_016P.IMG \
   LM/Terrain/WACGlobal16PPD.png \
-  LM/Terrain/WACGlobal16PPD.json
+  LM/Terrain/WACGlobal16PPD.json \
+  --elevation Tools/TerrainGenerator/cache/LDEM_16.IMG \
+  --elevation-label Tools/TerrainGenerator/cache/LDEM_16.LBL \
+  --normal-output LM/Terrain/LOLALDEM16MENormal.png
 ```
 
 The executable rejects the input unless its byte count, SHA-256, attached PDS
@@ -123,6 +134,16 @@ depend on the source image's observed extrema. Xcode may losslessly rewrite
 PNG container metadata while copying resources; the manifest hash therefore
 pins the generated repository artifact, while runtime tests separately verify
 the bundled texture dimensions and manifest relationship.
+
+The optional elevation arguments are all-or-nothing and independently verify
+the exact LDEM image and label. LDEM longitude is rotated from 0...360 east to
+the runtime's -180...+180 east convention. The generator differentiates only
+height above the 1,737,400 m reference sphere, reconstructs each radial normal
+in the Mean Earth/Polar-axis frame, and applies a five-degree polar reliability
+taper where a cylindrical map's separately quantized longitude samples
+converge. Runtime decodes this normal field only at the terminator mask's
+512×256 working resolution. It perturbs the day/night multiplier; it is not a
+PBR normal map and never shades the already illuminated WAC base a second time.
 
 ## Photo-derived crater candidate catalog
 

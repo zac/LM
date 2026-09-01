@@ -16,6 +16,7 @@ enum LMLunarGlobeResource {
     struct TerminatorResource {
         let entity: ModelEntity
         let opacityTexture: TextureResource
+        let surfaceNormals: [SIMD3<Double>]
     }
 
     enum ResourceError: LocalizedError {
@@ -84,9 +85,23 @@ enum LMLunarGlobeResource {
     @MainActor
     static func makeTerminator(
         manifest: LMTerrainManifest,
-        date: Date
+        date: Date,
+        bundle: Bundle = .main
     ) throws -> TerminatorResource {
-        let image = try terminatorOpacityImage(date: date)
+        let normalMap = manifest.globe.normalMap
+        guard manifest.sources.contains(where: { $0.id == normalMap.sourceID }) else {
+            throw ResourceError.missingSource(normalMap.sourceID)
+        }
+        let surfaceNormals = try globeNormalSamples(
+            manifest: manifest,
+            bundle: bundle,
+            width: 512,
+            height: 256
+        )
+        let image = try terminatorOpacityImage(
+            date: date,
+            surfaceNormals: surfaceNormals
+        )
         let options = TextureResource.CreateOptions(
             semantic: .scalar,
             mipmapsMode: .allocateAndGenerateAll
@@ -113,7 +128,11 @@ enum LMLunarGlobeResource {
 
         let entity = ModelEntity(mesh: mesh, materials: [material])
         entity.name = "Ephemeris terminator multiplier"
-        return TerminatorResource(entity: entity, opacityTexture: texture)
+        return TerminatorResource(
+            entity: entity,
+            opacityTexture: texture,
+            surfaceNormals: surfaceNormals
+        )
     }
 
     @MainActor
@@ -122,7 +141,10 @@ enum LMLunarGlobeResource {
         date: Date
     ) throws {
         try resource.opacityTexture.replace(
-            withImage: terminatorOpacityImage(date: date),
+            withImage: terminatorOpacityImage(
+                date: date,
+                surfaceNormals: resource.surfaceNormals
+            ),
             options: TextureResource.CreateOptions(
                 semantic: .scalar,
                 mipmapsMode: .allocateAndGenerateAll
@@ -160,9 +182,11 @@ enum LMLunarGlobeResource {
     nonisolated static func terminatorOpacitySamples(
         date: Date,
         width: Int = 512,
-        height: Int = 256
+        height: Int = 256,
+        surfaceNormals: [SIMD3<Double>]? = nil
     ) -> [UInt8] {
         precondition(width > 0 && height > 0)
+        precondition(surfaceNormals == nil || surfaceNormals?.count == width * height)
         // Use the plan's explicit ephemeris authority, then convert through
         // the same ME coordinate system as the globe and landing sites.
         let subsolarPoint = LMLunarEphemeris.subsolarPoint(at: date)
@@ -184,7 +208,7 @@ enum LMLunarGlobeResource {
             let sinLatitude = sin(latitude)
             for column in 0..<width {
                 let longitude = longitudes[column]
-                let normal = SIMD3(
+                let normal = surfaceNormals?[row * width + column] ?? SIMD3(
                     cosLatitude * longitude.0,
                     cosLatitude * longitude.1,
                     sinLatitude
@@ -204,12 +228,14 @@ enum LMLunarGlobeResource {
     private nonisolated static func terminatorOpacityImage(
         date: Date,
         width: Int = 512,
-        height: Int = 256
+        height: Int = 256,
+        surfaceNormals: [SIMD3<Double>]? = nil
     ) throws -> CGImage {
         let samples = terminatorOpacitySamples(
             date: date,
             width: width,
-            height: height
+            height: height,
+            surfaceNormals: surfaceNormals
         )
         guard let provider = CGDataProvider(data: Data(samples) as CFData),
               let image = CGImage(
@@ -228,6 +254,61 @@ enum LMLunarGlobeResource {
             throw CocoaError(.fileReadCorruptFile)
         }
         return image
+    }
+
+    /// Decodes the offline-generated ME normal field at the dynamic
+    /// terminator mask's working resolution. The vectors are normalized after
+    /// interpolation because RGB stores signed vector components, not color.
+    nonisolated static func globeNormalSamples(
+        manifest: LMTerrainManifest,
+        bundle: Bundle,
+        width: Int,
+        height: Int
+    ) throws -> [SIMD3<Double>] {
+        precondition(width > 0 && height > 0)
+        let map = manifest.globe.normalMap
+        guard map.coordinateFrame == manifest.globe.coordinateSystemName,
+              map.encoding == "linear RGB maps normalized ME x/y/z from [-1,1] to [0,1]"
+        else {
+            throw CocoaError(.fileReadCorruptFile)
+        }
+        let url = try resourceURL(bundle: bundle, file: map.file)
+        guard let source = CGImageSourceCreateWithURL(url as CFURL, nil),
+              let image = CGImageSourceCreateImageAtIndex(source, 0, nil),
+              image.width == map.width,
+              image.height == map.height
+        else {
+            throw CocoaError(.fileReadCorruptFile)
+        }
+
+        var pixels = [UInt8](repeating: 0, count: width * height * 4)
+        let colorSpace = CGColorSpace(name: CGColorSpace.linearSRGB)
+            ?? CGColorSpaceCreateDeviceRGB()
+        guard let context = CGContext(
+            data: &pixels,
+            width: width,
+            height: height,
+            bitsPerComponent: 8,
+            bytesPerRow: width * 4,
+            space: colorSpace,
+            bitmapInfo: CGBitmapInfo.byteOrder32Big.rawValue
+                | CGImageAlphaInfo.premultipliedLast.rawValue
+        ) else {
+            throw CocoaError(.fileReadCorruptFile)
+        }
+        context.interpolationQuality = .high
+        context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+
+        return stride(from: 0, to: pixels.count, by: 4).map { offset in
+            let vector = SIMD3<Double>(
+                Double(pixels[offset]) / 127.5 - 1,
+                Double(pixels[offset + 1]) / 127.5 - 1,
+                Double(pixels[offset + 2]) / 127.5 - 1
+            )
+            return simd_length_squared(vector) > 0.01
+                ? simd_normalize(vector)
+                : SIMD3(0, 0, 1)
+        }
     }
 
     /// Converts a Moon-fixed coordinate into a globe-display basis centered on

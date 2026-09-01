@@ -1,5 +1,6 @@
 import Foundation
 import ImageIO
+import simd
 import Testing
 @testable import LM
 
@@ -8,6 +9,7 @@ struct LMLunarGlobeTests {
     @Test func manifestPinsTheGlobalMorphologicBase() throws {
         let manifest = try LMTerrainManifest.load()
         let tier = try #require(manifest.globe.textureTiers.first)
+        let normalMap = manifest.globe.normalMap
         let source = try #require(
             manifest.sources.first { $0.id == tier.sourceID }
         )
@@ -29,6 +31,56 @@ struct LMLunarGlobeTests {
                 == "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/WAC_GLOBAL_E000N0000_016P.IMG"
         )
         #expect(source.labelURL == source.url)
+        let elevationSource = try #require(
+            manifest.sources.first { $0.id == normalMap.sourceID }
+        )
+        #expect(normalMap.width == 5_760)
+        #expect(normalMap.height == 2_880)
+        #expect(normalMap.coordinateFrame == "IAU_ME")
+        #expect(normalMap.sha256 == "bd70494eb4194aca023e4f4f724cc7a6d11a4b23148f4519192715694dd34696")
+        #expect(elevationSource.bytes == 33_177_600)
+        #expect(elevationSource.sha256 == "a511e40d7a3ea3275945b4da2a1df377133264fab0be94b7434b1cf8907254cb")
+        #expect(elevationSource.labelBytes == 5_121)
+        #expect(elevationSource.labelSHA256 == "9aef29463ccc6ed3a3fbe0df3ecd830a99c69e16b564f455507dee2697096579")
+        #expect(elevationSource.productId == "LDEM_16")
+        #expect(elevationSource.productVersion == "V3.1")
+        #expect(elevationSource.url == "https://imbrium.mit.edu/DATA/LOLA_GDR/CYLINDRICAL/IMG/LDEM_16.IMG")
+    }
+
+    @Test func bundledNormalMapMatchesManifestAndMEOrientation() throws {
+        let manifest = try LMTerrainManifest.load()
+        let map = manifest.globe.normalMap
+        let name = (map.file as NSString).deletingPathExtension
+        let ext = (map.file as NSString).pathExtension
+        let url = try #require(
+            Bundle.main.url(
+                forResource: name,
+                withExtension: ext,
+                subdirectory: "Terrain"
+            ) ?? Bundle.main.url(forResource: name, withExtension: ext)
+        )
+        let source = try #require(CGImageSourceCreateWithURL(url as CFURL, nil))
+        let properties = try #require(
+            CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any]
+        )
+        #expect(properties[kCGImagePropertyPixelWidth] as? Int == map.width)
+        #expect(properties[kCGImagePropertyPixelHeight] as? Int == map.height)
+
+        let width = 360
+        let height = 180
+        let normals = try LMLunarGlobeResource.globeNormalSamples(
+            manifest: manifest,
+            bundle: .main,
+            width: width,
+            height: height
+        )
+        let north = normals[0..<width]
+        let south = normals[((height - 1) * width)..<(height * width)]
+        #expect(north.allSatisfy { $0.z > 0.95 })
+        #expect(south.allSatisfy { $0.z < -0.95 })
+        let seamWest = normals[(height / 2) * width]
+        let seamEast = normals[(height / 2) * width + width - 1]
+        #expect(simd_dot(seamWest, seamEast) > 0.98)
     }
 
     @Test func bundledTextureMatchesTheManifestDimensions() throws {

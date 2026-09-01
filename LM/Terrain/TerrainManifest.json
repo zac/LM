@@ -24,10 +24,23 @@
   },
   "globe" : {
     "coordinateSystemName" : "IAU_ME",
-    "detail" : "Whole-Moon map-scale presentation in the Mean Earth/Polar-axis frame. Texture tiers are replaceable without changing the coordinate authority or site terrain.",
-    "generatorSHA256" : "6289e0ef7e02730b2ec424b2000ac6e9619967c6f16b212eb37c498183baaf32",
-    "generatorVersion" : "wac-global-morphologic-v1",
+    "detail" : "Whole-Moon map-scale presentation in the Mean Earth/Polar-axis frame. The WAC base remains unlit; a detrended LOLA normal field perturbs only the ephemeris terminator multiplier.",
+    "generatorSHA256" : "b0031f4f61bd62e71e8541f86476ebd51566be82cacde6517bfdd39096f273bf",
+    "generatorVersion" : "wac-global-morphologic-lola-normal-v2",
     "materialMode" : "unlit-morphologic-map",
+    "normalMap" : {
+      "coordinateFrame" : "IAU_ME",
+      "detail" : "Detrended radial normal plus central-difference LDEM_16 relief. Used only to perturb the ephemeris terminator multiplier; never as a second PBR lighting pass.",
+      "encoding" : "linear RGB maps normalized ME x/y/z from [-1,1] to [0,1]",
+      "file" : "LOLALDEM16MENormal.png",
+      "height" : 2880,
+      "id" : "lola-ldem-16ppd-me-normal",
+      "mapResolutionPixelsPerDegree" : 16,
+      "metersPerPixel" : 1895.2094015093,
+      "sha256" : "bd70494eb4194aca023e4f4f724cc7a6d11a4b23148f4519192715694dd34696",
+      "sourceID" : "lola-ldem-16ppd-global",
+      "width" : 5760
+    },
     "radiusMeters" : 1737400,
     "textureTiers" : [
       {
@@ -72,7 +85,7 @@
     "sphereRadiusMeters" : 1737400
   },
   "scenarioID" : "apollo11-progressive-real-data-terrain",
-  "schemaVersion" : 4,
+  "schemaVersion" : 5,
   "sourceLandingOriginElevationsMeters" : {
     "nac-dtm-apollo11" : -1928.037353515625,
     "sldem2015-128-apollo11-slab" : -1926.1782513219268,
@@ -232,6 +245,20 @@
       "role" : "global-morphologic-map",
       "sha256" : "c75a49b48df0d1d8afad8f25e58332599e8383e4967424ffbb0ba38b0808b2b6",
       "url" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/BDR\/WAC_GLOBAL\/WAC_GLOBAL_E000N0000_016P.IMG"
+    },
+    {
+      "bytes" : 33177600,
+      "detail" : "Global 16 ppd LOLA height above the 1,737,400 m reference sphere in the Mean Earth/Polar-axis frame. The pinned image is used only to derive the globe normal field; it does not replace measured site geometry, contact, or landing physics.",
+      "id" : "lola-ldem-16ppd-global",
+      "labelBytes" : 5121,
+      "labelSHA256" : "9aef29463ccc6ed3a3fbe0df3ecd830a99c69e16b564f455507dee2697096579",
+      "labelURL" : "https:\/\/imbrium.mit.edu\/DATA\/LOLA_GDR\/CYLINDRICAL\/IMG\/LDEM_16.LBL",
+      "mapResolutionPixelsPerDegree" : 16,
+      "productId" : "LDEM_16",
+      "productVersion" : "V3.1",
+      "role" : "global-elevation-normal-source",
+      "sha256" : "a511e40d7a3ea3275945b4da2a1df377133264fab0be94b7434b1cf8907254cb",
+      "url" : "https:\/\/imbrium.mit.edu\/DATA\/LOLA_GDR\/CYLINDRICAL\/IMG\/LDEM_16.IMG"
     }
   ],
   "sun" : {
@@ -379,5 +406,5 @@
       "zeroPointMeters" : -10470.86870527425
     }
   ],
-  "toolSHA256" : "a28aa919fb35c72ab7997f8f97eae1ce709245712c41d270a4510b540415a278"
+  "toolSHA256" : "f7e715e21c2c495ac871a6253924a8cb963534bb899156808eb0f7c68fa8a1f1"
 }

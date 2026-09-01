@@ -81,19 +81,25 @@ vehicle pose at 1:1 scale.
 The first land-anywhere tier is a pinned 16-pixel-per-degree LROC WAC global
 morphologic mosaic. `GlobalLunarMosaicGenerator` validates the complete source
 file and its attached PDS label before converting little-endian PC_REAL
-reflectance to a fixed-transfer sRGB PNG. Manifest schema 4 records the source,
+reflectance to a fixed-transfer sRGB PNG. Manifest schema 5 records the source,
 generator, projection, datum radius, texture dimensions, and generated-file
-hash. The raw PDS product remains in the ignored generator cache; the app
-bundles only the reproducible texture and provenance sidecar.
+hash. The same tool verifies the 16 ppd global LOLA `LDEM_16` image and label,
+then derives a detrended ME-frame normal field from elevation above the pinned
+reference sphere. The raw PDS products remain in the ignored generator cache;
+the app bundles only the reproducible texture, normal field, and provenance
+sidecar.
 
 `LMLunarGlobeResource` creates its sphere in the same Mean Earth/Polar-axis
 coordinate authority used by the landing terrain. The mesh display basis is
 centered on Apollo 11 for the initial Explorer view, with east to the right and
 north up. Because morphologic WAC already contains illumination, the runtime
 uses it as unlit map color rather than applying the movable mission sun a
-second time. The current whole-Moon-to-site gate is deliberately discrete;
-the crossfade, 64-pixel-per-degree tier, elevation-derived normal, and subtle
-ephemeris terminator remain Stage 1 work in `Docs/LandAnywhereMoonPlan.md`.
+second time. A black unlit shell applies the session ephemeris terminator as a
+brightness multiplier. Its 512×256 dynamic mask samples the LOLA-derived
+normal field, so map-scale relief perturbs only the terminator and never
+becomes a second lighting pass. The current whole-Moon-to-site gate is
+deliberately discrete; the crossfade and budget-gated 64-pixel-per-degree tier
+remain Stage 1 work in `Docs/LandAnywhereMoonPlan.md`.
 
 ## Coordinate-frame alignment
 
