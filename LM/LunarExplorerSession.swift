@@ -130,11 +130,12 @@ final class LunarExplorerSession {
     static let minimumGlobeCaptureTiltDegrees = -82.0
     static let maximumTiltDegrees = 82.0
     static let maximumFocusOffsetMeters = 900.0
-    /// Keep the temporary discrete globe view outside the viewer even when a
-    /// capture deliberately approaches the globe/site gate. The measured
-    /// crossfade replaces this cap later in Stage 1.
+    /// Keep the globe outside the viewer while the site presentation grows
+    /// out of its Apollo 11 surface point during the measured handoff.
     static let maximumGlobeDisplayRadiusMeters: Float = 1.35
     static let lunarGlobeRadiusMeters = 1_737_400.0
+    static let globeSiteBlendStartMetersAcross = 400_000.0
+    static let globeSiteBlendEndMetersAcross = Preset.orbit.metersAcross
     /// Eagle's touchdown. Named instants are just dates: the pinned mission
     /// sun is this one evaluated through the ephemeris.
     static let apollo11TouchdownUTC: Date = {
@@ -219,11 +220,46 @@ final class LunarExplorerSession {
         )
     }
 
-    /// The first Stage 1 gate deliberately avoids pretending that globe/site
-    /// curvature registration is complete. A later slice will replace this
-    /// discrete switch with the plan's measured crossfade.
+    struct GlobeSiteBlend: Equatable {
+        let progress: Double
+        let morphProgress: Double
+        let globeOpacity: Double
+        let siteOpacity: Double
+    }
+
+    /// Smooth globe-to-site presentation handoff. `metersAcross` remains a
+    /// camera/presentation concern and never changes the production terrain
+    /// LOD selected by virtual altitude.
+    var globeSiteBlend: GlobeSiteBlend {
+        let span = Self.globeSiteBlendStartMetersAcross
+            - Self.globeSiteBlendEndMetersAcross
+        let linear = min(max(
+            (Self.globeSiteBlendStartMetersAcross - metersAcross) / span,
+            0
+        ), 1)
+        let smooth = linear * linear * (3 - 2 * linear)
+        // Finish the representation crossfade before the planar patch leaves
+        // its registered tangent pose. The second half of the band is a
+        // site-only camera morph, so valid globe and site geometry cannot cut
+        // through one another as the patch grows to inspection scale.
+        let fadeLinear = min(smooth * 2, 1)
+        let siteOpacity = fadeLinear * fadeLinear * (3 - 2 * fadeLinear)
+        let morphLinear = min(max((smooth - 0.5) * 2, 0), 1)
+        let morph = morphLinear * morphLinear * (3 - 2 * morphLinear)
+        return GlobeSiteBlend(
+            progress: smooth,
+            morphProgress: morph,
+            globeOpacity: 1 - siteOpacity,
+            siteOpacity: siteOpacity
+        )
+    }
+
     var presentsGlobe: Bool {
-        metersAcross >= 350_000
+        globeSiteBlend.globeOpacity > 0
+    }
+
+    var presentsSite: Bool {
+        globeSiteBlend.siteOpacity > 0
     }
 
     func select(_ preset: Preset) {

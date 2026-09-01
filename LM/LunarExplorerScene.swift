@@ -198,16 +198,17 @@ final class LunarExplorerScene {
     }
 
     private func updatePresentationTransform(_ session: LunarExplorerSession) {
-        let scale = session.presentationScale
+        let siteScale = session.presentationScale
+        let blend = session.globeSiteBlend
         globePresentationRoot.scale = SIMD3(
             repeating: session.globePresentationScale
         )
         // Full-immersion coordinates are floor-relative. Put the map globe at
         // a standing viewer's eye line instead of sharing the site's floor
         // placement, which cropped most of the first whole-Moon capture.
-        globePresentationRoot.position = SIMD3(0, 1.45, -3.35)
-        presentationRoot.scale = SIMD3(repeating: scale)
-        presentationRoot.position = SIMD3(0, -0.35, -2.35)
+        let globePosition = SIMD3<Float>(0, 1.45, -3.35)
+        let sitePosition = SIMD3<Float>(0, -0.35, -2.35)
+        globePresentationRoot.position = globePosition
         let heading = simd_quatf(
             angle: Float(session.headingDegrees * .pi / 180),
             axis: SIMD3(0, 1, 0)
@@ -216,10 +217,75 @@ final class LunarExplorerScene {
             angle: Float(session.tiltDegrees * .pi / 180),
             axis: SIMD3(1, 0, 0)
         )
-        presentationRoot.orientation = tilt * heading
-        globePresentationRoot.orientation = tilt * heading
-        globePresentationRoot.isEnabled = session.presentsGlobe
-        presentationRoot.isEnabled = !session.presentsGlobe
+        let globeOrientation = tilt * heading
+        globePresentationRoot.orientation = globeOrientation
+
+        // The globe coordinate authority authors Apollo 11 at +z. Project its
+        // rotated surface point onto a foreground presentation plane along
+        // the same eye ray. This keeps the regional map centered on the real
+        // globe point without making a 262 km patch physically tiny at whole-
+        // Moon scale. It also puts the complete plane in front of the sphere,
+        // avoiding depth intersections while both representations crossfade.
+        let displayedGlobeRadius = Float(
+            LunarExplorerSession.lunarGlobeRadiusMeters
+        ) * session.globePresentationScale
+        let apolloSurfacePosition = globePosition + globeOrientation.act(
+            SIMD3(0, 0, displayedGlobeRadius)
+        )
+        let registeredPosition = Self.registeredSitePresentationPosition(
+            apolloSurfacePosition: apolloSurfacePosition,
+            eyePosition: SIMD3(0, globePosition.y, 0),
+            depthMeters: 1.45
+        )
+        // Site terrain is +x north, +y elevation, -z east. At the start of
+        // the overlap, rotate its up axis onto the globe's Apollo radial so
+        // the map is tangent and north/east stay registered. Once the globe
+        // is gone, tip toward the normal regional inspection view.
+        let siteToGlobeTangent = simd_quatf(
+            angle: .pi / 2,
+            axis: SIMD3(1, 0, 0)
+        )
+        let registeredOrientation = globeOrientation * siteToGlobeTangent
+        // A zoom that starts from the globe also eases into the Orbit viewing
+        // angle. Named site presets retain their own calibrated angles exactly
+        // (Approach through Surface are intentionally shallower than Orbit).
+        let siteTiltDegrees = session.selectedPreset == .globe
+            ? LunarExplorerSession.Preset.orbit.tiltDegrees
+            : session.tiltDegrees
+        let siteTilt = simd_quatf(
+            angle: Float(siteTiltDegrees * .pi / 180),
+            axis: SIMD3(1, 0, 0)
+        )
+        let siteOrientation = siteTilt * heading
+        // Overscan the finite 262 km regional base while it overlaps the
+        // globe. Its square boundary therefore cannot appear as a card during
+        // the dissolve; the ordinary map extent enters only in the site-only
+        // camera move below.
+        let crossfadeScale = siteScale * 1.5
+        let progress = Float(blend.morphProgress)
+        let logarithmicScale = exp(
+            log(crossfadeScale) * (1 - progress)
+                + log(siteScale) * progress
+        )
+        presentationRoot.scale = SIMD3(repeating: logarithmicScale)
+        presentationRoot.position = simd_mix(
+            registeredPosition,
+            sitePosition,
+            SIMD3(repeating: progress)
+        )
+        presentationRoot.orientation = simd_slerp(
+            registeredOrientation,
+            siteOrientation,
+            progress
+        )
+
+        let canPresentSite = isLoaded
+        let globeOpacity = canPresentSite ? blend.globeOpacity : 1
+        let siteOpacity = canPresentSite ? blend.siteOpacity : 0
+        globePresentationRoot.isEnabled = globeOpacity > 0.001
+        presentationRoot.isEnabled = siteOpacity > 0.001
+        Self.applyPresentationOpacity(globeOpacity, to: globePresentationRoot)
+        Self.applyPresentationOpacity(siteOpacity, to: presentationRoot)
 
         let focus = terrainFocus(session)
         terrainEnvironment?.position = SIMD3(
@@ -227,6 +293,33 @@ final class LunarExplorerScene {
             Float(-terrainDatumElevationMeters),
             Float(focus.y)
         )
+    }
+
+    /// Projects the Apollo surface point onto a nearer plane without changing
+    /// its view ray. The screen-space registration residual is therefore zero
+    /// before rasterization; only the planar-versus-spherical scale model is
+    /// deliberately different during the presentation handoff.
+    static func registeredSitePresentationPosition(
+        apolloSurfacePosition: SIMD3<Float>,
+        eyePosition: SIMD3<Float>,
+        depthMeters: Float
+    ) -> SIMD3<Float> {
+        let ray = simd_normalize(apolloSurfacePosition - eyePosition)
+        return eyePosition + ray * depthMeters
+    }
+
+    /// Do not leave a no-op opacity component on either fully opaque endpoint.
+    /// Besides avoiding transparent-render sorting, this preserves the exact
+    /// RealityKit path used by the existing named site capture baselines.
+    private static func applyPresentationOpacity(
+        _ opacity: Double,
+        to entity: Entity
+    ) {
+        if opacity >= 0.999 {
+            entity.components.remove(OpacityComponent.self)
+        } else {
+            entity.components.set(OpacityComponent(opacity: Float(opacity)))
+        }
     }
 
     private func terrainFocus(_ session: LunarExplorerSession) -> LMVector3D {
@@ -523,6 +616,9 @@ final class LunarExplorerScene {
     }
 
     private func sourceDescription(altitudeMeters: Double) -> String {
+        if let session, session.presentsGlobe, session.presentsSite {
+            return "Pinned WAC globe + Apollo 11 site crossfade"
+        }
         if session?.presentsGlobe == true {
             return "Pinned WAC_GLOBAL 16 ppd morphologic map"
         }

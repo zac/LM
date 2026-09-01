@@ -35,7 +35,7 @@ obeys. The three genuinely hard parts are §5 (mushy band), §4 stage 2
 | Elevation-tracking sun exposure | **Done** | `LMTerrainWorld.missionSunIlluminance(elevationDegrees:grade:)`; mission render pixel-identical. |
 | Photographic tone grade + earthshine | **Done** | Opt-in; calibrated grade pixel-identical. |
 | Global mosaic fetch/parse proven | **Done** | Source-validating 16 ppd generator, pinned PNG + provenance sidecar, and manifest schema v4 landed. |
-| Stage 1 globe | **In progress** | 16 ppd unlit WAC sphere, ME orientation, Explorer `globe` preset, ephemeris terminator, and pinned LOLA-derived ME normal field landed. 64 ppd, lat/lon navigation, and globe-to-site crossfade remain. |
+| Stage 1 globe | **In progress** | 16 ppd unlit WAC sphere, ME orientation, Explorer `globe` preset, ephemeris terminator, pinned LOLA-derived ME normal field, and a measured globe-to-site handoff landed. 64 ppd and lat/lon navigation remain. |
 | Stage 2 re-anchorable terrain | Not started | §4. The land-anywhere milestone. |
 | Stage 3 mushy-band quality | Not started | §5. |
 | Stage 4 site packs | Not started | §4. |
@@ -127,9 +127,7 @@ sRGB texture and provenance JSON. Manifest schema 5 pins that output and its
 source. `LMLunarGlobeResource` builds a tessellated sphere through the shared
 ME coordinate authority, centers Apollo 11 without a guessed rotation, and
 uses the baked-shading mosaic as unlit map color. The Explorer now has a
-whole-Moon preset and an explicit first presentation gate. That gate is a
-temporary discrete switch: it is not the Stage 1 handoff acceptance until the
-measured globe-to-site crossfade is implemented and visually captured.
+whole-Moon preset and an explicit first presentation gate.
 
 Simulator validation on the pinned 26.5 Vision Pro destination held the globe
 stable beyond 90 seconds, confirmed the Apollo-centered near-side geography,
@@ -164,6 +162,42 @@ analytic-normal touchdown capture, LOLA relief changed 82,470 of 8,294,400
 pixels (0.994285%); changed channels moved 3.8816/255 on average with a
 22/255 maximum. The rendered near-side geography remains registered and no
 normal-induced wrap or polar band is visible.
+
+The discrete 350 km presentation switch is now a measured 400–120 km
+handoff. From 400–260 km the globe and regional layer render together with a
+smooth opacity crossfade. The regional layer is projected onto the exact eye
+ray through the coordinate authority's Apollo 11 globe point and deliberately
+overscans the view during the overlap, so the finite 262 km square cannot
+appear as a card or intersect the sphere. From 260–120 km the globe is already
+absent and the regional camera eases from that registered tangent pose into
+the existing Orbit presentation. This sequencing avoids both the original
+projection pop and a translucent double-geometry interval.
+
+Registration is explicit rather than hidden: the normalized center-ray
+residual is below `1e-6` in the runtime test (zero before floating-point
+rounding, therefore zero pixels before rasterization). Scale is intentionally
+not physical during the dissolve: the planar presentation uses 1.5× overscan
+because a physically scaled 262 km patch is only about 7.5% of the Moon's
+diameter and produced a black coverage gap. It is a presentation bridge, not
+a claim that the global and regional products have feature-by-feature scale
+parity. Settled Simulator captures are:
+
+- `/tmp/LandAnywhere-Stage1-crossfade-400km-final.png` — globe endpoint;
+- `/tmp/LandAnywhere-Stage1-crossfade-330km-final.png` — both layers visible;
+- `/tmp/LandAnywhere-Stage1-crossfade-260km-final.png` — registered regional
+  endpoint of the opacity dissolve;
+- `/tmp/LandAnywhere-Stage1-crossfade-190km-final.png` — site-only camera
+  morph; and
+- `/tmp/LandAnywhere-Stage1-crossfade-120km-final.png` — Orbit endpoint.
+
+The first two captures were allowed to settle for more than 90 seconds; the
+remaining cached ladder points settled for 45 seconds. No sampled frame shows
+a discontinuity, sphere/plane intersection, overlap card edge, roll, or
+double-render artifact; continuous hand-gesture comfort still needs device
+validation. The ordinary finite regional boundary becomes visible only after
+the globe has reached zero opacity, as it does in the existing Orbit
+presentation. Site materials, calibrated grade, terrain LOD selection,
+contact, and capture baselines were left unchanged.
 
 A textured sphere with LOD texture swap — deliberately not a chunked
 quad-sphere; at globe scale a sphere mesh + good textures is enough, and

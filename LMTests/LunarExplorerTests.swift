@@ -1,4 +1,5 @@
 import Testing
+import simd
 @testable import LM
 
 @Suite("Lunar Explorer")
@@ -10,10 +11,12 @@ struct LunarExplorerTests {
 
         session.select(.globe)
         #expect(session.presentsGlobe)
+        #expect(!session.presentsSite)
         #expect(policy.finestSpacingMeters(altitudeMeters: session.altitudeMeters) == nil)
 
         session.select(.orbit)
         #expect(!session.presentsGlobe)
+        #expect(session.presentsSite)
         #expect(policy.finestSpacingMeters(altitudeMeters: session.altitudeMeters) == nil)
 
         session.select(.approach)
@@ -27,6 +30,53 @@ struct LunarExplorerTests {
 
         session.select(.surface)
         #expect(policy.finestSpacingMeters(altitudeMeters: session.altitudeMeters) == 0.125)
+    }
+
+    @Test func globeAndSiteCrossfadeOverTheMeasuredBand() {
+        let session = LunarExplorerSession()
+
+        session.metersAcross = 400_000
+        #expect(session.globeSiteBlend == .init(
+            progress: 0,
+            morphProgress: 0,
+            globeOpacity: 1,
+            siteOpacity: 0
+        ))
+        #expect(session.presentsGlobe)
+        #expect(!session.presentsSite)
+
+        session.metersAcross = 260_000
+        #expect(abs(session.globeSiteBlend.progress - 0.5) < 1e-12)
+        #expect(session.globeSiteBlend.morphProgress == 0)
+        #expect(session.globeSiteBlend.globeOpacity == 0)
+        #expect(session.globeSiteBlend.siteOpacity == 1)
+        #expect(!session.presentsGlobe)
+        #expect(session.presentsSite)
+
+        session.metersAcross = 120_000
+        #expect(session.globeSiteBlend == .init(
+            progress: 1,
+            morphProgress: 1,
+            globeOpacity: 0,
+            siteOpacity: 1
+        ))
+        #expect(!session.presentsGlobe)
+        #expect(session.presentsSite)
+    }
+
+    @Test func registeredSiteCenterPreservesTheApolloViewRay() {
+        let eye = SIMD3<Float>(0, 1.45, 0)
+        let apollo = SIMD3<Float>(0.7, 0.2, -2.9)
+        let registered = LunarExplorerScene.registeredSitePresentationPosition(
+            apolloSurfacePosition: apollo,
+            eyePosition: eye,
+            depthMeters: 1.45
+        )
+        let globeRay = simd_normalize(apollo - eye)
+        let siteRay = simd_normalize(registered - eye)
+
+        #expect(simd_length(globeRay - siteRay) < 1e-6)
+        #expect(abs(simd_length(registered - eye) - 1.45) < 1e-6)
     }
 
     @Test func zoomDoesNotSilentlyChangeVirtualAltitude() {
@@ -132,7 +182,7 @@ struct LunarExplorerTests {
         session.configure(arguments: [
             "LM",
             "--lunar-explorer-preset=globe",
-            "--lunar-explorer-meters-across=350000",
+            "--lunar-explorer-meters-across=375000",
             "--lunar-explorer-heading=180",
             "--lunar-explorer-tilt=82",
         ])
@@ -140,6 +190,7 @@ struct LunarExplorerTests {
         #expect(session.headingDegrees == 180)
         #expect(session.tiltDegrees == 82)
         #expect(session.presentsGlobe)
+        #expect(session.presentsSite)
         #expect(
             session.globePresentationScale
                 == LunarExplorerSession.maximumGlobeDisplayRadiusMeters
