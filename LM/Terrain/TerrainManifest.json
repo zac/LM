@@ -57,6 +57,7 @@
       {
         "codec" : "JPEG XL",
         "codecEncoder" : "cjxl 0.12.0 effort 7",
+        "codecEffort" : 7,
         "codecQuality" : 95,
         "detail" : "Pinned offline 64 ppd WAC morphologic tier. The source transfer is unchanged and remains unlit; one-channel JPEG XL is visually transparent to the lossless grayscale PNG in fixed Simulator globe and orbit-overlap captures.",
         "file" : "WACGlobal64PPD-q95.jxl",

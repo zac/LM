@@ -75,6 +75,7 @@ struct LMTerrainManifest: Equatable, Decodable {
             let detail: String
             let codec: String?
             let codecQuality: Int?
+            let codecEffort: Int?
             let codecEncoder: String?
             let losslessSourceSHA256: String?
             let losslessSourceBytes: Int?

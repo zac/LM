@@ -130,8 +130,13 @@ Verified this session (2026-08-31):
   dB / 0.0090% in the 320 km globe-to-orbit overlap, with no visible codec or
   tile seam. This explicitly flips the earlier stream-only decision while
   retaining its budget boundary: any further bundled addition requires owner
-  sign-off. The reusable durable streaming/cache layer still lands for Stage
-  2 elevation and site products, but no shipping WAC texture depends on it.
+  sign-off. The final generic visionOS arm64 Release app is 407.5 MiB
+  (417,312 KiB), including the byte-identical 76,112,646-byte JXL. A settled
+  visionOS 26.5 Simulator launch decoded and displayed the explicit 64 ppd
+  tier at `/private/tmp/LandAnywhere-JXL-64ppd-runtime-verified.png`; the same
+  asset and digest passed a generic visionOS arm64 Release build. Production
+  load attempts 64 ppd first, logs any decode failure, and falls back to the
+  pinned 16 ppd texture instead of failing the globe.
 - **Durable stream foundation (2026-09-01).** Remote scientific content uses a
   data-agnostic request boundary populated directly from existing manifest
   sources: URL, inclusive HTTP byte range, byte count, and SHA-256. A bounded

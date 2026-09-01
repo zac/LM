@@ -1,5 +1,6 @@
 import CoreGraphics
 import Foundation
+import OSLog
 import RealityKit
 import simd
 import UIKit
@@ -9,6 +10,11 @@ import UIKit
 /// contains illumination, so this first globe tier is emissive/unlit and is
 /// never shaded a second time by the Explorer's movable mission sun.
 enum LMLunarGlobeResource {
+    private static let logger = Logger(
+        subsystem: Bundle.main.bundleIdentifier ?? "io.positron.LM",
+        category: "LunarGlobe"
+    )
+
     struct GlobeResource {
         let entity: ModelEntity
         let textureTier: LMTerrainManifest.Globe.TextureTier
@@ -99,6 +105,9 @@ enum LMLunarGlobeResource {
                 )
             } catch {
                 lastTextureError = error
+                logger.error(
+                    "Globe texture tier \(tier.id, privacy: .public) failed to decode; trying the next bundled tier: \(error.localizedDescription, privacy: .public)"
+                )
             }
         }
         throw lastTextureError ?? ResourceError.missingTextureTier

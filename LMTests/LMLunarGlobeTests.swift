@@ -132,6 +132,7 @@ struct LMLunarGlobeTests {
         #expect(tier.sha256 == "819ca84afedca9a5fe864a0a3a036bc6384a105f21135614c90808c184355841")
         #expect(tier.codec == "JPEG XL")
         #expect(tier.codecQuality == 95)
+        #expect(tier.codecEffort == 7)
         #expect(tier.codecEncoder == "cjxl 0.12.0 effort 7")
         #expect(tier.losslessSourceSHA256 == "faead7d93e3ac1b16f30955419f4cbb2f1fbd1040dbc2913473ccd5f30df2420")
         #expect(tier.losslessSourceBytes == 128_461_405)
