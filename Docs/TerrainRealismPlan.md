@@ -20,7 +20,7 @@ fidelity contract.
 | Workstream | State | Notes |
 |---|---|---|
 | A — photo-seeded craters | **Integrated; visual QA pending** | The reviewed 1,200-entry catalog is pinned and live in render/contact geometry. Surface/landing A/B captures remain. |
-| B1 — radiance-conserving LOD | **Statistics integrated; compensation pending** | Both exact micro-normal and added-mesh-band distributions are available without a fixed sun. Live ephemeris-driven material compensation and capture measurement remain. |
+| B1 — radiance-conserving LOD | **Done; measured neutral** | The current hierarchy-corrected handoff measures −0.16% calibrated, −0.12% photographic, and +0.79% with constant reflectance/no normal maps. A material gain would create a step, so the sun-independent statistics remain a validation guard rather than an applied tint. |
 | B2 — photographic grade | **Done** | Opt-in `photographic` grade: exposure floor removed, ephemeris-driven earthshine fill scaled by Earth phase, exposed for highlights. Calibrated grade pixel-identical; lunar night renders. See `LMTerrainPresentationGrade`. |
 | C — shape-from-shading DTM | Not started | Needs owner sign-off on the provenance question first. Now also slotted as Stage 4 material in `Docs/LandAnywhereMoonPlan.md`, which extends this plan's A/B1 machinery to global scale. |
 
@@ -45,23 +45,27 @@ and sharper rims, and watch for false positives or excessive density. The
 catalog begins at 2 m while `LMRegolithMicrotextureModel` ends at 0.20 m, so
 there is currently no size-band overlap requiring a second reflectance halo.
 
-**Workstream B1, precisely where it stands.** Each baked detail tile now carries
+**Workstream B1, precisely where it stands.** Each baked detail tile carries
 a compact, sun-independent directional distribution of its exact tangent-space
 micro normals. The statistic is preserved unchanged by the neural appearance
 reconstructor, the byte-bounded cache contract, and final sampling-gutter
 padding. Progressive mesh generation separately records the directional slopes
 of the exact geomorphed height band introduced relative to the live parent.
-Arbitrary-sun response and both handoffs are covered by focused tests. Neither
-statistic is yet used to alter material radiance: ephemeris-to-tangent-space
-conversion, the bounded compensation ratio, live material application, and
-capture measurement remain to be implemented and validated.
+Arbitrary-sun response and both handoffs are covered by focused tests. A fresh
+2 m / 8 m capture set on 2026-09-01 segmented the actual terminal/landing edge
+with `Tools/TerrainGenerator/measure_radiance.py`. The adjacent-band step was
+−0.155% calibrated, −0.120% photographic, and +0.794% with constant
+reflectance and normal maps off. The full-resolution touchdown distributions
+independently predict a combined response ratio within 0.03% of flat. Those
+measurements reject the earlier 5–6% compensation hypothesis for the current
+renderer. No material multiplier was applied, no cache key became sun-dependent,
+and granularity is unchanged. Keep the statistics: Stage 2's much wider global
+LOD ladder must pass the same test and may need the originally designed
+material-time correction.
 
-**Cross-plan note.** `Docs/MoonExplorerPlan.md` §0 records an open finding
-that the manifest's pinned mission sun *azimuth* (276.4 degrees) is the
-anti-solar direction and is wrong by about 172 degrees; the elevation is
-right. This does not affect the LOD work, which is azimuth-agnostic, but it
-does mean B2's "does this look like the Artemis photographs" judgement should
-not be made until the sun is pointing the correct way.
+**Cross-plan note.** The old 276.4-degree anti-solar manifest azimuth has been
+replaced by the ephemeris touchdown direction (88.819 degrees azimuth,
+10.689 degrees elevation). B1 and B2 now evaluate the same corrected Sun.
 
 ## 1. Non-negotiable contracts
 
@@ -110,12 +114,12 @@ produced this plan; durable copy in project memory
   level is active). Local seam steps dropped from −4.3 to under ±0.5 gray
   levels. Guarded by test
   `coarserResidencyEnclosesFinerFootprintByItsOwnMorphCollar()`.
-- **Outstanding (now a prerequisite for Workstream B):** the landing-level
-  footprint still averages ~5-6% darker than its parents at grazing sun,
-  because each finer level adds relief octaves whose shading the coarser
-  levels do not represent. The measured reflectance already encodes real
-  sub-resolution shadowing at capture illumination, so shading synthetic
-  relief again at the same sun angle double-counts roughness darkening.
+- **Resolved after the hierarchy/ownership corrections:** the earlier broad
+  landing-footprint average suggested a ~5–6% LOD loss, but it compared
+  different lunar features rather than adjacent samples at the handoff. The
+  repeatable 2026-09-01 narrow-band measurement is under 1% in calibrated,
+  photographic, and constant/no-normal controls. Whole-region means remain in
+  the report for context, but are not an LOD acceptance metric.
 - Capture-only diagnostics now exist (all opt-in launch arguments, all in
   `LM/LMTerrainWorld.swift`):
   - `--lunar-explorer-terrain-reflectance=constant` — flat 0.25 albedo,
@@ -199,9 +203,10 @@ Two coupled pieces, in this order.
 
 ### B1. Radiance-conserving LOD (prerequisite)
 
-**Problem:** each finer level's added relief darkens mean shading ~5-6% at
-the mission's grazing sun; footprint edges read as soft rectangles. Going
-darker/contrastier (B2) will amplify this.
+**Historical problem statement:** an early broad-footprint comparison appeared
+to show each finer level darkening mean shading ~5–6% at the mission's grazing
+sun. The current adjacent-edge measurement rejects that hypothesis after the
+residency, ownership, and hierarchy fixes.
 
 **Approach:** compensate the fine tile's realized albedo by the expected
 mean shading of its *added* relief octaves under the current sun, so mean
@@ -230,11 +235,15 @@ fixed-sun compensation into tile albedo. Structure it as:
 - The neural mode consumes the same compensated procedural bake path as its
   fallback/baseline; verify the neural/procedural A/B RMSE stays in family.
 
-**Acceptance:** re-run the 2026-08-30 measurement protocol (tile-tint
-segmentation + per-region mean/high-pass statistics on a `surface`-preset
-capture): landing-vs-terminal *mean* difference should drop from ~5-6% to
-under ~1.5% with granularity (high-pass sd) preserved. No geometry changes:
-mesh/contact tests untouched and passing.
+**Acceptance (passed 2026-09-01):** the tile-tint segmented narrow band at the
+actual landing/terminal boundary is under 1.5% in both grades and in the
+constant-reflectance/no-normal control. Whole-region means and high-pass SD
+are still emitted to catch broader regressions, but do not compare like lunar
+features. Captures: `/private/tmp/LandAnywhere-B1-before-tile-tint-calibrated.png`,
+`/private/tmp/LandAnywhere-B1-before-calibrated.png`,
+`/private/tmp/LandAnywhere-B1-before-photographic.png`, and
+`/private/tmp/LandAnywhere-B1-before-constant-no-normals.png`. No geometry,
+contact, albedo, material, calibrated baseline, or cache behavior changed.
 
 ### B2. Photographic presentation mode (Artemis-style)
 

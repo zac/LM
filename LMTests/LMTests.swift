@@ -3501,6 +3501,46 @@ struct TerrainDetailTextureTests {
         #expect(grazingEast < overhead)
     }
 
+    @Test func touchdownReliefStatisticsDoNotRequireAnLODGain() throws {
+        let plan = try landingPlan()
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let mesh = try #require(
+            try Apollo11TerrainResource.makeProgressiveTileMeshData(
+                heightField: field,
+                plan: plan,
+                activePlans: [plan]
+            )
+        )
+        let detail = try LMTerrainTileDetailBaker.bake(
+            plan: plan,
+            albedoField: nil,
+            resolution: LMTerrainTileDetailBaker.resolution
+        )
+        let manifest = try LMTerrainManifest.load()
+        let elevation = Float(manifest.sun.elevationDegrees * .pi / 180)
+        let azimuth = Float(
+            manifest.sun.azimuthDegreesClockwiseFromNorth * .pi / 180
+        )
+        let horizontal = cos(elevation)
+        let tangentSun = simd_normalize(SIMD3<Float>(
+            horizontal * sin(azimuth),
+            -horizontal * cos(azimuth),
+            sin(elevation)
+        ))
+        let flatResponse = tangentSun.z
+        let detailResponse = detail.normalDistribution
+            .meanLambertianResponse(sunDirectionTangentSpace: tangentSun)
+        let meshResponse = mesh.addedReliefNormalDistribution
+            .meanLambertianResponse(sunDirectionTangentSpace: tangentSun)
+        let combinedRatio = (detailResponse / flatResponse)
+            * (meshResponse / flatResponse)
+
+        // The old B1 hypothesis predicted a 5-6% mean loss. The current,
+        // hierarchy-corrected tile is neutral to 0.03%, so a material gain
+        // would manufacture a new LOD step instead of removing one.
+        #expect(abs(combinedRatio - 1) < 0.005)
+    }
+
     @Test func renderingGutterKeepsSamplingInsideRepeatedBoundaryTexels() {
         let resolution = LMTerrainTileDetailBaker.resolution
         var albedo = [UInt8](repeating: 0, count: resolution * resolution * 4)
