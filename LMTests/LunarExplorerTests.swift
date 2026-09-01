@@ -1,10 +1,20 @@
 import Testing
+import RealityKit
 import simd
 @testable import LM
 
 @Suite("Lunar Explorer")
 @MainActor
 struct LunarExplorerTests {
+    @Test func opaquePresentationLeavesTheTransparentRenderPath() {
+        let entity = Entity()
+        LunarExplorerScene.applyPresentationOpacity(0.5, to: entity)
+        #expect(entity.components[OpacityComponent.self]?.opacity == 0.5)
+
+        LunarExplorerScene.applyPresentationOpacity(1, to: entity)
+        #expect(entity.components[OpacityComponent.self] == nil)
+    }
+
     @Test func presetsCrossEveryProductionLODGate() {
         let session = LunarExplorerSession()
         let policy = LMTerrainDetailPolicy()
@@ -35,7 +45,7 @@ struct LunarExplorerTests {
     @Test func globeAndSiteCrossfadeOverTheMeasuredBand() {
         let session = LunarExplorerSession()
 
-        session.metersAcross = 400_000
+        session.metersAcross = 240_000
         #expect(session.globeSiteBlend == .init(
             progress: 0,
             morphProgress: 0,
@@ -45,7 +55,7 @@ struct LunarExplorerTests {
         #expect(session.presentsGlobe)
         #expect(!session.presentsSite)
 
-        session.metersAcross = 260_000
+        session.metersAcross = 180_000
         #expect(abs(session.globeSiteBlend.progress - 0.5) < 1e-12)
         #expect(session.globeSiteBlend.morphProgress == 0)
         #expect(session.globeSiteBlend.globeOpacity == 0)
@@ -196,7 +206,7 @@ struct LunarExplorerTests {
         session.configure(arguments: [
             "LM",
             "--lunar-explorer-preset=globe",
-            "--lunar-explorer-meters-across=375000",
+            "--lunar-explorer-meters-across=210000",
             "--lunar-explorer-heading=180",
             "--lunar-explorer-tilt=82",
         ])
@@ -206,10 +216,40 @@ struct LunarExplorerTests {
         #expect(session.presentsGlobe)
         #expect(session.presentsSite)
         #expect(
-            session.globePresentationScale
-                == LunarExplorerSession.maximumGlobeDisplayRadiusMeters
-                    / Float(LunarExplorerSession.lunarGlobeRadiusMeters)
+            session.globePresentationScale == session.presentationScale
+                * Float(LunarExplorerSession.globeHandoffOverscan)
         )
+    }
+
+    @Test func globeHandoffOverscanRampsBeforeTheSiteAppears() {
+        let session = LunarExplorerSession()
+        session.metersAcross = 330_000
+        #expect(session.globeHandoffScaleMultiplier == 1)
+        #expect(!session.presentsSite)
+
+        session.metersAcross = 240_000
+        #expect(
+            session.globeHandoffScaleMultiplier
+                == LunarExplorerSession.globeHandoffOverscan
+        )
+        #expect(!session.presentsSite)
+
+        session.metersAcross = 210_000
+        #expect(
+            session.globeHandoffScaleMultiplier
+                == LunarExplorerSession.globeHandoffOverscan
+        )
+        #expect(session.presentsSite)
+        #expect(session.presentsGlobe)
+
+        session.metersAcross = LunarExplorerSession.Preset.orbit.metersAcross
+        #expect(
+            session.siteCoverageScaleMultiplier
+                == LunarExplorerSession.globeHandoffOverscan
+        )
+
+        session.metersAcross = LunarExplorerSession.Preset.regional.metersAcross
+        #expect(session.siteCoverageScaleMultiplier == 1)
     }
 
     @Test func captureCanInspectBothGlobePolesWithoutChangingSiteTiltBounds() {

@@ -18,6 +18,9 @@ final class LunarExplorerScene {
         category: "LunarExplorer"
     )
     private var terrainEnvironment: Entity?
+    private var measuredNearFieldEntity: ModelEntity?
+    private var measuredNearFieldGrid: LMTerrainMeshBuilder.VertexData?
+    private var measuredNearFieldMask = Set<LMTerrainTileID>()
     private var globeEntity: ModelEntity?
     private var globeTerminator: LMLunarGlobeResource.TerminatorResource?
     private var globeTerminatorDate: Date?
@@ -33,7 +36,12 @@ final class LunarExplorerScene {
     private var siteCoordinate: LMSelenographicCoordinate?
     private var progressiveEntities = [LMTerrainTileID: ModelEntity]()
     private var progressivePlans = [LMTerrainTileID: LMTerrainTilePlan]()
+    private var progressiveOwnership = [LMTerrainTileID: Set<LMTerrainTileID>]()
+    private var pendingProgressiveEntities = [LMTerrainTileID: ModelEntity]()
+    private var pendingProgressivePlans = [LMTerrainTileID: LMTerrainTilePlan]()
+    private var pendingOwnership = [LMTerrainTileID: Set<LMTerrainTileID>]()
     private var requestedPlans = [LMTerrainTileID: LMTerrainTilePlan]()
+    private var requestedOwnership = [LMTerrainTileID: Set<LMTerrainTileID>]()
     private var generationTasks = [LMTerrainTileID: Task<Void, Never>]()
     private var generationTokens = [LMTerrainTileID: UUID]()
     private var detailPipelines = [
@@ -128,6 +136,8 @@ final class LunarExplorerScene {
                 self.terrainDatumElevationMeters = datum
                 self.siteCoordinate = assembly.manifest.landingOriginCoordinate
                 self.terrainEnvironment = assembly.worldRoot
+                self.measuredNearFieldEntity = assembly.nearFieldEntity
+                self.measuredNearFieldGrid = assembly.nearFieldGrid
                 self.terrainSun = assembly.sun
                 self.terrainEarthshine = assembly.earthshine
                 self.terrainRockField = rocks
@@ -208,10 +218,17 @@ final class LunarExplorerScene {
         globePresentationRoot.scale = SIMD3(
             repeating: session.globePresentationScale
         )
-        // Full-immersion coordinates are floor-relative. Put the map globe at
-        // a standing viewer's eye line instead of sharing the site's floor
-        // placement, which cropped most of the first whole-Moon capture.
-        let globePosition = SIMD3<Float>(0, 1.45, -3.35)
+        // Keep the nearest surface at a stable viewing depth as the sphere
+        // grows. A fixed center put the camera inside the Moon once the 64 ppd
+        // map zoomed far enough to hand off to the regional tangent plane.
+        let displayedGlobeRadius = Float(
+            LunarExplorerSession.lunarGlobeRadiusMeters
+        ) * session.globePresentationScale
+        let globePosition = SIMD3<Float>(
+            0,
+            1.45,
+            -(LunarExplorerSession.globeSurfaceDepthMeters + displayedGlobeRadius)
+        )
         let sitePosition = SIMD3<Float>(0, -0.35, -2.35)
         globePresentationRoot.position = globePosition
         let heading = simd_quatf(
@@ -231,16 +248,13 @@ final class LunarExplorerScene {
         // globe point without making a 262 km patch physically tiny at whole-
         // Moon scale. It also puts the complete plane in front of the sphere,
         // avoiding depth intersections while both representations crossfade.
-        let displayedGlobeRadius = Float(
-            LunarExplorerSession.lunarGlobeRadiusMeters
-        ) * session.globePresentationScale
         let apolloSurfacePosition = globePosition + globeOrientation.act(
             SIMD3(0, 0, displayedGlobeRadius)
         )
         let registeredPosition = Self.registeredSitePresentationPosition(
             apolloSurfacePosition: apolloSurfacePosition,
             eyePosition: SIMD3(0, globePosition.y, 0),
-            depthMeters: 1.45
+            depthMeters: LunarExplorerSession.globeSurfaceDepthMeters - 0.01
         )
         // Site terrain is +x north, +y elevation, -z east. At the start of
         // the overlap, rotate its up axis onto the globe's Apollo radial so
@@ -262,15 +276,19 @@ final class LunarExplorerScene {
             axis: SIMD3(1, 0, 0)
         )
         let siteOrientation = siteTilt * heading
-        // Overscan the finite 262 km regional base while it overlaps the
-        // globe. Its square boundary therefore cannot appear as a card during
-        // the dissolve; the ordinary map extent enters only in the site-only
-        // camera move below.
-        let crossfadeScale = siteScale * 1.5
+        // The blend starts only once the finite 262 km regional base covers
+        // the selected view, so both representations can use the same scale.
+        // This removes the visible translucent Moon-over-map double image.
+        let crossfadeScale = siteScale * Float(
+            LunarExplorerSession.globeHandoffOverscan
+        )
+        let settledScale = siteScale * Float(
+            session.siteCoverageScaleMultiplier
+        )
         let progress = Float(blend.morphProgress)
         let logarithmicScale = exp(
             log(crossfadeScale) * (1 - progress)
-                + log(siteScale) * progress
+                + log(settledScale) * progress
         )
         presentationRoot.scale = SIMD3(repeating: logarithmicScale)
         presentationRoot.position = simd_mix(
@@ -316,7 +334,7 @@ final class LunarExplorerScene {
     /// Do not leave a no-op opacity component on either fully opaque endpoint.
     /// Besides avoiding transparent-render sorting, this preserves the exact
     /// RealityKit path used by the existing named site capture baselines.
-    private static func applyPresentationOpacity(
+    static func applyPresentationOpacity(
         _ opacity: Double,
         to entity: Entity
     ) {
@@ -341,58 +359,63 @@ final class LunarExplorerScene {
         altitudeMeters: Double
     ) {
         guard let heightField,
-              let terrainEnvironment,
+              terrainEnvironment != nil,
               let activeDetailMode else { return }
         let detailPipeline = pipeline(for: activeDetailMode)
         let planner = LMProgressiveTerrainPlanner(
             sourceSpacingMeters: heightField.spacingMeters
         )
-        // Explorer's low-altitude camera is deliberately more oblique than
-        // the contact footprint. Reuse the production prefetch union to keep
-        // a narrow forward corridor in the viewed direction instead of
-        // growing the working set to a symmetric square. The surface camera's
-        // grazing view reaches well beyond one 16 m tile; a 48 m projection
-        // keeps the landing-frequency handoff downrange of the inspected
-        // foreground while retaining only three rows. Heading zero looks
-        // toward positive terrain east; rotating the terrain rotates the
-        // projected direction with it. Terminal descent supplies real vehicle
-        // velocity to the same planner boundary.
-        let viewProjectionMeters = altitudeMeters <= 60 ? 48.0 : 0
-        let headingRadians = (session?.headingDegrees ?? 0) * .pi / 180
-        let lookaheadSeconds = 6.0
-        let forwardPlans = planner.prefetchedPlans(
+        // Explorer has no vehicle velocity to predict. Its former synthetic
+        // forward/rear projections expanded the landing set from the bounded
+        // 3x3 neighborhood to 31 fine tiles, overflowed the 32 MB working-set
+        // cache, and pushed a Debug Simulator bake past forty seconds. The
+        // ordinary focused footprint already covers the selected inspection
+        // width; powered descent still uses real six-second velocity prefetch.
+        let plans = planner.focusedPlans(
             focusEastMeters: focusEastMeters,
             focusNorthMeters: focusNorthMeters,
-            velocityEastMetersPerSecond: cos(headingRadians)
-                * viewProjectionMeters / lookaheadSeconds,
-            velocityNorthMetersPerSecond: sin(headingRadians)
-                * viewProjectionMeters / lookaheadSeconds,
             altitudeMeters: altitudeMeters
         )
-        let rearProjectionMeters = altitudeMeters <= 60 ? 32.0 : 0
-        let rearPlans = planner.focusedPlans(
-            focusEastMeters: focusEastMeters
-                - cos(headingRadians) * rearProjectionMeters,
-            focusNorthMeters: focusNorthMeters
-                - sin(headingRadians) * rearProjectionMeters,
-            altitudeMeters: altitudeMeters
-        )
-        let plans = planner.mergedPlans(forwardPlans + rearPlans)
         let nextPlans = Dictionary(uniqueKeysWithValues: plans.map { ($0.id, $0) })
-        guard nextPlans != requestedPlans else { return }
+        let policy = LMTerrainDetailPolicy()
+        let replacementPlans = plans.filter {
+            policy.presentationBlend(
+                sampleSpacingMeters: $0.sampleSpacingMeters,
+                altitudeMeters: altitudeMeters
+            ) >= 0.999
+        }
+        let nextOwnership = Dictionary(uniqueKeysWithValues: plans.map { plan in
+            (plan.id, Self.finerOwners(of: plan, in: replacementPlans))
+        })
+        guard nextPlans != requestedPlans
+                || nextOwnership != requestedOwnership else { return }
         let previousRequestedPlans = requestedPlans
+        let previousRequestedOwnership = requestedOwnership
         requestedPlans = nextPlans
+        requestedOwnership = nextOwnership
 
         for id in Array(generationTasks.keys)
-            where nextPlans[id] != previousRequestedPlans[id] {
+            where nextPlans[id] != previousRequestedPlans[id]
+                || nextOwnership[id] != previousRequestedOwnership[id] {
             generationTasks[id]?.cancel()
             generationTasks.removeValue(forKey: id)
             generationTokens.removeValue(forKey: id)
         }
-        retireTilesIfReplacementIsReady()
+        for id in Array(pendingProgressiveEntities.keys)
+            where nextPlans[id] != pendingProgressivePlans[id]
+                || nextOwnership[id] != pendingOwnership[id] {
+            pendingProgressiveEntities.removeValue(forKey: id)
+            pendingProgressivePlans.removeValue(forKey: id)
+            pendingOwnership.removeValue(forKey: id)
+        }
+        publishRequestedTerrainIfReady()
 
-        for plan in plans where progressivePlans[plan.id] != plan
+        for plan in plans where (progressivePlans[plan.id] != plan
+            || progressiveOwnership[plan.id] != nextOwnership[plan.id])
+            && (pendingProgressivePlans[plan.id] != plan
+                || pendingOwnership[plan.id] != nextOwnership[plan.id])
             && generationTasks[plan.id] == nil {
+            let ownership = nextOwnership[plan.id] ?? []
             let token = UUID()
             generationTokens[plan.id] = token
             let started = ContinuousClock.now
@@ -404,24 +427,19 @@ final class LunarExplorerScene {
                         heightField: heightField,
                         plan: plan,
                         activePlans: plans,
+                        geometryReplacementPlans: replacementPlans,
                         albedoField: self.albedoField,
                         detailPipeline: detailPipeline
                     )
                     guard self.finishGeneration(id: plan.id, token: token),
                           !Task.isCancelled,
                           self.requestedPlans[plan.id] == plan,
+                          self.requestedOwnership[plan.id] == ownership,
                           let build else { return }
                     let entity = build.entity
-                    self.applyPresentationBlend(
-                        to: entity,
-                        plan: plan,
-                        altitudeMeters: self.session?.altitudeMeters
-                            ?? altitudeMeters
-                    )
-                    terrainEnvironment.addChild(entity)
-                    self.progressiveEntities[plan.id]?.removeFromParent()
-                    self.progressiveEntities[plan.id] = entity
-                    self.progressivePlans[plan.id] = plan
+                    self.pendingProgressiveEntities[plan.id] = entity
+                    self.pendingProgressivePlans[plan.id] = plan
+                    self.pendingOwnership[plan.id] = ownership
                     let elapsed = started.duration(to: .now)
                     let milliseconds = Int(
                         elapsed.components.seconds * 1_000
@@ -429,7 +447,10 @@ final class LunarExplorerScene {
                     )
                     self.session?.diagnostics.latestGenerationMilliseconds = milliseconds
                     self.session?.diagnostics.latestGenerationMetrics = build.metrics
-                    self.retireTilesIfReplacementIsReady()
+                    self.logger.info(
+                        "Terrain tile ready L\(plan.id.level, privacy: .public) E\(plan.id.eastIndex, privacy: .public) N\(plan.id.northIndex, privacy: .public) spacing=\(plan.sampleSpacingMeters, privacy: .public)m generation=\(milliseconds, privacy: .public)ms"
+                    )
+                    self.publishRequestedTerrainIfReady()
                     if let session = self.session {
                         self.updateDiagnostics(session)
                     }
@@ -437,6 +458,9 @@ final class LunarExplorerScene {
                     _ = self.finishGeneration(id: plan.id, token: token)
                 } catch {
                     _ = self.finishGeneration(id: plan.id, token: token)
+                    self.logger.error(
+                        "Terrain tile failed L\(plan.id.level, privacy: .public) E\(plan.id.eastIndex, privacy: .public) N\(plan.id.northIndex, privacy: .public) spacing=\(plan.sampleSpacingMeters, privacy: .public)m: \(error.localizedDescription, privacy: .public)"
+                    )
                     self.session?.diagnostics.loadMessage =
                         "Tile L\(plan.id.level) failed: \(error.localizedDescription)"
                 }
@@ -473,7 +497,12 @@ final class LunarExplorerScene {
             sampleSpacingMeters: plan.sampleSpacingMeters,
             altitudeMeters: altitudeMeters
         )
-        entity.components.set(OpacityComponent(opacity: Float(opacity)))
+        // A no-op OpacityComponent still routes the mesh through RealityKit's
+        // transparent pass. Once the measured/parent quads have handed their
+        // footprint to this tile, that path can sort behind the resulting
+        // geometric hole and expose the immersive black background. Use the
+        // same opaque-endpoint contract as the globe/site presentation blend.
+        Self.applyPresentationOpacity(opacity, to: entity)
     }
 
     @discardableResult
@@ -484,16 +513,92 @@ final class LunarExplorerScene {
         return true
     }
 
-    private func retireTilesIfReplacementIsReady() {
+    /// Publish a complete residency generation as one main-actor transaction.
+    /// Parent meshes are allowed to contain child holes only when every child
+    /// in the same generation is ready, so the viewer never sees the immersive
+    /// background while asynchronous tiles arrive.
+    private func publishRequestedTerrainIfReady() {
+        guard let terrainEnvironment else { return }
+        guard requestedPlans.allSatisfy({ id, plan in
+            (progressivePlans[id] == plan
+                && progressiveOwnership[id] == requestedOwnership[id])
+                || (pendingProgressivePlans[id] == plan
+                    && pendingOwnership[id] == requestedOwnership[id])
+        }) else { return }
+
+        let altitude = session?.altitudeMeters ?? .greatestFiniteMagnitude
+        for (id, plan) in requestedPlans {
+            guard pendingProgressivePlans[id] == plan,
+                  pendingOwnership[id] == requestedOwnership[id],
+                  let entity = pendingProgressiveEntities.removeValue(forKey: id) else {
+                continue
+            }
+            pendingProgressivePlans.removeValue(forKey: id)
+            pendingOwnership.removeValue(forKey: id)
+            applyPresentationBlend(to: entity, plan: plan, altitudeMeters: altitude)
+            terrainEnvironment.addChild(entity)
+            progressiveEntities[id]?.removeFromParent()
+            progressiveEntities[id] = entity
+            progressivePlans[id] = plan
+            progressiveOwnership[id] = requestedOwnership[id] ?? []
+        }
+
         let activeIDs = Set(progressiveEntities.keys)
         let requestedIDs = Set(requestedPlans.keys)
-        guard requestedIDs.isSubset(of: activeIDs),
-              requestedPlans.allSatisfy({ progressivePlans[$0.key] == $0.value }) else {
-            return
-        }
         for id in activeIDs.subtracting(requestedIDs) {
             progressiveEntities.removeValue(forKey: id)?.removeFromParent()
             progressivePlans.removeValue(forKey: id)
+            progressiveOwnership.removeValue(forKey: id)
+        }
+        refreshMeasuredNearFieldOwnership()
+    }
+
+    static func finerOwners(
+        of plan: LMTerrainTilePlan,
+        in candidates: [LMTerrainTilePlan]
+    ) -> Set<LMTerrainTileID> {
+        let half = plan.sizeMeters / 2
+        return Set(candidates.compactMap { candidate in
+            guard candidate.sampleSpacingMeters
+                    < plan.sampleSpacingMeters - 1e-9 else { return nil }
+            let candidateHalf = candidate.sizeMeters / 2
+            let overlaps = candidate.centerEastMeters + candidateHalf
+                    > plan.centerEastMeters - half
+                && candidate.centerEastMeters - candidateHalf
+                    < plan.centerEastMeters + half
+                && candidate.centerNorthMeters + candidateHalf
+                    > plan.centerNorthMeters - half
+                && candidate.centerNorthMeters - candidateHalf
+                    < plan.centerNorthMeters + half
+            return overlaps ? candidate.id : nil
+        })
+    }
+
+    /// The measured near field and fine clipmap are alternate owners of the
+    /// same physical surface. Mask the measured triangles only after the full
+    /// requested replacement is resident, so asynchronous generation cannot
+    /// expose a hole. The fine mesh already converges to the measured parent
+    /// at this exact grid-aligned perimeter.
+    private func refreshMeasuredNearFieldOwnership() {
+        guard let entity = measuredNearFieldEntity,
+              let grid = measuredNearFieldGrid else { return }
+        let plans = Array(progressivePlans.values)
+        let ids = Set(plans.map(\.id))
+        guard ids != measuredNearFieldMask else { return }
+        do {
+            let ownedGrid = LMTerrainMeshBuilder.excludingProgressiveFootprints(
+                from: grid,
+                plans: plans
+            )
+            let mesh = try LMTerrainMeshBuilder.mesh(from: ownedGrid)
+            guard var model = entity.components[ModelComponent.self] else { return }
+            model.mesh = mesh
+            entity.components.set(model)
+            measuredNearFieldMask = ids
+        } catch {
+            logger.error(
+                "Measured terrain ownership update failed: \(error.localizedDescription, privacy: .public)"
+            )
         }
     }
 
@@ -596,11 +701,17 @@ final class LunarExplorerScene {
         generationTasks.removeAll(keepingCapacity: false)
         generationTokens.removeAll(keepingCapacity: false)
         requestedPlans.removeAll(keepingCapacity: false)
+        requestedOwnership.removeAll(keepingCapacity: false)
         progressivePlans.removeAll(keepingCapacity: false)
+        progressiveOwnership.removeAll(keepingCapacity: false)
+        pendingProgressivePlans.removeAll(keepingCapacity: false)
+        pendingOwnership.removeAll(keepingCapacity: false)
+        pendingProgressiveEntities.removeAll(keepingCapacity: false)
         for entity in progressiveEntities.values {
             entity.removeFromParent()
         }
         progressiveEntities.removeAll(keepingCapacity: false)
+        refreshMeasuredNearFieldOwnership()
         session.diagnostics.latestGenerationMilliseconds = nil
         session.diagnostics.latestGenerationMetrics = nil
         let detailPipeline = pipeline(for: mode)

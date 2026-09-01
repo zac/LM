@@ -35,7 +35,7 @@ obeys. The three genuinely hard parts are §5 (mushy band), §4 stage 2
 | Elevation-tracking sun exposure | **Done** | `LMTerrainWorld.missionSunIlluminance(elevationDegrees:grade:)`; mission render pixel-identical. |
 | Photographic tone grade + earthshine | **Done** | Opt-in; calibrated grade pixel-identical. |
 | Global mosaic fetch/parse proven | **Done** | Source-validating 16 ppd generator, pinned PNG + provenance sidecar, and manifest schema v4 landed. |
-| Stage 1 globe | **In progress** | 16 ppd unlit WAC sphere, ME orientation, Explorer `globe` preset, ephemeris terminator, pinned LOLA-derived ME normal field, and a measured globe-to-site handoff landed. 64 ppd and lat/lon navigation remain. |
+| Stage 1 globe | **In progress** | Complete offline 16/64 ppd WAC globe, ME orientation, Explorer `globe` preset, ephemeris terminator, pinned LOLA-derived ME normal field, durable scientific-resource cache, and a measured globe-to-site handoff landed. Globe-scale acceptance is green; near-surface radiance-conserving LOD and physical Vision Pro comfort remain. |
 | Stage 2 re-anchorable terrain | Not started | §4. The land-anywhere milestone. |
 | Stage 3 mushy-band quality | Not started | §5. |
 | Stage 4 site packs | Not started | §4. |
@@ -192,41 +192,64 @@ pixels (0.994285%); changed channels moved 3.8816/255 on average with a
 22/255 maximum. The rendered near-side geography remains registered and no
 normal-induced wrap or polar band is visible.
 
-The discrete 350 km presentation switch is now a measured 400–120 km
-handoff. From 400–260 km the globe and regional layer render together with a
-smooth opacity crossfade. The regional layer is projected onto the exact eye
-ray through the coordinate authority's Apollo 11 globe point and deliberately
-overscans the view during the overlap, so the finite 262 km square cannot
-appear as a card or intersect the sphere. From 260–120 km the globe is already
-absent and the regional camera eases from that registered tangent pose into
-the existing Orbit presentation. This sequencing avoids both the original
-projection pop and a translucent double-geometry interval.
+The discrete 350 km presentation switch is now a measured 330–120 km
+handoff. From 330–240 km the globe smoothly ramps to 1.4× presentation scale
+before the site appears. From 240–120 km the globe and regional layer share
+that exact screen scale while the globe opacity dissolves during the first
+half and the regional camera eases into the existing Orbit presentation
+during the second. The regional layer is projected onto the exact eye ray
+through the coordinate authority's Apollo 11 globe point. Waiting to reveal
+it until its finite 262 km square covers the view prevents a card edge;
+matching scale prevents the earlier translucent double image.
 
 Registration is explicit rather than hidden: the normalized center-ray
 residual is below `1e-6` in the runtime test (zero before floating-point
 rounding, therefore zero pixels before rasterization). Scale is intentionally
-not physical during the dissolve: the planar presentation uses 1.5× overscan
-because a physically scaled 262 km patch is only about 7.5% of the Moon's
-diameter and produced a black coverage gap. It is a presentation bridge, not
-a claim that the global and regional products have feature-by-feature scale
-parity. Settled Simulator captures are:
+not physical during the dissolve: both layers use 1.4× overscan because a
+physically scaled 262 km patch is only about 7.5% of the Moon's diameter and
+produced a black coverage gap. It is a presentation bridge, not a claim that
+the global and regional products have feature-by-feature scale parity. The
+overscan eases back to 1× between Orbit and Regional, after the ordinary
+finite site extent is safely outside the view. Settled 64 ppd Simulator
+captures for the final measured implementation are:
 
-- `/tmp/LandAnywhere-Stage1-crossfade-400km-final.png` — globe endpoint;
-- `/tmp/LandAnywhere-Stage1-crossfade-330km-final.png` — both layers visible;
-- `/tmp/LandAnywhere-Stage1-crossfade-260km-final.png` — registered regional
-  endpoint of the opacity dissolve;
-- `/tmp/LandAnywhere-Stage1-crossfade-190km-final.png` — site-only camera
-  morph; and
-- `/tmp/LandAnywhere-Stage1-crossfade-120km-final.png` — Orbit endpoint.
+- `/private/tmp/LandAnywhere-Stage1-crossfade-240km-64ppd-validated.png` —
+  globe-side endpoint;
+- `/private/tmp/LandAnywhere-Stage1-crossfade-210km-64ppd-validated.png` —
+  registered overlap; and
+- `/private/tmp/LandAnywhere-Stage1-crossfade-120km-64ppd-validated.png` —
+  site-side Orbit endpoint.
 
-The first two captures were allowed to settle for more than 90 seconds; the
-remaining cached ladder points settled for 45 seconds. No sampled frame shows
-a discontinuity, sphere/plane intersection, overlap card edge, roll, or
-double-render artifact; continuous hand-gesture comfort still needs device
-validation. The ordinary finite regional boundary becomes visible only after
-the globe has reached zero opacity, as it does in the existing Orbit
-presentation. Site materials, calibrated grade, terrain LOD selection,
-contact, and capture baselines were left unchanged.
+Every listed capture settled for at least 90 seconds. No sampled frame shows
+a coverage gap, sphere/plane intersection, overlap card edge, roll, or
+double-render artifact. The exact coordinate-authority center ray remains
+below `1e-6` normalized residual. Continuous hand-gesture comfort still needs
+physical Vision Pro validation.
+
+The same pass fixed a distinct near-surface ownership defect. Progressive
+children used to remove parent triangles while still transparent or before
+their asynchronous bake completed, revealing the black immersive background.
+The scene now separates residency from geometric ownership and publishes a
+complete requested generation atomically; the measured NAC base is masked
+only after all replacement tiles are ready. Explorer also stopped inventing a
+six-second camera velocity, reducing the 24.5 m Debug Simulator request from
+31 fine plus eight parent tiles (about 48.6 seconds cold) to nine fine plus one
+parent tile (about 19.1 seconds cold), a 60.8% reduction and a 20 MiB detail
+working set rather than 78 MiB. Captures
+`/private/tmp/LandAnywhere-probe-24m-atomic-focused.png` and
+`/private/tmp/LandAnywhere-probe-39m-atomic-settled.png` confirm the black
+holes are gone at both fine-detail opacity gates.
+
+Those near-surface frames still expose a narrower, measured blocker: generated
+tiles have a different grazing-incidence radiance distribution from their
+measured parent, so their rectangular footprints remain perceptible after the
+geometry is correct. That is the outstanding radiance-conserving LOD work in
+`Docs/TerrainRealismPlan.md` Workstream B1. Stage 1 is therefore not marked
+complete and the automated ladder in
+`Tools/CaptureLunarExplorerZoomLadder.sh` is not an acceptance artifact yet.
+This slice deliberately leaves site materials, calibrated grade, contact, and
+existing capture baselines unchanged until B1 can be measured and fixed as a
+material handoff rather than hidden with geometry overlap.
 
 A textured sphere with LOD texture swap — deliberately not a chunked
 quad-sphere; at globe scale a sphere mesh + good textures is enough, and

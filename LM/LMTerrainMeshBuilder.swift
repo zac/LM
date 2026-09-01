@@ -208,4 +208,38 @@ enum LMTerrainMeshBuilder {
         descriptor.primitives = .triangles(data.triangles)
         return try MeshResource.generate(from: [descriptor])
     }
+
+    /// Remove measured-base quads that are owned by resident progressive
+    /// tiles. Progressive relief legitimately dips below the measured 2 m
+    /// parent; drawing both surfaces made the depth buffer reveal the parent
+    /// as moving gray islands inside otherwise rectangular fine footprints.
+    /// Tile boundaries are aligned to the measured grid, so this produces one
+    /// watertight owner per quad without lifting visual terrain away from the
+    /// contact surface.
+    static func excludingProgressiveFootprints(
+        from data: VertexData,
+        plans: [LMTerrainTilePlan]
+    ) -> VertexData {
+        guard !plans.isEmpty else { return data }
+        var result = data
+        result.triangles.removeAll(keepingCapacity: true)
+        result.triangles.reserveCapacity(data.triangles.count)
+        for offset in stride(from: 0, to: data.triangles.count, by: 3) {
+            let triangle = data.triangles[offset..<(offset + 3)]
+            let positions = triangle.map { data.positions[Int($0)] }
+            let centerNorth = positions.reduce(Float.zero) { $0 + $1.x } / 3
+            let centerEast = -positions.reduce(Float.zero) { $0 + $1.z } / 3
+            let covered = plans.contains { plan in
+                let half = Float(plan.sizeMeters / 2)
+                return centerEast > Float(plan.centerEastMeters) - half
+                    && centerEast < Float(plan.centerEastMeters) + half
+                    && centerNorth > Float(plan.centerNorthMeters) - half
+                    && centerNorth < Float(plan.centerNorthMeters) + half
+            }
+            if !covered {
+                result.triangles.append(contentsOf: triangle)
+            }
+        }
+        return result
+    }
 }

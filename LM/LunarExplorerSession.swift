@@ -135,9 +135,17 @@ final class LunarExplorerSession {
     static let maximumFocusOffsetMeters = 900.0
     /// Keep the globe outside the viewer while the site presentation grows
     /// out of its Apollo 11 surface point during the measured handoff.
-    static let maximumGlobeDisplayRadiusMeters: Float = 1.35
+    /// Keep the nearest globe surface at the accepted whole-Moon depth while
+    /// zooming the sphere itself. Once its limb leaves the view, the local
+    /// spherical patch and the registered site share the same screen scale.
+    static let globeSurfaceDepthMeters: Float = 2.17
+    static let globeHandoffRampStartMetersAcross = 330_000.0
+    static let globeHandoffOverscan = 1.4
+    static let siteCoverageOverscanEndMetersAcross = Preset.regional.metersAcross
     static let lunarGlobeRadiusMeters = 1_737_400.0
-    static let globeSiteBlendStartMetersAcross = 400_000.0
+    /// The 262.144 km regional source cannot cover a wider view at matching
+    /// scale. Begin the representation blend only after it fills the frame.
+    static let globeSiteBlendStartMetersAcross = 240_000.0
     static let globeSiteBlendEndMetersAcross = Preset.orbit.metersAcross
     /// Eagle's touchdown. Named instants are just dates: the pinned mission
     /// sun is this one evaluated through the ephemeris.
@@ -220,10 +228,35 @@ final class LunarExplorerSession {
     }
 
     var globePresentationScale: Float {
-        min(
-            presentationScale,
-            Self.maximumGlobeDisplayRadiusMeters / Float(Self.lunarGlobeRadiusMeters)
-        )
+        presentationScale * Float(globeHandoffScaleMultiplier)
+    }
+
+    /// Ramp the matched globe/site overscan in before the site becomes
+    /// visible. Both representations then retain identical screen scale while
+    /// the finite regional patch covers the complete immersive view.
+    var globeHandoffScaleMultiplier: Double {
+        let span = Self.globeHandoffRampStartMetersAcross
+            - Self.globeSiteBlendStartMetersAcross
+        let linear = min(max(
+            (Self.globeHandoffRampStartMetersAcross - metersAcross) / span,
+            0
+        ), 1)
+        let smooth = linear * linear * (3 - 2 * linear)
+        return 1 + (Self.globeHandoffOverscan - 1) * smooth
+    }
+
+    /// Keep the finite regional mesh outside the camera frustum at Orbit,
+    /// then release the extra coverage once the ordinary site extent is more
+    /// than large enough for the selected view.
+    var siteCoverageScaleMultiplier: Double {
+        let span = Self.globeSiteBlendEndMetersAcross
+            - Self.siteCoverageOverscanEndMetersAcross
+        let linear = min(max(
+            (metersAcross - Self.siteCoverageOverscanEndMetersAcross) / span,
+            0
+        ), 1)
+        let smooth = linear * linear * (3 - 2 * linear)
+        return 1 + (Self.globeHandoffOverscan - 1) * smooth
     }
 
     struct GlobeSiteBlend: Equatable {

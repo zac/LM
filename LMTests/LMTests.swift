@@ -2026,6 +2026,31 @@ struct ProgressiveLunarTerrainTests {
         }
     }
 
+    @Test func transparentFineTilesDoNotRemoveParentTriangles() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let plans = LMProgressiveTerrainPlanner(
+            sourceSpacingMeters: field.spacingMeters
+        ).focusedPlans(
+            focusEastMeters: 2,
+            focusNorthMeters: 2,
+            altitudeMeters: 20
+        )
+        let parentPlan = try #require(plans.first {
+            $0.sampleSpacingMeters == 0.5
+        })
+        let generated = try Apollo11TerrainResource.makeProgressiveTileMeshData(
+            heightField: field,
+            plan: parentPlan,
+            activePlans: plans,
+            geometryReplacementPlans: plans.filter {
+                $0.sampleSpacingMeters >= parentPlan.sampleSpacingMeters
+            }
+        )
+        let mesh = try #require(generated)
+        let sampleCount = Int(parentPlan.sizeMeters / parentPlan.sampleSpacingMeters) + 1
+        #expect(mesh.indices.count == (sampleCount - 1) * (sampleCount - 1) * 6)
+    }
+
     @Test func presentationPreloadsFineGeometryThenBlendsToExactRenderedTouchdown() throws {
         let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
         let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: field.spacingMeters)
@@ -3419,6 +3444,40 @@ struct TerrainDetailTextureTests {
         // Finer than the 0.125 m triangles and far finer than 0.5 m NAC texels.
         #expect(texelSpacing < plan.sampleSpacingMeters)
         #expect(texelSpacing < 0.5)
+    }
+
+    @Test func appearanceHandoffTargetsTheRenderedParentFrequency() {
+        let landing = LMTerrainTilePlan(
+            id: .init(level: 1, eastIndex: 0, northIndex: 0),
+            centerEastMeters: 8,
+            centerNorthMeters: 8,
+            sizeMeters: 16,
+            sampleSpacingMeters: 0.125,
+            containsProceduralSubresolution: true
+        )
+        let terminal = LMTerrainTilePlan(
+            id: .init(level: 0, eastIndex: 0, northIndex: 0),
+            centerEastMeters: 32,
+            centerNorthMeters: 32,
+            sizeMeters: 64,
+            sampleSpacingMeters: 0.5,
+            containsProceduralSubresolution: true
+        )
+        let landingTexelSpacing = landing.sizeMeters
+            / Double(LMTerrainTileDetailBaker.resolution - 1)
+        let terminalTexelSpacing = terminal.sizeMeters
+            / Double(LMTerrainTileDetailBaker.resolution - 1)
+
+        #expect(abs(
+            LMTerrainTileDetailBaker.parentAppearanceSampleSpacingMeters(
+                plan: landing,
+                texelSpacingMeters: landingTexelSpacing
+            )! - terminalTexelSpacing
+        ) < 1e-12)
+        #expect(LMTerrainTileDetailBaker.parentAppearanceSampleSpacingMeters(
+            plan: terminal,
+            texelSpacingMeters: terminalTexelSpacing
+        ) == nil)
     }
 
     @Test func bakedNormalDistributionCanBeReusedForAnySunDirection() throws {

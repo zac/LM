@@ -713,6 +713,12 @@ enum LMTerrainTileDetailBaker {
     static let samplingGutterTexels = 8
     static let renderingResolution = resolution + samplingGutterTexels * 2
 
+    /// The bundled NAC height field is the last geometric parent in the
+    /// progressive hierarchy. A child below this spacing hands appearance to
+    /// another generated tile; the terminal 0.5 m tile hands directly to the
+    /// measured material, which has no procedural relief or modulation.
+    static let measuredGeometrySpacingMeters = 2.0
+
     /// The residency footprint's outer collar crossfades the complete child
     /// material into its live parent, mirroring the geometry's edge morph.
     /// Detail itself must remain full-strength through this collar. Fading the
@@ -869,7 +875,11 @@ enum LMTerrainTileDetailBaker {
                         transition: transition,
                         eastMeters: east,
                         northMeters: north,
-                        parentSampleSpacingMeters: texelSpacing * 4,
+                        parentSampleSpacingMeters:
+                            parentAppearanceSampleSpacingMeters(
+                                plan: plan,
+                                texelSpacingMeters: texelSpacing
+                            ),
                         microtexture: microtexture,
                         craterlets: craterlets
                     )
@@ -886,12 +896,17 @@ enum LMTerrainTileDetailBaker {
                     if transition >= 1 {
                         relief[localGridRow * gridWidth + column] = fine
                     } else {
-                        let parent = microtexture.reliefMeters(
-                            eastMeters: east,
-                            northMeters: north,
-                            sampleSpacingMeters: texelSpacing * 4,
-                            craterlets: craterlets
-                        )
+                        let parent = parentAppearanceSampleSpacingMeters(
+                            plan: plan,
+                            texelSpacingMeters: texelSpacing
+                        ).map {
+                            microtexture.reliefMeters(
+                                eastMeters: east,
+                                northMeters: north,
+                                sampleSpacingMeters: $0,
+                                craterlets: craterlets
+                            )
+                        } ?? 0
                         relief[localGridRow * gridWidth + column] = parent
                             + (fine - parent) * transition
                     }
@@ -972,17 +987,19 @@ enum LMTerrainTileDetailBaker {
         transition: Double,
         eastMeters: Double,
         northMeters: Double,
-        parentSampleSpacingMeters: Double,
+        parentSampleSpacingMeters: Double?,
         microtexture: LMRegolithMicrotextureModel,
         craterlets: LMRegolithCraterletField
     ) -> (reliefMeters: Double, reflectanceModulation: Double) {
         guard transition < 1 else { return fine }
-        let parent = microtexture.appearanceSample(
-            eastMeters: eastMeters,
-            northMeters: northMeters,
-            sampleSpacingMeters: parentSampleSpacingMeters,
-            craterlets: craterlets
-        )
+        let parent = parentSampleSpacingMeters.map {
+            microtexture.appearanceSample(
+                eastMeters: eastMeters,
+                northMeters: northMeters,
+                sampleSpacingMeters: $0,
+                craterlets: craterlets
+            )
+        } ?? (reliefMeters: 0, reflectanceModulation: 1)
         return (
             parent.reliefMeters
                 + (fine.reliefMeters - parent.reliefMeters) * transition,
@@ -990,6 +1007,24 @@ enum LMTerrainTileDetailBaker {
                 + (fine.reflectanceModulation - parent.reflectanceModulation)
                     * transition
         )
+    }
+
+    /// Appearance is sampled more densely than geometry. When the live parent
+    /// is another generated tile, match that tile's actual texel frequency
+    /// (four times the child's world texel spacing), not its coarser mesh
+    /// spacing. Once the next geometric parent is the measured NAC field,
+    /// return `nil`: the exact parent appearance is measured reflectance with
+    /// no invented microrelief.
+    nonisolated static func parentAppearanceSampleSpacingMeters(
+        plan: LMTerrainTilePlan,
+        texelSpacingMeters: Double
+    ) -> Double? {
+        let parentGeometrySpacing = plan.sampleSpacingMeters * 4
+        guard parentGeometrySpacing
+                < measuredGeometrySpacingMeters - 1e-6 else {
+            return nil
+        }
+        return texelSpacingMeters * 4
     }
 
     private nonisolated static func transitionWeight(

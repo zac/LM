@@ -221,6 +221,8 @@ enum LMTerrainWorld {
         let earthshine: DirectionalLight
         let manifest: LMTerrainManifest
         let nearAlbedoTexture: TextureResource
+        let nearFieldEntity: ModelEntity
+        let nearFieldGrid: LMTerrainMeshBuilder.VertexData
     }
 
     enum WorldError: Error, Equatable {
@@ -293,6 +295,7 @@ enum LMTerrainWorld {
             (tile: farTile, grid: farGrid),
         ]
         var nearAlbedoTexture: TextureResource?
+        var nearFieldEntity: ModelEntity?
 
         for (tile, grid) in bands {
             let albedoURL = try resourceURL(bundle: bundle, file: tile.albedoFile)
@@ -308,6 +311,9 @@ enum LMTerrainWorld {
             let model = ModelEntity(mesh: mesh, materials: [material])
             model.name = "Terrain-\(tile.id)"
             worldRoot.addChild(model)
+            if tile.id == nearFieldTileID {
+                nearFieldEntity = model
+            }
         }
 
         let sun = DirectionalLight()
@@ -330,7 +336,7 @@ enum LMTerrainWorld {
         earthshine.shadow = nil
         worldRoot.addChild(earthshine)
 
-        guard let nearAlbedoTexture else {
+        guard let nearAlbedoTexture, let nearFieldEntity else {
             throw WorldError.missingTile(nearFieldTileID)
         }
         await terrainDetailPreparation
@@ -339,7 +345,9 @@ enum LMTerrainWorld {
             sun: sun,
             earthshine: earthshine,
             manifest: manifest,
-            nearAlbedoTexture: nearAlbedoTexture
+            nearAlbedoTexture: nearAlbedoTexture,
+            nearFieldEntity: nearFieldEntity,
+            nearFieldGrid: nearGrid
         )
     }
 

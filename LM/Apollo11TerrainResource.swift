@@ -168,6 +168,7 @@ enum Apollo11TerrainResource {
         heightField: Apollo11TerrainHeightField,
         plan: LMTerrainTilePlan,
         activePlans: [LMTerrainTilePlan]? = nil,
+        geometryReplacementPlans: [LMTerrainTilePlan]? = nil,
         albedoField: LMMeasuredAlbedoField?,
         detailPipeline: LMTerrainDetailPipeline = Apollo11TerrainResource
             .detailPipeline
@@ -176,6 +177,7 @@ enum Apollo11TerrainResource {
             heightField: heightField,
             plan: plan,
             activePlans: activePlans,
+            geometryReplacementPlans: geometryReplacementPlans,
             albedoField: albedoField,
             detailPipeline: detailPipeline
         )?.entity
@@ -186,6 +188,7 @@ enum Apollo11TerrainResource {
         heightField: Apollo11TerrainHeightField,
         plan: LMTerrainTilePlan,
         activePlans: [LMTerrainTilePlan]? = nil,
+        geometryReplacementPlans: [LMTerrainTilePlan]? = nil,
         albedoField: LMMeasuredAlbedoField?,
         detailPipeline: LMTerrainDetailPipeline = Apollo11TerrainResource
             .detailPipeline
@@ -197,7 +200,8 @@ enum Apollo11TerrainResource {
             async let timedMesh = timedProgressiveTileMesh(
                 heightField: heightField,
                 plan: plan,
-                activePlans: activePlans
+                activePlans: activePlans,
+                geometryReplacementPlans: geometryReplacementPlans
             )
             async let timedDetail = timedProgressiveTileDetail(
                 plan: plan,
@@ -271,13 +275,15 @@ enum Apollo11TerrainResource {
     nonisolated private static func timedProgressiveTileMesh(
         heightField: Apollo11TerrainHeightField,
         plan: LMTerrainTilePlan,
-        activePlans: [LMTerrainTilePlan]?
+        activePlans: [LMTerrainTilePlan]?,
+        geometryReplacementPlans: [LMTerrainTilePlan]?
     ) throws -> (value: LMProgressiveTerrainMeshData?, milliseconds: Int) {
         let started = ContinuousClock.now
         let value = try makeProgressiveTileMeshData(
             heightField: heightField,
             plan: plan,
-            activePlans: activePlans
+            activePlans: activePlans,
+            geometryReplacementPlans: geometryReplacementPlans
         )
         return (value, milliseconds(started.duration(to: .now)))
     }
@@ -297,7 +303,8 @@ enum Apollo11TerrainResource {
     nonisolated static func makeProgressiveTileMeshData(
         heightField: Apollo11TerrainHeightField,
         plan: LMTerrainTilePlan,
-        activePlans: [LMTerrainTilePlan]? = nil
+        activePlans: [LMTerrainTilePlan]? = nil,
+        geometryReplacementPlans: [LMTerrainTilePlan]? = nil
     ) throws -> LMProgressiveTerrainMeshData? {
         let tileSize = plan.sizeMeters
         let sampleSpacing = plan.sampleSpacingMeters
@@ -312,7 +319,12 @@ enum Apollo11TerrainResource {
         // residency set so shared edges retain their actual ownership.
         let meshPlan = activePlans == nil ? plan.withTransitionEdges(.all) : plan
         let residentPlans = activePlans ?? [meshPlan]
-        let finerResidentPlans = residentPlans.filter {
+        // Residency determines the hierarchical height/morph evaluation, but
+        // only fully opaque children may take geometric ownership from this
+        // parent. Keeping those inputs separate prevents a preloaded or
+        // crossfading child from exposing the immersive background through a
+        // parent hole.
+        let finerResidentPlans = (geometryReplacementPlans ?? residentPlans).filter {
             $0.sampleSpacingMeters < plan.sampleSpacingMeters - 1e-9
         }
         let halfSize = tileSize / 2
