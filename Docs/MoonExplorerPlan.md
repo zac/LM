@@ -22,8 +22,8 @@ are astronomically correct.
 | W1 ephemeris / time | **Done** | `LM/LMLunarEphemeris.swift`: subsolar + sub-Earth points, Moon-fixed directions, site horizon angles, Earth phase for earthshine. Tests: `LMTests/LMLunarEphemerisTests.swift`. Built analytically rather than as a SPICE-baked table — see §3. |
 | W3 POI catalog / lat-lon entry / fly-to | Not started | Unblocked by W1. |
 | W4 panel debug section | Not started | Capture-only diagnostics exist as launch flags; no runtime toggles yet. |
-| W5 sun modes in the UI | Not started | The ephemeris behind it is done; nothing is wired to rendering yet. |
-| W2 globe | Not started | Largest; do the Release profiling baseline first. |
+| W5 sun modes in the UI | **Done** | Ephemeris-driven sun with UTC date picker, lunation scrub, live readout, mission-instant reset; pinned mission azimuth corrected (was anti-solar); elevation-tracking exposure; opt-in photographic grade with earthshine. Calibrated renders pixel-identical. |
+| W2 globe | **Superseded** | Reshaped as Stage 1 of `Docs/LandAnywhereMoonPlan.md`, which owns the globe, re-anchorable terrain, and the neural texture track. W3/W4 land as that plan's UX face. |
 
 Related, from `Docs/TerrainRealismPlan.md`: Workstream A (photo-seeded craters)
 has landed its code path — `LM/LMLunarCraterCatalog.swift`, catalog seeding in

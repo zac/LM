@@ -21,8 +21,8 @@ fidelity contract.
 |---|---|---|
 | A — photo-seeded craters | **Integrated; visual QA pending** | The reviewed 1,200-entry catalog is pinned and live in render/contact geometry. Surface/landing A/B captures remain. |
 | B1 — radiance-conserving LOD | **Statistics integrated; compensation pending** | Both exact micro-normal and added-mesh-band distributions are available without a fixed sun. Live ephemeris-driven material compensation and capture measurement remain. |
-| B2 — photographic grade | Not started | Earthshine direction and Earth phase are both available from the ephemeris. |
-| C — shape-from-shading DTM | Not started | Needs owner sign-off on the provenance question first. |
+| B2 — photographic grade | **Done** | Opt-in `photographic` grade: exposure floor removed, ephemeris-driven earthshine fill scaled by Earth phase, exposed for highlights. Calibrated grade pixel-identical; lunar night renders. See `LMTerrainPresentationGrade`. |
+| C — shape-from-shading DTM | Not started | Needs owner sign-off on the provenance question first. Now also slotted as Stage 4 material in `Docs/LandAnywhereMoonPlan.md`, which extends this plan's A/B1 machinery to global scale. |
 
 **Workstream A, precisely where it stands.** The deterministic detector has
 produced `LM/Terrain/apollo11-nac-craters-v1.json`: a conservative,
