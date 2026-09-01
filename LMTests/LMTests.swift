@@ -1979,6 +1979,158 @@ struct ProgressiveLunarTerrainTests {
         ) > 0.999_99)
     }
 
+    @Test func everyEagleLandingTileEdgeIsGeometricallyContinuous() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: field.spacingMeters)
+        let plans = planner.focusedPlans(
+            focusEastMeters: -4.335939305713085,
+            focusNorthMeters: 19.61920772442715,
+            altitudeMeters: 2
+        )
+        let finePlans = plans.filter { $0.sampleSpacingMeters == 0.125 }
+        let meshes = try Dictionary(uniqueKeysWithValues: finePlans.map { plan in
+            let generated = try Apollo11TerrainResource.makeProgressiveTileMeshData(
+                heightField: field,
+                plan: plan,
+                activePlans: plans
+            )
+            return (plan.id, try #require(generated))
+        })
+        let sampleCount = 129
+
+        for plan in finePlans {
+            let mesh = try #require(meshes[plan.id])
+            let eastID = LMTerrainTileID(
+                level: plan.id.level,
+                eastIndex: plan.id.eastIndex + 1,
+                northIndex: plan.id.northIndex
+            )
+            if let east = meshes[eastID] {
+                for row in 0..<sampleCount {
+                    let westIndex = row * sampleCount + sampleCount - 1
+                    let eastIndex = row * sampleCount
+                    #expect(abs(mesh.positions[westIndex].y - east.positions[eastIndex].y) < 1e-6)
+                    #expect(simd_dot(mesh.normals[westIndex], east.normals[eastIndex]) > 0.999_99)
+                }
+            }
+
+            let northID = LMTerrainTileID(
+                level: plan.id.level,
+                eastIndex: plan.id.eastIndex,
+                northIndex: plan.id.northIndex + 1
+            )
+            if let north = meshes[northID] {
+                for column in 0..<sampleCount {
+                    let southIndex = column
+                    let northIndex = (sampleCount - 1) * sampleCount + column
+                    #expect(abs(mesh.positions[southIndex].y - north.positions[northIndex].y) < 1e-6)
+                    #expect(simd_dot(mesh.normals[southIndex], north.normals[northIndex]) > 0.999_99)
+                }
+            }
+        }
+    }
+
+    @Test func progressiveMeasuredNormalsStaySmoothAcrossSourceGridLines() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let north = 19.61920772442715
+        let west = try #require(field.interpolatedSurfaceNormal(
+            eastMeters: -0.001,
+            northMeters: north
+        ))
+        let east = try #require(field.interpolatedSurfaceNormal(
+            eastMeters: 0.001,
+            northMeters: north
+        ))
+        #expect(simd_dot(west, east) > 0.999_99)
+
+        let center = try #require(field.interpolatedSurfaceNormal(
+            eastMeters: 0,
+            northMeters: 20
+        ))
+        let spacing = field.spacingMeters
+        let expectedNorthSlope = (
+            try #require(field.relativeElevation(eastMeters: 0, northMeters: 20 + spacing))
+                - (try #require(field.relativeElevation(
+                    eastMeters: 0,
+                    northMeters: 20 - spacing
+                )))
+        ) / Float(2 * spacing)
+        let expectedEastSlope = (
+            try #require(field.relativeElevation(eastMeters: spacing, northMeters: 20))
+                - (try #require(field.relativeElevation(
+                    eastMeters: -spacing,
+                    northMeters: 20
+                )))
+        ) / Float(2 * spacing)
+        let expected = simd_normalize(SIMD3<Float>(
+            -expectedNorthSlope,
+            1,
+            expectedEastSlope
+        ))
+        #expect(simd_dot(center, expected) > 0.999_99)
+    }
+
+    @Test func landingPerimeterNormalsMatchTheTerminalParent() throws {
+        let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
+        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: field.spacingMeters)
+        let plans = planner.focusedPlans(
+            focusEastMeters: -4.335939305713085,
+            focusNorthMeters: 19.61920772442715,
+            altitudeMeters: 2
+        )
+        let meshes = try Dictionary(uniqueKeysWithValues: plans.map { plan in
+            let mesh = try Apollo11TerrainResource.makeProgressiveTileMeshData(
+                heightField: field,
+                plan: plan,
+                activePlans: plans
+            )
+            return (plan.id, try #require(mesh))
+        })
+        struct PositionKey: Hashable {
+            let northMillimeters: Int
+            let eastMillimeters: Int
+        }
+        let terminalPlans = plans.filter { $0.sampleSpacingMeters == 0.5 }
+        var terminalNormals = [PositionKey: SIMD3<Float>]()
+        for plan in terminalPlans {
+            let mesh = try #require(meshes[plan.id])
+            for (position, normal) in zip(mesh.positions, mesh.normals) {
+                terminalNormals[PositionKey(
+                    northMillimeters: Int((position.x * 1_000).rounded()),
+                    eastMillimeters: Int((-position.z * 1_000).rounded())
+                )] = normal
+            }
+        }
+
+        var edgeDots = [Float]()
+        for plan in plans where plan.sampleSpacingMeters == 0.125 {
+            let mesh = try #require(meshes[plan.id])
+            let sampleCount = Int(plan.sizeMeters / plan.sampleSpacingMeters) + 1
+            for row in 0..<sampleCount {
+                for column in 0..<sampleCount {
+                    let isEdge = (column == 0 && plan.transitionEdges.contains(.west))
+                        || (column == sampleCount - 1 && plan.transitionEdges.contains(.east))
+                        || (row == 0 && plan.transitionEdges.contains(.north))
+                        || (row == sampleCount - 1 && plan.transitionEdges.contains(.south))
+                    guard isEdge, row.isMultiple(of: 4), column.isMultiple(of: 4) else {
+                        continue
+                    }
+                    let index = row * sampleCount + column
+                    let position = mesh.positions[index]
+                    let key = PositionKey(
+                        northMillimeters: Int((position.x * 1_000).rounded()),
+                        eastMillimeters: Int((-position.z * 1_000).rounded())
+                    )
+                    if let parent = terminalNormals[key] {
+                        edgeDots.append(simd_dot(mesh.normals[index], parent))
+                    }
+                }
+            }
+        }
+        #expect(!edgeDots.isEmpty)
+        #expect(edgeDots.min() ?? 0 > 0.999_9)
+    }
+
     @Test func finerResidentTilesReplaceCoveredParentTriangles() throws {
         let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
         let plans = LMProgressiveTerrainPlanner(
@@ -2155,26 +2307,28 @@ struct ProgressiveLunarTerrainTests {
 
     @Test func explorerViewProjectionKeepsAContiguousLandingViewCorridor() {
         let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: 2)
-        let forward = planner.prefetchedPlans(
+        let plans = planner.viewCorridorPlans(
             focusEastMeters: -4.336,
             focusNorthMeters: 19.619,
-            velocityEastMetersPerSecond: 48.0 / 6.0,
-            velocityNorthMetersPerSecond: 0,
+            headingDegrees: 0,
+            forwardDistanceMeters: 48,
             altitudeMeters: 2
         )
-        let rear = planner.focusedPlans(
-            focusEastMeters: -4.336 - 32,
+        let rear = planner.viewCorridorPlans(
+            focusEastMeters: -4.336,
             focusNorthMeters: 19.619,
+            headingDegrees: 180,
+            forwardDistanceMeters: 32,
             altitudeMeters: 2
         )
-        let plans = planner.mergedPlans(forward + rear)
-        let landing = plans.filter { $0.sampleSpacingMeters == 0.125 }
-
-        #expect(landing.count == 24)
-        #expect(Set(landing.map(\.id.eastIndex)) == Set(-4...3))
-        #expect(Set(landing.map(\.id.northIndex)) == Set(0...2))
-        let byID = Dictionary(uniqueKeysWithValues: landing.map { ($0.id, $0) })
-        for plan in landing where plan.id.eastIndex < 3 {
+        let complete = planner.mergedPlans(plans + rear).filter {
+            $0.sampleSpacingMeters == 0.125
+        }
+        #expect(complete.count == 24)
+        #expect(Set(complete.map(\.id.eastIndex)) == Set(-4...3))
+        #expect(Set(complete.map(\.id.northIndex)) == Set(0...2))
+        let byID = Dictionary(uniqueKeysWithValues: complete.map { ($0.id, $0) })
+        for plan in complete where plan.id.eastIndex < 3 {
             let east = LMTerrainTileID(
                 level: plan.id.level,
                 eastIndex: plan.id.eastIndex + 1,

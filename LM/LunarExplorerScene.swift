@@ -388,17 +388,71 @@ final class LunarExplorerScene {
         let planner = LMProgressiveTerrainPlanner(
             sourceSpacingMeters: heightField.spacingMeters
         )
-        // Explorer has no vehicle velocity to predict. Its former synthetic
-        // forward/rear projections expanded the landing set from the bounded
-        // 3x3 neighborhood to 31 fine tiles, overflowed the 32 MB working-set
-        // cache, and pushed a Debug Simulator bake past forty seconds. The
-        // ordinary focused footprint already covers the selected inspection
-        // width; powered descent still uses real six-second velocity prefetch.
-        let plans = planner.focusedPlans(
+        // Capture-only control for a same-camera, same-feature LOD A/B. It is
+        // more reliable than comparing different lunar pixels on opposite
+        // sides of a footprint boundary after residency geometry changes.
+        let terminalOnlyCapture = ProcessInfo.processInfo.arguments.contains(
+            "--lunar-explorer-capture-max-detail=terminal"
+        ) && ProcessInfo.processInfo.arguments.contains(
+            "--lunar-explorer-capture"
+        )
+        let requestedAltitude = terminalOnlyCapture
+            ? max(
+                altitudeMeters,
+                LMTerrainDetailPolicy().landingAltitudeMeters + 1
+            )
+            : altitudeMeters
+        let heading = session?.headingDegrees ?? 0
+        let metersAcross = session?.metersAcross ?? 0
+        // The compact footprint owns contact around the selected point. The
+        // oblique Explorer camera also needs a bounded forward corridor so its
+        // frame never sees the rectangular outer morph into the parent level.
+        // Keep the expensive 0.125 m landing corridor asymmetric but complete:
+        // 48 m into the view and 32 m behind the focus. The rear coverage is
+        // load-bearing at Surface, where the nearest footprint perimeter is
+        // otherwise visible as a broad normal-frequency collar. This is 24
+        // Eagle tiles, still bounded below the former 31-tile blanket. The
+        // cheaper 0.5 m terminal corridor can follow wider inspection views.
+        let basePlans = planner.focusedPlans(
             focusEastMeters: focusEastMeters,
             focusNorthMeters: focusNorthMeters,
-            altitudeMeters: altitudeMeters
+            altitudeMeters: requestedAltitude
         )
+        var corridorPlans = basePlans
+        if !terminalOnlyCapture,
+           altitudeMeters <= LMTerrainDetailPolicy().landingAltitudeMeters {
+            corridorPlans += planner.viewCorridorPlans(
+                focusEastMeters: focusEastMeters,
+                focusNorthMeters: focusNorthMeters,
+                headingDegrees: heading,
+                forwardDistanceMeters: 48,
+                altitudeMeters: altitudeMeters
+            )
+            corridorPlans += planner.viewCorridorPlans(
+                focusEastMeters: focusEastMeters,
+                focusNorthMeters: focusNorthMeters,
+                headingDegrees: heading + 180,
+                forwardDistanceMeters: 32,
+                altitudeMeters: altitudeMeters
+            )
+        }
+        let terminalDistance = min(384, max(48, metersAcross * 0.75))
+        if altitudeMeters <= LMTerrainDetailPolicy().terminalAltitudeMeters {
+            // Asking at 61 m selects only the terminal level when the landing
+            // level is also resident, avoiding a large hidden fine-tile set.
+            let terminalOnlyAltitude = max(
+                altitudeMeters,
+                LMTerrainDetailPolicy().landingAltitudeMeters + 1
+            )
+            corridorPlans += planner.viewCorridorPlans(
+                focusEastMeters: focusEastMeters,
+                focusNorthMeters: focusNorthMeters,
+                headingDegrees: heading,
+                forwardDistanceMeters: terminalDistance,
+                altitudeMeters: terminalOnlyAltitude
+            )
+        }
+        let plans = planner.mergedPlans(corridorPlans)
         let nextPlans = Dictionary(uniqueKeysWithValues: plans.map { ($0.id, $0) })
         let policy = LMTerrainDetailPolicy()
         let replacementPlans = plans.filter {

@@ -36,6 +36,54 @@ struct Apollo11TerrainHeightField: Equatable, Sendable {
         let south = value(x0, y1) + (value(x1, y1) - value(x0, y1)) * tx
         return north + (south - north) * ty
     }
+
+    /// Smooth shading normal from the measured DTM posts.
+    ///
+    /// The geometry remains the exact bilinear interpolation above, preserving
+    /// every measured post and the contact surface. Recomputing a constant
+    /// slope from that interpolation inside every 2 m source cell exposes the
+    /// DTM grid at surface scale. Interpolating the same central-difference
+    /// post normals used by the measured base mesh removes that artificial
+    /// faceting without inventing or moving any elevation.
+    func interpolatedSurfaceNormal(
+        eastMeters: Double,
+        northMeters: Double
+    ) -> SIMD3<Float>? {
+        let spacing = spacingMeters
+        let column = eastMeters / spacing + Double(width - 1) / 2
+        let row = -northMeters / spacing + Double(height - 1) / 2
+        guard column >= 0, row >= 0,
+              column <= Double(width - 1),
+              row <= Double(height - 1) else {
+            return nil
+        }
+        let x0 = Int(column.rounded(.down))
+        let y0 = Int(row.rounded(.down))
+        let x1 = min(x0 + 1, width - 1)
+        let y1 = min(y0 + 1, height - 1)
+        let tx = Float(column - Double(x0))
+        let ty = Float(row - Double(y0))
+
+        func postNormal(_ x: Int, _ y: Int) -> SIMD3<Float> {
+            let centerX = min(max(x, 1), width - 2)
+            let centerY = min(max(y, 1), height - 2)
+            let west = heights[centerY * width + centerX - 1]
+            let east = heights[centerY * width + centerX + 1]
+            let north = heights[(centerY - 1) * width + centerX]
+            let south = heights[(centerY + 1) * width + centerX]
+            let eastSlope = (east - west) / Float(2 * spacing)
+            let northSlope = (north - south) / Float(2 * spacing)
+            return simd_normalize(SIMD3(-northSlope, 1, eastSlope))
+        }
+
+        let northwest = postNormal(x0, y0)
+        let northeast = postNormal(x1, y0)
+        let southwest = postNormal(x0, y1)
+        let southeast = postNormal(x1, y1)
+        let north = simd_mix(northwest, northeast, SIMD3(repeating: tx))
+        let south = simd_mix(southwest, southeast, SIMD3(repeating: tx))
+        return simd_normalize(simd_mix(north, south, SIMD3(repeating: ty)))
+    }
 }
 
 struct LMProgressiveTerrainMeshData: Sendable {
@@ -435,7 +483,53 @@ enum Apollo11TerrainResource {
                     )
                 }
                 let index = row * sampleCount + column
-                let normal = simd_normalize(simd_cross(right - left, south - north))
+                let measuredNormal = heightField.interpolatedSurfaceNormal(
+                    eastMeters: eastMeters,
+                    northMeters: northMeters
+                ) ?? SIMD3<Float>(0, 1, 0)
+                let measuredNorthSlope = -measuredNormal.x / measuredNormal.y
+                let measuredEastSlope = measuredNormal.z / measuredNormal.y
+                func residualHeight(
+                    _ position: SIMD3<Float>,
+                    east: Double,
+                    north: Double
+                ) -> Float {
+                    position.y - (heightField.relativeElevation(
+                        eastMeters: east,
+                        northMeters: north
+                    ) ?? position.y)
+                }
+                let leftEast = eastMeters - sampleSpacing
+                let rightEast = eastMeters + sampleSpacing
+                let northCoordinate = northMeters + sampleSpacing
+                let southCoordinate = northMeters - sampleSpacing
+                let residualEastSlope = (
+                    residualHeight(
+                        right,
+                        east: rightEast,
+                        north: northMeters
+                    ) - residualHeight(
+                        left,
+                        east: leftEast,
+                        north: northMeters
+                    )
+                ) / Float(2 * sampleSpacing)
+                let residualNorthSlope = (
+                    residualHeight(
+                        north,
+                        east: eastMeters,
+                        north: northCoordinate
+                    ) - residualHeight(
+                        south,
+                        east: eastMeters,
+                        north: southCoordinate
+                    )
+                ) / Float(2 * sampleSpacing)
+                let normal = simd_normalize(SIMD3<Float>(
+                    -(measuredNorthSlope + residualNorthSlope),
+                    1,
+                    measuredEastSlope + residualEastSlope
+                ))
                 normals[index] = normal
                 // u runs east (RealityKit -Z) and v runs south (-X). Orthogonalize
                 // the tangent against the vertex normal so the baked tangent-space

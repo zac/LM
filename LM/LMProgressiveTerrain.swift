@@ -831,6 +831,57 @@ struct LMProgressiveTerrainPlanner: Sendable {
         return mergedPlans(current + predicted)
     }
 
+    /// Keeps a continuous, view-aligned inspection corridor resident.
+    ///
+    /// Explorer has no vehicle velocity, but its oblique camera can see well
+    /// beyond the compact contact footprint around the selected point. Merely
+    /// requesting the start and end footprints leaves a parent-only gap when
+    /// they are farther apart than one tile. Sampling at the finest active
+    /// tile width keeps the union contiguous while bounding the number of
+    /// generated tiles.
+    func viewCorridorPlans(
+        focusEastMeters: Double,
+        focusNorthMeters: Double,
+        headingDegrees: Double,
+        forwardDistanceMeters: Double,
+        altitudeMeters: Double,
+        policy: LMTerrainDetailPolicy = .init()
+    ) -> [LMTerrainTilePlan] {
+        guard forwardDistanceMeters > 0,
+              let finestSpacing = policy.finestSpacingMeters(
+                  altitudeMeters: altitudeMeters
+              ),
+              let finestLevel = levels.first(where: {
+                  abs($0.sampleSpacingMeters - finestSpacing)
+                      < Self.spacingToleranceMeters
+              }) else {
+            return focusedPlans(
+                focusEastMeters: focusEastMeters,
+                focusNorthMeters: focusNorthMeters,
+                altitudeMeters: altitudeMeters,
+                policy: policy
+            )
+        }
+        let sampleCount = max(
+            1,
+            Int(ceil(forwardDistanceMeters / finestLevel.tileSizeMeters))
+        )
+        let heading = headingDegrees * .pi / 180
+        let eastDirection = cos(heading)
+        let northDirection = sin(heading)
+        let samples = (0...sampleCount).flatMap { index in
+            let fraction = Double(index) / Double(sampleCount)
+            let distance = forwardDistanceMeters * fraction
+            return focusedPlans(
+                focusEastMeters: focusEastMeters + eastDirection * distance,
+                focusNorthMeters: focusNorthMeters + northDirection * distance,
+                altitudeMeters: altitudeMeters,
+                policy: policy
+            )
+        }
+        return mergedPlans(samples)
+    }
+
     /// Merges independently projected residency samples into one continuous
     /// footprint, then assigns transition ownership only at its final outer
     /// edge. Explorer uses this for a view corridor; descent uses the same
