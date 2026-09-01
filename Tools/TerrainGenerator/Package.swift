@@ -6,7 +6,11 @@ let package = Package(
     name: "Apollo11TerrainGenerator",
     platforms: [.macOS(.v14)],
     products: [
-        .executable(name: "Apollo11TerrainGenerator", targets: ["Apollo11TerrainGenerator"])
+        .executable(name: "Apollo11TerrainGenerator", targets: ["Apollo11TerrainGenerator"]),
+        .executable(
+            name: "GlobalLunarMosaicGenerator",
+            targets: ["GlobalLunarMosaicGenerator"]
+        )
     ],
     targets: [
         .executableTarget(
@@ -21,6 +25,13 @@ let package = Package(
                 .copy("WAC_EMP_643NM_E300N0450_304P.xml"),
                 .copy("WAC_EMP_643NM_E300S0450_064P.xml")
             ],
+            linkerSettings: [
+                .linkedFramework("CoreGraphics"),
+                .linkedFramework("ImageIO")
+            ]
+        ),
+        .executableTarget(
+            name: "GlobalLunarMosaicGenerator",
             linkerSettings: [
                 .linkedFramework("CoreGraphics"),
                 .linkedFramework("ImageIO")

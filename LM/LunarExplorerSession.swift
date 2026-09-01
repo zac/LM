@@ -25,6 +25,7 @@ final class LunarExplorerSession {
     }
 
     enum Preset: String, CaseIterable, Identifiable {
+        case globe
         case orbit
         case regional
         case approach
@@ -36,6 +37,7 @@ final class LunarExplorerSession {
 
         var title: String {
             switch self {
+            case .globe: "Globe"
             case .orbit: "Orbit"
             case .regional: "Regional"
             case .approach: "Approach"
@@ -47,6 +49,7 @@ final class LunarExplorerSession {
 
         var altitudeMeters: Double {
             switch self {
+            case .globe: 1_000_000
             case .orbit: 30_000
             case .regional: 7_500
             case .approach: 1_200
@@ -58,6 +61,7 @@ final class LunarExplorerSession {
 
         var metersAcross: Double {
             switch self {
+            case .globe: 4_400_000
             case .orbit: 120_000
             case .regional: 24_000
             case .approach: 4_000
@@ -69,6 +73,7 @@ final class LunarExplorerSession {
 
         var tiltDegrees: Double {
             switch self {
+            case .globe: 0
             case .orbit, .regional: 72
             case .approach: 66
             case .terminal: 58
@@ -118,12 +123,18 @@ final class LunarExplorerSession {
     }
 
     static let minimumAltitudeMeters = 1.5
-    static let maximumAltitudeMeters = 40_000.0
+    static let maximumAltitudeMeters = 1_500_000.0
     static let minimumMetersAcross = 8.0
-    static let maximumMetersAcross = 140_000.0
+    static let maximumMetersAcross = 5_000_000.0
     static let minimumTiltDegrees = 18.0
+    static let minimumGlobeCaptureTiltDegrees = -82.0
     static let maximumTiltDegrees = 82.0
     static let maximumFocusOffsetMeters = 900.0
+    /// Keep the temporary discrete globe view outside the viewer even when a
+    /// capture deliberately approaches the globe/site gate. The measured
+    /// crossfade replaces this cap later in Stage 1.
+    static let maximumGlobeDisplayRadiusMeters: Float = 1.35
+    static let lunarGlobeRadiusMeters = 1_737_400.0
     /// Eagle's touchdown. Named instants are just dates: the pinned mission
     /// sun is this one evaluated through the ephemeris.
     static let apollo11TouchdownUTC: Date = {
@@ -201,6 +212,20 @@ final class LunarExplorerSession {
         Float(3 / metersAcross)
     }
 
+    var globePresentationScale: Float {
+        min(
+            presentationScale,
+            Self.maximumGlobeDisplayRadiusMeters / Float(Self.lunarGlobeRadiusMeters)
+        )
+    }
+
+    /// The first Stage 1 gate deliberately avoids pretending that globe/site
+    /// curvature registration is complete. A later slice will replace this
+    /// discrete switch with the plan's measured crossfade.
+    var presentsGlobe: Bool {
+        metersAcross >= 350_000
+    }
+
     func select(_ preset: Preset) {
         selectedPreset = preset
         altitudeMeters = preset.altitudeMeters
@@ -227,6 +252,8 @@ final class LunarExplorerSession {
     func configure(arguments: [String]) {
         var altitudeOverride: Double?
         var metersAcrossOverride: Double?
+        var headingOverride: Double?
+        var tiltOverride: Double?
         for argument in arguments {
             if let value = value(after: "--lunar-explorer-preset=", in: argument),
                let preset = Preset(rawValue: value) {
@@ -274,6 +301,16 @@ final class LunarExplorerSession {
                 in: argument
             ), let metersAcross = Double(value), metersAcross.isFinite {
                 metersAcrossOverride = metersAcross
+            } else if let value = value(
+                after: "--lunar-explorer-heading=",
+                in: argument
+            ), let heading = Double(value), heading.isFinite {
+                headingOverride = heading
+            } else if let value = value(
+                after: "--lunar-explorer-tilt=",
+                in: argument
+            ), let tilt = Double(value), tilt.isFinite {
+                tiltOverride = tilt
             }
         }
 
@@ -290,6 +327,19 @@ final class LunarExplorerSession {
             metersAcross = min(
                 max(metersAcrossOverride, Self.minimumMetersAcross),
                 Self.maximumMetersAcross
+            )
+        }
+        if let headingOverride {
+            headingDegrees = headingOverride.truncatingRemainder(dividingBy: 360)
+        }
+        if let tiltOverride {
+            let minimumTilt = selectedPreset == .globe
+                && arguments.contains("--lunar-explorer-capture")
+                ? Self.minimumGlobeCaptureTiltDegrees
+                : Self.minimumTiltDegrees
+            tiltDegrees = min(
+                max(tiltOverride, minimumTilt),
+                Self.maximumTiltDegrees
             )
         }
     }

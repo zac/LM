@@ -34,8 +34,8 @@ obeys. The three genuinely hard parts are §5 (mushy band), §4 stage 2
 | Lunar ephemeris (sun/Earth for any instant, any site) | **Done** | `LM/LMLunarEphemeris.swift`, tested; mission sun corrected and tied to it. |
 | Elevation-tracking sun exposure | **Done** | `LMTerrainWorld.missionSunIlluminance(elevationDegrees:grade:)`; mission render pixel-identical. |
 | Photographic tone grade + earthshine | **Done** | Opt-in; calibrated grade pixel-identical. |
-| Global mosaic fetch/parse proven | **Done (scratch)** | WAC_GLOBAL 16 ppd downloaded, parsed, converted; see §3. Not yet productized. |
-| Stage 1 globe | Not started | §4. |
+| Global mosaic fetch/parse proven | **Done** | Source-validating 16 ppd generator, pinned PNG + provenance sidecar, and manifest schema v4 landed. |
+| Stage 1 globe | **In progress** | 16 ppd unlit WAC sphere, ME orientation, and Explorer `globe` preset landed. 64 ppd, elevation normal, lat/lon navigation, terminator, and globe-to-site crossfade remain. |
 | Stage 2 re-anchorable terrain | Not started | §4. The land-anywhere milestone. |
 | Stage 3 mushy-band quality | Not started | §5. |
 | Stage 4 site packs | Not started | §4. |
@@ -85,8 +85,10 @@ Verified this session (2026-08-31):
   attached PDS3 label, 23040-byte label record): 66,378,240 bytes, SHA-256
   `c75a49b48df0d1d8afad8f25e58332599e8383e4967424ffbb0ba38b0808b2b6`, at
   `https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/`.
-  Parsed clean: 100% valid, reflectance mean 0.0455, p99 0.133. A 64 ppd
-  sibling (474 m/px) exists at ~1.06 GB.
+  The production converter accepts 16,313,894 finite [0, 1) reflectance
+  samples, replaces 274,906 source no-data samples with the fixed display
+  floor, and measures a valid-sample mean of 0.04633. A 64 ppd sibling
+  (474 m/px) exists at ~1.06 GB.
 - **The morphologic caveat:** WAC_GLOBAL is deliberately imaged at 53–70°
   incidence — **shading is baked in**. Lighting it with our movable sun
   double-shades. The photometrically normalized WAC_EMP 643 nm series (what
@@ -117,6 +119,25 @@ Verified this session (2026-08-31):
 ## 4. The stages
 
 ### Stage 1 — Globe (fly everywhere, look)
+
+Progress landed 2026-08-31: `GlobalLunarMosaicGenerator` validates the exact
+source byte count, SHA-256, attached PDS label, projection, dimensions, sample
+type, and longitude convention before producing the committed 5,760×2,880
+sRGB texture and provenance JSON. Manifest schema 4 pins that output and its
+source. `LMLunarGlobeResource` builds a tessellated sphere through the shared
+ME coordinate authority, centers Apollo 11 without a guessed rotation, and
+uses the baked-shading mosaic as unlit map color. The Explorer now has a
+whole-Moon preset and an explicit first presentation gate. That gate is a
+temporary discrete switch: it is not the Stage 1 handoff acceptance until the
+measured globe-to-site crossfade is implemented and visually captured.
+
+Simulator validation on the pinned 26.5 Vision Pro destination held the globe
+stable beyond 90 seconds, confirmed the Apollo-centered near-side geography,
+and inspected both poles plus the back-side texture wrap. That pass found and
+fixed a duplicated-seam UV normalization error. At the temporary 350 km gate,
+the globe and site widths now differ by 9 pixels in a 3,840-pixel capture, but
+the site's planar projection remains visibly discontinuous; that measured
+failure is the baseline the required crossfade must replace rather than hide.
 
 A textured sphere with LOD texture swap — deliberately not a chunked
 quad-sphere; at globe scale a sphere mesh + good textures is enough, and

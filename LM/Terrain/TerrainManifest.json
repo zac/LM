@@ -22,6 +22,27 @@
       "nac-ortho-m150368601-50cm-slab"
     ]
   },
+  "globe" : {
+    "coordinateSystemName" : "IAU_ME",
+    "detail" : "Whole-Moon map-scale presentation in the Mean Earth/Polar-axis frame. Texture tiers are replaceable without changing the coordinate authority or site terrain.",
+    "generatorSHA256" : "6289e0ef7e02730b2ec424b2000ac6e9619967c6f16b212eb37c498183baaf32",
+    "generatorVersion" : "wac-global-morphologic-v1",
+    "materialMode" : "unlit-morphologic-map",
+    "radiusMeters" : 1737400,
+    "textureTiers" : [
+      {
+        "detail" : "Pinned global WAC morphologic base. Illumination is baked into this map, so it is rendered unlit rather than double-shaded by the movable mission sun.",
+        "file" : "WACGlobal16PPD.png",
+        "height" : 2880,
+        "id" : "wac-global-16ppd",
+        "mapResolutionPixelsPerDegree" : 16,
+        "metersPerPixel" : 1895.2094015093,
+        "sha256" : "b799eab2d43f7a27799972d4ec4bc25cff06776ba14774e03e322cb7a7ea460e",
+        "sourceID" : "wac-global-morphologic-16ppd",
+        "width" : 5760
+      }
+    ]
+  },
   "landingOrigin" : {
     "detail" : "Apollo 11 retroreflector alignment; heights are relative to the DTM elevation sampled at this point.",
     "latitudeDegrees" : 0.67343299999999995,
@@ -51,7 +72,7 @@
     "sphereRadiusMeters" : 1737400
   },
   "scenarioID" : "apollo11-progressive-real-data-terrain",
-  "schemaVersion" : 3,
+  "schemaVersion" : 4,
   "sourceLandingOriginElevationsMeters" : {
     "nac-dtm-apollo11" : -1928.037353515625,
     "sldem2015-128-apollo11-slab" : -1926.1782513219268,
@@ -199,6 +220,18 @@
       "sourceRowEnd" : 235,
       "sourceRowStart" : 0,
       "url" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/MDR\/WAC_EMP\/WAC_EMP_643NM_E300S0450_064P.IMG"
+    },
+    {
+      "bytes" : 66378240,
+      "detail" : "Global 53-70 degree-incidence WAC morphologic mosaic with an attached PDS3 label. It is the pinned source for the unlit globe base and is not photometrically normalized surface albedo.",
+      "id" : "wac-global-morphologic-16ppd",
+      "labelURL" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/BDR\/WAC_GLOBAL\/WAC_GLOBAL_E000N0000_016P.IMG",
+      "mapResolutionPixelsPerDegree" : 16,
+      "productId" : "WAC_GLOBAL_E000N0000_016P",
+      "productVersion" : "v1.3",
+      "role" : "global-morphologic-map",
+      "sha256" : "c75a49b48df0d1d8afad8f25e58332599e8383e4967424ffbb0ba38b0808b2b6",
+      "url" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/BDR\/WAC_GLOBAL\/WAC_GLOBAL_E000N0000_016P.IMG"
     }
   ],
   "sun" : {

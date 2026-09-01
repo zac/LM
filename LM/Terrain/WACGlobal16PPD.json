@@ -1,0 +1,43 @@
+{
+  "generatorSHA256" : "6289e0ef7e02730b2ec424b2000ac6e9619967c6f16b212eb37c498183baaf32",
+  "generatorVersion" : "wac-global-morphologic-v1",
+  "projection" : {
+    "easternmostLongitudeDegrees" : 180,
+    "latitudeType" : "PLANETOCENTRIC",
+    "lunarRadiusMeters" : 1737400,
+    "mapProjectionType" : "EQUIRECTANGULAR",
+    "maximumLatitudeDegrees" : 90,
+    "metersPerPixel" : 1895.2094015093,
+    "minimumLatitudeDegrees" : -90,
+    "pixelsPerDegree" : 16,
+    "positiveLongitudeDirection" : "EAST",
+    "westernmostLongitudeDegrees" : -180
+  },
+  "schemaVersion" : 1,
+  "source" : {
+    "byteCount" : 66378240,
+    "productID" : "WAC_GLOBAL_E000N0000_016P",
+    "productVersion" : "v1.3",
+    "sampleBits" : 32,
+    "sampleType" : "PC_REAL",
+    "sha256" : "c75a49b48df0d1d8afad8f25e58332599e8383e4967424ffbb0ba38b0808b2b6",
+    "url" : "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/WAC_GLOBAL_E000N0000_016P.IMG"
+  },
+  "statistics" : {
+    "invalidPixelCount" : 274906,
+    "maximumLinearReflectance" : 0.5991924405097961,
+    "meanLinearReflectance" : 0.046330224670090146,
+    "minimumLinearReflectance" : 6.614860659226451e-09,
+    "validPixelCount" : 16313894
+  },
+  "texture" : {
+    "colorSpace" : "sRGB encoding of linear reflectance proxy",
+    "file" : "WACGlobal16PPD.png",
+    "format" : "RGBA8 PNG",
+    "height" : 2880,
+    "maximumLinearReflectance" : 0.45,
+    "minimumLinearReflectance" : 0.015,
+    "sha256" : "b799eab2d43f7a27799972d4ec4bc25cff06776ba14774e03e322cb7a7ea460e",
+    "width" : 5760
+  }
+}

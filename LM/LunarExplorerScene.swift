@@ -12,11 +12,13 @@ final class LunarExplorerScene {
     let interactionSurface = Entity()
 
     private let presentationRoot = Entity()
+    private let globePresentationRoot = Entity()
     private let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier ?? "io.positron.LM",
         category: "LunarExplorer"
     )
     private var terrainEnvironment: Entity?
+    private var globeEntity: ModelEntity?
     private var terrainSun: DirectionalLight?
     private var terrainEarthshine: DirectionalLight?
     private var activeGrade: LMTerrainPresentationGrade?
@@ -44,6 +46,8 @@ final class LunarExplorerScene {
         root.name = "Lunar Explorer"
         presentationRoot.name = "Lunar Explorer presentation"
         root.addChild(presentationRoot)
+        globePresentationRoot.name = "Lunar Explorer globe presentation"
+        root.addChild(globePresentationRoot)
 
         interactionSurface.name = "Lunar Explorer interaction surface"
         interactionSurface.position = SIMD3(0, 0, -1.15)
@@ -71,6 +75,20 @@ final class LunarExplorerScene {
         loadTask = Task { @MainActor [weak self] in
             guard let self else { return }
             do {
+                let manifest = try LMTerrainManifest.load()
+                do {
+                    let globe = try await LMLunarGlobeResource.makeEntity(
+                        manifest: manifest
+                    )
+                    self.globePresentationRoot.addChild(globe)
+                    self.globeEntity = globe
+                    session.diagnostics.loadMessage = "Global WAC Moon ready"
+                    self.apply(session)
+                } catch {
+                    self.logger.error(
+                        "Lunar globe load failed: \(error.localizedDescription, privacy: .public)"
+                    )
+                }
                 let heightField = try Apollo11TerrainResource.loadSourceBackedHeightField()
                 let assembly = try await LMTerrainWorld.load(
                     detailPipeline: detailPipeline
@@ -154,6 +172,13 @@ final class LunarExplorerScene {
 
     private func updatePresentationTransform(_ session: LunarExplorerSession) {
         let scale = session.presentationScale
+        globePresentationRoot.scale = SIMD3(
+            repeating: session.globePresentationScale
+        )
+        // Full-immersion coordinates are floor-relative. Put the map globe at
+        // a standing viewer's eye line instead of sharing the site's floor
+        // placement, which cropped most of the first whole-Moon capture.
+        globePresentationRoot.position = SIMD3(0, 1.45, -3.35)
         presentationRoot.scale = SIMD3(repeating: scale)
         presentationRoot.position = SIMD3(0, -0.35, -2.35)
         let heading = simd_quatf(
@@ -165,6 +190,9 @@ final class LunarExplorerScene {
             axis: SIMD3(1, 0, 0)
         )
         presentationRoot.orientation = tilt * heading
+        globePresentationRoot.orientation = tilt * heading
+        globePresentationRoot.isEnabled = session.presentsGlobe
+        presentationRoot.isEnabled = !session.presentsGlobe
 
         let focus = terrainFocus(session)
         terrainEnvironment?.position = SIMD3(
@@ -468,7 +496,10 @@ final class LunarExplorerScene {
     }
 
     private func sourceDescription(altitudeMeters: Double) -> String {
-        switch altitudeMeters {
+        if session?.presentsGlobe == true {
+            return "Pinned WAC_GLOBAL 16 ppd morphologic map"
+        }
+        return switch altitudeMeters {
         case ...60:
             "2 m LROC plus 0.5 m and 0.125 m procedural geometry"
         case ...250:

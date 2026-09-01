@@ -62,6 +62,28 @@ struct LMTerrainManifest: Equatable, Decodable {
         let detail: String
     }
 
+    struct Globe: Equatable, Decodable {
+        struct TextureTier: Equatable, Decodable {
+            let id: String
+            let file: String
+            let width: Int
+            let height: Int
+            let mapResolutionPixelsPerDegree: Double
+            let metersPerPixel: Double
+            let sha256: String
+            let sourceID: String
+            let detail: String
+        }
+
+        let coordinateSystemName: String
+        let radiusMeters: Double
+        let materialMode: String
+        let generatorVersion: String
+        let generatorSHA256: String
+        let textureTiers: [TextureTier]
+        let detail: String
+    }
+
     struct Source: Equatable, Decodable {
         let id: String
         let role: String
@@ -150,11 +172,12 @@ struct LMTerrainManifest: Equatable, Decodable {
     let projection: Projection
     let sun: Sun
     let craterCatalog: CraterCatalog?
+    let globe: Globe
     let sources: [Source]
     let tiles: [Tile]
     let toolSHA256: String
 
-    static let schemaVersion = 3
+    static let schemaVersion = 4
 
     static let eagleLandmarkID = "apollo11-lm-eagle"
 

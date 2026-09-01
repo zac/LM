@@ -76,6 +76,25 @@ The runtime coordinate convention is +X north, +Y up, and -Z east. The cockpit
 stays fixed around the wearer while the lunar world receives the inverse
 vehicle pose at 1:1 scale.
 
+## Global map-scale Moon
+
+The first land-anywhere tier is a pinned 16-pixel-per-degree LROC WAC global
+morphologic mosaic. `GlobalLunarMosaicGenerator` validates the complete source
+file and its attached PDS label before converting little-endian PC_REAL
+reflectance to a fixed-transfer sRGB PNG. Manifest schema 4 records the source,
+generator, projection, datum radius, texture dimensions, and generated-file
+hash. The raw PDS product remains in the ignored generator cache; the app
+bundles only the reproducible texture and provenance sidecar.
+
+`LMLunarGlobeResource` creates its sphere in the same Mean Earth/Polar-axis
+coordinate authority used by the landing terrain. The mesh display basis is
+centered on Apollo 11 for the initial Explorer view, with east to the right and
+north up. Because morphologic WAC already contains illumination, the runtime
+uses it as unlit map color rather than applying the movable mission sun a
+second time. The current whole-Moon-to-site gate is deliberately discrete;
+the crossfade, 64-pixel-per-degree tier, elevation-derived normal, and subtle
+ephemeris terminator remain Stage 1 work in `Docs/LandAnywhereMoonPlan.md`.
+
 ## Coordinate-frame alignment
 
 The terrain and Luminary do not share an origin. The measured terrain products

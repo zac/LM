@@ -86,7 +86,7 @@ struct LunarExplorerControls: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Lunar Explorer")
                         .font(.title2.weight(.semibold))
-                    Text("Apollo 11 site, production terrain")
+                    Text("Whole Moon to Apollo 11 production terrain")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

@@ -8,7 +8,12 @@ struct LunarExplorerTests {
         let session = LunarExplorerSession()
         let policy = LMTerrainDetailPolicy()
 
+        session.select(.globe)
+        #expect(session.presentsGlobe)
+        #expect(policy.finestSpacingMeters(altitudeMeters: session.altitudeMeters) == nil)
+
         session.select(.orbit)
+        #expect(!session.presentsGlobe)
         #expect(policy.finestSpacingMeters(altitudeMeters: session.altitudeMeters) == nil)
 
         session.select(.approach)
@@ -122,6 +127,46 @@ struct LunarExplorerTests {
         )
     }
 
+    @Test func captureArgumentsCanInspectGlobeOrientationAndNearGateScale() {
+        let session = LunarExplorerSession()
+        session.configure(arguments: [
+            "LM",
+            "--lunar-explorer-preset=globe",
+            "--lunar-explorer-meters-across=350000",
+            "--lunar-explorer-heading=180",
+            "--lunar-explorer-tilt=82",
+        ])
+
+        #expect(session.headingDegrees == 180)
+        #expect(session.tiltDegrees == 82)
+        #expect(session.presentsGlobe)
+        #expect(
+            session.globePresentationScale
+                == LunarExplorerSession.maximumGlobeDisplayRadiusMeters
+                    / Float(LunarExplorerSession.lunarGlobeRadiusMeters)
+        )
+    }
+
+    @Test func captureCanInspectBothGlobePolesWithoutChangingSiteTiltBounds() {
+        let globe = LunarExplorerSession()
+        globe.configure(arguments: [
+            "LM",
+            "--lunar-explorer-preset=globe",
+            "--lunar-explorer-tilt=-82",
+            "--lunar-explorer-capture",
+        ])
+        let site = LunarExplorerSession()
+        site.configure(arguments: [
+            "LM",
+            "--lunar-explorer-preset=orbit",
+            "--lunar-explorer-tilt=-82",
+            "--lunar-explorer-capture",
+        ])
+
+        #expect(globe.tiltDegrees == -82)
+        #expect(site.tiltDegrees == LunarExplorerSession.minimumTiltDegrees)
+    }
+
     @Test func invalidAndOutOfRangeCaptureOverridesAreSafe() {
         let invalid = LunarExplorerSession()
         invalid.configure(arguments: [
@@ -136,7 +181,7 @@ struct LunarExplorerTests {
         clamped.configure(arguments: [
             "LM",
             "--lunar-explorer-altitude=0",
-            "--lunar-explorer-meters-across=999999",
+            "--lunar-explorer-meters-across=9999999",
         ])
         #expect(clamped.altitudeMeters == LunarExplorerSession.minimumAltitudeMeters)
         #expect(clamped.metersAcross == LunarExplorerSession.maximumMetersAcross)

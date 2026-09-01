@@ -95,6 +95,35 @@ The runtime retains measured heights at their native 2 m spacing. Below the
 terminal-detail altitude, deterministic procedural residuals add only the
 sub-resolution frequency band and remain exactly zero at every measured post.
 
+## Global WAC map tier
+
+Stage 1 of `Docs/LandAnywhereMoonPlan.md` uses the separate
+`GlobalLunarMosaicGenerator` executable. Fetch the complete attached-label PDS
+product into the ignored cache:
+
+```sh
+curl -L --fail \
+  --output Tools/TerrainGenerator/cache/WAC_GLOBAL_E000N0000_016P.IMG \
+  https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/WAC_GLOBAL_E000N0000_016P.IMG
+```
+
+Then regenerate the bundled map and provenance sidecar:
+
+```sh
+swift run --package-path Tools/TerrainGenerator GlobalLunarMosaicGenerator \
+  Tools/TerrainGenerator/cache/WAC_GLOBAL_E000N0000_016P.IMG \
+  LM/Terrain/WACGlobal16PPD.png \
+  LM/Terrain/WACGlobal16PPD.json
+```
+
+The executable rejects the input unless its byte count, SHA-256, attached PDS
+label, sample layout, projection, dimensions, and longitude convention match
+the pinned product. It uses a fixed reflectance transfer, so output does not
+depend on the source image's observed extrema. Xcode may losslessly rewrite
+PNG container metadata while copying resources; the manifest hash therefore
+pins the generated repository artifact, while runtime tests separately verify
+the bundled texture dimensions and manifest relationship.
+
 ## Photo-derived crater candidate catalog
 
 Workstream A in `Docs/TerrainRealismPlan.md` starts with a deterministic,

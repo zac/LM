@@ -238,13 +238,42 @@ let craterCatalogSHA256 =
     "b2bdfada9d6df68623dcfd8c99a5b7b7d1bc2c6000b997d04afd80a79a6e630f"
 let craterDetectorSHA256 =
     "d01e3ed540e29a54bde5afc283688bd38b0f0013b0317d1b395608e34a839558"
+let wacGlobal16PPDURL =
+    "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/WAC_GLOBAL_E000N0000_016P.IMG"
+let wacGlobal16PPDSourceSHA256 =
+    "c75a49b48df0d1d8afad8f25e58332599e8383e4967424ffbb0ba38b0808b2b6"
+let wacGlobal16PPDTextureSHA256 =
+    "b799eab2d43f7a27799972d4ec4bc25cff06776ba14774e03e322cb7a7ea460e"
+let globalLunarMosaicGeneratorSHA256 =
+    "6289e0ef7e02730b2ec424b2000ac6e9619967c6f16b212eb37c498183baaf32"
 
 // MARK: - Manifest model (mirrored by LM/LM/LMTerrainManifest.swift)
 
 func manifestJSON() -> [String: Any] {
     [
-        "schemaVersion": 3,
+        "schemaVersion": 4,
         "scenarioID": "apollo11-progressive-real-data-terrain",
+        "globe": [
+            "coordinateSystemName": "IAU_ME",
+            "radiusMeters": lunarRadiusMeters,
+            "materialMode": "unlit-morphologic-map",
+            "generatorVersion": "wac-global-morphologic-v1",
+            "generatorSHA256": globalLunarMosaicGeneratorSHA256,
+            "textureTiers": [
+                [
+                    "id": "wac-global-16ppd",
+                    "file": "WACGlobal16PPD.png",
+                    "width": 5_760,
+                    "height": 2_880,
+                    "mapResolutionPixelsPerDegree": 16.0,
+                    "metersPerPixel": 1_895.209_401_509_3,
+                    "sha256": wacGlobal16PPDTextureSHA256,
+                    "sourceID": "wac-global-morphologic-16ppd",
+                    "detail": "Pinned global WAC morphologic base. Illumination is baked into this map, so it is rendered unlit rather than double-shaded by the movable mission sun."
+                ]
+            ],
+            "detail": "Whole-Moon map-scale presentation in the Mean Earth/Polar-axis frame. Texture tiers are replaceable without changing the coordinate authority or site terrain."
+        ],
         "craterCatalog": [
             "file": craterCatalogFileName,
             "catalogID": craterCatalogID,
@@ -395,7 +424,19 @@ func manifestJSON() -> [String: Any] {
                 rowBytes: wacFarSamples * MemoryLayout<Float>.size,
                 resolution: wacFarResolutionPixelsPerDegree,
                 detail: "Exact PDS byte-range slab from the normalized 643 nm WAC mosaic south of the equator at about 473.8 m/pixel."
-            )
+            ),
+            [
+                "id": "wac-global-morphologic-16ppd",
+                "role": "global-morphologic-map",
+                "url": wacGlobal16PPDURL,
+                "sha256": wacGlobal16PPDSourceSHA256,
+                "bytes": 66_378_240,
+                "mapResolutionPixelsPerDegree": 16.0,
+                "productId": "WAC_GLOBAL_E000N0000_016P",
+                "productVersion": "v1.3",
+                "labelURL": wacGlobal16PPDURL,
+                "detail": "Global 53-70 degree-incidence WAC morphologic mosaic with an attached PDS3 label. It is the pinned source for the unlit globe base and is not photometrically normalized surface albedo."
+            ]
         ],
         "tiles": [
             nearManifestTile(),
