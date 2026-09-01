@@ -107,6 +107,44 @@ def parse_image(value: str) -> tuple[str, Path]:
     return label, Path(path)
 
 
+def parse_lod_pair(value: str) -> tuple[str, Path, Path]:
+    label, separator, paths = value.partition("=")
+    coarse, comma, fine = paths.partition(",")
+    if not separator or not comma or not label or not coarse or not fine:
+        raise argparse.ArgumentTypeError("use LABEL=COARSE_PATH,FINE_PATH")
+    return label, Path(coarse), Path(fine)
+
+
+def measure_lod_pair(
+    coarse_path: Path,
+    fine_path: Path,
+    fine_region: np.ndarray,
+) -> dict[str, object]:
+    coarse = luminance(coarse_path)
+    fine = luminance(fine_path)
+    if coarse.shape != fine_region.shape or fine.shape != fine_region.shape:
+        raise ValueError("LOD pair and tile tint must have identical dimensions")
+    interior = binary_erosion(fine_region, iterations=16)
+    coarse_mean = float(coarse[interior].mean())
+    fine_mean = float(fine[interior].mean())
+    coarse_high_pass = coarse - gaussian_filter(coarse, sigma=8)
+    fine_high_pass = fine - gaussian_filter(fine, sigma=8)
+    return {
+        "coarseImage": str(coarse_path),
+        "fineImage": str(fine_path),
+        "pixels": int(interior.sum()),
+        "coarseMeanLuminance": coarse_mean,
+        "fineMeanLuminance": fine_mean,
+        "fineVsCoarsePercent": (fine_mean / coarse_mean - 1) * 100,
+        "coarseHighPassSD": float(coarse_high_pass[interior].std()),
+        "fineHighPassSD": float(fine_high_pass[interior].std()),
+        "note": (
+            "Same camera and lunar pixels; the tint's fine-LOD ownership "
+            "region is applied to both captures."
+        ),
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--tint", type=Path, required=True)
@@ -116,6 +154,15 @@ def main() -> None:
         type=parse_image,
         required=True,
         help="matched capture as LABEL=PATH; repeat for each presentation grade",
+    )
+    parser.add_argument(
+        "--lod-pair",
+        action="append",
+        type=parse_lod_pair,
+        default=[],
+        help=(
+            "same-camera LOD pair as LABEL=COARSE_PATH,FINE_PATH; repeatable"
+        ),
     )
     arguments = parser.parse_args()
     terminal, landing = ownership_masks(arguments.tint)
@@ -136,6 +183,11 @@ def main() -> None:
             for label, path in arguments.image
         },
     }
+    if arguments.lod_pair:
+        result["sameRegionLODComparisons"] = {
+            label: measure_lod_pair(coarse, fine, landing)
+            for label, coarse, fine in arguments.lod_pair
+        }
     print(json.dumps(result, indent=2, sort_keys=True))
 
 
