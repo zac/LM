@@ -94,19 +94,24 @@ plan failure, not a judgment call.
   (e.g. crater catalogs derived from the NAC ortho-images) must be pinned the
   same way.
 
-## 2. Where the pipeline stands (as of 2026-08-30)
+## 2. Where the pipeline stands (as of 2026-09-01)
 
-Summary of the most recent investigation (full details in the session that
-produced this plan; durable copy in project memory
-`lm-terrain-cards-are-geometry-shading-lod`):
+Summary of the measured investigations (visual diagnoses were deliberately
+reopened when later controls contradicted them):
 
-- The long-standing "rectangular cards" in the Lunar Explorer close-surface
-  view were diagnosed as **grazing-sun shading steps of level-dependent
-  procedural relief at residency-footprint perimeters** — geometry shading,
-  not albedo. Evidence: ~92% of the boundary luminance step survives with a
-  constant-reflectance material and normal maps disabled (−4.0 of −4.3 gray
-  levels); per-tile albedo bakes are mean-neutral (−0.26%) and same-level
-  tiles are statistically identical.
+- The earlier close-surface card was a **grazing-sun geometry-shading step at
+  residency-footprint perimeters**. Roughly 92% of that boundary luminance
+  step survived the then-current constant-reflectance/no-normal control. The
+  residency nesting fix below reduced that defect to under ±0.5 gray levels.
+- A separate card-shaped defect remained in the final 2026-09-01 Surface
+  ladder. This one survived removal of tangent-space normals, procedural
+  reflectance modulation, mipmaps, and appearance collars, while a
+  constant-reflectance control was clean. CPU-baked shared edges were exact.
+  The cause was albedo registration: `CGImage` rows are north-to-south but
+  RealityKit texture V is bottom-to-top, so every tile sampled vertically
+  mirrored measured reflectance. Mapping the mesh's north row to V=1 removes
+  the cards in the full production material. Tests now pin the UV orientation,
+  exact north/south shared-edge bytes, and adjacent measured narrow bands.
 - **Fixed:** residency nesting. `LMProgressiveTerrainPlanner` (see
   `coverageRadiiMeters(finestSpacing:)` in `LM/LMProgressiveTerrain.swift`)
   now makes each coarser active level enclose the finer footprint by at least

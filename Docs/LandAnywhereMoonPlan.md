@@ -35,7 +35,7 @@ obeys. The three genuinely hard parts are §5 (mushy band), §4 stage 2
 | Elevation-tracking sun exposure | **Done** | `LMTerrainWorld.missionSunIlluminance(elevationDegrees:grade:)`; mission render pixel-identical. |
 | Photographic tone grade + earthshine | **Done** | Opt-in; calibrated grade pixel-identical. |
 | Global mosaic fetch/parse proven | **Done** | Source-validating 16 ppd generator, pinned PNG + provenance sidecar, and manifest schema v4 landed. |
-| Stage 1 globe | **In progress** | Complete offline 16/64 ppd WAC globe, ME orientation, Explorer `globe` preset, ephemeris terminator, pinned LOLA-derived ME normal field, and a radiance-matched globe-to-site handoff landed. Globe/site and near-surface radiance acceptance are green; the final zoom ladder and physical Vision Pro comfort remain. |
+| Stage 1 globe | **Done in Simulator** | Complete offline 16/64 ppd WAC globe, ME orientation, Explorer `globe` preset, ephemeris terminator, pinned LOLA-derived ME normal field, radiance-matched globe-to-site handoff, and the final globe-to-surface ladder are green. Continuous hand-gesture comfort remains owner hardware validation on physical Vision Pro; it is not an implementation blocker for Stage 2. |
 | Stage 2 re-anchorable terrain | Not started | §4. The land-anywhere milestone. |
 | Stage 3 mushy-band quality | Not started | §5. |
 | Stage 4 site packs | Not started | §4. |
@@ -130,8 +130,9 @@ Verified this session (2026-08-31):
   dB / 0.0090% in the 320 km globe-to-orbit overlap, with no visible codec or
   tile seam. This explicitly flips the earlier stream-only decision while
   retaining its budget boundary: any further bundled addition requires owner
-  sign-off. The final generic visionOS arm64 Release app is 407.5 MiB
-  (417,312 KiB), including the byte-identical 76,112,646-byte JXL. A settled
+  sign-off. The Stage 1 close-out generic visionOS arm64 Release app is 406.5
+  MiB allocated (416,272 KiB; 405.9 MiB summed file payload), including the
+  byte-identical 76,112,646-byte JXL. A settled
   visionOS 26.5 Simulator launch decoded and displayed the explicit 64 ppd
   tier at `/private/tmp/LandAnywhere-JXL-64ppd-runtime-verified.png`; the same
   asset and digest passed a generic visionOS arm64 Release build. Production
@@ -271,6 +272,30 @@ touchdown normal distributions independently predict a 0.03% response change.
 Applying the proposed material gain would therefore manufacture a seam; no
 site material or cache key changed. The repeatable protocol and captures are
 recorded in `Docs/TerrainRealismPlan.md` Workstream B1.
+
+The final Surface ladder exposed one more, independent rectangular-tile
+defect. CPU bakes were byte-identical on shared edges and adjacent measured
+8-texel bands differed by only 0.17% east/west and 0.66% north/south, but the
+rendered tiles still looked like cards with tangent-space normals,
+microtexture modulation, mipmaps, and appearance collars independently
+disabled. A constant-reflectance control was clean. The root cause was
+coordinate convention: baked `CGImage` rows run north-to-south while
+RealityKit texture V runs bottom-to-top, so each tile displayed its measured
+reflectance vertically mirrored. The progressive mesh now maps its north row
+to V=1. The production material capture
+`/private/tmp/LandAnywhere-surface-v-flipped-production.png` is continuous,
+and tests pin both north/south edge bytes and the north-at-texture-top UV
+contract.
+
+Stage 1's committed-build acceptance artifact is
+`/private/tmp/LandAnywhere-Stage1-64ppd-accepted-2026-09-01/`. Its
+`ladder.tsv` pins all eleven captures from the 64 ppd globe through 2 m,
+0.5 m, 0.125 m, both close relief-blend boundaries, and the 2 m-above-ground
+Surface view. Every accepted frame settled for at least 90 seconds and passed
+the harness's live-process and monochrome-scene checks. The contact sheet and
+full-resolution frames show no texture-wrap seam, coverage gap, globe/site
+double render, tile card, or LOD handoff seam. Physical Vision Pro comfort is
+explicit owner hardware testing and remains the only Stage 1 follow-up.
 
 A textured sphere with LOD texture swap — deliberately not a chunked
 quad-sphere; at globe scale a sphere mesh + good textures is enough, and
