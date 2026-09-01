@@ -128,4 +128,45 @@ struct LMLunarGlobeTests {
         #expect(tycho.y < 0)
         #expect(tycho.z > 0)
     }
+
+    @Test func terminatorIsAMultiplierRatherThanASecondLightingPass() {
+        let sun = SIMD3<Double>(1, 0, 0)
+        let day = LMLunarGlobeResource.terminatorMultiplier(
+            surfaceNormal: sun,
+            subsolarDirection: sun
+        )
+        let night = LMLunarGlobeResource.terminatorMultiplier(
+            surfaceNormal: -sun,
+            subsolarDirection: sun
+        )
+        let limb = LMLunarGlobeResource.terminatorMultiplier(
+            surfaceNormal: SIMD3(0, 1, 0),
+            subsolarDirection: sun
+        )
+
+        #expect(day == 1)
+        #expect(night == LMLunarGlobeResource.terminatorNightMultiplier)
+        #expect(abs(limb - (1 + night) / 2) < 0.000_001)
+    }
+
+    @Test func terminatorMaskMovesWithTheSessionSunDate() {
+        let landing = LunarExplorerSession.apollo11TouchdownUTC
+        let later = landing.addingTimeInterval(7 * 24 * 3_600)
+        let landingSamples = LMLunarGlobeResource.terminatorOpacitySamples(
+            date: landing,
+            width: 180,
+            height: 90
+        )
+        let laterSamples = LMLunarGlobeResource.terminatorOpacitySamples(
+            date: later,
+            width: 180,
+            height: 90
+        )
+
+        #expect(landingSamples != laterSamples)
+        #expect(landingSamples.contains(0))
+        #expect(landingSamples.max() == UInt8(
+            ((1 - LMLunarGlobeResource.terminatorNightMultiplier) * 255).rounded()
+        ))
+    }
 }

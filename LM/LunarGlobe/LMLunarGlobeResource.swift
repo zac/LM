@@ -1,5 +1,7 @@
+import CoreGraphics
 import Foundation
 import RealityKit
+import simd
 import UIKit
 
 /// Builds the map-scale Moon from the same Mean Earth/Polar-axis coordinate
@@ -7,6 +9,15 @@ import UIKit
 /// contains illumination, so this first globe tier is emissive/unlit and is
 /// never shaded a second time by the Explorer's movable mission sun.
 enum LMLunarGlobeResource {
+    /// A low-frequency black overlay whose opacity is `1 - illumination`.
+    /// Alpha compositing it over the unlit WAC map is therefore exactly a
+    /// brightness multiplier; it cannot introduce a second lighting model.
+    @MainActor
+    struct TerminatorResource {
+        let entity: ModelEntity
+        let opacityTexture: TextureResource
+    }
+
     enum ResourceError: LocalizedError {
         case missingTextureTier
         case missingSource(String)
@@ -68,6 +79,155 @@ enum LMLunarGlobeResource {
         let entity = ModelEntity(mesh: mesh, materials: [material])
         entity.name = "Pinned WAC global Moon"
         return entity
+    }
+
+    @MainActor
+    static func makeTerminator(
+        manifest: LMTerrainManifest,
+        date: Date
+    ) throws -> TerminatorResource {
+        let image = try terminatorOpacityImage(date: date)
+        let options = TextureResource.CreateOptions(
+            semantic: .scalar,
+            mipmapsMode: .allocateAndGenerateAll
+        )
+        let texture = try TextureResource.generate(
+            from: image,
+            withName: "Lunar ephemeris terminator",
+            options: options
+        )
+        let mesh = try globeMesh(
+            // Keep the transparent shell far enough above the color sphere to
+            // avoid depth fighting after the Moon is scaled to tabletop size.
+            radiusMeters: manifest.globe.radiusMeters * 1.0005,
+            frontCoordinate: manifest.landingOriginCoordinate
+        )
+        var material = UnlitMaterial(applyPostProcessToneMap: false)
+        material.color = .init(tint: .black)
+        material.blending = .transparent(opacity: .init(
+            scale: 1,
+            texture: globeTexture(texture)
+        ))
+        material.writesDepth = false
+        material.readsDepth = true
+
+        let entity = ModelEntity(mesh: mesh, materials: [material])
+        entity.name = "Ephemeris terminator multiplier"
+        return TerminatorResource(entity: entity, opacityTexture: texture)
+    }
+
+    @MainActor
+    static func updateTerminator(
+        _ resource: TerminatorResource,
+        date: Date
+    ) throws {
+        try resource.opacityTexture.replace(
+            withImage: terminatorOpacityImage(date: date),
+            options: TextureResource.CreateOptions(
+                semantic: .scalar,
+                mipmapsMode: .allocateAndGenerateAll
+            )
+        )
+    }
+
+    /// The map deliberately retains some context on the lunar night side.
+    /// This is a cartographic day/night cue rather than photometric lighting:
+    /// the WAC morphologic source already contains its own shaded relief.
+    nonisolated static let terminatorNightMultiplier = 0.58
+
+    /// A two-degree-wide smoothstep is wider than the physical solar limb but
+    /// stable in a compact dynamic mask and still visually reads as a crisp
+    /// terminator at whole-Moon scale.
+    nonisolated static let terminatorDotHalfWidth = sin(Double.pi / 180)
+
+    nonisolated static func terminatorMultiplier(
+        surfaceNormal: SIMD3<Double>,
+        subsolarDirection: SIMD3<Double>
+    ) -> Double {
+        let dot = simd_dot(
+            simd_normalize(surfaceNormal),
+            simd_normalize(subsolarDirection)
+        )
+        let t = min(max(
+            (dot + terminatorDotHalfWidth) / (2 * terminatorDotHalfWidth),
+            0
+        ), 1)
+        let smooth = t * t * (3 - 2 * t)
+        return terminatorNightMultiplier
+            + (1 - terminatorNightMultiplier) * smooth
+    }
+
+    nonisolated static func terminatorOpacitySamples(
+        date: Date,
+        width: Int = 512,
+        height: Int = 256
+    ) -> [UInt8] {
+        precondition(width > 0 && height > 0)
+        // Use the plan's explicit ephemeris authority, then convert through
+        // the same ME coordinate system as the globe and landing sites.
+        let subsolarPoint = LMLunarEphemeris.subsolarPoint(at: date)
+        let system = LMSelenographicCoordinateSystem()
+        let subsolarDirection = simd_normalize(
+            system.moonCenteredPosition(for: subsolarPoint).vector
+        )
+
+        let longitudes = (0..<width).map { column -> (Double, Double) in
+            let longitude = (-180
+                + (Double(column) + 0.5) * 360 / Double(width)) * .pi / 180
+            return (cos(longitude), sin(longitude))
+        }
+        var samples = [UInt8](repeating: 0, count: width * height)
+        for row in 0..<height {
+            let latitude = (90
+                - (Double(row) + 0.5) * 180 / Double(height)) * .pi / 180
+            let cosLatitude = cos(latitude)
+            let sinLatitude = sin(latitude)
+            for column in 0..<width {
+                let longitude = longitudes[column]
+                let normal = SIMD3(
+                    cosLatitude * longitude.0,
+                    cosLatitude * longitude.1,
+                    sinLatitude
+                )
+                let multiplier = terminatorMultiplier(
+                    surfaceNormal: normal,
+                    subsolarDirection: subsolarDirection
+                )
+                samples[row * width + column] = UInt8(
+                    ((1 - multiplier) * 255).rounded()
+                )
+            }
+        }
+        return samples
+    }
+
+    private nonisolated static func terminatorOpacityImage(
+        date: Date,
+        width: Int = 512,
+        height: Int = 256
+    ) throws -> CGImage {
+        let samples = terminatorOpacitySamples(
+            date: date,
+            width: width,
+            height: height
+        )
+        guard let provider = CGDataProvider(data: Data(samples) as CFData),
+              let image = CGImage(
+                width: width,
+                height: height,
+                bitsPerComponent: 8,
+                bitsPerPixel: 8,
+                bytesPerRow: width,
+                space: CGColorSpaceCreateDeviceGray(),
+                bitmapInfo: CGBitmapInfo(rawValue: 0),
+                provider: provider,
+                decode: nil,
+                shouldInterpolate: true,
+                intent: .defaultIntent
+              ) else {
+            throw CocoaError(.fileReadCorruptFile)
+        }
+        return image
     }
 
     /// Converts a Moon-fixed coordinate into a globe-display basis centered on

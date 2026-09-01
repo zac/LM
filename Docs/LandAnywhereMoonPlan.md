@@ -35,7 +35,7 @@ obeys. The three genuinely hard parts are §5 (mushy band), §4 stage 2
 | Elevation-tracking sun exposure | **Done** | `LMTerrainWorld.missionSunIlluminance(elevationDegrees:grade:)`; mission render pixel-identical. |
 | Photographic tone grade + earthshine | **Done** | Opt-in; calibrated grade pixel-identical. |
 | Global mosaic fetch/parse proven | **Done** | Source-validating 16 ppd generator, pinned PNG + provenance sidecar, and manifest schema v4 landed. |
-| Stage 1 globe | **In progress** | 16 ppd unlit WAC sphere, ME orientation, and Explorer `globe` preset landed. 64 ppd, elevation normal, lat/lon navigation, terminator, and globe-to-site crossfade remain. |
+| Stage 1 globe | **In progress** | 16 ppd unlit WAC sphere, ME orientation, Explorer `globe` preset, and ephemeris terminator multiplier landed. 64 ppd, elevation normal, lat/lon navigation, and globe-to-site crossfade remain. |
 | Stage 2 re-anchorable terrain | Not started | §4. The land-anywhere milestone. |
 | Stage 3 mushy-band quality | Not started | §5. |
 | Stage 4 site packs | Not started | §4. |
@@ -138,6 +138,14 @@ fixed a duplicated-seam UV normalization error. At the temporary 350 km gate,
 the globe and site widths now differ by 9 pixels in a 3,840-pixel capture, but
 the site's planar projection remains visibly discontinuous; that measured
 failure is the baseline the required crossfade must replace rather than hide.
+
+The globe terminator is a separate black unlit shell whose opacity is
+`1 - multiplier`, not a directional material light. At Apollo 11 touchdown it
+changed 29.2% of the visible disk pixels (mean 11.9/255 and maximum 24/255
+darkening among changed pixels); seven days later the ephemeris moved that
+terminator off the same visible half and the capture there was pixel-identical
+to the pre-terminator globe. This preserves the WAC product's baked relief
+while making the session date legible at map scale.
 
 A textured sphere with LOD texture swap — deliberately not a chunked
 quad-sphere; at globe scale a sphere mesh + good textures is enough, and

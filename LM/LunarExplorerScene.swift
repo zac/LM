@@ -19,6 +19,8 @@ final class LunarExplorerScene {
     )
     private var terrainEnvironment: Entity?
     private var globeEntity: ModelEntity?
+    private var globeTerminator: LMLunarGlobeResource.TerminatorResource?
+    private var globeTerminatorDate: Date?
     private var terrainSun: DirectionalLight?
     private var terrainEarthshine: DirectionalLight?
     private var activeGrade: LMTerrainPresentationGrade?
@@ -82,6 +84,13 @@ final class LunarExplorerScene {
                     )
                     self.globePresentationRoot.addChild(globe)
                     self.globeEntity = globe
+                    let terminator = try LMLunarGlobeResource.makeTerminator(
+                        manifest: manifest,
+                        date: session.sunDate
+                    )
+                    self.globePresentationRoot.addChild(terminator.entity)
+                    self.globeTerminator = terminator
+                    self.globeTerminatorDate = session.sunDate
                     session.diagnostics.loadMessage = "Global WAC Moon ready"
                     self.apply(session)
                 } catch {
@@ -137,6 +146,7 @@ final class LunarExplorerScene {
     func apply(_ session: LunarExplorerSession) {
         self.session = session
         updatePresentationTransform(session)
+        updateGlobeTerminator(session)
         guard isLoaded else { return }
 
         if activeDetailMode != session.detailMode {
@@ -168,6 +178,23 @@ final class LunarExplorerScene {
             altitudeMeters: session.altitudeMeters
         )
         updateDiagnostics(session)
+    }
+
+    private func updateGlobeTerminator(_ session: LunarExplorerSession) {
+        guard let globeTerminator else { return }
+        let date = session.sunDate
+        guard globeTerminatorDate != date else { return }
+        do {
+            try LMLunarGlobeResource.updateTerminator(
+                globeTerminator,
+                date: date
+            )
+            globeTerminatorDate = date
+        } catch {
+            logger.error(
+                "Lunar globe terminator update failed: \(error.localizedDescription, privacy: .public)"
+            )
+        }
     }
 
     private func updatePresentationTransform(_ session: LunarExplorerSession) {
