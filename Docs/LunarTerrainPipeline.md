@@ -78,6 +78,29 @@ The runtime coordinate convention is +X north, +Y up, and -Z east. The cockpit
 stays fixed around the wearer while the lunar world receives the inverse
 vehicle pose at 1:1 scale.
 
+### Floating Explorer coordinates
+
+The Explorer keeps source geometry in its original site frame and places that
+subtree inside `LMLunarFloatingOrigin`'s active spherical ENU. A 4,096 m
+three-dimensional focus drift triggers a new anchor. Both source-to-anchor and
+anchor-to-view rigid transforms are computed from canonical Double coordinates
+and applied together; rotations include normals and lights. Re-anchoring never
+regenerates heights, materials, tile plans, or contact. Float32 focus-coordinate
+spacing is at most 0.48828125 mm at the trigger. This is a focus bound, not a
+precision guarantee for distant vertices. New fine source meshes must be
+chunk-local before Float conversion.
+
+This coordinate operation preserves Apollo's planar geometry exactly in real
+arithmetic. It does not bend Apollo onto the datum sphere or extend its source
+coverage. The global resolver must author spherical geometry separately. Lunar
+Cartesian-to-latitude conversion uses `atan2(z, hypot(x,y))`; the old `asin(z/r)`
+lost up to 3 cm in a measured near-pole round trip.
+
+`Tools/CaptureLunarExplorerReanchor.sh` holds a Surface view in a frame offset
+by 4.2 km, then releases the production trigger after 100 seconds. It captures
+settled endpoints, consecutive transition frames, residency logs, and frame
+timings without changing the camera focus or source data.
+
 ## Global map-scale Moon
 
 The first land-anywhere tier is a pinned 16-pixel-per-degree LROC WAC global

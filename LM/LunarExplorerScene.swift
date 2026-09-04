@@ -12,6 +12,10 @@ final class LunarExplorerScene {
     let interactionSurface = Entity()
 
     private let presentationRoot = Entity()
+    private let terrainAnchorRoot = Entity()
+    private var sourceFrame: LMSelenographicLocalFrame?
+    private var floatingOrigin: LMLunarFloatingOrigin?
+    private var reanchorProbePending = false
     private let globePresentationRoot = Entity()
     private let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier ?? "io.positron.LM",
@@ -57,6 +61,8 @@ final class LunarExplorerScene {
         root.name = "Lunar Explorer"
         presentationRoot.name = "Lunar Explorer presentation"
         root.addChild(presentationRoot)
+        terrainAnchorRoot.name = "Floating lunar ENU"
+        presentationRoot.addChild(terrainAnchorRoot)
         globePresentationRoot.name = "Lunar Explorer globe presentation"
         root.addChild(globePresentationRoot)
 
@@ -127,7 +133,24 @@ final class LunarExplorerScene {
                     eagleTerrainPosition: eagle
                 )
                 assembly.worldRoot.addChild(rocks)
-                presentationRoot.addChild(assembly.worldRoot)
+                terrainAnchorRoot.addChild(assembly.worldRoot)
+                self.sourceFrame = assembly.manifest.landingLocalFrame
+                self.floatingOrigin = LMLunarFloatingOrigin(frame: assembly.manifest.landingLocalFrame)
+                self.reanchorProbePending = session.captureReanchorProbe
+                if session.captureReanchorProbe {
+                    // Hold a stationary view in an offset frame for 100 seconds.
+                    // Its 4.2 km focus drift then exercises the production trigger.
+                    let offset = assembly.manifest.landingLocalFrame.coordinate(for:
+                        LMSiteENUPosition(northMeters: eagle.x + 4_200,
+                                          eastMeters: eagle.y, upMeters: datum))
+                    self.floatingOrigin?.reanchor(at: offset)
+                    Task { @MainActor [weak self, weak session] in
+                        try? await Task.sleep(for: .seconds(100))
+                        guard let self, let session else { return }
+                        self.reanchorProbePending = false
+                        self.apply(session)
+                    }
+                }
 
                 self.heightField = heightField
                 self.albedoField = try? LMMeasuredAlbedoField.load(tile: heightField.tile)
@@ -312,12 +335,27 @@ final class LunarExplorerScene {
         Self.applyPresentationOpacity(globeOpacity, to: globePresentationRoot)
         Self.applyPresentationOpacity(siteOpacity, to: presentationRoot)
 
+        updateFloatingAnchor(session)
+    }
+
+    private func updateFloatingAnchor(_ session: LunarExplorerSession) {
+        guard let sourceFrame, var origin = floatingOrigin, let terrainEnvironment else { return }
         let focus = terrainFocus(session)
-        terrainEnvironment?.position = SIMD3(
-            Float(-focus.x),
-            Float(-terrainDatumElevationMeters),
-            Float(focus.y)
+        let sourceFocus = LMSiteENUPosition(
+            northMeters: focus.x, eastMeters: focus.y, upMeters: terrainDatumElevationMeters
         )
+        let moonFocus = sourceFrame.moonCenteredPosition(for: sourceFocus)
+        if !reanchorProbePending, origin.update(focus: moonFocus) {
+            logger.info("Reanchor generation=\(origin.generation) resident=\(self.progressiveEntities.count) pending=\(self.generationTasks.count)")
+        }
+        floatingOrigin = origin
+        let placement = LMLunarAnchoredPlacement(
+            source: sourceFrame, anchor: origin.frame, focus: sourceFocus
+        )
+        // Both assignments happen synchronously on the main actor. Resident
+        // meshes, ownership, textures, lights, and pending builds stay attached.
+        terrainEnvironment.transform = placement.sourceTransform
+        terrainAnchorRoot.transform = placement.viewTransform
     }
 
     /// RealityKit's unlit base-color tint is evaluated in linear space. An

@@ -36,7 +36,7 @@ obeys. The three genuinely hard parts are §5 (mushy band), §4 stage 2
 | Photographic tone grade + earthshine | **Done** | Opt-in; calibrated grade pixel-identical. |
 | Global mosaic fetch/parse proven | **Done** | Source-validating 16 ppd generator, pinned PNG + provenance sidecar, and manifest schema v4 landed. |
 | Stage 1 globe | **Done in Simulator** | Complete offline 16/64 ppd WAC globe, ME orientation, Explorer `globe` preset, ephemeris terminator, pinned LOLA-derived ME normal field, radiance-matched globe-to-site handoff, and the final globe-to-surface ladder are green. Continuous hand-gesture comfort remains owner hardware validation on physical Vision Pro; it is not an implementation blocker for Stage 2. |
-| Stage 2 re-anchorable terrain | **In progress** | §4. Release Simulator attribution baseline and source catalog completed 2026-09-04; floating-anchor work is next. The owner approved the source-scaled residual contract on 2026-09-04. |
+| Stage 2 re-anchorable terrain | **In progress** | §4. Release baseline, source catalog, and floating Explorer anchor implemented and measured in Simulator. Streaming is next. The owner approved the source-scaled residual contract and up to 32 MiB for the offline elevation base on 2026-09-04. |
 | Stage 3 mushy-band quality | Not started | §5. |
 | Stage 4 site packs | Not started | §4. |
 | Neural track N1 multi-site retrain | Not started | §6. Cheap; do early. |
@@ -147,6 +147,13 @@ Verified this session (2026-08-31):
   with Stage 2's first streamed elevation slab. That implementation must use
   the real source resolver and decoded elevation product in its tests rather
   than an otherwise unused generic path.
+- **Owner-approved Stage 2 elevation budget, 2026-09-04:** up to 32 MiB of
+  additional bundled data for the global offline elevation base. The prepared
+  candidate is the already pinned LOLA `LDEM_16` V3.1 raw image, 33,177,600
+  bytes or 31.640625 MiB. Its source and label digests were verified against
+  the catalog. Lossless zlib measured 28.621368 MiB and round-tripped exactly;
+  the raw form avoids adding a codec for a 3.019257 MiB saving. This approval
+  covers the elevation base and provenance, not further texture tiers.
 
 ## 4. The stages
 
@@ -336,11 +343,25 @@ anchor, floating tangent frame, whatever sources cover it."
    post spacing, and the per-source residual cap approved under §1. Apollo 11
    is the first catalog entry; exact Stage 1 asset hashes guard its unchanged loaded bytes,
    and Explorer reports its 2 m measured floor.
-2. **Floating anchor:** a local ENU tangent frame under the vehicle/focus,
-   re-anchored when the focus drifts beyond ~25–50 km (planar validity), via
-   `LMSelenographicLocalFrame`. Re-anchoring is a coordinate translation of
-   resident tiles, not a visual event; design it seam-free like every LOD
-   gate and validate with the capture protocol.
+2. **Floating anchor, implemented and measured in Simulator 2026-09-04:**
+   `LMLunarFloatingOrigin` uses a 4,096 m three-dimensional
+   focus-to-anchor distance, including vertical travel. The earlier 25–50 km
+   proposal confused coordinate precision with planar validity. A 25 km arc
+   already departs from its tangent plane by 179.86 m; moving an origin cannot
+   correct that shape. Global source geometry must retain spherical positions
+   when the resolver lands. Apollo 11 retains its existing planar geometry.
+   Float32 steps are 0.48828125 mm at 4,096 m, 1.953125 mm at 25 km, and
+   3.90625 mm at 50 km. The smaller trigger bounds focus-coordinate precision;
+   distant fine meshes still need their own source-local origins.
+
+   A change of spherical ENU includes rotation and translation. The Explorer
+   moves the immutable source subtree into the active ENU and compensates the
+   presentation frame in the same main-actor update. It recomputes transforms
+   from canonical Double coordinates rather than accumulating Float deltas.
+   Terrain heights, normals, UVs, tile IDs, cache keys, contact samples, and
+   pending bake tasks do not depend on the floating origin. The scene still
+   respects the existing 900 m navigation limit until source resolution and
+   UX are ready; the capture probe exercises the actual trigger independently.
 3. **Streaming transport and cache:** build the remote elevation path against
    its first real consumer. Use fixed-record PDS HTTP byte ranges, a pinned
    digest per derived tile, bounded retries, a persistent content-addressed
@@ -510,6 +531,53 @@ and Mach sampler. A physical Vision Pro Release run still has to measure true
 90 Hz frame pacing, memory pressure, thermals, and gesture comfort.
 
 ## 8. Validation
+
+### Stage 2 item 2 evidence, 2026-09-04
+
+The seven floating-anchor test methods pass, including four RealityKit site
+cases. Five hundred canonical-coordinate transitions through Apollo, a
+highland location, both polar regions, and the antimeridian have a maximum
+Double round-trip error of `2.1234e-10 m`. Independent neighboring source
+frames agree on shared positions within `1e-6 m`. The worst measured Float
+hierarchy transition is `0.503542 mm`, below the 1 mm test limit. At Apollo the
+same test measures `0.000238419 mm`. Near-pole regression tests also cover the
+old `asin(z/r)` precision loss; `atan2(z,hypot(x,y))` keeps round trips below
+`1e-8 m` even within centimeters of a pole.
+
+The optimized Simulator app builds successfully. Both eleven-stop ladders at
+`/tmp/LM-Stage2-Anchor-Ladder/` and
+`/tmp/LM-Stage2-Anchor-Ladder-Final/` are byte-identical to item 0 at every stop.
+The first pass retains 16.67 ms settled p95 with no missed callbacks throughout.
+Fine-tile completion ranges are 282–369 ms at Terminal, 1,485–1,937 ms at
+Landing, and 1,451–2,324 ms at Surface. Surface physical footprint is 343.3 MiB
+versus item 0's 368.6 MiB; this is Simulator process footprint, not device
+memory pressure. The later pass has unstable cadence and completion times up
+to 3,892 ms; the subsequent baseline-test launch failed with Simulator Mach
+error -308 and a dead service. These later timings are retained, not presented
+as evidence of stable performance. The capture harness now attributes records
+only to accepted launch PIDs, excluding an observed stale process record.
+
+The stationary re-anchor artifact is `/tmp/LM-Stage2-Anchor-Probe/`. Endpoints
+settle for at least 90 seconds, and ten consecutive transition captures span
+the trigger. The actual trigger retains 32 resident tiles, has zero pending
+bakes, and causes no tile regeneration. Its containing five-second frame
+window has 16.67 ms maximum and zero missed callbacks. Normalized image RMSE
+across the coordinate change is 0.000197233; mean absolute channel change is
+0.003002 on a 0–255 scale. The largest mean change among horizontal and
+vertical 8-pixel bands is 0.001927%. The settled endpoint matches the first
+post-trigger frame exactly. No coverage hole, card edge, or new seam is visible.
+
+The broader run has 97 passes and one failure in 98 test methods. The failure,
+`SourceBackedTerrainTileTests.explorerLandingTileMissionSunShadingVariationNeedsNoPerTileGain`,
+also reproduces alone. Its synthetic six-second Explorer corridor and
+per-tile 2% shading assertion are outside the changed coordinate path; no
+terrain correction or relaxed bound was applied. Full results and console
+output are preserved in `/tmp/LM-Stage2-Anchor-Validation/`.
+
+Physical Vision Pro still has to validate 90 Hz pacing, memory pressure,
+thermals, gesture comfort, and continuous re-anchoring. Item 2 does not claim
+global source coverage, curved Apollo geometry, new navigation, or arbitrary
+contact; those remain the following items.
 
 - The capture protocol from `Docs/TerrainRealismPlan.md` §7 (tile-tint
   segmentation, per-region statistics, narrow-band edge steps; measure,

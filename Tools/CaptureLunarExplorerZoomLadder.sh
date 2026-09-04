@@ -37,6 +37,8 @@ profile_logger_pid=
 if [[ "$capture_profile" == 1 ]]; then
     profile_arguments+=(--lunar-explorer-profile)
     profile_log="$output_directory/performance.log"
+    profile_runs="$output_directory/profile-runs.tsv"
+    : > "$profile_runs"
     xcrun simctl spawn "$simulator_udid" log stream \
         --level=info \
         --predicate 'subsystem == "io.positron.LM"' \
@@ -125,6 +127,9 @@ for stop in "${stops[@]}"; do
     fi
 
     sha=$(shasum -a 256 "$screenshot" | awk '{print $1}')
+    if [[ "$capture_profile" == 1 ]]; then
+        printf "%s\t%s\n" "$launch_pid" "$name" >> "$profile_runs"
+    fi
     printf "%s\t%s\t%s\t%s\t%s\n" \
         "$name" "$preset" "$altitude" "$width" "$sha" >> "$manifest"
     echo "Captured $screenshot (mean saturation $mean_saturation)"
@@ -136,6 +141,7 @@ if [[ "$capture_profile" == 1 ]]; then
     {
         printf "stop\ttile_records\ttile_mean_ms\ttile_first_ms\ttile_last_ms\tframes\tframe_mean_ms\tframe_p95_ms\tframe_p99_ms\tframe_max_ms\tmissed\tphysical_mib\n"
         awk '
+            NR == FNR { accepted[$1] = $2; next }
             function field_value(field, prefix, suffix) {
                 sub("^" prefix, "", field)
                 if (suffix != "") sub(suffix "$", "", field)
@@ -143,7 +149,9 @@ if [[ "$capture_profile" == 1 ]]; then
             }
             /Explorer performance preset=/ {
                 process = $6
+                if (!(process in accepted)) next
                 label = field_value($12, "preset=", "")
+                if (label != accepted[process]) next
                 labels[process] = label
                 frames[label] = field_value($13, "frames=", "")
                 frame_mean[label] = field_value($14, "mean=", "ms")
@@ -155,6 +163,7 @@ if [[ "$capture_profile" == 1 ]]; then
             }
             /Terrain tile ready/ {
                 process = $6
+                if (!(process in accepted)) next
                 generation = field_value($17, "generation=", "ms") + 0
                 tile_count[process] += 1
                 tile_sum[process] += generation
@@ -180,7 +189,7 @@ if [[ "$capture_profile" == 1 ]]; then
                         physical[label]
                 }
             }
-        ' "$profile_log" | sort
+        ' "$profile_runs" "$profile_log" | sort
     } > "$summary"
     echo "Wrote Release performance summary to $summary"
 fi

@@ -109,7 +109,11 @@ struct LMSelenographicCoordinateSystem: Equatable, Sendable {
         precondition(radius.isFinite && radius > 0)
 
         return LMSelenographicCoordinate(
-            latitudeDegrees: asin(position.zMeters / radius) * 180 / .pi,
+            // atan2 retains the small horizontal component at the poles;
+            // asin(z / radius) can round that component away entirely.
+            latitudeDegrees: atan2(
+                position.zMeters, hypot(position.xMeters, position.yMeters)
+            ) * 180 / .pi,
             longitudeDegrees: atan2(position.yMeters, position.xMeters) * 180 / .pi,
             heightMeters: radius - datumRadiusMeters
         )
@@ -225,6 +229,11 @@ struct LMSelenographicLocalFrame: Equatable, Sendable {
             simd_dot(moonFixedDirection, east),
             simd_dot(moonFixedDirection, up)
         )
+    }
+
+    /// Inverse direction rotation, with no translation or height projection.
+    func moonFixedDirection(_ localDirection: SIMD3<Double>) -> SIMD3<Double> {
+        north * localDirection.x + east * localDirection.y + up * localDirection.z
     }
 
     func moonCenteredPosition(

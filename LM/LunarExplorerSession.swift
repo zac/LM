@@ -219,6 +219,7 @@ final class LunarExplorerSession {
     /// Capture-only radiance bypass used to retain a before frame after the
     /// shipping globe match is active.
     private(set) var captureUnmatchedGlobeRadiance = false
+    private(set) var captureReanchorProbe = false
 
     var logarithmicAltitude: Double {
         get { log10(altitudeMeters) }
@@ -390,6 +391,7 @@ final class LunarExplorerSession {
     /// after launch, but every named preset starts from the same terrain state.
     func configure(arguments: [String]) {
         let isCapture = arguments.contains("--lunar-explorer-capture")
+        captureReanchorProbe = isCapture && arguments.contains("--lunar-explorer-reanchor-probe")
         var altitudeOverride: Double?
         var metersAcrossOverride: Double?
         var headingOverride: Double?
