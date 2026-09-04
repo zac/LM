@@ -36,7 +36,7 @@ obeys. The three genuinely hard parts are §5 (mushy band), §4 stage 2
 | Photographic tone grade + earthshine | **Done** | Opt-in; calibrated grade pixel-identical. |
 | Global mosaic fetch/parse proven | **Done** | Source-validating 16 ppd generator, pinned PNG + provenance sidecar, and manifest schema v4 landed. |
 | Stage 1 globe | **Done in Simulator** | Complete offline 16/64 ppd WAC globe, ME orientation, Explorer `globe` preset, ephemeris terminator, pinned LOLA-derived ME normal field, radiance-matched globe-to-site handoff, and the final globe-to-surface ladder are green. Continuous hand-gesture comfort remains owner hardware validation on physical Vision Pro; it is not an implementation blocker for Stage 2. |
-| Stage 2 re-anchorable terrain | Not started | §4. The land-anywhere milestone. |
+| Stage 2 re-anchorable terrain | **In progress** | §4. Release Simulator attribution baseline recorded 2026-09-04; source catalog is next. Residual-cap sign-off remains a ship gate. |
 | Stage 3 mushy-band quality | Not started | §5. |
 | Stage 4 site packs | Not started | §4. |
 | Neural track N1 multi-site retrain | Not started | §6. Cheap; do early. |
@@ -325,31 +325,38 @@ Stage 2 owns close terrain.
 Generalize the site stack from "Apollo 11, planar ENU, 2 m NAC" to "any
 anchor, floating tangent frame, whatever sources cover it."
 
-1. **Floating anchor:** a local ENU tangent frame under the vehicle/focus,
+0. **Release performance baseline — done in Simulator 2026-09-04:** the
+   existing eleven-stop Apollo 11 ladder is recorded before Stage 2 adds
+   source resolution, transport, or wider amplification work. Measurements
+   and caveats are in §7. Physical Vision Pro profiling remains separate.
+1. **Source catalog:** evolve the manifest from one site's fixed bands into a
+   catalog of pinned sources with coverage extents, roles, post spacing, and
+   the per-source residual cap approved under §1. Apollo 11 becomes the first
+   catalog entry without changing its loaded bytes.
+2. **Floating anchor:** a local ENU tangent frame under the vehicle/focus,
    re-anchored when the focus drifts beyond ~25–50 km (planar validity), via
    `LMSelenographicLocalFrame`. Re-anchoring is a coordinate translation of
    resident tiles, not a visual event; design it seam-free like every LOD
    gate and validate with the capture protocol.
-2. **Source resolver and streaming:** given an anchor, assemble the band stack from
-   available pinned sources — streamed SLDEM/LOLA tiles for geometry, WAC
-   (normalized where available) for reflectance, NAC site packs where they
-   exist (Stage 4). Build the remote data path with this first real consumer:
-   fixed-record PDS HTTP byte ranges, a pinned digest per derived tile,
-   bounded retries, a persistent content-addressed LRU, and resumable prefetch
-   for offline use. The manifest becomes a catalog of sources + coverage
-   rather than one site's fixed bands. Format conversion belongs to the
-   elevation consumer, not the transport/cache layer.
-3. **Widen the amplification ladder:** today's progressive levels run
-   0.5 m/0.125 m below a 2 m source. Extend upward (e.g. 128/32/8/2 m
-   levels — the planner's `Level` list already sketches this) so each level
-   adds its octave of crater statistics below the local measured floor,
-   anchored at that source's posts, residual cap scaled per §1. The
-   geology model needs its crater diameter range extended to match
-   (currently 0.22–1.2 m geometry + 2–8 m catalog).
-4. **Contact everywhere:** `LMTerrainLandingSurface` builds from the same
+3. **Streaming transport and cache:** build the remote elevation path against
+   its first real consumer. Use fixed-record PDS HTTP byte ranges, a pinned
+   digest per derived tile, bounded retries, a persistent content-addressed
+   LRU, a bundled coarse base, and resumable region prefetch for offline use.
+   Format conversion belongs to the elevation consumer, not transport.
+4. **Source resolver and amplification:** given an anchor, assemble the band
+   stack from available pinned sources: streamed SLDEM/LOLA for geometry,
+   normalized WAC where available for reflectance, and NAC site packs where
+   present. Extend today's 0.5 m/0.125 m progressive levels upward, such as
+   128/32/8/2 m, so each adds its octave below the local measured floor and
+   stays anchored at that source's posts under the §1 cap. Extend the geology
+   model's crater diameter range to match.
+5. **Contact everywhere:** `LMTerrainLandingSurface` builds from the same
    resolver, so descent works at any anchor. The AGC/LR side already treats
    altitude spherically (see project memory).
-5. Reuse, don't rebuild: planner, morph collars, residency nesting,
+6. **Explorer UX:** add lat/lon entry, fly-to, a USGS-sourced POI catalog, the
+   measured-floor diagnostic, and region download controls from the companion
+   Explorer workstreams.
+7. Reuse, don't rebuild: planner, morph collars, residency nesting,
    per-tile bake, detail cache, capture diagnostics all generalize. The
    work is plumbing anchors and sources through them, not new rendering.
 
@@ -455,9 +462,49 @@ it is done.**
 4. **Stage 4 site packs**, then TerrainRealismPlan B1 radiance-conserving
    LOD re-validated at global scale.
 
-Standing prerequisite from the other plans, still outstanding: **Vision Pro
-Release profiling** — do it before Stage 2 adds load, so regressions are
-attributable.
+**Stage 2 item 0 Release baseline, 2026-09-04.** This closes the Simulator
+attribution prerequisite before Stage 2 adds load. It does not close the
+physical Vision Pro performance, thermal, or comfort gate retained by the
+companion plans.
+
+The run used Xcode 26.6 (17F113), macOS 26.5.1, the xrOS 26.5 Apple Vision Pro
+Simulator `8F38C0E7-6366-4DAC-9372-DCF6F9151DCB`, and an optimized `Release`
+build at `c950d46` plus the launch-flagged measurement probe added with this
+baseline. `Tools/CaptureLunarExplorerZoomLadder.sh` ran each existing stop for
+20 seconds with `LUNAR_CAPTURE_PROFILE=1`. The first five-second window covers
+resource loading; the final window is the settled measurement below. The
+display link advertised 11.11 ms but the Simulator delivered a stable 60 Hz
+cadence, so the probe counts hitches against the slower observed cadence. The
+`physical` column is the process's Mach physical footprint, not device memory
+pressure.
+
+| Stop | Progressive completion records | Completion range | Settled frame mean / p95 | Settled max / missed | Settled physical |
+|---|---:|---:|---:|---:|---:|
+| Globe | 0 | — | 16.67 / 16.67 ms | 16.67 ms / 0 | 312.2 MiB |
+| Global detail | 0 | — | 16.67 / 16.67 ms | 16.67 ms / 0 | 312.2 MiB |
+| Crossfade | 0 | — | 16.67 / 16.67 ms | 16.67 ms / 0 | 312.0 MiB |
+| Orbit | 0 | — | 16.50 / 16.67 ms | 22.22 ms / 0 | 313.1 MiB |
+| Regional | 0 | — | 16.67 / 16.67 ms | 16.67 ms / 0 | 311.9 MiB |
+| Approach, 2 m | 0 | — | 16.67 / 16.67 ms | 16.67 ms / 0 | 311.5 MiB |
+| Terminal, 0.5 m | 8 | 252–356 ms | 16.67 / 16.67 ms | 22.22 ms / 0 | 336.5 MiB |
+| Landing, 0.125 m | 33 | 1,471–2,043 ms | 16.67 / 16.67 ms | 16.67 ms / 0 | 380.8 MiB |
+| Relief blend start | 32 | 1,334–1,815 ms | 16.67 / 16.67 ms | 22.22 ms / 0 | 370.6 MiB |
+| Relief blend end | 32 | 1,390–1,882 ms | 16.67 / 16.67 ms | 16.67 ms / 0 | 377.4 MiB |
+| Surface | 32 | 1,351–1,819 ms | 16.67 / 16.67 ms | 16.67 ms / 0 | 368.6 MiB |
+
+The cold resource-loading windows still hitch. The worst observed single
+callback was 643.77 ms at the relief-blend-end stop, and the transient physical
+footprint peaked at 406.5 MiB during the 0.125 m landing stop. All fine tiles
+completed before the final window. The two instrumented passes produced
+byte-identical screenshots at all eleven stops. Against the earlier unprofiled
+Stage 1 acceptance ladder, the first ten stops are byte-identical; Surface has
+normalized RMSE 0.0000633 after the shorter 20-second settle. Raw logs,
+screenshots, hashes, and `performance.tsv` are in
+`/private/tmp/LM-Stage2-Release-Baseline-2026-09-04-v2/`. Instruments attached
+to the Simulator process but did not finalize a usable RealityKit, game, or
+Time Profiler trace, so this baseline uses the launch-flagged `CADisplayLink`
+and Mach sampler. A physical Vision Pro Release run still has to measure true
+90 Hz frame pacing, memory pressure, thermals, and gesture comfort.
 
 ## 8. Validation
 

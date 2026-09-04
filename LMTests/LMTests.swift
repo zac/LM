@@ -9,6 +9,23 @@ import LMCore
 @testable import LM
 
 struct LMTests {
+    @Test func frameStatisticsReportTailLatencyAndMissedFrames() throws {
+        let statistics = try #require(
+            LunarExplorerFrameStatistics.summarize(
+                durationsMilliseconds: [10, 10, 10, 20, 40],
+                nominalMilliseconds: 10
+            )
+        )
+
+        #expect(statistics.sampleCount == 5)
+        #expect(statistics.meanMilliseconds == 18)
+        #expect(statistics.p95Milliseconds == 40)
+        #expect(statistics.p99Milliseconds == 40)
+        #expect(statistics.maximumMilliseconds == 40)
+        #expect(statistics.nominalMilliseconds == 10)
+        #expect(statistics.missedFrameCount == 2)
+    }
+
     @Test @MainActor func rodSwitchIsSpringLoadedAndMutuallyExclusive() {
         let session = PoweredDescentSession()
 

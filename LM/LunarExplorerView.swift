@@ -19,6 +19,14 @@ struct LunarExplorerView: View {
         }
         .gesture(orbitGesture(explorer))
         .simultaneousGesture(zoomGesture(explorer))
+        .onAppear {
+            LunarExplorerPerformanceProbe.shared.start(
+                arguments: ProcessInfo.processInfo.arguments
+            )
+        }
+        .onDisappear {
+            LunarExplorerPerformanceProbe.shared.stop()
+        }
     }
 
     private func orbitGesture(_ session: LunarExplorerSession) -> some Gesture {
