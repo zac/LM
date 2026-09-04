@@ -114,6 +114,7 @@ final class LunarExplorerSession {
     struct Diagnostics: Equatable {
         var loadMessage = "Loading measured terrain"
         var sourceDescription = "Waiting for manifest"
+        var measuredFloorMeters: Double?
         var requestedTileCount = 0
         var activeTileCount = 0
         var finestSpacingMeters: Double?

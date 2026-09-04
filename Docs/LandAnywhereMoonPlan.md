@@ -36,7 +36,7 @@ obeys. The three genuinely hard parts are §5 (mushy band), §4 stage 2
 | Photographic tone grade + earthshine | **Done** | Opt-in; calibrated grade pixel-identical. |
 | Global mosaic fetch/parse proven | **Done** | Source-validating 16 ppd generator, pinned PNG + provenance sidecar, and manifest schema v4 landed. |
 | Stage 1 globe | **Done in Simulator** | Complete offline 16/64 ppd WAC globe, ME orientation, Explorer `globe` preset, ephemeris terminator, pinned LOLA-derived ME normal field, radiance-matched globe-to-site handoff, and the final globe-to-surface ladder are green. Continuous hand-gesture comfort remains owner hardware validation on physical Vision Pro; it is not an implementation blocker for Stage 2. |
-| Stage 2 re-anchorable terrain | **In progress** | §4. Release Simulator attribution baseline recorded 2026-09-04; source catalog is next. Residual-cap sign-off remains a ship gate. |
+| Stage 2 re-anchorable terrain | **In progress** | §4. Release Simulator attribution baseline and source catalog completed 2026-09-04; floating-anchor work is next. The owner approved the source-scaled residual contract on 2026-09-04. |
 | Stage 3 mushy-band quality | Not started | §5. |
 | Stage 4 site packs | Not started | §4. |
 | Neural track N1 multi-site retrain | Not started | §6. Cheap; do early. |
@@ -50,16 +50,18 @@ authoritative, determinism (same coordinate + same generator version = same
 result), runtime neural is appearance-only, offline source changes are
 versioned and pinned, every source input pinned by product/byte-range/hash.
 
-**One contract evolves and needs owner sign-off before Stage 2 ships:** the
-bounded-residual rule. At Apollo 11 the procedural residual is capped at
+**Owner-approved 2026-09-04:** the bounded-residual rule scales with the
+authoritative elevation source. At Apollo 11 the procedural residual is capped at
 0.24 m against a 2 m source. Against a 118 m source, honest sub-resolution
-relief includes 50 m craters that are 10 m deep. The cap must scale with
-source spacing (proposal: cap ≈ 0.12 × source spacing, matching the current
-ratio), and the contract language changes from "bounded correction" to
+relief includes 50 m craters that are 10 m deep. The cap is
+`0.12 × source post spacing`, stored per elevation source in the manifest, and
+the contract language changes from "bounded correction" to
 "plausible synthesis anchored to truth." The invariants that survive
 unchanged: exactly zero at every measured post, deterministic, versioned,
-and contact = rendered. The UI should expose provenance (a "measured floor:
-X m" diagnostic) so nobody mistakes synthesized terrain for surveyed truth.
+and contact = rendered. Apollo 11 therefore remains at 0.24 m and its terrain
+assets must stay byte-identical. The UI must expose provenance (a "measured
+floor: X m" diagnostic) so nobody mistakes synthesized terrain for surveyed
+truth.
 
 ## 2. What "plausible" means here (set expectations in code review, not after)
 
@@ -153,7 +155,7 @@ Verified this session (2026-08-31):
 Progress landed 2026-08-31: `GlobalLunarMosaicGenerator` validates the exact
 source byte count, SHA-256, attached PDS label, projection, dimensions, sample
 type, and longitude convention before producing the committed 5,760×2,880
-sRGB texture and provenance JSON. Manifest schema 5 pins that output and its
+sRGB texture and provenance JSON. Manifest schema 6 pins that output and its
 source. `LMLunarGlobeResource` builds a tessellated sphere through the shared
 ME coordinate authority, centers Apollo 11 without a guessed rotation, and
 uses the baked-shading mosaic as unlit map color. The Explorer now has a
@@ -329,10 +331,11 @@ anchor, floating tangent frame, whatever sources cover it."
    existing eleven-stop Apollo 11 ladder is recorded before Stage 2 adds
    source resolution, transport, or wider amplification work. Measurements
    and caveats are in §7. Physical Vision Pro profiling remains separate.
-1. **Source catalog:** evolve the manifest from one site's fixed bands into a
-   catalog of pinned sources with coverage extents, roles, post spacing, and
-   the per-source residual cap approved under §1. Apollo 11 becomes the first
-   catalog entry without changing its loaded bytes.
+1. **Source catalog — done 2026-09-04:** evolve the manifest from one site's
+   fixed bands into a catalog of pinned sources with coverage extents, roles,
+   post spacing, and the per-source residual cap approved under §1. Apollo 11
+   is the first catalog entry; exact Stage 1 asset hashes guard its unchanged loaded bytes,
+   and Explorer reports its 2 m measured floor.
 2. **Floating anchor:** a local ENU tangent frame under the vehicle/focus,
    re-anchored when the focus drifts beyond ~25–50 km (planar validity), via
    `LMSelenographicLocalFrame`. Re-anchoring is a coordinate translation of

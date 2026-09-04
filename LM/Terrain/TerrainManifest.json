@@ -102,7 +102,7 @@
     "sphereRadiusMeters" : 1737400
   },
   "scenarioID" : "apollo11-progressive-real-data-terrain",
-  "schemaVersion" : 5,
+  "schemaVersion" : 6,
   "sourceLandingOriginElevationsMeters" : {
     "nac-dtm-apollo11" : -1928.037353515625,
     "sldem2015-128-apollo11-slab" : -1926.1782513219268,
@@ -111,11 +111,19 @@
   "sources" : [
     {
       "bytes" : 118142727,
+      "coverage" : {
+        "easternmostLongitudeDegrees" : 23.511529599999999,
+        "maximumLatitudeDegrees" : 1.2365387999999999,
+        "minimumLatitudeDegrees" : 0.31460900000000003,
+        "westernmostLongitudeDegrees" : 23.372275800000001
+      },
       "detail" : "LROC NAC DTM supplies measured near-field geometry. Separately pinned 0.5 m orthorectified NAC observations supply only exposure-normalized high-frequency reflectance detail over a photometrically normalized WAC base. The mission-sun DirectionalLight shades the mesh normals; per-tile hillshade PNGs remain regenerable diagnostics rather than surface color.",
       "id" : "nac-dtm-apollo11",
       "labelURL" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/SDP\/NAC_DTM\/APOLLO11\/NAC_DTM_APOLLO11.LBL",
+      "postSpacingMeters" : 2.0000000000006,
       "productId" : "NAC_DTM_APOLLO11",
       "productVersion" : "v1.9",
+      "residualCapRatio" : 0.12,
       "role" : "geometry",
       "sha256" : "920da622e3d7c3f047c67a970b5429aaadf00f886804e3fc6c72f6e5298043e9",
       "url" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/SDP\/NAC_DTM\/APOLLO11\/NAC_DTM_APOLLO11.TIF"
@@ -124,12 +132,20 @@
       "byteRangeEnd" : 1396869119,
       "byteRangeStart" : 1370787840,
       "bytes" : 26081280,
+      "coverage" : {
+        "easternmostLongitudeDegrees" : 45,
+        "maximumLatitudeDegrees" : 0.9501953125,
+        "minimumLatitudeDegrees" : 0.3974609375,
+        "westernmostLongitudeDegrees" : 0
+      },
       "detail" : "Exact PDS byte-range slab covering the 16.384 km Apollo 11 medium field. Native SLDEM2015 posts are about 59.2 m at the equator; the 32 m render grid interpolates this source and is boundary-registered to the measured NAC tile.",
       "id" : "sldem2015-512-apollo11-slab",
       "labelURL" : "https:\/\/pds-geosciences.wustl.edu\/lro\/lro-l-lola-3-rdr-v1\/lrolol_1xxx\/data\/sldem2015\/tiles\/float_img\/sldem2015_512_00n_30n_000_045_float.lbl",
       "mapResolutionPixelsPerDegree" : 512,
+      "postSpacingMeters" : 59.225293800000003,
       "productId" : "SLDEM2015_512_00N_30N_000_045_FLOAT",
       "productVersion" : "V2.0",
+      "residualCapRatio" : 0.12,
       "role" : "medium-field-geometry",
       "sha256" : "9ef0cf5d054c295d21b02ccf463c0f246dc78871c344f4fe01c5f077ba8d7698",
       "sourceBytes" : 1415577600,
@@ -142,12 +158,20 @@
       "byteRangeEnd" : 1502392319,
       "byteRangeStart" : 1297244160,
       "bytes" : 205148160,
+      "coverage" : {
+        "easternmostLongitudeDegrees" : 360,
+        "maximumLatitudeDegrees" : 5.01953125,
+        "minimumLatitudeDegrees" : -3.67578125,
+        "westernmostLongitudeDegrees" : 0
+      },
       "detail" : "Exact PDS byte-range slab covering the 262.144 km Apollo 11 far field. Native SLDEM2015 posts are about 236.9 m at the equator; the 512 m render grid is boundary-registered to the medium field.",
       "id" : "sldem2015-128-apollo11-slab",
       "labelURL" : "https:\/\/pds-geosciences.wustl.edu\/lro\/lro-l-lola-3-rdr-v1\/lrolol_1xxx\/data\/sldem2015\/global\/float_img\/sldem2015_128_60s_60n_000_360_float.lbl",
       "mapResolutionPixelsPerDegree" : 128,
+      "postSpacingMeters" : 236.90100000000001,
       "productId" : "SLDEM2015_128_60S_60N_000_360_FLOAT",
       "productVersion" : "V2.0",
+      "residualCapRatio" : 0.12,
       "role" : "far-field-geometry",
       "sha256" : "f02bb39e4b11f664a77ce3ed8ab0f12087fd89a01d534942564fba5d643122f9",
       "sourceBytes" : 2831155200,
@@ -160,6 +184,12 @@
       "byteRangeEnd" : 611039119,
       "byteRangeStart" : 541864880,
       "bytes" : 69174240,
+      "coverage" : {
+        "easternmostLongitudeDegrees" : 23.51148314983493,
+        "maximumLatitudeDegrees" : 0.707219010691794,
+        "minimumLatitudeDegrees" : 0.639647321833555,
+        "westernmostLongitudeDegrees" : 23.37231647
+      },
       "detail" : "Exact PDS byte-range slab from the first 0.5 m orthorectified NAC stereo observation. Exposure-normalized high-frequency contrast is averaged with the second observation and faded to zero at the near-field edge; it is not treated as photometrically normalized absolute albedo.",
       "id" : "nac-ortho-m150361817-50cm-slab",
       "labelURL" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/SDP\/NAC_DTM\/APOLLO11\/NAC_DTM_APOLLO11_M150361817_50CM.xml",
@@ -179,6 +209,12 @@
       "byteRangeEnd" : 611039119,
       "byteRangeStart" : 541864880,
       "bytes" : 69174240,
+      "coverage" : {
+        "easternmostLongitudeDegrees" : 23.51148314983493,
+        "maximumLatitudeDegrees" : 0.707219010691794,
+        "minimumLatitudeDegrees" : 0.639647321833555,
+        "westernmostLongitudeDegrees" : 23.37231647
+      },
       "detail" : "Exact PDS byte-range slab from the second 0.5 m orthorectified NAC stereo observation. Its independent gain and offset are normalized before the two registered views are averaged.",
       "id" : "nac-ortho-m150368601-50cm-slab",
       "labelURL" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/SDP\/NAC_DTM\/APOLLO11\/NAC_DTM_APOLLO11_M150368601_50CM.xml",
@@ -198,6 +234,12 @@
       "byteRangeEnd" : 1983052799,
       "byteRangeStart" : 1964666880,
       "bytes" : 18385920,
+      "coverage" : {
+        "easternmostLongitudeDegrees" : 90,
+        "maximumLatitudeDegrees" : 0.952302631578945,
+        "minimumLatitudeDegrees" : 0.399671052631582,
+        "westernmostLongitudeDegrees" : 0
+      },
       "detail" : "Exact PDS byte-range slab from the empirically photometrically normalized 643 nm WAC mosaic at about 99.7 m\/pixel. It supplies absolute low-frequency reflectance for the near and medium bands.",
       "id" : "wac-emp-643nm-304p-apollo11-slab",
       "labelURL" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/MDR\/WAC_EMP\/WAC_EMP_643NM_E300N0450_304P.xml",
@@ -217,6 +259,12 @@
       "byteRangeEnd" : 88496639,
       "byteRangeStart" : 81077760,
       "bytes" : 7418880,
+      "coverage" : {
+        "easternmostLongitudeDegrees" : 90,
+        "maximumLatitudeDegrees" : 5.0390625,
+        "minimumLatitudeDegrees" : 0.0078125,
+        "westernmostLongitudeDegrees" : 0
+      },
       "detail" : "Exact PDS byte-range slab from the normalized 643 nm WAC mosaic north of the equator at about 473.8 m\/pixel.",
       "id" : "wac-emp-643nm-64p-north-apollo11-slab",
       "labelURL" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/MDR\/WAC_EMP\/WAC_EMP_643NM_E300N0450_064P.xml",
@@ -236,6 +284,12 @@
       "byteRangeEnd" : 5460479,
       "byteRangeStart" : 23040,
       "bytes" : 5437440,
+      "coverage" : {
+        "easternmostLongitudeDegrees" : 90,
+        "maximumLatitudeDegrees" : 0.0078125,
+        "minimumLatitudeDegrees" : -3.6796875,
+        "westernmostLongitudeDegrees" : 0
+      },
       "detail" : "Exact PDS byte-range slab from the normalized 643 nm WAC mosaic south of the equator at about 473.8 m\/pixel.",
       "id" : "wac-emp-643nm-64p-south-apollo11-slab",
       "labelURL" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/MDR\/WAC_EMP\/WAC_EMP_643NM_E300S0450_064P.xml",
@@ -253,6 +307,12 @@
     },
     {
       "bytes" : 66378240,
+      "coverage" : {
+        "easternmostLongitudeDegrees" : 360,
+        "maximumLatitudeDegrees" : 90,
+        "minimumLatitudeDegrees" : -90,
+        "westernmostLongitudeDegrees" : 0
+      },
       "detail" : "Global 53-70 degree-incidence WAC morphologic mosaic with an attached PDS3 label. It is the pinned source for the unlit globe base and is not photometrically normalized surface albedo.",
       "id" : "wac-global-morphologic-16ppd",
       "labelURL" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/BDR\/WAC_GLOBAL\/WAC_GLOBAL_E000N0000_016P.IMG",
@@ -265,6 +325,12 @@
     },
     {
       "bytes" : 1061775360,
+      "coverage" : {
+        "easternmostLongitudeDegrees" : 360,
+        "maximumLatitudeDegrees" : 90,
+        "minimumLatitudeDegrees" : -90,
+        "westernmostLongitudeDegrees" : 0
+      },
       "detail" : "Global 53-70 degree-incidence WAC morphologic mosaic at 64 ppd with an attached PDS3 label. It is the pinned lossless source for the bundled one-channel JPEG XL tier and is not photometrically normalized surface albedo.",
       "id" : "wac-global-morphologic-64ppd",
       "labelURL" : "https:\/\/pds.lroc.im-ldi.com\/data\/LRO-L-LROC-5-RDR-V1.0\/LROLRC_2001\/DATA\/BDR\/WAC_GLOBAL\/WAC_GLOBAL_E000N0000_064P.IMG",
@@ -277,14 +343,22 @@
     },
     {
       "bytes" : 33177600,
+      "coverage" : {
+        "easternmostLongitudeDegrees" : 360,
+        "maximumLatitudeDegrees" : 90,
+        "minimumLatitudeDegrees" : -90,
+        "westernmostLongitudeDegrees" : 0
+      },
       "detail" : "Global 16 ppd LOLA height above the 1,737,400 m reference sphere in the Mean Earth/Polar-axis frame. The pinned image is used only to derive the globe normal field; it does not replace measured site geometry, contact, or landing physics.",
       "id" : "lola-ldem-16ppd-global",
       "labelBytes" : 5121,
       "labelSHA256" : "9aef29463ccc6ed3a3fbe0df3ecd830a99c69e16b564f455507dee2697096579",
       "labelURL" : "https:\/\/imbrium.mit.edu\/DATA\/LOLA_GDR\/CYLINDRICAL\/IMG\/LDEM_16.LBL",
       "mapResolutionPixelsPerDegree" : 16,
+      "postSpacingMeters" : 1895.2094015093,
       "productId" : "LDEM_16",
       "productVersion" : "V3.1",
+      "residualCapRatio" : 0.12,
       "role" : "global-elevation-normal-source",
       "sha256" : "a511e40d7a3ea3275945b4da2a1df377133264fab0be94b7434b1cf8907254cb",
       "url" : "https:\/\/imbrium.mit.edu\/DATA\/LOLA_GDR\/CYLINDRICAL\/IMG\/LDEM_16.IMG"
@@ -435,5 +509,5 @@
       "zeroPointMeters" : -10470.86870527425
     }
   ],
-  "toolSHA256" : "f7e715e21c2c495ac871a6253924a8cb963534bb899156808eb0f7c68fa8a1f1"
+  "toolSHA256" : "aef1d32c2580d206269364771116dd5538ec5d1d7dbcebb371658cebb2633d8d"
 }

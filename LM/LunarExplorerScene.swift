@@ -142,6 +142,8 @@ final class LunarExplorerScene {
                 self.terrainRockField = rocks
                 self.isLoaded = true
                 self.loadTask = nil
+                session.diagnostics.measuredFloorMeters = assembly.manifest
+                    .measuredFloorMeters(at: assembly.manifest.landingOriginCoordinate)
                 session.diagnostics.loadMessage = "Apollo 11 terrain ready"
                 session.diagnostics.sourceDescription = self.sourceDescription(
                     altitudeMeters: session.altitudeMeters

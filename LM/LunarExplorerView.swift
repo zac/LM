@@ -281,6 +281,10 @@ struct LunarExplorerControls: View {
         Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 6) {
             diagnosticRow("State", session.diagnostics.loadMessage)
             diagnosticRow("Source", session.diagnostics.sourceDescription)
+            diagnosticRow(
+                "Measured floor",
+                session.diagnostics.measuredFloorMeters.map(distance) ?? "pending"
+            )
             diagnosticRow("Appearance", session.detailMode.title)
             diagnosticRow("Globe tier", session.diagnostics.globeTierState)
             diagnosticRow(

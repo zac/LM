@@ -106,8 +106,43 @@ struct LMTerrainManifest: Equatable, Decodable {
     }
 
     struct Source: Equatable, Decodable {
+        struct Coverage: Equatable, Decodable {
+            let minimumLatitudeDegrees: Double
+            let maximumLatitudeDegrees: Double
+            let westernmostLongitudeDegrees: Double
+            let easternmostLongitudeDegrees: Double
+
+            func contains(latitudeDegrees: Double, longitudeDegrees: Double) -> Bool {
+                guard latitudeDegrees >= minimumLatitudeDegrees,
+                      latitudeDegrees <= maximumLatitudeDegrees else {
+                    return false
+                }
+
+                let longitudeSpan = easternmostLongitudeDegrees
+                    - westernmostLongitudeDegrees
+                if longitudeSpan >= 360 {
+                    return true
+                }
+
+                func normalizedLongitude(_ longitude: Double) -> Double {
+                    let remainder = longitude.truncatingRemainder(dividingBy: 360)
+                    return remainder >= 0 ? remainder : remainder + 360
+                }
+
+                let longitude = normalizedLongitude(longitudeDegrees)
+                let west = normalizedLongitude(westernmostLongitudeDegrees)
+                let east = normalizedLongitude(easternmostLongitudeDegrees)
+                return west <= east
+                    ? longitude >= west && longitude <= east
+                    : longitude >= west || longitude <= east
+            }
+        }
+
         let id: String
         let role: String
+        let coverage: Coverage
+        let postSpacingMeters: Double?
+        let residualCapRatio: Double?
         let url: String
         let sha256: String
         let bytes: Int?
@@ -125,6 +160,13 @@ struct LMTerrainManifest: Equatable, Decodable {
         let labelSHA256: String?
         let labelBytes: Int?
         let detail: String
+
+        var maximumResidualMeters: Double? {
+            guard let postSpacingMeters, let residualCapRatio else {
+                return nil
+            }
+            return postSpacingMeters * residualCapRatio
+        }
     }
 
     struct HeightEncoding: Equatable, Decodable {
@@ -200,9 +242,15 @@ struct LMTerrainManifest: Equatable, Decodable {
     let tiles: [Tile]
     let toolSHA256: String
 
-    static let schemaVersion = 5
+    static let schemaVersion = 6
 
     static let eagleLandmarkID = "apollo11-lm-eagle"
+
+    /// Catalog-facing name for the pinned source records. `sources` remains
+    /// the decoded field so existing Apollo 11 loading stays unchanged.
+    var sourceCatalog: [Source] {
+        sources
+    }
 
     func tile(id: String) -> Tile? {
         tiles.first { $0.id == id }
@@ -210,6 +258,18 @@ struct LMTerrainManifest: Equatable, Decodable {
 
     func landmark(id: String) -> Landmark? {
         landmarks.first { $0.id == id }
+    }
+
+    func measuredFloorMeters(at coordinate: LMSelenographicCoordinate) -> Double? {
+        sourceCatalog.compactMap { source in
+            guard source.coverage.contains(
+                latitudeDegrees: coordinate.latitudeDegrees,
+                longitudeDegrees: coordinate.longitudeDegrees
+            ) else {
+                return nil
+            }
+            return source.postSpacingMeters
+        }.min()
     }
 
     var selenographicCoordinateSystem: LMSelenographicCoordinateSystem {

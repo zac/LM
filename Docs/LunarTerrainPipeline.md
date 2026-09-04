@@ -2,17 +2,19 @@
 
 ## Fidelity contract
 
-Measured terrain is authoritative. Procedural detail may add only frequencies
-below the best available source resolution and must never move a measured
-sample. The same absolute lunar coordinate and generator version must always
-produce the same result.
+Measured terrain is authoritative. Below the best available source resolution,
+procedural detail is plausible synthesis anchored to truth: it must never move
+a measured sample. The same absolute lunar coordinate and generator version
+must always produce the same result.
 
 Procedural relief is no longer visual-only. `LMLunarGeologyModel` shape now
 reaches the landing-gear contact surface, so the ground the crew can see is the
 ground the footpads touch. This is a deliberate change from the earlier
 conservative contract and is bounded by the same rules: the residual is
-deterministic, capped at 0.24 m, and exactly zero at every measured LROC post,
-so no synthesized feature can move a measured one. Appearance-only detail —
+deterministic, capped per elevation source at `0.12 × source post spacing`, and
+exactly zero at every measured post, so no synthesized feature can move a
+measured one. Apollo 11's 2 m LROC source therefore retains its existing
+0.24 m cap. Appearance-only detail —
 `LMRegolithMicrotextureModel`, described below — remains strictly outside both
 the mesh and the contact surface. The synthesized rock fragments also remain
 non-colliding: they are explicitly not surveyed coordinates and must not decide
@@ -81,7 +83,7 @@ vehicle pose at 1:1 scale.
 The first land-anywhere tier is a pinned 16-pixel-per-degree LROC WAC global
 morphologic mosaic. `GlobalLunarMosaicGenerator` validates the complete source
 file and its attached PDS label before converting little-endian PC_REAL
-reflectance to a fixed-transfer sRGB PNG. Manifest schema 5 records the source,
+reflectance to a fixed-transfer sRGB PNG. Manifest schema 6 records the source,
 generator, projection, datum radius, texture dimensions, and generated-file
 hash. The same tool verifies the 16 ppd global LOLA `LDEM_16` image and label,
 then derives a detrended ME-frame normal field from elevation above the pinned
@@ -143,7 +145,8 @@ The geometry is versioned by
 `surveyor-degraded-microrelief-v3+apollo11-near-field-nac-craters-v1@nac-parametric-correlation-v1`.
 A bilinear post-anchoring correction keeps the residual continuous across
 measured cell boundaries and exactly zero at every LROC post. The visual
-residual is smoothly bounded to 0.24 m.
+residual is smoothly bounded by the active source's manifest parameter; for
+the 2 m Apollo 11 source that remains 0.24 m.
 
 Primary morphology constraints:
 

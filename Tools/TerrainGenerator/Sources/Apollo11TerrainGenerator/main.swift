@@ -244,6 +244,14 @@ let wacGlobal16PPDSourceSHA256 =
     "c75a49b48df0d1d8afad8f25e58332599e8383e4967424ffbb0ba38b0808b2b6"
 let wacGlobal16PPDTextureSHA256 =
     "b799eab2d43f7a27799972d4ec4bc25cff06776ba14774e03e322cb7a7ea460e"
+let wacGlobal64PPDURL =
+    "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/WAC_GLOBAL_E000N0000_064P.IMG"
+let wacGlobal64PPDSourceSHA256 =
+    "bc1feab6e86ae2cf47798a4f00cdf7f5e73030fcbc2223fba7fab59a5a2a34ec"
+let wacGlobal64PPDTextureSHA256 =
+    "819ca84afedca9a5fe864a0a3a036bc6384a105f21135614c90808c184355841"
+let wacGlobal64PPDLosslessSHA256 =
+    "faead7d93e3ac1b16f30955419f4cbb2f1fbd1040dbc2913473ccd5f30df2420"
 let lolaLDEM16URL =
     "https://imbrium.mit.edu/DATA/LOLA_GDR/CYLINDRICAL/IMG/LDEM_16.IMG"
 let lolaLDEM16LabelURL =
@@ -255,19 +263,19 @@ let lolaLDEM16LabelSHA256 =
 let lolaLDEM16NormalSHA256 =
     "bd70494eb4194aca023e4f4f724cc7a6d11a4b23148f4519192715694dd34696"
 let globalLunarMosaicGeneratorSHA256 =
-    "b0031f4f61bd62e71e8541f86476ebd51566be82cacde6517bfdd39096f273bf"
+    "1dcd7091ec5dcb370ece0196f02510d33aab48510a44f4ca7571a2b898567711"
 
 // MARK: - Manifest model (mirrored by LM/LM/LMTerrainManifest.swift)
 
 func manifestJSON() -> [String: Any] {
     [
-        "schemaVersion": 5,
+        "schemaVersion": 6,
         "scenarioID": "apollo11-progressive-real-data-terrain",
         "globe": [
             "coordinateSystemName": "IAU_ME",
             "radiusMeters": lunarRadiusMeters,
             "materialMode": "unlit-morphologic-map",
-            "generatorVersion": "wac-global-morphologic-lola-normal-v2",
+            "generatorVersion": "wac-global-morphologic-lola-normal-jxl-v3",
             "generatorSHA256": globalLunarMosaicGeneratorSHA256,
             "textureTiers": [
                 [
@@ -280,6 +288,23 @@ func manifestJSON() -> [String: Any] {
                     "sha256": wacGlobal16PPDTextureSHA256,
                     "sourceID": "wac-global-morphologic-16ppd",
                     "detail": "Pinned global WAC morphologic base. Illumination is baked into this map, so it is rendered unlit rather than double-shaded by the movable mission sun."
+                ],
+                [
+                    "id": "wac-global-64ppd",
+                    "file": "WACGlobal64PPD-q95.jxl",
+                    "width": 23_040,
+                    "height": 11_520,
+                    "mapResolutionPixelsPerDegree": 64.0,
+                    "metersPerPixel": 473.802_350_377_34,
+                    "sha256": wacGlobal64PPDTextureSHA256,
+                    "sourceID": "wac-global-morphologic-64ppd",
+                    "detail": "Pinned offline 64 ppd WAC morphologic tier. The source transfer is unchanged and remains unlit; one-channel JPEG XL is visually transparent to the lossless grayscale PNG in fixed Simulator globe and orbit-overlap captures.",
+                    "codec": "JPEG XL",
+                    "codecQuality": 95,
+                    "codecEffort": 7,
+                    "codecEncoder": "cjxl 0.12.0 effort 7",
+                    "losslessSourceSHA256": wacGlobal64PPDLosslessSHA256,
+                    "losslessSourceBytes": 128_461_405
                 ]
             ],
             "normalMap": [
@@ -354,8 +379,16 @@ func manifestJSON() -> [String: Any] {
         ],
         "sources": [
             [
+                "coverage": coverageManifest(
+                    minimumLatitude: dtmMinimumLatitude,
+                    maximumLatitude: dtmMaximumLatitude,
+                    westernmostLongitude: dtmWesternmostLongitude,
+                    easternmostLongitude: dtmEasternmostLongitude
+                ),
                 "id": "nac-dtm-apollo11",
                 "role": "geometry",
+                "postSpacingMeters": dtmMetersPerPost,
+                "residualCapRatio": 0.12,
                 "url": pinnedDTM.url,
                 "sha256": pinnedDTM.sha256 ?? "",
                 "bytes": pinnedDTM.bytes ?? 0,
@@ -374,6 +407,11 @@ func manifestJSON() -> [String: Any] {
                 rowEnd: sldemMediumRowEnd,
                 rowBytes: sldemMediumSamples * MemoryLayout<Float>.size,
                 resolution: sldemMediumResolutionPixelsPerDegree,
+                maximumLatitude: sldemMediumMaximumLatitude,
+                westernmostLongitude: sldemMediumWesternmostLongitude,
+                sourceSamples: sldemMediumSamples,
+                postSpacingMeters: sldemMediumMetersPerPost,
+                residualCapRatio: 0.12,
                 detail: "Exact PDS byte-range slab covering the 16.384 km Apollo 11 medium field. Native SLDEM2015 posts are about 59.2 m at the equator; the 32 m render grid interpolates this source and is boundary-registered to the measured NAC tile."
             ),
             sourceManifest(
@@ -386,6 +424,11 @@ func manifestJSON() -> [String: Any] {
                 rowEnd: sldemFarRowEnd,
                 rowBytes: sldemFarSamples * MemoryLayout<Float>.size,
                 resolution: sldemFarResolutionPixelsPerDegree,
+                maximumLatitude: sldemFarMaximumLatitude,
+                westernmostLongitude: sldemFarWesternmostLongitude,
+                sourceSamples: sldemFarSamples,
+                postSpacingMeters: sldemFarMetersPerPost,
+                residualCapRatio: 0.12,
                 detail: "Exact PDS byte-range slab covering the 262.144 km Apollo 11 far field. Native SLDEM2015 posts are about 236.9 m at the equator; the 512 m render grid is boundary-registered to the medium field."
             ),
             sourceManifest(
@@ -398,6 +441,11 @@ func manifestJSON() -> [String: Any] {
                 rowEnd: nacOrthoRowEnd,
                 rowBytes: nacOrthoSamples * MemoryLayout<Int16>.size,
                 resolution: nacOrthoResolutionPixelsPerDegree,
+                maximumLatitude: nacOrthoMaximumLatitude,
+                westernmostLongitude: nacOrthoWesternmostLongitude,
+                sourceSamples: nacOrthoSamples,
+                postSpacingMeters: nil,
+                residualCapRatio: nil,
                 detail: "Exact PDS byte-range slab from the first 0.5 m orthorectified NAC stereo observation. Exposure-normalized high-frequency contrast is averaged with the second observation and faded to zero at the near-field edge; it is not treated as photometrically normalized absolute albedo."
             ),
             sourceManifest(
@@ -410,6 +458,11 @@ func manifestJSON() -> [String: Any] {
                 rowEnd: nacOrthoRowEnd,
                 rowBytes: nacOrthoSamples * MemoryLayout<Int16>.size,
                 resolution: nacOrthoResolutionPixelsPerDegree,
+                maximumLatitude: nacOrthoMaximumLatitude,
+                westernmostLongitude: nacOrthoWesternmostLongitude,
+                sourceSamples: nacOrthoSamples,
+                postSpacingMeters: nil,
+                residualCapRatio: nil,
                 detail: "Exact PDS byte-range slab from the second 0.5 m orthorectified NAC stereo observation. Its independent gain and offset are normalized before the two registered views are averaged."
             ),
             sourceManifest(
@@ -422,6 +475,11 @@ func manifestJSON() -> [String: Any] {
                 rowEnd: wacMediumRowEnd,
                 rowBytes: wacMediumSamples * MemoryLayout<Float>.size,
                 resolution: wacMediumResolutionPixelsPerDegree,
+                maximumLatitude: wacMediumMaximumLatitude,
+                westernmostLongitude: wacMediumWesternmostLongitude,
+                sourceSamples: wacMediumSamples,
+                postSpacingMeters: nil,
+                residualCapRatio: nil,
                 detail: "Exact PDS byte-range slab from the empirically photometrically normalized 643 nm WAC mosaic at about 99.7 m/pixel. It supplies absolute low-frequency reflectance for the near and medium bands."
             ),
             sourceManifest(
@@ -434,6 +492,11 @@ func manifestJSON() -> [String: Any] {
                 rowEnd: wacFarNorthRowEnd,
                 rowBytes: wacFarSamples * MemoryLayout<Float>.size,
                 resolution: wacFarResolutionPixelsPerDegree,
+                maximumLatitude: wacFarNorthMaximumLatitude,
+                westernmostLongitude: 0,
+                sourceSamples: wacFarSamples,
+                postSpacingMeters: nil,
+                residualCapRatio: nil,
                 detail: "Exact PDS byte-range slab from the normalized 643 nm WAC mosaic north of the equator at about 473.8 m/pixel."
             ),
             sourceManifest(
@@ -446,9 +509,20 @@ func manifestJSON() -> [String: Any] {
                 rowEnd: wacFarSouthRowEnd,
                 rowBytes: wacFarSamples * MemoryLayout<Float>.size,
                 resolution: wacFarResolutionPixelsPerDegree,
+                maximumLatitude: wacFarSouthMaximumLatitude,
+                westernmostLongitude: 0,
+                sourceSamples: wacFarSamples,
+                postSpacingMeters: nil,
+                residualCapRatio: nil,
                 detail: "Exact PDS byte-range slab from the normalized 643 nm WAC mosaic south of the equator at about 473.8 m/pixel."
             ),
             [
+                "coverage": coverageManifest(
+                    minimumLatitude: -90,
+                    maximumLatitude: 90,
+                    westernmostLongitude: 0,
+                    easternmostLongitude: 360
+                ),
                 "id": "wac-global-morphologic-16ppd",
                 "role": "global-morphologic-map",
                 "url": wacGlobal16PPDURL,
@@ -461,8 +535,34 @@ func manifestJSON() -> [String: Any] {
                 "detail": "Global 53-70 degree-incidence WAC morphologic mosaic with an attached PDS3 label. It is the pinned source for the unlit globe base and is not photometrically normalized surface albedo."
             ],
             [
+                "coverage": coverageManifest(
+                    minimumLatitude: -90,
+                    maximumLatitude: 90,
+                    westernmostLongitude: 0,
+                    easternmostLongitude: 360
+                ),
+                "id": "wac-global-morphologic-64ppd",
+                "role": "global-morphologic-map",
+                "url": wacGlobal64PPDURL,
+                "sha256": wacGlobal64PPDSourceSHA256,
+                "bytes": 1_061_775_360,
+                "mapResolutionPixelsPerDegree": 64.0,
+                "productId": "WAC_GLOBAL_E000N0000_064P",
+                "productVersion": "v1.3",
+                "labelURL": wacGlobal64PPDURL,
+                "detail": "Global 53-70 degree-incidence WAC morphologic mosaic at 64 ppd with an attached PDS3 label. It is the pinned lossless source for the bundled one-channel JPEG XL tier and is not photometrically normalized surface albedo."
+            ],
+            [
+                "coverage": coverageManifest(
+                    minimumLatitude: -90,
+                    maximumLatitude: 90,
+                    westernmostLongitude: 0,
+                    easternmostLongitude: 360
+                ),
                 "id": "lola-ldem-16ppd-global",
                 "role": "global-elevation-normal-source",
+                "postSpacingMeters": 1_895.209_401_509_3,
+                "residualCapRatio": 0.12,
                 "url": lolaLDEM16URL,
                 "sha256": lolaLDEM16SourceSHA256,
                 "bytes": 33_177_600,
@@ -493,9 +593,20 @@ func sourceManifest(
     rowEnd: Int,
     rowBytes: Int,
     resolution: Double,
+    maximumLatitude: Double,
+    westernmostLongitude: Double,
+    sourceSamples: Int,
+    postSpacingMeters: Double?,
+    residualCapRatio: Double?,
     detail: String
 ) -> [String: Any] {
     var manifest: [String: Any] = [
+        "coverage": coverageManifest(
+            minimumLatitude: maximumLatitude - (Double(rowEnd) + 0.5) / resolution,
+            maximumLatitude: maximumLatitude - (Double(rowStart) - 0.5) / resolution,
+            westernmostLongitude: westernmostLongitude,
+            easternmostLongitude: westernmostLongitude + Double(sourceSamples) / resolution
+        ),
         "id": id,
         "role": role,
         "url": source.url,
@@ -513,10 +624,28 @@ func sourceManifest(
         "labelURL": labelURL,
         "detail": detail
     ]
+    if let postSpacingMeters, let residualCapRatio {
+        manifest["postSpacingMeters"] = postSpacingMeters
+        manifest["residualCapRatio"] = residualCapRatio
+    }
     if let sourceMD5 = source.sourceMD5 {
         manifest["sourceMD5"] = sourceMD5
     }
     return manifest
+}
+
+func coverageManifest(
+    minimumLatitude: Double,
+    maximumLatitude: Double,
+    westernmostLongitude: Double,
+    easternmostLongitude: Double
+) -> [String: Any] {
+    [
+        "minimumLatitudeDegrees": minimumLatitude,
+        "maximumLatitudeDegrees": maximumLatitude,
+        "westernmostLongitudeDegrees": westernmostLongitude,
+        "easternmostLongitudeDegrees": easternmostLongitude
+    ]
 }
 
 func nearManifestTile() -> [String: Any] {

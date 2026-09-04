@@ -1,4 +1,5 @@
 import Foundation
+import CryptoKit
 import CoreGraphics
 import ImageIO
 import RealityKit
@@ -939,8 +940,14 @@ struct SourceBackedTerrainTileTests {
         #expect(abs(manifest.projection.sphereRadiusMeters - 1_737_400) < 1)
         #expect(manifest.projection.sourceSamples == 2_111)
         #expect(manifest.projection.sourceLines == 13_978)
-        #expect(manifest.sources.count == 10)
-        #expect(manifest.toolSHA256 == "f7e715e21c2c495ac871a6253924a8cb963534bb899156808eb0f7c68fa8a1f1")
+        #expect(manifest.sources.count == 11)
+        #expect(manifest.sourceCatalog == manifest.sources)
+        #expect(manifest.sources.allSatisfy {
+            $0.coverage.minimumLatitudeDegrees <= $0.coverage.maximumLatitudeDegrees
+                && $0.coverage.easternmostLongitudeDegrees
+                    > $0.coverage.westernmostLongitudeDegrees
+        })
+        #expect(manifest.toolSHA256 == "aef1d32c2580d206269364771116dd5538ec5d1d7dbcebb371658cebb2633d8d")
         let craterCatalog = try #require(manifest.craterCatalog)
         #expect(craterCatalog.file == "apollo11-nac-craters-v1.json")
         #expect(craterCatalog.catalogID == "apollo11-near-field-nac-craters-v1")
@@ -955,6 +962,16 @@ struct SourceBackedTerrainTileTests {
         #expect(nac.productId == "NAC_DTM_APOLLO11")
         #expect(nac.role == "geometry")
         #expect(nac.sha256 == "920da622e3d7c3f047c67a970b5429aaadf00f886804e3fc6c72f6e5298043e9")
+        #expect(abs((nac.postSpacingMeters ?? 0) - 2.000_000_000_000_6) < 1e-12)
+        #expect(nac.residualCapRatio == 0.12)
+        #expect(abs((nac.maximumResidualMeters ?? 0) - 0.24) < 1e-12)
+        #expect(nac.coverage.contains(
+            latitudeDegrees: manifest.landingOrigin.latitudeDegrees,
+            longitudeDegrees: manifest.landingOrigin.longitudeDegrees
+        ))
+        #expect(abs((manifest.measuredFloorMeters(
+            at: manifest.landingOriginCoordinate
+        ) ?? 0) - 2.000_000_000_000_6) < 1e-12)
 
         let mediumSource = try #require(manifest.sources.first {
             $0.id == "sldem2015-512-apollo11-slab"
@@ -967,6 +984,8 @@ struct SourceBackedTerrainTileTests {
         #expect(mediumSource.sourceRowStart == 14_874)
         #expect(mediumSource.sourceRowEnd == 15_156)
         #expect(mediumSource.sha256 == "9ef0cf5d054c295d21b02ccf463c0f246dc78871c344f4fe01c5f077ba8d7698")
+        #expect(abs((mediumSource.postSpacingMeters ?? 0) - 59.225_293_8) < 1e-9)
+        #expect(mediumSource.residualCapRatio == 0.12)
 
         let farSource = try #require(manifest.sources.first {
             $0.id == "sldem2015-128-apollo11-slab"
@@ -979,6 +998,12 @@ struct SourceBackedTerrainTileTests {
         #expect(farSource.sourceRowStart == 7_038)
         #expect(farSource.sourceRowEnd == 8_150)
         #expect(farSource.sha256 == "f02bb39e4b11f664a77ce3ed8ab0f12087fd89a01d534942564fba5d643122f9")
+        #expect(abs((farSource.postSpacingMeters ?? 0) - 236.901) < 1e-9)
+        #expect(farSource.residualCapRatio == 0.12)
+        #expect(farSource.coverage.contains(
+            latitudeDegrees: manifest.landingOrigin.latitudeDegrees,
+            longitudeDegrees: manifest.landingOrigin.longitudeDegrees - 360
+        ))
 
         let nacOrthoA = try #require(manifest.sources.first {
             $0.id == "nac-ortho-m150361817-50cm-slab"
@@ -994,6 +1019,8 @@ struct SourceBackedTerrainTileTests {
         #expect(nacOrthoA.sourceRowBytes == 16_880)
         #expect(nacOrthoA.sourceMD5 == "c3784f010eb6d6c2d84d6ee7b4088331")
         #expect(nacOrthoA.sha256 == "b6e9df38ddae806b66c6dc3afbe7f1e94b932421292e3af07f048606d9d6e961")
+        #expect(nacOrthoA.postSpacingMeters == nil)
+        #expect(nacOrthoA.residualCapRatio == nil)
 
         let nacOrthoB = try #require(manifest.sources.first {
             $0.id == "nac-ortho-m150368601-50cm-slab"
@@ -1075,6 +1102,32 @@ struct SourceBackedTerrainTileTests {
                 + p64Altitude * p64Altitude
         )
         #expect(far.extentMeters / 2 > geometricHorizon)
+    }
+
+    @Test func apollo11TerrainAssetsRemainByteIdenticalToStage1() throws {
+        let expectedSHA256 = [
+            "near-field-height.png": "8d35110db46f21e3fb62a8de8dced3700cf8bcf79c449493583bf53f23e56027",
+            "medium-field-height.png": "7baf81ee1c182159c9e308ff922d6f543dc23606819a82d0e79e97babef8c06d",
+            "far-field-height.png": "9e1c571eeb02b4b50b980ecdf60cd5bcd3cdcd0511ea9fcfa53bba1c0f903802",
+            "near-field-albedo.png": "5cc754af24b02b2bd3fae183cccf3adc0e5bbb4c386a2357debd13d2fe6d3fff",
+            "medium-field-albedo.png": "2631b675920293aecc7cb37f7a4b93b67079f0bdba53174dbb672a3b7637311e",
+            "far-field-albedo.png": "9e48c12b48f80fa61ac6184172a9254351ea248b95b6a7b07ce2a7d00d7065c0",
+        ]
+        let terrainDirectory = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("LM/Terrain", isDirectory: true)
+
+        for (file, expectedDigest) in expectedSHA256 {
+            let data = try Data(
+                contentsOf: terrainDirectory.appendingPathComponent(file),
+                options: .mappedIfSafe
+            )
+            let digest = SHA256.hash(data: data)
+                .map { String(format: "%02x", $0) }
+                .joined()
+            #expect(digest == expectedDigest, "\(file) changed from the accepted Stage 1 bytes")
+        }
     }
 
     @Test func terminalDescentIsGeoreferencedToEagleWithoutChangingLiveDeviations() throws {
