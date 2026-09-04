@@ -14,6 +14,7 @@ final class LunarExplorerScene {
     private let presentationRoot = Entity()
     private let terrainAnchorRoot = Entity()
     private var sourceFrame: LMSelenographicLocalFrame?
+    private var elevationPreviewDescription: String?
     private var floatingOrigin: LMLunarFloatingOrigin?
     private var reanchorProbePending = false
     private let globePresentationRoot = Entity()
@@ -80,6 +81,10 @@ final class LunarExplorerScene {
         self.session = session
         guard !isLoaded, loadTask == nil else {
             apply(session)
+            return
+        }
+        if let coordinate = session.captureElevationCoordinate {
+            loadElevationPreview(coordinate: coordinate, session: session)
             return
         }
         let detailMode = session.detailMode
@@ -178,6 +183,39 @@ final class LunarExplorerScene {
                 self.logger.error(
                     "Lunar Explorer load failed: \(error.localizedDescription, privacy: .public)"
                 )
+            }
+        }
+    }
+
+    private func loadElevationPreview(coordinate: LMSelenographicCoordinate, session: LunarExplorerSession) {
+        activeDetailMode = session.detailMode
+        activeGrade = session.presentationGrade
+        LMTerrainWorld.presentationGrade = session.presentationGrade
+        loadTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                let manifest = try LMTerrainManifest.load()
+                let assembly = try await LMLunarElevationPreview.load(
+                    coordinate: coordinate, offline: session.captureElevationOffline, manifest: manifest
+                )
+                self.terrainAnchorRoot.addChild(assembly.root)
+                self.terrainEnvironment = assembly.root
+                self.sourceFrame = assembly.frame
+                self.floatingOrigin = LMLunarFloatingOrigin(frame: assembly.frame)
+                self.siteCoordinate = assembly.frame.anchor
+                self.terrainSun = assembly.sun
+                self.elevationPreviewDescription = "Measured elevation diagnostic: " + assembly.sourceID
+                    + "; constant reflectance"
+                self.isLoaded = true
+                self.loadTask = nil
+                session.diagnostics.measuredFloorMeters = assembly.sourceSpacingMeters
+                session.diagnostics.loadMessage = "Measured elevation ready"
+                self.logger.info("Elevation preview source=\(assembly.sourceID, privacy: .public) floor=\(assembly.sourceSpacingMeters)m load=\(assembly.loadMilliseconds)ms fallback=\(assembly.fallbackReason ?? "none", privacy: .public)")
+                self.apply(session)
+            } catch {
+                self.loadTask = nil
+                session.diagnostics.loadMessage = "Elevation failed: " + error.localizedDescription
+                self.logger.error("Elevation preview failed: \(String(describing: error), privacy: .public)")
             }
         }
     }
@@ -849,6 +887,7 @@ final class LunarExplorerScene {
     }
 
     private func sourceDescription(altitudeMeters: Double) -> String {
+        if let elevationPreviewDescription { return elevationPreviewDescription }
         if let session, session.presentsGlobe, session.presentsSite {
             return "Pinned WAC globe + Apollo 11 site crossfade"
         }

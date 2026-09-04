@@ -349,7 +349,9 @@
         "minimumLatitudeDegrees" : -90,
         "westernmostLongitudeDegrees" : 0
       },
-      "detail" : "Global 16 ppd LOLA height above the 1,737,400 m reference sphere in the Mean Earth/Polar-axis frame. The pinned image is used only to derive the globe normal field; it does not replace measured site geometry, contact, or landing physics.",
+      "detail" : "Global 16 ppd LOLA height above the 1,737,400 m reference sphere in the Mean Earth/Polar-axis frame. The pinned image supplies the global offline elevation base and the existing globe normal field. The measured-elevation diagnostic consumes it directly; Apollo site geometry and contact retain their original assets.",
+      "bundledFile" : "LDEM_16.IMG",
+      "bundledLabelFile" : "LDEM_16.LBL",
       "id" : "lola-ldem-16ppd-global",
       "labelBytes" : 5121,
       "labelSHA256" : "9aef29463ccc6ed3a3fbe0df3ecd830a99c69e16b564f455507dee2697096579",

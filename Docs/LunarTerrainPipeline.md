@@ -101,6 +101,48 @@ by 4.2 km, then releases the production trigger after 100 seconds. It captures
 settled endpoints, consecutive transition frames, residency logs, and frame
 timings without changing the camera focus or source data.
 
+## Pinned elevation transport and offline base
+
+`LMLunarElevationStore` fetches the catalog's complete, fixed-record SLDEM
+slabs over HTTPS. It requires HTTP 206 with the exact byte range and total
+product size before reading the body. A response cannot exceed the pinned
+byte count, and a complete SHA-256 check precedes atomic publication. The
+128 MiB content-addressed disk cache verifies every hit, repairs corruption,
+coalesces concurrent requests, and evicts least-recently-used slabs. Transient
+transport failures get at most three attempts. Region prefetch resumes at
+verified slabs; it rejects a region larger than its disk budget. Offline mode
+cannot issue a network request.
+
+`LMLunarElevationGrid` owns format conversion. SLDEM2015 V2.0 float32 samples
+are kilometers above the 1,737,400 m datum. LOLA LDEM_16 V3.1 int16 samples
+are half meters above that same datum. Both use pixel-center registration.
+Bilinear interpolation returns each measured post exactly. The global base
+wraps longitude; each unmeasured half-post polar cap converges to the mean of
+its nearest measured row, retaining that row's exact samples.
+
+The bundled raw LOLA image and its label occupy 31.645509 MiB within the
+owner's 32 MiB approval. They are copied verbatim from the already pinned
+source, independent of the existing Apollo height maps and globe normal map.
+The global measured floor remains about 1,895 m per post.
+
+The first runtime consumer is the capture-only measured elevation preview.
+`--lunar-explorer-capture --lunar-explorer-elevation-preview=0.67,25` renders
+a curved 16.384 km patch from the pinned 59.2 m SLDEM slab. Add
+`--lunar-explorer-elevation-offline` to require cache reuse. Outside that
+slab, or on a transfer failure, it renders the complete patch from the bundled
+base. Source identity, measured floor, load duration, and any fallback reason
+are logged. Its 128 m render spacing and constant gray material are diagnostic;
+it does not claim full SLDEM resolution, normalized reflectance, procedural
+amplification, or landing contact. The following resolver item must connect
+the production band stack and contact to these same decoded sources.
+
+`Tools/CaptureLunarElevation.sh` captures a cold streamed source, offline
+replay, global-base coverage, and an offline cache miss after source readiness
+plus 90 seconds of settling. It isolates the elevation cache and restores the
+original cache on exit. Streamed and offline captures must be byte-identical.
+The normal Apollo Explorer path does not load this base or open the elevation
+cache.
+
 ## Global map-scale Moon
 
 The first land-anywhere tier is a pinned 16-pixel-per-degree LROC WAC global

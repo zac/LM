@@ -36,7 +36,7 @@ obeys. The three genuinely hard parts are §5 (mushy band), §4 stage 2
 | Photographic tone grade + earthshine | **Done** | Opt-in; calibrated grade pixel-identical. |
 | Global mosaic fetch/parse proven | **Done** | Source-validating 16 ppd generator, pinned PNG + provenance sidecar, and manifest schema v4 landed. |
 | Stage 1 globe | **Done in Simulator** | Complete offline 16/64 ppd WAC globe, ME orientation, Explorer `globe` preset, ephemeris terminator, pinned LOLA-derived ME normal field, radiance-matched globe-to-site handoff, and the final globe-to-surface ladder are green. Continuous hand-gesture comfort remains owner hardware validation on physical Vision Pro; it is not an implementation blocker for Stage 2. |
-| Stage 2 re-anchorable terrain | **In progress** | §4. Release baseline, source catalog, and floating Explorer anchor implemented and measured in Simulator. Streaming is next. The owner approved the source-scaled residual contract and up to 32 MiB for the offline elevation base on 2026-09-04. |
+| Stage 2 re-anchorable terrain | **In progress** | §4. Release baseline, source catalog, floating Explorer anchor, and the first streamed elevation consumer are implemented. Production source resolution and amplification are next. The owner approved the source-scaled residual contract and up to 32 MiB for the offline elevation base on 2026-09-04. |
 | Stage 3 mushy-band quality | Not started | §5. |
 | Stage 4 site packs | Not started | §4. |
 | Neural track N1 multi-site retrain | Not started | §6. Cheap; do early. |
@@ -103,6 +103,13 @@ Verified this session (2026-08-31):
   system takes over (Stage 2), which uses normalized reflectance as today.
 - **Elevation:** SLDEM2015 512 ppd (59 m/post, ±60° lat, ~33 GB full) and
   128 ppd (237 m/post, global-ish, ~2.8 GB); LOLA LDEM fills the poles.
+  These are source-family capabilities, not current pinned runtime coverage.
+  The catalog currently pins two Apollo-latitude SLDEM strips and the complete
+  16 ppd LOLA base. Outside a supported fine strip, the offline measured floor
+  is about 1,895 m. Item 4 must derive and pin bounded finer chunks before
+  claiming 59–237 m coverage elsewhere. The existing 205,148,160-byte 128 ppd
+  strip exceeds the new 128 MiB cache; it needs smaller pinned slabs for runtime
+  use rather than an implicit cache-budget increase.
   Nobody bundles these whole: the offline generator produces tiled,
   content-hashed pyramids; the app bundles a coarse base and streams/caches
   finer tiles on demand, every tile pinned.
@@ -362,11 +369,19 @@ anchor, floating tangent frame, whatever sources cover it."
    pending bake tasks do not depend on the floating origin. The scene still
    respects the existing 900 m navigation limit until source resolution and
    UX are ready; the capture probe exercises the actual trigger independently.
-3. **Streaming transport and cache:** build the remote elevation path against
-   its first real consumer. Use fixed-record PDS HTTP byte ranges, a pinned
-   digest per derived tile, bounded retries, a persistent content-addressed
-   LRU, a bundled coarse base, and resumable region prefetch for offline use.
-   Format conversion belongs to the elevation consumer, not transport.
+3. **Streaming transport and cache, implemented in Simulator 2026-09-04:**
+   `LMLunarElevationStore` fetches fixed-record PDS byte ranges, validates
+   status/range/size before bounded body consumption, verifies SHA-256 before
+   atomic publication, and retries transient failures at most three times.
+   Its persistent 128 MiB content-addressed LRU supports offline reads and
+   region prefetch that resumes at verified slabs. Format conversion belongs
+   to `LMLunarElevationGrid`, independent of transport.
+
+   The first real consumer is a capture-only curved elevation patch, using
+   the pinned 59.2 m SLDEM strip or the bundled LOLA global base. It displays
+   constant reflectance with no residual or contact claim. The raw base plus
+   provenance label is 31.645509 MiB, within the approved 32 MiB. Production
+   band selection, morphing, and contact remain items 4 and 5.
 4. **Source resolver and amplification:** given an anchor, assemble the band
    stack from available pinned sources: streamed SLDEM/LOLA for geometry,
    normalized WAC where available for reflectance, and NAC site packs where
@@ -578,6 +593,51 @@ Physical Vision Pro still has to validate 90 Hz pacing, memory pressure,
 thermals, gesture comfort, and continuous re-anchoring. Item 2 does not claim
 global source coverage, curved Apollo geometry, new navigation, or arbitrary
 contact; those remain the following items.
+
+### Stage 2 item 3 evidence, 2026-09-04
+
+Ten elevation tests pass in the visionOS 26.5 Simulator. They cover actual
+bundled-source and label hashes, exact measured posts, pixel registration and
+units, antimeridian/polar continuity, deterministic curved geometry, persistent
+offline replay, corruption repair, bounded LRU eviction, response validation,
+interrupted region resume, coalesced requests, cancellation, and diagnostic
+launch gating. Results and console output are in
+`/tmp/LM-Stage2-Elevation-Validation/`. An independent public PDS request returns
+HTTP 206 for bytes `1370787840-1396869119/1415577600`, exactly 26,081,280 bytes,
+matching the catalog SHA-256. Independent NumPy decoding at 0.67°N, 25°E gives
+−2,087.100150585175 m above the ME datum.
+
+The Release build succeeds. Its Simulator bundle occupies 448,428 KiB,
+31.851563 MiB more than item 2 including executable growth. The new data itself
+is 33,182,721 bytes, or 31.645509 MiB. Every one of the 11 pre-existing terrain
+assets still matches `c950d46` byte for byte.
+
+The initial three-case capture is `/tmp/LM-Stage2-Elevation-Live/`. The final
+four-case run is `/tmp/LM-Stage2-Elevation-Final/`, with the cache explicitly
+isolated and restored. Cold SLDEM load is 2,696 ms; persistent offline replay is
+156 ms; the global base at 42°S, 120°E is 103 ms; an offline cache miss at the
+SLDEM coordinate falls back to LOLA in 268 ms. The streamed and offline images
+are byte-identical across both runs. All final settled callback windows have
+16.67 ms p95 and maximum, with zero missed callbacks. Settled process footprints
+are 91.9–99.4 MiB. Startup still hitches, with maxima of 123–249 ms in the final
+run; this does not establish device performance.
+
+The normal Apollo control at `/tmp/LM-Stage2-Elevation-Apollo-Control/` covers
+Globe, Terminal, Landing, and Surface after 90 seconds each. All four screenshots
+are byte-identical to item 0. All settled windows retain 16.67 ms p95/maximum
+and zero missed callbacks. Terminal completes in 221–277 ms, Landing in
+1,357–1,719 ms, and Surface in 1,165–1,805 ms. Settled physical footprints are
+304.5, 330.0, 368.2, and 347.7 MiB respectively, compared with item 0's 312.2,
+336.5, 380.8, and 368.6 MiB. This controlled run shows no Simulator regression;
+the earlier unstable item 2 timings remain recorded above.
+
+The measured-only preview visibly retains its finite patch boundary and its
+coarse-source interpolation. These captures validate the elevation consumer,
+offline behavior, and provenance. They are not the whole-plan seamless zoom
+ladder or arbitrary-location landing acceptance. The broader item 2 radiance
+test failure is retained above pending a separate sampling investigation.
+
+### Whole-plan acceptance
 
 - The capture protocol from `Docs/TerrainRealismPlan.md` §7 (tile-tint
   segmentation, per-region statistics, narrow-band edge steps; measure,

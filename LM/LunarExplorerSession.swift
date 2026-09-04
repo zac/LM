@@ -220,6 +220,8 @@ final class LunarExplorerSession {
     /// shipping globe match is active.
     private(set) var captureUnmatchedGlobeRadiance = false
     private(set) var captureReanchorProbe = false
+    private(set) var captureElevationCoordinate: LMSelenographicCoordinate?
+    private(set) var captureElevationOffline = false
 
     var logarithmicAltitude: Double {
         get { log10(altitudeMeters) }
@@ -392,6 +394,15 @@ final class LunarExplorerSession {
     func configure(arguments: [String]) {
         let isCapture = arguments.contains("--lunar-explorer-capture")
         captureReanchorProbe = isCapture && arguments.contains("--lunar-explorer-reanchor-probe")
+        captureElevationOffline = isCapture && arguments.contains("--lunar-explorer-elevation-offline")
+        captureElevationCoordinate = nil
+        if isCapture, let argument = arguments.first(where: { $0.hasPrefix("--lunar-explorer-elevation-preview=") }) {
+            let values = argument.dropFirst("--lunar-explorer-elevation-preview=".count).split(separator: ",")
+            if values.count == 2, let latitude = Double(values[0]), let longitude = Double(values[1]),
+               latitude.isFinite, longitude.isFinite, abs(latitude) <= 90 {
+                captureElevationCoordinate = .init(latitudeDegrees: latitude, longitudeDegrees: longitude)
+            }
+        }
         var altitudeOverride: Double?
         var metersAcrossOverride: Double?
         var headingOverride: Double?

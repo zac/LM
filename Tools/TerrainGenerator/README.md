@@ -30,7 +30,8 @@ is registered to the medium boundary. Images are stored as sRGB encodings of a
 linear reflectance proxy; dynamic mission lighting supplies shape. Diagnostic
 hillshade is not used as albedo.
 
-The source rasters remain outside Git. Download
+The source rasters remain outside Git except for the owner-approved global
+LOLA elevation base described below. Download
 `NAC_DTM_APOLLO11.TIF` from the URL recorded in
 `LM/Terrain/TerrainManifest.json`; the generator rejects a file whose byte
 count or SHA-256 does not match the pinned product.
@@ -172,6 +173,40 @@ taper where a cylindrical map's separately quantized longitude samples
 converge. Runtime decodes this normal field only at the terminator mask's
 512×256 working resolution. It perturbs the day/night multiplier; it is not a
 PBR normal map and never shades the already illuminated WAC base a second time.
+
+## Offline global elevation base
+
+Stage 2 bundles the same raw `LDEM_16.IMG` and `LDEM_16.LBL` downloaded for
+the globe normal map. No resampling, compression, or Apollo regeneration is
+needed. From the repository root, verify the cache inputs and copy only these
+two files:
+
+```sh
+python3 - <<'PY'
+import hashlib
+import json
+import pathlib
+import shutil
+
+root = pathlib.Path('LM/Terrain')
+catalog = json.loads((root / 'TerrainManifest.json').read_text())
+source = next(s for s in catalog['sources'] if s['id'] == 'lola-ldem-16ppd-global')
+cache = pathlib.Path('Tools/TerrainGenerator/cache')
+files = [(source['bundledFile'], source['sha256']),
+         (source['bundledLabelFile'], source['labelSHA256'])]
+assert sum((cache / name).stat().st_size for name, _ in files) <= 32 * 1024 * 1024
+for name, digest in files:
+    assert hashlib.sha256((cache / name).read_bytes()).hexdigest() == digest, name
+for name, _ in files:
+    shutil.copyfile(cache / name, root / name)
+PY
+```
+
+The image is 33,177,600 bytes and the label is 5,121 bytes, totaling
+31.645509 MiB. Runtime and Simulator tests independently validate both digests.
+The manifest's existing generator digest continues to describe the unchanged
+generated Apollo assets. The copied raw product retains its own source and
+label digests.
 
 ## Photo-derived crater candidate catalog
 

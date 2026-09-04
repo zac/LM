@@ -150,6 +150,8 @@ struct LMTerrainManifest: Equatable, Decodable {
         let byteRangeStart: Int?
         let byteRangeEnd: Int?
         let sourceMD5: String?
+        let bundledFile: String?
+        let bundledLabelFile: String?
         let sourceRowStart: Int?
         let sourceRowEnd: Int?
         let sourceRowBytes: Int?

@@ -560,6 +560,8 @@ func manifestJSON() -> [String: Any] {
                     easternmostLongitude: 360
                 ),
                 "id": "lola-ldem-16ppd-global",
+                "bundledFile": "LDEM_16.IMG",
+                "bundledLabelFile": "LDEM_16.LBL",
                 "role": "global-elevation-normal-source",
                 "postSpacingMeters": 1_895.209_401_509_3,
                 "residualCapRatio": 0.12,
@@ -572,7 +574,7 @@ func manifestJSON() -> [String: Any] {
                 "labelURL": lolaLDEM16LabelURL,
                 "labelSHA256": lolaLDEM16LabelSHA256,
                 "labelBytes": 5_121,
-                "detail": "Global 16 ppd LOLA height above the 1,737,400 m reference sphere in the Mean Earth/Polar-axis frame. The pinned image is used only to derive the globe normal field; it does not replace measured site geometry, contact, or landing physics."
+                "detail": "Global 16 ppd LOLA height above the 1,737,400 m reference sphere in the Mean Earth/Polar-axis frame. The pinned image supplies the global offline elevation base and the existing globe normal field. The measured-elevation diagnostic consumes it directly; Apollo site geometry and contact retain their original assets."
             ]
         ],
         "tiles": [
