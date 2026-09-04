@@ -833,95 +833,112 @@ struct SourceBackedTerrainTileTests {
         #expect(grazing < overhead)
     }
 
-    @Test func explorerLandingTileMissionSunShadingVariationNeedsNoPerTileGain() throws {
+    @Test @MainActor func explorerLandingTileMissionSunShadingVariationNeedsNoPerTileGain() throws {
         let field = try Apollo11TerrainResource.loadSourceBackedHeightField()
         let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: field.spacingMeters)
         let focusEast = -4.336
         let focusNorth = 19.619
-        let forward = planner.prefetchedPlans(
+        // The production Surface view has a continuous 48 m forward / 32 m
+        // rear corridor. The former velocity-prefetch fixture left gaps.
+        let forward = planner.viewCorridorPlans(
             focusEastMeters: focusEast,
             focusNorthMeters: focusNorth,
-            velocityEastMetersPerSecond: 48.0 / 6.0,
-            velocityNorthMetersPerSecond: 0,
+            headingDegrees: 0,
+            forwardDistanceMeters: 48,
             altitudeMeters: 2
         )
-        let rear = planner.focusedPlans(
-            focusEastMeters: focusEast - 32,
+        let rear = planner.viewCorridorPlans(
+            focusEastMeters: focusEast,
             focusNorthMeters: focusNorth,
+            headingDegrees: 180,
+            forwardDistanceMeters: 32,
             altitudeMeters: 2
         )
         let plans = planner.mergedPlans(forward + rear)
-        let surface = LMProgressiveTerrainSurfaceSampler(
-            heightField: field,
-            planner: planner
-        )
-        let sun = LMFullDescentMapper.sunDirection(from: try LMTerrainManifest.load())
+        let surface = LMProgressiveTerrainSurfaceSampler(heightField: field, planner: planner)
+        let manifest = try LMTerrainManifest.load()
+        let sun = LMFullDescentMapper.sunDirection(from: LMLunarEphemeris.sunAngles(
+            at: LunarExplorerSession.apollo11TouchdownUTC,
+            site: manifest.landingOriginCoordinate
+        ))
+        var meshes = [LMTerrainTileID: LMProgressiveTerrainMeshData]()
 
-        func shading(
-            east: Double,
-            north: Double,
-            plan: LMTerrainTilePlan
-        ) -> Double? {
-            let step = plan.sampleSpacingMeters
-            guard let west = surface.renderedElevation(
-                eastMeters: east - step,
-                northMeters: north,
-                plan: plan,
-                activePlans: plans
-            ), let eastHeight = surface.renderedElevation(
-                eastMeters: east + step,
-                northMeters: north,
-                plan: plan,
-                activePlans: plans
-            ), let south = surface.renderedElevation(
-                eastMeters: east,
-                northMeters: north - step,
-                plan: plan,
-                activePlans: plans
-            ), let northHeight = surface.renderedElevation(
-                eastMeters: east,
-                northMeters: north + step,
-                plan: plan,
-                activePlans: plans
-            ) else { return nil }
-            let eastSlope = (eastHeight - west) / Float(2 * step)
-            let northSlope = (northHeight - south) / Float(2 * step)
-            let normal = simd_normalize(SIMD3<Float>(-northSlope, 1, eastSlope))
-            return Double(max(simd_dot(normal, sun), 0))
+        func shading(east: Double, north: Double, plan: LMTerrainTilePlan) throws -> Double {
+            let mesh: LMProgressiveTerrainMeshData
+            if let cached = meshes[plan.id] {
+                mesh = cached
+            } else {
+                let generated = try Apollo11TerrainResource.makeProgressiveTileMeshData(
+                    heightField: field, plan: plan, activePlans: plans
+                )
+                mesh = try #require(generated)
+                meshes[plan.id] = mesh
+            }
+            let posts = Int(plan.sizeMeters / plan.sampleSpacingMeters) + 1
+            let column = (east - plan.centerEastMeters + plan.sizeMeters / 2) / plan.sampleSpacingMeters
+            let row = (plan.centerNorthMeters + plan.sizeMeters / 2 - north) / plan.sampleSpacingMeters
+            let x = min(Int(column.rounded(.down)), posts - 2)
+            let y = min(Int(row.rounded(.down)), posts - 2)
+            let tx = Float(column - Double(x))
+            let ty = Float(row - Double(y))
+            let nw = mesh.normals[y * posts + x]
+            let ne = mesh.normals[y * posts + x + 1]
+            let sw = mesh.normals[(y + 1) * posts + x]
+            let se = mesh.normals[(y + 1) * posts + x + 1]
+            // Interpolate the actual NW/NE/SW and NE/SE/SW mesh triangles,
+            // including the normalization performed by the fragment shader.
+            let normal = tx + ty <= 1
+                ? nw * (1 - tx - ty) + ne * tx + sw * ty
+                : ne * (1 - ty) + se * (tx + ty - 1) + sw * (1 - tx)
+            return Double(max(simd_dot(simd_normalize(normal), sun), 0))
         }
 
         var ratios = [Double]()
+        var largestSamplingDelta = 0.0
         for child in plans where child.sampleSpacingMeters == 0.125 {
             let parent = try #require(surface.parentPlan(
-                for: child,
-                eastMeters: child.centerEastMeters,
-                northMeters: child.centerNorthMeters,
-                activePlans: plans
+                for: child, eastMeters: child.centerEastMeters,
+                northMeters: child.centerNorthMeters, activePlans: plans
             ))
             var childTotal = Double.zero
             var parentTotal = Double.zero
-            var count = 0
-            for northOffset in -3...3 {
-                for eastOffset in -3...3 {
-                    let east = child.centerEastMeters + Double(eastOffset)
-                    let north = child.centerNorthMeters + Double(northOffset)
-                    guard let childShade = shading(east: east, north: north, plan: child),
-                          let parentShade = shading(east: east, north: north, plan: parent) else {
-                        continue
-                    }
+            var coarseChildTotal = Double.zero
+            var coarseParentTotal = Double.zero
+            // Integrate the complete 16 m tile at its rendered post spacing.
+            // The former 49-point, 6 m central window could overrepresent one
+            // crater and was not a measurement of mean tile radiance.
+            let intervals = Int(child.sizeMeters / child.sampleSpacingMeters)
+            for row in 0...intervals {
+                for column in 0...intervals {
+                    let east = child.centerEastMeters - child.sizeMeters / 2
+                        + Double(column) * child.sampleSpacingMeters
+                    let north = child.centerNorthMeters + child.sizeMeters / 2
+                        - Double(row) * child.sampleSpacingMeters
+                    let edgeWeight = (row == 0 || row == intervals ? 0.5 : 1)
+                        * (column == 0 || column == intervals ? 0.5 : 1)
+                    let childShade = try shading(east: east, north: north, plan: child) * edgeWeight
+                    let parentShade = try shading(east: east, north: north, plan: parent) * edgeWeight
                     childTotal += childShade
                     parentTotal += parentShade
-                    count += 1
+                    if row.isMultiple(of: 2), column.isMultiple(of: 2) {
+                        coarseChildTotal += childShade
+                        coarseParentTotal += parentShade
+                    }
                 }
             }
-            #expect(count > 0)
-            ratios.append(parentTotal / childTotal)
+            #expect(childTotal > 0)
+            let ratio = parentTotal / childTotal
+            largestSamplingDelta = max(largestSamplingDelta, abs(ratio - coarseParentTotal / coarseChildTotal))
+            ratios.append(ratio)
         }
-
-        #expect(!ratios.isEmpty)
-        #expect(ratios.allSatisfy { abs($0 - 1) < 0.02 })
+        // Halving integration spacing must change the ratio by less than
+        // 0.1 percentage point, well below the unchanged 2% tile limit.
+        #expect(largestSamplingDelta < 0.001)
+        #expect(ratios.count == 24)
+        #expect(ratios.allSatisfy { abs($0 - 1) < 0.02 }, "Per-tile parent/child shading ratios: \(ratios)")
         let meanRatio = ratios.reduce(0, +) / Double(ratios.count)
         #expect(abs(meanRatio - 1) < 0.005)
+        print("Explorer realized-normal shading ratios: count=\(ratios.count) min=\(ratios.min() ?? 0) max=\(ratios.max() ?? 0) mean=\(meanRatio) samplingDelta=\(largestSamplingDelta)")
     }
 
     @Test func manifestPinsMeasuredNearAndProgressiveSLDEMCoverage() throws {

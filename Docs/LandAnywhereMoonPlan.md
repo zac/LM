@@ -588,6 +588,8 @@ also reproduces alone. Its synthetic six-second Explorer corridor and
 per-tile 2% shading assertion are outside the changed coordinate path; no
 terrain correction or relaxed bound was applied. Full results and console
 output are preserved in `/tmp/LM-Stage2-Anchor-Validation/`.
+The sampling investigation below resolves this failure without changing the
+renderer or either radiance limit.
 
 Physical Vision Pro still has to validate 90 Hz pacing, memory pressure,
 thermals, gesture comfort, and continuous re-anchoring. Item 2 does not claim
@@ -635,7 +637,39 @@ The measured-only preview visibly retains its finite patch boundary and its
 coarse-source interpolation. These captures validate the elevation consumer,
 offline behavior, and provenance. They are not the whole-plan seamless zoom
 ladder or arbitrary-location landing acceptance. The broader item 2 radiance
-test failure is retained above pending a separate sampling investigation.
+test failure is retained above as the starting point of the separate sampling
+investigation below.
+
+### Radiance validation follow-up, 2026-09-04
+
+The old per-tile shading test sampled 49 points in a 6 m central square of
+each 16 m tile. It reported a 0.957490 parent/child ratio for one tile. Replacing
+its invented contact-gradient normals with the actual mesh normals and using
+the current Explorer corridor still gave 0.957530. Those stale inputs did not
+explain the failure.
+
+Integrating the complete tile at 0.125 m spacing gives ratios from 0.997837150
+to 1.000703642 across all 24 landing tiles, with mean 0.999996728. Repeating
+the integration at 0.25 m changes a ratio by at most 0.000148156, or 0.014816
+percentage points. The test now uses the generated normals, the actual mesh
+triangle interpolation, the mission ephemeris, and the complete tile area.
+It retains the 2% per-tile and 0.5% ensemble limits and adds a 0.1 percentage
+point convergence limit. No per-tile gain or renderer change was made.
+
+This corrects a biased estimate of mean tile shading. It does not replace
+the narrow-band image acceptance for local seams, nor claim that every small
+patch must have the same shading at every LOD. The diagnostic failures and
+passing integration result are preserved in
+`/tmp/LM-Stage2-Radiance-Validation/`.
+
+The final visionOS 26.5 Simulator run passes all 108 tests across ten suites:
+elevation, floating origin, globe, selenographic coordinates, detail streaming,
+Explorer, progressive terrain, source-backed tiles, terrain-relative descent,
+and landing. There are no remaining failures in that run. Its complete summary
+and console are `/tmp/LM-Stage2-Final-Validation/tests.txt` and
+`/tmp/LM-Stage2-Final-Validation/tests-console.txt`. Xcode MCP timed out before
+returning the longer tests; the completed Xcode result artifacts supply the
+reported counts.
 
 ### Whole-plan acceptance
 
