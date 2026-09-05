@@ -44,6 +44,45 @@ final class LMCommanderStationScene {
         subsystem: Bundle.main.bundleIdentifier ?? "io.positron.LM",
         category: "ProgressiveTerrain"
     )
+    private var globalCockpitTerrain: LMLunarCockpitTerrain?
+    var globalTerrainReady: Bool { globalCockpitTerrain?.permitsPhysicsStep ?? true }
+    var globalTerrainDescription: String {
+        guard let terrain = globalCockpitTerrain else { return "Lunar terrain" }
+        return String(format: "Measured floor: %.0f m · finer relief modeled", terrain.presentation.region.measuredFloorMeters)
+    }
+
+    func loadGlobalTerrain(at coordinate: LMSelenographicCoordinate, session: PoweredDescentSession, date: Date) async throws {
+        let directory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("LunarElevation-v1", isDirectory: true)
+        let store = try LMLunarElevationStore(directory: directory)
+        let region = try await Task.detached(priority: .userInitiated) {
+            try await LMLunarTerrainRegion.load(at: coordinate, store: store)
+        }.value
+        let terrain = try LMLunarCockpitTerrain(region: region, gate: session.terrainSimulationGate, date: date)
+        session.selectLandingSite(terrain.site)
+        let publishContact = session.contactPublisher()
+        terrain.contactChanged = { [weak self] surface in
+            self?.contactSurface = surface
+            publishContact(surface)
+        }
+        installGlobalTerrain(terrain)
+        session.terrainReady = { [weak self] in self?.globalTerrainReady ?? false }
+        session.vehicleDidAdvance = { [weak self] state in self?.apply(state) }
+        session.terrainCaptureMetrics = { [weak terrain] in terrain?.captureMetrics ?? [:] }
+        try await terrain.prepare()
+    }
+
+    func installGlobalTerrain(_ terrain: LMLunarCockpitTerrain) {
+        globalCockpitTerrain = terrain
+        provisionalTerrain.removeFromParent()
+        // The global controller owns the inverse vehicle pose and floating
+        // frame. Clear any Apollo pose applied while sources were loading.
+        lunarWorld.transform = Transform()
+        dustCloud.removeFromParent()
+        terrain.root.addChild(dustCloud)
+        lunarWorld.addChild(terrain.root)
+    }
+
     private var terrainHeightField: Apollo11TerrainHeightField?
     private var terrainFrameAlignment: LMTerrainFrameAlignment?
     private var terrainEnvironment: Entity?
@@ -266,6 +305,11 @@ final class LMCommanderStationScene {
     func apply(_ state: LMVehicleStateSnapshot?) {
         guard let state else { return }
         lastVehicleState = state
+        if let globalCockpitTerrain {
+            globalCockpitTerrain.apply(state)
+            fdaiBall?.orientation = FDAIOrientation.ballOrientation(for: state.attitude)
+            return
+        }
         fdaiBall?.orientation = FDAIOrientation.ballOrientation(
             for: state.attitude
         )
@@ -697,11 +741,10 @@ final class LMCommanderStationScene {
                 northMeters: terrainPosition.x
             )
             ?? 0
-        dustCloud.position = mapper.realityPosition(from: LMVector3D(
-            x: terrainPosition.x,
-            y: terrainPosition.y,
-            z: Double(surfaceElevation) + 0.18
-        ))
+        let dustPosition = LMVector3D(x: terrainPosition.x, y: terrainPosition.y,
+                                      z: Double(surfaceElevation) + 0.18)
+        dustCloud.position = globalCockpitTerrain?.anchorPosition(dustPosition)
+            ?? mapper.realityPosition(from: dustPosition)
         let spread = 0.8 + intensity * 2.6
         dustCloud.scale = SIMD3(spread, 0.25 + intensity * 0.45, spread)
         dustCloud.components.set(OpacityComponent(opacity: 0.08 + intensity * 0.34))

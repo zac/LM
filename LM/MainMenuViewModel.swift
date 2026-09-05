@@ -24,6 +24,7 @@ class MainMenuViewModel {
     var descentSpaceState = ImmersiveSpaceState.closed
     var cockpitSpaceState = ImmersiveSpaceState.closed
     var cockpitRecenterRequest = 0
+    var cockpitCoordinate: LMSelenographicCoordinate?
     var lunarExplorerSession = LunarExplorerSession()
     var session = PoweredDescentSession()
 
@@ -32,6 +33,9 @@ class MainMenuViewModel {
         // relaunch directly into the Explorer controls window, bypassing the
         // powered-descent view that normally handles automation arguments.
         lunarExplorerSession.configure(arguments: arguments)
+        if let value = arguments.first(where: { $0.hasPrefix("--cockpit-coordinate=") }) {
+            cockpitCoordinate = LMLunarNavigation.parse(String(value.dropFirst("--cockpit-coordinate=".count)))
+        }
     }
 
     func requestCockpitRecenter() {

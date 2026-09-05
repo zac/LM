@@ -141,6 +141,7 @@ struct LunarExplorerView: View {
 struct LunarExplorerControls: View {
     @Bindable var session: LunarExplorerSession
     let close: () -> Void
+    var landInCockpit: (() -> Void)? = nil
     @State private var coordinateEntry = ""
     @State private var search = ""
     @State private var navigationExpanded = true
@@ -219,8 +220,12 @@ struct LunarExplorerControls: View {
                     Text(session.downloadMessage).font(.caption)
                     if !session.usesBundledSite {
                         Button("Test landing here") { session.testLanding() }.disabled(session.landingRunning)
+                        if let landInCockpit {
+                            Button(session.usesBundledSite ? "Fly Apollo 11 in cockpit" : "Land here in cockpit", action: landInCockpit)
+                                .disabled(session.navigationInProgress || session.currentCoordinate == nil)
+                        }
                         Text(session.landingMessage).font(.caption)
-                        Text("Local gear drop; mission guidance remains Apollo 11.").font(.caption2).foregroundStyle(.secondary)
+                        Text("Local gear drop without mission guidance.").font(.caption2).foregroundStyle(.secondary)
                     }
                 }.disabled(session.landingRunning)
             }
@@ -502,6 +507,16 @@ struct LunarExplorerControlsWindow: View {
             Task { @MainActor in
                 await dismissImmersiveSpace()
                 dismissWindow(id: appModel.lunarExplorerControlsWindowID)
+            }
+        } landInCockpit: {
+            appModel.cockpitCoordinate = appModel.lunarExplorerSession.usesBundledSite ? nil
+                : appModel.lunarExplorerSession.currentCoordinate
+            appModel.session.stop()
+            if appModel.cockpitCoordinate == nil { appModel.session.selectLandingSite(nil) }
+            Task { @MainActor in
+                await dismissImmersiveSpace()
+                let result = await openImmersiveSpace(id: appModel.cockpitSpaceID)
+                if case .opened = result { dismissWindow(id: appModel.lunarExplorerControlsWindowID) }
             }
         }
         .task {

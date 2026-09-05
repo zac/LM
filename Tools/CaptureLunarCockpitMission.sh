@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# Capture the actual cockpit flight, using AGC state to label each stop.
+set -euo pipefail
+if [[ $# != 4 ]]; then
+    echo "usage: $0 <simulator-udid> <LM.app> <lat,lon> <output-directory>" >&2
+    exit 64
+fi
+udid=$1
+app=$2
+coordinate=$3
+out=$4
+mkdir -p "$out"
+date -u +%FT%TZ > "$out/started-at.txt"
+xcrun simctl install "$udid" "$app"
+container=$(xcrun simctl get_app_container "$udid" io.positron.LM data)
+latest="$container/Documents/CockpitMissionLatest.json"
+recording="$container/Documents/CockpitMissionRecording.json"
+# Only these capture artifacts are replaced; other app documents are retained.
+rm -f "$latest" "$recording"
+xcrun simctl spawn "$udid" log stream --level=info \
+    --predicate 'subsystem == "io.positron.LM"' > "$out/performance.log" 2>&1 &
+log_pid=$!
+trap 'kill "$log_pid" 2>/dev/null || true; wait "$log_pid" 2>/dev/null || true' EXIT
+launch=$(xcrun simctl launch --terminate-running-process "$udid" io.positron.LM \
+    --terminal-descent-cockpit "--cockpit-coordinate=$coordinate" --cockpit-mission-capture \
+    --lunar-explorer-profile "--lunar-explorer-profile-label=cockpit-$coordinate")
+app_pid=${launch##*: }
+shasum -a 256 "$app/LM" > "$out/binary-sha256.txt"
+for ((attempt=0; attempt<1200; attempt++)); do
+    kill -0 "$app_pid"
+    if [[ -f "$latest" ]]; then
+        cp "$latest" "$out/latest.json"
+        phases=$(python3 - "$out/latest.json" <<'PY'
+import json,sys
+s=json.load(open(sys.argv[1])); h=s['altitudeMeters']
+if s['outcome'] != 'inFlight':
+    print(s['outcome'])
+else:
+    if s['program'] in (63,64,65,66): print('P'+str(s['program']))
+    for threshold in (250,60,10):
+        if h < threshold: print('below-'+str(threshold)+'m')
+PY
+)
+        for phase in $phases; do
+        if [[ ! -f "$out/$phase.png" ]]; then
+            xcrun simctl io "$udid" screenshot "$out/$phase.png"
+            cp "$out/latest.json" "$out/$phase.json"
+        fi
+        done
+        if [[ -f "$recording" ]]; then
+            cp "$recording" "$out/recording.json"
+            sleep 5
+            xcrun simctl io "$udid" screenshot "$out/settled.png"
+            shasum -a 256 "$out"/*.png > "$out/capture-hashes.txt"
+            date -u +%FT%TZ > "$out/completed-at.txt"
+            exit 0
+        fi
+    fi
+    sleep 2
+done
+echo 'Mission did not reach terminal contact within 40 minutes.' >&2
+exit 1

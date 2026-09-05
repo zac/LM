@@ -48,6 +48,18 @@ final class PoweredDescentSession {
     private(set) var replayFrame: LMFlightReplayFrame?
     private(set) var recording: LMFlightRecording?
     private(set) var loadMessage = "Luminary 099 not loaded"
+    private(set) var scenario = LMPoweredDescentScenario.apollo11SourceBacked
+
+    func selectLandingSite(_ site: LMLunarLandingSite?) {
+        terrainBindingID = UUID()
+        scenario = site.map(LMPoweredDescentScenario.lunarSite) ?? .apollo11SourceBacked
+        landingSurface = nil
+        terrainReady = nil
+        vehicleDidAdvance = nil
+        terrainCaptureMetrics = nil
+        lastCaptureSecond = -1
+        loadProgram()
+    }
 
     var attitudeMode = LMPoweredDescentAttitudeMode.automatic
     var rhcPitch = 0
@@ -59,6 +71,19 @@ final class PoweredDescentSession {
     private(set) var rodSwitchPosition = RODSwitchPosition.neutral
 
     let terrainSimulationGate = LMTerrainSimulationGate()
+    @ObservationIgnored var terrainReady: (() -> Bool)?
+    @ObservationIgnored var vehicleDidAdvance: ((LMVehicleStateSnapshot) -> Void)?
+    @ObservationIgnored var terrainCaptureMetrics: (() -> [String: Double])?
+    @ObservationIgnored private var lastCaptureSecond = -1
+    @ObservationIgnored private var terrainBindingID = UUID()
+
+    func contactPublisher() -> (LMTerrainContactSurface) -> Void {
+        let binding = terrainBindingID
+        return { [weak self] surface in
+            guard let self, self.terrainBindingID == binding else { return }
+            self.landingSurface = surface
+        }
+    }
     @ObservationIgnored private var landingSurface: (any LMLandingSurfaceModel)?
     @ObservationIgnored private var runtime: LMSimulationRuntime?
     @ObservationIgnored private var loopTask: Task<Void, Never>?
@@ -197,7 +222,7 @@ final class PoweredDescentSession {
             return
         }
         do {
-            let loaded = try LMSimulationRuntime(binFile: url, scenario: .apollo11SourceBacked)
+            let loaded = try LMSimulationRuntime(binFile: url, scenario: scenario)
             runtime = loaded
             do {
                 p64Checkpoint = try Self.bundledP64Checkpoint()
@@ -219,7 +244,12 @@ final class PoweredDescentSession {
             } else {
                 recording = try? Self.bundledP66Recording()
             }
-            loadMessage = "Luminary 099 · Apollo 11 powered-descent foundation"
+            if scenario.initialState.landingSite != nil {
+                p64Checkpoint = nil
+                p65Checkpoint = nil
+                recording = nil
+            }
+            loadMessage = "Luminary 099 · \(scenario.title)"
             status = .idle
             snapshotTask = Task { @MainActor [weak self] in
                 guard let self else { return }
@@ -298,7 +328,7 @@ final class PoweredDescentSession {
             }
             var last = CACurrentMediaTime()
             while !Task.isCancelled, self.runID == runID {
-                if !self.isSceneActive || self.isPaused {
+                if !self.isSceneActive || self.isPaused || self.terrainReady?() == false {
                     try? await Task.sleep(for: .milliseconds(100))
                     last = CACurrentMediaTime()
                     continue
@@ -315,6 +345,7 @@ final class PoweredDescentSession {
                 }
                 guard self.runID == runID, let snap = result else { return }
                 self.snapshot = snap
+                self.vehicleDidAdvance?(snap.vehicleState)
                 self.record(snap)
                 if snap.vehicleState.flightOutcome.isTerminal {
                     break
@@ -581,7 +612,7 @@ final class PoweredDescentSession {
 
     private func makeFrameInput() -> LMFrameInput {
         let state = snapshot?.vehicleState
-            ?? LMPoweredDescentScenario.apollo11SourceBacked.initialState
+            ?? scenario.initialState
         let controller = effectiveRHCInput
         let descendPlus = rodSwitchPosition == .descendPlus
         let descendMinus = rodSwitchPosition == .descendMinus
@@ -606,11 +637,33 @@ final class PoweredDescentSession {
 
     private func record(_ snapshot: LMSimulationSnapshot) {
         recordedFrames.append(LMFlightFrame(snapshot: snapshot))
+        guard ProcessInfo.processInfo.arguments.contains("--cockpit-mission-capture"),
+              Int(snapshot.timeSeconds) != lastCaptureSecond || snapshot.vehicleState.flightOutcome.isTerminal else { return }
+        lastCaptureSecond = Int(snapshot.timeSeconds)
+        let state = snapshot.vehicleState
+        var report: [String: Any] = ["timeSeconds": snapshot.timeSeconds,
+            "program": snapshot.agc.dsky.programNumber ?? 0, "scenarioID": scenario.id,
+            "altitudeMeters": state.altitudeMeters, "outcome": state.flightOutcome.rawValue,
+            "northMeters": state.positionMeters.x, "eastMeters": state.positionMeters.y,
+            "terrain": terrainCaptureMetrics?() ?? [:]]
+        if let contact = state.surfaceContact {
+            report["contactVerticalSpeed"] = contact.verticalSpeedMetersPerSecond
+            report["contactHorizontalSpeed"] = contact.horizontalSpeedMetersPerSecond
+        }
+        let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        if let data = try? JSONSerialization.data(withJSONObject: report, options: [.sortedKeys]) {
+            try? data.write(to: directory.appendingPathComponent("CockpitMissionLatest.json"), options: .atomic)
+        }
+        if state.flightOutcome.isTerminal {
+            let recording = LMFlightRecording(scenarioID: scenario.id, controlMode: .automatic, frames: recordedFrames)
+            try? recording.encoded().write(to: directory.appendingPathComponent("CockpitMissionRecording.json"), options: .atomic)
+        }
     }
 
     private func finishRecording() {
         guard !recordedFrames.isEmpty else { return }
         recording = LMFlightRecording(
+            scenarioID: scenario.id,
             controlMode: recordedFrames.contains { $0.panelState.attitudeMode == .attitudeHold }
                 ? .astronautP66
                 : .automatic,

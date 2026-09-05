@@ -424,8 +424,14 @@ anchor, floating tangent frame, whatever sources cover it."
    Global gear drops pass at mare and highland anchors. Inspection showed
    spherical altitude was insufficient: AGC initialization, plant and LR basis
    also needed an explicit site context, now implemented on the authorized
-   `terrain-anchor-guidance` AGC branch. Full arbitrary-site cockpit descent
-   still requires atomic contact/geometry publication and mission captures.
+   `terrain-anchor-guidance` AGC branch. Arbitrary-site cockpit wiring and
+   atomic publication now have two complete Release mission captures: the
+   mare settles intact with a hard-landing classification; the highland
+   crashes on a 16.14° local slope below the guidance datum. Neither result
+   is relabelled as a soft landing. All 116,500 audited footpad samples match
+   the published mesh, and both recordings pass decoding and replay checks.
+   Near-ground terrain waits, distant coverage/faceting, and an intact
+   highland landing remain open; see `Stage2CockpitIntegration.md`.
    See `Stage2GlobalTerrainValidation.md`; local drops and retargeted sphere
    descents do not substitute for that acceptance.
 
@@ -438,7 +444,8 @@ anchor, floating tangent frame, whatever sources cover it."
    on visionOS Simulator. The test runner omitted its requested Release flag,
    so this is Debug evidence; Release capture validation remains required.
    AGC's existing gear integration is recorded separately as `4a1aeb4` after
-   14 isolated gear tests passed. Mission wiring and captures remain open.
+   14 isolated gear tests passed. The mission evidence above extends this
+   prerequisite without closing the remaining visual and performance gates.
 6. **Explorer UX, implemented with acceptance gaps:** coordinate entry/copy,
    eased great-circle fly-to, an 18-entry sourced POI catalog, measured-floor
    disclosure, history, cached-only reload and region download/pause controls.

@@ -84,7 +84,7 @@ struct TerminalDescentCockpitView: View {
                     Button {
                         restartExperience()
                     } label: {
-                        Label("Restart P64", systemImage: "arrow.counterclockwise")
+                        Label(appModel.cockpitCoordinate == nil ? "Restart P64" : "Restart P63", systemImage: "arrow.counterclockwise")
                     }
                     .disabled(!appModel.session.canStop && !appModel.session.canStart)
 
@@ -227,6 +227,7 @@ struct TerminalDescentCockpitView: View {
         .task {
             guard !didStart else { return }
             didStart = true
+            LunarExplorerPerformanceProbe.shared.start(arguments: ProcessInfo.processInfo.arguments)
             // The gear touches exactly the surface the clipmap is drawing.
             station.onContactSurfaceChange = { [session = appModel.session] surface in
                 session.setLandingSurface(surface)
@@ -234,7 +235,7 @@ struct TerminalDescentCockpitView: View {
             appModel.session.setSceneActive(scenePhase == .active)
             audioController.isEnabled = audioEnabled
             audioController.start()
-            if appModel.session.canStart {
+            if appModel.cockpitCoordinate == nil, appModel.session.canStart {
                 let startPoint: PoweredDescentSession.StartPoint = ProcessInfo
                     .processInfo.arguments.contains("--cockpit-start-p65")
                     ? .p65TerminalDescent
@@ -255,8 +256,18 @@ struct TerminalDescentCockpitView: View {
             do {
                 try station.loadExteriorLunarModule()
                 let artistCabinLoaded = try await station.loadArtistCabinIfAvailable()
-                try await station.loadApollo11Terrain()
-                terrainStatus = "LROC/SLDEM terrain · 0.5 m NAC + normalized WAC reflectance"
+                if let coordinate = appModel.cockpitCoordinate {
+                    terrainStatus = "Loading selected lunar site…"
+                    try await station.loadGlobalTerrain(at: coordinate, session: appModel.session,
+                        date: appModel.lunarExplorerSession.sunDate)
+                    terrainStatus = station.globalTerrainDescription
+                    appModel.session.start(from: .ignition)
+                } else {
+                    appModel.session.terrainReady = nil
+                    appModel.session.vehicleDidAdvance = nil
+                    try await station.loadApollo11Terrain()
+                    terrainStatus = "LROC/SLDEM terrain · 0.5 m NAC + normalized WAC reflectance"
+                }
                 recordValidation { $0.observeTerrainLoaded() }
                 logger.info("Apollo 11 LROC/SLDEM terrain loaded; artist cabin: \(artistCabinLoaded)")
             } catch {
@@ -287,6 +298,7 @@ struct TerminalDescentCockpitView: View {
             }
         }
         .onDisappear {
+            LunarExplorerPerformanceProbe.shared.stop()
             releaseSpatialControls()
             appModel.session.setSceneActive(false)
             cuePresentationTask?.cancel()
