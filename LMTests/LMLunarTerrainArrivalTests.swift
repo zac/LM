@@ -214,6 +214,21 @@ struct LMLunarTerrainArrivalTests {
             #expect(presentation.root.children.count == 1)
             frameChecks += 1
         }
+        request([coarse, fine], label: "cancelled-registration")
+        try await waitUntil { presentation.root.children.count == 2 }
+        #expect(presentation.snapshot.tiles.count == 1)
+        #expect(presentation.root.children.allSatisfy {
+            $0.components[OpacityComponent.self] == nil
+        })
+        let registrationHeight = presentation.snapshot.sample(east: 1.13, north: 1.37)?.elevation
+        let registrationAnchor = region.frame.coordinateSystem.localFrame(at: region.frame.coordinate(for:
+            .init(northMeters: 2_100, eastMeters: 0, upMeters: 0)))
+        presentation.apply(anchor: registrationAnchor)
+        #expect(presentation.snapshot.sample(east: 1.13, north: 1.37)?.elevation == registrationHeight)
+        presentation.cancel()
+        try await waitUntil { presentation.root.children.count == 1 }
+        #expect(presentation.snapshot.tiles.count == 1)
+        #expect(ready == ["initial"])
         request([coarse, fine], label: "superseded")
         try await waitUntil { presentation.isMorphing }
         let before = presentation.snapshot.sample(east: 1.13, north: 1.37)?.elevation

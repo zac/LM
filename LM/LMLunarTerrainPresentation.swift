@@ -20,6 +20,7 @@ final class LMLunarTerrainPresentation {
     static let morphDurationSeconds = 1.2
     private var generation = UUID()
     private var residentEntities = [(Entity, LMTerrainTilePlan)]()
+    private var registeringEntities = [(Entity, LMTerrainTilePlan)]()
     private var pipeline: LMTerrainDetailPipeline
     private struct Cached {
         let plan: LMTerrainTilePlan
@@ -139,6 +140,7 @@ final class LMLunarTerrainPresentation {
                     LMLunarTerrainTiming.end(realization)
                     try Task.checkCancellation()
                     guard self.generation == token else { return }
+                    try await self.prepareForPublication(renderer)
                     self.install(renderer.root, snapshot: morph.snapshot(weight: 0), entities: renderer.entities,
                         minimum: simd_min(self.boundsMinimum, minimum), maximum: simd_max(self.boundsMaximum, maximum))
                     self.cache = nextCache
@@ -267,6 +269,28 @@ final class LMLunarTerrainPresentation {
         }
     }
 
+    private func prepareForPublication(_ renderer: LMLunarTerrainMorphRenderer) async throws {
+        // The common-refinement start is the same geometric surface as the
+        // current snapshot. Keep the old opaque representation beneath that
+        // endpoint while RealityKit first renders the incoming resources. A
+        // zero-opacity registration did not prevent a one-frame upload gap.
+        let incoming = renderer.root
+        registeringEntities = renderer.entities
+        apply(anchor: anchor ?? region.frame)
+        root.addChild(incoming)
+        var completed = false
+        defer {
+            registeringEntities = []
+            if !completed { incoming.removeFromParent() }
+        }
+        // The observed gap lasts one 60 Hz capture frame. This 100 ms hold
+        // allows several rendered frames while retaining exact endpoint contact.
+        try await Task.sleep(for: .milliseconds(100))
+        await waitForSceneUpdates(3)
+        try Task.checkCancellation()
+        completed = true
+    }
+
     func setMode(_ mode: LMTerrainDetailMode) {
         cancel()
         // The bundled neural corpus is Apollo-only. Until N3 has validated
@@ -283,8 +307,8 @@ final class LMLunarTerrainPresentation {
         defer { LMLunarTerrainTiming.end(publication) }
         residentEntities = entities
         apply(anchor: anchor ?? region.frame)
-        let old = Array(root.children)
-        root.addChild(replacement)
+        let old = root.children.filter { $0 !== replacement }
+        if replacement.parent !== root { root.addChild(replacement) }
         old.forEach { $0.removeFromParent() }
         self.snapshot = snapshot
         boundsMinimum = minimum
@@ -294,7 +318,7 @@ final class LMLunarTerrainPresentation {
 
     func apply(anchor: LMSelenographicLocalFrame) {
         self.anchor = anchor
-        for (entity, plan) in residentEntities {
+        for (entity, plan) in residentEntities + registeringEntities {
             entity.transform = LMLunarAnchoredPlacement.chunkTransform(
                 origin: .init(northMeters: plan.centerNorthMeters, eastMeters: plan.centerEastMeters, upMeters: 0),
                 source: region.frame, anchor: anchor

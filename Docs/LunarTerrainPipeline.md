@@ -624,6 +624,14 @@ its TextureResource, so initial publication cannot expose an empty backing.
 Unchanged materials and geometry use the static path. GPU submissions
 remain bounded to one at a time and follow RealityKit scene updates; initial and
 final resources each receive two scene updates before the next replacement.
+Before interpolation starts, the prior opaque representation remains beneath
+the common-refinement starting endpoint for 100 ms and three scene updates.
+Those representations describe the same geometric surface. This covers the
+one-frame mesh-publication gap seen in the mare replay; a zero-opacity
+registration did not. Both receive anchor updates during registration.
+Cancellation removes the incoming representation and retains the old contact
+snapshot; activation retains the registered entity identity and removes the old
+representation before changing the displayed weight.
 Cancellation stops pending generation while the displayed transition finishes.
 A new completed generation waits for that endpoint, and re-anchoring changes
 only its entity placement. The final publication restores the original target
