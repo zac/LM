@@ -234,14 +234,18 @@ final class LunarExplorerScene {
                 // Keep the atlas resident across destinations. Only its frame changes;
                 // decoding another 64 ppd texture peaked at 881 MiB during fly-to.
                 if self.globeEntity == nil {
+                    let atlasInterval = LMLunarTerrainTiming.begin("global-atlas")
                     let globe = try await LMLunarGlobeResource.makeEntity(manifest: manifest, frontCoordinate: coordinate)
+                    LMLunarTerrainTiming.end(atlasInterval)
                     try Task.checkCancellation()
                     self.globeFrontCoordinate = coordinate
                     self.globePresentationRoot.addChild(globe.entity)
                     self.globeEntity = globe.entity
                     self.appliedGlobeLinearRadianceMultiplier = nil
+                    let terminatorInterval = LMLunarTerrainTiming.begin("global-terminator")
                     let terminator = try LMLunarGlobeResource.makeTerminator(manifest: manifest, date: session.sunDate,
                                                                              frontCoordinate: coordinate)
+                    LMLunarTerrainTiming.end(terminatorInterval)
                     self.globePresentationRoot.addChild(terminator.entity)
                     self.globeTerminator = terminator
                     self.globeTerminatorDate = session.sunDate

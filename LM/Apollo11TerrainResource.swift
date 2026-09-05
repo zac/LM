@@ -288,11 +288,12 @@ enum Apollo11TerrainResource {
         descriptor.bitangents = MeshBuffers.Tangents(data.bitangents)
         descriptor.textureCoordinates = MeshBuffers.TextureCoordinates(data.textureCoordinates)
         descriptor.primitives = .triangles(data.indices)
-        let mesh = try MeshResource.generate(from: [descriptor])
-        let material = try LMTerrainWorld.detailTerrainMaterial(
-            build.detail,
-            plan: plan
-        )
+        let mesh = try LMLunarTerrainTiming.measure("mesh-upload") {
+            try MeshResource.generate(from: [descriptor])
+        }
+        let material = try LMLunarTerrainTiming.measure("material-upload") {
+            try LMTerrainWorld.detailTerrainMaterial(build.detail, plan: plan)
+        }
         let entity = ModelEntity(mesh: mesh, materials: [material])
         if heightField.resolvesProceduralSamples {
             entity.position = SIMD3(Float(plan.centerNorthMeters), 0, Float(-plan.centerEastMeters))
@@ -332,6 +333,8 @@ enum Apollo11TerrainResource {
         geometryReplacementPlans: [LMTerrainTilePlan]?
     ) throws -> (value: LMProgressiveTerrainMeshData?, milliseconds: Int) {
         let started = ContinuousClock.now
+        let interval = LMLunarTerrainTiming.begin("cpu-mesh")
+        defer { LMLunarTerrainTiming.end(interval) }
         let value = try makeProgressiveTileMeshData(
             heightField: heightField,
             plan: plan,
@@ -346,6 +349,8 @@ enum Apollo11TerrainResource {
         albedoField: LMMeasuredAlbedoField?,
         detailPipeline: LMTerrainDetailPipeline
     ) async throws -> (value: LMTerrainDetailPipeline.Product, milliseconds: Int) {
+        let interval = LMLunarTerrainTiming.begin("appearance-bake")
+        defer { LMLunarTerrainTiming.end(interval) }
         let value = try await detailPipeline.textures(
             plan: plan,
             albedoField: albedoField

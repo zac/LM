@@ -124,6 +124,8 @@ final class LMLunarTerrainPresentation {
                 }
                 try Task.checkCancellation()
                 guard let self, self.generation == token else { return }
+                let publication = LMLunarTerrainTiming.begin("generation-publication")
+                defer { LMLunarTerrainTiming.end(publication) }
                 let old = Array(self.root.children)
                 self.root.addChild(replacement)
                 old.forEach { $0.removeFromParent() }

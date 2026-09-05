@@ -267,3 +267,24 @@ close-control adjustment. `LM-Stage2-Items456-Release-v10.log` is the final
 successful Release build. The navigation movie/contact images use v9; v10 adds
 only error-path recovery and keeps Done enabled while other controls are busy.
 No terrain generation or presentation geometry changed between those builds.
+
+## Transition stability follow-up
+
+The opt-in performance probe now records source resolution, verified source
+decoding, CPU mesh work, appearance baking, mesh upload, material upload, and
+complete-generation publication. Begin/end records retain overlapping work;
+their durations must not be added as if they were serial latency. The atlas
+interval includes an asynchronous texture load and is not main-thread occupancy.
+`Tools/SummarizeLunarTerrainTiming.py` groups these records by live process ID.
+
+The unchanged-geometry Release control is
+`/tmp/LM-Stage2-Stability-Before-Highland/`, at −42°, 120°. At the 0.5 m stop,
+38 tiles took 13,191 ms. Source resolution took 77.8 ms on a worker. Mesh
+uploads peaked at 3.45 ms and material uploads at 9.72 ms on the main thread;
+publication took 1.33 ms. Synchronous terminator creation took 140.4 ms during
+a startup window whose maximum frame was 250.14 ms. The surface repeat measured
+140.9 ms for the terminator and 1.69 ms for publication; 54 tiles took 19,248 ms.
+These measurements motivate moving CPU globe preparation off the main thread.
+They do not attribute the entire delayed frame to one phase or accept the
+visible coarse-parent patch. Both captures use readiness plus 90 seconds and
+the existing production source cache, without video recording.

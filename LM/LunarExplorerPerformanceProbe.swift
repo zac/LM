@@ -3,6 +3,32 @@ import OSLog
 import QuartzCore
 import UIKit
 
+/// Opt-in phase attribution using the same clock/log stream as the frame probe.
+/// Begin/end records retain overlap and distinguish worker work from UI stalls.
+enum LMLunarTerrainTiming {
+    private static let enabled = ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile")
+    private static let logger = Logger(subsystem: "io.positron.LM", category: "TerrainTiming")
+    struct Interval {
+        let phase: String
+        let start: ContinuousClock.Instant
+    }
+    static func begin(_ phase: String) -> Interval {
+        if enabled { logger.info("Terrain phase begin=\(phase, privacy: .public) main=\(Thread.isMainThread)") }
+        return Interval(phase: phase, start: .now)
+    }
+    static func end(_ interval: Interval) {
+        guard enabled else { return }
+        let duration = interval.start.duration(to: .now).components
+        let ms = Double(duration.seconds) * 1_000 + Double(duration.attoseconds) / 1e15
+        logger.info("Terrain phase end=\(interval.phase, privacy: .public) elapsed=\(ms)ms main=\(Thread.isMainThread)")
+    }
+    static func measure<T>(_ phase: String, _ operation: () throws -> T) rethrows -> T {
+        let interval = begin(phase)
+        defer { end(interval) }
+        return try operation()
+    }
+}
+
 struct LunarExplorerFrameStatistics: Equatable {
     let sampleCount: Int
     let meanMilliseconds: Double
@@ -106,9 +132,11 @@ final class LunarExplorerPerformanceProbe: NSObject {
             windowStartTimestamp = link.timestamp
             return
         }
-        durationsMilliseconds.append(
-            (link.timestamp - previousTimestamp) * 1_000
-        )
+        let duration = (link.timestamp - previousTimestamp) * 1_000
+        durationsMilliseconds.append(duration)
+        if duration > 25 {
+            logger.info("Explorer hitch elapsed=\(duration)ms")
+        }
         nominalDurationsMilliseconds.append(
             (link.targetTimestamp - link.timestamp) * 1_000
         )

@@ -35,13 +35,17 @@ struct LMLunarTerrainRegion: Sendable {
 
     static func load(at coordinate: LMSelenographicCoordinate, store: LMLunarElevationStore,
                      offline: Bool = false, bundle: Bundle = .main) async throws -> Self {
+        let interval = LMLunarTerrainTiming.begin("source-resolution")
+        defer { LMLunarTerrainTiming.end(interval) }
         let manifest = try LMTerrainManifest.load(bundle: bundle)
         let catalog = try LMLunarElevationCatalog.load(bundle: bundle)
         guard let source = manifest.sources.first(where: { $0.productId == "LDEM_16" }),
               let url = bundle.url(forResource: source.bundledFile, withExtension: nil) else {
             throw LMLunarElevationCatalog.CatalogError.missingResource
         }
-        let base = try LMLunarElevationGrid(data: Data(contentsOf: url, options: .mappedIfSafe), source: source)
+        let base = try LMLunarTerrainTiming.measure("base-verify-decode") {
+            try LMLunarElevationGrid(data: Data(contentsOf: url, options: .mappedIfSafe), source: source)
+        }
         var grids = [LMLunarElevationGrid]()
         var reflectance = [LMLunarReflectanceField.Slab]()
         var unavailable = [String]()
@@ -53,7 +57,9 @@ struct LMLunarTerrainRegion: Sendable {
                 if source.productId.hasPrefix("WAC_EMP_") {
                     reflectance.append(try .init(data: data, source: source))
                 } else {
-                    grids.append(try .init(data: data, source: source))
+                    grids.append(try LMLunarTerrainTiming.measure("strip-verify-decode") {
+                        try .init(data: data, source: source)
+                    })
                 }
                 identifiers.append(source.id)
             } catch is CancellationError { throw CancellationError() }
