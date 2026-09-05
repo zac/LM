@@ -491,3 +491,55 @@ is 16.67 ms with zero missed callbacks and 201.0 MiB, versus 157.1 MiB for the
 with four missed callbacks. This validates the previously failing resource
 path and records the larger residency cost. It does not prove every heading
 or distant boundary is visually accepted.
+
+### Offline stationary re-anchor repeat
+
+`/tmp/LM-Stage2-Stability-Reanchor/` repeats the production 4.2 km trigger
+with cached-only source access. The log records one 54-plan generation in
+21,715 ms, then `Reanchor generation=2 resident=54 pending=0`. No second
+terrain generation occurs. The before frame uses the deliberately offset
+anchor; it is not expected to be byte-identical to a normal-anchor launch.
+
+The same-view before/after PNG comparison changes 545 of 8,294,400 pixels,
+with normalized RGB RMSE 0.0000440105. The maximum individual channel change
+is 12/255. Across fifteen fixed 2,880 by 32 pixel bands, linear Rec.709 mean
+radiance changes by at most 0.00033594%. `image-metrics.json` records the
+individual bands. These stationary bands test re-anchor continuity, not the
+separate adjacent-source-boundary acceptance protocol. The after image differs
+from the normal-anchor highland surface control at 117 pixels, with RGB RMSE
+0.0000209624. Both images were inspected without a new visible gap or jump.
+
+All 23 late performance windows, including the re-anchor, have p95/p99/max
+16.67 ms and zero missed callbacks. Peak physical footprint is 158.3 MiB.
+The whole-run maximum is 231.52 ms with four startup misses. The measurement
+supports the existing threshold and no-rebake contract; physical stereoscopic
+continuity still needs Vision Pro validation.
+
+### Production motion sequence
+
+`Tools/CaptureLunarTerrainTransitions.sh` drives the real Explorer session
+through a 35° heading change at 2 m altitude and 8 m width, a zoom to 249 m
+altitude and 700 m width, and a return to heading zero at 2 m and 8 m. Each
+movement uses sixty eased steps and waits for production readiness plus
+100 seconds. The 4K H.264 recording in
+`/tmp/LM-Stage2-Stability-Motion/transitions.mov` is 430.528 seconds long.
+The script verifies the live process, all three completion markers, and valid
+video metadata before writing its completion manifest.
+
+Four generations publish successfully: 54/95/60/54 plans in
+20,898/38,100/26,618/21,996 ms. The final PNG is byte-identical to the initial
+PNG. Sampled movement and arrival frames contain terrain throughout, without
+a black coverage hole. They also expose a real temporal acceptance failure:
+on the return to the surface, the stationary coarse foreground gains its fine
+craters and texture when the last generation arrives. Publication is atomic,
+but has no temporal geometry morph. This pass does not close that gate.
+
+`frames/`, `events.json`, and `arrival-image-metrics.json` retain the sampled
+evidence. Approximate video times for the three arrivals are 55.85, 191.65
+and 323.02 seconds. At 1280 by 720, the two-second-before/after H.264 frame
+pairs have normalized RGB RMSE 0.0002033, 0.0011612 and 0.0049849. The last
+pair changes 506,178 of 921,600 pixels. These lossy video comparisons identify
+the arrival change; they are not substituted for the PNG radiance protocol.
+The recording run peaks at 256.8 MiB during replacement, with a final settled
+159.7 MiB and 16.67 ms p95/p99/max. Recording overhead makes these unsuitable
+for a direct comparison with the unrecorded item 0 performance baseline.

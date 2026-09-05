@@ -366,9 +366,11 @@ anchor, floating tangent frame, whatever sources cover it."
    presentation frame in the same main-actor update. It recomputes transforms
    from canonical Double coordinates rather than accumulating Float deltas.
    Terrain heights, normals, UVs, tile IDs, cache keys, contact samples, and
-   pending bake tasks do not depend on the floating origin. The scene still
-   respects the existing 900 m navigation limit until source resolution and
-   UX are ready; the capture probe exercises the actual trigger independently.
+   pending bake tasks do not depend on the floating origin. The initial
+   consumer retained the 900 m navigation limit. The production global UX now
+   permits a 20 km local window inside its immutable prefetched region, as
+   described in item 6; the capture probe exercises the actual re-anchor
+   trigger independently of that navigation limit.
 3. **Streaming transport and cache, implemented in Simulator 2026-09-04:**
    `LMLunarElevationStore` fetches fixed-record PDS byte ranges, validates
    status/range/size before bounded body consumption, verifies SHA-256 before
@@ -381,7 +383,7 @@ anchor, floating tangent frame, whatever sources cover it."
    the pinned 59.2 m SLDEM strip or the bundled LOLA global base. It displays
    constant reflectance with no residual or contact claim. The raw base plus
    provenance label is 31.645509 MiB, within the approved 32 MiB. Production
-   band selection, morphing, and contact remain items 4 and 5.
+   band selection, morphing, and contact are described in items 4 and 5.
 4. **Source resolver and amplification, implemented with visual gates open:** given an anchor, assemble the band
    stack from available pinned sources: streamed SLDEM/LOLA for geometry,
    normalized WAC where available for reflectance, and NAC site packs where
@@ -389,8 +391,13 @@ anchor, floating tangent frame, whatever sources cover it."
    128/32/8/2 m, so each adds its octave below the local measured floor and
    stays anchored at that source's posts under the §1 cap. Extend the geology
    model's crater diameter range to match. Implementation and numerical evidence
-   are in `Stage2GlobalTerrainValidation.md`. Coarse near-field intrusion,
-   temporal arrival and arbitrary-site handoff radiance remain acceptance gates.
+   are in `Stage2GlobalTerrainValidation.md`. The transition follow-up fixes
+   stepped-footprint collar discontinuities at oblique headings. Nominal rays
+   attribute one suspected foreground intrusion to terrain about 7 km away;
+   that diagnosis does not close visual acceptance. The recorded zoom-return
+   sequence restores byte-identical settled pixels but exposes abrupt fine-detail
+   arrival. Distant footprint joins, temporal arrival and arbitrary-site handoff
+   radiance remain acceptance gates.
 5. **Contact everywhere, implementation validated; mission integration open:**
    `LMTerrainLandingSurface` retains the exact rendered resolver triangles.
    Global gear drops pass at mare and highland anchors. Inspection showed

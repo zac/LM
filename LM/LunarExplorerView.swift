@@ -1,3 +1,4 @@
+import OSLog
 import RealityKit
 import SwiftUI
 import UIKit
@@ -36,6 +37,26 @@ struct LunarExplorerView: View {
                    let coordinate = LMLunarNavigation.parse(String(value.dropFirst("--lunar-explorer-fly-to=".count))) {
                     try await waitForSettledTerrain(explorer)
                     explorer.fly(to: coordinate)
+                }
+                if arguments.contains("--lunar-explorer-transition-probe") {
+                    try await waitForSettledTerrain(explorer)
+                    for destination in [(35.0, 2.0, 8.0), (35.0, 249.0, 700.0), (0.0, 2.0, 8.0)] {
+                        let heading = explorer.headingDegrees
+                        let altitude = explorer.altitudeMeters
+                        let width = explorer.metersAcross
+                        let logger = Logger(subsystem: "io.positron.LM", category: "TerrainTransition")
+                        logger.info("Transition probe begin heading=\(destination.0) altitude=\(destination.1)m width=\(destination.2)m")
+                        for step in 1...60 {
+                            let t = Double(step) / 60
+                            let weight = t * t * (3 - 2 * t)
+                            explorer.headingDegrees = heading + (destination.0 - heading) * weight
+                            explorer.altitudeMeters = exp(log(altitude) * (1 - weight) + log(destination.1) * weight)
+                            explorer.metersAcross = exp(log(width) * (1 - weight) + log(destination.2) * weight)
+                            try await Task.sleep(for: .milliseconds(33))
+                        }
+                        try await waitForSettledTerrain(explorer)
+                        logger.info("Transition probe settled heading=\(destination.0) altitude=\(destination.1)m width=\(destination.2)m")
+                    }
                 }
                 if arguments.contains("--lunar-explorer-contact-probe") {
                     try await waitForSettledTerrain(explorer)

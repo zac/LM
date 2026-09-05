@@ -21,10 +21,17 @@ printf 'stop\tcoordinate\taltitude_m\twidth_m\tpid\tsha256\n' > "$out/captures.t
 args=(--lunar-explorer-capture --lunar-explorer-profile --lunar-explorer-detail=procedural)
 args+=("--lunar-explorer-shadows=${LUNAR_CAPTURE_SHADOWS:-on}")
 args+=("--lunar-explorer-normal-maps=${LUNAR_CAPTURE_NORMAL_MAPS:-on}")
+args+=("--lunar-explorer-terrain-reflectance=${LUNAR_CAPTURE_REFLECTANCE:-measured}")
+args+=("--lunar-explorer-grade=${LUNAR_CAPTURE_GRADE:-calibrated}")
+if [[ -n ${LUNAR_CAPTURE_HEADING:-} ]]; then args+=("--lunar-explorer-heading=$LUNAR_CAPTURE_HEADING"); fi
 if [[ ${LUNAR_CAPTURE_TILE_TINT:-0} == 1 ]]; then args+=(--lunar-explorer-tile-tint=id); fi
 if [[ ${LUNAR_CAPTURE_REANCHOR:-0} == 1 ]]; then args+=(--lunar-explorer-reanchor-probe); fi
 if [[ ${LUNAR_CAPTURE_OFFLINE:-0} == 1 ]]; then args+=(--lunar-explorer-offline); fi
+if [[ ${LUNAR_CAPTURE_OWNERSHIP:-0} == 1 ]]; then args+=(--lunar-explorer-ownership-probe); fi
+printf '%s\n' "${args[@]}" > "$out/launch-arguments.txt"
 stops=(
+    '00-globe|globe|1000000|4400000'
+    '08-crossfade|globe|30000|210000'
     '01-128m|orbit|159999|120000'
     '02-32m|orbit|39999|60000'
     '03-8m|regional|9999|24000'
@@ -32,7 +39,6 @@ stops=(
     '05-0.5m|terminal|249|700'
     '06-0.125m|landing|24.5|40'
     '07-surface|surface|2|8'
-    '08-crossfade|globe|30000|210000'
 )
 for spec in "${stops[@]}"; do
     IFS='|' read -r name preset altitude width <<< "$spec"
@@ -47,6 +53,10 @@ for spec in "${stops[@]}"; do
     ready=false
     for ((attempt=0; attempt<600; attempt++)); do
         kill -0 "$pid"
+        if awk -v pid="$pid" '$6 == pid && /Global terrain failed:/ { found=1 } END { exit !found }' "$out/performance.log"; then
+            echo "Terrain generation failed: $name (see $out/performance.log)" >&2
+            exit 70
+        fi
         if awk -v pid="$pid" '$6 == pid && /Global terrain ready tiles=/ { found=1 } END { exit !found }' "$out/performance.log"; then
             ready=true; break
         fi
