@@ -391,9 +391,15 @@ anchor, floating tangent frame, whatever sources cover it."
    model's crater diameter range to match. Implementation and numerical evidence
    are in `Stage2GlobalTerrainValidation.md`. Coarse near-field intrusion,
    temporal arrival and arbitrary-site handoff radiance remain acceptance gates.
-5. **Contact everywhere:** `LMTerrainLandingSurface` builds from the same
-   resolver, so descent works at any anchor. The AGC/LR side already treats
-   altitude spherically (see project memory).
+5. **Contact everywhere, implementation validated; mission integration open:**
+   `LMTerrainLandingSurface` retains the exact rendered resolver triangles.
+   Global gear drops pass at mare and highland anchors. Inspection showed
+   spherical altitude was insufficient: AGC initialization, plant and LR basis
+   also needed an explicit site context, now implemented on the authorized
+   `terrain-anchor-guidance` AGC branch. Full arbitrary-site cockpit descent
+   still requires atomic contact/geometry publication and mission captures.
+   See `Stage2GlobalTerrainValidation.md`; local drops and retargeted sphere
+   descents do not substitute for that acceptance.
 6. **Explorer UX:** add lat/lon entry, fly-to, a USGS-sourced POI catalog, the
    measured-floor diagnostic, and region download controls from the companion
    Explorer workstreams.

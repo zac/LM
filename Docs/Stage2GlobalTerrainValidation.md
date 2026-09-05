@@ -95,3 +95,44 @@ site-specific handoff radiance at arbitrary locations; global source-join visual
 acceptance; the complete Apollo/mare/highland ladder; N3 geology conditioning;
 and physical Vision Pro frame timing, memory, stereo depth and gesture comfort.
 No acceptance threshold has been relaxed to close these gates.
+
+## Item 5: rendered contact and simulation frames
+
+Global `LMTerrainContactSurface` queries the exact published triangle snapshot,
+including parent morphs, without resampling. The existing Apollo contact patch
+now uses the mesh triangle diagonal rather than bilinear interpolation of a
+four-post saddle. Apollo source data and rendered geometry are unchanged.
+`LMLunarLandingRehearsal` runs the actual LMCore crushable gear solver against a
+frozen generation. It is a local drop diagnostic, not a full AGC mission.
+
+`/tmp/LM-Stage2-Items456-Validation.xcresult` and its `.log` pass 117 tests across
+13 suites in 190.828 seconds on visionOS 26.5 Simulator. These include the ten
+baseline suites plus resolver, global contact and navigation coverage. At
+8.35°, 30.83° and −42°, 120°, 2,000 contact queries have zero error against the
+submitted triangles. Gear settles after 2.53 and 5.63 seconds respectively,
+without strut failure or penetration beyond the solver's bearing allowance.
+Those two automated drops use the bundled base; streamed production drops are
+recorded separately under Item 6.
+
+Inspection disproved the plan's assumption that spherical altitude alone made
+the AGC frame arbitrary-site ready. RLS, RN/VN initialization, REFSMMAT, the
+plant basis and LR geometry also referenced Apollo's site. The authorized AGC
+branch `terrain-anchor-guidance` adds an explicit immutable landing-site context
+and rejects cross-site checkpoints before changing AGC or vehicle state. Nil
+context preserves the original NASA pad construction and old recording JSON.
+Custom scenarios start P63 from a modeled retargeting of Apollo PDI conditions;
+they cannot reuse Apollo P64/P65 checkpoints.
+
+The AGC working-checkout run `/tmp/AGC-Lunar-Anchor-v6.log` passes 86 tests across
+site, landing-radar and scenario/dynamics suites. `/tmp/AGC-Lunar-Anchor-v7.log`
+passes five site tests, including a custom P63 → P64 → P65 descent to a sphere
+at 8.35°, 30.83°, radius 1,735,000 m. It reports `softLanding` at simulation time
+825.570374 s. Encoded RLS and RN errors are at most 0.308361 and 0.364937 m,
+within the derived sqrt(3) × 0.25 m bound for B27 double-precision quantization.
+A separate staged-tree test excludes the owner's pre-existing AGC edits.
+
+The full cockpit still selects Apollo 11. Wiring a custom AGC run to a changing
+rendered region requires a pause/publish transaction for contact and geometry,
+then complete cockpit descent captures. The local drop and custom sphere test
+do not close that gate. Item 5 therefore has a validated contact implementation
+and AGC frame prerequisite, with mission integration outstanding.
