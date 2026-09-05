@@ -428,6 +428,17 @@ anchor, floating tangent frame, whatever sources cover it."
    still requires atomic contact/geometry publication and mission captures.
    See `Stage2GlobalTerrainValidation.md`; local drops and retargeted sphere
    descents do not substitute for that acceptance.
+
+   Cockpit integration prerequisite, 2026-09-05: the session stages contact
+   synchronously and serializes full physics steps with global mesh/contact
+   publication through `LMTerrainSimulationGate`. GPU morph completion is
+   included in the cockpit publication boundary. The Explorer retains its
+   existing publication path. `/tmp/LM-Cockpit-Publication-Tests.xcresult`
+   passes the two ordering/cancellation tests and eight existing arrival tests
+   on visionOS Simulator. The test runner omitted its requested Release flag,
+   so this is Debug evidence; Release capture validation remains required.
+   AGC's existing gear integration is recorded separately as `4a1aeb4` after
+   14 isolated gear tests passed. Mission wiring and captures remain open.
 6. **Explorer UX, implemented with acceptance gaps:** coordinate entry/copy,
    eased great-circle fly-to, an 18-entry sourced POI catalog, measured-floor
    disclosure, history, cached-only reload and region download/pause controls.

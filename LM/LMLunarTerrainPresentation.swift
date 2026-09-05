@@ -8,6 +8,7 @@ import OSLog
 final class LMLunarTerrainPresentation {
     let root = Entity()
     let region: LMLunarTerrainRegion
+    let simulationGate: LMTerrainSimulationGate?
     private(set) var snapshot = LMLunarTerrainMeshSnapshot(tiles: [])
     private(set) var boundsMinimum = SIMD3<Float>.zero
     private(set) var boundsMaximum = SIMD3<Float>.zero
@@ -31,8 +32,10 @@ final class LMLunarTerrainPresentation {
     private var cache = [LMTerrainTileID: Cached]()
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "io.positron.LM", category: "LunarTerrain")
 
-    init(region: LMLunarTerrainRegion, mode: LMTerrainDetailMode) {
+    init(region: LMLunarTerrainRegion, mode: LMTerrainDetailMode,
+         simulationGate: LMTerrainSimulationGate? = nil) {
         self.region = region
+        self.simulationGate = simulationGate
         // Per-region cache ownership prevents an appearance tile at one lunar
         // coordinate from being reused under the same local tile ID elsewhere.
         // The bundled neural corpus is Apollo-only. Until N3 has validated
@@ -120,7 +123,7 @@ final class LMLunarTerrainPresentation {
                     self.logger.info("Global terrain ready tiles=\(built.count) generation=\(milliseconds)ms floor=\(region.measuredFloorMeters)m")
                 }
                 if self.snapshot.tiles.isEmpty {
-                    self.install(replacement, snapshot: target, entities: entities, minimum: minimum, maximum: maximum)
+                    try await self.publish(replacement, snapshot: target, entities: entities, minimum: minimum, maximum: maximum)
                     self.cache = nextCache
                     ready()
                 } else {
@@ -145,7 +148,7 @@ final class LMLunarTerrainPresentation {
                     try Task.checkCancellation()
                     guard self.generation == token else { return }
                     try await self.prepareForPublication(renderer)
-                    self.install(renderer.root, snapshot: morph.snapshot(weight: 0), entities: renderer.entities,
+                    try await self.publish(renderer.root, snapshot: morph.snapshot(weight: 0), entities: renderer.entities,
                         minimum: simd_min(self.boundsMinimum, minimum), maximum: simd_max(self.boundsMaximum, maximum))
                     self.cache = nextCache
                     self.isMorphing = true
@@ -163,20 +166,31 @@ final class LMLunarTerrainPresentation {
                                 let seconds = Double(elapsed.seconds) + Double(elapsed.attoseconds) / 1e18
                                 let weight = LMLunarTerrainMorph.weight(fraction: seconds / Self.morphDurationSeconds)
                                 let update = LMLunarTerrainTiming.begin("morph-frame")
-                                let command = try renderer.update(weight: weight)
-                                self.snapshot = morph.snapshot(weight: weight)
-                                self.presentationChanged?()
-                                LMLunarTerrainTiming.end(update)
-                                // Bound in-flight replacement buffers. Slow GPU
-                                // work must not accumulate more mesh/texture copies.
-                                let completion = LMLunarTerrainTiming.begin("morph-gpu-wait")
-                                try await command.complete()
-                                LMLunarTerrainTiming.end(completion)
+                                if let gate = self.simulationGate {
+                                    try await gate.withAccess {
+                                        try Task.checkCancellation()
+                                        let command = try renderer.update(weight: weight)
+                                        // Physics waits for the GPU replacement and
+                                        // its matching immutable contact snapshot.
+                                        try await command.complete()
+                                        self.snapshot = morph.snapshot(weight: weight)
+                                        self.presentationChanged?()
+                                    }
+                                    LMLunarTerrainTiming.end(update)
+                                } else {
+                                    let command = try renderer.update(weight: weight)
+                                    self.snapshot = morph.snapshot(weight: weight)
+                                    self.presentationChanged?()
+                                    LMLunarTerrainTiming.end(update)
+                                    let completion = LMLunarTerrainTiming.begin("morph-gpu-wait")
+                                    try await command.complete()
+                                    LMLunarTerrainTiming.end(completion)
+                                }
                                 if weight == 1 { break }
                                 await self.waitForSceneUpdates(1)
                             }
                             await self.waitForSceneUpdates(2)
-                            self.install(replacement, snapshot: target, entities: entities, minimum: minimum, maximum: maximum)
+                            try await self.publish(replacement, snapshot: target, entities: entities, minimum: minimum, maximum: maximum)
                             self.isMorphing = false
                             LMLunarTerrainTiming.memory("morph-complete")
                             self.logger.info("Global morph complete")
@@ -304,6 +318,18 @@ final class LMLunarTerrainPresentation {
         // Both modes currently resolve to that same deterministic generator.
         // Keep the displayed appearance available as the next morph endpoint.
         requested = []
+    }
+
+    private func publish(_ replacement: Entity, snapshot: LMLunarTerrainMeshSnapshot,
+                         entities: [(Entity, LMTerrainTilePlan)], minimum: SIMD3<Float>, maximum: SIMD3<Float>) async throws {
+        if let simulationGate {
+            try await simulationGate.withAccess {
+                try Task.checkCancellation()
+                install(replacement, snapshot: snapshot, entities: entities, minimum: minimum, maximum: maximum)
+            }
+        } else {
+            install(replacement, snapshot: snapshot, entities: entities, minimum: minimum, maximum: maximum)
+        }
     }
 
     private func install(_ replacement: Entity, snapshot: LMLunarTerrainMeshSnapshot,

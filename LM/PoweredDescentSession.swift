@@ -58,6 +58,8 @@ final class PoweredDescentSession {
     var aca = LMACANormalizedInput.neutral
     private(set) var rodSwitchPosition = RODSwitchPosition.neutral
 
+    let terrainSimulationGate = LMTerrainSimulationGate()
+    @ObservationIgnored private var landingSurface: (any LMLandingSurfaceModel)?
     @ObservationIgnored private var runtime: LMSimulationRuntime?
     @ObservationIgnored private var loopTask: Task<Void, Never>?
     @ObservationIgnored private var replayTask: Task<Void, Never>?
@@ -116,8 +118,7 @@ final class PoweredDescentSession {
     /// this whenever clipmap residency changes, so the physics surface is always
     /// the surface currently being drawn.
     func setLandingSurface(_ surface: (any LMLandingSurfaceModel)?) {
-        guard let runtime else { return }
-        Task { await runtime.setLandingSurface(surface) }
+        landingSurface = surface
     }
 
     var canStart: Bool { runtime != nil && !isRunning && replayTask == nil }
@@ -307,8 +308,12 @@ final class PoweredDescentSession {
                 last = now
                 let pace = LMSimulationPace.pace(programNumber: self.snapshot?.agc.dsky.programNumber)
                 let delta = pace.simulationDelta(wallDelta: wallDelta)
-                let snap = await runtime.step(deltaTime: delta, input: self.makeFrameInput())
-                guard self.runID == runID else { return }
+                let result = await self.terrainSimulationGate.withAccess { () -> LMSimulationSnapshot? in
+                    guard !Task.isCancelled, self.runID == runID else { return nil }
+                    await runtime.setLandingSurface(self.landingSurface)
+                    return await runtime.step(deltaTime: delta, input: self.makeFrameInput())
+                }
+                guard self.runID == runID, let snap = result else { return }
                 self.snapshot = snap
                 self.record(snap)
                 if snap.vehicleState.flightOutcome.isTerminal {
