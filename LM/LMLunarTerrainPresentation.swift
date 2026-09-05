@@ -68,6 +68,8 @@ final class LMLunarTerrainPresentation {
                 var entities = [(Entity, LMTerrainTilePlan)]()
                 var nextCache = [LMTerrainTileID: Cached]()
                 var built = [LMLunarTerrainMeshTile]()
+                var cacheHits = 0
+                var missingMisses = 0, planMisses = 0, parentMisses = 0, ownerMisses = 0
                 // Coarse-to-fine order lets each child read its actual parent
                 // triangles, including the parent's own outer morph collar.
                 for plan in plans {
@@ -81,9 +83,15 @@ final class LMLunarTerrainPresentation {
                     if let cached = previousCache[plan.id], cached.plan == plan,
                        cached.parents == parents, cached.owners == owners {
                         reused = true
+                        cacheHits += 1
                         build = .init(entity: cached.build.entity.clone(recursive: true),
                                       mesh: cached.build.mesh, metrics: cached.build.metrics)
                     } else {
+                        if let cached = previousCache[plan.id] {
+                            if cached.plan != plan { planMisses += 1 }
+                            else if cached.parents != parents { parentMisses += 1 }
+                            else { ownerMisses += 1 }
+                        } else { missingMisses += 1 }
                         guard let generated = try await Apollo11TerrainResource.makeProgressiveTileEntityBuild(
                             heightField: field, plan: plan, activePlans: plans,
                             geometryReplacementPlans: plans, albedoField: region.albedo, detailPipeline: pipeline
@@ -120,6 +128,7 @@ final class LMLunarTerrainPresentation {
                     let elapsed = start.duration(to: .now).components
                     let milliseconds = Int(elapsed.seconds * 1_000 + elapsed.attoseconds / 1_000_000_000_000_000)
                     status("Lunar terrain ready", plans.count, built.count, plans.map(\.sampleSpacingMeters).min(), milliseconds)
+                    self.logger.info("Global cache hits=\(cacheHits) missing=\(missingMisses) plan=\(planMisses) parents=\(parentMisses) owners=\(ownerMisses)")
                     self.logger.info("Global terrain ready tiles=\(built.count) generation=\(milliseconds)ms floor=\(region.measuredFloorMeters)m")
                 }
                 if self.snapshot.tiles.isEmpty {

@@ -18,9 +18,11 @@ final class LMLunarCockpitTerrain {
     private var contact: LMTerrainContactSurface?
     private var maximumContactError = 0.0
     private var contactSamples = 0
+    private var missingContactSamples = 0
 
     var captureMetrics: [String: Double] {
         ["maximumContactErrorMeters": maximumContactError, "contactSamples": Double(contactSamples),
+         "missingContactSamples": Double(missingContactSamples),
          "reanchorGeneration": Double(origin.generation), "tiles": Double(presentation.snapshot.tiles.count),
          "measuredFloorMeters": presentation.region.measuredFloorMeters, "ready": ready ? 1 : 0]
     }
@@ -69,6 +71,8 @@ final class LMLunarCockpitTerrain {
                     let ground = contact.surfaceHeightMeters(northMeters: point.x, eastMeters: point.y)
                     maximumContactError = max(maximumContactError, abs(ground - Double(drawn.elevation)))
                     contactSamples += 1
+                } else {
+                    missingContactSamples += 1
                 }
             }
         }

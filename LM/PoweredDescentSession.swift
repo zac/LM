@@ -75,6 +75,10 @@ final class PoweredDescentSession {
     @ObservationIgnored var vehicleDidAdvance: ((LMVehicleStateSnapshot) -> Void)?
     @ObservationIgnored var terrainCaptureMetrics: (() -> [String: Double])?
     @ObservationIgnored private var lastCaptureSecond = -1
+    @ObservationIgnored private var terrainWaitSeconds = 0.0
+    @ObservationIgnored private var publicationWaitSeconds = 0.0
+    @ObservationIgnored private var maximumPublicationWaitSeconds = 0.0
+    @ObservationIgnored private var realtimeClampedSeconds = 0.0
     @ObservationIgnored private var terrainBindingID = UUID()
 
     func contactPublisher() -> (LMTerrainContactSurface) -> Void {
@@ -291,6 +295,10 @@ final class PoweredDescentSession {
         snapshotTask?.cancel()
         snapshotTask = nil
         lastCaptureSecond = -1
+        terrainWaitSeconds = 0
+        publicationWaitSeconds = 0
+        maximumPublicationWaitSeconds = 0
+        realtimeClampedSeconds = 0
         let runID = UUID()
         self.runID = runID
         lastStartPoint = startPoint
@@ -347,9 +355,16 @@ final class PoweredDescentSession {
             }
             var last = CACurrentMediaTime()
             while !Task.isCancelled, self.runID == runID {
-                if !self.isSceneActive || self.isPaused || self.terrainReady?() == false {
+                if !self.isSceneActive || self.isPaused {
                     try? await Task.sleep(for: .milliseconds(100))
                     last = CACurrentMediaTime()
+                    continue
+                }
+                if self.terrainReady?() == false {
+                    let waitStart = CACurrentMediaTime()
+                    try? await Task.sleep(for: .milliseconds(100))
+                    last = CACurrentMediaTime()
+                    self.terrainWaitSeconds += last - waitStart
                     continue
                 }
                 let now = CACurrentMediaTime()
@@ -357,7 +372,14 @@ final class PoweredDescentSession {
                 last = now
                 let pace = LMSimulationPace.pace(programNumber: self.snapshot?.agc.dsky.programNumber)
                 let delta = pace.simulationDelta(wallDelta: wallDelta)
+                if pace == .realtime {
+                    self.realtimeClampedSeconds += max(0, wallDelta - delta)
+                }
+                let publicationWaitStart = CACurrentMediaTime()
                 let result = await self.terrainSimulationGate.withAccess { () -> LMSimulationSnapshot? in
+                    let wait = CACurrentMediaTime() - publicationWaitStart
+                    self.publicationWaitSeconds += wait
+                    self.maximumPublicationWaitSeconds = max(self.maximumPublicationWaitSeconds, wait)
                     guard !Task.isCancelled, self.runID == runID else { return nil }
                     await runtime.setLandingSurface(self.landingSurface)
                     return await runtime.step(deltaTime: delta, input: self.makeFrameInput())
@@ -664,7 +686,11 @@ final class PoweredDescentSession {
             "program": snapshot.agc.dsky.programNumber ?? 0, "scenarioID": scenario.id,
             "altitudeMeters": state.altitudeMeters, "outcome": state.flightOutcome.rawValue,
             "northMeters": state.positionMeters.x, "eastMeters": state.positionMeters.y,
-            "terrain": terrainCaptureMetrics?() ?? [:]]
+            "terrain": terrainCaptureMetrics?() ?? [:],
+            "streaming": ["terrainWaitSeconds": terrainWaitSeconds,
+                          "publicationWaitSeconds": publicationWaitSeconds,
+                          "maximumPublicationWaitSeconds": maximumPublicationWaitSeconds,
+                          "realtimeClampedSeconds": realtimeClampedSeconds]]
         if let contact = state.surfaceContact {
             report["contactVerticalSpeed"] = contact.verticalSpeedMetersPerSecond
             report["contactHorizontalSpeed"] = contact.horizontalSpeedMetersPerSecond
