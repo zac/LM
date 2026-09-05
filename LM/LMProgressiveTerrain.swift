@@ -919,6 +919,46 @@ struct LMProgressiveTerrainPlanner: Sendable {
         return applyingFootprintPerimeter(to: union)
     }
 
+    /// The edge-only collar encoding describes a rectangle. A stepped union
+    /// can end one tile's collar at an internal corner while its neighbor has
+    /// full relief there. Close each global footprint into a rectangle, and
+    /// enclose the quantized child extent before assigning any edge masks.
+    /// Apollo callers retain their established planning and cache keys.
+    func rectangularPlansEnclosingChildren(_ plans: [LMTerrainTilePlan]) -> [LMTerrainTilePlan] {
+        let groups = Dictionary(grouping: plans, by: { $0.id.level }).values.sorted {
+            $0[0].sampleSpacingMeters < $1[0].sampleSpacingMeters
+        }
+        var result = [LMTerrainTilePlan]()
+        var childBounds: (west: Double, east: Double, south: Double, north: Double)?
+        for (index, group) in groups.enumerated() {
+            let sample = group[0], size = sample.sizeMeters
+            var west = group.map(\.id.eastIndex).min()!
+            var east = group.map(\.id.eastIndex).max()!
+            var south = group.map(\.id.northIndex).min()!
+            var north = group.map(\.id.northIndex).max()!
+            if let childBounds {
+                let parentSpacing = index + 1 < groups.count ? groups[index + 1][0].sampleSpacingMeters : sourceSpacingMeters
+                let collar = min(size / 4, parentSpacing * 8)
+                west = min(west, Int(floor((childBounds.west - collar) / size)))
+                east = max(east, Int(ceil((childBounds.east + collar) / size)) - 1)
+                south = min(south, Int(floor((childBounds.south - collar) / size)))
+                north = max(north, Int(ceil((childBounds.north + collar) / size)) - 1)
+            }
+            for n in south...north {
+                for e in west...east {
+                    result.append(.init(id: .init(level: sample.id.level, eastIndex: e, northIndex: n),
+                                        centerEastMeters: (Double(e) + 0.5) * size,
+                                        centerNorthMeters: (Double(n) + 0.5) * size,
+                                        sizeMeters: size, sampleSpacingMeters: sample.sampleSpacingMeters,
+                                        containsProceduralSubresolution: sample.containsProceduralSubresolution))
+                }
+            }
+            childBounds = (Double(west) * size, Double(east + 1) * size,
+                           Double(south) * size, Double(north + 1) * size)
+        }
+        return applyingFootprintPerimeter(to: result)
+    }
+
     /// Recomputes edge ownership after the final residency set is known. This
     /// is particularly important for prefetching: the current and projected
     /// footprints may overlap or touch, and their union must have one outer

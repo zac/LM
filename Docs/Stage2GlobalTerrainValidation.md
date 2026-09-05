@@ -314,3 +314,32 @@ passed. The shortcut now reports all texels in the flat histogram without
 changing texture bytes. This preserves correct weighting in ensemble checks.
 The final `/tmp/LM-Stage2-Stability-Final.xcresult` passes 155 tests across 16
 suites in 177.999 seconds, including the previously failing assertions.
+
+### Oblique footprint continuity and ownership
+
+A 0.2 m refinement over a flat parent exposes a stepped-footprint defect:
+one tile can finish its edge collar at an internal corner while its neighbor
+retains full refinement. `/tmp/LM-Stage2-Stability-Collars-Before.xcresult`
+fails shared-edge checks at headings 17°, 35° and 135°. Global planning now
+closes each level into a rectangle and encloses the quantized child bounds
+inside the parent's collar before assigning perimeter edges. Apollo planning
+is unchanged. At headings 0/17/35/90/135°, tile counts change from
+54/71/75/54/78 to 54/82/95/54/100. This extra residency is a measured cost of
+using the existing edge-only collar representation; it is not free prefetch.
+
+`/tmp/LM-Stage2-Stability-Collars-After.xcresult` passes eight tests in three
+suites. The four transition tests also pass in the final 155-test run: shared
+edge heights are exactly equal at all five headings, appearance edge bytes
+match, an inspection ray respects missing submitted triangles, and cancelling
+a generation permits an identical request to retry without publishing it.
+Release build evidence is `/tmp/LM-Stage2-Stability-Final-Release.log`.
+
+The capture-only ownership probe intersects the actual submitted triangles.
+In `/tmp/LM-Stage2-Stability-Ownership-Highland/`, eight of nine nominal rays
+hit the 0.125 m level and agree with the vertical contact owner. The upper-left
+ray hits the 128 m level about 7,054 m away; it does not demonstrate a coarse
+parent piercing the foreground. These rays assume a nominal 1.45 m eye and
+inspection projection, not a calibrated mapping from screenshot pixels.
+The earlier description of this particular patch as near-field intrusion is
+therefore unproven. Distant footprint joins and the complete visual acceptance
+gates remain open until the final captures are assessed.

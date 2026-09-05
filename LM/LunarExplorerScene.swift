@@ -471,6 +471,24 @@ final class LunarExplorerScene {
                 session.diagnostics.latestGenerationMilliseconds = milliseconds
                 self.updatePresentationTransform(session)
                 if milliseconds != nil {
+                    if ProcessInfo.processInfo.arguments.contains("--lunar-explorer-ownership-probe") {
+                        let snapshot = globalTerrain.snapshot
+                        let focus = SIMD3(Float(focus.x), snapshot.sample(east: focus.y, north: focus.x)?.elevation ?? 0, Float(-focus.y))
+                        let inverse = self.presentationRoot.orientation.inverse
+                        let scale = self.presentationRoot.scale.x
+                        let origin = focus + inverse.act(SIMD3(0, 1.45, 0) - self.presentationRoot.position) / scale
+                        Task.detached {
+                            let logger = Logger(subsystem: "io.positron.LM", category: "TerrainOwnership")
+                            for v: Float in [-0.5, 0, 0.5] {
+                                for u: Float in [-0.9, 0, 0.9] {
+                                    if let hit = snapshot.raycast(origin: origin, direction: inverse.act(SIMD3(u, v, -1))) {
+                                        let owner = snapshot.sample(east: Double(-hit.position.z), north: Double(hit.position.x))
+                                        logger.info("Ownership ray u=\(u) v=\(v) east=\(-hit.position.z)m north=\(hit.position.x)m height=\(hit.position.y)m spacing=\(hit.plan.sampleSpacingMeters)m verticalOwner=\(owner?.spacing ?? 0)m distance=\(hit.distance)m")
+                                    }
+                                }
+                            }
+                        }
+                    }
                     if session.pendingArrival { session.flightCoordinate = nil }
                     session.beginArrival()
                 }

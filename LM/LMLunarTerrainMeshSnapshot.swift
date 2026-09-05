@@ -43,6 +43,43 @@ struct LMLunarTerrainMeshSnapshot: Sendable {
     /// Finest first. The owner selection matches the parent quad masks.
     let tiles: [LMLunarTerrainMeshTile]
 
+    struct RayHit: Sendable {
+        let position: SIMD3<Float>
+        let distance: Float
+        let plan: LMTerrainTilePlan
+    }
+
+    /// Inspection rays use only submitted triangles, including ownership holes.
+    /// Unlike a height query, this can detect a distant parent occluding the focus.
+    func raycast(origin: SIMD3<Float>, direction: SIMD3<Float>) -> RayHit? {
+        let direction = simd_normalize(direction)
+        var closest: RayHit?
+        for tile in tiles {
+            let offset = SIMD3(Float(tile.plan.centerNorthMeters), 0, Float(-tile.plan.centerEastMeters))
+            let localOrigin = origin - offset
+            let positions = tile.mesh.positions
+            let indices = tile.mesh.indices
+            for index in stride(from: 0, to: indices.count, by: 3) {
+                let a = positions[Int(indices[index])]
+                let edge1 = positions[Int(indices[index + 1])] - a
+                let edge2 = positions[Int(indices[index + 2])] - a
+                let p = simd_cross(direction, edge2)
+                let determinant = simd_dot(edge1, p)
+                guard abs(determinant) > 1e-9 else { continue }
+                let t = localOrigin - a
+                let u = simd_dot(t, p) / determinant
+                guard u >= 0, u <= 1 else { continue }
+                let q = simd_cross(t, edge1)
+                let v = simd_dot(direction, q) / determinant
+                guard v >= 0, u + v <= 1 else { continue }
+                let distance = simd_dot(edge2, q) / determinant
+                guard distance > 0, distance < (closest?.distance ?? .infinity) else { continue }
+                closest = RayHit(position: origin + direction * distance, distance: distance, plan: tile.plan)
+            }
+        }
+        return closest
+    }
+
     func sample(east: Double, north: Double, coarserThan spacing: Double = 0) -> LMLunarTerrainMeshTile.Sample? {
         for tile in tiles where tile.plan.sampleSpacingMeters > spacing {
             if let sample = tile.sample(east: east, north: north) { return sample }

@@ -36,49 +36,8 @@ final class LMLunarTerrainPresentation {
 
     func update(east: Double, north: Double, altitude: Double, metersAcross: Double, heading: Double,
                 status: @escaping @MainActor (String, Int, Int, Double?, Int?) -> Void) {
-        var policy = LMTerrainDetailPolicy()
-        policy.globalBands = true
-        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: region.terrain.base.spacingMeters,
-                                                  levels: LMProgressiveTerrainPlanner.globalLevels)
-        var plans = planner.focusedPlans(focusEastMeters: east, focusNorthMeters: north,
-                                        altitudeMeters: altitude, policy: policy)
-        if altitude <= policy.landingAltitudeMeters {
-            // A global anchor starts exactly at a tile corner. The 32 m-wide
-            // footprint exposed its terminal parent in the Surface capture;
-            // cover both lateral edges of the oblique view as well as its ray.
-            let radians = heading * .pi / 180
-            for lateral in [-16.0, 0, 16] {
-                let e = east - sin(radians) * lateral
-                let n = north + cos(radians) * lateral
-                plans += planner.viewCorridorPlans(focusEastMeters: e, focusNorthMeters: n,
-                                                   headingDegrees: heading, forwardDistanceMeters: 48, altitudeMeters: altitude)
-                plans += planner.viewCorridorPlans(focusEastMeters: e, focusNorthMeters: n,
-                                                   headingDegrees: heading + 180, forwardDistanceMeters: 32, altitudeMeters: altitude)
-            }
-        }
-        if altitude <= policy.terminalAltitudeMeters {
-            plans += planner.viewCorridorPlans(focusEastMeters: east, focusNorthMeters: north,
-                                               headingDegrees: heading, forwardDistanceMeters: min(384, max(48, metersAcross * 0.75)),
-                                               altitudeMeters: max(altitude, policy.landingAltitudeMeters + 1))
-        }
-        // Coarse measured geometry must cover the globe-to-region handoff.
-        // Fine residency remains bounded by the planner's nested footprints.
-        let reach = min(131_000, max(32_000, metersAcross * 0.8))
-        let size = 65_536.0
-        for n in Int(floor((north - reach) / size))...Int(floor((north + reach) / size)) {
-            for e in Int(floor((east - reach) / size))...Int(floor((east + reach) / size)) {
-                plans.append(.init(id: .init(level: 6, eastIndex: e, northIndex: n),
-                                   centerEastMeters: (Double(e) + 0.5) * size,
-                                   centerNorthMeters: (Double(n) + 0.5) * size,
-                                   sizeMeters: size, sampleSpacingMeters: 512,
-                                   containsProceduralSubresolution: false))
-            }
-        }
-        plans = planner.mergedPlans(plans).sorted {
-            if $0.sampleSpacingMeters != $1.sampleSpacingMeters { return $0.sampleSpacingMeters > $1.sampleSpacingMeters }
-            if $0.id.northIndex != $1.id.northIndex { return $0.id.northIndex < $1.id.northIndex }
-            return $0.id.eastIndex < $1.id.eastIndex
-        }
+        let plans = Self.plans(sourceSpacing: region.terrain.base.spacingMeters, east: east, north: north,
+                               altitude: altitude, metersAcross: metersAcross, heading: heading)
         guard plans != requested else { return }
         requested = plans
         task?.cancel()
@@ -157,7 +116,60 @@ final class LMLunarTerrainPresentation {
         }
     }
 
-    func cancel() { generation = UUID(); task?.cancel(); task = nil }
+    nonisolated static func plans(sourceSpacing: Double, east: Double, north: Double,
+                                  altitude: Double, metersAcross: Double, heading: Double) -> [LMTerrainTilePlan] {
+        var policy = LMTerrainDetailPolicy()
+        policy.globalBands = true
+        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: sourceSpacing,
+                                                  levels: LMProgressiveTerrainPlanner.globalLevels)
+        var plans = planner.focusedPlans(focusEastMeters: east, focusNorthMeters: north,
+                                        altitudeMeters: altitude, policy: policy)
+        if altitude <= policy.landingAltitudeMeters {
+            // A global anchor starts exactly at a tile corner. The 32 m-wide
+            // footprint exposed its terminal parent in the Surface capture;
+            // cover both lateral edges of the oblique view as well as its ray.
+            let radians = heading * .pi / 180
+            for lateral in [-16.0, 0, 16] {
+                let e = east - sin(radians) * lateral
+                let n = north + cos(radians) * lateral
+                plans += planner.viewCorridorPlans(focusEastMeters: e, focusNorthMeters: n,
+                                                   headingDegrees: heading, forwardDistanceMeters: 48, altitudeMeters: altitude)
+                plans += planner.viewCorridorPlans(focusEastMeters: e, focusNorthMeters: n,
+                                                   headingDegrees: heading + 180, forwardDistanceMeters: 32, altitudeMeters: altitude)
+            }
+        }
+        if altitude <= policy.terminalAltitudeMeters {
+            plans += planner.viewCorridorPlans(focusEastMeters: east, focusNorthMeters: north,
+                                               headingDegrees: heading, forwardDistanceMeters: min(384, max(48, metersAcross * 0.75)),
+                                               altitudeMeters: max(altitude, policy.landingAltitudeMeters + 1))
+        }
+        // Coarse measured geometry must cover the globe-to-region handoff.
+        // Fine residency remains bounded by the planner's nested footprints.
+        let reach = min(131_000, max(32_000, metersAcross * 0.8))
+        let size = 65_536.0
+        for n in Int(floor((north - reach) / size))...Int(floor((north + reach) / size)) {
+            for e in Int(floor((east - reach) / size))...Int(floor((east + reach) / size)) {
+                plans.append(.init(id: .init(level: 6, eastIndex: e, northIndex: n),
+                                   centerEastMeters: (Double(e) + 0.5) * size,
+                                   centerNorthMeters: (Double(n) + 0.5) * size,
+                                   sizeMeters: size, sampleSpacingMeters: 512,
+                                   containsProceduralSubresolution: false))
+            }
+        }
+        plans = planner.rectangularPlansEnclosingChildren(plans).sorted {
+            if $0.sampleSpacingMeters != $1.sampleSpacingMeters { return $0.sampleSpacingMeters > $1.sampleSpacingMeters }
+            if $0.id.northIndex != $1.id.northIndex { return $0.id.northIndex < $1.id.northIndex }
+            return $0.id.eastIndex < $1.id.eastIndex
+        }
+        return plans
+    }
+
+    func cancel() {
+        generation = UUID()
+        task?.cancel()
+        task = nil
+        requested = []
+    }
 
     func setMode(_ mode: LMTerrainDetailMode) {
         cancel()
