@@ -288,3 +288,20 @@ These measurements motivate moving CPU globe preparation off the main thread.
 They do not attribute the entire delayed frame to one phase or accept the
 visible coarse-parent patch. Both captures use readiness plus 90 seconds and
 the existing production source cache, without video recording.
+
+Globe mesh buffers and the decoded terminator normal field/opacity image now
+prepare on worker tasks. Resource realization stays on the main actor, with
+cancellation checked before publication and the requested sun date retained
+across suspension. `/tmp/LM-Stage2-Stability-CPU.xcresult` passes 29 tests in
+two suites, including exact opacity bytes, unchanged globe vertices, and
+cancelled preparation. Xcode BuildProject and Release Simulator builds pass.
+
+The matched `/tmp/LM-Stage2-Stability-Async-Highland/` PNGs are byte-identical
+to both before controls. Worker terminator preparation takes about 80 ms;
+globe mesh uploads take about 3.5 ms. Whole-run maximum frames changed from
+250.14/382.96 ms to 240.44/125.38 ms for the terminal/surface launches, while
+missed callbacks increased from 17/24 to 23/31. These are two launch pairs,
+not evidence that startup hitches are solved. Both late settled windows retain
+16.67 ms p95/p99/max with zero missed callbacks. Settled footprints changed
+from 137.6/157.6 MiB to 142.5/158.4 MiB. The async atlas upload and resource
+arrival still need attribution; background execution alone is insufficient.

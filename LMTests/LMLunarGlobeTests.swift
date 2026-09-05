@@ -291,6 +291,48 @@ struct LMLunarGlobeTests {
         #expect(abs(limb - (1 + night) / 2) < 0.000_001)
     }
 
+    @Test func backgroundPreparationPreservesTerminatorBytesAndGlobeVertices() async throws {
+        let manifest = try LMTerrainManifest.load()
+        let date = Date(timeIntervalSince1970: 0)
+        let result = try await Task.detached {
+            #expect(!Thread.isMainThread)
+            return try LMLunarGlobeResource.prepareTerminator(manifest: manifest, date: date)
+        }.value
+        let expected = LMLunarGlobeResource.terminatorOpacitySamples(
+            date: date, surfaceNormals: result.surfaceNormals)
+        let bytes = try #require(result.image.dataProvider?.data)
+        #expect((bytes as Data) == Data(expected))
+        let coordinate = manifest.landingOriginCoordinate
+        let mesh = await Task.detached {
+            LMLunarGlobeResource.globeMeshData(radiusMeters: manifest.globe.radiusMeters,
+                                               frontCoordinate: coordinate)
+        }.value
+        #expect(mesh.positions.count == 129 * 257)
+        #expect(mesh.indices.count == 128 * 256 * 6)
+        for row in stride(from: 0, through: 128, by: 16) {
+            for column in stride(from: 0, through: 256, by: 16) {
+                let expected = LMLunarGlobeResource.displayPosition(
+                    coordinate: .init(latitudeDegrees: 90 - Double(row) * 180 / 128,
+                                      longitudeDegrees: -180 + Double(column) * 360 / 256),
+                    frontCoordinate: coordinate, radiusMeters: manifest.globe.radiusMeters)
+                #expect(mesh.positions[row * 257 + column] == expected)
+            }
+        }
+        #expect(mesh.textureCoordinates[256].x == 1)
+    }
+
+    @Test func cancelledTerminatorPreparationDoesNotReturnPublishableData() async throws {
+        let manifest = try LMTerrainManifest.load()
+        let task = Task.detached {
+            withUnsafeCurrentTask { $0?.cancel() }
+            return try LMLunarGlobeResource.prepareTerminator(manifest: manifest, date: .now)
+        }
+        do {
+            _ = try await task.value
+            Issue.record("Cancelled preparation returned a resource")
+        } catch is CancellationError { }
+    }
+
     @Test func terminatorMaskMovesWithTheSessionSunDate() {
         let landing = LunarExplorerSession.apollo11TouchdownUTC
         let later = landing.addingTimeInterval(7 * 24 * 3_600)

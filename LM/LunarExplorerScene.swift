@@ -129,13 +129,15 @@ final class LunarExplorerScene {
                     session.diagnostics.globeTierState = "bundled "
                         + "\(globe.textureTier.mapResolutionPixelsPerDegree) ppd"
                         + (globe.usedFallback ? " fallback" : "")
-                    let terminator = try LMLunarGlobeResource.makeTerminator(
+                    let terminatorDate = session.sunDate
+                    let terminator = try await LMLunarGlobeResource.makeTerminator(
                         manifest: manifest,
-                        date: session.sunDate
+                        date: terminatorDate
                     )
+                    try Task.checkCancellation()
                     self.globePresentationRoot.addChild(terminator.entity)
                     self.globeTerminator = terminator
-                    self.globeTerminatorDate = session.sunDate
+                    self.globeTerminatorDate = terminatorDate
                     } else {
                         session.diagnostics.globeTierState = "resident global atlas"
                     }
@@ -242,13 +244,14 @@ final class LunarExplorerScene {
                     self.globePresentationRoot.addChild(globe.entity)
                     self.globeEntity = globe.entity
                     self.appliedGlobeLinearRadianceMultiplier = nil
+                    let terminatorDate = session.sunDate
                     let terminatorInterval = LMLunarTerrainTiming.begin("global-terminator")
-                    let terminator = try LMLunarGlobeResource.makeTerminator(manifest: manifest, date: session.sunDate,
+                    let terminator = try await LMLunarGlobeResource.makeTerminator(manifest: manifest, date: terminatorDate,
                                                                              frontCoordinate: coordinate)
                     LMLunarTerrainTiming.end(terminatorInterval)
                     self.globePresentationRoot.addChild(terminator.entity)
                     self.globeTerminator = terminator
-                    self.globeTerminatorDate = session.sunDate
+                    self.globeTerminatorDate = terminatorDate
                     session.diagnostics.globeTierState = "bundled \(globe.textureTier.mapResolutionPixelsPerDegree) ppd"
                 } else {
                     session.diagnostics.globeTierState = "resident global atlas"

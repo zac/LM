@@ -72,7 +72,7 @@ enum LMLunarGlobeResource {
         guard !tiers.isEmpty else {
             throw ResourceError.missingTextureTier
         }
-        let mesh = try globeMesh(
+        let mesh = try await globeMesh(
             radiusMeters: manifest.globe.radiusMeters,
             frontCoordinate: frontCoordinate ?? manifest.landingOriginCoordinate
         )
@@ -183,7 +183,28 @@ enum LMLunarGlobeResource {
         date: Date,
         frontCoordinate: LMSelenographicCoordinate? = nil,
         bundle: Bundle = .main
-    ) throws -> TerminatorResource {
+    ) async throws -> TerminatorResource {
+        let preparation = Task.detached(priority: .userInitiated) {
+            try prepareTerminator(manifest: manifest, date: date, bundle: bundle)
+        }
+        let prepared = try await withTaskCancellationHandler(
+            operation: { try await preparation.value },
+            onCancel: { preparation.cancel() }
+        )
+        try Task.checkCancellation()
+        return try await realizeTerminator(prepared, manifest: manifest,
+                                           frontCoordinate: frontCoordinate)
+    }
+
+    struct PreparedTerminator: Sendable {
+        let surfaceNormals: [SIMD3<Double>]
+        let image: CGImage
+    }
+
+    nonisolated static func prepareTerminator(manifest: LMTerrainManifest, date: Date,
+                                              bundle: Bundle = .main) throws -> PreparedTerminator {
+        let interval = LMLunarTerrainTiming.begin("terminator-cpu")
+        defer { LMLunarTerrainTiming.end(interval) }
         let normalMap = manifest.globe.normalMap
         guard manifest.sources.contains(where: { $0.id == normalMap.sourceID }) else {
             throw ResourceError.missingSource(normalMap.sourceID)
@@ -198,6 +219,16 @@ enum LMLunarGlobeResource {
             date: date,
             surfaceNormals: surfaceNormals
         )
+        try Task.checkCancellation()
+        return PreparedTerminator(surfaceNormals: surfaceNormals, image: image)
+    }
+
+    @MainActor
+    private static func realizeTerminator(_ prepared: PreparedTerminator,
+                                         manifest: LMTerrainManifest,
+                                         frontCoordinate: LMSelenographicCoordinate?) async throws -> TerminatorResource {
+        let surfaceNormals = prepared.surfaceNormals
+        let image = prepared.image
         let options = TextureResource.CreateOptions(
             semantic: .scalar,
             mipmapsMode: .allocateAndGenerateAll
@@ -207,7 +238,7 @@ enum LMLunarGlobeResource {
             withName: "Lunar ephemeris terminator",
             options: options
         )
-        let mesh = try globeMesh(
+        let mesh = try await globeMesh(
             // Keep the transparent shell far enough above the color sphere to
             // avoid depth fighting after the Moon is scaled to tabletop size.
             radiusMeters: manifest.globe.radiusMeters * 1.0005,
@@ -443,7 +474,35 @@ enum LMLunarGlobeResource {
     private static func globeMesh(
         radiusMeters: Double,
         frontCoordinate: LMSelenographicCoordinate
-    ) throws -> MeshResource {
+    ) async throws -> MeshResource {
+        let preparation = Task.detached(priority: .userInitiated) {
+            globeMeshData(radiusMeters: radiusMeters, frontCoordinate: frontCoordinate)
+        }
+        let data = await withTaskCancellationHandler(
+            operation: { await preparation.value }, onCancel: { preparation.cancel() }
+        )
+        try Task.checkCancellation()
+        var descriptor = MeshDescriptor(name: "IAU ME lunar globe")
+        descriptor.positions = MeshBuffers.Positions(data.positions)
+        descriptor.normals = MeshBuffers.Normals(data.normals)
+        descriptor.textureCoordinates = MeshBuffers.TextureCoordinates(data.textureCoordinates)
+        descriptor.primitives = .triangles(data.indices)
+        return try LMLunarTerrainTiming.measure("globe-mesh-upload") {
+            try MeshResource.generate(from: [descriptor])
+        }
+    }
+
+    struct GlobeMeshData: Sendable {
+        let positions: [SIMD3<Float>]
+        let normals: [SIMD3<Float>]
+        let textureCoordinates: [SIMD2<Float>]
+        let indices: [UInt32]
+    }
+
+    nonisolated static func globeMeshData(radiusMeters: Double,
+                                          frontCoordinate: LMSelenographicCoordinate) -> GlobeMeshData {
+        let interval = LMLunarTerrainTiming.begin("globe-mesh-cpu")
+        defer { LMLunarTerrainTiming.end(interval) }
         let rowLength = longitudeSegments + 1
         var positions = [SIMD3<Float>]()
         var normals = [SIMD3<Float>]()
@@ -491,12 +550,8 @@ enum LMLunarGlobeResource {
             }
         }
 
-        var descriptor = MeshDescriptor(name: "IAU ME lunar globe")
-        descriptor.positions = MeshBuffers.Positions(positions)
-        descriptor.normals = MeshBuffers.Normals(normals)
-        descriptor.textureCoordinates = MeshBuffers.TextureCoordinates(textureCoordinates)
-        descriptor.primitives = .triangles(indices)
-        return try MeshResource.generate(from: [descriptor])
+        return GlobeMeshData(positions: positions, normals: normals,
+                             textureCoordinates: textureCoordinates, indices: indices)
     }
 
     private static func resourceURL(bundle: Bundle, file: String) throws -> URL {
