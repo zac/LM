@@ -43,6 +43,39 @@ The terminal view still has broad, low-contrast forms. These are diagnostic
 controls, not matched Artemis recreations: they use the existing mission date,
 different terrain and much smaller viewing scales.
 
+## Controlled low-Sun result
+
+The existing ephemeris at Highland (-42 N, 120 E) gives a 44.0039-degree
+solar elevation at the mission date. Adding 120 hours gives 7.8663 degrees
+at azimuth 278.8098 degrees. This is a repeatable lighting experiment, not
+an Artemis camera/date reconstruction. The ephemeris calculation and output
+are retained in `/tmp/LM-Artemis-Realism/Sun` and `sun-angles.txt`.
+
+All four controls below use the same final normal Release binary
+`3078b67fca3ecda7879b3bff5ddf369875d85ff12fb2b30622f4d6ccb259ed6c`,
+the 249 m altitude / 700 m width footprint, 38 tiles, and the global protocol's
+90-second settling interval. Each directory retains the image, launch settings
+and performance log. All images were visually inspected.
+
+| Capture directory under `/tmp` | Grade | Shadows | Normal maps / reflectance |
+| --- | --- | --- | --- |
+| `LM-Artemis-Highland-LowSun-Photographic` | Photographic | On | On / measured |
+| `LM-Artemis-Highland-LowSun-Calibrated` | Calibrated | On | On / measured |
+| `LM-Artemis-Highland-LowSun-NoShadows` | Photographic | Off | On / measured |
+| `LM-Artemis-Highland-LowSun-Geometry` | Photographic | Off | Off / constant |
+
+Low Sun produces much stronger relief and shadow contrast, but also exposes
+large bands around the refined corridor and repeated horizontal striping.
+The artifacts remain in the constant-reflectance, shadows-off, normal-maps-off
+control. They cannot be attributed solely to shadow maps or appearance
+textures. Geometry or mesh-normal behavior across levels of detail is the
+next isolation target; these captures do not yet identify the exact defect.
+The cockpit Highland terminal capture also retains visible distant facets.
+
+This is a failed visual acceptance, not a promoted photographic default.
+Keep the diagnostic controls: changing tone can amplify an existing geometry
+problem even when the overall contrast looks closer to the NASA photographs.
+
 ## Next visual experiments
 
 1. Match geographic region, solar elevation/azimuth, view direction and image
