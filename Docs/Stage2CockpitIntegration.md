@@ -32,9 +32,10 @@ publication and flight steps share one gate; late contact callbacks from an
 earlier site are rejected by a mission binding identifier.
 
 The cockpit uses the production global terrain presentation, including its
-appearance and geometry arrivals. Near touchdown it waits for requested
-terrain to finish. This can lengthen wall-clock descent time and is an open
-performance concern, not real-time flight acceptance. The floating source
+appearance and geometry arrivals. The initial mission captures below waited
+near touchdown for requested terrain to finish. `Stage2CockpitStreaming.md`
+records the subsequent measured removal of those readiness pauses, bounded
+prefetch, contact-stable publication, and remaining short hitches. The floating source
 frame changes at the existing 4,096 m threshold. Geometry and the inverse
 vehicle view use the same frame change, including sunlight and dust.
 

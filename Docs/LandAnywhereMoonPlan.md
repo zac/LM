@@ -430,8 +430,17 @@ anchor, floating tangent frame, whatever sources cover it."
    crashes on a 16.14° local slope below the guidance datum. Neither result
    is relabelled as a soft landing. All 116,500 audited footpad samples match
    the published mesh, and both recordings pass decoding and replay checks.
-   Near-ground terrain waits, distant coverage/faceting, and an intact
-   highland landing remain open; see `Stage2CockpitIntegration.md`.
+   The streaming follow-up removes near-ground readiness waits on both checked
+   routes: the fresh Mare control paused for 422.187 seconds; final flights
+   have zero coverage pauses and no missing/mismatched audited contact. An
+   80-tile predictive budget, stable residency and ownership-only remasking
+   reduce repeated work. Terrain publication is held at contact while the
+   landing dynamics continue. All 22 Release tests pass; both final mission
+   recordings pass replay checks, and the eleven-stop Apollo images remain
+   byte-identical to item 0. Short publication hitches and allocation variation
+   remain, along with distant coverage/faceting and an intact highland landing.
+   See `Stage2CockpitStreaming.md` for measured controls, the rejected larger
+   prefetch budget, capture bookkeeping correction, and physical-device gates.
    The lifecycle follow-up passes 15 Release Simulator tests, including exact
    P63 restart state, cancelled loads, and GPU/contact publication. The final
    eleven-stop Apollo capture is byte-identical to item 0. Settled pacing is
