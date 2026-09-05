@@ -60,9 +60,10 @@ validation on physical Vision Pro.
 ## Numerical and Simulator evidence
 
 All runs use visionOS Simulator UDID `8F38C0E7-6366-4DAC-9372-DCF6F9151DCB`.
-Captures wait for the production geometry-ready event and then settle at least
-90 seconds. Tile tint, normal-map-off and shadow-off controls are diagnostics,
-not acceptance images.
+Global captures wait for the production geometry-ready event and then settle
+at least 90 seconds. The later Apollo item 0 comparison retains its matched
+20-second attribution protocol, as documented below. Tile tint, normal-map-off
+and shadow-off controls are diagnostics, not acceptance images.
 
 - `/tmp/LM-Stage2-Resolver-Triangles-v2.xcresult`: 16 resolver/elevation tests
   passed. The 100-sample spherical graph probe had maximum radial error
@@ -78,9 +79,10 @@ not acceptance images.
   Surface tile builds were 1260–1671 ms. This run does not cover all eleven stops.
 - `/tmp/LM-Stage2-Global-Depth-Corridor/`: highland point −42°, 120°, final
   near-field and bounded-depth handoff controls. The globe intersections are
-  removed. A coarse triangular near-field patch remains visible at the edge.
+  removed. A coarse triangular patch remains visible at the edge. Its initial
+  near-field interpretation is revisited by the later ownership probe.
 - `/tmp/LM-Stage2-Global-Tile-Control/` and
-  `/tmp/LM-Stage2-Global-Geometry-Control/`: tile tint identified the intruding
+  `/tmp/LM-Stage2-Global-Geometry-Control/`: tile tint identified the visible
   surface as a terminal parent; disabling shadows and normal maps did not remove
   it. Widening the fine view corridor reduced but did not eliminate the artifact.
 - `/tmp/LM-Stage2-Global-Coarse-Ladder/`: highland 128/32/8 m and handoff captures.
@@ -90,11 +92,12 @@ not acceptance images.
   before/after capture of the actual re-anchor trigger, with no geometry rebake.
   The final per-frame and image-difference results are recorded below.
 
-Open gates: the coarse near-field intrusion; temporal band-arrival continuity;
-site-specific handoff radiance at arbitrary locations; global source-join visual
-acceptance; the complete Apollo/mare/highland ladder; N3 geology conditioning;
-and physical Vision Pro frame timing, memory, stereo depth and gesture comfort.
-No acceptance threshold has been relaxed to close these gates.
+The stability follow-up below completes the Apollo/mare/highland ladders and
+revisits the suspected near-field intrusion using submitted-triangle rays.
+Open gates remain temporal band-arrival continuity, site-specific handoff
+radiance at arbitrary locations, global source-join visual acceptance, N3
+geology conditioning, and physical Vision Pro frame timing, memory, stereo
+depth and gesture comfort. No acceptance threshold has been relaxed.
 
 ## Item 5: rendered contact and simulation frames
 
@@ -449,9 +452,25 @@ The corrected highland surface result is +0.4394% calibrated, +1.0561%
 photographic and +0.4653% with normal maps off. There are 49,221 terminal and
 39,175 landing boundary pixels. These results are in
 `/tmp/LM-Stage2-Stability-Highland-Tint/radiance-corrected.json`.
-The required constant-reflectance/no-normal control is reported separately.
+The completed constant-reflectance/no-normal control measures +0.2679%.
+All four matched controls are below the unchanged 1.5% adjacent-boundary
+limit. `radiance-all-controls.json` in that directory records the full set;
+the constant control is in
+`/tmp/LM-Stage2-Stability-Highland-Constant-NoNormals/`.
 The mare surface tint contains only landing tiles. Its failed measurement is
 correctly rejected; a same-view surface image cannot establish a boundary pass.
+
+The mare control therefore uses the existing Landing stop, at 24.5 m altitude
+and 40 m width. Its tint has 62,362 terminal and 65,354 landing boundary pixels.
+The measured step is -0.0394% calibrated, -0.1294% photographic and -0.0939%
+with constant reflectance and normals disabled. All three satisfy the unchanged
+1.5% limit without a material gain. The matched set and results are in
+`/tmp/LM-Stage2-Stability-Mare-Landing-Tint/radiance-all-controls.json`,
+`/tmp/LM-Stage2-Stability-Mare-Landing-Photographic/`, and
+`/tmp/LM-Stage2-Stability-Mare-Landing-Constant-NoNormals/`; the calibrated
+image is `06-0.125m.png` in the complete mare ladder. All controls were inspected.
+These highland and mare measurements accept the sampled terminal/landing
+boundaries only. They do not extend to every global LOD or the globe handoff.
 
 ### Fully hidden parent resource failure
 
@@ -543,3 +562,37 @@ the arrival change; they are not substituted for the PNG radiance protocol.
 The recording run peaks at 256.8 MiB during replacement, with a final settled
 159.7 MiB and 16.67 ms p95/p99/max. Recording overhead makes these unsuitable
 for a direct comparison with the unrecorded item 0 performance baseline.
+
+### Repeating the stability captures
+
+`Tools/CaptureLunarGlobalTerrain.sh <udid> <LM.app> <lat,lon> <fresh-output>`
+captures the nine-stop global ladder. Each stop requires a PID-scoped ready
+event, then 90 seconds of settling. It rejects generation failures, dead
+processes and unexpected saturation, and records image hashes and launch
+controls. Run `Tools/SummarizeLunarTerrainTiming.py` over `performance.log`
+for source, CPU, upload and presentation attribution. Use the capture
+manifest's PID when selecting an individual run from that summary.
+
+For matched boundary controls, select one stop with `LUNAR_CAPTURE_FILTER`.
+Set `LUNAR_CAPTURE_TILE_TINT=1` for ownership, `LUNAR_CAPTURE_GRADE=photographic`
+for the photographic grade, and both `LUNAR_CAPTURE_REFLECTANCE=constant`
+and `LUNAR_CAPTURE_NORMAL_MAPS=off` for the geometry control. The same camera
+and completed generation are required in every image. Run
+`Tools/TerrainGenerator/measure_radiance.py --global-levels --tint <tint.png>`
+with repeated `--image <label>=<image.png>` arguments. A frame without an
+adjacent terminal/landing boundary is invalid evidence, even when both levels
+exist elsewhere in the scene.
+
+`LUNAR_CAPTURE_HEADING=35` selects the oblique control.
+`LUNAR_CAPTURE_OFFLINE=1 LUNAR_CAPTURE_REANCHOR=1` selects the cached-only
+stationary re-anchor repeat. The separate
+`Tools/CaptureLunarTerrainTransitions.sh <udid> <LM.app> <lat,lon> <fresh-output>`
+records the motion sequence above. Run one Simulator capture queue at a time.
+Keep video recording and Xcode builds/tests out of baseline performance runs.
+The controls in this pass do not establish all-level radiance, temporal arrival,
+arbitrary-site cockpit descent, or physical Vision Pro acceptance.
+
+The final manifest audit verifies 44 PNG hashes across 18 completed capture
+manifests. `/tmp/LM-Stage2-Stability-Capture-Manifest-Verification.json` lists
+them. All eleven Apollo baseline PNGs and all eleven original terrain asset
+hashes were rechecked after the final captures and remain unchanged.
