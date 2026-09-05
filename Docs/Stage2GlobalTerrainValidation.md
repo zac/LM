@@ -596,3 +596,18 @@ The final manifest audit verifies 44 PNG hashes across 18 completed capture
 manifests. `/tmp/LM-Stage2-Stability-Capture-Manifest-Verification.json` lists
 them. All eleven Apollo baseline PNGs and all eleven original terrain asset
 hashes were rechecked after the final captures and remain unchanged.
+
+### Temporal arrival: shared triangle endpoints
+
+The first arrival change adds a common refinement of the old and new aligned
+clipmaps. Its endpoints come from the actual displayed triangles. Contact and
+inspection rays evaluate the same vertex interpolation, with exact endpoint
+branches and a bounded smoothstep weight. This is geometry infrastructure;
+GPU realization and production arrival acceptance are subsequent checks.
+
+`/tmp/LM-Stage2-Arrival-Geometry.xcresult` passes nine tests covering both
+refinement and coarsening on a saddle, intermediate contact versus submitted
+triangle rays within one micrometre, unchanged native fixture posts, restart
+from an intermediate state, and existing oblique ownership and contact tests.
+The first build exposed a Swift name-shadowing/type-check issue in the normal
+interpolation expression; naming that intermediate explicitly fixed it.

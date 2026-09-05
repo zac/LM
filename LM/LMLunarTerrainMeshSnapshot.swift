@@ -5,6 +5,23 @@ import simd
 struct LMLunarTerrainMeshTile: Sendable {
     let plan: LMTerrainTilePlan
     let mesh: LMProgressiveTerrainMeshData
+    // During arrival, these are the same endpoints and weight consumed by the
+    // render mesh. Contact evaluates only its three vertices, without copying
+    // every resident mesh on each frame.
+    var startMesh: LMProgressiveTerrainMeshData? = nil
+    var morphWeight: Float = 1
+
+    func position(at index: Int) -> SIMD3<Float> {
+        guard let startMesh, morphWeight < 1 else { return mesh.positions[index] }
+        if morphWeight <= 0 { return startMesh.positions[index] }
+        return startMesh.positions[index] + (mesh.positions[index] - startMesh.positions[index]) * morphWeight
+    }
+
+    func normal(at index: Int) -> SIMD3<Float> {
+        guard let startMesh, morphWeight < 1 else { return mesh.normals[index] }
+        if morphWeight <= 0 { return startMesh.normals[index] }
+        return startMesh.normals[index] + (mesh.normals[index] - startMesh.normals[index]) * morphWeight
+    }
 
     struct Sample: Sendable {
         let elevation: Float
@@ -12,7 +29,7 @@ struct LMLunarTerrainMeshTile: Sendable {
         let spacing: Double
     }
 
-    func sample(east: Double, north: Double) -> Sample? {
+    func sample(east: Double, north: Double, normalizeNormal: Bool = true) -> Sample? {
         let half = plan.sizeMeters / 2
         let x = (east - plan.centerEastMeters + half) / plan.sampleSpacingMeters
         let y = (plan.centerNorthMeters + half - north) / plan.sampleSpacingMeters
@@ -33,9 +50,9 @@ struct LMLunarTerrainMeshTile: Sendable {
             indices = SIMD3(ne, se, sw)
             weights = SIMD3(1 - ty, tx + ty - 1, 1 - tx)
         }
-        let height = (0..<3).reduce(Float.zero) { $0 + mesh.positions[indices[$1]].y * weights[$1] }
-        let normal = (0..<3).reduce(SIMD3<Float>.zero) { $0 + mesh.normals[indices[$1]] * weights[$1] }
-        return Sample(elevation: height, normal: simd_normalize(normal), spacing: plan.sampleSpacingMeters)
+        let height = (0..<3).reduce(Float.zero) { $0 + position(at: indices[$1]).y * weights[$1] }
+        let interpolated = (0..<3).reduce(SIMD3<Float>.zero) { $0 + self.normal(at: indices[$1]) * weights[$1] }
+        return Sample(elevation: height, normal: normalizeNormal ? simd_normalize(interpolated) : interpolated, spacing: plan.sampleSpacingMeters)
     }
 }
 
@@ -57,12 +74,11 @@ struct LMLunarTerrainMeshSnapshot: Sendable {
         for tile in tiles {
             let offset = SIMD3(Float(tile.plan.centerNorthMeters), 0, Float(-tile.plan.centerEastMeters))
             let localOrigin = origin - offset
-            let positions = tile.mesh.positions
             let indices = tile.mesh.indices
             for index in stride(from: 0, to: indices.count, by: 3) {
-                let a = positions[Int(indices[index])]
-                let edge1 = positions[Int(indices[index + 1])] - a
-                let edge2 = positions[Int(indices[index + 2])] - a
+                let a = tile.position(at: Int(indices[index]))
+                let edge1 = tile.position(at: Int(indices[index + 1])) - a
+                let edge2 = tile.position(at: Int(indices[index + 2])) - a
                 let p = simd_cross(direction, edge2)
                 let determinant = simd_dot(edge1, p)
                 guard abs(determinant) > 1e-9 else { continue }
@@ -80,9 +96,9 @@ struct LMLunarTerrainMeshSnapshot: Sendable {
         return closest
     }
 
-    func sample(east: Double, north: Double, coarserThan spacing: Double = 0) -> LMLunarTerrainMeshTile.Sample? {
+    func sample(east: Double, north: Double, coarserThan spacing: Double = 0, normalizeNormal: Bool = true) -> LMLunarTerrainMeshTile.Sample? {
         for tile in tiles where tile.plan.sampleSpacingMeters > spacing {
-            if let sample = tile.sample(east: east, north: north) { return sample }
+            if let sample = tile.sample(east: east, north: north, normalizeNormal: normalizeNormal) { return sample }
         }
         return nil
     }
