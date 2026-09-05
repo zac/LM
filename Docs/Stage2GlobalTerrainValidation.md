@@ -858,7 +858,8 @@ arrival tests were rerun after the final publication change in
 `/tmp/LM-Stage2-Arrival-Capture-Hashes.json` retains 19 PNG hashes across the
 Apollo control and four final-binary motion captures. Physical-device and
 broader Stage 2 gates listed above are unchanged.
-# Arrival allocation attribution, 2026-09-05
+
+## Arrival allocation attribution, 2026-09-05
 
 The opt-in profile now records Mach physical footprint and its kernel lifetime
 peak around preparation, resource realization and frame submission. The timing
@@ -882,3 +883,146 @@ blend peak. This short diagnostic, including that inspection, is not a matched
 performance acceptance run. The initial binary's Metal resource counters were
 also zero; explicit logical payload accounting was added afterward and built
 successfully through Xcode MCP.
+
+The CPU-only reduction is retained at `/tmp/LM-Arrival-Compact-Highland/` with
+the same five-second diagnostic holds. The first preparation increase falls
+from 226.2 MiB to 47.3 MiB. Preparation totals 851.0 ms versus 1,019.6 ms,
+and all seven arrival tests pass in `/tmp/LM-Arrival-Compact-Tests.xcresult`.
+Its settled PNGs are byte-identical. This alone does not resolve the peak:
+the complete short replay still samples 987.9 MiB. Logical texture accounting
+shows why: zoom-out retains 343.1 MiB of source texels and 297.8 MiB of output
+texels, before driver overhead and replacement copies.
+
+The combined reduction preserves Float32 precision, source posts, interpolation
+and final static resources. It shares compact normal/elevation endpoints with
+contact, packs transient GPU vertices from 80 to 56 bytes, and retains only
+level zero of copied source textures. The compute shader already samples that
+level explicitly; output textures keep the complete generated mip chain.
+Source copies are cached by both tile ID and full plan, retaining both endpoint
+variants when their collars differ. Alternating parent ownership has a dedicated
+GPU resource regression test. Uploaded endpoint pixels, linear-light blending,
+GPU/contact agreement and publication cancellation remain covered.
+
+Validation before the final captures:
+
+- `/tmp/LM-Arrival-Resources-Tests.xcresult`: 22 methods, 25 cases across
+  arrival, transitions, rendered contact and floating origins; no failures or
+  skips. The Simulator emitted a launch-service error, but the result bundle
+  confirms all cases completed successfully.
+- `/tmp/LM-Arrival-Final-Tests.xcresult`: all eight arrival methods pass after
+  the source-variant cache correction, including the new alternating-owner test.
+- Four `test_measure_radiance.py` checks pass. Python compilation, shell syntax
+  and `git diff --check` pass.
+- Xcode MCP built the diagnostics successfully but later test/edit calls timed
+  out. The Xcode skill's command-line fallback produced the result bundles and
+  Release builds. Device discovery also reports a locked physical device;
+  those messages do not establish physical-device test coverage.
+- `/tmp/LM-Arrival-Resources-Apollo-Assets.json`: all 11 original terrain assets
+  match `c950d46` byte for byte. Both user scheme files retain their original
+  hashes, and the separate AGC working tree is unchanged by this work.
+
+### Fresh paired mare allocation control
+
+The older five-second memory sample cannot bound a transient peak. A fresh
+original/optimized pair therefore uses the same Simulator, coordinates, source
+set, launch arguments and five-second diagnostic holds, consecutively without
+concurrent builds or tests. The original arrival implementation was rebuilt from
+the five implementation files at `dafe02b`; all current source files were then
+restored and verified byte for byte. Both app bundles remain available under
+`/tmp/LM-Arrival-Control-Build/`.
+
+| Metric | Original arrival | Compact arrival |
+|---|---:|---:|
+| Five-second sampled maximum | 716.8 MiB | 541.5 MiB |
+| Maximum observed across phase samples | 1,172.4 MiB | 903.5 MiB |
+| Reported frame misses | 25 | 20 |
+| Maximum window p95 | 18.49 ms | 16.67 ms |
+| Maximum window p99 | 84.75 ms | 85.08 ms |
+| Worst callback including startup | 146.20 ms | 236.72 ms |
+| CPU preparation total, three arrivals | 1,028.0 ms | 812.4 ms |
+| Main-thread blend update mean | 5.284 ms | 4.454 ms |
+| Main-thread blend update maximum | 64.889 ms | 59.845 ms |
+| Asynchronous realization total | 11,796.0 ms | 11,881.1 ms |
+
+The measured phase maximum falls 22.9%, and the five-second maximum falls 24.5%.
+The callback maximum worsens, and resource realization remains essentially
+unchanged. These are single matched runs, not a statistical performance budget
+pass. Their phase samples still do not bound every sub-phase allocation; the
+kernel lifetime peak is dominated by the separate approximately 1.6 GiB startup.
+Raw logs, binary hashes and matched comparison are retained in
+`/tmp/LM-Arrival-Fresh-Control-Mare/` and `/tmp/LM-Arrival-Final-Mare-Fast/`.
+
+The original binary is
+`477cacdaa6a0ce215cb8b3abab0ef44655fbb9c31e460471d5aaab43a48e8195`.
+The final compact binary, also used for the full captures, is
+`0f308cf3d1165ea0bf2786de1a3d1b27c91bbbc0ac43d99e77ee210a79925e3c`.
+
+### Full mare replay
+
+`/tmp/LM-Arrival-Final-Mare-Full/` uses the final binary and the original
+100-second holds. All three arrivals preserve continuity in the inspected
+frames; the settled before/after PNGs also match the accepted mare Surface PNG
+byte for byte. Adjacent-frame peaks are 0.0009751, 0.0014131 and 0.0025583, versus
+0.0009748, 0.0014516 and 0.0033586 in the preceding accepted arrival capture.
+These lossy video diagnostics do not replace the fixed-band radiance contract.
+
+All 109 windows have maximum p95 16.67 ms. The run reports 18 misses versus 22,
+maximum p99 101.34 ms versus 84.59 ms, and worst callback 300.36 ms versus
+261.64 ms. The five-second memory maximum is **947.2 MiB versus 508.3 MiB** in
+the older capture. This regression remains in the record; the fresh paired
+control above establishes a narrower memory improvement under current matched
+conditions. The five late windows have 16.67 ms p95/p99/maximum and zero misses,
+at 227.5 MiB versus 173.3 MiB previously. The memory and hitch gates remain open.
+
+### Final full highland replay
+
+`/tmp/LM-Arrival-Final-Highland-Full/` repeats the original 100-second holds with
+the final binary. Its 112 frame windows have maximum p95 16.67 ms, maximum p99
+99.56 ms versus 101.08 ms, worst callback 286.86 ms versus 154.91 ms, and 21
+misses versus 18. The five-second memory maximum is 493.9 MiB versus 713.8 MiB;
+phase samples reach 677.4 MiB. The five late windows are 16.67 ms p95/p99/maximum
+with zero misses at 234.0 MiB versus 174.7 MiB. Settled memory is therefore
+higher even though the sampled arrival maximum is lower.
+
+CPU preparation totals 767.1 ms versus 986.6 ms. The 131 main-thread blend
+updates total 570.7 ms with a 57.20 ms maximum; the preceding implementation
+had 92 updates totaling 495.1 ms with a 59.96 ms maximum. Average update work
+falls from 5.38 to 4.36 ms, with more intermediate displayed weights. Async
+resource realization remains about 11.9 seconds across all three arrivals.
+Generation completion is 22,111 / 43,286 / 33,522 / 26,240 ms, close to the
+preceding 20,726 / 44,357 / 33,710 / 26,457 ms. This does not close generation
+latency, worst-frame, settled-memory or physical-device acceptance.
+
+The final highland before/after PNGs match one another and the accepted Surface
+control byte for byte. Adjacent-frame peaks are 0.0008559 / 0.0008926 / 0.0023024,
+compared with 0.0008565 / 0.0009024 / 0.0023007 previously. The inspected peak
+frames show no new publication gap or flash. Blend durations are 1.251 / 1.276 /
+1.279 seconds. The original static endpoint images and existing fixed-band
+radiance acceptance therefore remain unchanged.
+
+### Final Apollo 11 and acceptance boundary
+
+`/tmp/LM-Arrival-Final-Apollo/` uses the same final binary and the item 0
+eleven-stop Release protocol with 20-second holds. All eleven PNGs are
+byte-identical to `/tmp/LM-Stage2-Release-Baseline-2026-09-04-v2/`. Every final
+window has 16.67 ms mean/p95/p99/maximum and zero missed callbacks. The sampled
+physical maximum is 369.9 MiB versus 406.5 MiB; the worst cold callback is
+513.50 ms versus 643.77 ms. The kernel lifetime maximum is 1,604.3 MiB, again
+exposing startup allocation that the older five-second baseline did not bound.
+Terminal tile completion is 296–317 ms versus 252–356 ms; Landing is
+1,386–1,532 ms versus 1,471–2,043 ms. Surface settles at 348.3 MiB versus
+368.6 MiB. `performance.tsv`, `metrics.json`, `baseline-comparison.json` and
+the binary hash are retained with the images.
+
+`/tmp/LM-Arrival-Capture-Hashes.json` records 25 primary PNG hashes across this
+work's motion controls and the final Apollo ladder. The standard Release build
+product is restored to the optimized source after building the isolated control
+app. Code is committed as `40d5f0a`; allocation diagnostics are `dafe02b`.
+
+This completes the focused allocation reduction and its Simulator validation.
+It does **not** close overall arrival performance: full-run frame misses are
+mixed, late global footprint is higher, asynchronous realization remains about
+12 seconds across three arrivals, and startup still reaches about 1.6 GiB.
+Distant joins, arbitrary-site globe handoff radiance and cockpit integration
+remain open under the controlling plan. Physical Vision Pro must still validate
+90 Hz pacing, actual GPU memory pressure, thermals, stereo continuity and comfort.

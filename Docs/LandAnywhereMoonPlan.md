@@ -410,6 +410,15 @@ anchor, floating tangent frame, whatever sources cover it."
    interpolation begins. The full mare repeat removes that gap and restores
    byte-identical settled pixels. This extends visual coverage without closing
    the performance gates above.
+
+   The allocation follow-up replaces duplicate full CPU endpoint meshes with
+   shared compact height/normal arrays and packs transient GPU attributes while
+   retaining Float32 precision. Copied source textures retain only the level
+   sampled by the blend; rendered output mip chains remain complete. Fresh
+   instrumented controls show that five-second samples can miss arrival peaks
+   above 1 GiB, so both phase samples and the original frame-window measurements
+   must accompany comparisons. Detailed runs and remaining performance gates
+   are recorded in `Stage2GlobalTerrainValidation.md`.
 5. **Contact everywhere, implementation validated; mission integration open:**
    `LMTerrainLandingSurface` retains the exact rendered resolver triangles.
    Global gear drops pass at mare and highland anchors. Inspection showed
@@ -582,6 +591,14 @@ to the Simulator process but did not finalize a usable RealityKit, game, or
 Time Profiler trace, so this baseline uses the launch-flagged `CADisplayLink`
 and Mach sampler. A physical Vision Pro Release run still has to measure true
 90 Hz frame pacing, memory pressure, thermals, and gesture comfort.
+
+**Measurement correction, 2026-09-05.** The table's physical footprint values and
+the reported 406.5 MiB maximum are five-second observations, not a kernel
+high-water bound. Arrival profiling now adds the kernel lifetime peak and
+phase-boundary samples. Global Explorer and Apollo captures expose a separate
+startup peak near 1.6 GiB. Retain the original sampling metric for
+comparison, but do not use it alone to claim a memory budget passes. Simulator
+Metal allocation counters return zero and cannot establish device GPU pressure.
 
 ## 8. Validation
 
