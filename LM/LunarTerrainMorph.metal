@@ -2,10 +2,10 @@
 using namespace metal;
 
 struct LunarMorphVertex {
-    float3 position;
-    float3 normal;
-    float3 tangent;
-    float3 bitangent;
+    packed_float3 position;
+    packed_float3 normal;
+    packed_float3 tangent;
+    packed_float3 bitangent;
     float2 uv;
 };
 
@@ -20,9 +20,9 @@ kernel void lunarMorphVertices(device const float4 *a [[buffer(0)]],
     LunarMorphVertex v = existing[i];
     v.position.y = weight <= 0 ? a[i].w : (weight >= 1 ? b[i].w : fma(weight, b[i].w - a[i].w, a[i].w));
     v.normal = weight <= 0 ? a[i].xyz : (weight >= 1 ? b[i].xyz : a[i].xyz + (b[i].xyz - a[i].xyz) * weight);
-    float3 n = normalize(v.normal), east = float3(0, 0, -1);
+    float3 n = normalize(float3(v.normal)), east = float3(0, 0, -1);
     v.tangent = normalize(east - n * dot(n, east));
-    v.bitangent = cross(n, v.tangent);
+    v.bitangent = cross(n, float3(v.tangent));
     out[i] = v;
 }
 

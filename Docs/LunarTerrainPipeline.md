@@ -613,13 +613,20 @@ close-range footprint cue must be removed before this phase is accepted.
 Global terrain arrival uses a common refinement of the previously displayed and
 incoming triangle meshes. It samples those meshes, never a new procedural
 realization. GPU vertices and CPU contact share exact endpoints and a bounded
-Float weight, including fused multiply-add rounding. Hidden parent samples
+Float weight, including fused multiply-add rounding. Arrival endpoints store
+only normal.xyz and elevation.w in a shared compact Float32 layout. The original
+immutable grid supplies X/Z and UVs; contact reads its displayed position and
+normal accessors. Transient GPU vertices use packed Float32 attributes, reducing
+their stride from 80 to 56 bytes without quantization. Hidden parent samples
 remain available, while only submitted vertices determine whether a render mesh
 needs updates. The source-post and residual-cap contracts remain unchanged.
 
 The transient surface stays opaque. Its appearance interpolates copies of the
 actual uploaded endpoint textures in linear light, writing the native sRGB
-format. Initialize each low-level appearance and its mipmaps before registering
+format. Copies are shared across endpoints when their deterministic tile plans
+match. The blend explicitly samples source mip level zero, so only that level
+is retained after copying through a compatible full-chain texture. Output
+mipmaps remain complete. Initialize each low-level appearance and its mipmaps before registering
 its TextureResource, so initial publication cannot expose an empty backing.
 Unchanged materials and geometry use the static path. GPU submissions
 remain bounded to one at a time and follow RealityKit scene updates; initial and

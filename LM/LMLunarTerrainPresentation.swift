@@ -134,7 +134,9 @@ final class LMLunarTerrainPresentation {
                     let morph = try await withTaskCancellationHandler(
                         operation: { try await preparation.value }, onCancel: { preparation.cancel() })
                     try Task.checkCancellation()
-                    LMLunarTerrainTiming.memory("morph-after-preparation")
+                    LMLunarTerrainTiming.memory("morph-after-preparation", resourceBytes: morph.tiles.reduce(0) {
+                        $0 + ($1.endpoints.start.count + $1.endpoints.end.count) * MemoryLayout<SIMD4<Float>>.stride
+                    })
                     let realization = LMLunarTerrainTiming.begin("morph-realization")
                     let renderer = try await LMLunarTerrainMorphRenderer(morph: morph,
                         from: self.cache.values.map { ($0.plan, $0.build) },

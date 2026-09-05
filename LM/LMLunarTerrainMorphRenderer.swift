@@ -8,12 +8,28 @@ import simd
 @MainActor
 final class LMLunarTerrainMorphRenderer {
     typealias Build = Apollo11TerrainResource.ProgressiveTileEntityBuild
+    /// Metal's packed_float3 preserves Float32 values without SIMD3 padding.
+    struct Packed3 {
+        var x: Float
+        var y: Float
+        var z: Float
+        init(_ value: SIMD3<Float>) { x = value.x; y = value.y; z = value.z }
+        var vector: SIMD3<Float> { SIMD3(x, y, z) }
+    }
     struct Vertex {
-        var position: SIMD3<Float>
-        var normal: SIMD3<Float>
-        var tangent: SIMD3<Float>
-        var bitangent: SIMD3<Float>
+        var position: Packed3
+        var normal: Packed3
+        var tangent: Packed3
+        var bitangent: Packed3
         var uv: SIMD2<Float>
+        init(position: SIMD3<Float>, normal: SIMD3<Float>, tangent: SIMD3<Float>,
+             bitangent: SIMD3<Float>, uv: SIMD2<Float>) {
+            self.position = Packed3(position)
+            self.normal = Packed3(normal)
+            self.tangent = Packed3(tangent)
+            self.bitangent = Packed3(bitangent)
+            self.uv = uv
+        }
     }
     struct Source {
         let color: any MTLTexture
@@ -65,7 +81,9 @@ final class LMLunarTerrainMorphRenderer {
               let af = library.makeFunction(name: "lunarMorphAppearance") else { throw GPUError.unavailable }
         vertices = try await device.makeComputePipelineState(function: vf)
         appearance = try await device.makeComputePipelineState(function: af)
-        var oldSources = [LMTerrainTileID: Source](), newSources = [LMTerrainTileID: Source]()
+        // A tile ID can have different collars in the two endpoints. Retain
+        // both variants so alternating child owners do not repeat their copies.
+        var sourceCache = [LMTerrainTileID: [Source]]()
         func owner(_ builds: [(LMTerrainTilePlan, Build)], for plan: LMTerrainTilePlan) throws -> (LMTerrainTilePlan, Build) {
             guard let value = builds.filter({
                 $0.0.sampleSpacingMeters >= plan.sampleSpacingMeters &&
@@ -74,22 +92,22 @@ final class LMLunarTerrainMorphRenderer {
             }).min(by: { $0.0.sampleSpacingMeters < $1.0.sampleSpacingMeters }) else { throw GPUError.missingAppearance }
             return value
         }
-        for tile in morph.tiles where !tile.end.indices.isEmpty {
+        for tile in morph.tiles where !tile.mesh.indices.isEmpty {
             try Task.checkCancellation()
             let oldOwner = try? owner(from, for: tile.plan), newOwner = try? owner(to, for: tile.plan)
             guard let a = oldOwner ?? newOwner, let b = newOwner ?? oldOwner else { throw GPUError.missingAppearance }
             guard let template = (to.first { $0.0.id == tile.plan.id } ?? from.first { $0.0.id == tile.plan.id })?.1 else {
                 throw GPUError.missingAppearance
             }
-            if !tile.changesGeometry && tile.end.indices == template.mesh.indices && a.0 == b.0 {
+            if !tile.changesGeometry && tile.mesh.indices == template.mesh.indices && a.0 == b.0 {
                 let entity = template.entity.clone(recursive: true)
                 root.addChild(entity)
                 entities.append((entity, tile.plan))
                 continue
             }
             func source(_ item: (LMTerrainTilePlan, Build),
-                        cache: inout [LMTerrainTileID: Source]) async throws -> Source {
-                if let cached = cache[item.0.id] { return cached }
+                        cache: inout [LMTerrainTileID: [Source]]) async throws -> Source {
+                if let cached = cache[item.0.id]?.first(where: { $0.plan == item.0 }) { return cached }
                 let material = item.1.entity.model?.materials.first as? PhysicallyBasedMaterial
                 func texture(_ resource: TextureResource?, fallback: [UInt8], color: Bool) async throws -> any MTLTexture {
                     let descriptor = MTLTextureDescriptor.texture2DDescriptor(
@@ -103,6 +121,23 @@ final class LMLunarTerrainMorphRenderer {
                         // Preserve the actual uploaded color conversion, normal
                         // encoding, orientation and mips used by the endpoint.
                         try await resource.copy(to: texture)
+                        if texture.mipmapLevelCount > 1 {
+                            // The blend samples level zero explicitly. Copy via
+                            // a compatible full chain, then retain only that level.
+                            // Output mipmaps are still regenerated after blending.
+                            descriptor.mipmapLevelCount = 1
+                            guard let base = device.makeTexture(descriptor: descriptor),
+                                  let command = queue.makeCommandBuffer(),
+                                  let blit = command.makeBlitCommandEncoder() else { throw GPUError.unavailable }
+                            blit.copy(from: texture, sourceSlice: 0, sourceLevel: 0,
+                                      sourceOrigin: .init(x: 0, y: 0, z: 0),
+                                      sourceSize: .init(width: texture.width, height: texture.height, depth: 1),
+                                      to: base, destinationSlice: 0, destinationLevel: 0,
+                                      destinationOrigin: .init(x: 0, y: 0, z: 0))
+                            blit.endEncoding()
+                            try await Self.commit(command).complete()
+                            return base
+                        }
                     } else {
                         fallback.withUnsafeBytes { raw in
                             texture.replace(region: MTLRegionMake2D(0, 0, 1, 1), mipmapLevel: 0,
@@ -115,15 +150,12 @@ final class LMLunarTerrainMorphRenderer {
                         fallback: [64, 64, 64, 255], color: true),
                     normal: try await texture(material?.normal.texture?.resource,
                         fallback: [128, 128, 255, 255], color: false), plan: item.0)
-                cache[item.0.id] = value
+                cache[item.0.id, default: []].append(value)
                 return value
             }
             let resource: MeshResource
             if tile.changesGeometry {
-                let first = Self.vertexData(tile.start)
-                func endpoint(_ mesh: LMProgressiveTerrainMeshData) -> [SIMD4<Float>] {
-                    mesh.positions.indices.map { SIMD4(mesh.normals[$0], mesh.positions[$0].y) }
-                }
+                let first = Self.vertexData(tile.displayed(weight: 0))
                 func buffer(_ data: [SIMD4<Float>]) throws -> any MTLBuffer {
                     guard let buffer = data.withUnsafeBytes({ device.makeBuffer(bytes: $0.baseAddress!,
                         length: $0.count, options: .storageModeShared) }) else { throw GPUError.unavailable }
@@ -131,7 +163,7 @@ final class LMLunarTerrainMorphRenderer {
                 }
                 var descriptor = LowLevelMesh.Descriptor()
                 descriptor.vertexCapacity = first.count
-                descriptor.indexCapacity = tile.end.indices.count
+                descriptor.indexCapacity = tile.mesh.indices.count
                 descriptor.indexType = .uint32
                 descriptor.vertexAttributes = [
                     .init(semantic: .position, format: .float3, offset: MemoryLayout<Vertex>.offset(of: \.position)!),
@@ -146,26 +178,31 @@ final class LMLunarTerrainMorphRenderer {
                     first.withUnsafeBytes { output.copyMemory(from: $0) }
                 }
                 mesh.withUnsafeMutableIndices { output in
-                    tile.end.indices.withUnsafeBytes { output.copyMemory(from: $0) }
+                    tile.mesh.indices.withUnsafeBytes { output.copyMemory(from: $0) }
                 }
                 var minimum = SIMD3<Float>(repeating: .infinity), maximum = SIMD3<Float>(repeating: -.infinity)
-                for point in tile.start.positions + tile.end.positions {
-                    minimum = simd_min(minimum, point)
-                    maximum = simd_max(maximum, point)
+                for weight: Float in [0, 1] {
+                    let displayed = tile.displayed(weight: weight)
+                    for i in tile.mesh.positions.indices {
+                        let point = displayed.position(at: i)
+                        minimum = simd_min(minimum, point)
+                        maximum = simd_max(maximum, point)
+                    }
                 }
-                mesh.parts.replaceAll([.init(indexCount: tile.end.indices.count, topology: .triangle,
+                mesh.parts.replaceAll([.init(indexCount: tile.mesh.indices.count, topology: .triangle,
                                              bounds: .init(min: minimum, max: maximum))])
-                entries.append(.init(mesh: mesh, first: try buffer(endpoint(tile.start)),
-                                     last: try buffer(endpoint(tile.end)), count: UInt32(first.count)))
+                entries.append(.init(mesh: mesh, first: try buffer(tile.endpoints.start),
+                                     last: try buffer(tile.endpoints.end), count: UInt32(first.count)))
                 resource = try await MeshResource(from: mesh)
             } else {
                 var descriptor = MeshDescriptor(name: "Static lunar arrival ownership")
-                descriptor.positions = .init(tile.start.positions)
-                descriptor.normals = .init(tile.start.normals)
-                descriptor.tangents = .init(tile.start.tangents)
-                descriptor.bitangents = .init(tile.start.bitangents)
-                descriptor.textureCoordinates = .init(tile.start.textureCoordinates)
-                descriptor.primitives = .triangles(tile.start.indices)
+                let first = Self.vertexData(tile.displayed(weight: 0))
+                descriptor.positions = .init(first.map(\.position.vector))
+                descriptor.normals = .init(first.map(\.normal.vector))
+                descriptor.tangents = .init(first.map(\.tangent.vector))
+                descriptor.bitangents = .init(first.map(\.bitangent.vector))
+                descriptor.textureCoordinates = .init(tile.mesh.textureCoordinates)
+                descriptor.primitives = .triangles(tile.mesh.indices)
                 resource = try MeshResource.generate(from: [descriptor])
             }
             let materials: [any Material]
@@ -175,8 +212,8 @@ final class LMLunarTerrainMorphRenderer {
                let original = template.entity.model?.materials {
                 materials = original
             } else {
-                let firstSource = try await source(a, cache: &oldSources)
-                let lastSource = try await source(b, cache: &newSources)
+                let firstSource = try await source(a, cache: &sourceCache)
+                let lastSource = try await source(b, cache: &sourceCache)
                 let resolution = max(firstSource.color.width, lastSource.color.width, firstSource.normal.width, lastSource.normal.width)
                 func outputTexture(_ format: MTLPixelFormat) throws -> LowLevelTexture {
                     var descriptor = LowLevelTexture.Descriptor()
@@ -226,6 +263,8 @@ final class LMLunarTerrainMorphRenderer {
         let outputBytes = appearances.reduce(0) { $0 + Self.texturePayloadBytes($1.color.read()) + Self.texturePayloadBytes($1.normal.read()) }
         LMLunarTerrainTiming.memory("morph-sources", metalBytes: device.currentAllocatedSize, resourceBytes: sourceBytes)
         LMLunarTerrainTiming.memory("morph-endpoints", metalBytes: device.currentAllocatedSize, resourceBytes: endpointBytes)
+        LMLunarTerrainTiming.memory("morph-vertices", metalBytes: device.currentAllocatedSize,
+                                   resourceBytes: entries.reduce(0) { $0 + Int($1.count) * MemoryLayout<Vertex>.stride })
         LMLunarTerrainTiming.memory("morph-outputs", metalBytes: device.currentAllocatedSize, resourceBytes: outputBytes)
         // Meshes were initialized through their CPU buffers; each appearance
         // was initialized before registration with RealityKit above.
@@ -239,11 +278,14 @@ final class LMLunarTerrainMorphRenderer {
         }
     }
 
-    static func vertexData(_ mesh: LMProgressiveTerrainMeshData) -> [Vertex] {
-        mesh.positions.indices.map { i in
-            Vertex(position: mesh.positions[i], normal: mesh.normals[i],
-                   tangent: mesh.tangents[i], bitangent: mesh.bitangents[i],
-                   uv: mesh.textureCoordinates.isEmpty ? .zero : mesh.textureCoordinates[i])
+    static func vertexData(_ tile: LMLunarTerrainMeshTile) -> [Vertex] {
+        tile.mesh.positions.indices.map { i in
+            let normal = tile.normal(at: i)
+            let n = simd_normalize(normal), east = SIMD3<Float>(0, 0, -1)
+            let tangent = simd_normalize(east - n * simd_dot(n, east))
+            return Vertex(position: tile.position(at: i), normal: normal,
+                          tangent: tangent, bitangent: simd_cross(n, tangent),
+                          uv: tile.mesh.textureCoordinates.isEmpty ? .zero : tile.mesh.textureCoordinates[i])
         }
     }
 
@@ -308,6 +350,10 @@ final class LMLunarTerrainMorphRenderer {
         guard let blit = command.makeBlitCommandEncoder() else { throw GPUError.unavailable }
         for texture in mipmaps { blit.generateMipmaps(for: texture) }
         blit.endEncoding()
+        return Self.commit(command)
+    }
+
+    private static func commit(_ command: any MTLCommandBuffer) -> Submission {
         let (completion, continuation) = AsyncStream<Bool>.makeStream(bufferingPolicy: .bufferingNewest(1))
         command.addCompletedHandler { buffer in
             continuation.yield(buffer.status == .completed)

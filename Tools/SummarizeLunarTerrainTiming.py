@@ -58,7 +58,9 @@ def summarize(path):
         if run["memory"]:
             result[pid]["memory"] = {
                 "lifetimePeakMiB": max(v["lifetimePeakMiB"] for v in run["memory"]),
-                "maxMetalAllocatedMiB": max(v["metalAllocatedMiB"] for v in run["memory"]),
+                "maxObservedPhysicalMiB": max(v["physicalMiB"] for v in run["memory"]),
+                # Simulator returns zero for this unsupported device counter.
+                "maxMetalAllocatedMiB": max(v["metalAllocatedMiB"] for v in run["memory"]) or None,
                 "samples": run["memory"],
             }
     return result

@@ -58,7 +58,7 @@ struct LMLunarTerrainArrivalTests {
                 }
             }
             // Fine ownership must remove every covered parent triangle.
-            #expect(morph.tiles.first { $0.plan.id.level == 0 }?.end.indices.isEmpty == true)
+            #expect(morph.tiles.first { $0.plan.id.level == 0 }?.mesh.indices.isEmpty == true)
         }
     }
 
@@ -96,8 +96,8 @@ struct LMLunarTerrainArrivalTests {
         let fine = LMLunarTerrainMeshTile(plan: originalFine.plan, mesh: fineMesh)
         let morph = try LMLunarTerrainMorph(from: .init(tiles: [coarse]), to: .init(tiles: [fine, coarse]))
         let parent = try #require(morph.tiles.first { $0.plan.id == coarse.plan.id })
-        #expect(!parent.end.indices.isEmpty)
-        #expect(parent.start.positions != parent.end.positions)
+        #expect(!parent.mesh.indices.isEmpty)
+        #expect(parent.endpoints.start != parent.endpoints.end)
         #expect(!parent.changesGeometry)
     }
 
@@ -124,6 +124,11 @@ struct LMLunarTerrainArrivalTests {
             from: [(a.plan, before)], to: [(b.plan, after)])
         let entry = try #require(renderer.entries.first)
         let appearance = try #require(renderer.appearances.first)
+        // Retaining only source level zero must preserve uploaded pixels; the
+        // existing checks below compare all weights and both north/south rows.
+        #expect(appearance.a.color.mipmapLevelCount == 1)
+        #expect(appearance.b.normal.mipmapLevelCount == 1)
+        #expect(appearance.color.read().mipmapLevelCount == 4)
         let fine = try #require(morph.tiles.first { $0.plan.id.level == 1 })
         // The first resource must already contain the displayed endpoint,
         // before any replacement command is submitted after registration.
@@ -136,8 +141,9 @@ struct LMLunarTerrainArrivalTests {
             let displayed = fine.displayed(weight: weight)
             entry.mesh.withUnsafeBytes(bufferIndex: 0) { raw in
                 let vertices = raw.bindMemory(to: LMLunarTerrainMorphRenderer.Vertex.self)
-                for index in fine.end.positions.indices {
-                    #expect(vertices[index].position == displayed.position(at: index))
+                for index in fine.mesh.positions.indices {
+                    #expect(vertices[index].position.vector == displayed.position(at: index))
+                    #expect(simd_length(vertices[index].normal.vector - displayed.normal(at: index)) < 0.000001)
                 }
             }
             let texture = appearance.color.read()
@@ -178,6 +184,56 @@ struct LMLunarTerrainArrivalTests {
             }
             #expect(abs(Float(values[0]) - encoded(expectedNorth)) <= 0.6)
             #expect(abs(Float(values[7 * 256]) - encoded(expectedSouth)) <= 0.6)
+        }
+    }
+
+    @Test @MainActor func alternatingOwnersRetainBothSourcePlanVariants() async throws {
+        let base = tile(level: 0, spacing: 1, fine: false)
+        func parent(fine: Bool) -> LMLunarTerrainMeshTile {
+            .init(plan: .init(id: base.plan.id, centerEastMeters: 4, centerNorthMeters: 4,
+                             sizeMeters: 8, sampleSpacingMeters: 2, containsProceduralSubresolution: fine),
+                  mesh: .init(positions: base.mesh.positions.map { SIMD3($0.x * 2, $0.y, $0.z * 2) },
+                              normals: base.mesh.normals, tangents: [], bitangents: [],
+                              addedReliefNormalDistribution: .flat, textureCoordinates: [], indices: base.mesh.indices))
+        }
+        func child(east: Int, north: Int) -> LMLunarTerrainMeshTile {
+            let value = tile(level: 1, spacing: 0.5, fine: true)
+            return .init(plan: .init(id: .init(level: 1, eastIndex: east, northIndex: north),
+                                    centerEastMeters: 2 + Double(east * 4), centerNorthMeters: 2 + Double(north * 4),
+                                    sizeMeters: 4, sampleSpacingMeters: 0.5, containsProceduralSubresolution: true),
+                         mesh: value.mesh)
+        }
+        let a = parent(fine: false), b = parent(fine: true)
+        let before = [child(east: 0, north: 0), child(east: 1, north: 1), a]
+        let after = [child(east: 1, north: 0), child(east: 0, north: 1), b]
+        func builds(_ tiles: [LMLunarTerrainMeshTile]) async throws -> [(LMTerrainTilePlan, Apollo11TerrainResource.ProgressiveTileEntityBuild)] {
+            var result = [(LMTerrainTilePlan, Apollo11TerrainResource.ProgressiveTileEntityBuild)]()
+            for tile in tiles {
+                let value: UInt8 = tile.plan.containsProceduralSubresolution ? 192 : 32
+                let detail = LMTerrainTileDetailTextures(resolution: 8,
+                    albedo: Array(repeating: [value, value, value, 255], count: 64).flatMap { $0 },
+                    normal: Array(repeating: [UInt8(128), 128, 255, 255], count: 64).flatMap { $0 })
+                let material = try await LMTerrainWorld.detailTerrainMaterial(detail, plan: tile.plan)
+                result.append((tile.plan, .init(entity: ModelEntity(mesh: .generatePlane(width: 1, depth: 1), materials: [material]),
+                    mesh: tile.mesh, metrics: .init(meshMilliseconds: 0, detailMilliseconds: 0, realizationMilliseconds: 0,
+                                                   detailModelID: "fixture", detailCacheHit: false))))
+            }
+            return result
+        }
+        let old = try await builds(before), new = try await builds(after)
+        let morph = try LMLunarTerrainMorph(from: .init(tiles: before), to: .init(tiles: after))
+        let renderer = try await LMLunarTerrainMorphRenderer(morph: morph, from: old, to: new)
+        #expect(renderer.appearances.count == 4)
+        let sources = renderer.appearances.flatMap { [$0.a, $0.b] }
+        // Four unique children and two variants of one parent ID. Each parent
+        // must remain distinct and each repeated owner must share its copy.
+        #expect(Set(sources.map { ObjectIdentifier($0.color) }).count == 6)
+        let parents = sources.filter { $0.plan.id == a.plan.id }
+        #expect(parents.count == 4)
+        for plan in [a.plan, b.plan] {
+            let copies = parents.filter { $0.plan == plan }
+            #expect(copies.count == 2)
+            #expect(Set(copies.map { ObjectIdentifier($0.color) }).count == 1)
         }
     }
 

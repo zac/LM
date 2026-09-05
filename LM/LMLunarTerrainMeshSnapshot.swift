@@ -1,29 +1,35 @@
 import simd
 
-/// CPU copy of the exact vertices submitted to RealityKit. Parent morphs and
-/// landing contact use the same NW/NE/SW, NE/SE/SW triangles as the renderer.
+/// Grid topology plus optional arrival endpoints. Use position(at:) and
+/// normal(at:) for displayed values; mesh retains the original immutable grid.
+/// Parent morphs and contact use the renderer's NW/NE/SW, NE/SE/SW triangles.
 struct LMLunarTerrainMeshTile: Sendable {
     let plan: LMTerrainTilePlan
     let mesh: LMProgressiveTerrainMeshData
     // During arrival, these are the same endpoints and weight consumed by the
     // render mesh. Contact evaluates only its three vertices, without copying
     // every resident mesh on each frame.
-    var startMesh: LMProgressiveTerrainMeshData? = nil
+    struct Arrival: Sendable {
+        // Exactly the GPU endpoint layout: normal.xyz and elevation.w.
+        let start: [SIMD4<Float>]
+        let end: [SIMD4<Float>]
+    }
+    var arrival: Arrival? = nil
     var morphWeight: Float = 1
 
     func position(at index: Int) -> SIMD3<Float> {
-        guard let startMesh, morphWeight < 1 else { return mesh.positions[index] }
-        if morphWeight <= 0 { return startMesh.positions[index] }
-        let a = startMesh.positions[index], b = mesh.positions[index]
-        return SIMD3(a.x.addingProduct(b.x - a.x, morphWeight),
-                     a.y.addingProduct(b.y - a.y, morphWeight),
-                     a.z.addingProduct(b.z - a.z, morphWeight))
+        var position = mesh.positions[index]
+        guard let arrival else { return position }
+        let a = arrival.start[index].w, b = arrival.end[index].w
+        position.y = morphWeight <= 0 ? a : (morphWeight >= 1 ? b : a.addingProduct(b - a, morphWeight))
+        return position
     }
 
     func normal(at index: Int) -> SIMD3<Float> {
-        guard let startMesh, morphWeight < 1 else { return mesh.normals[index] }
-        if morphWeight <= 0 { return startMesh.normals[index] }
-        return startMesh.normals[index] + (mesh.normals[index] - startMesh.normals[index]) * morphWeight
+        guard let arrival else { return mesh.normals[index] }
+        let a = SIMD3(arrival.start[index].x, arrival.start[index].y, arrival.start[index].z)
+        let b = SIMD3(arrival.end[index].x, arrival.end[index].y, arrival.end[index].z)
+        return morphWeight <= 0 ? a : (morphWeight >= 1 ? b : a + (b - a) * morphWeight)
     }
 
     struct Sample: Sendable {
