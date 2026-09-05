@@ -305,3 +305,12 @@ not evidence that startup hitches are solved. Both late settled windows retain
 16.67 ms p95/p99/max with zero missed callbacks. Settled footprints changed
 from 137.6/157.6 MiB to 142.5/158.4 MiB. The async atlas upload and resource
 arrival still need attribution; background execution alone is insufficient.
+
+The expanded shared-terrain run found an existing coarse-bake statistics
+regression in `/tmp/LM-Stage2-Stability-Shared-Terrain.xcresult`: the flat-normal
+shortcut reported one sample for a 64×64 texture. Two assertions in
+`bakedNormalDistributionCanBeReusedForAnySunDirection` failed; 63 other tests
+passed. The shortcut now reports all texels in the flat histogram without
+changing texture bytes. This preserves correct weighting in ensemble checks.
+The final `/tmp/LM-Stage2-Stability-Final.xcresult` passes 155 tests across 16
+suites in 177.999 seconds, including the previously failing assertions.

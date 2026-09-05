@@ -774,10 +774,15 @@ enum LMTerrainTileDetailBaker {
                     normal[offset] = 128; normal[offset + 1] = 128
                 }
             }
-            var distribution = LMTerrainNormalDistribution.Accumulator()
-            distribution.add(SIMD3(0, 0, 1))
+            // The constant-normal shortcut still represents every texel.
+            // A one-sample histogram underweights this tile in ensemble checks.
+            let flat = LMTerrainNormalDistribution.flat
+            let count = resolution * resolution
+            let distribution = LMTerrainNormalDistribution(
+                sampleCount: count, counts: flat.counts.map { $0 * UInt32(count) },
+                normalSums: flat.normalSums.map { $0 * Float(count) })
             return LMTerrainTileDetailTextures(resolution: resolution, albedo: albedo, normal: normal,
-                                              normalDistribution: distribution.finalized())
+                                              normalDistribution: distribution)
         }
         let craterlets = craterletField(
             plan: plan,
