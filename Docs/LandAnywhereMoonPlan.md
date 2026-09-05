@@ -382,13 +382,15 @@ anchor, floating tangent frame, whatever sources cover it."
    constant reflectance with no residual or contact claim. The raw base plus
    provenance label is 31.645509 MiB, within the approved 32 MiB. Production
    band selection, morphing, and contact remain items 4 and 5.
-4. **Source resolver and amplification:** given an anchor, assemble the band
+4. **Source resolver and amplification, implemented with visual gates open:** given an anchor, assemble the band
    stack from available pinned sources: streamed SLDEM/LOLA for geometry,
    normalized WAC where available for reflectance, and NAC site packs where
    present. Extend today's 0.5 m/0.125 m progressive levels upward, such as
    128/32/8/2 m, so each adds its octave below the local measured floor and
    stays anchored at that source's posts under the §1 cap. Extend the geology
-   model's crater diameter range to match.
+   model's crater diameter range to match. Implementation and numerical evidence
+   are in `Stage2GlobalTerrainValidation.md`. Coarse near-field intrusion,
+   temporal arrival and arbitrary-site handoff radiance remain acceptance gates.
 5. **Contact everywhere:** `LMTerrainLandingSurface` builds from the same
    resolver, so descent works at any anchor. The AGC/LR side already treats
    altitude spherically (see project memory).

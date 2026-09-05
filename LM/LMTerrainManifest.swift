@@ -5,6 +5,12 @@ import LMCore
 /// Every field traces to a pinned LROC NAC or LOLA/SELENE source recorded in
 /// the manifest itself.
 struct LMTerrainManifest: Equatable, Decodable {
+    struct PinnedResource: Equatable, Decodable {
+        let file: String
+        let sha256: String
+    }
+    let remoteElevationCatalog: PinnedResource?
+
     struct LandingOrigin: Equatable, Decodable {
         let latitudeDegrees: Double
         let longitudeDegrees: Double

@@ -472,6 +472,7 @@ struct LMMeasuredAlbedoField: Sendable {
     /// Half-extent of the covered square, meters from the terrain origin.
     let halfExtentMeters: Double
     let luminance: [UInt8]
+    var lunarField: LMLunarReflectanceField? = nil
 
     enum FieldError: Error, Equatable {
         case unsupportedFormat
@@ -480,6 +481,7 @@ struct LMMeasuredAlbedoField: Sendable {
 
     /// Bilinear reflectance in 0...1, or nil outside the measured tile.
     func reflectance(eastMeters: Double, northMeters: Double) -> Float? {
+        if let lunarField { return lunarField.reflectance(east: eastMeters, north: northMeters) }
         let column = (eastMeters + halfExtentMeters) / (2 * halfExtentMeters)
             * Double(width - 1)
         let row = (halfExtentMeters - northMeters) / (2 * halfExtentMeters)
@@ -752,6 +754,31 @@ enum LMTerrainTileDetailBaker {
         microtexture: LMRegolithMicrotextureModel = LMRegolithMicrotextureModel(),
         resolution: Int = resolution
     ) throws -> LMTerrainTileDetailTextures {
+        // At this footprint every microtexture feature has exactly zero
+        // sampling weight. Avoid allocating a sub-meter crater cache over a
+        // regional tile that may span tens of kilometers.
+        if plan.sizeMeters / Double(max(1, resolution - 1))
+            >= LMRegolithMicrotextureModel.maximumCraterDiameterMeters / 1.5 {
+            var albedo = [UInt8](repeating: 255, count: resolution * resolution * 4)
+            var normal = albedo
+            let half = plan.sizeMeters / 2
+            let step = plan.sizeMeters / Double(max(1, resolution - 1))
+            for row in 0..<resolution {
+                try Task.checkCancellation()
+                for column in 0..<resolution {
+                    let value = albedoField?.reflectance(eastMeters: plan.centerEastMeters - half + Double(column) * step,
+                                                        northMeters: plan.centerNorthMeters + half - Double(row) * step) ?? 0.25
+                    let offset = (row * resolution + column) * 4
+                    let byte = UInt8(min(1, max(0, value)) * 255)
+                    albedo[offset] = byte; albedo[offset + 1] = byte; albedo[offset + 2] = byte
+                    normal[offset] = 128; normal[offset + 1] = 128
+                }
+            }
+            var distribution = LMTerrainNormalDistribution.Accumulator()
+            distribution.add(SIMD3(0, 0, 1))
+            return LMTerrainTileDetailTextures(resolution: resolution, albedo: albedo, normal: normal,
+                                              normalDistribution: distribution.finalized())
+        }
         let craterlets = craterletField(
             plan: plan,
             microtexture: microtexture,

@@ -213,6 +213,9 @@ final class LunarExplorerSession {
     var presentationGrade: LMTerrainPresentationGrade = .calibrated
     var diagnosticsVisible = true
     var diagnostics = Diagnostics()
+    var destinationCoordinate: LMSelenographicCoordinate?
+    var usesBundledSite = true
+    var regionOffline = false
     /// Capture-only layer isolation for measuring the globe/site handoff at
     /// identical camera scale. Normal launches always leave this nil.
     private(set) var capturePresentation: CapturePresentation?
@@ -408,6 +411,14 @@ final class LunarExplorerSession {
         var headingOverride: Double?
         var tiltOverride: Double?
         for argument in arguments {
+            if argument.hasPrefix("--lunar-explorer-coordinate=") {
+                let values = argument.dropFirst("--lunar-explorer-coordinate=".count).split(separator: ",")
+                if values.count == 2, let latitude = Double(values[0]), let longitude = Double(values[1]),
+                   latitude.isFinite, longitude.isFinite, abs(latitude) <= 90 {
+                    destinationCoordinate = .init(latitudeDegrees: latitude, longitudeDegrees: longitude)
+                }
+            }
+            if argument == "--lunar-explorer-offline" { regionOffline = true }
             if let value = value(after: "--lunar-explorer-preset=", in: argument),
                let preset = Preset(rawValue: value) {
                 select(preset)

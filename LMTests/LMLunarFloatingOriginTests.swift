@@ -7,6 +7,58 @@ import simd
 struct LMLunarFloatingOriginTests {
     private let system = LMSelenographicCoordinateSystem()
 
+    @Test @MainActor func distantChunksRetainMillimeterPrecisionAcrossReanchoring() {
+        let source = system.localFrame(at: .init(latitudeDegrees: -42, longitudeDegrees: 179.99, heightMeters: 6_000))
+        var worst = 0.0
+        for index in 0..<100 {
+            let focus = LMSiteENUPosition(northMeters: 50_000 + Double(index) * 137.127,
+                                         eastMeters: 42_000 - Double(index) * 117.43, upMeters: -850.123)
+            let chunk = LMSiteENUPosition(northMeters: (floor(focus.northMeters / 16) + 0.5) * 16,
+                                         eastMeters: (floor(focus.eastMeters / 16) + 0.5) * 16, upMeters: 0)
+            let vertex = SIMD3<Float>(0.3125, Float(focus.upMeters + 0.1875), -0.625)
+            let canonical = chunk.vector + SIMD3(Double(vertex.x), Double(-vertex.z), Double(vertex.y))
+            let expected = LMLunarFrameTransform.renderVector(canonical - focus.vector)
+            for drift in [0.0, 4_200] {
+                let anchor = system.localFrame(at: source.coordinate(for: .init(northMeters: focus.northMeters + drift,
+                                                                                eastMeters: focus.eastMeters, upMeters: focus.upMeters)))
+                let placement = LMLunarAnchoredPlacement(source: source, anchor: anchor, focus: focus)
+                let transform = LMLunarAnchoredPlacement.chunkTransform(origin: chunk, source: source, anchor: anchor)
+                let actual = placement.viewTransform.matrix * transform.matrix * SIMD4(vertex, 1)
+                worst = max(worst, simd_length(SIMD3(Double(actual.x), Double(actual.y), Double(actual.z)) - expected))
+            }
+        }
+        print("Global distant-chunk maximum presentation error=\(worst)m")
+        #expect(worst < 0.001)
+    }
+
+    @Test @MainActor func foregroundBoundPreservesEveryProjectedCorner() {
+        let eye = SIMD3<Float>(0, 1.45, 0)
+        let position = SIMD3<Float>(0.2, 1.3, -2.16)
+        let scale: Float = 3 / 210_000 * 1.4
+        for tilt in [0.0, 38, 72] {
+            let orientation = simd_quatf(angle: Float(tilt * .pi / 180), axis: SIMD3(1, 0, 0))
+            let minimum = SIMD3<Float>(-150_000, -12_000, -150_000)
+            let maximum = -minimum
+            let result = LunarExplorerScene.foregroundProjection(position: position, orientation: orientation,
+                                                                 scale: scale, minimum: minimum, maximum: maximum,
+                                                                 eye: eye, maximumDepth: 2.16)
+            for x in [minimum.x, maximum.x] {
+                for y in [minimum.y, maximum.y] {
+                    for z in [minimum.z, maximum.z] {
+                        let point = SIMD3(x, y, z)
+                        let before = position + orientation.act(point * scale) - eye
+                        let after = result.position + orientation.act(point * result.scale) - eye
+                        #expect(-after.z <= 2.160001)
+                        if abs(before.z) > 0.1 {
+                            #expect(simd_length(SIMD2(before.x, before.y) / before.z
+                                                - SIMD2(after.x, after.y) / after.z) < 1e-5)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @Test func thresholdComesFromFloatPrecisionRatherThanPlanarCurvature() {
         #expect(Float(4_096).ulp == 0.00048828125)
         #expect(Float(25_000).ulp == 0.001953125)

@@ -208,12 +208,13 @@ enum Apollo11TerrainResource {
 
     struct ProgressiveTileEntityBuild {
         let entity: ModelEntity
+        let mesh: LMProgressiveTerrainMeshData
         let metrics: ProgressiveTileGenerationMetrics
     }
 
     @MainActor
     static func makeProgressiveTileEntity(
-        heightField: Apollo11TerrainHeightField,
+        heightField: any LMTerrainHeightField,
         plan: LMTerrainTilePlan,
         activePlans: [LMTerrainTilePlan]? = nil,
         geometryReplacementPlans: [LMTerrainTilePlan]? = nil,
@@ -233,7 +234,7 @@ enum Apollo11TerrainResource {
 
     @MainActor
     static func makeProgressiveTileEntityBuild(
-        heightField: Apollo11TerrainHeightField,
+        heightField: any LMTerrainHeightField,
         plan: LMTerrainTilePlan,
         activePlans: [LMTerrainTilePlan]? = nil,
         geometryReplacementPlans: [LMTerrainTilePlan]? = nil,
@@ -293,12 +294,16 @@ enum Apollo11TerrainResource {
             plan: plan
         )
         let entity = ModelEntity(mesh: mesh, materials: [material])
+        if heightField.resolvesProceduralSamples {
+            entity.position = SIMD3(Float(plan.centerNorthMeters), 0, Float(-plan.centerEastMeters))
+        }
         let geologyID = LMProgressiveTerrainSampler(
             heightField: heightField
         ).geology.versionedModelID
         entity.name = "LROC progressive \(geologyID) + \(build.detailModelID) L\(plan.id.level) E\(plan.id.eastIndex) N\(plan.id.northIndex) \(plan.sampleSpacingMeters)m"
         return ProgressiveTileEntityBuild(
             entity: entity,
+            mesh: data,
             metrics: ProgressiveTileGenerationMetrics(
                 meshMilliseconds: build.meshMilliseconds,
                 detailMilliseconds: build.detailMilliseconds,
@@ -321,7 +326,7 @@ enum Apollo11TerrainResource {
     }
 
     nonisolated private static func timedProgressiveTileMesh(
-        heightField: Apollo11TerrainHeightField,
+        heightField: any LMTerrainHeightField,
         plan: LMTerrainTilePlan,
         activePlans: [LMTerrainTilePlan]?,
         geometryReplacementPlans: [LMTerrainTilePlan]?
@@ -349,7 +354,7 @@ enum Apollo11TerrainResource {
     }
 
     nonisolated static func makeProgressiveTileMeshData(
-        heightField: Apollo11TerrainHeightField,
+        heightField: any LMTerrainHeightField,
         plan: LMTerrainTilePlan,
         activePlans: [LMTerrainTilePlan]? = nil,
         geometryReplacementPlans: [LMTerrainTilePlan]? = nil
@@ -398,9 +403,9 @@ enum Apollo11TerrainResource {
                     return nil
                 }
                 positions.append(SIMD3(
-                    Float(north),
+                    Float(north - (heightField.resolvesProceduralSamples ? plan.centerNorthMeters : 0)),
                     sample.elevationMeters,
-                    Float(-east)
+                    Float(-east + (heightField.resolvesProceduralSamples ? plan.centerEastMeters : 0))
                 ))
                 levelContributions.append(sample.levelContributionMeters)
                 textureCoordinates.append(SIMD2(
@@ -489,6 +494,7 @@ enum Apollo11TerrainResource {
                     )
                 }
                 let index = row * sampleCount + column
+                var normal = SIMD3<Float>(0, 1, 0)
                 let measuredNormal = heightField.interpolatedSurfaceNormal(
                     eastMeters: eastMeters,
                     northMeters: northMeters
@@ -531,11 +537,23 @@ enum Apollo11TerrainResource {
                         north: southCoordinate
                     )
                 ) / Float(2 * sampleSpacing)
-                let normal = simd_normalize(SIMD3<Float>(
+                normal = simd_normalize(SIMD3<Float>(
                     -(measuredNorthSlope + residualNorthSlope),
                     1,
                     measuredEastSlope + residualEastSlope
                 ))
+                if heightField.resolvesProceduralSamples {
+                    if let parent = heightField.renderedParent(eastMeters: eastMeters, northMeters: northMeters,
+                                                               spacingMeters: sampleSpacing) {
+                        var distance = Double.infinity
+                        if meshPlan.transitionEdges.contains(.west) { distance = min(distance, eastMeters - plan.centerEastMeters + halfSize) }
+                        if meshPlan.transitionEdges.contains(.east) { distance = min(distance, plan.centerEastMeters + halfSize - eastMeters) }
+                        if meshPlan.transitionEdges.contains(.north) { distance = min(distance, plan.centerNorthMeters + halfSize - northMeters) }
+                        if meshPlan.transitionEdges.contains(.south) { distance = min(distance, northMeters - plan.centerNorthMeters + halfSize) }
+                        let t = Float(min(1, max(0, distance / min(tileSize / 4, parent.spacing * 8))))
+                        normal = simd_normalize(simd_mix(parent.normal, normal, SIMD3(repeating: t * t * (3 - 2 * t))))
+                    }
+                }
                 normals[index] = normal
                 // u runs east (RealityKit -Z) and v runs south (-X). Orthogonalize
                 // the tangent against the vertex normal so the baked tangent-space

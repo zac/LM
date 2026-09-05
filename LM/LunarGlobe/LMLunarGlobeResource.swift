@@ -57,6 +57,7 @@ enum LMLunarGlobeResource {
     @MainActor
     static func makeEntity(
         manifest: LMTerrainManifest,
+        frontCoordinate: LMSelenographicCoordinate? = nil,
         bundle: Bundle = .main
     ) async throws -> GlobeResource {
         guard abs(manifest.globe.radiusMeters - manifest.projection.sphereRadiusMeters) < 0.001
@@ -73,7 +74,7 @@ enum LMLunarGlobeResource {
         }
         let mesh = try globeMesh(
             radiusMeters: manifest.globe.radiusMeters,
-            frontCoordinate: manifest.landingOriginCoordinate
+            frontCoordinate: frontCoordinate ?? manifest.landingOriginCoordinate
         )
         var lastTextureError: Error?
         for tier in tiers {
@@ -180,6 +181,7 @@ enum LMLunarGlobeResource {
     static func makeTerminator(
         manifest: LMTerrainManifest,
         date: Date,
+        frontCoordinate: LMSelenographicCoordinate? = nil,
         bundle: Bundle = .main
     ) throws -> TerminatorResource {
         let normalMap = manifest.globe.normalMap
@@ -209,7 +211,7 @@ enum LMLunarGlobeResource {
             // Keep the transparent shell far enough above the color sphere to
             // avoid depth fighting after the Moon is scaled to tabletop size.
             radiusMeters: manifest.globe.radiusMeters * 1.0005,
-            frontCoordinate: manifest.landingOriginCoordinate
+            frontCoordinate: frontCoordinate ?? manifest.landingOriginCoordinate
         )
         var material = UnlitMaterial(applyPostProcessToneMap: false)
         material.color = .init(tint: .black)

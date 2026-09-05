@@ -606,3 +606,19 @@ cache invalidation, fallback, neural edge restoration, and presentation/contact
 alignment. A moving Vision Pro Release descent still has to establish frame-time,
 generation latency, memory, thermal, and comfort budgets, and the remaining
 close-range footprint cue must be removed before this phase is accepted.
+
+
+## Global source resolver (Stage 2)
+
+`LMLunarTerrainRegion` freezes its verified source set before geometry generation.
+`LMLunarResolvedTerrain` owns the native-post residual and cap contracts;
+`LMLunarTerrainMeshSnapshot` retains the actual submitted triangles for parent
+morphing and contact. Re-anchoring changes chunk transforms only. The Apollo
+site keeps its original source bytes, geometry and appearance path.
+
+The added LDEM_128 source is pinned through `LunarElevationStrips.json`, generated
+by `Tools/TerrainGenerator/pin_lola_strips.py` from the fully verified source.
+Its V3.0 label documents 45-degree latitude-band artifacts and interpolated gaps.
+The 2.1 GB source remains in the ignored tool cache; only its 5,133-byte label and
+49,080-byte strip catalog are added to the bundle. See
+`Stage2GlobalTerrainValidation.md` for exact hashes, measurements and open gates.

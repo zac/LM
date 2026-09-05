@@ -8,6 +8,14 @@ struct LMLunarAnchoredPlacement {
     let sourceTransform: Transform
     let viewTransform: Transform
 
+    static func chunkTransform(origin: LMSiteENUPosition, source: LMSelenographicLocalFrame,
+                               anchor: LMSelenographicLocalFrame) -> Transform {
+        let local = LMLunarFrameTransform(from: source, to: anchor)
+        return Transform(scale: .one,
+                         rotation: simd_quatf(vector: SIMD4<Float>(simd_quatd(local.renderRotation).vector)),
+                         translation: SIMD3<Float>(LMLunarFrameTransform.renderVector(local.position(origin.vector))))
+    }
+
     init(source: LMSelenographicLocalFrame, anchor: LMSelenographicLocalFrame,
          focus: LMSiteENUPosition) {
         let local = LMLunarFrameTransform(from: source, to: anchor)

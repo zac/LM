@@ -270,6 +270,10 @@ let globalLunarMosaicGeneratorSHA256 =
 func manifestJSON() -> [String: Any] {
     [
         "schemaVersion": 6,
+        "remoteElevationCatalog": [
+            "file": "LunarElevationStrips.json",
+            "sha256": "3cb3fa9507cfe174ae0c0698a684f4c3704b507b6213b0d78a2c6ac6ab303181",
+        ],
         "scenarioID": "apollo11-progressive-real-data-terrain",
         "globe": [
             "coordinateSystemName": "IAU_ME",
