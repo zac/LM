@@ -52,12 +52,16 @@ final class LMCommanderStationScene {
     }
 
     func loadGlobalTerrain(at coordinate: LMSelenographicCoordinate, session: PoweredDescentSession, date: Date) async throws {
+        try Task.checkCancellation()
         let directory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("LunarElevation-v1", isDirectory: true)
         let store = try LMLunarElevationStore(directory: directory)
         let region = try await Task.detached(priority: .userInitiated) {
             try await LMLunarTerrainRegion.load(at: coordinate, store: store)
         }.value
+        // A dismissed cockpit must not retarget a newer mission when its
+        // detached source load eventually completes.
+        try Task.checkCancellation()
         let terrain = try LMLunarCockpitTerrain(region: region, gate: session.terrainSimulationGate, date: date)
         session.selectLandingSite(terrain.site)
         let publishContact = session.contactPublisher()

@@ -120,6 +120,26 @@ Evidence: `/tmp/LM-Cockpit-Integration/replay-check.log` and the standalone
 `ReplayCheck` package beside it. This checks replay data; it does not claim
 interactive coverage of every Explorer-to-cockpit or replay control.
 
+## Lifecycle follow-up
+
+The custom P63 restart reused an advanced runtime and skipped the fresh boot.
+`/tmp/LM-Cockpit-Restart-Before-v2.xcresult` reproduces that failure. Ignition
+now resets and boots inside the terrain simulation gate, so it cannot race a
+cancelled run's outstanding physics step. The regression advances a custom
+mission, restarts it, and requires exactly the original prepared P63 vehicle
+state and AGC cycle at the same site. Pending snapshot refreshes are cancelled.
+
+Cancelled terrain loads are checked before loading and after the detached
+source request, before they can select a site in the shared session. Terrain
+logs now describe the actual selected site instead of always naming Apollo.
+
+`/tmp/LM-Cockpit-Final-Tests.xcresult` passes all 15 tests in four suites in
+Release with `ENABLE_TESTABILITY=YES`: mission context, restart/cancellation,
+publication ordering, and CPU/GPU arrival agreement. These lifecycle-only
+changes follow the v2 mission captures; those captures are not represented as
+having used the later binary. No geometry, residual, contact, radar or landing
+classification rules changed in this follow-up.
+
 ## Capture protocol
 
 `Tools/CaptureLunarCockpitMission.sh` launches the actual cockpit with a

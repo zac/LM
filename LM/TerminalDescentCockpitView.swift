@@ -269,10 +269,10 @@ struct TerminalDescentCockpitView: View {
                     terrainStatus = "LROC/SLDEM terrain · 0.5 m NAC + normalized WAC reflectance"
                 }
                 recordValidation { $0.observeTerrainLoaded() }
-                logger.info("Apollo 11 LROC/SLDEM terrain loaded; artist cabin: \(artistCabinLoaded)")
+                logger.info("Cockpit terrain loaded: \(terrainStatus, privacy: .public); artist cabin: \(artistCabinLoaded)")
             } catch {
                 terrainStatus = "Terrain unavailable · \(error.localizedDescription)"
-                logger.error("Apollo 11 terrain failed: \(error.localizedDescription, privacy: .public)")
+                logger.error("Cockpit terrain failed: \(error.localizedDescription, privacy: .public)")
             }
         }
         .onChange(of: appModel.session.snapshot?.agc.cycle) { _, _ in

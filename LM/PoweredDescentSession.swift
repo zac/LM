@@ -288,6 +288,9 @@ final class PoweredDescentSession {
             return
         }
         loopTask?.cancel()
+        snapshotTask?.cancel()
+        snapshotTask = nil
+        lastCaptureSecond = -1
         let runID = UUID()
         self.runID = runID
         lastStartPoint = startPoint
@@ -318,13 +321,29 @@ final class PoweredDescentSession {
                     self.status = .error(error.localizedDescription)
                     return
                 }
-            } else if (self.snapshot?.agc.cycle ?? 0) < 1_000_000 {
+            } else {
                 self.loadMessage = "Auto-land · booting Luminary 099…"
-                let prepared = await runtime.bootAndEnterP63()
-                guard self.runID == runID else { return }
-                self.snapshot = prepared
-                self.record(prepared)
-                self.loadMessage = self.autoLandMessage(program: prepared.agc.dsky.programNumber, accelerated: true)
+                do {
+                    // Ignition always starts a fresh flight. Serialize reset
+                    // and boot with any cancelled run's outstanding step.
+                    let prepared = try await self.terrainSimulationGate.withAccess {
+                        try Task.checkCancellation()
+                        _ = try await runtime.reset()
+                        try Task.checkCancellation()
+                        await runtime.setLandingSurface(self.landingSurface)
+                        return await runtime.bootAndEnterP63()
+                    }
+                    guard !Task.isCancelled, self.runID == runID else { return }
+                    self.snapshot = prepared
+                    self.record(prepared)
+                    self.loadMessage = self.autoLandMessage(program: prepared.agc.dsky.programNumber, accelerated: true)
+                } catch {
+                    guard self.runID == runID else { return }
+                    self.isRunning = false
+                    self.loopTask = nil
+                    self.status = .error(error.localizedDescription)
+                    return
+                }
             }
             var last = CACurrentMediaTime()
             while !Task.isCancelled, self.runID == runID {
