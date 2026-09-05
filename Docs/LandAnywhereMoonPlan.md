@@ -432,6 +432,11 @@ anchor, floating tangent frame, whatever sources cover it."
    the published mesh, and both recordings pass decoding and replay checks.
    Near-ground terrain waits, distant coverage/faceting, and an intact
    highland landing remain open; see `Stage2CockpitIntegration.md`.
+   The lifecycle follow-up passes 15 Release Simulator tests, including exact
+   P63 restart state, cancelled loads, and GPU/contact publication. The final
+   eleven-stop Apollo capture is byte-identical to item 0. Settled pacing is
+   unchanged, while cold-frame/memory improvements coexist with slower fine
+   generation ranges; the detailed report retains those regressions.
    See `Stage2GlobalTerrainValidation.md`; local drops and retargeted sphere
    descents do not substitute for that acceptance.
 

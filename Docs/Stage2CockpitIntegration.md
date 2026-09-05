@@ -73,8 +73,10 @@ The first-contact speeds are 0.900104 m/s vertical and 0.244749 m/s horizontal;
 forward strut strokes 48.5 mm. The classification thresholds are unchanged.
 
 The 13,463-frame recording retains the selected site in every frame. All
-51,300 sampled footpad heights agree exactly with the published mesh snapshot,
-across 152 floating-origin changes. The source spacing is 236.901175 m.
+51,300 sampled footpad heights below 250 m agree exactly with the published
+mesh snapshot. The mission makes 152 floating-origin changes during approach;
+the footpad audit does not itself span those earlier changes. The source
+spacing is 236.901175 m.
 Screenshots show the surface through the commander window below 250 m and
 through touchdown. These discrete images do not establish continuous stereo
 or headset acceptance. The high approach lacks a distant global surface.
@@ -114,6 +116,12 @@ The landing radar uses the selected site's spherical geometry and basis. This
 work does not implement radar ray intersections with procedural relief or
 automatic hazard avoidance. An intact highland landing remains unproven.
 
+Inspection also found an existing post-contact sensor discrepancy in AGC:
+`specificForceBody` still derives DPS thrust from the commanded engine state
+after the dynamics have cut thrust at contact. Reconciling that feedback and
+contact reaction forces remains a separate AGC follow-up. These captures do
+not validate post-contact IMU fidelity.
+
 Both recordings pass the actual LMCore Codable round trip and 1,001 replay
 interpolation samples each, including exact terminal-state preservation.
 Evidence: `/tmp/LM-Cockpit-Integration/replay-check.log` and the standalone
@@ -139,6 +147,27 @@ publication ordering, and CPU/GPU arrival agreement. These lifecycle-only
 changes follow the v2 mission captures; those captures are not represented as
 having used the later binary. No geometry, residual, contact, radar or landing
 classification rules changed in this follow-up.
+
+## Final Apollo comparison
+
+After the lifecycle fix, a normal Release build passes in
+`/tmp/LM-Cockpit-Integration/release-v3-build.log`. Binary SHA-256:
+`3d56c3a36ff5ea380c7d0c9e5caeafe5e7f5f8df57cff9a864a76e2dc1844a16`.
+`/tmp/LM-Cockpit-Final-Apollo` repeats item 0's eleven stops, 20-second settle,
+procedural detail and 64 ppd globe tier. All 11 PNG files are byte-identical
+to `/tmp/LM-Stage2-Release-Baseline-2026-09-04-v2`.
+
+Every final five-second window reports 16.67 ms mean/p95/p99/max with zero
+missed intervals. Whole-run frame-window memory peaks at 370.1 MiB versus
+406.5 MiB in item 0; the worst frame is 438.65 ms versus 643.77 ms. The current
+process peak counter reaches 1,605.21 MiB at startup; item 0 did not collect
+that counter. These results preserve Apollo's settled output, but do not
+establish a general speedup: generation timings remain variable and the new
+cockpit mission still waits for terrain. `baseline-comparison.json`,
+`performance.tsv` and `metrics.json` retain the per-stop results.
+In particular, stop 08 generates in 1,893–2,235 ms versus 1,471–2,043 ms, and
+stop 10 in 2,028–2,150 ms versus 1,390–1,882 ms. Those slower ranges are retained
+as regressions in this sample, not hidden by the improved worst-frame result.
 
 ## Capture protocol
 
