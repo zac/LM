@@ -381,10 +381,14 @@ final class PoweredDescentSession {
                     self.publicationWaitSeconds += wait
                     self.maximumPublicationWaitSeconds = max(self.maximumPublicationWaitSeconds, wait)
                     guard !Task.isCancelled, self.runID == runID else { return nil }
+                    // Publication may have changed coverage while this step
+                    // waited for the gate. Check the installed generation again.
+                    guard self.terrainReady?() != false else { return nil }
                     await runtime.setLandingSurface(self.landingSurface)
                     return await runtime.step(deltaTime: delta, input: self.makeFrameInput())
                 }
-                guard self.runID == runID, let snap = result else { return }
+                guard self.runID == runID else { return }
+                guard let snap = result else { continue }
                 self.snapshot = snap
                 self.vehicleDidAdvance?(snap.vehicleState)
                 self.record(snap)

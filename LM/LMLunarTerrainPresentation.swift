@@ -17,6 +17,9 @@ final class LMLunarTerrainPresentation {
     private var morphTask: Task<Void, Never>?
     private var anchor: LMSelenographicLocalFrame?
     var presentationChanged: (@MainActor () -> Void)?
+    /// A contacted lander must retain the surface it is resting on. Waiting
+    /// happens outside the simulation gate so contact dynamics keep advancing.
+    var publicationAllowed: (@MainActor () -> Bool)?
     private(set) var isMorphing = false
     static let morphDurationSeconds = 1.2
     private var generation = UUID()
@@ -25,11 +28,34 @@ final class LMLunarTerrainPresentation {
     private var pipeline: LMTerrainDetailPipeline
     private struct Cached {
         let plan: LMTerrainTilePlan
-        let parents: [LMTerrainTilePlan]
+        let parents: [ParentDependency]
+        let neighbors: [LMTerrainTilePlan]
+        let geometryRevision: UUID
         let owners: Set<LMTerrainTileID>
         let build: Apollo11TerrainResource.ProgressiveTileEntityBuild
     }
+    private struct ParentDependency: Equatable {
+        let id: LMTerrainTileID
+        let revision: UUID
+    }
+    struct CacheStatistics {
+        var hits = 0, remasked = 0, missing = 0, plan = 0, parents = 0, owners = 0, neighbors = 0
+    }
+    private(set) var cacheStatistics = CacheStatistics()
     private var cache = [LMTerrainTileID: Cached]()
+
+    /// Vertices and central-difference edge normals read no farther than one
+    /// sample outside the tile. Include touching boundaries and a second sample
+    /// conservatively. Distant parents cannot affect these reads.
+    nonisolated static func samplingDependencies(for plan: LMTerrainTilePlan,
+                                                in plans: [LMTerrainTilePlan]) -> [LMTerrainTilePlan] {
+        let radius = plan.sizeMeters / 2 + plan.sampleSpacingMeters * 2
+        return plans.filter {
+            $0.sampleSpacingMeters >= plan.sampleSpacingMeters &&
+            abs($0.centerEastMeters - plan.centerEastMeters) <= radius + $0.sizeMeters / 2 &&
+            abs($0.centerNorthMeters - plan.centerNorthMeters) <= radius + $0.sizeMeters / 2
+        }
+    }
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "io.positron.LM", category: "LunarTerrain")
 
     init(region: LMLunarTerrainRegion, mode: LMTerrainDetailMode,
@@ -68,37 +94,57 @@ final class LMLunarTerrainPresentation {
                 var entities = [(Entity, LMTerrainTilePlan)]()
                 var nextCache = [LMTerrainTileID: Cached]()
                 var built = [LMLunarTerrainMeshTile]()
-                var cacheHits = 0
-                var missingMisses = 0, planMisses = 0, parentMisses = 0, ownerMisses = 0
+                var statistics = CacheStatistics()
                 // Coarse-to-fine order lets each child read its actual parent
                 // triangles, including the parent's own outer morph collar.
                 for plan in plans {
                     try Task.checkCancellation()
                     var field = LMLunarTerrainHeightField(terrain: region.terrain, frame: region.frame)
                     field.parents = .init(tiles: built.reversed())
-                    let parents = plans.filter { $0.sampleSpacingMeters > plan.sampleSpacingMeters }
+                    let neighbors = Self.samplingDependencies(for: plan, in: plans)
+                    let parents = neighbors.compactMap { dependency -> ParentDependency? in
+                        guard dependency.sampleSpacingMeters > plan.sampleSpacingMeters,
+                              let cached = nextCache[dependency.id] else { return nil }
+                        return .init(id: dependency.id, revision: cached.geometryRevision)
+                    }
                     let owners = LunarExplorerScene.finerOwners(of: plan, in: plans)
                     let build: Apollo11TerrainResource.ProgressiveTileEntityBuild
                     var reused = false
                     if let cached = previousCache[plan.id], cached.plan == plan,
-                       cached.parents == parents, cached.owners == owners {
+                       cached.parents == parents, cached.owners == owners, cached.neighbors == neighbors {
                         reused = true
-                        cacheHits += 1
+                        statistics.hits += 1
                         build = .init(entity: cached.build.entity.clone(recursive: true),
                                       mesh: cached.build.mesh, metrics: cached.build.metrics)
+                    } else if let cached = previousCache[plan.id], cached.plan == plan,
+                              cached.parents == parents, cached.neighbors == neighbors,
+                              cached.build.entity.model != nil {
+                        statistics.remasked += 1
+                        reused = true
+                        build = try await Self.replacingOwnership(cached.build, plan: plan, plans: plans)
                     } else {
                         if let cached = previousCache[plan.id] {
-                            if cached.plan != plan { planMisses += 1 }
-                            else if cached.parents != parents { parentMisses += 1 }
-                            else { ownerMisses += 1 }
-                        } else { missingMisses += 1 }
+                            if cached.plan != plan { statistics.plan += 1 }
+                            else if cached.parents != parents { statistics.parents += 1 }
+                            else if cached.owners != owners { statistics.owners += 1 }
+                            else { statistics.neighbors += 1 }
+                        } else { statistics.missing += 1 }
                         guard let generated = try await Apollo11TerrainResource.makeProgressiveTileEntityBuild(
                             heightField: field, plan: plan, activePlans: plans,
                             geometryReplacementPlans: plans, albedoField: region.albedo, detailPipeline: pipeline
                         ) else { throw LMLunarElevationGrid.GridError.invalidDimensions }
                         build = generated
                     }
-                    nextCache[plan.id] = .init(plan: plan, parents: parents, owners: owners, build: build)
+                    // Ownership only changes indices. Preserve the dependency
+                    // revision when sampled positions/normals are byte-identical,
+                    // so a moving child does not invalidate every descendant.
+                    let previous = previousCache[plan.id]
+                    let sameGeometry = previous?.plan == plan &&
+                        previous?.build.mesh.positions == build.mesh.positions &&
+                        previous?.build.mesh.normals == build.mesh.normals
+                    let revision = sameGeometry ? previous!.geometryRevision : UUID()
+                    nextCache[plan.id] = .init(plan: plan, parents: parents, neighbors: neighbors,
+                                              geometryRevision: revision, owners: owners, build: build)
                     replacement.addChild(build.entity)
                     entities.append((build.entity, plan))
                     built.append(.init(plan: plan, mesh: build.mesh))
@@ -128,7 +174,8 @@ final class LMLunarTerrainPresentation {
                     let elapsed = start.duration(to: .now).components
                     let milliseconds = Int(elapsed.seconds * 1_000 + elapsed.attoseconds / 1_000_000_000_000_000)
                     status("Lunar terrain ready", plans.count, built.count, plans.map(\.sampleSpacingMeters).min(), milliseconds)
-                    self.logger.info("Global cache hits=\(cacheHits) missing=\(missingMisses) plan=\(planMisses) parents=\(parentMisses) owners=\(ownerMisses)")
+                    self.cacheStatistics = statistics
+                    self.logger.info("Global cache hits=\(statistics.hits) remasked=\(statistics.remasked) missing=\(statistics.missing) plan=\(statistics.plan) parents=\(statistics.parents) owners=\(statistics.owners) neighbors=\(statistics.neighbors)")
                     self.logger.info("Global terrain ready tiles=\(built.count) generation=\(milliseconds)ms floor=\(region.measuredFloorMeters)m")
                 }
                 if self.snapshot.tiles.isEmpty {
@@ -136,6 +183,7 @@ final class LMLunarTerrainPresentation {
                     self.cache = nextCache
                     ready()
                 } else {
+                    try await self.waitForPublication()
                     LMLunarTerrainTiming.memory("morph-before-preparation")
                     let previous = self.snapshot
                     let preparation = Task.detached(priority: .userInitiated) {
@@ -171,21 +219,25 @@ final class LMLunarTerrainPresentation {
                             await self.waitForSceneUpdates(2)
                             let clock = ContinuousClock.now
                             while true {
+                                try await self.waitForPublication()
                                 let elapsed = clock.duration(to: .now).components
                                 let seconds = Double(elapsed.seconds) + Double(elapsed.attoseconds) / 1e18
                                 let weight = LMLunarTerrainMorph.weight(fraction: seconds / Self.morphDurationSeconds)
                                 let update = LMLunarTerrainTiming.begin("morph-frame")
                                 if let gate = self.simulationGate {
-                                    try await gate.withAccess {
+                                    let published = try await gate.withAccess {
                                         try Task.checkCancellation()
+                                        guard self.publicationAllowed?() != false else { return false }
                                         let command = try renderer.update(weight: weight)
                                         // Physics waits for the GPU replacement and
                                         // its matching immutable contact snapshot.
                                         try await command.complete()
                                         self.snapshot = morph.snapshot(weight: weight)
                                         self.presentationChanged?()
+                                        return true
                                     }
                                     LMLunarTerrainTiming.end(update)
+                                    if !published { continue }
                                 } else {
                                     let command = try renderer.update(weight: weight)
                                     self.snapshot = morph.snapshot(weight: weight)
@@ -220,6 +272,41 @@ final class LMLunarTerrainPresentation {
                 status("Lunar terrain failed: \(error.localizedDescription)", plans.count, self.snapshot.tiles.count, nil, nil)
             }
         }
+    }
+
+    private static func replacingOwnership(_ cached: Apollo11TerrainResource.ProgressiveTileEntityBuild,
+                                           plan: LMTerrainTilePlan, plans: [LMTerrainTilePlan]) async throws
+        -> Apollo11TerrainResource.ProgressiveTileEntityBuild {
+        let geometry = cached.mesh
+        let task = Task.detached(priority: .userInitiated) {
+            try Task.checkCancellation()
+            return Apollo11TerrainResource.progressiveTileIndices(plan: plan,
+                finerResidentPlans: plans.filter { $0.sampleSpacingMeters < plan.sampleSpacingMeters - 1e-9 })
+        }
+        let indices = try await withTaskCancellationHandler(operation: { try await task.value },
+                                                            onCancel: { task.cancel() })
+        try Task.checkCancellation()
+        let data = LMProgressiveTerrainMeshData(positions: geometry.positions, normals: geometry.normals,
+            tangents: geometry.tangents, bitangents: geometry.bitangents,
+            addedReliefNormalDistribution: geometry.addedReliefNormalDistribution,
+            textureCoordinates: geometry.textureCoordinates, indices: indices)
+        let entity = cached.entity.clone(recursive: true)
+        if indices.isEmpty {
+            entity.model = nil
+        } else {
+            var descriptor = MeshDescriptor(name: "Lunar tile ownership")
+            descriptor.positions = MeshBuffers.Positions(data.positions)
+            descriptor.normals = MeshBuffers.Normals(data.normals)
+            descriptor.tangents = MeshBuffers.Tangents(data.tangents)
+            descriptor.bitangents = MeshBuffers.Tangents(data.bitangents)
+            descriptor.textureCoordinates = MeshBuffers.TextureCoordinates(data.textureCoordinates)
+            descriptor.primitives = .triangles(indices)
+            let resource = try LMLunarTerrainTiming.measure("ownership-upload") {
+                try MeshResource.generate(from: [descriptor])
+            }
+            entity.model?.mesh = resource
+        }
+        return .init(entity: entity, mesh: data, metrics: cached.metrics)
     }
 
     nonisolated static func plans(sourceSpacing: Double, east: Double, north: Double,
@@ -329,12 +416,26 @@ final class LMLunarTerrainPresentation {
         requested = []
     }
 
+    private func waitForPublication() async throws {
+        while publicationAllowed?() == false {
+            try Task.checkCancellation()
+            try await Task.sleep(for: .milliseconds(100))
+        }
+        try Task.checkCancellation()
+    }
+
     private func publish(_ replacement: Entity, snapshot: LMLunarTerrainMeshSnapshot,
                          entities: [(Entity, LMTerrainTilePlan)], minimum: SIMD3<Float>, maximum: SIMD3<Float>) async throws {
         if let simulationGate {
-            try await simulationGate.withAccess {
-                try Task.checkCancellation()
-                install(replacement, snapshot: snapshot, entities: entities, minimum: minimum, maximum: maximum)
+            while true {
+                try await waitForPublication()
+                let installed = try await simulationGate.withAccess {
+                    try Task.checkCancellation()
+                    guard publicationAllowed?() != false else { return false }
+                    install(replacement, snapshot: snapshot, entities: entities, minimum: minimum, maximum: maximum)
+                    return true
+                }
+                if installed { break }
             }
         } else {
             install(replacement, snapshot: snapshot, entities: entities, minimum: minimum, maximum: maximum)

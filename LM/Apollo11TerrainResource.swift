@@ -599,6 +599,25 @@ enum Apollo11TerrainResource {
             }
         }
 
+        let indices = progressiveTileIndices(plan: plan, finerResidentPlans: finerResidentPlans)
+
+        return LMProgressiveTerrainMeshData(
+            positions: positions,
+            normals: normals,
+            tangents: tangents,
+            bitangents: bitangents,
+            addedReliefNormalDistribution: addedReliefNormalDistribution.finalized(),
+            textureCoordinates: textureCoordinates,
+            indices: indices
+        )
+    }
+
+    /// Ownership changes only the triangle list, not sampled geometry.
+    nonisolated static func progressiveTileIndices(plan: LMTerrainTilePlan,
+                                                   finerResidentPlans: [LMTerrainTilePlan]) -> [UInt32] {
+        let sampleSpacing = plan.sampleSpacingMeters
+        let sampleCount = Int(plan.sizeMeters / sampleSpacing) + 1
+        let halfSize = plan.sizeMeters / 2
         var indices = [UInt32]()
         indices.reserveCapacity((sampleCount - 1) * (sampleCount - 1) * 6)
         for row in 0..<(sampleCount - 1) {
@@ -634,16 +653,7 @@ enum Apollo11TerrainResource {
                 ])
             }
         }
-
-        return LMProgressiveTerrainMeshData(
-            positions: positions,
-            normals: normals,
-            tangents: tangents,
-            bitangents: bitangents,
-            addedReliefNormalDistribution: addedReliefNormalDistribution.finalized(),
-            textureCoordinates: textureCoordinates,
-            indices: indices
-        )
+        return indices
     }
 
     private nonisolated static func terrainResourceURL(

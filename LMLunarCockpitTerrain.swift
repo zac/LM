@@ -3,6 +3,97 @@ import LMCore
 import RealityKit
 import simd
 
+/// Cockpit-only residency policy. Explorer planning and Apollo geometry retain
+/// their existing paths. Predictions choose work; published coverage gates flight.
+enum LMLunarCockpitStreamingPolicy {
+    static let lookAheadSeconds = 40.0
+    static let maximumPrefetchedTiles = 80
+
+    static func spacing(at altitude: Double) -> Double {
+        var policy = LMTerrainDetailPolicy()
+        policy.globalBands = true
+        return policy.finestSpacingMeters(altitudeMeters: altitude) ?? 512
+    }
+
+    static func forecast(_ state: LMVehicleStateSnapshot) -> (east: Double, north: Double, altitude: Double) {
+        let p = state.positionMeters, v = state.velocityMetersPerSecond
+        let radius = state.landingSite?.radiusMeters ?? 1_737_400
+        let radialSpeed = (p.x * v.x + p.y * v.y + (p.z + radius) * v.z)
+            / sqrt(p.x * p.x + p.y * p.y + (p.z + radius) * (p.z + radius))
+        let currentSpacing = spacing(at: state.altitudeMeters)
+        let levels = LMProgressiveTerrainPlanner.globalLevels.sorted { $0.sampleSpacingMeters > $1.sampleSpacingMeters }
+        let next = levels.first { $0.sampleSpacingMeters < currentSpacing } ?? levels.last!
+        // Bound time and distance together. A fixed 40-second altitude forecast
+        // at 500 m would request landing detail while traveling 50 m/s; a 64 m
+        // landing footprint would be obsolete long before its bake completed.
+        let seconds = min(lookAheadSeconds, next.tileSizeMeters * 4 / max(1, hypot(v.x, v.y)))
+        let altitude = max(0, state.altitudeMeters + min(0, radialSpeed) * seconds)
+        return (p.y + v.y * seconds, p.x + v.x * seconds, altitude)
+    }
+
+    static func plans(_ state: LMVehicleStateSnapshot, sourceSpacing: Double) -> [LMTerrainTilePlan] {
+        let future = forecast(state)
+        func focus(_ east: Double, _ north: Double, _ altitude: Double) -> [LMTerrainTilePlan] {
+            LMLunarTerrainPresentation.plans(sourceSpacing: sourceSpacing, east: east, north: north,
+                altitude: altitude, metersAcross: max(64, min(32_000, altitude * 3)), heading: 90)
+        }
+        let current = focus(state.positionMeters.y, state.positionMeters.x, max(0, state.altitudeMeters))
+        let ahead = focus(future.east, future.north, future.altitude)
+        let planner = LMProgressiveTerrainPlanner(sourceSpacingMeters: sourceSpacing,
+            levels: LMProgressiveTerrainPlanner.globalLevels)
+        let combined = planner.rectangularPlansEnclosingChildren(current + ahead)
+        // A prediction may spend only this many tiles. Retain the normal
+        // current-view request if unusual geometry would exceed the budget.
+        return (combined.count <= maximumPrefetchedTiles ? combined : current).sorted {
+            if $0.sampleSpacingMeters != $1.sampleSpacingMeters { return $0.sampleSpacingMeters > $1.sampleSpacingMeters }
+            if $0.id.northIndex != $1.id.northIndex { return $0.id.northIndex < $1.id.northIndex }
+            return $0.id.eastIndex < $1.id.eastIndex
+        }
+    }
+
+    /// Exact rectangle-union coverage, including disjoint tiles and internal
+    /// gaps. Checking only the center or four corners can miss a hole.
+    static func covers(_ plans: [LMTerrainTilePlan], east: Double, north: Double,
+                       radius: Double, interior: Bool = false) -> Bool {
+        guard east.isFinite, north.isFinite, radius.isFinite, radius >= 0 else { return false }
+        let west = east - radius, right = east + radius, south = north - radius, top = north + radius
+        let rectangles = plans.map { plan -> (w: Double, e: Double, s: Double, n: Double) in
+            let half = plan.sizeMeters / 2, collar = interior ? plan.sizeMeters / 4 : 0
+            return (plan.centerEastMeters - half + (plan.transitionEdges.contains(.west) ? collar : 0),
+                    plan.centerEastMeters + half - (plan.transitionEdges.contains(.east) ? collar : 0),
+                    plan.centerNorthMeters - half + (plan.transitionEdges.contains(.south) ? collar : 0),
+                    plan.centerNorthMeters + half - (plan.transitionEdges.contains(.north) ? collar : 0))
+        }.filter { $0.e >= west && $0.w <= right && $0.n >= south && $0.s <= top }
+        if rectangles.contains(where: { $0.w <= west && $0.e >= right && $0.s <= south && $0.n >= top }) { return true }
+        let cuts = ([west, right] + rectangles.flatMap { [$0.w, $0.e] }.filter { $0 > west && $0 < right }).sorted()
+        for pair in zip(cuts, cuts.dropFirst()) {
+            let x = (pair.0 + pair.1) / 2
+            let intervals = rectangles.filter { $0.w <= x && $0.e >= x }.sorted { $0.s < $1.s }
+            var covered = south
+            for interval in intervals {
+                if interval.s > covered { break }
+                covered = max(covered, interval.n)
+            }
+            if covered < top { return false }
+        }
+        return !rectangles.isEmpty
+    }
+
+    static func permitsStep(_ state: LMVehicleStateSnapshot, snapshot: LMLunarTerrainMeshSnapshot) -> Bool {
+        // Bound the entire body/footpad sweep for the largest runtime step,
+        // independent of attitude or leg compression. 100 m/s² exceeds the
+        // modeled DPS/RCS translational acceleration even at dry mass.
+        let step = max(LMSimulationPace.acceleratedDeltaSeconds, LMSimulationPace.realtimeFrameCapSeconds)
+        let reach = LMLandingGearGeometry.footpadRadiusMeters
+            + LMLandingGearGeometry.primaryStrutStrokeMeters
+            + LMLandingGearGeometry.contactProbeLengthMeters
+        let v = state.velocityMetersPerSecond
+        let radius = reach + hypot(v.x, v.y) * step + 100 * step * step
+        return covers(snapshot.tiles.map(\.plan), east: state.positionMeters.y,
+                      north: state.positionMeters.x, radius: radius)
+    }
+}
+
 /// One immutable source region shared by a cockpit mission and its terrain.
 @MainActor
 final class LMLunarCockpitTerrain {
@@ -19,10 +110,12 @@ final class LMLunarCockpitTerrain {
     private var maximumContactError = 0.0
     private var contactSamples = 0
     private var missingContactSamples = 0
+    private var holdsTerrainAtContact = false
 
     var captureMetrics: [String: Double] {
         ["maximumContactErrorMeters": maximumContactError, "contactSamples": Double(contactSamples),
          "missingContactSamples": Double(missingContactSamples),
+         "heldAtContact": holdsTerrainAtContact ? 1 : 0,
          "reanchorGeneration": Double(origin.generation), "tiles": Double(presentation.snapshot.tiles.count),
          "measuredFloorMeters": presentation.region.measuredFloorMeters, "ready": ready ? 1 : 0]
     }
@@ -42,6 +135,7 @@ final class LMLunarCockpitTerrain {
         sun.orientation = sourceSunOrientation
         sun.light.intensity = LMTerrainWorld.missionSunIlluminance(elevationDegrees: angles.elevationDegrees, grade: .calibrated)
         sun.shadow = LMTerrainWorld.missionShadow(altitudeMeters: 1_000)
+        presentation.publicationAllowed = { [weak self] in self?.holdsTerrainAtContact != true }
         presentation.presentationChanged = { [weak self] in
             guard let self else { return }
             let surface = LMTerrainContactSurfaceBuilder.build(region: region, snapshot: self.presentation.snapshot)
@@ -63,11 +157,25 @@ final class LMLunarCockpitTerrain {
 
     func apply(_ state: LMVehicleStateSnapshot) {
         vehicle = state
-        if let contact, state.altitudeMeters < 250 {
+        if state.altitudeMeters > 250 {
+            // Ignition restart/departure releases the previous landing surface.
+            holdsTerrainAtContact = false
+        } else if !holdsTerrainAtContact,
+                  state.landingGear?.isProbeContact == true || state.surfaceContact != nil || state.flightOutcome.isTerminal {
+            holdsTerrainAtContact = true
+            if !presentation.isMorphing {
+                // Discard an unpublished replacement instead of retaining its
+                // upload resources for the rest of a settled mission.
+                presentation.cancel()
+                lastPlans = []
+                ready = true
+            }
+        }
+        if state.altitudeMeters < 250 {
             for leg in LMLandingGearLeg.allCases {
                 let stroke = state.landingGear?.legs.first(where: { $0.leg == leg })?.strokeMeters ?? 0
                 let point = state.positionMeters + state.attitude.rotated(LMLandingGearGeometry.footpadBody(leg, strokeMeters: stroke))
-                if let drawn = presentation.snapshot.sample(east: point.y, north: point.x) {
+                if let contact, let drawn = presentation.snapshot.sample(east: point.y, north: point.x) {
                     let ground = contact.surfaceHeightMeters(northMeters: point.x, eastMeters: point.y)
                     maximumContactError = max(maximumContactError, abs(ground - Double(drawn.elevation)))
                     contactSamples += 1
@@ -102,9 +210,22 @@ final class LMLunarCockpitTerrain {
         // A moving approach can cross tile boundaries faster than a generation
         // completes. Finish the bounded request, then use the latest vehicle
         // pose; cancellation on every frame otherwise starves publication.
-        guard ready || lastPlans.isEmpty else { return }
-        let plans = LMLunarTerrainPresentation.plans(sourceSpacing: presentation.region.terrain.base.spacingMeters,
-            east: east, north: north, altitude: altitude, metersAcross: max(64, min(32_000, altitude * 3)), heading: 90)
+        guard !holdsTerrainAtContact, ready || lastPlans.isEmpty else { return }
+        let plans: [LMTerrainTilePlan]
+        if let vehicle, vehicle.altitudeMeters < 5_000 {
+            let forecast = LMLunarCockpitStreamingPolicy.forecast(vehicle)
+            let spacing = LMLunarCockpitStreamingPolicy.spacing(at: forecast.altitude)
+            let radius = 8 + min(32, hypot(vehicle.velocityMetersPerSecond.x,
+                                           vehicle.velocityMetersPerSecond.y) * 2)
+            if lastPlans.map(\.sampleSpacingMeters).min() == spacing,
+               LMLunarCockpitStreamingPolicy.covers(lastPlans.filter { $0.sampleSpacingMeters == spacing },
+                   east: east, north: north, radius: radius, interior: true) { return }
+            plans = LMLunarCockpitStreamingPolicy.plans(vehicle,
+                sourceSpacing: presentation.region.terrain.base.spacingMeters)
+        } else {
+            plans = LMLunarTerrainPresentation.plans(sourceSpacing: presentation.region.terrain.base.spacingMeters,
+                east: east, north: north, altitude: altitude, metersAcross: max(64, min(32_000, altitude * 3)), heading: 90)
+        }
         guard plans != lastPlans else { return }
         lastPlans = plans
         ready = false
@@ -114,12 +235,12 @@ final class LMLunarCockpitTerrain {
         }
     }
 
-    /// Near touchdown, wait for requested detail rather than let AGC touch a
-    /// fallback surface that is absent from the visible triangle snapshot.
+    /// A pending replacement is not a reason to stop flight: the published
+    /// generation remains the authority for both rendering and contact.
     var permitsPhysicsStep: Bool {
         guard let vehicle else { return ready }
         if vehicle.altitudeMeters > 250 { return true }
-        return ready && presentation.snapshot.sample(east: vehicle.positionMeters.y,
-                                                      north: vehicle.positionMeters.x) != nil
+        return contact != nil && LMLunarCockpitStreamingPolicy.permitsStep(vehicle,
+            snapshot: presentation.snapshot)
     }
 }
