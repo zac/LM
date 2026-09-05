@@ -70,7 +70,10 @@ struct LunarExplorerView: View {
     private func waitForSettledTerrain(_ session: LunarExplorerSession) async throws {
         for _ in 0..<600 {
             if !session.navigationInProgress && session.diagnostics.loadMessage == "Lunar terrain ready" {
-                try await Task.sleep(for: .seconds(100))
+                let prefix = "--lunar-explorer-transition-hold-seconds="
+                let hold = ProcessInfo.processInfo.arguments.first { $0.hasPrefix(prefix) }
+                    .flatMap { Double($0.dropFirst(prefix.count)) } ?? 100
+                try await Task.sleep(for: .seconds(hold.isFinite ? max(5, hold) : 100))
                 return
             }
             try await Task.sleep(for: .seconds(1))
