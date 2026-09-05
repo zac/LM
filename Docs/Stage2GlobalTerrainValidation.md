@@ -611,3 +611,250 @@ triangle rays within one micrometre, unchanged native fixture posts, restart
 from an intermediate state, and existing oblique ownership and contact tests.
 The first build exposed a Swift name-shadowing/type-check issue in the normal
 interpolation expression; naming that intermediate explicitly fixed it.
+
+### Temporal arrival: GPU and lifecycle
+
+The production transition uses one opaque common-refinement surface. Its
+LowLevelMesh and contact snapshot share endpoint vertices and the same Float
+weight; a GPU readback checks exact vertex equality, including fused multiply-add
+rounding. A 1.2-second smoothstep controls both geometry and appearance. Pending
+requests can cancel and reverse while the displayed transition finishes; the
+next transition starts from that displayed endpoint. Re-anchoring transforms
+the resident entities without resampling either endpoint.
+
+Appearance comes from copies of the actual uploaded TextureResources, including
+their color conversion and normal encoding. The compute shader interpolates in
+linear light and writes the native 8-bit sRGB format. Tests constrain output to
+the expected final code-value rounding. The texture-copy probe established that
+the copied northern row remains row zero; independently flipping the low-level
+output had mirrored its endpoint. Existing mesh UVs remain unchanged.
+
+Only submitted vertices determine whether a mesh needs GPU updates. Unchanged
+geometry uses the existing static mesh path, and unchanged appearance reuses its
+material. Hidden parent samples still remain available to contact. One command
+buffer updates a displayed weight, with its completion handler registered before
+commit. The next update waits for GPU completion and a scene update. Initial and
+final publication each allow two scene updates before the next resource change;
+an inactive scene has a bounded wait. Cached appearance remains available when
+changing the global detail mode, because both choices currently use the same
+procedural fallback pending N3.
+
+Seven focused tests pass in `/tmp/LM-Stage2-Arrival-Native-Format.xcresult`:
+refinement/coarsening and triangle contact, restart from an intermediate surface,
+hidden-parent update classification, actual GPU vertices and linear-light
+appearance, production cancellation/reversal/re-anchor lifecycle, easing, and
+uploaded normal row order. The final broader suite also exercises a detail-mode
+reset before a transition.
+
+The final `/tmp/LM-Stage2-Arrival-Final.xcresult` passes **163 tests in 17 suites**
+with no failures, in 194.499 seconds of test execution. This includes source and
+residual fidelity, coordinates and floating origins, contact and descent,
+navigation, texture edges and radiance controls, and the seven arrival tests.
+The four Python radiance-tool tests also pass. Xcode MCP became unresponsive
+after the rejected Metal texture assertion; only that test process and its
+attached debugger were terminated. The final runs used the serial xcodebuild
+fallback, with the exact result bundle retained above.
+
+The first full prototype capture, `/tmp/LM-Stage2-Arrival-Motion-v1/`, was rejected:
+552.09 ms maximum callbacks, 1,167.2 MiB peak footprint, a transient dark frame,
+and a remaining endpoint detail jump. The short v2 replay exited on an incorrectly
+registered Metal completion handler; the corrected path is tested. A proposed
+swizzled single-channel writable texture also failed Metal validation and is not
+used. The short v4 shadow-off control retained the dark footprint, ruling out
+dynamic shadows as its source. The short scene-synchronized replay,
+`/tmp/LM-Stage2-Arrival-Motion-v5-fast/`, did not show that large artifact; these
+short holds are diagnostic and do not replace the 100-second hold protocol.
+
+The subsequent full `/tmp/LM-Stage2-Arrival-Final-Motion/` replay was also rejected.
+Its second arrival retained a one-frame dark footprint (adjacent-frame normalized
+RGB RMSE 0.059594), despite passing GPU endpoint tests. The zoom-return peak was
+0.002339 versus the old atomic path's 0.004863, and its settled PNG remained
+byte-identical to both the initial frame and the accepted highland Surface PNG.
+Those improvements did not excuse the flash. Its peak footprint was 1,220.4 MiB
+during initial resource realization; final settled footprint was 174.2 MiB with
+16.67 ms p95/p99/max and zero reported misses. Whole-run maximum was 260.29 ms.
+
+Inspection found that the initial low-level textures were registered with
+RealityKit before their first backing contents were populated. The follow-up
+initializes each appearance and its mipmaps before creating its TextureResource,
+and avoids an unnecessary initial replacement of already initialized meshes.
+The GPU test now checks initial contents before any post-registration update.
+The seven focused tests pass in `/tmp/LM-Stage2-Arrival-Initialized.xcresult`.
+
+`Tools/MeasureLunarTerrainArrival.py` retains adjacent frames and reports their
+differences around logged arrivals, using lossy 1280×720 video samples at 60 fps.
+Those values supplement visual review, not the unchanged 1.5% fixed-band PNG
+radiance criterion. `CaptureLunarTerrainTransitions.sh` retains the default
+100-second holds, supports an explicit shorter diagnostic hold, records launch
+arguments and binary hash, and fails promptly on process death or terrain errors.
+
+### Temporal arrival: Apollo regression control
+
+`/tmp/LM-Stage2-Arrival-Final-Apollo/` repeats the eleven-stop Release ladder with
+the item 0 twenty-second settling protocol. Every PNG is byte-identical to
+`/tmp/LM-Stage2-Release-Baseline-2026-09-04-v2/`. Every final sampled window reports
+16.67 ms p95/p99/max and zero missed callbacks. Peak process footprint is
+364.8 MiB versus the baseline's 406.5 MiB; worst startup callback is 518.37 ms
+versus 643.77 ms. These are Simulator measurements, not 90 Hz device acceptance.
+
+Globe, Terminal, Landing and Surface settled footprints are 305.3, 329.3, 354.5
+and 361.2 MiB respectively (baseline 312.2, 336.5, 380.8 and 368.6 MiB).
+Terminal completion records span 286–319 ms and Landing 1,706–1,869 ms;
+baseline ranges are 252–356 ms and 1,471–2,043 ms. Per-stop numbers and byte
+comparisons are in `baseline-comparison.json` and `performance.tsv` in that
+capture directory. This capture uses binary
+`2f10d8e20a72520111f557c8044ac0cb0ada21ba4720e2ad3964dab873c3546c`, before
+the global-only texture-initialization follow-up.
+
+### Temporal arrival: accepted highland replay and remaining cost
+
+The initialized-texture Release binary is
+`fee67ec465822baf35548ca6e1c3f0f079cf87e2530954080de9a14bb20e0dd0`.
+`/tmp/LM-Stage2-Arrival-Initialized-Full/` records the production rotation,
+zoom-out and zoom-return with the default 100-second holds, shadows and normal
+maps enabled. Its 3840×2160 video is 446.587 seconds long. Arrival frame review
+shows no recurrence of the transient gap or dark footprint. The before/after
+PNGs are byte-identical, and both match the previously accepted highland
+`07-surface.png` exactly. The existing highland fixed-band radiance controls
+therefore still describe that settled image; this is not a new all-level
+radiance acceptance claim.
+
+| Arrival | Actual blend duration | Old atomic peak adjacent RGB RMSE | New peak | Change |
+| --- | ---: | ---: | ---: | ---: |
+| Rotate 0° → 35° | 1.254 s | 0.000855174 | 0.000861870 | +0.8% |
+| Zoom out to 249 m / 700 m width | 1.281 s | 0.001178016 | 0.000878942 | −25.4% |
+| Return to 2 m / 8 m width | 1.292 s | 0.004863249 | 0.002325657 | −52.2% |
+
+These lossy video differences are diagnostic measurements, not a replacement
+for the 1.5% radiance criterion. `arrival-frames/` retains the sampled frames
+and each peak pair; `baseline-comparison.json` records both PNG equality and
+the comparison with `/tmp/LM-Stage2-Stability-Motion/`. The short initialized
+replay also passed visual inspection and restored identical PNG bytes in
+`/tmp/LM-Stage2-Arrival-Initialized-Fast/`.
+
+**The visual fix does not close performance acceptance.** The full run reports
+111 frame windows, 16.67 ms maximum p95, 86.45 ms maximum p99, 248.80 ms worst
+callback and 19 misses. The old atomic control had 108 windows, 16.67 ms maximum
+p95, 86.67 ms maximum p99, 173.66 ms worst callback and six misses. The new
+sampled peak physical footprint is **1,247.5 MiB**, versus **256.8 MiB** in that
+control. It occurs during transient resource creation. Final settled footprint
+recovers to **175.0 MiB**, versus **159.7 MiB**, with four late windows at
+16.67 ms p95/p99/max and zero misses. The five-second sampling does not establish
+the absolute allocation high-water mark or physical Vision Pro memory pressure.
+
+Initial/rotation/zoom-out/return generation times are 20,759 / 42,829 / 33,461 /
+26,354 ms, compared with 20,898 / 38,100 / 26,618 / 21,996 ms in the atomic
+control. Common-refinement preparation takes 273–386 ms on a worker. Asynchronous
+resource realization takes 3.09–5.26 seconds per arrival; those main-actor spans
+include suspension and are not continuous CPU occupancy. The 99 update
+submissions total 493.59 ms of measured main-actor work, with a 65.22 ms maximum.
+GPU completion waits total 2,238.70 ms, with a 126.29 ms maximum; they suspend
+instead of accumulating additional in-flight submissions.
+
+The recorded abrupt highland arrival is addressed. Transient allocation cost,
+arrival hitches, distant footprint joins, arbitrary-site globe handoff radiance,
+and full cockpit descent remain open. Cancellation, reversal, mode reset and
+re-anchoring during interpolation have production lifecycle and GPU/triangle
+test coverage; this pass does not add a video of re-anchoring mid-interpolation.
+Physical Vision Pro must still validate 90 Hz pacing, GPU memory/pressure,
+thermals, stereo continuity and comfort. All eleven original terrain asset
+hashes were rechecked against `c950d46` in
+`/tmp/LM-Stage2-Arrival-Apollo-Assets.json`; all remain identical.
+
+The additional `/tmp/LM-Stage2-Arrival-Initialized-Mare-Fast/` control rejected
+broader arrival acceptance: its first arrival had a one-frame triangular gap at
+the image edge, with peak adjacent RGB RMSE 0.072004. Its settled before/after
+PNGs were nevertheless byte-identical to the accepted mare Surface PNG. The
+texture-initialization correction alone therefore does not establish complete
+scene-publication readiness. This short run used five-second holds and is a
+diagnostic control, not a substitute for the long-hold performance protocol.
+
+A zero-opacity scene-registration experiment also failed to remove that gap
+in `/tmp/LM-Stage2-Arrival-Registered-Fast/` (peak 0.072002). Its cancellation
+tests passed, but visual evidence rejected that approach. The next publication
+path retains the previous opaque representation only at the common-refinement
+starting endpoint, for a 100 ms registration interval, before removing it and
+starting interpolation. Re-anchoring updates both representations during that
+interval, and cancellation removes only the incoming one. The seven focused
+tests, extended to cancel and re-anchor during registration, pass in
+`/tmp/LM-Stage2-Arrival-Covered.xcresult`; visual acceptance is recorded below.
+
+### Temporal arrival: final mesh-publication control
+
+The final Release binary is
+`6657e14b4f0e0f0bd5e2b800ef201ec42e2514cab600c52aaa71db0c22009086`.
+Both `/tmp/LM-Stage2-Arrival-Covered-Fast/` and the default-hold
+`/tmp/LM-Stage2-Arrival-Covered-Mare-Full/` remove the mare publication gap.
+The full 3840×2160 recording is 433.972 seconds long. Arrival frame inspection
+shows no transient gap or dark footprint, and the before/after PNGs are
+byte-identical to each other and to the accepted mare Surface PNG.
+
+The full mare rotation/zoom-out/return durations are 1.280 / 1.317 / 1.279 seconds,
+with peak adjacent RGB RMSE 0.000974759 / 0.001451590 / 0.003358608. The first
+arrival's 0.072004 gap spike in the rejected mare replay is absent. The 100 ms
+registration interval is deliberately conservative relative to that one-frame
+60 Hz defect; it retains the same starting surface and adds less than 0.3% to
+the measured rotation generation time. It is not a claimed optimal threshold
+or a guarantee for physical-device rendering.
+
+The full mare run records 109 frame windows, 16.67 ms maximum p95, 84.59 ms maximum
+p99, 261.64 ms worst callback and 22 misses. Its sampled peak footprint is
+508.3 MiB; five late settled windows report 16.67 ms p95/p99/max, zero misses and
+173.3 MiB. Initial/rotation/zoom-out/return generations take 19,216 / 40,100 /
+28,186 / 24,481 ms. This lower sampled peak does not prove that the highland
+allocation regression disappeared: regions and sampling alignment differ.
+`metrics.json`, `endpoint-comparison.json`, `arrival-temporal-metrics.json` and
+`arrival-frames/` retain the evidence. The terrain performance gates above remain
+open.
+
+The same final binary passes the short highland regression replay in
+`/tmp/LM-Stage2-Arrival-Covered-Highland-Fast/`. Its peak adjacent RGB differences
+are 0.000853768 / 0.000904689 / 0.002322102, with no transient gap or dark
+footprint in the inspected arrival frames. The return peak is 52.3% lower than
+the atomic control, and both settled PNGs remain byte-identical to the accepted
+highland Surface image. Its 516.4 MiB sampled peak is substantially below the
+earlier initialized-texture short run's 1,112.8 MiB, but the final long highland
+comparison below controls the hold duration as well.
+
+### Temporal arrival: final matched highland comparison
+
+`/tmp/LM-Stage2-Arrival-Covered-Highland-Full/` repeats the original highland
+sequence with the default 100-second holds on the final binary above. Its
+3840×2160 video is 448.818 seconds long. All three inspected arrivals are free
+of the previously recorded gap and dark footprint. Before/after PNGs are
+byte-identical and match the accepted highland Surface PNG. Blend durations
+are 1.295 / 1.280 / 1.279 seconds; peak adjacent RGB RMSE is 0.000856451 /
+0.000902409 / 0.002300722. The zoom-out and return peaks are 23.4% and 52.7%
+below the atomic control; the rotation peak differs by only +0.15%.
+
+| Metric | Atomic highland control | Final highland arrival |
+| --- | ---: | ---: |
+| Frame windows | 108 | 112 |
+| Maximum p95 / p99 | 16.67 / 86.67 ms | 16.67 / 101.08 ms |
+| Worst callback / total misses | 173.66 ms / 6 | 154.91 ms / 18 |
+| Sampled peak physical footprint | 256.8 MiB | 713.8 MiB |
+| Late settled footprint | 159.7 MiB | 174.7 MiB |
+| Late p95 / p99 / max / misses | 16.67 / 16.67 / 16.67 ms / 0 | 16.67 / 16.67 / 16.67 ms / 0 |
+| Initial generation | 20,898 ms | 20,726 ms |
+| Rotation generation | 38,100 ms | 44,357 ms |
+| Zoom-out generation | 26,618 ms | 33,710 ms |
+| Return generation | 21,996 ms | 26,457 ms |
+
+This is the final comparison, superseding the earlier initialized-texture
+highland run for performance reporting. The publication fix reduces the sampled
+peak relative to that 1,247.5 MiB prototype, but the remaining allocation and
+arrival-hitch regression keeps performance acceptance open. Five late windows
+are stable; neither that result nor the lower worst callback establishes
+physical 90 Hz acceptance. The 92 morph submissions total 495.09 ms of measured
+main-actor work, maximum 59.96 ms, with 2,109.40 ms of suspended GPU waits,
+maximum 137.37 ms. Resource realization totals 11.77 seconds across three
+arrivals, maximum 5.27 seconds. Phase spans overlap and must not be summed as
+total generation latency.
+
+The final Release build log is `/tmp/LM-Stage2-Arrival-Covered-Release.log`.
+The 163-test broader suite and four Python checks passed; the seven GPU/lifecycle
+arrival tests were rerun after the final publication change in
+`/tmp/LM-Stage2-Arrival-Covered.xcresult`. No tests failed in these final runs.
+`/tmp/LM-Stage2-Arrival-Capture-Hashes.json` retains 19 PNG hashes across the
+Apollo control and four final-binary motion captures. Physical-device and
+broader Stage 2 gates listed above are unchanged.

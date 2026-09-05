@@ -394,10 +394,22 @@ anchor, floating tangent frame, whatever sources cover it."
    are in `Stage2GlobalTerrainValidation.md`. The transition follow-up fixes
    stepped-footprint collar discontinuities at oblique headings. Nominal rays
    attribute one suspected foreground intrusion to terrain about 7 km away;
-   that diagnosis does not close visual acceptance. The recorded zoom-return
-   sequence restores byte-identical settled pixels but exposes abrupt fine-detail
-   arrival. Distant footprint joins, temporal arrival and arbitrary-site handoff
-   radiance remain acceptance gates.
+   that diagnosis does not close visual acceptance. The arrival follow-up now
+   interpolates geometry and uploaded appearance on a common-refinement surface,
+   with GPU-tested contact agreement. The full highland motion replay removes
+   the recorded abrupt fine-detail arrival and transient publication flash,
+   and restores byte-identical settled pixels. The final matched highland
+   replay samples 713.8 MiB versus 256.8 MiB for the atomic control, so arrival memory
+   and hitch costs remain open performance gates. Distant footprint joins and
+   arbitrary-site handoff radiance also remain open; see the detailed evidence
+   and physical-device limitations in `Stage2GlobalTerrainValidation.md`.
+
+   A second-region mare control exposed a one-frame mesh-publication gap. The
+   final path retains the identical opaque starting surface during a 100 ms
+   registration interval, with cancellation and re-anchor coverage, before
+   interpolation begins. The full mare repeat removes that gap and restores
+   byte-identical settled pixels. This extends visual coverage without closing
+   the performance gates above.
 5. **Contact everywhere, implementation validated; mission integration open:**
    `LMTerrainLandingSurface` retains the exact rendered resolver triangles.
    Global gear drops pass at mare and highland anchors. Inspection showed
@@ -413,9 +425,17 @@ anchor, floating tangent frame, whatever sources cover it."
    Global local pan remains bounded to the prefetched 20 km window; continuous
    globe dragging, full panel interaction coverage and physical gesture comfort
    remain open. See `Stage2GlobalTerrainValidation.md` for captures and failures.
-7. Reuse, don't rebuild: planner, morph collars, residency nesting,
-   per-tile bake, detail cache, capture diagnostics all generalize. The
-   work is plumbing anchors and sources through them, not new rendering.
+7. Reuse the planner, morph collars, residency nesting, per-tile bake,
+   detail cache and static materials. The recorded atomic generation swap
+   exposed an additional rendering requirement: continuous arrival needs one
+   transient common-refinement surface whose GPU vertices and CPU contact share
+   the displayed weight. The arrival follow-up therefore adds a bounded GPU
+   interpolation path for geometry and uploaded appearance; it restores the
+   existing static resources at completion. This revises the original assumption
+   that anchor/source plumbing alone was sufficient. Source generation, measured
+   posts, residual limits, contact agreement and Apollo 11 invariance remain
+   controlling contracts. See `Stage2GlobalTerrainValidation.md` for rejected
+   prototypes, tests and capture evidence.
 
 ### Stage 3 — Mushy-band quality (see §5)
 
