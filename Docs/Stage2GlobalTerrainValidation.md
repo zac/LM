@@ -858,3 +858,27 @@ arrival tests were rerun after the final publication change in
 `/tmp/LM-Stage2-Arrival-Capture-Hashes.json` retains 19 PNG hashes across the
 Apollo control and four final-binary motion captures. Physical-device and
 broader Stage 2 gates listed above are unchanged.
+# Arrival allocation attribution, 2026-09-05
+
+The opt-in profile now records Mach physical footprint and its kernel lifetime
+peak around preparation, resource realization and frame submission. The timing
+summary retains these timestamped samples. Metal allocation counters return zero
+in this Simulator; those values are unavailable, not evidence of no allocation.
+Resource payload counts use buffer lengths and uncompressed RGBA mip dimensions,
+excluding driver padding and retained replacement copies.
+
+The first instrumented highland diagnostic, with five-second motion holds, is
+`/tmp/LM-Arrival-Memory-Control/`. Release build passed. Its settled before/after
+PNGs match the accepted highland PNG byte for byte. The first arrival grows from
+259.4 MiB before CPU preparation to 485.6 MiB afterward, then 691.7 MiB after
+resource realization. The three arrivals have 61/105/68 dynamic meshes and the
+same counts of blended appearances. The five-second sample maximum is 1,039.0
+MiB. CPU preparation takes 1,019.6 ms total across three arrivals.
+
+The kernel lifetime peak is already 1,601.8 MiB before the first arrival, exposing
+a separate startup peak missed by the old five-second sampler. A `vmmap` attempt
+completed after the first blend, so its retained report does not attribute the
+blend peak. This short diagnostic, including that inspection, is not a matched
+performance acceptance run. The initial binary's Metal resource counters were
+also zero; explicit logical payload accounting was added afterward and built
+successfully through Xcode MCP.

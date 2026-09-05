@@ -215,8 +215,28 @@ final class LMLunarTerrainMorphRenderer {
             root.addChild(entity)
             entities.append((entity, tile.plan))
         }
+        var sources = [ObjectIdentifier: any MTLTexture]()
+        for entry in appearances {
+            for texture in [entry.a.color, entry.a.normal, entry.b.color, entry.b.normal] {
+                sources[ObjectIdentifier(texture)] = texture
+            }
+        }
+        let sourceBytes = sources.values.reduce(0) { $0 + Self.texturePayloadBytes($1) }
+        let endpointBytes = entries.reduce(0) { $0 + $1.first.length + $1.last.length }
+        let outputBytes = appearances.reduce(0) { $0 + Self.texturePayloadBytes($1.color.read()) + Self.texturePayloadBytes($1.normal.read()) }
+        LMLunarTerrainTiming.memory("morph-sources", metalBytes: device.currentAllocatedSize, resourceBytes: sourceBytes)
+        LMLunarTerrainTiming.memory("morph-endpoints", metalBytes: device.currentAllocatedSize, resourceBytes: endpointBytes)
+        LMLunarTerrainTiming.memory("morph-outputs", metalBytes: device.currentAllocatedSize, resourceBytes: outputBytes)
         // Meshes were initialized through their CPU buffers; each appearance
         // was initialized before registration with RealityKit above.
+    }
+
+    /// Logical payload for the uncompressed four-channel endpoint/output formats.
+    /// Simulator reports zero allocatedSize; this excludes driver padding/copies.
+    private static func texturePayloadBytes(_ texture: any MTLTexture) -> Int {
+        (0..<texture.mipmapLevelCount).reduce(0) {
+            $0 + max(1, texture.width >> $1) * max(1, texture.height >> $1) * 4
+        }
     }
 
     static func vertexData(_ mesh: LMProgressiveTerrainMeshData) -> [Vertex] {
@@ -249,6 +269,9 @@ final class LMLunarTerrainMorphRenderer {
 
     private func submit(weight: Float, meshes: [Entry], textures: [Appearance]) throws -> Submission {
         guard let command = queue.makeCommandBuffer(), let encoder = command.makeComputeCommandEncoder() else { throw GPUError.unavailable }
+        let encoding = LMLunarTerrainTiming.begin("morph-encode")
+        defer { LMLunarTerrainTiming.end(encoding) }
+        LMLunarTerrainTiming.memory("morph-submit", metalBytes: device.currentAllocatedSize)
         var weight = min(1, max(0, weight))
         encoder.setComputePipelineState(vertices)
         for entry in meshes {
@@ -264,6 +287,8 @@ final class LMLunarTerrainMorphRenderer {
             encoder.dispatchThreads(.init(width: Int(count), height: 1, depth: 1),
                                     threadsPerThreadgroup: .init(width: 64, height: 1, depth: 1))
         }
+        let texturesPhase = LMLunarTerrainTiming.begin("morph-texture-encode")
+        defer { LMLunarTerrainTiming.end(texturesPhase) }
         encoder.setComputePipelineState(appearance)
         var mipmaps = [any MTLTexture]()
         for entry in textures {

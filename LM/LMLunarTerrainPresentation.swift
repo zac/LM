@@ -124,6 +124,7 @@ final class LMLunarTerrainPresentation {
                     self.cache = nextCache
                     ready()
                 } else {
+                    LMLunarTerrainTiming.memory("morph-before-preparation")
                     let previous = self.snapshot
                     let preparation = Task.detached(priority: .userInitiated) {
                         try LMLunarTerrainTiming.measure("morph-preparation") {
@@ -133,6 +134,7 @@ final class LMLunarTerrainPresentation {
                     let morph = try await withTaskCancellationHandler(
                         operation: { try await preparation.value }, onCancel: { preparation.cancel() })
                     try Task.checkCancellation()
+                    LMLunarTerrainTiming.memory("morph-after-preparation")
                     let realization = LMLunarTerrainTiming.begin("morph-realization")
                     let renderer = try await LMLunarTerrainMorphRenderer(morph: morph,
                         from: self.cache.values.map { ($0.plan, $0.build) },
@@ -174,6 +176,7 @@ final class LMLunarTerrainPresentation {
                             await self.waitForSceneUpdates(2)
                             self.install(replacement, snapshot: target, entities: entities, minimum: minimum, maximum: maximum)
                             self.isMorphing = false
+                            LMLunarTerrainTiming.memory("morph-complete")
                             self.logger.info("Global morph complete")
                             ready()
                         } catch {

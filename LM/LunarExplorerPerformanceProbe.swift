@@ -22,6 +22,25 @@ enum LMLunarTerrainTiming {
         let ms = Double(duration.seconds) * 1_000 + Double(duration.attoseconds) / 1e15
         logger.info("Terrain phase end=\(interval.phase, privacy: .public) elapsed=\(ms)ms main=\(Thread.isMainThread)")
     }
+    /// Kernel lifetime high-water mark catches peaks between five-second windows.
+    /// Metal allocation is device accounting, not physical device memory pressure.
+    static func memory(_ phase: String, metalBytes: Int = 0, resourceBytes: Int = 0) {
+        guard enabled, let info = memoryInfo() else { return }
+        logger.info("Terrain memory phase=\(phase, privacy: .public) physical=\(info.phys_footprint) peak=\(info.ledger_phys_footprint_peak) metal=\(metalBytes) resources=\(resourceBytes)")
+    }
+
+    static func memoryInfo() -> task_vm_info_data_t? {
+        var info = task_vm_info_data_t()
+        var count = mach_msg_type_number_t(MemoryLayout<task_vm_info_data_t>.size / MemoryLayout<natural_t>.size)
+        let result = withUnsafeMutablePointer(to: &info) { pointer in
+            pointer.withMemoryRebound(to: integer_t.self, capacity: Int(count)) {
+                task_info(mach_task_self_, task_flavor_t(TASK_VM_INFO), $0, &count)
+            }
+        }
+        guard result == KERN_SUCCESS else { return nil }
+        return info
+    }
+
     static func measure<T>(_ phase: String, _ operation: () throws -> T) rethrows -> T {
         let interval = begin(phase)
         defer { end(interval) }
@@ -169,6 +188,7 @@ final class LunarExplorerPerformanceProbe: NSObject {
             memory
         )
         logger.notice("\(message, privacy: .public)")
+        LMLunarTerrainTiming.memory("frame-window")
         durationsMilliseconds.removeAll(keepingCapacity: true)
         nominalDurationsMilliseconds.removeAll(keepingCapacity: true)
     }

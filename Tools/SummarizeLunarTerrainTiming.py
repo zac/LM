@@ -15,7 +15,7 @@ from pathlib import Path
 
 
 def summarize(path):
-    runs = defaultdict(lambda: {"phases": defaultdict(list), "frames": [], "ready": []})
+    runs = defaultdict(lambda: {"phases": defaultdict(list), "frames": [], "ready": [], "memory": []})
     for line in path.read_text().splitlines():
         parts = line.split()
         if len(parts) < 8 or not parts[5].isdigit():
@@ -25,6 +25,11 @@ def summarize(path):
         except ValueError:
             continue
         run = runs[int(parts[5])]
+        memory = re.search(r"Terrain memory phase=(\S+) physical=(\d+) peak=(\d+) metal=(\d+) resources=(\d+)", line)
+        if memory:
+            run["memory"].append(dict(time=time, phase=memory[1],
+                **{key: int(memory[index]) / 1048576 for index, key in enumerate(
+                    ["physicalMiB", "lifetimePeakMiB", "metalAllocatedMiB", "resourceMiB"], start=2)}))
         phase = re.search(r"Terrain phase end=(\S+) elapsed=([\d.]+)ms main=(\w+)", line)
         if phase:
             run["phases"][phase[1] + ("/main" if phase[3] == "true" else "/worker")].append(float(phase[2]))
@@ -50,6 +55,12 @@ def summarize(path):
                        "phases": {name: {"count": len(v), "totalMS": sum(v), "maxMS": max(v)} for name, v in run["phases"].items()},
                        "wholeRun": frames(run["frames"]),
                        "settled": frames([v for v in run["frames"] if v["time"] >= ready_time + 85])}
+        if run["memory"]:
+            result[pid]["memory"] = {
+                "lifetimePeakMiB": max(v["lifetimePeakMiB"] for v in run["memory"]),
+                "maxMetalAllocatedMiB": max(v["metalAllocatedMiB"] for v in run["memory"]),
+                "samples": run["memory"],
+            }
     return result
 
 
