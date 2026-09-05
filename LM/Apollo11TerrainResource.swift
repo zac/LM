@@ -291,9 +291,10 @@ enum Apollo11TerrainResource {
         let mesh = try LMLunarTerrainTiming.measure("mesh-upload") {
             try MeshResource.generate(from: [descriptor])
         }
-        let material = try LMLunarTerrainTiming.measure("material-upload") {
-            try LMTerrainWorld.detailTerrainMaterial(build.detail, plan: plan)
-        }
+        let upload = LMLunarTerrainTiming.begin("material-upload-async")
+        let material = try await LMTerrainWorld.detailTerrainMaterial(build.detail, plan: plan)
+        LMLunarTerrainTiming.end(upload)
+        try Task.checkCancellation()
         let entity = ModelEntity(mesh: mesh, materials: [material])
         if heightField.resolvesProceduralSamples {
             entity.position = SIMD3(Float(plan.centerNorthMeters), 0, Float(-plan.centerEastMeters))

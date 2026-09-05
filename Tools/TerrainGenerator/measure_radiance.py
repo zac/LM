@@ -27,13 +27,24 @@ def circular_hue_distance(hue: np.ndarray, target: float) -> np.ndarray:
     return np.minimum(distance, 255 - distance)
 
 
-def ownership_masks(path: Path) -> tuple[np.ndarray, np.ndarray]:
+def ownership_masks(path: Path, global_levels: bool = False) -> tuple[np.ndarray, np.ndarray]:
     hsv = np.asarray(Image.open(path).convert("HSV"))
     hue = hsv[..., 0].astype(np.float64)
     saturation = hsv[..., 1]
     terminal_distance = circular_hue_distance(hue, TERMINAL_HUE)
     landing_distance = circular_hue_distance(hue, LANDING_HUE)
     valid = saturation > 30
+    if global_levels:
+        # The Simulator still color-converts unlit tints. Verified output hues
+        # are 32-33 for L0 and 79-80 for L1, versus input hues 33 and 92.
+        # L5's other green is 68 on output / 71 on input. These disjoint bands
+        # include both encodings and exclude every other global LOD; the old
+        # broad two-class mask also counted L4 as terminal and L5 as landing.
+        terminal = valid & (circular_hue_distance(hue, TERMINAL_HUE) < 7)
+        landing = valid & (hue >= 75) & (hue <= 100)
+        if not terminal.any() or not landing.any():
+            raise ValueError("global tint does not contain both terminal and landing levels")
+        return terminal, landing
     terminal = valid & (terminal_distance < landing_distance) & (terminal_distance < 24)
     landing = valid & (landing_distance < terminal_distance) & (landing_distance < 35)
     if not terminal.any() or not landing.any():
@@ -62,6 +73,8 @@ def measure(
     regions: dict[str, dict[str, float | int]] = {}
     for label, mask in (("terminal", terminal), ("landing", landing)):
         interior = binary_erosion(mask, iterations=16)
+        if not interior.any():
+            raise ValueError(f"{label} has no interior after the required 16-pixel erosion")
         regions[label] = {
             "pixels": int(interior.sum()),
             "meanLuminance": float(values[interior].mean()),
@@ -84,6 +97,8 @@ def measure(
         & (landing_depth < 30)
         & (distance_to_terminal < 80)
     )
+    if not terminal_band.any() or not landing_band.any():
+        raise ValueError("capture has no adjacent boundary at the required 8-30 pixel depth")
     terminal_mean = float(values[terminal_band].mean())
     landing_mean = float(values[landing_band].mean())
     boundary = {
@@ -164,8 +179,10 @@ def main() -> None:
             "same-camera LOD pair as LABEL=COARSE_PATH,FINE_PATH; repeatable"
         ),
     )
+    parser.add_argument("--global-levels", action="store_true",
+                        help="Segment the unlit seven-level global palette; reject unrelated LODs")
     arguments = parser.parse_args()
-    terminal, landing = ownership_masks(arguments.tint)
+    terminal, landing = ownership_masks(arguments.tint, arguments.global_levels)
     result = {
         "tileTint": str(arguments.tint),
         "protocol": {

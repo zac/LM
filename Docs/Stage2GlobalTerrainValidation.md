@@ -343,3 +343,112 @@ inspection projection, not a calibrated mapping from screenshot pixels.
 The earlier description of this particular patch as near-field intrusion is
 therefore unproven. Distant footprint joins and the complete visual acceptance
 gates remain open until the final captures are assessed.
+
+### Final highland ladder and texture-upload tradeoff
+
+`/tmp/LM-Stage2-Stability-Final-Highland/` contains all nine production stops,
+including the whole globe. All nine final settled windows have p95/p99/max
+16.67 ms and zero missed callbacks. No video or Xcode build/test ran during
+these captures. Both terminal and surface PNGs are byte-identical to the
+unchanged-geometry before controls. The inspected ladder still shows smooth
+coarse terrain and distant rectangular transitions; equal pixels establish
+continuity of this change, not global appearance acceptance.
+
+| Stop | Generation ms | Settled MiB | Whole-run maximum frame ms | Whole-run missed callbacks |
+| --- | ---: | ---: | ---: | ---: |
+| Globe | 4,844 | 116.8 | 220.78 | 4 |
+| Crossfade | 7,368 | 125.9 | 158.78 | 5 |
+| 128 m | 6,200 | 122.0 | 166.78 | 5 |
+| 32 m | 3,801 | 111.8 | 220.15 | 4 |
+| 8 m | 5,351 | 116.2 | 239.75 | 4 |
+| 2 m | 6,895 | 121.3 | 485.91 | 4 |
+| 0.5 m | 13,948 | 140.8 | 204.98 | 4 |
+| 0.125 m | 20,493 | 158.1 | 237.27 | 5 |
+| Surface | 20,566 | 157.1 | 156.30 | 6 |
+
+Detail albedo and normal textures now use RealityKit's asynchronous image
+initializers, followed by a cancellation check before entity publication.
+Their elapsed upload intervals include suspension and are not main-thread
+occupancy. Relative to the before terminal/surface controls, generation takes
+757/1,318 ms longer, while whole-run missed callbacks fall from 17/24 to 4/6.
+The intervening worker-only control measured 23/31 missed callbacks. These
+single-launch comparisons support the responsiveness tradeoff but do not
+establish a statistically stable gain. The maximum surface publication interval
+is 1.85 ms; its individual mesh uploads peak at 3.25 ms. Startup stalls remain.
+The 485.91 ms event occurs during initial globe setup, before source resolution
+or terrain generation starts, so it is not attributed to a terrain tile bake.
+
+After the ninth highland screenshot and hash record, the capture shell emitted
+an EOF parse error because its source file had been edited while it was running.
+All nine PNG hashes and PID-scoped complete settled records were verified after
+this error. The corrected script passes `bash -n`; subsequent captures use that
+fixed script. This is a capture-script failure after the completed ladder, not
+an app failure or evidence that an unfinished capture passed.
+
+`/tmp/LM-Stage2-Stability-Final-Mare/` completes the same nine-stop ladder at
+8.35°, 30.83°. Every settled p95/p99/max is 16.67 ms with zero missed callbacks.
+Both regions report a 236.901175 m focus source floor and zero missing requested
+sources; this is a regional terrain comparison, not a finer SLDEM source test.
+All mare images were inspected. Near-surface foregrounds are continuous in the
+static views, while wider views still expose the extent of added fine detail.
+
+| Stop | Generation ms | Settled MiB | Whole-run maximum frame ms | Whole-run missed callbacks |
+| --- | ---: | ---: | ---: | ---: |
+| Globe | 4,377 | 118.1 | 233.37 | 5 |
+| Crossfade | 6,710 | 127.3 | 145.31 | 4 |
+| 128 m | 5,597 | 121.9 | 257.31 | 4 |
+| 32 m | 3,396 | 113.2 | 165.72 | 7 |
+| 8 m | 4,696 | 116.8 | 219.32 | 4 |
+| 2 m | 5,846 | 121.8 | 128.26 | 5 |
+| 0.5 m | 12,444 | 141.4 | 137.01 | 6 |
+| 0.125 m | 18,366 | 157.7 | 123.72 | 5 |
+| Surface | 18,278 | 158.2 | 274.55 | 4 |
+
+### Complete Apollo baseline regression
+
+`/tmp/LM-Stage2-Stability-Final-Apollo/` repeats all eleven item 0 stops with
+the same 20-second launch protocol. Every PNG is byte-identical to
+`/tmp/LM-Stage2-Release-Baseline-2026-09-04-v2/`. Every final settled window has
+16.67 ms p95/p99/max and zero missed callbacks. Baseline maximum settled frames
+were 22.22 ms at Orbit, Terminal and relief-blend start, and 16.67 ms elsewhere.
+The original terrain assets also remain byte-identical to `c950d46`.
+
+Settled physical footprints at Globe/Terminal/Landing/Surface are
+305.2/325.7/349.2/362.9 MiB, versus 312.2/336.5/380.8/368.6 MiB in item 0.
+Across all stops, the largest sampled footprint is 364.1 MiB, versus 406.5 MiB.
+The worst startup frame is 578.65 ms, versus 643.77 ms. These matched launch
+runs do not establish headset performance or a repeatable percentage gain.
+Terminal tile completion ranges are 324–354 ms, versus 252–356 ms; Landing
+ranges are 2021–2234 ms, versus 1471–2043 ms. As in the global comparison,
+asynchronous resource creation can trade some arrival latency for fewer
+blocking intervals. `baseline-comparison.json`, `performance.tsv` and
+`metrics.json` retain the complete per-stop evidence. The 90-second global
+readiness protocol and 20-second Apollo attribution protocol are deliberately
+reported separately.
+
+### Boundary diagnostic corrections
+
+The seven global levels need stricter ownership masks than Apollo's original
+two-color diagnostic. That broad classifier also counted distant L4/L5 pixels
+as terminal/landing. A first strict classifier assumed input HSV survived the
+unlit render unchanged. `/tmp/LM-Stage2-Stability-Highland-Tint/radiance.json`
+records that failed attempt with empty bands and NaN values; it is invalid
+acceptance evidence. The Simulator output has terminal hues 32–33 and landing
+hues 79–80, while the other green L5 has hue 68 on the same 0–255 scale.
+
+The global classifier now uses disjoint bands that include the observed output
+and original input colors while excluding the other levels. Four Python tests
+cover all seven input colors, captured output colors at all three landing parity
+brightnesses, empty interiors, and separated regions without an adjacent edge.
+Empty measurement bands now raise an error. The existing 16-pixel erosion,
+8–30 pixel boundary depth, 80-pixel adjacency distance, luminance formula and
+1.5% acceptance limit are unchanged. This calibration is Simulator evidence;
+a different capture color pipeline needs its own palette check.
+
+The corrected highland surface result is +0.4394% calibrated, +1.0561%
+photographic and +0.4653% with normal maps off. There are 49,221 terminal and
+39,175 landing boundary pixels. These results are in
+`/tmp/LM-Stage2-Stability-Highland-Tint/radiance-corrected.json`.
+The required constant-reflectance/no-normal control is reported separately.
+The mare surface tint contains only landing tiles. Its failed measurement is
+correctly rejected; a same-view surface image cannot establish a boundary pass.

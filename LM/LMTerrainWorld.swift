@@ -361,7 +361,7 @@ enum LMTerrainWorld {
     @MainActor static func detailTerrainMaterial(
         _ detail: LMTerrainTileDetailTextures,
         plan: LMTerrainTilePlan
-    ) throws -> PhysicallyBasedMaterial {
+    ) async throws -> any Material {
         // Capture-only residency map: paint each progressive tile a flat color
         // keyed by its level and grid parity so a screenshot attributes every
         // rendered rectangle to one concrete tile. Never set for production or
@@ -369,7 +369,9 @@ enum LMTerrainWorld {
         if ProcessInfo.processInfo.arguments.contains(
             "--lunar-explorer-tile-tint=id"
         ) {
-            var material = PhysicallyBasedMaterial()
+            // Keep the diagnostic palette independent of lighting and tone
+            // mapping so all seven global LODs can be segmented unambiguously.
+            var material = UnlitMaterial(applyPostProcessToneMap: false)
             let hue = 0.13 + Double(plan.id.level) * 0.23
             let parity = Double((plan.id.eastIndex & 1) + (plan.id.northIndex & 1))
             let tint = PhysicallyBasedMaterial.Color(
@@ -378,11 +380,7 @@ enum LMTerrainWorld {
                 brightness: 0.45 + parity * 0.25,
                 alpha: 1
             )
-            material.baseColor = .init(tint: tint)
-            material.roughness = .init(floatLiteral: 0.96)
-            material.metallic = .init(floatLiteral: 0)
-            material.emissiveColor = .init(color: tint)
-            material.emissiveIntensity = exposureFloor
+            material.color = .init(tint: tint)
             return material
         }
         guard let albedoImage = LMTerrainTileDetailBaker.image(
@@ -392,7 +390,7 @@ enum LMTerrainWorld {
         ) else {
             throw WorldError.missingTile("tile detail textures")
         }
-        let albedo = try TextureResource(
+        let albedo = try await TextureResource(
             image: albedoImage,
             options: terrainTextureCreateOptions(semantic: .color)
         )
@@ -411,7 +409,7 @@ enum LMTerrainWorld {
             ) else {
                 throw WorldError.missingTile("tile detail normal texture")
             }
-            let normal = try TextureResource(
+            let normal = try await TextureResource(
                 image: normalImage,
                 options: terrainTextureCreateOptions(semantic: .normal)
             )
