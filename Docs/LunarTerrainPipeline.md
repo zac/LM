@@ -610,6 +610,28 @@ close-range footprint cue must be removed before this phase is accepted.
 
 ## Global source resolver (Stage 2)
 
+Global terrain arrival uses a common refinement of the previously displayed and
+incoming triangle meshes. It samples those meshes, never a new procedural
+realization. GPU vertices and CPU contact share exact endpoints and a bounded
+Float weight, including fused multiply-add rounding. Hidden parent samples
+remain available, while only submitted vertices determine whether a render mesh
+needs updates. The source-post and residual-cap contracts remain unchanged.
+
+The transient surface stays opaque. Its appearance interpolates copies of the
+actual uploaded endpoint textures in linear light, writing the native sRGB
+format. Initialize each low-level appearance and its mipmaps before registering
+its TextureResource, so initial publication cannot expose an empty backing.
+Unchanged materials and geometry use the static path. GPU submissions
+remain bounded to one at a time and follow RealityKit scene updates; initial and
+final resources each receive two scene updates before the next replacement.
+Cancellation stops pending generation while the displayed transition finishes.
+A new completed generation waits for that endpoint, and re-anchoring changes
+only its entity placement. The final publication restores the original target
+resources. Apollo 11 continues to use its existing renderer and loaded bytes.
+
+Arrival measurements and capture limitations are recorded in
+`Stage2GlobalTerrainValidation.md`.
+
 `LMLunarTerrainRegion` freezes its verified source set before geometry generation.
 `LMLunarResolvedTerrain` owns the native-post residual and cap contracts;
 `LMLunarTerrainMeshSnapshot` retains the actual submitted triangles for parent

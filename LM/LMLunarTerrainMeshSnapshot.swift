@@ -14,7 +14,10 @@ struct LMLunarTerrainMeshTile: Sendable {
     func position(at index: Int) -> SIMD3<Float> {
         guard let startMesh, morphWeight < 1 else { return mesh.positions[index] }
         if morphWeight <= 0 { return startMesh.positions[index] }
-        return startMesh.positions[index] + (mesh.positions[index] - startMesh.positions[index]) * morphWeight
+        let a = startMesh.positions[index], b = mesh.positions[index]
+        return SIMD3(a.x.addingProduct(b.x - a.x, morphWeight),
+                     a.y.addingProduct(b.y - a.y, morphWeight),
+                     a.z.addingProduct(b.z - a.z, morphWeight))
     }
 
     func normal(at index: Int) -> SIMD3<Float> {

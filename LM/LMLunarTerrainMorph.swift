@@ -8,6 +8,7 @@ struct LMLunarTerrainMorph: Sendable {
         let plan: LMTerrainTilePlan
         let start: LMProgressiveTerrainMeshData
         let end: LMProgressiveTerrainMeshData
+        let changesGeometry: Bool
 
         func displayed(weight: Float) -> LMLunarTerrainMeshTile {
             .init(plan: plan, mesh: end, startMesh: start, morphWeight: min(1, max(0, weight)))
@@ -84,7 +85,13 @@ struct LMLunarTerrainMorph: Sendable {
                              addedReliefNormalDistribution: .flat,
                              textureCoordinates: candidate.mesh.textureCoordinates, indices: indices)
             }
-            result.append(.init(plan: plan, start: mesh(a, an), end: mesh(b, bn)))
+            // Covered parent samples are retained for contact lookup, but only
+            // submitted vertices can make this render mesh dynamic.
+            let changesGeometry = indices.contains {
+                let i = Int($0)
+                return a[i] != b[i] || an[i] != bn[i]
+            }
+            result.append(.init(plan: plan, start: mesh(a, an), end: mesh(b, bn), changesGeometry: changesGeometry))
         }
         tiles = result
     }

@@ -13,6 +13,11 @@ final class LMLunarTerrainPresentation {
     private(set) var boundsMaximum = SIMD3<Float>.zero
     private var requested = [LMTerrainTilePlan]()
     private var task: Task<Void, Never>?
+    private var morphTask: Task<Void, Never>?
+    private var anchor: LMSelenographicLocalFrame?
+    var presentationChanged: (@MainActor () -> Void)?
+    private(set) var isMorphing = false
+    static let morphDurationSeconds = 1.2
     private var generation = UUID()
     private var residentEntities = [(Entity, LMTerrainTilePlan)]()
     private var pipeline: LMTerrainDetailPipeline
@@ -38,6 +43,12 @@ final class LMLunarTerrainPresentation {
                 status: @escaping @MainActor (String, Int, Int, Double?, Int?) -> Void) {
         let plans = Self.plans(sourceSpacing: region.terrain.base.spacingMeters, east: east, north: north,
                                altitude: altitude, metersAcross: metersAcross, heading: heading)
+        update(plans: plans, east: east, north: north, status: status)
+    }
+
+    /// Also permits small real-baker plans in lifecycle tests.
+    func update(plans: [LMTerrainTilePlan], east: Double, north: Double,
+                status: @escaping @MainActor (String, Int, Int, Double?, Int?) -> Void) {
         guard plans != requested else { return }
         requested = plans
         task?.cancel()
@@ -83,12 +94,13 @@ final class LMLunarTerrainPresentation {
                 }
                 try Task.checkCancellation()
                 guard let self, self.generation == token else { return }
-                let publication = LMLunarTerrainTiming.begin("generation-publication")
-                defer { LMLunarTerrainTiming.end(publication) }
-                let old = Array(self.root.children)
-                self.root.addChild(replacement)
-                old.forEach { $0.removeFromParent() }
-                self.snapshot = .init(tiles: built.reversed())
+                // Let the current visible interpolation finish even when a new
+                // request cancels pending work. Never restart from its target
+                // while a different intermediate surface is still displayed.
+                if let active = self.morphTask { await active.value }
+                try Task.checkCancellation()
+                guard self.generation == token else { return }
+                let target = LMLunarTerrainMeshSnapshot(tiles: built.reversed())
                 var minimum = SIMD3<Float>(repeating: .infinity)
                 var maximum = SIMD3<Float>(repeating: -.infinity)
                 for tile in built {
@@ -98,15 +110,78 @@ final class LMLunarTerrainPresentation {
                         maximum = simd_max(maximum, vertex + offset)
                     }
                 }
-                self.boundsMinimum = minimum
-                self.boundsMaximum = maximum
-                self.residentEntities = entities
-                self.cache = nextCache
-                self.logger.info("Global focus rendered=\(self.snapshot.sample(east: east, north: north)?.elevation ?? 0)m")
-                let elapsed = start.duration(to: .now).components
-                let milliseconds = Int(elapsed.seconds * 1_000 + elapsed.attoseconds / 1_000_000_000_000_000)
-                status("Lunar terrain ready", plans.count, built.count, plans.map(\.sampleSpacingMeters).min(), milliseconds)
-                self.logger.info("Global terrain ready tiles=\(built.count) generation=\(milliseconds)ms floor=\(region.measuredFloorMeters)m")
+                @MainActor func ready() {
+                    guard self.generation == token else { return }
+                    self.logger.info("Global focus rendered=\(self.snapshot.sample(east: east, north: north)?.elevation ?? 0)m")
+                    let elapsed = start.duration(to: .now).components
+                    let milliseconds = Int(elapsed.seconds * 1_000 + elapsed.attoseconds / 1_000_000_000_000_000)
+                    status("Lunar terrain ready", plans.count, built.count, plans.map(\.sampleSpacingMeters).min(), milliseconds)
+                    self.logger.info("Global terrain ready tiles=\(built.count) generation=\(milliseconds)ms floor=\(region.measuredFloorMeters)m")
+                }
+                if self.snapshot.tiles.isEmpty {
+                    self.install(replacement, snapshot: target, entities: entities, minimum: minimum, maximum: maximum)
+                    self.cache = nextCache
+                    ready()
+                } else {
+                    let previous = self.snapshot
+                    let preparation = Task.detached(priority: .userInitiated) {
+                        try LMLunarTerrainTiming.measure("morph-preparation") {
+                            try LMLunarTerrainMorph(from: previous, to: target)
+                        }
+                    }
+                    let morph = try await withTaskCancellationHandler(
+                        operation: { try await preparation.value }, onCancel: { preparation.cancel() })
+                    try Task.checkCancellation()
+                    let realization = LMLunarTerrainTiming.begin("morph-realization")
+                    let renderer = try await LMLunarTerrainMorphRenderer(morph: morph,
+                        from: self.cache.values.map { ($0.plan, $0.build) },
+                        to: nextCache.values.map { ($0.plan, $0.build) })
+                    LMLunarTerrainTiming.end(realization)
+                    try Task.checkCancellation()
+                    guard self.generation == token else { return }
+                    self.install(renderer.root, snapshot: morph.snapshot(weight: 0), entities: renderer.entities,
+                        minimum: simd_min(self.boundsMinimum, minimum), maximum: simd_max(self.boundsMaximum, maximum))
+                    self.cache = nextCache
+                    self.isMorphing = true
+                    status("Blending lunar terrain", plans.count, morph.tiles.count, plans.map(\.sampleSpacingMeters).min(), nil)
+                    self.logger.info("Global morph begin tiles=\(morph.tiles.count) dynamic=\(renderer.entries.count) appearance=\(renderer.appearances.count) duration=\(Self.morphDurationSeconds)s")
+                    self.morphTask = Task { @MainActor in
+                        defer { self.morphTask = nil; self.isMorphing = false }
+                        do {
+                            // Let RealityKit consume initial entity/buffer
+                            // publication before replacing those buffers again.
+                            await self.waitForSceneUpdates(2)
+                            let clock = ContinuousClock.now
+                            while true {
+                                let elapsed = clock.duration(to: .now).components
+                                let seconds = Double(elapsed.seconds) + Double(elapsed.attoseconds) / 1e18
+                                let weight = LMLunarTerrainMorph.weight(fraction: seconds / Self.morphDurationSeconds)
+                                let update = LMLunarTerrainTiming.begin("morph-frame")
+                                let command = try renderer.update(weight: weight)
+                                self.snapshot = morph.snapshot(weight: weight)
+                                self.presentationChanged?()
+                                LMLunarTerrainTiming.end(update)
+                                // Bound in-flight replacement buffers. Slow GPU
+                                // work must not accumulate more mesh/texture copies.
+                                let completion = LMLunarTerrainTiming.begin("morph-gpu-wait")
+                                try await command.complete()
+                                LMLunarTerrainTiming.end(completion)
+                                if weight == 1 { break }
+                                await self.waitForSceneUpdates(1)
+                            }
+                            await self.waitForSceneUpdates(2)
+                            self.install(replacement, snapshot: target, entities: entities, minimum: minimum, maximum: maximum)
+                            self.isMorphing = false
+                            self.logger.info("Global morph complete")
+                            ready()
+                        } catch {
+                            self.logger.error("Global terrain failed: morph \(error.localizedDescription)")
+                            if self.generation == token {
+                                status("Lunar terrain failed: \(error.localizedDescription)", plans.count, self.snapshot.tiles.count, nil, nil)
+                            }
+                        }
+                    }
+                }
             } catch is CancellationError { }
             catch {
                 guard let self, self.generation == token else { return }
@@ -172,16 +247,53 @@ final class LMLunarTerrainPresentation {
         requested = []
     }
 
+    private func waitForSceneUpdates(_ count: Int) async {
+        guard let scene = root.scene else {
+            try? await Task.sleep(for: .milliseconds(16 * count))
+            return
+        }
+        let (updates, continuation) = AsyncStream<Void>.makeStream(bufferingPolicy: .bufferingNewest(count))
+        let subscription = scene.subscribe(to: SceneEvents.Update.self) { _ in continuation.yield(()) }
+        // A detached or suspended scene must not retain an arrival forever.
+        let timeout = Task {
+            try? await Task.sleep(for: .seconds(1))
+            continuation.finish()
+        }
+        defer { subscription.cancel(); timeout.cancel(); continuation.finish() }
+        var received = 0
+        for await _ in updates {
+            received += 1
+            if received == count { break }
+        }
+    }
+
     func setMode(_ mode: LMTerrainDetailMode) {
         cancel()
         // The bundled neural corpus is Apollo-only. Until N3 has validated
         // geographic conditioning, global regions use the calibrated fallback.
         pipeline = LMTerrainDetailMode.procedural.makePipeline()
-        cache = [:]
+        // Both modes currently resolve to that same deterministic generator.
+        // Keep the displayed appearance available as the next morph endpoint.
         requested = []
     }
 
+    private func install(_ replacement: Entity, snapshot: LMLunarTerrainMeshSnapshot,
+                         entities: [(Entity, LMTerrainTilePlan)], minimum: SIMD3<Float>, maximum: SIMD3<Float>) {
+        let publication = LMLunarTerrainTiming.begin("generation-publication")
+        defer { LMLunarTerrainTiming.end(publication) }
+        residentEntities = entities
+        apply(anchor: anchor ?? region.frame)
+        let old = Array(root.children)
+        root.addChild(replacement)
+        old.forEach { $0.removeFromParent() }
+        self.snapshot = snapshot
+        boundsMinimum = minimum
+        boundsMaximum = maximum
+        presentationChanged?()
+    }
+
     func apply(anchor: LMSelenographicLocalFrame) {
+        self.anchor = anchor
         for (entity, plan) in residentEntities {
             entity.transform = LMLunarAnchoredPlacement.chunkTransform(
                 origin: .init(northMeters: plan.centerNorthMeters, eastMeters: plan.centerEastMeters, upMeters: 0),

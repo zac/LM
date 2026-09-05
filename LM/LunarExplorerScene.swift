@@ -275,6 +275,10 @@ final class LunarExplorerScene {
                 self.terrainAnchorRoot.addChild(world)
                 self.terrainEnvironment = world
                 self.globalTerrain = terrain
+                terrain.presentationChanged = { [weak self, weak session] in
+                    guard let self, let session else { return }
+                    self.updatePresentationTransform(session)
+                }
                 self.sourceFrame = region.frame
                 self.floatingOrigin = .init(frame: region.frame)
                 self.reanchorProbePending = session.captureReanchorProbe
