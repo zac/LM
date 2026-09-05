@@ -1,4 +1,5 @@
 import Foundation
+import Darwin
 import QuartzCore
 import AGC
 import LMCore
@@ -74,6 +75,7 @@ final class PoweredDescentSession {
     @ObservationIgnored var terrainReady: (() -> Bool)?
     @ObservationIgnored var vehicleDidAdvance: ((LMVehicleStateSnapshot) -> Void)?
     @ObservationIgnored var terrainCaptureMetrics: (() -> [String: Double])?
+    @ObservationIgnored private var captureExport: Task<Void, Never>?
     @ObservationIgnored private var lastCaptureSecond = -1
     @ObservationIgnored private var terrainWaitSeconds = 0.0
     @ObservationIgnored private var publicationWaitSeconds = 0.0
@@ -420,6 +422,8 @@ final class PoweredDescentSession {
     }
 
     func stop() {
+        captureExport?.cancel()
+        captureExport = nil
         runID = UUID()
         loopTask?.cancel()
         loopTask = nil
@@ -698,6 +702,11 @@ final class PoweredDescentSession {
         if let contact = state.surfaceContact {
             report["contactVerticalSpeed"] = contact.verticalSpeedMetersPerSecond
             report["contactHorizontalSpeed"] = contact.horizontalSpeedMetersPerSecond
+            report["contactTiltDegrees"] = contact.tiltRadians * 180 / .pi
+            if let normal = contact.surfaceNormal {
+                report["contactSurfaceNormalSiteENU"] = [normal.x, normal.y, normal.z]
+                report["contactSurfaceSlopeToSiteUpDegrees"] = acos(min(1, max(-1, normal.z))) * 180 / .pi
+            }
         }
         let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         if let data = try? JSONSerialization.data(withJSONObject: report, options: [.sortedKeys]) {
@@ -705,7 +714,41 @@ final class PoweredDescentSession {
         }
         if state.flightOutcome.isTerminal {
             let recording = LMFlightRecording(scenarioID: scenario.id, controlMode: .automatic, frames: recordedFrames)
-            try? recording.encoded().write(to: directory.appendingPathComponent("CockpitMissionRecording.json"), options: .atomic)
+            let recordingRunID = runID
+            captureExport?.cancel()
+            captureExport = Task { @MainActor [weak self] in
+                let temporary = directory.appendingPathComponent("CockpitMission-\(UUID()).partial")
+                defer { try? FileManager.default.removeItem(at: temporary) }
+                let worker = Task.detached(priority: .utility) {
+                    try LMLunarTerrainTiming.measure("cockpit-recording-export") {
+                        try Task.checkCancellation()
+                        LMLunarTerrainTiming.memory("cockpit-recording-before")
+                        guard FileManager.default.createFile(atPath: temporary.path, contents: nil) else {
+                            throw CocoaError(.fileWriteUnknown)
+                        }
+                        let handle = try FileHandle(forWritingTo: temporary)
+                        do {
+                            try recording.writeJSON(to: handle)
+                            try handle.close()
+                        } catch {
+                            try? handle.close()
+                            throw error
+                        }
+                        LMLunarTerrainTiming.memory("cockpit-recording-after")
+                    }
+                }
+                do {
+                    try await withTaskCancellationHandler(operation: { try await worker.value },
+                                                          onCancel: { worker.cancel() })
+                    guard !Task.isCancelled, self?.runID == recordingRunID else { return }
+                    // Only the atomic rename runs on the main actor. A stopped
+                    // or restarted flight cannot publish an older recording.
+                    let destination = directory.appendingPathComponent("CockpitMissionRecording.json")
+                    let publication = LMLunarTerrainTiming.begin("cockpit-recording-publication")
+                    defer { LMLunarTerrainTiming.end(publication) }
+                    guard rename(temporary.path, destination.path) == 0 else { return }
+                } catch { /* Capture failure leaves no partial final recording. */ }
+            }
         }
     }
 

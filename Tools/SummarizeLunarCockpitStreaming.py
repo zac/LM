@@ -20,9 +20,15 @@ def mission(directory):
         raise ValueError("Capture needs an unambiguous app PID")
     run = timing[pid]
     cache = {}
+    morphs = []
     for line in (directory / "performance.log").read_text().splitlines():
         parts = line.split()
-        if len(parts) < 8 or parts[5] != str(pid) or "Global cache " not in line:
+        if len(parts) < 8 or parts[5] != str(pid):
+            continue
+        morph = re.search(r"Global morph begin tiles=(\d+) dynamic=(\d+) appearance=(\d+)", line)
+        if morph:
+            morphs.append(tuple(map(int, morph.groups())))
+        if "Global cache " not in line:
             continue
         for key, value in re.findall(r"(\w+)=(\d+)", line.split("Global cache ", 1)[1]):
             cache[key] = cache.get(key, 0) + int(value)
@@ -30,18 +36,32 @@ def mission(directory):
     if latest["outcome"] == "inFlight":
         raise ValueError("Capture has no terminal status; recover or repeat it before summarizing")
     generations = run["generations"]
+    resource_peaks = {}
+    for sample in run.get("memory", {}).get("samples", []):
+        if sample["resourceMiB"]:
+            resource_peaks[sample["phase"]] = max(resource_peaks.get(sample["phase"], 0), sample["resourceMiB"])
     report = {
         "directory": str(directory.resolve()), "pid": pid,
         "binarySHA256": (directory / "binary-sha256.txt").read_text().split()[0],
         "outcome": latest["outcome"], "simulationSeconds": latest["timeSeconds"],
         "streaming": latest.get("streaming"), "contact": latest["terrain"],
+        "touchdown": {key: latest.get(key) for key in (
+            "contactVerticalSpeed", "contactHorizontalSpeed", "contactTiltDegrees",
+            "contactSurfaceNormalSiteENU", "contactSurfaceSlopeToSiteUpDegrees")},
         "cache": cache or None,
+        "morphs": {"count": len(morphs),
+                   "maximumTiles": max((m[0] for m in morphs), default=0),
+                   "maximumDynamicMeshes": max((m[1] for m in morphs), default=0),
+                   "maximumAppearancePairs": max((m[2] for m in morphs), default=0)},
         "generations": {"count": len(generations),
                         "totalSeconds": sum(x["milliseconds"] for x in generations) / 1000,
                         "maximumSeconds": max((x["milliseconds"] for x in generations), default=0) / 1000,
                         "maximumTiles": max((x["tiles"] for x in generations), default=0)},
         "frames": run["wholeRun"],
         "memory": {key: value for key, value in run.get("memory", {}).items() if key != "samples"},
+        # Phase peaks need not coincide and can refer to retained/shared data.
+        # Do not sum them or interpret logical payload as driver allocation.
+        "logicalResourcePeaksMiB": resource_peaks or None,
         "phases": run["phases"],
     }
     if all((directory / name).exists() for name in ["started-at.txt", "completed-at.txt"]):

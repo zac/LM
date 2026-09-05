@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 import LMCore
 import RealityKit
 import simd
@@ -111,6 +112,7 @@ final class LMLunarCockpitTerrain {
     private var contactSamples = 0
     private var missingContactSamples = 0
     private var holdsTerrainAtContact = false
+    private var reportedTerminalRays = false
 
     var captureMetrics: [String: Double] {
         ["maximumContactErrorMeters": maximumContactError, "contactSamples": Double(contactSamples),
@@ -160,6 +162,7 @@ final class LMLunarCockpitTerrain {
         if state.altitudeMeters > 250 {
             // Ignition restart/departure releases the previous landing surface.
             holdsTerrainAtContact = false
+            reportedTerminalRays = false
         } else if !holdsTerrainAtContact,
                   state.landingGear?.isProbeContact == true || state.surfaceContact != nil || state.flightOutcome.isTerminal {
             holdsTerrainAtContact = true
@@ -181,6 +184,29 @@ final class LMLunarCockpitTerrain {
                     contactSamples += 1
                 } else {
                     missingContactSamples += 1
+                }
+            }
+        }
+        if state.flightOutcome.isTerminal, !reportedTerminalRays,
+           ProcessInfo.processInfo.arguments.contains("--cockpit-terrain-rays") {
+            reportedTerminalRays = true
+            let snapshot = presentation.snapshot
+            let orientation = LMWorldMapper.attitudeOrientation(from: state.attitude)
+            // Nominal Simulator eye, not tracked headset pose. Hull occlusion
+            // is deliberately excluded so this isolates terrain ownership.
+            let eye = SIMD3(Float(state.positionMeters.x), Float(state.positionMeters.z),
+                            Float(-state.positionMeters.y)) + orientation.act(SIMD3(0, 1.45, 0))
+            Task.detached(priority: .utility) {
+                let logger = Logger(subsystem: "io.positron.LM", category: "TerrainOwnership")
+                for v: Float in [-0.3, 0, 0.3] {
+                    for u: Float in [-0.5, 0, 0.5] {
+                        if let hit = snapshot.raycast(origin: eye, direction: orientation.act(SIMD3(u, v, -1))) {
+                            let angularCell = atan2(hit.plan.sampleSpacingMeters, Double(hit.distance)) * 180 / .pi
+                            logger.info("Cockpit terrain ray u=\(u) v=\(v) spacing=\(hit.plan.sampleSpacingMeters)m distance=\(hit.distance)m cellAngle=\(angularCell)deg east=\(-hit.position.z)m north=\(hit.position.x)m")
+                        } else {
+                            logger.info("Cockpit terrain ray u=\(u) v=\(v) missed=true")
+                        }
+                    }
                 }
             }
         }

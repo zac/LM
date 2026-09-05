@@ -427,7 +427,8 @@ anchor, floating tangent frame, whatever sources cover it."
    `terrain-anchor-guidance` AGC branch. Arbitrary-site cockpit wiring and
    atomic publication now have two complete Release mission captures: the
    mare settles intact with a hard-landing classification; the highland
-   crashes on a 16.14° local slope below the guidance datum. Neither result
+   crashes at 16.14° vehicle tilt relative to the contact normal below the
+   guidance datum. That recording did not separately retain terrain slope. Neither result
    is relabelled as a soft landing. All 116,500 audited footpad samples match
    the published mesh, and both recordings pass decoding and replay checks.
    The streaming follow-up removes near-ground readiness waits on both checked
@@ -441,6 +442,21 @@ anchor, floating tangent frame, whatever sources cover it."
    remain, along with distant coverage/faceting and an intact highland landing.
    See `Stage2CockpitStreaming.md` for measured controls, the rejected larger
    prefetch budget, capture bookkeeping correction, and physical-device gates.
+
+   The September 5 diagnostic follow-up separates first-contact terrain
+   normal/slope from vehicle tilt, moves capture export off the main actor and
+   bounds JSON export memory. Final Mare remains intact with 51,996 exact
+   audited samples and zero coverage pauses. Its worst frame falls from
+   750.86 to 175.23 ms, while maximum publication wait and lifetime footprint
+   rise to 105.418 ms and 777.160 MiB; those gates remain open. Transient
+   transitions reach 113 tiles/99 dynamic meshes despite the 80-tile prediction
+   cap, so the next allocation budget must include the morph union and texture
+   payload. Highland diagnostic rays find a 512 m grid at 23.9 km; test denser
+   distant interpolation only against that expanded budget. Do not label the
+   historical 15.84-degree contact tilt as terrain slope. See
+   `Stage2TerrainDiagnostics.md` for evidence and `ArtemisFlybyRealism.md`
+   for the photographic reference controls.
+
    The lifecycle follow-up passes 15 Release Simulator tests, including exact
    P63 restart state, cancelled loads, and GPU/contact publication. The final
    eleven-stop Apollo capture is byte-identical to item 0. Settled pacing is

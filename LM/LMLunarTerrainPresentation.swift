@@ -231,9 +231,13 @@ final class LMLunarTerrainPresentation {
                                         let command = try renderer.update(weight: weight)
                                         // Physics waits for the GPU replacement and
                                         // its matching immutable contact snapshot.
+                                        let completion = LMLunarTerrainTiming.begin("cockpit-morph-gpu-wait")
                                         try await command.complete()
-                                        self.snapshot = morph.snapshot(weight: weight)
-                                        self.presentationChanged?()
+                                        LMLunarTerrainTiming.end(completion)
+                                        LMLunarTerrainTiming.measure("cockpit-morph-contact-publication") {
+                                            self.snapshot = morph.snapshot(weight: weight)
+                                            self.presentationChanged?()
+                                        }
                                         return true
                                     }
                                     LMLunarTerrainTiming.end(update)
