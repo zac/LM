@@ -1,0 +1,211 @@
+{
+  "version": 1,
+  "source": "USGS Gazetteer of Planetary Nomenclature",
+  "retrieved": "2026-09-04",
+  "queryURL": "https://planetarynames.wr.usgs.gov/SearchResults?Target=16_Moon",
+  "sourceSHA256": "05d2234ae1df89b01d2ffca5b2a6edd83a767935d56adc2c5c4201da3d41531f",
+  "coordinateSystem": "Planetographic, east positive, -180 to 180; spherical lunar datum",
+  "features": [
+    {
+      "id": "380",
+      "name": "Aristarchus",
+      "latitude": 23.73,
+      "longitude": -47.49,
+      "sourceURL": "https://planetarynames.wr.usgs.gov/Feature/380",
+      "category": "crater",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "USGS feature center. The terrain source resolution is shown after arrival."
+    },
+    {
+      "id": "1236",
+      "name": "Clavius",
+      "latitude": -58.62,
+      "longitude": -14.73,
+      "sourceURL": "https://planetarynames.wr.usgs.gov/Feature/1236",
+      "category": "crater",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "USGS feature center. The terrain source resolution is shown after arrival."
+    },
+    {
+      "id": "1296",
+      "name": "Copernicus",
+      "latitude": 9.62,
+      "longitude": -20.08,
+      "sourceURL": "https://planetarynames.wr.usgs.gov/Feature/1296",
+      "category": "crater",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "USGS feature center. The terrain source resolution is shown after arrival."
+    },
+    {
+      "id": "2482",
+      "name": "Hertzsprung",
+      "latitude": 1.37,
+      "longitude": -128.66,
+      "sourceURL": "https://planetarynames.wr.usgs.gov/Feature/2482",
+      "category": "crater",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "USGS feature center. The terrain source resolution is shown after arrival."
+    },
+    {
+      "id": "2990",
+      "name": "Kepler",
+      "latitude": 8.12,
+      "longitude": -38.01,
+      "sourceURL": "https://planetarynames.wr.usgs.gov/Feature/2990",
+      "category": "crater",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "USGS feature center. The terrain source resolution is shown after arrival."
+    },
+    {
+      "id": "3691",
+      "name": "Mare Tranquillitatis",
+      "latitude": 8.35,
+      "longitude": 30.83,
+      "sourceURL": "https://planetarynames.wr.usgs.gov/Feature/3691",
+      "category": "mare",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "USGS feature center. The terrain source resolution is shown after arrival."
+    },
+    {
+      "id": "4004",
+      "name": "Montes Apenninus",
+      "latitude": 19.87,
+      "longitude": 0.03,
+      "sourceURL": "https://planetarynames.wr.usgs.gov/Feature/4004",
+      "category": "mountain",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "USGS feature center. The terrain source resolution is shown after arrival."
+    },
+    {
+      "id": "4757",
+      "name": "Plato",
+      "latitude": 51.62,
+      "longitude": -9.38,
+      "sourceURL": "https://planetarynames.wr.usgs.gov/Feature/4757",
+      "category": "crater",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "USGS feature center. The terrain source resolution is shown after arrival."
+    },
+    {
+      "id": "5450",
+      "name": "Shackleton",
+      "latitude": -89.67,
+      "longitude": 129.78,
+      "sourceURL": "https://planetarynames.wr.usgs.gov/Feature/5450",
+      "category": "crater",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "USGS feature center. The terrain source resolution is shown after arrival."
+    },
+    {
+      "id": "6163",
+      "name": "Tycho",
+      "latitude": -43.3,
+      "longitude": -11.22,
+      "sourceURL": "https://planetarynames.wr.usgs.gov/Feature/6163",
+      "category": "crater",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "USGS feature center. The terrain source resolution is shown after arrival."
+    },
+    {
+      "id": "6336",
+      "name": "Vavilov",
+      "latitude": -0.87,
+      "longitude": -138.77,
+      "sourceURL": "https://planetarynames.wr.usgs.gov/Feature/6336",
+      "category": "crater",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "USGS feature center. The terrain source resolution is shown after arrival."
+    },
+    {
+      "id": "6300",
+      "name": "Vallis Schröteri",
+      "latitude": 26.16,
+      "longitude": -51.58,
+      "sourceURL": "https://planetarynames.wr.usgs.gov/Feature/6300",
+      "category": "valley",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "USGS feature center. The terrain source resolution is shown after arrival."
+    },
+    {
+      "id": "apollo-11",
+      "name": "Apollo 11",
+      "latitude": 0.673433,
+      "longitude": 23.473113,
+      "sourceURL": "https://ssd.jpl.nasa.gov/doc/lunar_cmd_2005_jpl_d32296.pdf",
+      "detail": "Bundled terrain origin, retaining the manifest retroreflector alignment. Eagle is a separate landmark.",
+      "height": -1928.037353515625,
+      "category": "apollo",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "Bundled terrain origin, retaining the manifest retroreflector alignment. Eagle is a separate landmark."
+    },
+    {
+      "id": "apollo-12",
+      "name": "Apollo 12",
+      "latitude": -3.0128,
+      "longitude": -23.4219,
+      "sourceURL": "https://www.lroc.asu.edu/data/support/downloads/2016_LROC_Coordinates_of_Human_Features.pdf",
+      "category": "apollo",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "Apollo landing site from the published mission coordinates."
+    },
+    {
+      "id": "apollo-14",
+      "name": "Apollo 14",
+      "latitude": -3.64589,
+      "longitude": -17.47194,
+      "sourceURL": "https://www.lroc.asu.edu/data/support/downloads/2016_LROC_Coordinates_of_Human_Features.pdf",
+      "category": "apollo",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "Apollo landing site from the published mission coordinates."
+    },
+    {
+      "id": "apollo-15",
+      "name": "Apollo 15",
+      "latitude": 26.13239,
+      "longitude": 3.6333,
+      "sourceURL": "https://www.lroc.asu.edu/data/support/downloads/2016_LROC_Coordinates_of_Human_Features.pdf",
+      "category": "apollo",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "Apollo landing site from the published mission coordinates."
+    },
+    {
+      "id": "apollo-16",
+      "name": "Apollo 16",
+      "latitude": -8.9734,
+      "longitude": 15.5011,
+      "sourceURL": "https://www.lroc.asu.edu/data/support/downloads/2016_LROC_Coordinates_of_Human_Features.pdf",
+      "category": "apollo",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "Apollo landing site from the published mission coordinates."
+    },
+    {
+      "id": "apollo-17",
+      "name": "Apollo 17",
+      "latitude": 20.1911,
+      "longitude": 30.7723,
+      "sourceURL": "https://www.lroc.asu.edu/data/support/downloads/2016_LROC_Coordinates_of_Human_Features.pdf",
+      "category": "apollo",
+      "suggestedAltitudeMeters": 7500,
+      "suggestedHeadingDegrees": 0,
+      "blurb": "Apollo landing site from the published mission coordinates."
+    }
+  ],
+  "viewDefaults": "Suggested altitude and heading are application inspection defaults, not source measurements."
+}

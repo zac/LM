@@ -1,5 +1,6 @@
 import RealityKit
 import SwiftUI
+import UIKit
 
 struct LunarExplorerView: View {
     @Environment(MainMenuViewModel.self) private var appModel
@@ -27,12 +28,40 @@ struct LunarExplorerView: View {
         .onDisappear {
             LunarExplorerPerformanceProbe.shared.stop()
         }
+        .task {
+            let arguments = ProcessInfo.processInfo.arguments
+            guard arguments.contains("--lunar-explorer-capture") else { return }
+            do {
+                if let value = arguments.first(where: { $0.hasPrefix("--lunar-explorer-fly-to=") }),
+                   let coordinate = LMLunarNavigation.parse(String(value.dropFirst("--lunar-explorer-fly-to=".count))) {
+                    try await waitForSettledTerrain(explorer)
+                    explorer.fly(to: coordinate)
+                }
+                if arguments.contains("--lunar-explorer-contact-probe") {
+                    try await waitForSettledTerrain(explorer)
+                    explorer.testLanding()
+                }
+            } catch { /* Closing the scene cancels the capture sequence. */ }
+
+        }
+    }
+
+    private func waitForSettledTerrain(_ session: LunarExplorerSession) async throws {
+        for _ in 0..<600 {
+            if !session.navigationInProgress && session.diagnostics.loadMessage == "Lunar terrain ready" {
+                try await Task.sleep(for: .seconds(100))
+                return
+            }
+            try await Task.sleep(for: .seconds(1))
+        }
+        throw CancellationError()
     }
 
     private func orbitGesture(_ session: LunarExplorerSession) -> some Gesture {
         DragGesture(minimumDistance: 0)
             .targetedToEntity(scene.interactionSurface)
             .onChanged { value in
+                guard !session.landingRunning, !session.navigationInProgress else { return }
                 switch session.navigationMode {
                 case .orbit:
                     panStart = nil
@@ -72,6 +101,7 @@ struct LunarExplorerView: View {
         MagnifyGesture()
             .targetedToEntity(scene.interactionSurface)
             .onChanged { value in
+                guard !session.landingRunning, !session.navigationInProgress else { return }
                 if zoomStartMetersAcross == nil {
                     zoomStartMetersAcross = session.metersAcross
                 }
@@ -87,20 +117,90 @@ struct LunarExplorerView: View {
 struct LunarExplorerControls: View {
     @Bindable var session: LunarExplorerSession
     let close: () -> Void
+    @State private var coordinateEntry = ""
+    @State private var search = ""
+    @State private var navigationExpanded = true
+    @State private var places = [LMLunarPOICatalog.Place]()
 
     var body: some View {
+        ScrollView {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Lunar Explorer")
                         .font(.title2.weight(.semibold))
-                    Text("Whole Moon to Apollo 11 production terrain")
+                    Text("Explore the Moon at any coordinate")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
                 Button("Done", action: close)
             }
+
+            Group {
+            DisclosureGroup("Navigate", isExpanded: $navigationExpanded) {
+                VStack(alignment: .leading, spacing: 8) {
+                    if let coordinate = session.currentCoordinate {
+                        HStack {
+                            Text(String(format: "%.6f, %.6f", coordinate.latitudeDegrees, coordinate.longitudeDegrees))
+                                .font(.caption.monospacedDigit())
+                            Button {
+                                UIPasteboard.general.string = String(format: "%.6f, %.6f", coordinate.latitudeDegrees, coordinate.longitudeDegrees)
+                            } label: { Image(systemName: "doc.on.doc") }
+                            .accessibilityLabel("Copy coordinates")
+                        }
+                    }
+                    if !session.usesBundledSite, let floor = session.diagnostics.measuredFloorMeters {
+                        Text("Elevation posts are about \(distance(floor)) apart. Finer craters are modeled.")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                    HStack {
+                        TextField("Latitude, longitude (N/E positive)", text: $coordinateEntry)
+                        Button("Go") {
+                            if let coordinate = LMLunarNavigation.parse(coordinateEntry) { session.fly(to: coordinate) }
+                            else { session.navigationMessage = "Enter latitude −90…90, longitude −180…180." }
+                        }
+                    }
+                    HStack {
+                        Button("Back") { session.back() }.disabled(session.navigationHistory.isEmpty)
+                        Button("Apollo 11") {
+                            if let coordinate = try? LMTerrainManifest.load().landingOriginCoordinate { session.fly(to: coordinate) }
+                        }
+                    }
+                    TextField("Search places", text: $search)
+                    ScrollView {
+                        VStack(alignment: .leading) {
+                            ForEach(Array(Set(places.map(\.category))).sorted(), id: \.self) { category in
+                                let matches = places.filter { $0.category == category && (search.isEmpty || $0.name.localizedCaseInsensitiveContains(search)) }
+                                if !matches.isEmpty { Text(category.capitalized).font(.caption.weight(.semibold)) }
+                                ForEach(matches) { place in
+                                HStack {
+                                    Button(place.name) { session.fly(to: place.coordinate, altitude: place.suggestedAltitudeMeters, heading: place.suggestedHeadingDegrees) }.help(place.blurb)
+                                    Spacer()
+                                    Link(destination: place.sourceURL) { Image(systemName: "info.circle") }
+                                }
+                                }
+                            }
+                        }
+                    }.frame(height: 130)
+                    if !session.navigationMessage.isEmpty { Text(session.navigationMessage).font(.caption) }
+                    Toggle("Use cached terrain only", isOn: $session.regionOffline)
+                    HStack {
+                        Button("Download this region") { session.downloadRegion() }.disabled(session.isDownloading)
+                        Button("Reload") {
+                            if let coordinate = session.currentCoordinate { session.fly(to: coordinate, remember: false) }
+                        }
+                        if session.isDownloading { Button("Pause") { session.cancelDownload() } }
+                    }
+                    Text(session.downloadMessage).font(.caption)
+                    if !session.usesBundledSite {
+                        Button("Test landing here") { session.testLanding() }.disabled(session.landingRunning)
+                        Text(session.landingMessage).font(.caption)
+                        Text("Local gear drop; mission guidance remains Apollo 11.").font(.caption2).foregroundStyle(.secondary)
+                    }
+                }.disabled(session.landingRunning)
+            }
+            .task { places = (try? LMLunarPOICatalog.load().features) ?? [] }
 
             Picker("View", selection: Binding(
                 get: { session.selectedPreset },
@@ -126,6 +226,10 @@ struct LunarExplorerControls: View {
             }
             .pickerStyle(.segmented)
 
+            if !session.usesBundledSite {
+                Text("Global terrain currently uses Procedural appearance.")
+                    .font(.caption2).foregroundStyle(.secondary)
+            }
             Toggle("Mission shadows", isOn: $session.missionShadowsEnabled)
 
             Divider()
@@ -184,7 +288,11 @@ struct LunarExplorerControls: View {
             Text(navigationHelp)
                 .font(.caption)
                 .foregroundStyle(.secondary)
+            }
+            .disabled(session.landingRunning || session.navigationInProgress)
         }
+        }
+        .frame(maxHeight: 900)
         .padding(20)
         .frame(width: 390)
         .glassBackgroundEffect()
@@ -396,4 +504,8 @@ struct LunarExplorerControlsWindow: View {
 #Preview(immersionStyle: .full) {
     LunarExplorerView()
         .environment(MainMenuViewModel())
+}
+
+#Preview("Navigation controls") {
+    LunarExplorerControls(session: LunarExplorerSession(), close: {})
 }

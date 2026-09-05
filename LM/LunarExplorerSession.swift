@@ -216,6 +216,131 @@ final class LunarExplorerSession {
     var destinationCoordinate: LMSelenographicCoordinate?
     var usesBundledSite = true
     var regionOffline = false
+    var navigationRevision = 0
+    enum NavigationPhase { case idle, departing, loading, arriving }
+    var navigationPhase = NavigationPhase.idle
+    var navigationInProgress: Bool { navigationPhase != .idle }
+    var pendingArrival = false
+    private var arrivalAltitude = Preset.regional.altitudeMeters
+    private var arrivalHeading = 0.0
+    var flightCoordinate: LMSelenographicCoordinate?
+    var currentCoordinate: LMSelenographicCoordinate?
+    var navigationMessage = ""
+    var downloadMessage = ""
+    var isDownloading = false
+    var navigationHistory = [LMSelenographicCoordinate]()
+    var landingRequest = 0
+    var landingMessage = ""
+    var landingRunning = false
+    @ObservationIgnored private var flightTask: Task<Void, Never>?
+    @ObservationIgnored private var downloadTask: Task<Void, Never>?
+
+    func fly(to coordinate: LMSelenographicCoordinate, remember: Bool = true,
+             altitude: Double = Preset.regional.altitudeMeters, heading targetHeading: Double = 0) {
+        guard !landingRunning else { return }
+        flightTask?.cancel()
+        arrivalAltitude = min(Self.maximumAltitudeMeters, max(Self.minimumAltitudeMeters, altitude))
+        arrivalHeading = targetHeading
+        let start = currentCoordinate ?? destinationCoordinate
+            ?? (try? LMTerrainManifest.load().landingOriginCoordinate) ?? coordinate
+        if remember { navigationHistory.append(start) }
+        navigationPhase = .departing
+        navigationMessage = "Flying"
+        pendingArrival = false
+        let width = metersAcross, altitude = altitudeMeters, tilt = tiltDegrees, heading = headingDegrees
+        flightTask = Task { [weak self] in
+            for index in 1...60 {
+                do { try await Task.sleep(for: .milliseconds(16)) } catch { return }
+                guard let self else { return }
+                let t = Double(index) / 60
+                let eased = t * t * (3 - 2 * t)
+                self.metersAcross = exp(log(width) * (1 - eased) + log(Preset.globe.metersAcross) * eased)
+                self.altitudeMeters = exp(log(altitude) * (1 - eased) + log(Preset.globe.altitudeMeters) * eased)
+                self.tiltDegrees = tilt * (1 - eased)
+                self.headingDegrees = heading * (1 - eased)
+            }
+            self?.select(.globe)
+            self?.flightCoordinate = start
+            for index in 1...120 {
+                do { try await Task.sleep(for: .milliseconds(16)) } catch { return }
+                guard let self else { return }
+                let t = Double(index) / 120
+                self.flightCoordinate = LMLunarNavigation.interpolate(from: start, to: coordinate,
+                                                                       fraction: t * t * (3 - 2 * t))
+            }
+            guard let self else { return }
+            let apollo = try? LMTerrainManifest.load().landingOriginCoordinate
+            self.destinationCoordinate = coordinate.latitudeDegrees == apollo?.latitudeDegrees
+                && coordinate.longitudeDegrees == apollo?.longitudeDegrees ? nil : coordinate
+            self.focusNorthOffsetMeters = 0
+            self.focusEastOffsetMeters = 0
+            self.pendingArrival = true
+            self.navigationRevision += 1
+            // Hold the destination-facing globe until its replacement is ready.
+            self.flightCoordinate = coordinate
+            self.navigationPhase = .loading
+            self.navigationMessage = "Loading destination"
+        }
+    }
+
+    func beginArrival() {
+        guard pendingArrival else { return }
+        pendingArrival = false
+        navigationPhase = .arriving
+        navigationMessage = "Arriving"
+        flightTask = Task { [weak self] in
+            for index in 1...120 {
+                do { try await Task.sleep(for: .milliseconds(16)) } catch { return }
+                guard let self else { return }
+                let t = Double(index) / 120
+                let eased = t * t * (3 - 2 * t)
+                self.metersAcross = exp(log(Preset.globe.metersAcross) * (1 - eased) + log(self.arrivalAltitude * 3.2) * eased)
+                self.altitudeMeters = exp(log(Preset.globe.altitudeMeters) * (1 - eased) + log(self.arrivalAltitude) * eased)
+                self.tiltDegrees = Preset.regional.tiltDegrees * eased
+                self.headingDegrees = self.arrivalHeading * eased
+            }
+            self?.selectedPreset = .regional
+            self?.navigationPhase = .idle
+            self?.navigationMessage = ""
+        }
+    }
+
+    func back() {
+        guard let coordinate = navigationHistory.popLast() else { return }
+        fly(to: coordinate, remember: false)
+    }
+
+    func downloadRegion() {
+        guard !isDownloading, let coordinate = currentCoordinate ?? destinationCoordinate else { return }
+        isDownloading = true
+        downloadMessage = "Checking region sources"
+        downloadTask = Task { [weak self] in
+            defer { self?.isDownloading = false }
+            do {
+                let manifest = try LMTerrainManifest.load()
+                let catalog = try LMLunarElevationCatalog.load()
+                let sources = LMLunarTerrainRegion.sources(at: coordinate, manifest: manifest, catalog: catalog)
+                let total = sources.reduce(0) { $0 + ($1.bytes ?? 0) }
+                let store = try LMLunarElevationStore(directory: FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+                    .appendingPathComponent("LunarElevation-v1", isDirectory: true))
+                self?.downloadMessage = String(format: "Downloading %.1f MiB", Double(total) / 1_048_576)
+                try await store.prefetch(sources)
+                self?.downloadMessage = "Region cached for offline use; the 128 MiB cache may evict older regions."
+            } catch is CancellationError { self?.downloadMessage = "Download paused; verified sources retained." }
+            catch { self?.downloadMessage = "Download failed: " + error.localizedDescription }
+        }
+    }
+
+    func cancelDownload() { downloadTask?.cancel() }
+
+    func testLanding() {
+        guard !usesBundledSite, !landingRunning else { return }
+        select(.surface)
+        metersAcross = 30
+        landingMessage = "Preparing terrain"
+        landingRequest += 1
+    }
+
     /// Capture-only layer isolation for measuring the globe/site handoff at
     /// identical camera scale. Normal launches always leave this nil.
     private(set) var capturePresentation: CapturePresentation?
@@ -536,13 +661,14 @@ final class LunarExplorerSession {
     }
 
     func pan(northMeters: Double, eastMeters: Double) {
+        let limit = usesBundledSite ? Self.maximumFocusOffsetMeters : 20_000.0
         focusNorthOffsetMeters = min(
-            max(northMeters, -Self.maximumFocusOffsetMeters),
-            Self.maximumFocusOffsetMeters
+            max(northMeters, -limit),
+            limit
         )
         focusEastOffsetMeters = min(
-            max(eastMeters, -Self.maximumFocusOffsetMeters),
-            Self.maximumFocusOffsetMeters
+            max(eastMeters, -limit),
+            limit
         )
         selectedFocus = .eagle
     }

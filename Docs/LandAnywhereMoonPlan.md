@@ -36,7 +36,7 @@ obeys. The three genuinely hard parts are §5 (mushy band), §4 stage 2
 | Photographic tone grade + earthshine | **Done** | Opt-in; calibrated grade pixel-identical. |
 | Global mosaic fetch/parse proven | **Done** | Source-validating 16 ppd generator, pinned PNG + provenance sidecar, and manifest schema v4 landed. |
 | Stage 1 globe | **Done in Simulator** | Complete offline 16/64 ppd WAC globe, ME orientation, Explorer `globe` preset, ephemeris terminator, pinned LOLA-derived ME normal field, radiance-matched globe-to-site handoff, and the final globe-to-surface ladder are green. Continuous hand-gesture comfort remains owner hardware validation on physical Vision Pro; it is not an implementation blocker for Stage 2. |
-| Stage 2 re-anchorable terrain | **In progress** | §4. Release baseline, source catalog, floating Explorer anchor, and the first streamed elevation consumer are implemented. Production source resolution and amplification are next. The owner approved the source-scaled residual contract and up to 32 MiB for the offline elevation base on 2026-09-04. |
+| Stage 2 re-anchorable terrain | **In progress** | §4. Release baseline, source catalog, floating Explorer anchor, and the first streamed elevation consumer are implemented. Global source resolution/amplification, rendered contact, and Explorer navigation are implemented with visual and mission-integration gates open; see `Stage2GlobalTerrainValidation.md`. The owner approved the source-scaled residual contract and up to 32 MiB for the offline elevation base on 2026-09-04. |
 | Stage 3 mushy-band quality | Not started | §5. |
 | Stage 4 site packs | Not started | §4. |
 | Neural track N1 multi-site retrain | Not started | §6. Cheap; do early. |
@@ -400,9 +400,12 @@ anchor, floating tangent frame, whatever sources cover it."
    still requires atomic contact/geometry publication and mission captures.
    See `Stage2GlobalTerrainValidation.md`; local drops and retargeted sphere
    descents do not substitute for that acceptance.
-6. **Explorer UX:** add lat/lon entry, fly-to, a USGS-sourced POI catalog, the
-   measured-floor diagnostic, and region download controls from the companion
-   Explorer workstreams.
+6. **Explorer UX, implemented with acceptance gaps:** coordinate entry/copy,
+   eased great-circle fly-to, an 18-entry sourced POI catalog, measured-floor
+   disclosure, history, cached-only reload and region download/pause controls.
+   Global local pan remains bounded to the prefetched 20 km window; continuous
+   globe dragging, full panel interaction coverage and physical gesture comfort
+   remain open. See `Stage2GlobalTerrainValidation.md` for captures and failures.
 7. Reuse, don't rebuild: planner, morph collars, residency nesting,
    per-tile bake, detail cache, capture diagnostics all generalize. The
    work is plumbing anchors and sources through them, not new rendering.

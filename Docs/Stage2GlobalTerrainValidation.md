@@ -136,3 +136,134 @@ rendered region requires a pause/publish transaction for contact and geometry,
 then complete cockpit descent captures. The local drop and custom sphere test
 do not close that gate. Item 5 therefore has a validated contact implementation
 and AGC frame prerequisite, with mission integration outstanding.
+
+## Item 6: navigation and region controls
+
+The Explorer panel now has coordinate entry and copy, a searchable catalog
+grouped by category, fly-to history, return to Apollo 11, measured-floor and
+modeled-relief disclosure, cached-only reload, region download/pause controls,
+and the local landing diagnostic. Catalog version 1 has the twelve requested
+USGS natural features and six Apollo landing sites. Each entry records its
+source; suggested view settings are explicitly application defaults. Apollo 11
+uses the exact manifest anchor, including height, rather than substituting the
+nearby LROC LM position. The other Apollo coordinates come from the published
+2016 LROC coordinate table. No additional downloaded site pack is bundled.
+
+Fly-to eases out to the globe, follows the short great circle, prepares a
+regional mesh, then eases in. Pole and antipodal cases have deterministic
+finite paths. One globe atlas remains resident across destinations; geographic
+rotation changes its frame. A synchronous state read in RealityView's loading
+path keeps later camera and contact actions observable. The global view centers
+the selected coordinate; Apollo keeps its established capture framing.
+
+The source region remains immutable while viewed. Local pan is bounded to
+20 km inside the prefetched region; use fly-to to change regions. This is not
+yet continuous great-circle globe dragging. The 128 MiB cache retains verified
+sources and may evict old regions; download is not a permanent offline pin.
+The controls say this explicitly. Existing cache tests cover transport,
+coalescing, cancellation, eviction and offline reuse; UI button activation is
+not itself covered by those tests.
+
+The landing diagnostic freezes one visible generation and runs the real gear
+solver. Its simple body and pad markers are inspection aids. Their unlit
+materials remain visible on lunar night terrain; they are not mission vehicle
+appearance. The cockpit continues to select Apollo 11.
+
+### Measured results and failed probes
+
+- `/tmp/AGC-Lunar-Anchor-Commit-Validation.log`: all five site tests pass in
+  248.704 s in an isolated staged-tree export without the pre-existing AGC
+  gear/pad-load edits. This independently validates AGC commit `65d5b99`.
+- `/tmp/LM-Stage2-Items56-Final.xcresult`: 22 tests in three suites pass after
+  the navigation/triangle-contact changes. A later final run is recorded below.
+- `/tmp/LM-Stage2-Global-Mare-Ladder/`: all eight production stops at
+  8.35°, 30.83° have settled p95/p99/max 16.67 ms and zero missed callbacks.
+  Generation times for 128/32/8/2/0.5/0.125 m, Surface, and handoff were
+  4918/3102/4155/5541/11763/18523/18566/6741 ms. Settled footprints were
+  144.4/113.7/116.9/122.4/243.2/158.9/177.5/126.5 MiB. The complete ladder was
+  inspected. Coarse posts remain visibly smooth, and the 0.5 m view exposes a
+  rectangular fine-detail footprint. These precede the coordinate-centering
+  correction and are not final framing controls.
+- `/tmp/LM-Stage2-Item4-Offline-Reanchor/image-metrics.json`: RGB normalized
+  RMSE is 0.0000348843; the largest mean linear-radiance change across fifteen
+  fixed 2880×32 pixel bands is 0.000102949%. This compares identical stationary
+  footprints before/after the production re-anchor, with no rebake. It does not
+  measure a source-boundary seam or validate arbitrary-site handoff radiance.
+- `/tmp/LM-Stage2-Navigation-Contact-Capture/`, PID 28576: failed arrival probe.
+  The view remained on the globe and no contact ran. Navigation-window memory
+  peaked at 880.7 MiB with a 167.13 ms maximum frame and 12 missed callbacks.
+- `/tmp/LM-Stage2-Navigation-Contact-v2/`, PID 37020: corrected state observation
+  and atlas reuse. Navigation-window peak was 158.1 MiB, maximum frame 36.27 ms,
+  seven missed callbacks. The streamed highland drop settled in 5.23 s. Its
+  diagnostic was offscreen under the old view framing, so this is numeric
+  contact evidence rather than a visible-pad acceptance capture. Settled p95
+  and max were 16.67 ms, zero missed callbacks, 285.6 MiB. Across startup and
+  all terrain generation in that process, the maximum frame was 255.15 ms.
+- Xcode's controls preview request timed out. This is an unavailable preview,
+  not a successful UI check. The final production Simulator captures below
+  provide the available visual evidence.
+
+The unchanged settled 60 Hz Simulator callback rate does not establish the
+physical Vision Pro 90 Hz budget. Startup/generation hitches and global visual
+joins remain acceptance failures. No threshold was relaxed.
+
+### Final navigation capture and bundle accounting
+
+`/tmp/LM-Stage2-Items56-Final-v2.xcresult` passes all 22 tests in three suites
+in 10.064 s. Xcode BuildProject and the Release Simulator build also pass.
+The last small error-recovery and close-button adjustment has an additional
+successful build. The default Apollo path is still selected by the existing
+mission entry points.
+
+`/tmp/LM-Stage2-Navigation-Final/` records the final centered view, PID 45064,
+with actual-source readiness followed by 100 s before each automated action.
+`mare-before-flight.png` and `highland-contact.png` are settled captures;
+`fly-to.mov` records the complete transition. Extracted motion frames were
+inspected. The destination's regional generation took 6956 ms, and the final
+54-tile contact generation took 19343 ms. The local drop settled after 5.23 s.
+The final image includes the diagnostic body and visible pad marker; it does
+not establish visibility of all four pads or replace a cockpit landing review.
+Coarse near-field geometry remains visible toward the edge of the highland view.
+
+With video recording active, the observed navigation-window peak was 286.5 MiB,
+maximum frame 52.84 ms and 12 missed callbacks. Across the entire process the
+maximum frame was 306.15 ms. The final settled window returned to p95/p99/max
+16.67 ms, zero missed callbacks and 247.4 MiB. Video recording and concurrent
+host work differ from the earlier non-recording control; neither is a physical
+headset measurement. `metrics.json` retains the PID-filtered measurements.
+
+`Tools/CaptureLunarNavigation.sh` reproduces the sequence using caller-supplied
+start/destination coordinates and a fresh output directory. It checks the live
+PID, waits for geometry, records fly-to, requires a settled contact outcome,
+and waits another 90 s before the final screenshot. This harness is for known
+safe validation points; a real sloped-site crash should remain a failure.
+
+The new offline raster, both provenance labels, strip catalog and POI catalog
+total 33,244,624 bytes, or 31.704544 MiB. No LDEM_128 raster is bundled. All eleven
+original terrain resources other than the intentionally extended manifest are
+byte-identical to `c950d46`; both unrelated scheme-user files retain their
+pre-session hashes. The owner's AGC pad-load and gear files retain their hashes,
+and its pre-existing gear integration helper is unchanged.
+
+`/tmp/LM-Stage2-Items56-Apollo-Final/` completes the matched Terminal and Landing
+controls. Both PNGs are byte-identical to item 0. Settled p95/p99/max remain
+16.67 ms with zero missed callbacks. Footprints are 337.5/374.2 MiB versus the
+baseline's 336.5/380.8 MiB. Tile completion ranges are 281–377 ms at Terminal and
+1316–1703 ms at Landing. Together with the earlier Globe/Surface controls, these
+cover the four requested attribution points, not a new complete eleven-stop run.
+
+`/tmp/LM-Stage2-Navigation-Panel/controls.png` captures the production panel after
+90 s of settled geometry. Coordinate −42°, 120°, 237 m source spacing, modeled
+relief disclosure, grouped POIs, download/reload and landing controls are visible.
+The Simulator AX tree exposes its wrapper rather than individual visionOS form
+controls. Two coordinate-click/typing attempts did not activate the search field;
+keyboard capture was restored. Search/button activation is therefore unverified
+through UI automation, despite the parser/catalog tests and session-action
+capture passing. Do not report the screenshot as a complete interaction test.
+
+Final source check: `/tmp/LM-Stage2-Items56-Commit-Validation.xcresult` passes
+all 22 tests in three suites in 9.942 s, including the last error-recovery and
+close-control adjustment. `LM-Stage2-Items456-Release-v10.log` is the final
+successful Release build. The navigation movie/contact images use v9; v10 adds
+only error-path recovery and keeps Done enabled while other controls are busy.
+No terrain generation or presentation geometry changed between those builds.
