@@ -25,6 +25,7 @@ launch=$(xcrun simctl launch --terminate-running-process "$udid" io.positron.LM 
     --terminal-descent-cockpit "--cockpit-coordinate=$coordinate" --cockpit-mission-capture \
     --lunar-explorer-profile "--lunar-explorer-profile-label=cockpit-$coordinate")
 app_pid=${launch##*: }
+echo "$app_pid" > "$out/app-pid.txt"
 shasum -a 256 "$app/LM" > "$out/binary-sha256.txt"
 for ((attempt=0; attempt<1200; attempt++)); do
     kill -0 "$app_pid"
@@ -43,12 +44,28 @@ PY
 )
         for phase in $phases; do
         if [[ ! -f "$out/$phase.png" ]]; then
+            cp "$latest" "$out/$phase-before.json"
+            date -u +%FT%TZ > "$out/$phase-screenshot-started-at.txt"
             xcrun simctl io "$udid" screenshot "$out/$phase.png"
-            cp "$out/latest.json" "$out/$phase.json"
+            date -u +%FT%TZ > "$out/$phase-screenshot-completed-at.txt"
+            cp "$latest" "$out/$phase.json"
         fi
         done
         if [[ -f "$recording" ]]; then
+            # A screenshot can block while flight continues. Refresh terminal
+            # status instead of leaving the pre-screenshot in-flight report.
+            cp "$latest" "$out/latest.json"
             cp "$recording" "$out/recording.json"
+            outcome=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["outcome"])' "$out/latest.json")
+            if [[ "$outcome" == inFlight ]]; then
+                echo 'Recording exists without a terminal status; retrying.' >&2
+                sleep 2
+                continue
+            fi
+            if [[ ! -f "$out/$outcome.png" ]]; then
+                xcrun simctl io "$udid" screenshot "$out/$outcome.png"
+                cp "$out/latest.json" "$out/$outcome.json"
+            fi
             sleep 5
             xcrun simctl io "$udid" screenshot "$out/settled.png"
             shasum -a 256 "$out"/*.png > "$out/capture-hashes.txt"
