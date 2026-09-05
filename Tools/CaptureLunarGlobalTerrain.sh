@@ -23,6 +23,7 @@ args+=("--lunar-explorer-shadows=${LUNAR_CAPTURE_SHADOWS:-on}")
 args+=("--lunar-explorer-normal-maps=${LUNAR_CAPTURE_NORMAL_MAPS:-on}")
 args+=("--lunar-explorer-terrain-reflectance=${LUNAR_CAPTURE_REFLECTANCE:-measured}")
 args+=("--lunar-explorer-grade=${LUNAR_CAPTURE_GRADE:-calibrated}")
+args+=("--lunar-explorer-sun-offset-hours=${LUNAR_CAPTURE_SUN_OFFSET_HOURS:-0}")
 if [[ -n ${LUNAR_CAPTURE_HEADING:-} ]]; then args+=("--lunar-explorer-heading=$LUNAR_CAPTURE_HEADING"); fi
 if [[ ${LUNAR_CAPTURE_TILE_TINT:-0} == 1 ]]; then args+=(--lunar-explorer-tile-tint=id); fi
 if [[ ${LUNAR_CAPTURE_REANCHOR:-0} == 1 ]]; then args+=(--lunar-explorer-reanchor-probe); fi

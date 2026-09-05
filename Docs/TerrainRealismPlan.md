@@ -5,6 +5,11 @@ It assumes no prior conversation context. Read
 `Docs/LunarTerrainPipeline.md` first for the full pipeline description; this
 document only summarizes what is needed to act.
 
+The September 5, 2026 reference review in `ArtemisFlybyRealism.md` qualifies
+the photographic claims below: released images include exposure brackets,
+and the existing grade is not a calibrated camera or human-vision model.
+That review records the inspected NASA images and the next controlled passes.
+
 Motivation: recent Artemis II far-side photography shows two things the
 current renderer does not deliver. First, real crater rims are sharp; ours
 render rounded ("curvy") because rim detail below ~4-6 m is missing from the
