@@ -111,6 +111,7 @@ final class LMLunarTerrainPresentation {
             catch {
                 guard let self, self.generation == token else { return }
                 self.requested = []
+                self.logger.error("Global terrain failed: \(error.localizedDescription)")
                 status("Lunar terrain failed: \(error.localizedDescription)", plans.count, self.snapshot.tiles.count, nil, nil)
             }
         }

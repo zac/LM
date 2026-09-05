@@ -1,4 +1,5 @@
 import Foundation
+import RealityKit
 import Testing
 import simd
 @testable import LM
@@ -21,6 +22,24 @@ struct LMLunarTerrainTransitionTests {
         func renderedParent(eastMeters: Double, northMeters: Double, spacingMeters: Double) -> LMLunarTerrainMeshTile.Sample? {
             .init(elevation: 0, normal: SIMD3(0, 1, 0), spacing: spacingMeters * 4)
         }
+    }
+
+    @Test @MainActor func fullyOwnedParentRetainsSamplesWithoutUploadingEmptyMesh() async throws {
+        let parent = LMTerrainTilePlan(id: .init(level: 0, eastIndex: 0, northIndex: 0),
+                                      centerEastMeters: 2, centerNorthMeters: 2, sizeMeters: 4,
+                                      sampleSpacingMeters: 1, containsProceduralSubresolution: true)
+        let child = LMTerrainTilePlan(id: .init(level: 1, eastIndex: 0, northIndex: 0),
+                                     centerEastMeters: 2, centerNorthMeters: 2, sizeMeters: 4,
+                                     sampleSpacingMeters: 0.5, containsProceduralSubresolution: true)
+        let result = try await Apollo11TerrainResource.makeProgressiveTileEntityBuild(
+            heightField: Refinement(), plan: parent, activePlans: [parent, child],
+            geometryReplacementPlans: [child], albedoField: nil,
+            detailPipeline: LMTerrainDetailMode.procedural.makePipeline())
+        let build = try #require(result)
+        #expect(build.mesh.indices.isEmpty)
+        #expect(!build.mesh.positions.isEmpty)
+        #expect(build.entity.components[ModelComponent.self] == nil)
+        #expect(LMLunarTerrainMeshTile(plan: parent, mesh: build.mesh).sample(east: 2, north: 2) != nil)
     }
 
     @Test @MainActor func cancelledRequestCanBeRetriedWithoutPublishingGeometry() throws {

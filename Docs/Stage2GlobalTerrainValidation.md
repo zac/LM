@@ -452,3 +452,42 @@ photographic and +0.4653% with normal maps off. There are 49,221 terminal and
 The required constant-reflectance/no-normal control is reported separately.
 The mare surface tint contains only landing tiles. Its failed measurement is
 correctly rejected; a same-view surface image cannot establish a boundary pass.
+
+### Fully hidden parent resource failure
+
+The first production 35° capture, `/tmp/LM-Stage2-Stability-Oblique/`, failed
+before publication. Its screenshot is a flat fallback, not terrain acceptance.
+The rectangular footprint can fully cover a parent tile with children, leaving
+an empty submitted index list. RealityKit rejects that upload with
+`.geomMeshFailure`. The numerical collar tests did not exercise this resource
+boundary. The new focused test reproduces the error in
+`/tmp/LM-Stage2-Stability-HiddenParent-Before.xcresult` and passes in
+`/tmp/LM-Stage2-Stability-HiddenParent-After.xcresult` after the fix.
+
+A fully hidden parent now keeps its CPU vertices and samples, which its children
+need for hierarchical morphing, and carries an empty `ModelEntity` without a
+render mesh. Non-empty tile realization is unchanged. The regression test checks
+both absence of a render component and continued parent sampling. Generation
+errors now enter the log explicitly, allowing the global capture script to fail
+promptly instead of waiting ten minutes for a readiness event that cannot occur.
+Xcode's first test-tool call timed out, but the copied result bundle established
+the actual failure; the corrected focused run passed through Xcode MCP.
+
+`/tmp/LM-Stage2-Stability-Final-v2.xcresult` passes all 156 tests in 16 suites
+in 185.609 s, including the new RealityKit regression. The final optimized build
+is `/tmp/LM-Stage2-Stability-Final-Release-v2.log`. Its executable SHA-256 is
+`19c330908cc8c9f4d02066c0ce3217f80947069acd821484125a21c2886bd023`.
+`/tmp/LM-Stage2-Stability-HiddenParent-Apollo/11-surface.png` is byte-identical
+to item 0 after this last fix; its settled callbacks are 16.67 ms with zero
+misses. The complete eleven-stop Apollo and nine-stop regional matrices above
+precede this empty-index guard. Their non-empty realization path is unchanged;
+subsequent oblique, re-anchor and motion captures use the final build.
+
+`/tmp/LM-Stage2-Stability-Oblique-v2/` successfully publishes 95 plans at 35°
+in 38,117 ms, with 93 mesh uploads and two fully hidden CPU parents. The
+settled image was inspected without a foreground hole. Its settled p95/p99/max
+is 16.67 ms with zero missed callbacks and 201.0 MiB, versus 157.1 MiB for the
+54-plan heading-zero surface control. Whole-run maximum frame is 270.06 ms,
+with four missed callbacks. This validates the previously failing resource
+path and records the larger residency cost. It does not prove every heading
+or distant boundary is visually accepted.

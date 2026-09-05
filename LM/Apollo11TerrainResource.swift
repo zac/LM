@@ -281,21 +281,29 @@ enum Apollo11TerrainResource {
         let data = build.mesh
 
         let realizationStarted = ContinuousClock.now
-        var descriptor = MeshDescriptor(name: "Progressive LROC tile")
-        descriptor.positions = MeshBuffers.Positions(data.positions)
-        descriptor.normals = MeshBuffers.Normals(data.normals)
-        descriptor.tangents = MeshBuffers.Tangents(data.tangents)
-        descriptor.bitangents = MeshBuffers.Tangents(data.bitangents)
-        descriptor.textureCoordinates = MeshBuffers.TextureCoordinates(data.textureCoordinates)
-        descriptor.primitives = .triangles(data.indices)
-        let mesh = try LMLunarTerrainTiming.measure("mesh-upload") {
-            try MeshResource.generate(from: [descriptor])
-        }
-        let upload = LMLunarTerrainTiming.begin("material-upload-async")
-        let material = try await LMTerrainWorld.detailTerrainMaterial(build.detail, plan: plan)
-        LMLunarTerrainTiming.end(upload)
         try Task.checkCancellation()
-        let entity = ModelEntity(mesh: mesh, materials: [material])
+        let entity: ModelEntity
+        if data.indices.isEmpty {
+            // A fully owned parent still supplies CPU samples for its children.
+            // RealityKit rejects an empty triangle list, so it has no render mesh.
+            entity = ModelEntity()
+        } else {
+            var descriptor = MeshDescriptor(name: "Progressive LROC tile")
+            descriptor.positions = MeshBuffers.Positions(data.positions)
+            descriptor.normals = MeshBuffers.Normals(data.normals)
+            descriptor.tangents = MeshBuffers.Tangents(data.tangents)
+            descriptor.bitangents = MeshBuffers.Tangents(data.bitangents)
+            descriptor.textureCoordinates = MeshBuffers.TextureCoordinates(data.textureCoordinates)
+            descriptor.primitives = .triangles(data.indices)
+            let mesh = try LMLunarTerrainTiming.measure("mesh-upload") {
+                try MeshResource.generate(from: [descriptor])
+            }
+            let upload = LMLunarTerrainTiming.begin("material-upload-async")
+            let material = try await LMTerrainWorld.detailTerrainMaterial(build.detail, plan: plan)
+            LMLunarTerrainTiming.end(upload)
+            try Task.checkCancellation()
+            entity = ModelEntity(mesh: mesh, materials: [material])
+        }
         if heightField.resolvesProceduralSamples {
             entity.position = SIMD3(Float(plan.centerNorthMeters), 0, Float(-plan.centerEastMeters))
         }
