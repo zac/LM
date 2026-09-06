@@ -165,8 +165,12 @@ second time. A black unlit shell applies the session ephemeris terminator as a
 brightness multiplier. Its 512×256 dynamic mask samples the LOLA-derived
 normal field, so map-scale relief perturbs only the terminator and never
 becomes a second lighting pass. The current whole-Moon-to-site gate is
-deliberately discrete; the crossfade and budget-gated 64-pixel-per-degree tier
-remain Stage 1 work in `Docs/LandAnywhereMoonPlan.md`.
+now implemented as a crossfade with a bundled 64-pixel-per-degree source tier;
+see Stage 1 acceptance in `Docs/LandAnywhereMoonPlan.md`. Source raster size
+does not establish GPU residency size. The current Simulator realizes that
+23,040 × 11,520 source as a 5,760 × 2,880 texture. The decoder allocation and
+pending prepared-color companion are documented in
+`Docs/MoonExplorerTextureAndPublication.md`.
 
 ## Coordinate-frame alignment
 

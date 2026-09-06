@@ -48,6 +48,15 @@ The Explorer navigation/presentation follow-up is recorded in
 terrain entry, native place browser, sunlight controls and saved views. It
 shares this terrain pipeline and retains all capture and provenance contracts.
 
+The texture/import follow-up is recorded in
+`MoonExplorerTextureAndPublication.md`. Source pixel dimensions are not GPU
+residency dimensions: the current Simulator imports the 23,040 × 11,520
+64 ppd raster as a 5,760 × 2,880 texture. A 15.38 MiB prepared color companion
+matches the fixed globe/handoff images and awaits a separate 16 MiB owner
+budget approval; the original source remains unchanged. Terrain ownership
+preparation moves ahead of atomic publication, with frame-budget and physical
+Vision Pro gates still open.
+
 The September 6 startup and repeated-navigation profiling follow-up is in
 `MoonExplorerPerformance.md`. It attributes the approximately 1.6 GiB startup
 peak to the 64 ppd texture load and records the bounded navigation soak,

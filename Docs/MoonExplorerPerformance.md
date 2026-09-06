@@ -4,6 +4,10 @@ This follow-up uses `LandAnywhereMoonPlan.md` as the controlling plan. All
 source, residual, rendered-contact and Apollo image contracts remain intact.
 The evidence root is `/tmp/LM-Explorer-Performance-2026-09-06/`.
 
+The subsequent texture-decoder attribution, prepared color companion and
+terrain-publication work are recorded in `MoonExplorerTextureAndPublication.md`.
+Read that report for the current performance state and pending storage decision.
+
 ## Protocol and attribution
 
 Release runs use Xcode 26.6 and the visionOS 26.5 Simulator

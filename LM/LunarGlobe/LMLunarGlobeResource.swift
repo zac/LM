@@ -99,6 +99,8 @@ enum LMLunarGlobeResource {
                     )
                 }
 
+                logger.info("Globe texture realized width=\(texture.width) height=\(texture.height) format=\(texture.pixelFormat.rawValue) mips=\(texture.mipmapLevelCount)")
+
                 // Display the pinned morphologic product in its authored
                 // transfer function. Tone mapping here crushed the maria and
                 // ray systems even though no scene lighting was applied.
