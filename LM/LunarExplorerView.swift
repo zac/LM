@@ -14,11 +14,23 @@ struct LunarExplorerView: View {
     var body: some View {
         @Bindable var explorer = appModel.lunarExplorerSession
 
-        RealityView { content in
+        RealityView { content, attachments in
             content.add(scene.root)
+            if let marker = attachments.entity(for: "selected-place") {
+                scene.installPlaceMarker(marker)
+            }
             scene.loadIfNeeded(session: explorer)
-        } update: { _ in
+        } update: { _, attachments in
+            if let marker = attachments.entity(for: "selected-place") {
+                scene.installPlaceMarker(marker)
+            }
             scene.apply(explorer)
+        } attachments: {
+            if explorer.isExplorerExperience {
+                Attachment(id: "selected-place") {
+                    LunarExplorerPlaceMarker(place: explorer.selectedMarkerPlace)
+                }
+            }
         }
         .gesture(orbitGesture(explorer))
         .simultaneousGesture(zoomGesture(explorer))

@@ -20,8 +20,8 @@ final class LunarExplorerScene {
     private var reanchorProbePending = false
     private var globalReanchorProbeStarted = false
     private let globePresentationRoot = Entity()
-    private let selectionMarker = ModelEntity(mesh: .generateSphere(radius: 28_000),
-                                               materials: [UnlitMaterial(color: .systemBlue)])
+    private let selectionMarker = Entity()
+    private let markerBillboard = Entity()
     private var appliedInteractionRadius: Float?
     private let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier ?? "io.positron.LM",
@@ -81,6 +81,10 @@ final class LunarExplorerScene {
         selectionMarker.position = SIMD3(0, 0, Float(LunarExplorerSession.lunarGlobeRadiusMeters) * 1.006)
         selectionMarker.isEnabled = false
         globePresentationRoot.addChild(selectionMarker)
+        markerBillboard.name = "Lunar place label"
+        markerBillboard.components.set(BillboardComponent())
+        markerBillboard.isEnabled = false
+        root.addChild(markerBillboard)
 
         interactionSurface.name = "Lunar Explorer interaction surface"
         interactionSurface.position = SIMD3(0, 0, -1.15)
@@ -90,6 +94,14 @@ final class LunarExplorerScene {
             .generateBox(size: SIMD3(3.8, 2.6, 0.02)),
         ]))
         root.addChild(interactionSurface)
+    }
+
+    func installPlaceMarker(_ marker: Entity) {
+        guard marker.parent !== markerBillboard else { return }
+        // SwiftUI attachments use one millimeter per point. Offset the view's
+        // center so the glyph's (24, 76) foot sits at the billboard origin.
+        marker.position = SIMD3(0.106, 0.036, 0)
+        markerBillboard.addChild(marker)
     }
 
     func loadIfNeeded(session: LunarExplorerSession) {
@@ -689,7 +701,10 @@ final class LunarExplorerScene {
                 ]))
             }
         }
-        selectionMarker.isEnabled = session.isBrowsingGlobe && session.selectedPlaceID != nil
+        markerBillboard.isEnabled = session.isExplorerExperience && session.isBrowsingGlobe
+        if markerBillboard.isEnabled {
+            markerBillboard.position = selectionMarker.position(relativeTo: root)
+        }
         let canPresentSite = !session.isBrowsingGlobe && session.flightCoordinate == nil && isLoaded && (globalTerrain == nil || globalTerrain?.snapshot.tiles.isEmpty == false)
         let globeOpacity = canPresentSite ? blend.globeOpacity : 1
         let siteOpacity = canPresentSite ? blend.siteOpacity : 0

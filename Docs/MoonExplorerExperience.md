@@ -181,3 +181,45 @@ hitches and transient texture memory remain unresolved. The two unrelated
 Xcode scheme-user edits and the separate AGC pad-load edit retain their starting
 hashes. This remains an Explorer experience inside the existing LM app; a
 separately packaged app target is a later distribution decision.
+
+## Selected-place markers, 2026-09-05
+
+Apollo landing sites use a compact flag symbol with a short mast, horizontal
+support bar, simplified stars/stripes and one subtle fold. Other catalog places
+and arbitrary coordinates use a conventional blue pin. A dark/white outline
+keeps the symbols visible on bright terrain and shadow, and a dark name label
+identifies the selected place. These are cartographic symbols, not scale models.
+
+`LunarExplorerPlaceMarker.swift` draws the symbols as SwiftUI vectors. The
+80-point glyph and 260-by-80-point label attachment retain their physical size
+while the globe zooms. Both glyphs share a foot at (24, 76); the attachment
+offset places that foot at the existing geographic marker anchor. A separate
+RealityKit billboard turns the symbol and label toward the viewer without
+moving the foot. The anchor sits 0.6% above the globe radius to avoid overlap
+with the surface. The label has no hit target and does not intercept globe drag.
+Markers appear only in the product's mixed globe, never the terrain/capture
+presentation. The source catalog's `apollo` category selects the flag; the
+catalog is decoded once for marker lookup.
+
+Release build passed. Evidence lives in `/tmp/LM-Explorer-Markers`; executable
+SHA-256 `dfa2cd4e5ee56af1264040361be9ee15b556ea58e2f35eeff8e6c6144abc6c6f`.
+The `Journey/globe.png` and `Journey/selected.png` Simulator captures were
+inspected at normal display size for the pin and flag respectively. Physical
+head movement, stereo legibility and gaze/pinch comfort still need Vision Pro.
+
+The five-stage production-session journey passed, including exact persisted
+camera/sunlight restoration. All five screenshots were inspected: the marker
+is absent in both terrain views and returns with the globe. Across this run,
+frame-window footprint peaked at 330.2 MiB, the largest callback was 358.89 ms
+and 26 misses were recorded. Mach lifetime peak was 1,587.89 MiB. This is another
+single-run observation, not evidence that the unresolved loading hitches or
+transient texture memory have improved. No terrain/physics code or data changed;
+all eleven pinned resource hashes remain unchanged. Validation for this visual
+change uses the Release build and renderer journey rather than new unit tests
+that repeat the drawing implementation.
+
+The representative Apollo `01-globe`, `03-crossfade` and `11-surface` captures
+in `/tmp/LM-Explorer-Markers/Apollo` are byte-identical to item 0. All three
+settled windows report 16.67 ms p95/p99/max with zero misses. This check sampled
+three stops; the full eleven-stop ladder was last run for the preceding UX
+commit. The unrelated scheme-user files and AGC pad-load edit are preserved.
