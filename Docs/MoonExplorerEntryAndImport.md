@@ -140,3 +140,29 @@ framework improvement. The pending texture companion budget is unchanged.
 Physical Vision Pro still needs pacing, memory, thermal, stereo and gesture
 validation. No AGC source is changed; both unrelated scheme-user files are
 preserved.
+
+Physical-device attempt on 2026-09-06 used source `c82fa12` and an Apple Vision
+Pro (RealityDevice14,1), visionOS 27.0 build 24M5359a, paired over the local
+network with Developer Mode enabled. Evidence is in
+`/tmp/LM-Device-Entry-2026-09-06/`. Xcode 26.6 compiled the Release device
+product at `/tmp/LM-Device-Entry-DerivedData/Build/Products/Release-xros/LM.app`,
+but signing failed. The build wrapper returned zero despite the unsigned
+product; a direct Xcode build confirmed exit 65 at CodeSign. Future device
+preflight must check both the build result and `codesign --verify --deep
+--strict` before installation.
+
+The device rejected installation with `0xe800801c` (no code signature).
+Automatic signing, a direct signing attempt and the Xcode app build all failed
+with `errSecInternalComponent`; macOS diagnostics identify
+`CSSMERR_CSP_OPERATION_AUTH_DENIED` / `errSecAuthFailed` for the configured
+development key. No keychain access controls or signing team were changed.
+Resolve keychain authorization on the Mac before asking for another headset
+session. The existing installed app has unverified source provenance and was
+not used as evidence for these changes.
+
+Xcode 27 beta 6 Instruments recognized the physical device. The attempted
+three-minute Time Profiler plus os_log recording disconnected before app
+launch and saved `Entry.trace`; it contains no current-build entry/import
+validation. No on-device app run, visual acceptance, pacing or memory result
+is claimed. Resume with verified signing, installation, then a short targeted
+capture. The physical validation requirements above remain open.
