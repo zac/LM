@@ -74,7 +74,7 @@ final class LunarExplorerLibrary {
 
 extension LunarExplorerSession {
     var displayedCoordinate: LMSelenographicCoordinate {
-        isBrowsingGlobe ? browseCoordinate : currentCoordinate ?? destinationCoordinate ?? browseCoordinate
+        isBrowsingGlobe ? selectedMarkerPlace?.coordinate ?? browseCoordinate : currentCoordinate ?? destinationCoordinate ?? browseCoordinate
     }
 
     func returnToGlobe() {
@@ -101,8 +101,9 @@ extension LunarExplorerSession {
 
     func exploreSelectedPlace(altitude: Double = Preset.regional.altitudeMeters, heading: Double = 0) {
         guard !landingRunning else { return }
-        flightCoordinate = browseCoordinate
-        fly(to: browseCoordinate, altitude: altitude, heading: heading)
+        let coordinate = selectedMarkerPlace?.coordinate ?? browseCoordinate
+        flightCoordinate = coordinate
+        fly(to: coordinate, altitude: altitude, heading: heading)
     }
 
     func showDaylight() {
@@ -120,7 +121,23 @@ extension LunarExplorerSession {
         guard horizontal.isFinite, vertical.isFinite else { return }
         browseCoordinate = LMLunarNavigation.draggedCoordinate(
             from: start, northDegrees: vertical * 0.18, eastDegrees: -horizontal * 0.18)
-        selectedPlaceID = nil
+    }
+
+    func setExplorerMode(_ mode: String) {
+        guard !navigationInProgress, !landingRunning else { return }
+        if mode == "globe", !isBrowsingGlobe { returnToGlobeGently() }
+        else if mode == "surface", isBrowsingGlobe {
+            let place = selectedMarkerPlace
+            exploreSelectedPlace(altitude: place?.suggestedAltitudeMeters ?? 7_500,
+                                 heading: place?.suggestedHeadingDegrees ?? 0)
+        }
+    }
+
+    func advanceGlobeRotation(seconds: Double) {
+        guard automaticallyRotatesGlobe, !reduceMotion, !isManipulatingGlobe,
+              isBrowsingGlobe, !navigationInProgress, !landingRunning else { return }
+        browseCoordinate = LMLunarNavigation.draggedCoordinate(from: browseCoordinate,
+            northDegrees: 0, eastDegrees: min(0.1, max(0, seconds)) * 0.35)
     }
 
     /// Product zoom requests matching geometry. The independent inspection

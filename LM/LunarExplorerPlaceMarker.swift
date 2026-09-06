@@ -13,7 +13,7 @@ struct LunarExplorerPlaceMarker: View {
                 .foregroundStyle(.white)
                 .lineLimit(2)
                 .padding(.horizontal, 12).padding(.vertical, 8)
-                .background(.black.opacity(0.68), in: Capsule())
+                .glassBackgroundEffect(in: .capsule)
         }
         .frame(width: 260, height: 80, alignment: .leading)
         .allowsHitTesting(false)
@@ -103,8 +103,7 @@ struct LunarExplorerMarkerGlyph: View {
 }
 
 extension LunarExplorerSession {
-    private static let markerPlaces = (try? LMLunarPOICatalog.load().features) ?? []
     var selectedMarkerPlace: LMLunarPOICatalog.Place? {
-        Self.markerPlaces.first { $0.id == selectedPlaceID }
+        catalogPlaces.first { $0.id == selectedPlaceID }
     }
 }

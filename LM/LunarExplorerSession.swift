@@ -192,6 +192,9 @@ final class LunarExplorerSession {
 
     // Capture sessions retain the original full-space inspection path.
     var reduceMotion = false
+    var automaticallyRotatesGlobe = false
+    var isManipulatingGlobe = false
+    let catalogPlaces = (try? LMLunarPOICatalog.load().features) ?? []
     var transitionOpacity: Float = 1
     var globePosition = SIMD3<Float>(1.05, 0, -2.0)
     var globePlacementRevision = 0
@@ -226,6 +229,13 @@ final class LunarExplorerSession {
     var presentationGrade: LMTerrainPresentationGrade = .calibrated
     var diagnosticsVisible = true
     var diagnostics = Diagnostics()
+
+    /// Scene updates must not invalidate their own observed diagnostic input
+    /// when the resident terrain has not changed.
+    func publishDiagnostics(_ value: Diagnostics) {
+        guard diagnostics != value else { return }
+        diagnostics = value
+    }
     var destinationCoordinate: LMSelenographicCoordinate?
     var usesBundledSite = true
     var regionOffline = false
@@ -399,6 +409,7 @@ final class LunarExplorerSession {
     }
 
     func prepareForPresentation() {
+        isManipulatingGlobe = false
         returnToGlobe()
         transitionOpacity = 1
     }

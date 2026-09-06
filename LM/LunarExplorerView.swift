@@ -39,6 +39,20 @@ struct LunarExplorerView: View {
         .onChange(of: reduceMotion, initial: true) { _, value in
             explorer.reduceMotion = value || ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile-reduce-motion")
         }
+        .simultaneousGesture(SpatialTapGesture().targetedToAnyEntity().onEnded { value in
+            guard !explorer.navigationInProgress, !explorer.landingRunning,
+                  let place = scene.place(for: value.entity, session: explorer) else { return }
+            explorer.previewPlace(place)
+        })
+        .task(id: explorer.automaticallyRotatesGlobe && !explorer.reduceMotion) {
+            guard explorer.automaticallyRotatesGlobe, !explorer.reduceMotion else { return }
+            do {
+                while !Task.isCancelled {
+                    try await Task.sleep(for: .milliseconds(50))
+                    explorer.advanceGlobeRotation(seconds: 0.05)
+                }
+            } catch {}
+        }
         .gesture(orbitGesture(explorer))
         .simultaneousGesture(zoomGesture(explorer))
         .onAppear {
@@ -112,6 +126,7 @@ struct LunarExplorerView: View {
             .onChanged { value in
                 guard !session.landingRunning, !session.navigationInProgress else { return }
                 if session.isBrowsingGlobe {
+                    session.isManipulatingGlobe = true
                     if globeDragStart == nil { globeDragStart = session.browseCoordinate }
                     if let start = globeDragStart {
                         session.rotateGlobe(from: start, horizontal: Double(value.translation.width),
@@ -152,6 +167,7 @@ struct LunarExplorerView: View {
                 orbitStart = nil
                 panStart = nil
                 globeDragStart = nil
+                session.isManipulatingGlobe = zoomStartMetersAcross != nil
             }
     }
 
@@ -160,6 +176,7 @@ struct LunarExplorerView: View {
             .targetedToEntity(scene.interactionSurface)
             .onChanged { value in
                 guard !session.landingRunning, !session.navigationInProgress else { return }
+                if session.isBrowsingGlobe { session.isManipulatingGlobe = true }
                 if zoomStartMetersAcross == nil {
                     zoomStartMetersAcross = session.metersAcross
                 }
@@ -172,6 +189,7 @@ struct LunarExplorerView: View {
             }
             .onEnded { _ in
                 zoomStartMetersAcross = nil
+                session.isManipulatingGlobe = globeDragStart != nil
             }
     }
 }
@@ -539,6 +557,7 @@ struct LunarExplorerControlsWindow: View {
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
     @Environment(\.dismissWindow) private var dismissWindow
     @State private var didRestoreAutomatedSpace = false
+    @State private var leavingForCockpit = false
 
     var body: some View {
         LunarExplorerControls(session: appModel.lunarExplorerSession) {
@@ -550,6 +569,7 @@ struct LunarExplorerControlsWindow: View {
                 dismissWindow(id: appModel.lunarExplorerControlsWindowID)
             }
         } landInCockpit: {
+            leavingForCockpit = true
             appModel.cockpitCoordinate = appModel.lunarExplorerSession.usesBundledSite ? nil
                 : appModel.lunarExplorerSession.currentCoordinate
             appModel.session.stop()
@@ -559,6 +579,12 @@ struct LunarExplorerControlsWindow: View {
                 let result = await openImmersiveSpace(id: appModel.cockpitSpaceID)
                 if case .opened = result { dismissWindow(id: appModel.lunarExplorerControlsWindowID) }
             }
+        }
+        .onDisappear {
+            guard appModel.lunarExplorerSession.isExplorerExperience,
+                  !leavingForCockpit, appModel.lunarExplorerSpaceState == .open else { return }
+            appModel.lunarExplorerSession.prepareForPresentation()
+            Task { @MainActor in await dismissImmersiveSpace() }
         }
         .task {
             let arguments = ProcessInfo.processInfo.arguments

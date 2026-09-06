@@ -7,6 +7,10 @@ the implementation gaps identified against Apple's [designing for visionOS](http
 and [accessibility guidance](https://developer.apple.com/documentation/visionos/improving-accessibility-support-in-your-app).
 It does not close physical-device acceptance or claim comprehensive HIG compliance.
 
+The later [native controls overhaul](MoonExplorerOverhaul.md) supersedes the
+browser layout and corrects the marker's assumed points-to-meters conversion.
+Its measured attachment bounds replace the fixed offset described here.
+
 ## Changes
 
 - Product navigation fades content out, changes the camera while hidden, waits

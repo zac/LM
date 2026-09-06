@@ -501,7 +501,10 @@ anchor, floating tangent frame, whatever sources cover it."
    navigation uses fades instead of automatic camera travel, while inspection
    launches retain the great-circle path. `MoonExplorerHIGReview.md` records
    adjustable initial-viewer placement, larger controls/text, and the flag
-   quality pass. Full panel interaction coverage and physical gesture comfort
+   quality pass. `MoonExplorerOverhaul.md` records native tabs/search, a
+   Globe/Surface ornament, mission sheets, all-site markers and a measured
+   attachment-alignment correction; the Apollo flag drawing is retained.
+   Full panel interaction coverage and physical gesture comfort
    remain open. See `Stage2GlobalTerrainValidation.md` for terrain failures.
 7. Reuse the planner, morph collars, residency nesting, per-tile bake,
    detail cache and static materials. The recorded atomic generation swap

@@ -25,6 +25,8 @@ final class LunarExplorerScene {
     private var globePlacementRoot: AnchorEntity?
     private var appliedPlacementRevision = -1
     private var appliedInteractionRadius: Float?
+    private var placePins = [String: ModelEntity]()
+    private var appliedMarkerScale: Float?
     private let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier ?? "io.positron.LM",
         category: "LunarExplorer"
@@ -99,12 +101,57 @@ final class LunarExplorerScene {
     }
 
     func installPlaceMarker(_ marker: Entity, scale: Float) {
-        marker.position = SIMD3<Float>(0.106, 0.036, 0) * scale
+        // Attachment layout only changes with its identity or text scale;
+        // avoid measuring and rewriting it on every observed scene update.
+        guard marker.parent !== markerBillboard || appliedMarkerScale != scale else { return }
+        appliedMarkerScale = scale
+        // Derive the foot from the rendered attachment bounds. A fixed 1 mm/pt
+        // conversion is incorrect for this RealityView and shifts the marker.
+        let bounds = marker.visualBounds(relativeTo: marker)
+        marker.position = SIMD3(
+            -bounds.min.x - bounds.extents.x * (24.0 / 260.0),
+            -bounds.max.y + bounds.extents.y * (76.0 / 80.0), 0)
         guard marker.parent !== markerBillboard else { return }
-        // SwiftUI attachments use one millimeter per point. Offset the view's
-        // center so the glyph's (24, 76) foot sits at the billboard origin.
-        // Offset scales with Dynamic Type as well as the attachment.
         markerBillboard.addChild(marker)
+        if ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile") {
+            let bounds = marker.visualBounds(relativeTo: marker)
+            logger.info("Moon label bounds min=\(String(describing: bounds.min), privacy: .public) max=\(String(describing: bounds.max), privacy: .public)")
+        }
+    }
+
+    func place(for entity: Entity, session: LunarExplorerSession) -> LMLunarPOICatalog.Place? {
+        guard entity.name.hasPrefix("moon-place:") else { return nil }
+        return session.catalogPlaces.first { "moon-place:" + $0.id == entity.name }
+    }
+
+    private func updatePlacePins(_ session: LunarExplorerSession) {
+        guard session.isExplorerExperience, session.isBrowsingGlobe, let anchor = globePlacementRoot else {
+            for pin in placePins.values { pin.isEnabled = false }
+            return
+        }
+        let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale * 0.32
+        for place in session.catalogPlaces {
+            let pin: ModelEntity
+            if let existing = placePins[place.id] { pin = existing }
+            else {
+                pin = ModelEntity(mesh: .generateSphere(radius: 0.007),
+                                  materials: [UnlitMaterial(color: place.category == "apollo" ? .white : .systemCyan)])
+                pin.name = "moon-place:" + place.id
+                pin.components.set(InputTargetComponent())
+                pin.components.set(HoverEffectComponent())
+                pin.components.set(CollisionComponent(shapes: [.generateSphere(radius: 0.02)]))
+                pin.isAccessibilityElement = true
+                pin.accessibilityLabelKey = "\(place.name)"
+                pin.accessibilityTraits = .button
+                placePins[place.id] = pin
+            }
+            if pin.parent !== anchor { anchor.addChild(pin) }
+            let direction = LunarExplorerMapGeometry.direction(to: place.coordinate, centeredOn: session.browseCoordinate)
+            pin.position = session.globePosition + direction * radius * 1.006
+            pin.scale = SIMD3(repeating: place.id == session.selectedPlaceID ? 1.6 : 1)
+            pin.isEnabled = LunarExplorerMapGeometry.isVisible(direction: direction,
+                globePosition: session.globePosition, radius: radius)
+        }
     }
 
     func loadIfNeeded(session: LunarExplorerSession) {
@@ -727,9 +774,15 @@ final class LunarExplorerScene {
                 ]))
             }
         }
+        updatePlacePins(session)
         markerBillboard.isEnabled = session.isExplorerExperience && session.isBrowsingGlobe
         if markerBillboard.isEnabled {
-            markerBillboard.position = selectionMarker.position(relativeTo: markerBillboard.parent)
+            let coordinate = session.selectedMarkerPlace?.coordinate ?? session.browseCoordinate
+            let direction = LunarExplorerMapGeometry.direction(to: coordinate, centeredOn: session.browseCoordinate)
+            let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale * 0.32
+            markerBillboard.position = session.globePosition + direction * radius * 1.006
+            markerBillboard.isEnabled = LunarExplorerMapGeometry.isVisible(direction: direction,
+                globePosition: session.globePosition, radius: radius)
         }
         let canPresentSite = !session.isBrowsingGlobe && session.flightCoordinate == nil && isLoaded && (globalTerrain == nil || globalTerrain?.snapshot.tiles.isEmpty == false)
         let globeOpacity = canPresentSite ? blend.globeOpacity : 1
@@ -1294,14 +1347,16 @@ final class LunarExplorerScene {
     }
 
     private func updateDiagnostics(_ session: LunarExplorerSession) {
-        session.diagnostics.requestedTileCount = requestedPlans.count
-        session.diagnostics.activeTileCount = progressiveEntities.count
-        session.diagnostics.finestSpacingMeters = requestedPlans.values
+        var diagnostics = session.diagnostics
+        diagnostics.requestedTileCount = requestedPlans.count
+        diagnostics.activeTileCount = progressiveEntities.count
+        diagnostics.finestSpacingMeters = requestedPlans.values
             .map(\.sampleSpacingMeters)
             .min()
-        session.diagnostics.sourceDescription = sourceDescription(
+        diagnostics.sourceDescription = sourceDescription(
             altitudeMeters: session.altitudeMeters
         )
+        session.publishDiagnostics(diagnostics)
     }
 
     private func sourceDescription(altitudeMeters: Double) -> String {

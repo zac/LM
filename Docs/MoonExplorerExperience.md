@@ -11,8 +11,8 @@ small bottom toolbar. Start in mixed immersion with a bounded globe beside a
 native glass window. Globe dragging changes the geographic focus across the
 whole Moon. Pinching changes the globe within a modest size range.
 
-An explicit **Explore surface** action opens full immersion and loads terrain.
-**Return to globe** restores passthrough. This avoids unexpectedly filling the
+An explicit **Globe / Surface** picker opens full immersion and loads terrain.
+**Exit surface** restores passthrough. This avoids unexpectedly filling the
 room with a giant sphere or an unbounded terrain plane while pinching. Close
 terrain is an inspection view, not a claim of a life-size lunar walk.
 
@@ -58,6 +58,9 @@ Implementation and validation results are recorded below as they complete.
 The initial placement and marker sizing described below are historical. The
 [HIG improvement pass](MoonExplorerHIGReview.md) supersedes them with adjustable
 placement relative to the initial viewer position, Dynamic Type, and fades.
+The [native controls overhaul](MoonExplorerOverhaul.md) adds system tabs/search,
+scene ornaments, mission sheets and all-site markers, and corrects the flag's
+attachment alignment using measured RealityKit bounds.
 
 The mixed globe has a radius of 0.334-0.491 m across its allowed zoom range,
 with its center 0.95 m right, 1.45 m high and 1.8 m forward in the existing
