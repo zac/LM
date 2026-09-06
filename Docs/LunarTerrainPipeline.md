@@ -648,6 +648,12 @@ Arrival measurements and capture limitations are recorded in
 `Stage2GlobalTerrainValidation.md`.
 
 `LMLunarTerrainRegion` freezes its verified source set before geometry generation.
+The v2 source resolver applies edge halos only above the resolution of the
+fully covering owner. A neighboring strip at the same resolution cannot clamp
+its boundary row over native coverage. This fixes the extruded rows and moved
+posts exposed by low-Sun Highland captures. Native measurements and residual
+caps remain authoritative; the source files and octave morphology are unchanged.
+Global mesh metadata identifies `lunar-source-anchored-octaves-v2`.
 `LMLunarResolvedTerrain` owns the native-post residual and cap contracts;
 `LMLunarTerrainMeshSnapshot` retains the actual submitted triangles for parent
 morphing and contact. Re-anchoring changes chunk transforms only. The Apollo

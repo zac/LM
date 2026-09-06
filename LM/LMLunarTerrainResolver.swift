@@ -4,7 +4,7 @@ import simd
 /// Immutable source ownership and procedural version for one resident region.
 /// Re-anchoring the presentation never changes this value or its lunar samples.
 struct LMLunarResolvedTerrain: Sendable {
-    static let generatorVersion = "lunar-source-anchored-octaves-v1"
+    static let generatorVersion = "lunar-source-anchored-octaves-v2"
     let base: LMLunarElevationGrid
     /// Increasing resolution; overlapping strips from one product share posts.
     let refinements: [LMLunarElevationGrid]
@@ -29,7 +29,11 @@ struct LMLunarResolvedTerrain: Sendable {
         let ownedIndex = weighted.lastIndex { $0.1 == 1 }
         let owner = ownedIndex.map { weighted[$0].0 } ?? base
         guard var result = resolved(grid: owner, coordinate: coordinate, spacing: spacingMeters) else { return nil }
-        for (grid, weight) in weighted.dropFirst(ownedIndex.map { $0 + 1 } ?? 0) where weight > 0 {
+        // An edge halo is fallback coverage, never a refinement over a native
+        // peer. Applying a clamped neighboring strip here extruded its final
+        // row over valid posts and made heights depend on strip ordering.
+        for (grid, weight) in weighted.dropFirst(ownedIndex.map { $0 + 1 } ?? 0)
+            where weight > 0 && grid.pixelsPerDegree > owner.pixelsPerDegree {
             let clamped = clampedCoordinate(coordinate, to: grid)
             guard let finer = resolved(grid: grid, coordinate: clamped, spacing: spacingMeters) else { continue }
             result = Sample(

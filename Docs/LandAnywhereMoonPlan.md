@@ -457,6 +457,17 @@ anchor, floating tangent frame, whatever sources cover it."
    `Stage2TerrainDiagnostics.md` for evidence and `ArtemisFlybyRealism.md`
    for the photographic reference controls.
 
+   The low-Sun banding follow-up fixes a source-ownership defect: a clamped
+   peer-strip halo could overwrite native coverage, moving measured posts and
+   extruding a boundary row into stripes. Resolver v2 restricts halo blending
+   to strictly finer sources above the native owner. Its combined-strip test
+   is exact at posts and fractional coordinates in both strip orders. A
+   separate shading correction blends collar slopes once, and consistent
+   neutral-normal encoding removes the fine/coarse brightness step. See
+   `Stage2TerrainBanding.md` for the failing controls, regression measurements,
+   final captures and remaining visual/device limits. The source-data,
+   procedural cap, rendered-contact and Apollo contracts remain unchanged.
+
    The lifecycle follow-up passes 15 Release Simulator tests, including exact
    P63 restart state, cancelled loads, and GPU/contact publication. The final
    eleven-stop Apollo capture is byte-identical to item 0. Settled pacing is

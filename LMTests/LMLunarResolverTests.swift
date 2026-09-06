@@ -97,6 +97,39 @@ struct LMLunarResolverTests {
         #expect(a.elevation(at: .init(latitudeDegrees: 30, longitudeDegrees: 0)) == nil)
     }
 
+    @Test func peerStripHaloCannotOverrideNativeCoverageOrExtrudeItsEdge() throws {
+        let a = try strip(first: 11_519, last: 11_552)
+        let b = try strip(first: 11_551, last: 11_584)
+        let base = try base()
+        let single = [LMLunarResolvedTerrain(base: base, refinements: [a]),
+                      LMLunarResolvedTerrain(base: base, refinements: [b])]
+        let joined = [LMLunarResolvedTerrain(base: base, refinements: [a, b]),
+                      LMLunarResolvedTerrain(base: base, refinements: [b, a])]
+        var maximumMeasuredError = 0.0, maximumResidualError = 0.0
+        for (index, grid) in [a, b].enumerated() {
+            for row in 0..<grid.height {
+                for fraction in [0.0, 0.37] where Double(row) + fraction <= Double(grid.height - 1) {
+                    let post = grid.coordinate(row: row, column: 15_360)
+                    let coordinate = LMSelenographicCoordinate(
+                        latitudeDegrees: post.latitudeDegrees - fraction / grid.pixelsPerDegree,
+                        longitudeDegrees: post.longitudeDegrees + fraction / grid.pixelsPerDegree)
+                    for spacing in [512.0, 2, 0.125] {
+                        let expected = try #require(single[index].sample(at: coordinate, spacingMeters: spacing))
+                        for terrain in joined {
+                            let actual = try #require(terrain.sample(at: coordinate, spacingMeters: spacing))
+                            maximumMeasuredError = max(maximumMeasuredError, abs(actual.measuredMeters - expected.measuredMeters))
+                            maximumResidualError = max(maximumResidualError, abs(actual.residualMeters - expected.residualMeters))
+                            #expect(abs(actual.residualMeters) <= actual.capMeters)
+                        }
+                    }
+                }
+            }
+        }
+        print("LUNAR_PEER_STRIPS measuredError=\(maximumMeasuredError)m residualError=\(maximumResidualError)m")
+        #expect(maximumMeasuredError == 0)
+        #expect(maximumResidualError == 0)
+    }
+
     @Test func polarOwnershipConvergesAndLongitudeWrapIsContinuous() throws {
         let north = try strip(first: 0, last: 32)
         let south = try strip(first: 23_007, last: 23_039)

@@ -76,6 +76,14 @@ This is a failed visual acceptance, not a promoted photographic default.
 Keep the diagnostic controls: changing tone can amplify an existing geometry
 problem even when the overall contrast looks closer to the NASA photographs.
 
+The subsequent repair is recorded in `Stage2TerrainBanding.md`. Raw mesh
+inspection traced the prominent stripes to a neighboring elevation strip's
+clamped edge overriding fully covered native terrain. The v2 resolver removes
+that extrusion; a separate collar-normal correction fixes double weighting of
+the shading ramp. Matching the coarse baker's neutral-normal encoding to the
+full baker removes the remaining narrow brightness card with normal maps
+enabled. The original failed captures above remain the controls.
+
 ## Next visual experiments
 
 1. Match geographic region, solar elevation/azimuth, view direction and image
