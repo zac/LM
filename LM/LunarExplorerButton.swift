@@ -31,7 +31,7 @@ struct LunarExplorerButton: View {
             Label(
                 appModel.lunarExplorerSpaceState == .open
                     ? "Leave Lunar Explorer"
-                    : "Explore Apollo 11 terrain",
+                    : "Explore the Moon",
                 systemImage: "globe.americas.fill"
             )
             .frame(maxWidth: .infinity)

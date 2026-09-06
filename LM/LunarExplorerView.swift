@@ -8,6 +8,7 @@ struct LunarExplorerView: View {
     @State private var scene = LunarExplorerScene()
     @State private var orbitStart: SIMD2<Double>?
     @State private var panStart: SIMD2<Double>?
+    @State private var globeDragStart: LMSelenographicCoordinate?
     @State private var zoomStartMetersAcross: Double?
 
     var body: some View {
@@ -28,9 +29,14 @@ struct LunarExplorerView: View {
         }
         .onDisappear {
             LunarExplorerPerformanceProbe.shared.stop()
+            if explorer.isExplorerExperience { explorer.cancelNavigation() }
         }
         .task {
             let arguments = ProcessInfo.processInfo.arguments
+            if arguments.contains("--lunar-explorer-profile-journey") {
+                await LunarExplorerExperienceProbe.run(explorer)
+                return
+            }
             guard arguments.contains("--lunar-explorer-capture") else { return }
             do {
                 if let value = arguments.first(where: { $0.hasPrefix("--lunar-explorer-fly-to=") }),
@@ -86,6 +92,14 @@ struct LunarExplorerView: View {
             .targetedToEntity(scene.interactionSurface)
             .onChanged { value in
                 guard !session.landingRunning, !session.navigationInProgress else { return }
+                if session.isBrowsingGlobe {
+                    if globeDragStart == nil { globeDragStart = session.browseCoordinate }
+                    if let start = globeDragStart {
+                        session.rotateGlobe(from: start, horizontal: Double(value.translation.width),
+                                            vertical: Double(value.translation.height))
+                    }
+                    return
+                }
                 switch session.navigationMode {
                 case .orbit:
                     panStart = nil
@@ -118,6 +132,7 @@ struct LunarExplorerView: View {
             .onEnded { _ in
                 orbitStart = nil
                 panStart = nil
+                globeDragStart = nil
             }
     }
 
@@ -130,7 +145,11 @@ struct LunarExplorerView: View {
                     zoomStartMetersAcross = session.metersAcross
                 }
                 guard let start = zoomStartMetersAcross else { return }
-                session.zoom(by: Double(value.magnification), from: start)
+                if session.isExplorerExperience {
+                    session.exploreZoom(by: Double(value.magnification), from: start)
+                } else {
+                    session.zoom(by: Double(value.magnification), from: start)
+                }
             }
             .onEnded { _ in
                 zoomStartMetersAcross = nil
@@ -138,7 +157,7 @@ struct LunarExplorerView: View {
     }
 }
 
-struct LunarExplorerControls: View {
+struct LunarExplorerInspector: View {
     @Bindable var session: LunarExplorerSession
     let close: () -> Void
     var landInCockpit: (() -> Void)? = nil

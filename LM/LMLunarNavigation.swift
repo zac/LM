@@ -34,6 +34,23 @@ enum LMLunarNavigation {
         return .init(latitudeDegrees: lat, longitudeDegrees: lon)
     }
 
+    /// Move on the sphere in the starting point's tangent frame. This remains
+    /// finite at the poles and wraps the dateline without a latitude clamp.
+    static func draggedCoordinate(from start: LMSelenographicCoordinate,
+                                  northDegrees: Double, eastDegrees: Double) -> LMSelenographicCoordinate {
+        guard northDegrees.isFinite, eastDegrees.isFinite else { return start }
+        let frame = LMSelenographicCoordinateSystem().localFrame(at: start)
+        let north = northDegrees * .pi / 180, east = eastDegrees * .pi / 180
+        let length = hypot(north, east)
+        guard length > 1e-12 else { return start }
+        let angle = min(.pi, length)
+        let up = frame.moonFixedDirection(SIMD3(0, 0, 1))
+        let tangent = frame.moonFixedDirection(SIMD3(north / length, east / length, 0))
+        let p = up * cos(angle) + tangent * sin(angle)
+        return .init(latitudeDegrees: atan2(p.z, hypot(p.x, p.y)) * 180 / .pi,
+                     longitudeDegrees: atan2(p.y, p.x) * 180 / .pi)
+    }
+
     /// Constant-angular-speed great circle; the caller supplies eased time.
     /// Antipodes have no unique shortest path: choose a stable orthogonal axis.
     static func interpolate(from: LMSelenographicCoordinate, to: LMSelenographicCoordinate,

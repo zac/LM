@@ -20,6 +20,9 @@ final class LunarExplorerScene {
     private var reanchorProbePending = false
     private var globalReanchorProbeStarted = false
     private let globePresentationRoot = Entity()
+    private let selectionMarker = ModelEntity(mesh: .generateSphere(radius: 28_000),
+                                               materials: [UnlitMaterial(color: .systemBlue)])
+    private var appliedInteractionRadius: Float?
     private let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier ?? "io.positron.LM",
         category: "LunarExplorer"
@@ -74,6 +77,10 @@ final class LunarExplorerScene {
         presentationRoot.addChild(terrainAnchorRoot)
         globePresentationRoot.name = "Lunar Explorer globe presentation"
         root.addChild(globePresentationRoot)
+        selectionMarker.name = "Selected lunar place"
+        selectionMarker.position = SIMD3(0, 0, Float(LunarExplorerSession.lunarGlobeRadiusMeters) * 1.006)
+        selectionMarker.isEnabled = false
+        globePresentationRoot.addChild(selectionMarker)
 
         interactionSurface.name = "Lunar Explorer interaction surface"
         interactionSurface.position = SIMD3(0, 0, -1.15)
@@ -121,6 +128,7 @@ final class LunarExplorerScene {
                     )
                     try Task.checkCancellation()
                     self.globePresentationRoot.children.removeAll()
+                    self.globePresentationRoot.addChild(self.selectionMarker)
                     self.globeFrontCoordinate = manifest.landingOriginCoordinate
                     if session.pendingArrival { session.flightCoordinate = nil }
                     self.globePresentationRoot.addChild(globe.entity)
@@ -149,6 +157,9 @@ final class LunarExplorerScene {
                         "Lunar globe load failed: \(error.localizedDescription, privacy: .public)"
                     )
                 }
+                // Browsing needs only the globe. Load the landing stack after
+                // an explicit Explore action, preserving the capture path.
+                if session.isBrowsingGlobe { self.loadTask = nil; return }
                 let heightField = try Apollo11TerrainResource.loadSourceBackedHeightField()
                 let assembly = try await LMTerrainWorld.load(
                     detailPipeline: detailPipeline
@@ -420,7 +431,11 @@ final class LunarExplorerScene {
         }
         updatePresentationTransform(session)
         updateGlobeTerminator(session)
-        guard isLoaded else { return }
+        if !isLoaded, loadTask == nil, !session.isBrowsingGlobe, navigationPhase == .idle {
+            loadIfNeeded(session: session)
+            return
+        }
+        guard isLoaded, !session.isBrowsingGlobe else { return }
 
         if activeDetailMode != session.detailMode {
             if let globalTerrain {
@@ -642,7 +657,7 @@ final class LunarExplorerScene {
             progress
         )
 
-        let globeFocus = session.flightCoordinate
+        let globeFocus = (session.isBrowsingGlobe ? session.browseCoordinate : nil) ?? session.flightCoordinate
             ?? (isLoaded ? (session.usesBundledSite ? siteCoordinate : session.currentCoordinate) : nil)
         if let flight = globeFocus, let front = globeFrontCoordinate {
             let rotation = front == flight ? simd_quatf() : LMLunarNavigation.displayRotation(from: front, to: flight)
@@ -652,7 +667,30 @@ final class LunarExplorerScene {
             globeEntity?.orientation = .init()
             globeTerminator?.entity.orientation = .init()
         }
-        let canPresentSite = session.flightCoordinate == nil && isLoaded && (globalTerrain == nil || globalTerrain?.snapshot.tiles.isEmpty == false)
+        if session.isBrowsingGlobe {
+            // A bounded, reachable globe in passthrough. Zoom cannot turn it
+            // into a room-filling surface; Explore explicitly enters full space.
+            let scale = session.globePresentationScale * 0.32
+            globePresentationRoot.scale = SIMD3(repeating: scale)
+            globePresentationRoot.position = SIMD3(0.95, 1.45, -1.8)
+            globePresentationRoot.orientation = .init()
+            interactionSurface.position = globePresentationRoot.position
+            let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * scale
+            if appliedInteractionRadius != radius {
+                appliedInteractionRadius = radius
+                interactionSurface.components.set(CollisionComponent(shapes: [.generateSphere(radius: radius)]))
+            }
+        } else {
+            interactionSurface.position = SIMD3(0, 0, -1.15)
+            if appliedInteractionRadius != nil {
+                appliedInteractionRadius = nil
+                interactionSurface.components.set(CollisionComponent(shapes: [
+                    .generateBox(size: SIMD3(3.8, 2.6, 0.02))
+                ]))
+            }
+        }
+        selectionMarker.isEnabled = session.isBrowsingGlobe && session.selectedPlaceID != nil
+        let canPresentSite = !session.isBrowsingGlobe && session.flightCoordinate == nil && isLoaded && (globalTerrain == nil || globalTerrain?.snapshot.tiles.isEmpty == false)
         let globeOpacity = canPresentSite ? blend.globeOpacity : 1
         let siteOpacity = canPresentSite ? blend.siteOpacity : 0
         globePresentationRoot.isEnabled = globeOpacity > 0.001
@@ -720,7 +758,9 @@ final class LunarExplorerScene {
     /// extended-linear color preserves a multiplier above one without
     /// changing the texture, its transfer function, or the terminator shell.
     private func updateGlobeRadiance(_ session: LunarExplorerSession) {
-        let multiplier = session.globeHandoffLinearRadianceMultiplier
+        // Cartographic globe against a bright room; immersive/capture radiance
+        // keeps the accepted handoff calibration exactly.
+        let multiplier = session.isBrowsingGlobe ? 3.0 : session.globeHandoffLinearRadianceMultiplier
         guard appliedGlobeLinearRadianceMultiplier != multiplier,
               let globeEntity,
               var model = globeEntity.components[ModelComponent.self],
@@ -1115,9 +1155,18 @@ final class LunarExplorerScene {
             illuminatedFraction: illuminatedFraction,
             grade: grade
         )
-        session.diagnostics.sunAzimuthDegrees = sun.azimuthDegreesClockwiseFromNorth
-        session.diagnostics.sunElevationDegrees = sun.elevationDegrees
-        session.diagnostics.earthIlluminatedFraction = illuminatedFraction
+        // RealityView observes diagnostics while deciding whether an arrival
+        // is ready. Publishing identical values here can retrigger its update
+        // closure indefinitely when returning to an already resident site.
+        if session.diagnostics.sunAzimuthDegrees != sun.azimuthDegreesClockwiseFromNorth {
+            session.diagnostics.sunAzimuthDegrees = sun.azimuthDegreesClockwiseFromNorth
+        }
+        if session.diagnostics.sunElevationDegrees != sun.elevationDegrees {
+            session.diagnostics.sunElevationDegrees = sun.elevationDegrees
+        }
+        if session.diagnostics.earthIlluminatedFraction != illuminatedFraction {
+            session.diagnostics.earthIlluminatedFraction = illuminatedFraction
+        }
     }
 
     private func updateRockDetail(altitudeMeters: Double) {

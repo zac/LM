@@ -190,6 +190,15 @@ final class LunarExplorerSession {
         !arguments.contains("--lunar-explorer-capture")
     }
 
+    // Capture sessions retain the original full-space inspection path.
+    var isExplorerExperience = false
+    var isBrowsingGlobe = false
+    var immersionStyle: any ImmersionStyle = .full
+    var browseCoordinate = LMSelenographicCoordinate(latitudeDegrees: 0, longitudeDegrees: 0)
+    var selectedPlaceID: String?
+    var pendingSavedView: LunarExplorerSavedView?
+    var library = LunarExplorerLibrary()
+
     var selectedPreset: Preset = .regional
     var selectedFocus: Focus = .eagle
     var navigationMode: NavigationMode = .orbit
@@ -239,9 +248,10 @@ final class LunarExplorerSession {
              altitude: Double = Preset.regional.altitudeMeters, heading targetHeading: Double = 0) {
         guard !landingRunning else { return }
         flightTask?.cancel()
+        pendingSavedView = nil
         arrivalAltitude = min(Self.maximumAltitudeMeters, max(Self.minimumAltitudeMeters, altitude))
         arrivalHeading = targetHeading
-        let start = currentCoordinate ?? destinationCoordinate
+        let start = flightCoordinate ?? currentCoordinate ?? destinationCoordinate
             ?? (try? LMTerrainManifest.load().landingOriginCoordinate) ?? coordinate
         if remember { navigationHistory.append(start) }
         navigationPhase = .departing
@@ -285,6 +295,8 @@ final class LunarExplorerSession {
 
     func beginArrival() {
         guard pendingArrival else { return }
+        // Readiness belongs to the destination, even when its globe was reused.
+        flightCoordinate = nil
         pendingArrival = false
         navigationPhase = .arriving
         navigationMessage = "Arriving"
@@ -302,7 +314,18 @@ final class LunarExplorerSession {
             self?.selectedPreset = .regional
             self?.navigationPhase = .idle
             self?.navigationMessage = ""
+            self?.applyPendingSavedView()
         }
+    }
+
+    func cancelNavigation() {
+        flightTask?.cancel()
+        flightTask = nil
+        pendingArrival = false
+        pendingSavedView = nil
+        navigationPhase = .idle
+        flightCoordinate = nil
+        navigationMessage = ""
     }
 
     func back() {
@@ -521,6 +544,11 @@ final class LunarExplorerSession {
     /// after launch, but every named preset starts from the same terrain state.
     func configure(arguments: [String]) {
         let isCapture = arguments.contains("--lunar-explorer-capture")
+        let inspectionOptions = arguments.contains {
+            $0.hasPrefix("--lunar-explorer-") && !$0.hasPrefix("--lunar-explorer-profile")
+        }
+        isExplorerExperience = !isCapture && !inspectionOptions
+        if isExplorerExperience { returnToGlobe(); showDaylight() }
         captureReanchorProbe = isCapture && arguments.contains("--lunar-explorer-reanchor-probe")
         captureElevationOffline = isCapture && arguments.contains("--lunar-explorer-elevation-offline")
         captureElevationCoordinate = nil
