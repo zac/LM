@@ -4,6 +4,9 @@ This follow-up implements the next performance work in
 `MoonExplorerPerformance.md`, under the contracts in `LandAnywhereMoonPlan.md`.
 Evidence is retained in `/tmp/LM-Texture-Publication-2026-09-06/`.
 
+The subsequent source-read attribution and sampled RealityKit import investigation
+are in `MoonExplorerEntryAndImport.md`.
+
 ## Protocol
 
 The control starts from `ad9d416` with additional texture-dimension and mesh

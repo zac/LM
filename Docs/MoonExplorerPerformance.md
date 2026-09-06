@@ -7,6 +7,8 @@ The evidence root is `/tmp/LM-Explorer-Performance-2026-09-06/`.
 The subsequent texture-decoder attribution, prepared color companion and
 terrain-publication work are recorded in `MoonExplorerTextureAndPublication.md`.
 Read that report for the current performance state and pending storage decision.
+`MoonExplorerEntryAndImport.md` continues with source decoding and a sampled
+main-thread mesh-import call stack.
 
 ## Protocol and attribution
 

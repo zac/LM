@@ -57,6 +57,11 @@ budget approval; the original source remains unchanged. Terrain ownership
 preparation moves ahead of atomic publication, with frame-budget and physical
 Vision Pro gates still open.
 
+`MoonExplorerEntryAndImport.md` records the subsequent source-read scheduling
+fix and sampled evidence that RealityKit still conditions descriptor meshes
+on the main thread internally. A direct-buffer alternative failed Apollo image
+identity and was rejected; the rendering contract remains intact.
+
 The September 6 startup and repeated-navigation profiling follow-up is in
 `MoonExplorerPerformance.md`. It attributes the approximately 1.6 GiB startup
 peak to the 64 ppd texture load and records the bounded navigation soak,
