@@ -13,10 +13,16 @@ xcrun simctl spawn "$udid" log stream --level=info --predicate 'subsystem == "io
 logger=$!
 trap 'kill "$logger" 2>/dev/null || true; wait "$logger" 2>/dev/null || true' EXIT
 args=(--lunar-explorer --lunar-explorer-profile --lunar-explorer-profile-browser)
-stages=(selected mission saved settings placement lighting far-side)
+stages=(selected mission saved saved-views settings placement lighting far-side)
 if [[ ${LUNAR_BROWSER_CAPTURE_LIGHTING_ONLY:-0} == 1 ]]; then
     args+=(--lunar-explorer-profile-browser-lighting)
     stages=(lighting)
+elif [[ ${LUNAR_BROWSER_CAPTURE_SELECTED_ONLY:-0} == 1 ]]; then
+    args+=(--lunar-explorer-profile-browser-selected)
+    stages=(selected)
+elif [[ ${LUNAR_BROWSER_CAPTURE_SEARCH_ONLY:-0} == 1 ]]; then
+    args+=(--lunar-explorer-profile-browser-search)
+    stages=(search empty coordinate coordinate-selected)
 fi
 printf '%s\n' "${args[@]}" > "$out/launch-arguments.txt"
 launch=$(xcrun simctl launch --terminate-running-process "$udid" io.positron.LM "${args[@]}")

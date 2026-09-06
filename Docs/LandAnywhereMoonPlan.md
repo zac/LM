@@ -504,6 +504,9 @@ anchor, floating tangent frame, whatever sources cover it."
    quality pass. `MoonExplorerOverhaul.md` records native tabs/search, a
    Globe/Surface ornament, mission sheets, all-site markers and a measured
    attachment-alignment correction; the Apollo flag drawing is retained.
+   `MoonExplorerVisualPolish.md` supersedes that browser layout with full-width
+   search, grouped place cards, stronger contrast and a compact destination
+   action after the owner rejected the default controls' visual result.
    Full panel interaction coverage and physical gesture comfort
    remain open. See `Stage2GlobalTerrainValidation.md` for terrain failures.
 7. Reuse the planner, morph collars, residency nesting, per-tile bake,

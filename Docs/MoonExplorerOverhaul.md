@@ -5,6 +5,10 @@ layout in `MoonExplorerExperience.md` and `MoonExplorerHIGReview.md`. Terrain
 sources, residuals, contact geometry and Apollo inspection rendering retain
 their existing contracts.
 
+The owner subsequently rejected this browser's visual appearance. The
+[visual refinement](MoonExplorerVisualPolish.md) supersedes its toolbar search,
+plain place rows and destination layout while retaining the navigation work.
+
 ## Changes
 
 - Native Explore, Saved and Settings tabs replace the custom browser shell.
