@@ -36,7 +36,7 @@ import OSLog
             let reloaded = LunarExplorerLibrary(defaults: defaults)
             guard reloaded.views == [saved] else { throw CocoaError(.fileReadCorruptFile) }
             session.library = reloaded
-            session.returnToGlobe()
+            session.returnToGlobeGently()
             try await stage("returned")
             session.restore(saved)
             try await waitForArrival(session)
@@ -46,7 +46,13 @@ import OSLog
             let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             try JSONEncoder().encode([saved, restored]).write(to: directory.appendingPathComponent("MoonExplorerJourney.json"))
             try await stage("restored")
-            session.returnToGlobe()
+            session.returnToGlobeGently()
+            for _ in 0..<120 where session.navigationInProgress {
+                try await Task.sleep(for: .milliseconds(20))
+            }
+            guard session.isBrowsingGlobe, session.transitionOpacity == 1 else {
+                throw CocoaError(.fileReadUnknown)
+            }
             logger.info("Moon experience stage=passed cameraAndSunlightExact=true persistenceReload=true")
         } catch {
             logger.error("Moon experience stage=failed error=\(error.localizedDescription, privacy: .public)")

@@ -495,9 +495,14 @@ anchor, floating tangent frame, whatever sources cover it."
 6. **Explorer UX, implemented with acceptance gaps:** coordinate entry/copy,
    eased great-circle fly-to, an 18-entry sourced POI catalog, measured-floor
    disclosure, history, cached-only reload and region download/pause controls.
-   Global local pan remains bounded to the prefetched 20 km window; continuous
-   globe dragging, full panel interaction coverage and physical gesture comfort
-   remain open. See `Stage2GlobalTerrainValidation.md` for captures and failures.
+   Global local pan remains bounded to the prefetched 20 km window. The product
+   browser now supports continuous globe dragging, explicit immersive entry,
+   saved views, and sunlight controls; see `MoonExplorerExperience.md`. Product
+   navigation uses fades instead of automatic camera travel, while inspection
+   launches retain the great-circle path. `MoonExplorerHIGReview.md` records
+   adjustable initial-viewer placement, larger controls/text, and the flag
+   quality pass. Full panel interaction coverage and physical gesture comfort
+   remain open. See `Stage2GlobalTerrainValidation.md` for terrain failures.
 7. Reuse the planner, morph collars, residency nesting, per-tile bake,
    detail cache and static materials. The recorded atomic generation swap
    exposed an additional rendering requirement: continuous arrival needs one

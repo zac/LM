@@ -22,6 +22,8 @@ final class LunarExplorerScene {
     private let globePresentationRoot = Entity()
     private let selectionMarker = Entity()
     private let markerBillboard = Entity()
+    private var globePlacementRoot: AnchorEntity?
+    private var appliedPlacementRevision = -1
     private var appliedInteractionRadius: Float?
     private let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier ?? "io.positron.LM",
@@ -96,11 +98,12 @@ final class LunarExplorerScene {
         root.addChild(interactionSurface)
     }
 
-    func installPlaceMarker(_ marker: Entity) {
+    func installPlaceMarker(_ marker: Entity, scale: Float) {
+        marker.position = SIMD3<Float>(0.106, 0.036, 0) * scale
         guard marker.parent !== markerBillboard else { return }
         // SwiftUI attachments use one millimeter per point. Offset the view's
         // center so the glyph's (24, 76) foot sits at the billboard origin.
-        marker.position = SIMD3(0.106, 0.036, 0)
+        // Offset scales with Dynamic Type as well as the attachment.
         markerBillboard.addChild(marker)
     }
 
@@ -565,6 +568,29 @@ final class LunarExplorerScene {
     }
 
     private func updatePresentationTransform(_ session: LunarExplorerSession) {
+        if session.isExplorerExperience {
+            root.components.set(OpacityComponent(opacity: session.transitionOpacity))
+        }
+        if session.isBrowsingGlobe {
+            if globePlacementRoot == nil || appliedPlacementRevision != session.globePlacementRevision {
+                let previous = globePlacementRoot
+                let anchor = AnchorEntity(.head, trackingMode: .once)
+                root.addChild(anchor)
+                for entity in [globePresentationRoot, interactionSurface, markerBillboard] {
+                    anchor.addChild(entity)
+                }
+                previous?.removeFromParent()
+                globePlacementRoot = anchor
+                appliedPlacementRevision = session.globePlacementRevision
+            }
+            if let anchor = globePlacementRoot {
+                for entity in [globePresentationRoot, interactionSurface, markerBillboard]
+                    where entity.parent !== anchor { anchor.addChild(entity) }
+            }
+        } else {
+            for entity in [globePresentationRoot, interactionSurface, markerBillboard]
+                where entity.parent !== root { root.addChild(entity) }
+        }
         updateGlobeRadiance(session)
         let siteScale = session.presentationScale
         let blend = session.globeSiteBlend
@@ -684,7 +710,7 @@ final class LunarExplorerScene {
             // into a room-filling surface; Explore explicitly enters full space.
             let scale = session.globePresentationScale * 0.32
             globePresentationRoot.scale = SIMD3(repeating: scale)
-            globePresentationRoot.position = SIMD3(0.95, 1.45, -1.8)
+            globePresentationRoot.position = session.globePosition
             globePresentationRoot.orientation = .init()
             interactionSurface.position = globePresentationRoot.position
             let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * scale
@@ -703,7 +729,7 @@ final class LunarExplorerScene {
         }
         markerBillboard.isEnabled = session.isExplorerExperience && session.isBrowsingGlobe
         if markerBillboard.isEnabled {
-            markerBillboard.position = selectionMarker.position(relativeTo: root)
+            markerBillboard.position = selectionMarker.position(relativeTo: markerBillboard.parent)
         }
         let canPresentSite = !session.isBrowsingGlobe && session.flightCoordinate == nil && isLoaded && (globalTerrain == nil || globalTerrain?.snapshot.tiles.isEmpty == false)
         let globeOpacity = canPresentSite ? blend.globeOpacity : 1

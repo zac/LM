@@ -14,6 +14,9 @@ struct LunarExplorerButton: View {
                     appModel.lunarExplorerSpaceState = .inTransition
                     await dismissImmersiveSpace()
                 case .closed:
+                    if appModel.lunarExplorerSession.isExplorerExperience {
+                        appModel.lunarExplorerSession.prepareForPresentation()
+                    }
                     appModel.lunarExplorerSpaceState = .inTransition
                     switch await openImmersiveSpace(id: appModel.lunarExplorerSpaceID) {
                     case .opened:

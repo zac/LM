@@ -91,12 +91,39 @@ struct LunarExplorerExperienceTests {
         s.configure(arguments: [])
         s.browseCoordinate = .init(latitudeDegrees: -42, longitudeDegrees: 120)
         s.exploreSelectedPlace()
-        #expect(s.navigationInProgress && !s.isBrowsingGlobe)
+        #expect(s.navigationInProgress && s.isBrowsingGlobe) // Fade before immersion changes.
         #expect(s.flightCoordinate == s.browseCoordinate)
         s.returnToGlobe()
         try await Task.sleep(for: .milliseconds(80))
         #expect(s.isBrowsingGlobe && !s.navigationInProgress && !s.pendingArrival)
         #expect(s.flightCoordinate == nil)
+    }
+
+    @Test func reducedMotionFadesWithoutFlyingAndReopeningCancelsTransitions() async throws {
+        let s = LunarExplorerSession()
+        s.configure(arguments: [])
+        s.reduceMotion = true
+        let initialWidth = s.metersAcross
+        s.exploreSelectedPlace(altitude: 180, heading: 27)
+        #expect(s.isBrowsingGlobe && s.metersAcross == initialWidth)
+        for _ in 0..<100 where s.navigationPhase != .loading {
+            try await Task.sleep(for: .milliseconds(20))
+        }
+        #expect(!s.isBrowsingGlobe && s.pendingArrival && s.transitionOpacity == 0)
+        #expect(s.metersAcross == initialWidth) // No zoom animation before load.
+        s.beginArrival()
+        #expect(s.altitudeMeters == 180 && s.headingDegrees == 27)
+        let arrivalWidth = s.metersAcross
+        for _ in 0..<100 where s.navigationInProgress {
+            try await Task.sleep(for: .milliseconds(20))
+            #expect(s.metersAcross == arrivalWidth) // Only opacity changes.
+        }
+        #expect(s.transitionOpacity == 1 && !s.navigationInProgress)
+        s.returnToGlobeGently()
+        s.prepareForPresentation()
+        try await Task.sleep(for: .milliseconds(350))
+        #expect(s.isBrowsingGlobe && s.transitionOpacity == 1)
+        #expect(!s.navigationInProgress && !s.pendingArrival)
     }
 
     @Test func bookmarksSurviveReloadAndRejectInvalidPersistedCoordinates() throws {

@@ -55,6 +55,10 @@ Implementation and validation results are recorded below as they complete.
 
 ## Implementation notes
 
+The initial placement and marker sizing described below are historical. The
+[HIG improvement pass](MoonExplorerHIGReview.md) supersedes them with adjustable
+placement relative to the initial viewer position, Dynamic Type, and fades.
+
 The mixed globe has a radius of 0.334-0.491 m across its allowed zoom range,
 with its center 0.95 m right, 1.45 m high and 1.8 m forward in the existing
 scene frame. The initial overlapping layout was rejected after live Simulator

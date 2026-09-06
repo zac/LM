@@ -5,6 +5,8 @@ import UIKit
 
 struct LunarExplorerView: View {
     @Environment(MainMenuViewModel.self) private var appModel
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @ScaledMetric(relativeTo: .body) private var markerScale = 1.0
     @State private var scene = LunarExplorerScene()
     @State private var orbitStart: SIMD2<Double>?
     @State private var panStart: SIMD2<Double>?
@@ -17,20 +19,25 @@ struct LunarExplorerView: View {
         RealityView { content, attachments in
             content.add(scene.root)
             if let marker = attachments.entity(for: "selected-place") {
-                scene.installPlaceMarker(marker)
+                scene.installPlaceMarker(marker, scale: Float(markerScale))
             }
             scene.loadIfNeeded(session: explorer)
         } update: { _, attachments in
             if let marker = attachments.entity(for: "selected-place") {
-                scene.installPlaceMarker(marker)
+                scene.installPlaceMarker(marker, scale: Float(markerScale))
             }
             scene.apply(explorer)
         } attachments: {
             if explorer.isExplorerExperience {
                 Attachment(id: "selected-place") {
                     LunarExplorerPlaceMarker(place: explorer.selectedMarkerPlace)
+                        .scaleEffect(markerScale)
+                        .frame(width: 260 * markerScale, height: 80 * markerScale)
                 }
             }
+        }
+        .onChange(of: reduceMotion, initial: true) { _, value in
+            explorer.reduceMotion = value || ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile-reduce-motion")
         }
         .gesture(orbitGesture(explorer))
         .simultaneousGesture(zoomGesture(explorer))
@@ -537,6 +544,9 @@ struct LunarExplorerControlsWindow: View {
         LunarExplorerControls(session: appModel.lunarExplorerSession) {
             Task { @MainActor in
                 await dismissImmersiveSpace()
+                if appModel.lunarExplorerSession.isExplorerExperience {
+                    appModel.lunarExplorerSession.prepareForPresentation()
+                }
                 dismissWindow(id: appModel.lunarExplorerControlsWindowID)
             }
         } landInCockpit: {

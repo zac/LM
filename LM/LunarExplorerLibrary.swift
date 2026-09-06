@@ -78,9 +78,14 @@ extension LunarExplorerSession {
     }
 
     func returnToGlobe() {
+        cancelNavigation()
+        transitionOpacity = 1
+        setGlobePresentation()
+    }
+
+    func setGlobePresentation() {
         let coordinate = isBrowsingGlobe ? browseCoordinate : currentCoordinate ?? destinationCoordinate ?? browseCoordinate
         if !isBrowsingGlobe { selectedPlaceID = nil }
-        cancelNavigation()
         isBrowsingGlobe = true
         browseCoordinate = coordinate
         select(.globe)
@@ -97,8 +102,6 @@ extension LunarExplorerSession {
     func exploreSelectedPlace(altitude: Double = Preset.regional.altitudeMeters, heading: Double = 0) {
         guard !landingRunning else { return }
         flightCoordinate = browseCoordinate
-        isBrowsingGlobe = false
-        immersionStyle = .full
         fly(to: browseCoordinate, altitude: altitude, heading: heading)
     }
 
@@ -167,8 +170,10 @@ extension LunarExplorerSession {
             metersAcross = min(5_000_000, max(3_400_000, view.width))
         } else {
             if isBrowsingGlobe { flightCoordinate = browseCoordinate }
-            isBrowsingGlobe = false
-            immersionStyle = .full
+            if !isExplorerExperience {
+                isBrowsingGlobe = false
+                immersionStyle = .full
+            }
             fly(to: view.coordinate, altitude: view.altitude, heading: view.heading)
             pendingSavedView = view
         }

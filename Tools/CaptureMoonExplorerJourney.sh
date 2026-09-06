@@ -13,6 +13,7 @@ xcrun simctl spawn "$udid" log stream --level=info --predicate 'subsystem == "io
 logger=$!
 trap 'kill "$logger" 2>/dev/null || true; wait "$logger" 2>/dev/null || true' EXIT
 args=(--lunar-explorer --lunar-explorer-profile --lunar-explorer-profile-label=experience-journey --lunar-explorer-profile-journey)
+if [[ ${LUNAR_CAPTURE_REDUCE_MOTION:-0} == 1 ]]; then args+=(--lunar-explorer-profile-reduce-motion); fi
 printf '%s\n' "${args[@]}" > "$out/launch-arguments.txt"
 launch=$(xcrun simctl launch --terminate-running-process "$udid" io.positron.LM "${args[@]}")
 pid=${launch##*: }

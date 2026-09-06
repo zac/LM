@@ -6,6 +6,8 @@ struct LunarExplorerControls: View {
     @Bindable var session: LunarExplorerSession
     var close: () -> Void
     var landInCockpit: (() -> Void)? = nil
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @State private var showsPlacement = false
     @State private var places: [LMLunarPOICatalog.Place] = []
     @State private var search = ""
     @State private var filter = "All"
@@ -31,6 +33,37 @@ struct LunarExplorerControls: View {
     }
 
     var body: some View {
+        Group {
+            if dynamicTypeSize.isAccessibilitySize {
+                ScrollView { panelContent }
+            } else {
+                panelContent
+            }
+        }
+        .padding(24)
+        .frame(width: dynamicTypeSize.isAccessibilitySize ? 680 : 520,
+               height: session.isBrowsingGlobe ? 720 : 560)
+        .glassBackgroundEffect()
+        .tint(.blue)
+        .ornament(attachmentAnchor: .scene(.bottom), contentAlignment: .top) {
+            toolbar
+        }
+        .alert("Save view", isPresented: $showsSave) {
+            TextField("Name", text: $savedName)
+            Button("Save") { session.library.save(session.savedView(named: savedName)) }
+                .disabled(savedName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            Button("Cancel", role: .cancel) {}
+        } message: { Text("Remembers this location, camera and sunlight.") }
+        .sheet(isPresented: $showsInspector) {
+            LunarExplorerInspector(session: session, close: { showsInspector = false }, landInCockpit: landInCockpit)
+        }
+        .task {
+            do { places = try LMLunarPOICatalog.load().features }
+            catch { session.navigationMessage = "Places could not be loaded. Coordinate search is still available." }
+        }
+    }
+
+    private var panelContent: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 10) {
                 Image(systemName: "moonphase.waning.gibbous").font(.largeTitle)
@@ -40,7 +73,7 @@ struct LunarExplorerControls: View {
                         .font(.subheadline).foregroundStyle(.secondary)
                 }
                 Spacer()
-                Button(action: close) { Image(systemName: "xmark") }
+                Button(action: close) { Image(systemName: "xmark").frame(width: 60, height: 60).contentShape(.rect) }
                     .buttonStyle(.borderless).accessibilityLabel("Close Moon Explorer")
             }
             if session.isBrowsingGlobe {
@@ -54,54 +87,22 @@ struct LunarExplorerControls: View {
                             .buttonStyle(.plain).accessibilityLabel("Clear search")
                     }
                 }
-                .padding(12).background(.fill.tertiary, in: RoundedRectangle(cornerRadius: 12))
-                Picker("Places", selection: $filter) {
-                    ForEach(["All", "Landings", "Craters", "Saved"], id: \.self) { Text($0) }
-                }.pickerStyle(.segmented)
-
-                ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 6) {
-                        if filter == "Saved" {
-                            if session.library.views.isEmpty {
-                                ContentUnavailableView("Keep a view", systemImage: "bookmark",
-                                    description: Text("Save a location, camera angle and sunlight to return to later."))
-                            }
-                            ForEach(session.library.views.filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }) { view in
-                                Button { session.restore(view) } label: {
-                                    placeRow(title: view.name,
-                                        subtitle: view.isGlobe ? "Saved globe view" : "Open immersive terrain view",
-                                        symbol: "bookmark.fill", selected: false)
-                                }
-                                .buttonStyle(.plain)
-                                .contextMenu { Button("Delete saved view", role: .destructive) { session.library.remove(view.id) } }
-                            }
-                        } else {
-                            if LMLunarNavigation.parse(search) != nil {
-                                Button(action: openCoordinate) {
-                                    placeRow(title: "Show coordinate", subtitle: search,
-                                             symbol: "mappin.and.ellipse", selected: false)
-                                }.buttonStyle(.plain)
-                            }
-                            ForEach(matches) { place in
-                                Button { session.previewPlace(place) } label: {
-                                    placeRow(title: place.name,
-                                        subtitle: place.category == "apollo" ? "Landing site" : place.category.capitalized,
-                                        symbol: place.category == "apollo" ? "flag.fill" : "circle.dotted",
-                                        selected: session.selectedPlaceID == place.id)
-                                }
-                                .buttonStyle(.plain)
-                                .accessibilityIdentifier("moon.place." + place.id)
-                            }
-                            if matches.isEmpty && LMLunarNavigation.parse(search) == nil {
-                                ContentUnavailableView.search(text: search)
-                            }
-                        }
-                    }
+                .padding(12).frame(minHeight: 60).background(.fill.tertiary, in: RoundedRectangle(cornerRadius: 12))
+                if dynamicTypeSize.isAccessibilitySize {
+                    placeFilter.pickerStyle(.menu)
+                } else {
+                    placeFilter.pickerStyle(.segmented)
                 }
-                .frame(maxHeight: .infinity)
+
+                if dynamicTypeSize.isAccessibilitySize {
+                    destinationCard
+                    placeResults
+                } else {
+                    ScrollView { placeResults }.frame(minHeight: 140, maxHeight: .infinity)
+                }
             } else {
                 HStack {
-                    Button { session.returnToGlobe() } label: { Label("Return to globe", systemImage: "globe") }
+                    Button { session.returnToGlobeGently() } label: { Label("Return to globe", systemImage: "globe") }
                     Spacer()
                     Button { session.back() } label: { Image(systemName: "arrow.uturn.backward") }
                         .disabled(session.navigationHistory.isEmpty || session.navigationInProgress)
@@ -126,7 +127,7 @@ struct LunarExplorerControls: View {
                 Spacer(minLength: 0)
             }
             Divider()
-            destinationCard
+            if !session.isBrowsingGlobe || !dynamicTypeSize.isAccessibilitySize { destinationCard }
             if session.navigationInProgress {
                 HStack { ProgressView().controlSize(.small); Text(session.navigationMessage).font(.subheadline) }
             } else if !session.navigationMessage.isEmpty {
@@ -134,27 +135,76 @@ struct LunarExplorerControls: View {
             }
             if !session.library.message.isEmpty { Text(session.library.message).font(.caption) }
         }
-        .padding(24)
-        .frame(width: 440, height: session.isBrowsingGlobe ? 640 : 440)
-        .glassBackgroundEffect()
-        .tint(.blue)
-        .ornament(attachmentAnchor: .scene(.bottom), contentAlignment: .top) {
-            HStack(spacing: 16) {
-                Button { session.returnToGlobe() } label: { Image(systemName: "globe") }
+    }
+
+    private var placeFilter: some View {
+        Picker("Places", selection: $filter) {
+            ForEach(["All", "Landings", "Craters", "Saved"], id: \.self) { Text($0) }
+        }
+    }
+
+    private var placeResults: some View {
+        LazyVStack(alignment: .leading, spacing: 6) {
+            if filter == "Saved" {
+                if session.library.views.isEmpty {
+                    ContentUnavailableView("Keep a view", systemImage: "bookmark",
+                        description: Text("Save a location, camera angle and sunlight to return to later."))
+                }
+                ForEach(session.library.views.filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }) { view in
+                    Button { session.restore(view) } label: {
+                        placeRow(title: view.name,
+                            subtitle: view.isGlobe ? "Saved globe view" : "Open immersive terrain view",
+                            symbol: "bookmark.fill", selected: false)
+                    }
+                    .buttonStyle(.plain).hoverEffect(.highlight)
+                    .contextMenu { Button("Delete saved view", role: .destructive) { session.library.remove(view.id) } }
+                }
+            } else {
+                if LMLunarNavigation.parse(search) != nil {
+                    Button(action: openCoordinate) {
+                        placeRow(title: "Show coordinate", subtitle: search,
+                                 symbol: "mappin.and.ellipse", selected: false)
+                    }.buttonStyle(.plain).hoverEffect(.highlight)
+                }
+                ForEach(matches) { place in
+                    Button { session.previewPlace(place) } label: {
+                        placeRow(title: place.name,
+                            subtitle: place.category == "apollo" ? "Landing site" : place.category.capitalized,
+                            symbol: place.category == "apollo" ? "flag.fill" : "circle.dotted",
+                            selected: session.selectedPlaceID == place.id)
+                    }
+                    .buttonStyle(.plain).hoverEffect(.highlight)
+                    .accessibilityIdentifier("moon.place." + place.id)
+                }
+                if matches.isEmpty && LMLunarNavigation.parse(search) == nil {
+                    ContentUnavailableView.search(text: search)
+                }
+            }
+        }
+    }
+
+    private var toolbar: some View {
+            HStack(spacing: 8) {
+                Button { session.returnToGlobeGently() } label: { Image(systemName: "globe").frame(width: 60, height: 60).contentShape(.rect) }
                     .accessibilityLabel("Return to whole Moon")
-                Divider().frame(height: 24)
-                Button { session.exploreZoom(by: 1 / 1.6, from: session.metersAcross) } label: { Image(systemName: "minus") }
+                Button { session.exploreZoom(by: 1 / 1.6, from: session.metersAcross) } label: { Image(systemName: "minus").frame(width: 60, height: 60).contentShape(.rect) }
                     .accessibilityLabel("Zoom out")
-                Button { session.exploreZoom(by: 1.6, from: session.metersAcross) } label: { Image(systemName: "plus") }
+                Button { session.exploreZoom(by: 1.6, from: session.metersAcross) } label: { Image(systemName: "plus").frame(width: 60, height: 60).contentShape(.rect) }
                     .accessibilityLabel("Zoom in")
-                Divider().frame(height: 24)
-                Button { showsSun.toggle() } label: { Image(systemName: "sun.max") }
+                Button { showsSun.toggle() } label: { Image(systemName: "sun.max").frame(width: 60, height: 60).contentShape(.rect) }
                     .accessibilityLabel("Sunlight")
                     .popover(isPresented: $showsSun) { LunarExplorerSunPanel(session: session) }
-                Button { savedName = selected?.name ?? "Moon view"; showsSave = true } label: { Image(systemName: "bookmark") }
+                Button { savedName = selected?.name ?? "Moon view"; showsSave = true } label: { Image(systemName: "bookmark").frame(width: 60, height: 60).contentShape(.rect) }
                     .accessibilityLabel("Save this view")
                     .disabled(session.navigationInProgress)
-                Button { showsInspector = true } label: { Image(systemName: "slider.horizontal.3") }
+                if session.isBrowsingGlobe {
+                    Button { showsPlacement = true } label: {
+                        Image(systemName: "move.3d").frame(width: 60, height: 60).contentShape(.rect)
+                    }
+                    .accessibilityLabel("Position globe")
+                    .popover(isPresented: $showsPlacement) { LunarExplorerPlacementPanel(session: session) }
+                }
+                Button { showsInspector = true } label: { Image(systemName: "slider.horizontal.3").frame(width: 60, height: 60).contentShape(.rect) }
                     .accessibilityLabel("Terrain inspector")
                     .disabled(session.isBrowsingGlobe || session.navigationInProgress)
             }
@@ -162,20 +212,6 @@ struct LunarExplorerControls: View {
             .padding(.horizontal, 20).padding(.vertical, 14)
             .glassBackgroundEffect()
             .disabled(session.landingRunning)
-        }
-        .alert("Save view", isPresented: $showsSave) {
-            TextField("Name", text: $savedName)
-            Button("Save") { session.library.save(session.savedView(named: savedName)) }
-                .disabled(savedName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-            Button("Cancel", role: .cancel) {}
-        } message: { Text("Remembers this location, camera and sunlight.") }
-        .sheet(isPresented: $showsInspector) {
-            LunarExplorerInspector(session: session, close: { showsInspector = false }, landInCockpit: landInCockpit)
-        }
-        .task {
-            do { places = try LMLunarPOICatalog.load().features }
-            catch { session.navigationMessage = "Places could not be loaded. Coordinate search is still available." }
-        }
     }
 
     private var destinationCard: some View {
@@ -184,12 +220,12 @@ struct LunarExplorerControls: View {
                 Image(systemName: "mappin.circle.fill").foregroundStyle(.blue).font(.title2)
                 Text(selected?.name ?? "Selected location").font(.title3.weight(.semibold))
                 Spacer()
-                if let selected { Link(destination: selected.sourceURL) { Image(systemName: "info.circle") }.accessibilityLabel("Place source") }
+                if let selected { Link(destination: selected.sourceURL) { Image(systemName: "info.circle").frame(width: 60, height: 60).contentShape(.rect) }.accessibilityLabel("Place source") }
             }
             Text(coordinateCaption).font(.caption.monospacedDigit()).foregroundStyle(.secondary)
                 .textSelection(.enabled)
-            if let selected {
-                Text(placeDescription(selected)).font(.subheadline).foregroundStyle(.secondary).lineLimit(3)
+            if let selected, session.isBrowsingGlobe {
+                Text(placeDescription(selected)).font(.subheadline).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             }
             if session.isBrowsingGlobe {
                 Button {
@@ -220,7 +256,7 @@ struct LunarExplorerControls: View {
             Spacer()
             if selected { Image(systemName: "checkmark.circle.fill").foregroundStyle(.blue) }
         }
-        .padding(12).frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12).frame(maxWidth: .infinity, minHeight: 60, alignment: .leading)
         .background(selected ? Color.blue.opacity(0.16) : Color.white.opacity(0.04),
                     in: RoundedRectangle(cornerRadius: 16))
         .contentShape(RoundedRectangle(cornerRadius: 16))
@@ -254,7 +290,9 @@ struct LunarExplorerControls: View {
 
 private struct LunarExplorerSunPanel: View {
     @Bindable var session: LunarExplorerSession
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     var body: some View {
+        ScrollView {
         VStack(alignment: .leading, spacing: 16) {
             Label("Sunlight", systemImage: "sun.max").font(.title2.weight(.semibold))
             Button("Daylight here") { session.showDaylight() }
@@ -269,6 +307,7 @@ private struct LunarExplorerSunPanel: View {
                 Button("+6 hours") { session.sunOffsetHours = min(360, session.sunOffsetHours + 6) }
             }
             Slider(value: $session.sunOffsetHours, in: -360...360)
+                .accessibilityLabel("Sunlight time offset")
             Text("Move through a lunar day to reveal crater rims and shadows.")
                 .font(.subheadline).foregroundStyle(.secondary)
             HStack {
@@ -281,8 +320,9 @@ private struct LunarExplorerSunPanel: View {
             }
             Picker("Tone", selection: $session.presentationGrade) {
                 ForEach(LMTerrainPresentationGrade.allCases) { Text($0.title).tag($0) }
-            }.pickerStyle(.segmented)
-        }.padding(24).frame(width: 420)
+            }.pickerStyle(.menu)
+        }.padding(24)
+        }.frame(width: dynamicTypeSize.isAccessibilitySize ? 680 : 460, height: 560)
     }
 }
 

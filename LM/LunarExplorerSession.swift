@@ -191,6 +191,10 @@ final class LunarExplorerSession {
     }
 
     // Capture sessions retain the original full-space inspection path.
+    var reduceMotion = false
+    var transitionOpacity: Float = 1
+    var globePosition = SIMD3<Float>(1.05, 0, -2.0)
+    var globePlacementRevision = 0
     var isExplorerExperience = false
     var isBrowsingGlobe = false
     var immersionStyle: any ImmersionStyle = .full
@@ -247,6 +251,10 @@ final class LunarExplorerSession {
     func fly(to coordinate: LMSelenographicCoordinate, remember: Bool = true,
              altitude: Double = Preset.regional.altitudeMeters, heading targetHeading: Double = 0) {
         guard !landingRunning else { return }
+        if isExplorerExperience {
+            navigateWithFade(to: coordinate, remember: remember, altitude: altitude, heading: targetHeading)
+            return
+        }
         flightTask?.cancel()
         pendingSavedView = nil
         arrivalAltitude = min(Self.maximumAltitudeMeters, max(Self.minimumAltitudeMeters, altitude))
@@ -300,6 +308,21 @@ final class LunarExplorerSession {
         pendingArrival = false
         navigationPhase = .arriving
         navigationMessage = "Arriving"
+        if isExplorerExperience {
+            select(closestPreset(to: arrivalAltitude))
+            altitudeMeters = arrivalAltitude
+            metersAcross = arrivalAltitude * 3.2
+            tiltDegrees = Preset.regional.tiltDegrees
+            headingDegrees = arrivalHeading
+            applyPendingSavedView()
+            flightTask = Task { [weak self] in
+                guard let self else { return }
+                do { try await self.fadePresentation(to: 1) } catch { return }
+                self.navigationPhase = .idle
+                self.navigationMessage = ""
+            }
+            return
+        }
         flightTask = Task { [weak self] in
             for index in 1...120 {
                 do { try await Task.sleep(for: .milliseconds(16)) } catch { return }
@@ -316,6 +339,68 @@ final class LunarExplorerSession {
             self?.navigationMessage = ""
             self?.applyPendingSavedView()
         }
+    }
+
+    /// Product navigation avoids simulated camera travel, including when the
+    /// system requests Reduce Motion. Legacy inspection flights stay unchanged.
+    private func navigateWithFade(to coordinate: LMSelenographicCoordinate, remember: Bool,
+                                  altitude: Double, heading: Double) {
+        flightTask?.cancel()
+        pendingSavedView = nil
+        arrivalAltitude = min(Self.maximumAltitudeMeters, max(Self.minimumAltitudeMeters, altitude))
+        arrivalHeading = heading
+        if remember { navigationHistory.append(displayedCoordinate) }
+        pendingArrival = false
+        navigationPhase = .departing
+        navigationMessage = "Opening terrain"
+        flightTask = Task { [weak self] in
+            guard let self else { return }
+            do { try await self.fadePresentation(to: 0) } catch { return }
+            self.isBrowsingGlobe = false
+            self.immersionStyle = .full
+            let apollo = try? LMTerrainManifest.load().landingOriginCoordinate
+            self.destinationCoordinate = coordinate.latitudeDegrees == apollo?.latitudeDegrees
+                && coordinate.longitudeDegrees == apollo?.longitudeDegrees ? nil : coordinate
+            self.focusNorthOffsetMeters = 0
+            self.focusEastOffsetMeters = 0
+            self.pendingArrival = true
+            self.flightCoordinate = coordinate
+            self.navigationPhase = .loading
+            self.navigationMessage = "Loading destination"
+            self.navigationRevision += 1
+        }
+    }
+
+    private func fadePresentation(to target: Float) async throws {
+        let start = transitionOpacity
+        let steps = reduceMotion ? 8 : 15
+        for step in 1...steps {
+            try await Task.sleep(for: .milliseconds(16))
+            transitionOpacity = start + (target - start) * Float(step) / Float(steps)
+        }
+    }
+
+    func returnToGlobeGently() {
+        guard !landingRunning else { return }
+        if isBrowsingGlobe { returnToGlobe(); return }
+        cancelNavigation()
+        navigationPhase = .departing
+        navigationMessage = "Returning to globe"
+        flightTask = Task { [weak self] in
+            guard let self else { return }
+            do {
+                try await self.fadePresentation(to: 0)
+                self.setGlobePresentation()
+                try await self.fadePresentation(to: 1)
+                self.navigationPhase = .idle
+                self.navigationMessage = ""
+            } catch { return }
+        }
+    }
+
+    func prepareForPresentation() {
+        returnToGlobe()
+        transitionOpacity = 1
     }
 
     func cancelNavigation() {
