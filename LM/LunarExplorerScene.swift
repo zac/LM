@@ -235,10 +235,12 @@ final class LunarExplorerScene {
                         northMeters: eagle.x
                     ) ?? 0
                 )
-                let rocks = try LMLunarRockFieldResource.makeEntity(
-                    heightField: heightField,
-                    eagleTerrainPosition: eagle
-                )
+                let rocks = try LMLunarTerrainTiming.measure("apollo-rocks") {
+                    try LMLunarRockFieldResource.makeEntity(
+                        heightField: heightField,
+                        eagleTerrainPosition: eagle
+                    )
+                }
                 assembly.worldRoot.addChild(rocks)
                 terrainAnchorRoot.addChild(assembly.worldRoot)
                 self.sourceFrame = assembly.manifest.landingLocalFrame

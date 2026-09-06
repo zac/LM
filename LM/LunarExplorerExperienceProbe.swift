@@ -8,13 +8,33 @@ import OSLog
         let logger = Logger(subsystem: "io.positron.LM", category: "MoonExperience")
         let originalLibrary = session.library
         defer { session.library = originalLibrary }
+        let arguments = ProcessInfo.processInfo.arguments
+        let tokenPrefix = "--lunar-explorer-profile-capture-token="
+        let token = arguments.first(where: { $0.hasPrefix(tokenPrefix) })
+            .flatMap { UUID(uuidString: String($0.dropFirst(tokenPrefix.count))) }
+        let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let stageURL = token.map { documents.appendingPathComponent("MoonExplorerJourney-\($0.uuidString)-stage.txt") }
+        let ackURL = token.map { documents.appendingPathComponent("MoonExplorerJourney-\($0.uuidString)-ack.txt") }
         do {
             for _ in 0..<240 where session.diagnostics.globeTierState == "pending" {
                 try await Task.sleep(for: .milliseconds(500))
             }
             func stage(_ value: String) async throws {
                 logger.info("Moon experience stage=\(value, privacy: .public)")
-                try await Task.sleep(for: .seconds(25))
+                async let minimumHold: Void = Task.sleep(for: .seconds(25))
+                if let stageURL, let ackURL {
+                    try Data(value.utf8).write(to: stageURL, options: .atomic)
+                    var acknowledged = false
+                    for _ in 0..<1_200 {
+                        if (try? String(contentsOf: ackURL, encoding: .utf8)) == value {
+                            acknowledged = true
+                            break
+                        }
+                        try await Task.sleep(for: .milliseconds(100))
+                    }
+                    guard acknowledged else { throw CocoaError(.fileReadUnknown) }
+                }
+                try await minimumHold
             }
             try await stage("globe")
             let place = try LMLunarPOICatalog.load().features.first { $0.id == "apollo-11" }
@@ -53,7 +73,37 @@ import OSLog
             guard session.isBrowsingGlobe, session.transitionOpacity == 1 else {
                 throw CocoaError(.fileReadUnknown)
             }
+            let prefix = "--lunar-explorer-profile-soak-cycles="
+            if arguments.contains("--lunar-explorer-profile"),
+               let argument = arguments.first(where: { $0.hasPrefix(prefix) }),
+               let cycles = Int(argument.dropFirst(prefix.count)), (1...20).contains(cycles) {
+                for cycle in 1...cycles {
+                    session.restore(saved)
+                    try await waitForArrival(session)
+                    LMLunarTerrainTiming.memory("soak-\(cycle)-surface")
+                    // Exercise the same sunlight state as the Lighting control.
+                    let originalOffset = session.sunOffsetHours
+                    session.sunOffsetHours += 6
+                    try await Task.sleep(for: .seconds(5))
+                    session.sunOffsetHours = originalOffset
+                    try await Task.sleep(for: .seconds(5))
+                    var replay = session.savedView(named: saved.name)
+                    replay.id = saved.id
+                    guard replay == saved else { throw CocoaError(.validationMissingMandatoryProperty) }
+                    session.returnToGlobeGently()
+                    for _ in 0..<120 where session.navigationInProgress {
+                        try await Task.sleep(for: .milliseconds(20))
+                    }
+                    guard session.isBrowsingGlobe, session.transitionOpacity == 1 else {
+                        throw CocoaError(.fileReadUnknown)
+                    }
+                    try await Task.sleep(for: .seconds(25))
+                    LMLunarTerrainTiming.memory("soak-\(cycle)-returned")
+                    logger.info("Moon experience cycle=\(cycle) cameraAndSunlightExact=true")
+                }
+            }
             logger.info("Moon experience stage=passed cameraAndSunlightExact=true persistenceReload=true")
+            if let stageURL { try Data("passed".utf8).write(to: stageURL, options: .atomic) }
         } catch {
             logger.error("Moon experience stage=failed error=\(error.localizedDescription, privacy: .public)")
         }

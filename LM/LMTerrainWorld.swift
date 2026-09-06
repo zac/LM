@@ -238,6 +238,12 @@ enum LMTerrainWorld {
         detailPipeline: LMTerrainDetailPipeline = Apollo11TerrainResource
             .detailPipeline
     ) async throws -> Assembly {
+        let loadInterval = LMLunarTerrainTiming.begin("apollo-base-load")
+        LMLunarTerrainTiming.memory("apollo-base-before")
+        defer {
+            LMLunarTerrainTiming.end(loadInterval)
+            LMLunarTerrainTiming.memory("apollo-base-after")
+        }
         async let terrainDetailPreparation: Void =
             Apollo11TerrainResource.prepareTerrainDetail(
                 pipeline: detailPipeline
@@ -247,6 +253,7 @@ enum LMTerrainWorld {
         let worldRoot = Entity()
         worldRoot.name = "TerrainWorld"
 
+        let gridInterval = LMLunarTerrainTiming.begin("apollo-base-grids")
         let nearTile = try requireTile(manifest, id: nearFieldTileID)
         let mediumTile = try requireTile(manifest, id: mediumFieldTileID)
         let farTile = try requireTile(manifest, id: farFieldTileID)
@@ -289,6 +296,8 @@ enum LMTerrainWorld {
             parentTile: mediumTile,
             childHalfExtentMeters: nearTile.extentMeters / 2
         )
+        LMLunarTerrainTiming.end(gridInterval)
+        LMLunarTerrainTiming.memory("apollo-grids-after")
         let bands = [
             (tile: nearTile, grid: nearGrid),
             (tile: mediumTile, grid: mediumGrid),

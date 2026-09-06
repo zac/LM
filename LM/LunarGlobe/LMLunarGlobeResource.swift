@@ -72,6 +72,7 @@ enum LMLunarGlobeResource {
         guard !tiers.isEmpty else {
             throw ResourceError.missingTextureTier
         }
+        LMLunarTerrainTiming.memory("globe-start")
         let mesh = try await globeMesh(
             radiusMeters: manifest.globe.radiusMeters,
             frontCoordinate: frontCoordinate ?? manifest.landingOriginCoordinate
@@ -84,10 +85,19 @@ enum LMLunarGlobeResource {
             let file = textureFile(bundledFile: tier.file, arguments: arguments)
             do {
                 let textureURL = try resourceURL(bundle: bundle, file: file)
-                let texture = try await TextureResource(
-                    contentsOf: textureURL,
-                    options: LMTerrainWorld.terrainTextureCreateOptions(semantic: .color)
-                )
+                let textureInterval = LMLunarTerrainTiming.begin("globe-texture")
+                LMLunarTerrainTiming.memory("globe-texture-before")
+                let texture: TextureResource
+                do {
+                    defer {
+                        LMLunarTerrainTiming.end(textureInterval)
+                        LMLunarTerrainTiming.memory("globe-texture-after")
+                    }
+                    texture = try await TextureResource(
+                        contentsOf: textureURL,
+                        options: LMTerrainWorld.terrainTextureCreateOptions(semantic: .color)
+                    )
+                }
 
                 // Display the pinned morphologic product in its authored
                 // transfer function. Tone mapping here crushed the maria and
@@ -204,7 +214,11 @@ enum LMLunarGlobeResource {
     nonisolated static func prepareTerminator(manifest: LMTerrainManifest, date: Date,
                                               bundle: Bundle = .main) throws -> PreparedTerminator {
         let interval = LMLunarTerrainTiming.begin("terminator-cpu")
-        defer { LMLunarTerrainTiming.end(interval) }
+        LMLunarTerrainTiming.memory("terminator-before")
+        defer {
+            LMLunarTerrainTiming.end(interval)
+            LMLunarTerrainTiming.memory("terminator-after")
+        }
         let normalMap = manifest.globe.normalMap
         guard manifest.sources.contains(where: { $0.id == normalMap.sourceID }) else {
             throw ResourceError.missingSource(normalMap.sourceID)
@@ -267,6 +281,8 @@ enum LMLunarGlobeResource {
         _ resource: TerminatorResource,
         date: Date
     ) throws {
+        let interval = LMLunarTerrainTiming.begin("terminator-update")
+        defer { LMLunarTerrainTiming.end(interval) }
         try resource.opacityTexture.replace(
             withImage: terminatorOpacityImage(
                 date: date,
