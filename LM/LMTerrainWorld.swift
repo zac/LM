@@ -253,66 +253,29 @@ enum LMTerrainWorld {
         let worldRoot = Entity()
         worldRoot.name = "TerrainWorld"
 
-        let gridInterval = LMLunarTerrainTiming.begin("apollo-base-grids")
-        let nearTile = try requireTile(manifest, id: nearFieldTileID)
-        let mediumTile = try requireTile(manifest, id: mediumFieldTileID)
-        let farTile = try requireTile(manifest, id: farFieldTileID)
-        let nearHeightMap = try LMTerrainHeightMap.load(
-            contentsOf: resourceURL(bundle: bundle, file: nearTile.heightFile)
+        let preparation = Task.detached(priority: .userInitiated) {
+            try prepareBaseBands(manifest: manifest, bundle: bundle)
+        }
+        let bands = try await withTaskCancellationHandler(
+            operation: { try await preparation.value },
+            onCancel: { preparation.cancel() }
         )
-        let mediumHeightMap = try LMTerrainHeightMap.load(
-            contentsOf: resourceURL(bundle: bundle, file: mediumTile.heightFile)
-        )
-        let farHeightMap = try LMTerrainHeightMap.load(
-            contentsOf: resourceURL(bundle: bundle, file: farTile.heightFile)
-        )
-
-        // Each power-of-two-plus-one grid shares its inner boundary exactly
-        // with the next denser tile. Punch nested square holes at those grid
-        // lines so the bands neither overlap nor leave a geometric gap.
-        let farGrid = try LMTerrainMeshBuilder.grid(
-            tile: farTile,
-            heightMap: farHeightMap,
-            holeHalfExtentMeters: mediumTile.extentMeters / 2
-        )
-        let rawMediumGrid = try LMTerrainMeshBuilder.grid(
-            tile: mediumTile,
-            heightMap: mediumHeightMap,
-            holeHalfExtentMeters: nearTile.extentMeters / 2
-        )
-        let mediumGrid = try LMTerrainMeshBuilder.morphToParent(
-            child: rawMediumGrid,
-            parent: farGrid,
-            parentTile: farTile,
-            childHalfExtentMeters: mediumTile.extentMeters / 2
-        )
-        let rawNearGrid = try LMTerrainMeshBuilder.grid(
-            tile: nearTile,
-            heightMap: nearHeightMap
-        )
-        let nearGrid = try LMTerrainMeshBuilder.morphToParent(
-            child: rawNearGrid,
-            parent: mediumGrid,
-            parentTile: mediumTile,
-            childHalfExtentMeters: nearTile.extentMeters / 2
-        )
-        LMLunarTerrainTiming.end(gridInterval)
-        LMLunarTerrainTiming.memory("apollo-grids-after")
-        let bands = [
-            (tile: nearTile, grid: nearGrid),
-            (tile: mediumTile, grid: mediumGrid),
-            (tile: farTile, grid: farGrid),
-        ]
+        try Task.checkCancellation()
+        let nearGrid = bands[0].grid
         var nearAlbedoTexture: TextureResource?
         var nearFieldEntity: ModelEntity?
 
-        for (tile, grid) in bands {
+        for band in bands {
+            try Task.checkCancellation()
+            let tile = band.tile
+            let grid = band.grid
             let albedoURL = try resourceURL(bundle: bundle, file: tile.albedoFile)
             let mesh = try LMTerrainMeshBuilder.mesh(from: grid)
             let texture = try await TextureResource(
                 contentsOf: albedoURL,
                 options: terrainTextureCreateOptions(semantic: .color)
             )
+            try Task.checkCancellation()
             if tile.id == nearFieldTileID {
                 nearAlbedoTexture = texture
             }
@@ -591,7 +554,73 @@ enum LMTerrainWorld {
         return LMFullDescentMapper().worldTransform(for: state)
     }
 
-    private static func requireTile(
+    struct PreparedBaseBand: Sendable {
+        let tile: LMTerrainManifest.Tile
+        let grid: LMTerrainMeshBuilder.VertexData
+    }
+
+    /// CPU-only source decoding and the exact existing parent collars.
+    /// No RealityKit resources or mutable presentation state cross this boundary.
+    nonisolated static func prepareBaseBands(
+        manifest: LMTerrainManifest, bundle: Bundle = .main
+    ) throws -> [PreparedBaseBand] {
+        try Task.checkCancellation()
+        let gridInterval = LMLunarTerrainTiming.begin("apollo-base-grids")
+        defer { LMLunarTerrainTiming.end(gridInterval) }
+        let nearTile = try requireTile(manifest, id: nearFieldTileID)
+        let mediumTile = try requireTile(manifest, id: mediumFieldTileID)
+        let farTile = try requireTile(manifest, id: farFieldTileID)
+        let nearHeightMap = try LMTerrainHeightMap.load(
+            contentsOf: resourceURL(bundle: bundle, file: nearTile.heightFile)
+        )
+        let mediumHeightMap = try LMTerrainHeightMap.load(
+            contentsOf: resourceURL(bundle: bundle, file: mediumTile.heightFile)
+        )
+        let farHeightMap = try LMTerrainHeightMap.load(
+            contentsOf: resourceURL(bundle: bundle, file: farTile.heightFile)
+        )
+
+        // Each power-of-two-plus-one grid shares its inner boundary exactly
+        // with the next denser tile. Punch nested square holes at those grid
+        // lines so the bands neither overlap nor leave a geometric gap.
+        let farGrid = try LMTerrainMeshBuilder.grid(
+            tile: farTile,
+            heightMap: farHeightMap,
+            holeHalfExtentMeters: mediumTile.extentMeters / 2
+        )
+        try Task.checkCancellation()
+        let rawMediumGrid = try LMTerrainMeshBuilder.grid(
+            tile: mediumTile,
+            heightMap: mediumHeightMap,
+            holeHalfExtentMeters: nearTile.extentMeters / 2
+        )
+        let mediumGrid = try LMTerrainMeshBuilder.morphToParent(
+            child: rawMediumGrid,
+            parent: farGrid,
+            parentTile: farTile,
+            childHalfExtentMeters: mediumTile.extentMeters / 2
+        )
+        try Task.checkCancellation()
+        let rawNearGrid = try LMTerrainMeshBuilder.grid(
+            tile: nearTile,
+            heightMap: nearHeightMap
+        )
+        let nearGrid = try LMTerrainMeshBuilder.morphToParent(
+            child: rawNearGrid,
+            parent: mediumGrid,
+            parentTile: mediumTile,
+            childHalfExtentMeters: nearTile.extentMeters / 2
+        )
+        LMLunarTerrainTiming.memory("apollo-grids-after")
+        try Task.checkCancellation()
+        return [
+            .init(tile: nearTile, grid: nearGrid),
+            .init(tile: mediumTile, grid: mediumGrid),
+            .init(tile: farTile, grid: farGrid),
+        ]
+    }
+
+    nonisolated private static func requireTile(
         _ manifest: LMTerrainManifest,
         id: String
     ) throws -> LMTerrainManifest.Tile {
@@ -601,7 +630,7 @@ enum LMTerrainWorld {
         return tile
     }
 
-    private static func resourceURL(bundle: Bundle, file: String) throws -> URL {
+    nonisolated private static func resourceURL(bundle: Bundle, file: String) throws -> URL {
         let name = (file as NSString).deletingPathExtension
         let ext = (file as NSString).pathExtension
         guard let url = bundle.url(

@@ -15,7 +15,7 @@ enum LMTerrainMeshBuilder {
     /// Interleaved layout: position float3, normal float3, texcoord float2.
     static let strideBytes = 32
 
-    struct VertexData {
+    struct VertexData: Sendable {
         var positions: [SIMD3<Float>]
         var normals: [SIMD3<Float>]
         var texCoords: [SIMD2<Float>]

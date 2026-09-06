@@ -711,6 +711,19 @@ struct CockpitWorldMappingTests {
 
 @Suite("Source-backed terrain tiles")
 struct SourceBackedTerrainTileTests {
+    @Test func cancelledBasePreparationStopsBeforeReadingResources() async throws {
+        let manifest = try LMTerrainManifest.load()
+        await Task.detached {
+            withUnsafeCurrentTask { $0?.cancel() }
+            // Foundation has no terrain assets. Cancellation must win over
+            // attempting their decode and throwing a missing-resource error.
+            #expect(throws: CancellationError.self) {
+                try LMTerrainWorld.prepareBaseBands(
+                    manifest: manifest, bundle: Bundle(for: NSObject.self))
+            }
+        }.value
+    }
+
     @Test @MainActor func terrainSamplingMinifiesDenseBandsWithoutAliasing() {
         let colorOptions = LMTerrainWorld.terrainTextureCreateOptions(
             semantic: .color

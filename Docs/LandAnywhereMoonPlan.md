@@ -48,6 +48,16 @@ The Explorer navigation/presentation follow-up is recorded in
 terrain entry, native place browser, sunlight controls and saved views. It
 shares this terrain pipeline and retains all capture and provenance contracts.
 
+The September 6 startup and repeated-navigation profiling follow-up is in
+`MoonExplorerPerformance.md`. It attributes the approximately 1.6 GiB startup
+peak to the 64 ppd texture load and records the bounded navigation soak,
+capture-stage acknowledgement protocol and remaining performance gates.
+The worker preparation follow-up removes approximately 65 ms of synchronous
+base-grid work per surface entry from the main actor. Its 86 focused tests and
+all eleven byte-identical Apollo captures pass. Repeat-cycle hitch maxima fall
+but hitch counts and retained footprint increase; overall performance acceptance
+remains open rather than being inferred from the scheduling change.
+
 ## 1. Non-negotiable contracts (inherited, with one evolution)
 
 All contracts in `Docs/TerrainRealismPlan.md` §1 apply: measured terrain
