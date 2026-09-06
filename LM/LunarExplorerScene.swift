@@ -226,7 +226,23 @@ final class LunarExplorerScene {
                 // Browsing needs only the globe. Load the landing stack after
                 // an explicit Explore action, preserving the capture path.
                 if session.isBrowsingGlobe { self.loadTask = nil; return }
-                let heightField = try Apollo11TerrainResource.loadSourceBackedHeightField()
+                let preparation = Task.detached(priority: .userInitiated) {
+                    try Task.checkCancellation()
+                    let height = try LMLunarTerrainTiming.measure("apollo-source-height") {
+                        try Apollo11TerrainResource.loadSourceBackedHeightField()
+                    }
+                    try Task.checkCancellation()
+                    let albedo = LMLunarTerrainTiming.measure("apollo-source-albedo") {
+                        try? LMMeasuredAlbedoField.load(tile: height.tile)
+                    }
+                    try Task.checkCancellation()
+                    return (height, albedo)
+                }
+                let (heightField, albedoField) = try await withTaskCancellationHandler(
+                    operation: { try await preparation.value },
+                    onCancel: { preparation.cancel() }
+                )
+                try Task.checkCancellation()
                 let assembly = try await LMTerrainWorld.load(
                     detailPipeline: detailPipeline
                 )
@@ -266,7 +282,7 @@ final class LunarExplorerScene {
                 }
 
                 self.heightField = heightField
-                self.albedoField = try? LMMeasuredAlbedoField.load(tile: heightField.tile)
+                self.albedoField = albedoField
                 self.eagleTerrainPosition = eagle
                 if let destination = session.destinationCoordinate,
                    let point = LMLunarTerrainRegion.bundledSitePosition(at: destination, manifest: assembly.manifest) {

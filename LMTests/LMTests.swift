@@ -733,6 +733,26 @@ struct SourceBackedTerrainTileTests {
         #expect(restored.triangles == grid.triangles)
     }
 
+    @MainActor @Test func preparedBaseMeshPreservesDescriptorGeometry() async throws {
+        let normal = simd_normalize(SIMD3<Float>(-0.25, 1, 0.125))
+        let grid = LMTerrainMeshBuilder.VertexData(
+            positions: [SIMD3(0, 0, 0), SIMD3(0, 0.25, -2),
+                        SIMD3(2, 0.5, 0), SIMD3(2, 0.75, -2)],
+            normals: Array(repeating: normal, count: 4),
+            texCoords: [SIMD2(0, 0), SIMD2(1, 0), SIMD2(0, 1), SIMD2(1, 1)],
+            triangles: [0, 1, 2, 1, 3, 2])
+        let original = try LMTerrainMeshBuilder.mesh(from: grid)
+        let prepared = try await LMTerrainMeshBuilder.meshAsync(from: grid)
+        let before = try #require(original.contents.models.first?.parts.first)
+        let after = try #require(prepared.contents.models.first?.parts.first)
+        #expect(before.positions.elements == after.positions.elements)
+        #expect(before.normals?.elements == after.normals?.elements)
+        #expect(before.textureCoordinates?.elements == after.textureCoordinates?.elements)
+        #expect(before.triangleIndices?.elements == after.triangleIndices?.elements)
+        #expect(original.expectedMaterialCount == prepared.expectedMaterialCount)
+        #expect(original.bounds == prepared.bounds)
+    }
+
     @Test func cancelledOwnershipPreparationDoesNotImportAMesh() async {
         let grid = LMTerrainMeshBuilder.VertexData(
             positions: [], normals: [], texCoords: [], triangles: [])
