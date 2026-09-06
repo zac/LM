@@ -24,6 +24,71 @@ struct LMLunarTerrainTransitionTests {
         }
     }
 
+    @Test func collarNormalsRetainTheRenderedRampSlope() throws {
+        let plan = LMTerrainTilePlan(id: .init(level: 0, eastIndex: 0, northIndex: 0),
+            centerEastMeters: 8, centerNorthMeters: 8, sizeMeters: 16,
+            sampleSpacingMeters: 0.5, containsProceduralSubresolution: true)
+            .withTransitionEdges(.west)
+        let mesh = try #require(try Apollo11TerrainResource.makeProgressiveTileMeshData(
+            heightField: Refinement(), plan: plan, activePlans: [plan]))
+        let side = 33, row = 16, column = 4 // Halfway through the west collar.
+        let index = row * side + column
+        let renderedSlope = (mesh.positions[index + 1].y - mesh.positions[index - 1].y)
+            / Float(plan.sampleSpacingMeters * 2)
+        let shadingSlope = mesh.normals[index].z / mesh.normals[index].y
+        print("LUNAR_COLLAR renderedSlope=\(renderedSlope) shadingSlope=\(shadingSlope)")
+        #expect(abs(renderedSlope - shadingSlope) < 1e-6)
+    }
+
+    private struct CurvedRefinement: LMTerrainHeightField {
+        let spacingMeters = 64.0
+        let width = 1_025, height = 1_025
+        var craterCatalog: LMLunarCraterCatalog? { nil }
+        var resolvesProceduralSamples: Bool { true }
+        func relativeElevation(eastMeters: Double, northMeters: Double) -> Float? {
+            Float(0.01 * northMeters * northMeters)
+        }
+        func interpolatedSurfaceNormal(eastMeters: Double, northMeters: Double) -> SIMD3<Float>? {
+            simd_normalize(SIMD3(Float(-0.02 * northMeters), 1, 0))
+        }
+        func resolvedSample(eastMeters: Double, northMeters: Double, requestedSpacingMeters: Double) -> LMResolvedTerrainSample? {
+            .init(measuredElevationMeters: relativeElevation(eastMeters: eastMeters, northMeters: northMeters)!,
+                  proceduralResidualMeters: 0,
+                  elevationMeters: relativeElevation(eastMeters: eastMeters, northMeters: northMeters)!,
+                  provenance: .measuredInterpolated)
+        }
+        func renderedParent(eastMeters: Double, northMeters: Double, spacingMeters: Double) -> LMLunarTerrainMeshTile.Sample? {
+            let low = floor(northMeters / 4) * 4, high = low + 4
+            let fraction = (northMeters - low) / 4
+            let height = 0.01 * (low * low + (high * high - low * low) * fraction)
+            return .init(elevation: Float(height),
+                normal: interpolatedSurfaceNormal(eastMeters: eastMeters, northMeters: northMeters)!, spacing: 4)
+        }
+    }
+
+    @Test func collarDoesNotDifferentiateParentInterpolationErrorIntoStripes() throws {
+        let plan = LMTerrainTilePlan(id: .init(level: 0, eastIndex: 0, northIndex: 0),
+            centerEastMeters: 8, centerNorthMeters: 8, sizeMeters: 16,
+            sampleSpacingMeters: 0.5, containsProceduralSubresolution: true)
+            .withTransitionEdges(.west)
+        let field = CurvedRefinement()
+        let mesh = try #require(try Apollo11TerrainResource.makeProgressiveTileMeshData(
+            heightField: field, plan: plan, activePlans: [plan]))
+        var maximumSlopeError: Float = 0
+        for row in 1..<32 {
+            let north = 16 - Double(row) * 0.5
+            let index = row * 33 + 4
+            maximumSlopeError = max(maximumSlopeError,
+                abs(-mesh.normals[index].x / mesh.normals[index].y - Float(0.02 * north)))
+            // Shading repair must retain the exact pre-existing morphed height.
+            let fine = field.relativeElevation(eastMeters: 2, northMeters: north)!
+            let parent = field.renderedParent(eastMeters: 2, northMeters: north, spacingMeters: 0.5)!
+            #expect(mesh.positions[index].y == parent.elevation + (fine - parent.elevation) * 0.5)
+        }
+        print("LUNAR_CURVED_COLLAR maximumSlopeError=\(maximumSlopeError)")
+        #expect(maximumSlopeError < 1e-6)
+    }
+
     @Test @MainActor func fullyOwnedParentRetainsSamplesWithoutUploadingEmptyMesh() async throws {
         let parent = LMTerrainTilePlan(id: .init(level: 0, eastIndex: 0, northIndex: 0),
                                       centerEastMeters: 2, centerNorthMeters: 2, sizeMeters: 4,
@@ -75,6 +140,22 @@ struct LMLunarTerrainTransitionTests {
                 #expect(Array(pair.0.albedo[a..<a + 4]) == Array(pair.1.albedo[b..<b + 4]))
                 #expect(Array(pair.0.normal[a..<a + 4]) == Array(pair.1.normal[b..<b + 4]))
             }
+        }
+    }
+
+    @Test func neutralNormalShortcutMatchesFullBakerAtTheLODPerimeter() throws {
+        let finePlan = LMTerrainTilePlan(id: .init(level: 0, eastIndex: 0, northIndex: 0),
+            centerEastMeters: 1, centerNorthMeters: 1, sizeMeters: 2,
+            sampleSpacingMeters: 0.5, containsProceduralSubresolution: true).withTransitionEdges(.all)
+        let coarsePlan = LMTerrainTilePlan(id: .init(level: 2, eastIndex: 0, northIndex: 0),
+            centerEastMeters: 4, centerNorthMeters: 4, sizeMeters: 8,
+            sampleSpacingMeters: 2, containsProceduralSubresolution: true)
+        let fine = try LMTerrainTileDetailBaker.bake(plan: finePlan, albedoField: nil, resolution: 33)
+        let coarse = try LMTerrainTileDetailBaker.bake(plan: coarsePlan, albedoField: nil, resolution: 33)
+        let neutral = Array(fine.normal[0..<4]) // Corner derivatives are exactly flat.
+        #expect(neutral == [127, 127, 255, 255])
+        for offset in stride(from: 0, to: coarse.normal.count, by: 4) {
+            #expect(Array(coarse.normal[offset..<offset + 4]) == neutral)
         }
     }
 

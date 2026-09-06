@@ -307,9 +307,9 @@ enum Apollo11TerrainResource {
         if heightField.resolvesProceduralSamples {
             entity.position = SIMD3(Float(plan.centerNorthMeters), 0, Float(-plan.centerEastMeters))
         }
-        let geologyID = LMProgressiveTerrainSampler(
-            heightField: heightField
-        ).geology.versionedModelID
+        let geologyID = heightField.resolvesProceduralSamples
+            ? LMLunarResolvedTerrain.generatorVersion
+            : LMProgressiveTerrainSampler(heightField: heightField).geology.versionedModelID
         entity.name = "LROC progressive \(geologyID) + \(build.detailModelID) L\(plan.id.level) E\(plan.id.eastIndex) N\(plan.id.northIndex) \(plan.sampleSpacingMeters)m"
         return ProgressiveTileEntityBuild(
             entity: entity,
@@ -398,6 +398,10 @@ enum Apollo11TerrainResource {
 
         var positions = [SIMD3<Float>]()
         var levelContributions = [Float]()
+        // Global shading needs the unmorphed endpoint, not derivatives of the
+        // parent's piecewise-triangle interpolation error inside the collar.
+        var fineElevations = [Float]()
+        if heightField.resolvesProceduralSamples { fineElevations.reserveCapacity(sampleCount * sampleCount) }
         var textureCoordinates = [SIMD2<Float>]()
         positions.reserveCapacity(sampleCount * sampleCount)
         levelContributions.reserveCapacity(sampleCount * sampleCount)
@@ -422,6 +426,7 @@ enum Apollo11TerrainResource {
                     Float(-east + (heightField.resolvesProceduralSamples ? plan.centerEastMeters : 0))
                 ))
                 levelContributions.append(sample.levelContributionMeters)
+                if heightField.resolvesProceduralSamples { fineElevations.append(sample.fineElevationMeters) }
                 textureCoordinates.append(SIMD2(
                     LMTerrainTileDetailBaker.renderingTextureCoordinate(
                         contentFraction: Float(column) / Float(sampleCount - 1)
@@ -507,6 +512,21 @@ enum Apollo11TerrainResource {
                         Float(-eastMeters)
                     )
                 }
+                if heightField.resolvesProceduralSamples {
+                    func fine(_ row: Int, _ column: Int, east: Double, north: Double) -> Float {
+                        if row >= 0, row < sampleCount, column >= 0, column < sampleCount {
+                            return fineElevations[row * sampleCount + column]
+                        }
+                        return heightField.resolvedSample(eastMeters: east, northMeters: north,
+                            requestedSpacingMeters: sampleSpacing)?.elevationMeters
+                            ?? fineElevations[min(max(row, 0), sampleCount - 1) * sampleCount
+                                + min(max(column, 0), sampleCount - 1)]
+                    }
+                    left.y = fine(row, column - 1, east: eastMeters - sampleSpacing, north: northMeters)
+                    right.y = fine(row, column + 1, east: eastMeters + sampleSpacing, north: northMeters)
+                    north.y = fine(row - 1, column, east: eastMeters, north: northMeters + sampleSpacing)
+                    south.y = fine(row + 1, column, east: eastMeters, north: northMeters - sampleSpacing)
+                }
                 let index = row * sampleCount + column
                 var normal = SIMD3<Float>(0, 1, 0)
                 let measuredNormal = heightField.interpolatedSurfaceNormal(
@@ -559,13 +579,35 @@ enum Apollo11TerrainResource {
                 if heightField.resolvesProceduralSamples {
                     if let parent = heightField.renderedParent(eastMeters: eastMeters, northMeters: northMeters,
                                                                spacingMeters: sampleSpacing) {
-                        var distance = Double.infinity
-                        if meshPlan.transitionEdges.contains(.west) { distance = min(distance, eastMeters - plan.centerEastMeters + halfSize) }
-                        if meshPlan.transitionEdges.contains(.east) { distance = min(distance, plan.centerEastMeters + halfSize - eastMeters) }
-                        if meshPlan.transitionEdges.contains(.north) { distance = min(distance, plan.centerNorthMeters + halfSize - northMeters) }
-                        if meshPlan.transitionEdges.contains(.south) { distance = min(distance, northMeters - plan.centerNorthMeters + halfSize) }
-                        let t = Float(min(1, max(0, distance / min(tileSize / 4, parent.spacing * 8))))
-                        normal = simd_normalize(simd_mix(parent.normal, normal, SIMD3(repeating: t * t * (3 - 2 * t))))
+                        func weight(east: Double, north: Double) -> Float {
+                            var distance = Double.infinity
+                            if meshPlan.transitionEdges.contains(.west) { distance = min(distance, east - plan.centerEastMeters + halfSize) }
+                            if meshPlan.transitionEdges.contains(.east) { distance = min(distance, plan.centerEastMeters + halfSize - east) }
+                            if meshPlan.transitionEdges.contains(.north) { distance = min(distance, plan.centerNorthMeters + halfSize - north) }
+                            if meshPlan.transitionEdges.contains(.south) { distance = min(distance, north - plan.centerNorthMeters + halfSize) }
+                            let t = Float(min(1, max(0, distance / min(tileSize / 4, parent.spacing * 8))))
+                            return t * t * (3 - 2 * t)
+                        }
+                        let w = weight(east: eastMeters, north: northMeters)
+                        if w == 0 {
+                            normal = parent.normal
+                        } else if w < 1 {
+                            // h = parent + w * (fine - parent). Blend endpoint
+                            // slopes once, then include (fine-parent) * grad(w).
+                            // Differentiating morphed heights first injected the
+                            // coarse triangle pattern and weighted the ramp twice.
+                            let span = Float(2 * sampleSpacing)
+                            let dwEast = (weight(east: eastMeters + sampleSpacing, north: northMeters)
+                                - weight(east: eastMeters - sampleSpacing, north: northMeters)) / span
+                            let dwNorth = (weight(east: eastMeters, north: northMeters + sampleSpacing)
+                                - weight(east: eastMeters, north: northMeters - sampleSpacing)) / span
+                            let delta = fineElevations[index] - parent.elevation
+                            let parentEast = parent.normal.z / parent.normal.y
+                            let parentNorth = -parent.normal.x / parent.normal.y
+                            let eastSlope = parentEast + (normal.z / normal.y - parentEast) * w + delta * dwEast
+                            let northSlope = parentNorth + (-normal.x / normal.y - parentNorth) * w + delta * dwNorth
+                            normal = simd_normalize(SIMD3(-northSlope, 1, eastSlope))
+                        }
                     }
                 }
                 normals[index] = normal

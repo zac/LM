@@ -1138,7 +1138,7 @@ struct LMProgressiveTerrainSurfaceSampler: Sendable {
         northMeters: Double,
         plan: LMTerrainTilePlan,
         activePlans: [LMTerrainTilePlan]? = nil
-    ) -> (elevationMeters: Float, levelContributionMeters: Float)? {
+    ) -> (elevationMeters: Float, levelContributionMeters: Float, fineElevationMeters: Float)? {
         guard contains(plan, eastMeters: eastMeters, northMeters: northMeters),
               let fine = terrainSampler.sample(
                   eastMeters: eastMeters,
@@ -1151,12 +1151,12 @@ struct LMProgressiveTerrainSurfaceSampler: Sendable {
         if heightField.resolvesProceduralSamples {
             guard let parent = heightField.renderedParent(eastMeters: eastMeters, northMeters: northMeters,
                                                           spacingMeters: plan.sampleSpacingMeters) else {
-                return (fine.elevationMeters, fine.proceduralResidualMeters)
+                return (fine.elevationMeters, fine.proceduralResidualMeters, fine.elevationMeters)
             }
             let weight = Self.smoothstep(distanceToEdge(plan, eastMeters: eastMeters, northMeters: northMeters)
                                         / min(plan.sizeMeters / 4, parent.spacing * 8))
             let contribution = (fine.elevationMeters - parent.elevation) * Float(weight)
-            return (parent.elevation + contribution, contribution)
+            return (parent.elevation + contribution, contribution, fine.elevationMeters)
         }
 
         let parent = parentPlan(
@@ -1201,7 +1201,8 @@ struct LMProgressiveTerrainSurfaceSampler: Sendable {
         let realizedContribution = levelContribution * Float(morph)
         return (
             elevationMeters: parentRendered + realizedContribution,
-            levelContributionMeters: realizedContribution
+            levelContributionMeters: realizedContribution,
+            fineElevationMeters: fine.elevationMeters
         )
     }
 

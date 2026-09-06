@@ -771,7 +771,10 @@ enum LMTerrainTileDetailBaker {
                     let offset = (row * resolution + column) * 4
                     let byte = UInt8(min(1, max(0, value)) * 255)
                     albedo[offset] = byte; albedo[offset + 1] = byte; albedo[offset + 2] = byte
-                    normal[offset] = 128; normal[offset + 1] = 128
+                    // Use the full baker's identical neutral encoding. 128
+                    // versus its truncating 127 tilted coarse and fine normals
+                    // in opposite directions, exposing LOD cards at low Sun.
+                    normal[offset] = encode(0); normal[offset + 1] = encode(0)
                 }
             }
             // The constant-normal shortcut still represents every texel.
