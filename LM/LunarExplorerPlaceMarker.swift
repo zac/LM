@@ -13,7 +13,7 @@ struct LunarExplorerPlaceMarker: View {
                 .foregroundStyle(.white)
                 .lineLimit(2)
                 .padding(.horizontal, 12).padding(.vertical, 8)
-                .background(.black.opacity(0.78), in: RoundedRectangle(cornerRadius: 12))
+                .background(.black.opacity(0.68), in: Capsule())
         }
         .frame(width: 260, height: 80, alignment: .leading)
         .allowsHitTesting(false)
@@ -52,11 +52,14 @@ struct LunarExplorerMarkerGlyph: View {
         cloth.move(to: CGPoint(x: 24, y: 10))
         cloth.addCurve(to: CGPoint(x: 70, y: 10),
                        control1: CGPoint(x: 40, y: 4), control2: CGPoint(x: 54, y: 16))
-        cloth.addLine(to: CGPoint(x: 70, y: 50))
+        cloth.addCurve(to: CGPoint(x: 70, y: 50),
+                       control1: CGPoint(x: 66, y: 22), control2: CGPoint(x: 73, y: 38))
         cloth.addCurve(to: CGPoint(x: 24, y: 50),
                        control1: CGPoint(x: 54, y: 56), control2: CGPoint(x: 40, y: 44))
         cloth.closeSubpath()
-        outline(cloth, in: &context)
+        // A thin silhouette edge replaces the heavy rectangular white frame.
+        // The cloth supplies the contour; only the top has a support bar.
+        context.stroke(cloth, with: .color(.black.opacity(0.65)), lineWidth: 2)
         var fabric = context
         fabric.clip(to: cloth)
         fabric.fill(cloth, with: .color(Color(red: 0.78, green: 0.12, blue: 0.18)))
