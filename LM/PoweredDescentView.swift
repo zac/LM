@@ -65,8 +65,14 @@ struct PoweredDescentView: View {
 
             if arguments.contains("--lunar-explorer") {
                 didLaunchReplayFixture = true
-                appModel.lunarExplorerSession.configure(arguments: arguments)
-                await toggleLunarExplorerSpace()
+                // Restored Explorer controls can already be opening the space.
+                // MainMenuViewModel configured it before either window appeared.
+                // An automated launch must not toggle that existing space closed.
+                if appModel.lunarExplorerSpaceState == .closed {
+                    await toggleLunarExplorerSpace()
+                } else {
+                    dismissWindow(id: appModel.descentConsoleWindowID)
+                }
                 return
             }
 
