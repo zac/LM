@@ -43,6 +43,11 @@ obeys. The three genuinely hard parts are §5 (mushy band), §4 stage 2
 | Neural track N2 teacher–student | Not started | §6. |
 | Neural track N3 geology conditioning | Not started | §6. Lands with Stage 2. |
 
+The Explorer navigation/presentation follow-up is recorded in
+`MoonExplorerExperience.md`: a bounded mixed-space globe, explicit immersive
+terrain entry, native place browser, sunlight controls and saved views. It
+shares this terrain pipeline and retains all capture and provenance contracts.
+
 ## 1. Non-negotiable contracts (inherited, with one evolution)
 
 All contracts in `Docs/TerrainRealismPlan.md` §1 apply: measured terrain

@@ -14,14 +14,20 @@ control that is either direct (azimuth/elevation) or driven by a real UTC
 date/time through an ephemeris — so the terminator, and lighting at any site,
 are astronomically correct.
 
+The current Explorer UX milestone is specified in `MoonExplorerExperience.md`.
+It adds a mixed-space globe, an explicit immersive terrain entry, a compact
+place browser, sunlight controls and persistent saved views. Historical
+implementation descriptions below are superseded where that document and
+`LandAnywhereMoonPlan.md` record newer behavior.
+
 ## 0. Status board (update this when you land work)
 
 | Workstream | State | Notes |
 |---|---|---|
 | W1 coordinates | **Done** | `LM/MoonCoordinateConverter.swift`: `LMSelenographicCoordinateSystem`, `LMSelenographicLocalFrame`, site projection, manifest integration. Tests: `LMTests/LMSelenographicCoordinateTests.swift`. |
 | W1 ephemeris / time | **Done** | `LM/LMLunarEphemeris.swift`: subsolar + sub-Earth points, Moon-fixed directions, site horizon angles, Earth phase for earthshine. Tests: `LMTests/LMLunarEphemerisTests.swift`. Built analytically rather than as a SPICE-baked table — see §3. |
-| W3 POI catalog / lat-lon entry / fly-to | Implemented; acceptance gaps open | Stage 2 item 6 adds 18 sourced places, coordinate entry/copy, great-circle fly-to and history. Continuous globe dragging and physical gesture validation remain open. See `Stage2GlobalTerrainValidation.md`. |
-| W4 panel debug section | Not started | Capture-only diagnostics exist as launch flags; no runtime toggles yet. |
+| W3 POI catalog / lat-lon entry / fly-to | Implemented; acceptance gaps open | Stage 2 item 6 adds 18 sourced places, coordinate entry/copy, great-circle fly-to and history. The Explorer experience adds spherical globe dragging, mixed-space browsing and saved camera/time views. Physical gesture validation remains open. See `MoonExplorerExperience.md` and `Stage2GlobalTerrainValidation.md`. |
+| W4 panel debug section | Inspector available; overlays remain open | Everyday navigation is separate from the terrain inspector. Specialized layer/ownership diagnostics remain capture flags. |
 | W5 sun modes in the UI | **Done** | Ephemeris-driven sun with UTC date picker, lunation scrub, live readout, mission-instant reset; pinned mission azimuth corrected (was anti-solar); elevation-tracking exposure; opt-in photographic grade with earthshine. Calibrated renders pixel-identical. |
 | W2 globe | **Superseded** | Reshaped as Stage 1 of `Docs/LandAnywhereMoonPlan.md`, which owns the globe, re-anchorable terrain, and the neural texture track. W3/W4 land as that plan's UX face. |
 
@@ -31,7 +37,10 @@ has landed its code path — `LM/LMLunarCraterCatalog.swift`, catalog seeding in
 catalog data has been generated, pinned, or loaded at runtime**, so it is inert
 in the app today.
 
-### Open finding: the pinned mission sun azimuth is wrong
+### Historical finding: pinned mission sun azimuth
+
+Resolved by W5 and the controlling land-anywhere plan. The original diagnosis
+below records why the earlier lighting baseline changed.
 
 Evaluating the new ephemeris at Apollo 11's touchdown
 (1969-07-20 20:17:40 UTC, Tranquility Base) gives:
