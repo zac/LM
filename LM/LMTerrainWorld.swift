@@ -270,7 +270,9 @@ enum LMTerrainWorld {
             let tile = band.tile
             let grid = band.grid
             let albedoURL = try resourceURL(bundle: bundle, file: tile.albedoFile)
-            let mesh = try LMTerrainMeshBuilder.mesh(from: grid)
+            let meshInterval = LMLunarTerrainTiming.begin("base-mesh-async")
+            let mesh = try await LMTerrainMeshBuilder.meshAsync(from: grid)
+            LMLunarTerrainTiming.end(meshInterval)
             let texture = try await TextureResource(
                 contentsOf: albedoURL,
                 options: terrainTextureCreateOptions(semantic: .color)

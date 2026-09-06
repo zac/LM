@@ -35,6 +35,10 @@ final class LunarExplorerScene {
     private var measuredNearFieldEntity: ModelEntity?
     private var measuredNearFieldGrid: LMTerrainMeshBuilder.VertexData?
     private var measuredNearFieldMask = Set<LMTerrainTileID>()
+    private var ownershipPreparation: Task<Void, Never>?
+    private var ownershipPreparationToken: UUID?
+    private var ownershipPreparationIDs: Set<LMTerrainTileID>?
+    private var preparedOwnershipMesh: MeshResource?
     private var globeEntity: ModelEntity?
     private var appliedGlobeLinearRadianceMultiplier: Double?
     private var globeTerminator: LMLunarGlobeResource.TerminatorResource?
@@ -477,6 +481,7 @@ final class LunarExplorerScene {
             landingTask?.cancel(); landingEntity?.removeFromParent(); landingEntity = nil; landingPose = nil
             terrainAnchorRoot.children.removeAll()
             heightField = nil; albedoField = nil; sourceFrame = nil; floatingOrigin = nil
+            cancelOwnershipPreparation()
             terrainRockField = nil; measuredNearFieldEntity = nil; measuredNearFieldGrid = nil
             measuredNearFieldMask = []; terrainSun = nil; terrainEarthshine = nil
             terrainEnvironment = nil; isLoaded = false; activeDetailMode = nil
@@ -1130,6 +1135,10 @@ final class LunarExplorerScene {
     /// background while asynchronous tiles arrive.
     private func publishRequestedTerrainIfReady() {
         guard let terrainEnvironment else { return }
+        prepareMeasuredNearFieldOwnership()
+        let nextMask = Set(requestedPlans.keys)
+        guard measuredNearFieldEntity == nil || nextMask == measuredNearFieldMask
+            || (ownershipPreparationIDs == nextMask && preparedOwnershipMesh != nil) else { return }
         guard requestedPlans.allSatisfy({ id, plan in
             (progressivePlans[id] == plan
                 && progressiveOwnership[id] == requestedOwnership[id])
@@ -1137,6 +1146,8 @@ final class LunarExplorerScene {
                     && pendingOwnership[id] == requestedOwnership[id])
         }) else { return }
 
+        let publication = LMLunarTerrainTiming.begin("apollo-publication")
+        defer { LMLunarTerrainTiming.end(publication) }
         let altitude = session?.altitudeMeters ?? .greatestFiniteMagnitude
         for (id, plan) in requestedPlans {
             guard pendingProgressivePlans[id] == plan,
@@ -1161,7 +1172,15 @@ final class LunarExplorerScene {
             progressivePlans.removeValue(forKey: id)
             progressiveOwnership.removeValue(forKey: id)
         }
-        refreshMeasuredNearFieldOwnership()
+        if nextMask != measuredNearFieldMask,
+           let entity = measuredNearFieldEntity,
+           let mesh = preparedOwnershipMesh,
+           var model = entity.model {
+            model.mesh = mesh
+            entity.model = model
+            measuredNearFieldMask = nextMask
+        }
+        preparedOwnershipMesh = nil
     }
 
     static func finerOwners(
@@ -1190,6 +1209,60 @@ final class LunarExplorerScene {
     /// requested replacement is resident, so asynchronous generation cannot
     /// expose a hole. The fine mesh already converges to the measured parent
     /// at this exact grid-aligned perimeter.
+    private func prepareMeasuredNearFieldOwnership() {
+        guard let grid = measuredNearFieldGrid else { return }
+        let ids = Set(requestedPlans.keys)
+        guard ids != measuredNearFieldMask else {
+            cancelOwnershipPreparation()
+            return
+        }
+        guard ownershipPreparationIDs != ids else { return }
+        cancelOwnershipPreparation()
+        ownershipPreparationIDs = ids
+        let token = UUID()
+        ownershipPreparationToken = token
+        let plans = Array(requestedPlans.values)
+        ownershipPreparation = Task { [weak self] in
+            do {
+                let worker = Task.detached(priority: .userInitiated) {
+                    try Task.checkCancellation()
+                    let owned = try LMLunarTerrainTiming.measure("ownership-grid") {
+                        try LMTerrainMeshBuilder.excludingProgressiveFootprints(from: grid, plans: plans)
+                    }
+                    try Task.checkCancellation()
+                    return owned
+                }
+                let grid = try await withTaskCancellationHandler(
+                    operation: { try await worker.value }, onCancel: { worker.cancel() }
+                )
+                let interval = LMLunarTerrainTiming.begin("ownership-mesh-async")
+                let mesh = try await LMTerrainMeshBuilder.meshAsync(from: grid)
+                LMLunarTerrainTiming.end(interval)
+                try Task.checkCancellation()
+                guard let self, self.ownershipPreparationToken == token else { return }
+                self.preparedOwnershipMesh = mesh
+                self.ownershipPreparation = nil
+                self.publishRequestedTerrainIfReady()
+            } catch is CancellationError {
+                // A newer footprint or scene owns publication.
+            } catch {
+                guard let self, self.ownershipPreparationToken == token else { return }
+                self.ownershipPreparation = nil
+                self.logger.error("Measured terrain ownership preparation failed: \(error.localizedDescription, privacy: .public)")
+            }
+        }
+    }
+
+    private func cancelOwnershipPreparation() {
+        ownershipPreparation?.cancel()
+        ownershipPreparation = nil
+        ownershipPreparationToken = nil
+        ownershipPreparationIDs = nil
+        preparedOwnershipMesh = nil
+    }
+
+    /// Retain the existing synchronous reset for explicit appearance-mode
+    /// changes. Ordinary residency publication prepares its mesh beforehand.
     private func refreshMeasuredNearFieldOwnership() {
         guard let entity = measuredNearFieldEntity,
               let grid = measuredNearFieldGrid else { return }
@@ -1197,19 +1270,15 @@ final class LunarExplorerScene {
         let ids = Set(plans.map(\.id))
         guard ids != measuredNearFieldMask else { return }
         do {
-            let ownedGrid = LMTerrainMeshBuilder.excludingProgressiveFootprints(
-                from: grid,
-                plans: plans
-            )
+            let ownedGrid = try LMTerrainMeshBuilder.excludingProgressiveFootprints(
+                from: grid, plans: plans)
             let mesh = try LMTerrainMeshBuilder.mesh(from: ownedGrid)
-            guard var model = entity.components[ModelComponent.self] else { return }
+            guard var model = entity.model else { return }
             model.mesh = mesh
-            entity.components.set(model)
+            entity.model = model
             measuredNearFieldMask = ids
         } catch {
-            logger.error(
-                "Measured terrain ownership update failed: \(error.localizedDescription, privacy: .public)"
-            )
+            logger.error("Measured terrain ownership reset failed: \(error.localizedDescription, privacy: .public)")
         }
     }
 
@@ -1335,6 +1404,7 @@ final class LunarExplorerScene {
         pendingProgressivePlans.removeAll(keepingCapacity: false)
         pendingOwnership.removeAll(keepingCapacity: false)
         pendingProgressiveEntities.removeAll(keepingCapacity: false)
+        cancelOwnershipPreparation()
         for entity in progressiveEntities.values {
             entity.removeFromParent()
         }

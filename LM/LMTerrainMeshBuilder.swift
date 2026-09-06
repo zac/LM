@@ -209,6 +209,30 @@ enum LMTerrainMeshBuilder {
         return try MeshResource.generate(from: [descriptor])
     }
 
+    /// Keep the original importer and its rendering behavior, but explicitly
+    /// run descriptor preparation and nonisolated async import on a worker.
+    nonisolated static func meshAsync(from data: VertexData) async throws -> MeshResource {
+        try Task.checkCancellation()
+        let preparation = Task.detached(priority: .userInitiated) {
+            try Task.checkCancellation()
+            let interval = LMLunarTerrainTiming.begin("mesh-import-worker")
+            defer { LMLunarTerrainTiming.end(interval) }
+            var descriptor = MeshDescriptor(name: "terrain")
+            descriptor[MeshBuffers.positions] = MeshBuffer(data.positions)
+            descriptor[MeshBuffers.normals] = MeshBuffer(data.normals)
+            descriptor[MeshBuffers.textureCoordinates] = MeshBuffer(data.texCoords)
+            descriptor.primitives = .triangles(data.triangles)
+            let mesh = try await MeshResource(from: [descriptor])
+            try Task.checkCancellation()
+            return mesh
+        }
+        let mesh = try await withTaskCancellationHandler(
+            operation: { try await preparation.value },
+            onCancel: { preparation.cancel() })
+        try Task.checkCancellation()
+        return mesh
+    }
+
     /// Remove measured-base quads that are owned by resident progressive
     /// tiles. Progressive relief legitimately dips below the measured 2 m
     /// parent; drawing both surfaces made the depth buffer reveal the parent
@@ -219,12 +243,14 @@ enum LMTerrainMeshBuilder {
     static func excludingProgressiveFootprints(
         from data: VertexData,
         plans: [LMTerrainTilePlan]
-    ) -> VertexData {
+    ) throws -> VertexData {
+        try Task.checkCancellation()
         guard !plans.isEmpty else { return data }
         var result = data
         result.triangles.removeAll(keepingCapacity: true)
         result.triangles.reserveCapacity(data.triangles.count)
         for offset in stride(from: 0, to: data.triangles.count, by: 3) {
+            if offset % 3072 == 0 { try Task.checkCancellation() }
             let triangle = data.triangles[offset..<(offset + 3)]
             let positions = triangle.map { data.positions[Int($0)] }
             let centerNorth = positions.reduce(Float.zero) { $0 + $1.x } / 3

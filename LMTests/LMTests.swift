@@ -711,6 +711,45 @@ struct CockpitWorldMappingTests {
 
 @Suite("Source-backed terrain tiles")
 struct SourceBackedTerrainTileTests {
+    @Test func ownershipPreparationRetainsExactUncoveredTriangles() throws {
+        let grid = LMTerrainMeshBuilder.VertexData(
+            positions: [SIMD3(0, 0, 0), SIMD3(0, 0, -2),
+                        SIMD3(2, 0, 0), SIMD3(2, 0, -2)],
+            normals: Array(repeating: SIMD3(0, 1, 0), count: 4),
+            texCoords: [SIMD2(0, 0), SIMD2(1, 0), SIMD2(0, 1), SIMD2(1, 1)],
+            triangles: [0, 1, 2, 1, 3, 2])
+        let owner = LMTerrainTilePlan(
+            id: .init(level: 0, eastIndex: 0, northIndex: 0),
+            centerEastMeters: 0, centerNorthMeters: 0, sizeMeters: 2,
+            sampleSpacingMeters: 0.5, containsProceduralSubresolution: true)
+        let masked = try LMTerrainMeshBuilder.excludingProgressiveFootprints(
+            from: grid, plans: [owner])
+        #expect(masked.triangles == [1, 3, 2])
+        #expect(masked.positions == grid.positions)
+        #expect(masked.normals == grid.normals)
+        #expect(masked.texCoords == grid.texCoords)
+        let restored = try LMTerrainMeshBuilder.excludingProgressiveFootprints(
+            from: grid, plans: [])
+        #expect(restored.triangles == grid.triangles)
+    }
+
+    @Test func cancelledOwnershipPreparationDoesNotImportAMesh() async {
+        let grid = LMTerrainMeshBuilder.VertexData(
+            positions: [], normals: [], texCoords: [], triangles: [])
+        await Task.detached {
+            withUnsafeCurrentTask { $0?.cancel() }
+            #expect(throws: CancellationError.self) {
+                try LMTerrainMeshBuilder.excludingProgressiveFootprints(from: grid, plans: [])
+            }
+            do {
+                _ = try await LMTerrainMeshBuilder.meshAsync(from: grid)
+                Issue.record("Cancelled preparation imported an invalid mesh")
+            } catch {
+                #expect(error is CancellationError)
+            }
+        }.value
+    }
+
     @Test func cancelledBasePreparationStopsBeforeReadingResources() async throws {
         let manifest = try LMTerrainManifest.load()
         await Task.detached {
