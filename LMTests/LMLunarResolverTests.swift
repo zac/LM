@@ -36,6 +36,62 @@ struct LMLunarResolverTests {
         return try .init(data: data, source: source)
     }
 
+    @Test func allocationFreeSelectionIsBitExactWithPreviousWeightedAlgorithm() throws {
+        let base = try base()
+        let a = try strip(first: 11_519, last: 11_552)
+        let b = try strip(first: 11_551, last: 11_584)
+        for grids in [[a, b], [b, a]] {
+            let terrain = LMLunarResolvedTerrain(base: base, refinements: grids)
+            let isolated = Dictionary(uniqueKeysWithValues: ([base] + grids).map {
+                ($0.sourceID, LMLunarResolvedTerrain(base: $0, refinements: []))
+            })
+            // Frozen pre-D selection/mixing algorithm. Individual source
+            // sampling is unchanged; only ownership selection was optimized.
+            func reference(_ coordinate: LMSelenographicCoordinate, spacing: Double) throws -> LMLunarResolvedTerrain.Sample {
+                let weighted = grids.map { ($0, terrain.influence(of: $0, at: coordinate)) }
+                let ownedIndex = weighted.lastIndex { $0.1 == 1 }
+                let owner = ownedIndex.map { weighted[$0].0 } ?? base
+                var result = try #require(isolated[owner.sourceID]?.sample(at: coordinate, spacingMeters: spacing))
+                for (grid, weight) in weighted.dropFirst(ownedIndex.map { $0 + 1 } ?? 0)
+                    where weight > 0 && grid.pixelsPerDegree > owner.pixelsPerDegree {
+                    var longitude = coordinate.longitudeDegrees
+                    if !grid.wrapsLongitude {
+                        longitude += 360 * ((0.5 * (grid.westernPostLongitude + grid.easternPostLongitude) - longitude) / 360).rounded()
+                        longitude = min(max(longitude, grid.westernPostLongitude), grid.easternPostLongitude)
+                    }
+                    let clamped = LMSelenographicCoordinate(
+                        latitudeDegrees: min(max(coordinate.latitudeDegrees, grid.southernCoverageLatitude), grid.northernCoverageLatitude),
+                        longitudeDegrees: longitude)
+                    let finer = try #require(isolated[grid.sourceID]?.sample(at: clamped, spacingMeters: spacing))
+                    result = .init(measuredMeters: result.measuredMeters + (finer.measuredMeters - result.measuredMeters) * weight,
+                        residualMeters: result.residualMeters + (finer.residualMeters - result.residualMeters) * weight,
+                        capMeters: result.capMeters + (finer.capMeters - result.capMeters) * weight,
+                        sourceSpacingMeters: max(result.sourceSpacingMeters, finer.sourceSpacingMeters),
+                        sourceID: result.sourceID + "+" + finer.sourceID)
+                }
+                return result
+            }
+            var coordinates = (0..<72).map { i in
+                LMSelenographicCoordinate(latitudeDegrees: 0.04 - Double(i) * 0.009,
+                    longitudeDegrees: [-0.001, 0, 179.999, 359.999][i % 4])
+            }
+            for grid in grids {
+                for row in [0, 1, 16, 32, 33] { coordinates.append(grid.coordinate(row: row, column: 32)) }
+            }
+            for spacing in [512.0, 128, 32, 8, 2, 0.5, 0.125] {
+                for coordinate in coordinates {
+                    let expected = try reference(coordinate, spacing: spacing)
+                    let actual = try #require(terrain.sample(at: coordinate, spacingMeters: spacing))
+                    #expect(actual.measuredMeters.bitPattern == expected.measuredMeters.bitPattern)
+                    #expect(actual.residualMeters.bitPattern == expected.residualMeters.bitPattern)
+                    #expect(actual.capMeters.bitPattern == expected.capMeters.bitPattern)
+                    #expect(actual.sourceSpacingMeters.bitPattern == expected.sourceSpacingMeters.bitPattern)
+                    #expect(actual.sourceID == expected.sourceID)
+                }
+            }
+        }
+    }
+
     @Test func catalogCoversEveryRowWithBoundedOverlappingVerifiedRanges() throws {
         let catalog = try LMLunarElevationCatalog.load()
         var prior: LMTerrainManifest.Source?

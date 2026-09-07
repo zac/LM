@@ -25,6 +25,15 @@ final class LunarExplorerScene {
     private var sourceFrame: LMSelenographicLocalFrame?
     private var elevationPreviewDescription: String?
     private var globalTerrain: LMLunarTerrainPresentation?
+    private struct PrefetchKey: Equatable {
+        let coordinate: LMSelenographicCoordinate
+        let offline: Bool
+        let grade: LMTerrainPresentationGrade
+        let mode: LMTerrainDetailMode
+    }
+    private var prefetchKey: PrefetchKey?
+    private var prefetchTask: Task<LMLunarTerrainPresentation, Error>?
+    private static let bundledPrefetchAnchor = try? LMTerrainManifest.load().landingOriginCoordinate
     private var floatingOrigin: LMLunarFloatingOrigin?
     private var reanchorProbePending = false
     private var globalReanchorProbeStarted = false
@@ -120,6 +129,7 @@ final class LunarExplorerScene {
 
     func stopStepping() {
         globeImagery?.suspend()
+        cancelTerrainPrefetch()
         updateSubscription?.cancel(); updateSubscription = nil
         updateContinuation?.finish(); updateContinuation = nil
         updateTask?.cancel(); updateTask = nil
@@ -429,6 +439,55 @@ final class LunarExplorerScene {
         }
     }
 
+    private static func resolveRegion(at coordinate: LMSelenographicCoordinate, offline: Bool) async throws -> LMLunarTerrainRegion {
+        let directory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("LunarElevation-v1", isDirectory: true)
+        let store = try LMLunarElevationStore(directory: directory)
+        let worker = Task.detached(priority: .userInitiated) {
+            try await LMLunarTerrainRegion.load(at: coordinate, store: store, offline: offline)
+        }
+        return try await withTaskCancellationHandler(operation: { try await worker.value },
+            onCancel: { worker.cancel() })
+    }
+
+    private func cancelTerrainPrefetch() {
+        prefetchTask?.cancel()
+        prefetchTask = nil
+        prefetchKey = nil
+    }
+
+    private func updateTerrainPrefetch(_ session: LunarExplorerSession) {
+        guard session.usesWindowContainer else { cancelTerrainPrefetch(); return }
+        let coordinate = session.isBrowsingGlobe ? session.browseCoordinate : session.destinationCoordinate
+        guard let coordinate else { cancelTerrainPrefetch(); return }
+        let key = PrefetchKey(coordinate: coordinate, offline: session.regionOffline,
+            grade: session.presentationGrade, mode: session.detailMode)
+        if prefetchKey != key { cancelTerrainPrefetch() }
+        // Crossing the handoff transfers this task to loadGlobalTerrain.
+        guard session.isBrowsingGlobe else { return }
+        guard session.metersAcross < 650_000 else { cancelTerrainPrefetch(); return }
+        guard session.metersAcross < 600_000, prefetchTask == nil,
+              coordinate != Self.bundledPrefetchAnchor else { return }
+        if let terrain = globalTerrain, terrain.region.frame.anchor == coordinate,
+           terrain.region.unavailableSourceIDs.isEmpty { return }
+        prefetchKey = key
+        LMTerrainWorld.presentationGrade = key.grade
+        let logger = self.logger
+        logger.info("Global prefetch requested width=\(session.metersAcross)m latitude=\(coordinate.latitudeDegrees) longitude=\(coordinate.longitudeDegrees)")
+        prefetchTask = Task { @MainActor in
+            let interval = LMLunarTerrainTiming.begin("global-prefetch")
+            defer { LMLunarTerrainTiming.end(interval) }
+            let region = try await Self.resolveRegion(at: coordinate, offline: key.offline)
+            try Task.checkCancellation()
+            let terrain = LMLunarTerrainPresentation(region: region, mode: key.mode)
+            try await terrain.prepareCoarse()
+            try Task.checkCancellation()
+            logger.info("Global prefetch ready tiles=\(terrain.snapshot.tiles.count)")
+            LMLunarTerrainTiming.memory("global-prefetch-ready")
+            return terrain
+        }
+    }
+
     private func loadGlobalTerrain(coordinate: LMSelenographicCoordinate, session: LunarExplorerSession) {
         session.residentPanBounds = .regional
         session.camera.reference?.siteHeightMeters = 1.45
@@ -465,15 +524,24 @@ final class LunarExplorerScene {
                     self.pendingDiagnostics.globeTierState = "resident global atlas"
                 }
                 self.requestSceneUpdate()
-                let directory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-                    .appendingPathComponent("LunarElevation-v1", isDirectory: true)
-                let store = try LMLunarElevationStore(directory: directory)
-                let offline = session.regionOffline
-                let region = try await Task.detached(priority: .userInitiated) {
-                    try await LMLunarTerrainRegion.load(at: coordinate, store: store, offline: offline)
-                }.value
+                let key = PrefetchKey(coordinate: coordinate, offline: session.regionOffline,
+                    grade: session.presentationGrade, mode: session.detailMode)
+                let terrain: LMLunarTerrainPresentation
+                if self.prefetchKey == key, let pending = self.prefetchTask {
+                    // Navigation now owns cancellation. A later Settings change
+                    // must not cancel an adopted task through the browse prefetch.
+                    self.prefetchTask = nil
+                    self.prefetchKey = nil
+                    terrain = try await withTaskCancellationHandler(operation: { try await pending.value },
+                        onCancel: { pending.cancel() })
+                    try Task.checkCancellation()
+                    self.logger.info("Global prefetch adopted tiles=\(terrain.snapshot.tiles.count)")
+                } else {
+                    let region = try await Self.resolveRegion(at: coordinate, offline: session.regionOffline)
+                    terrain = LMLunarTerrainPresentation(region: region, mode: session.detailMode)
+                }
                 try Task.checkCancellation()
-                let terrain = LMLunarTerrainPresentation(region: region, mode: session.detailMode)
+                let region = terrain.region
                 let world = Entity()
                 world.addChild(terrain.root)
                 let sun = DirectionalLight()
@@ -593,6 +661,7 @@ final class LunarExplorerScene {
 
     private func apply(_ input: LunarExplorerSession.SceneSnapshot, to session: LunarExplorerSession) {
         self.session = session
+        updateTerrainPrefetch(session)
         let landingRequest = input.landingRequest
         let navigationPhase = input.navigationPhase
         if appliedNavigationRevision != session.navigationRevision {
@@ -670,7 +739,8 @@ final class LunarExplorerScene {
             globalTerrain.update(east: focus.y, north: focus.x,
                                  altitude: session.pendingArrival ? LunarExplorerSession.Preset.regional.altitudeMeters : session.altitudeMeters,
                                  metersAcross: session.pendingArrival ? LunarExplorerSession.Preset.regional.metersAcross : session.metersAcross,
-                                 heading: session.terrainPlanningHeadingDegrees) { [weak self, weak session] message, requested, active, spacing, milliseconds in
+                                 heading: session.terrainPlanningHeadingDegrees,
+                                 coarseFirst: session.usesWindowContainer) { [weak self, weak session] message, requested, active, spacing, milliseconds in
                 guard let self, let session else { return }
                 self.pendingDiagnostics.loadMessage = message
                 if message.hasPrefix("Lunar terrain failed") {
