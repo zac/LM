@@ -557,3 +557,45 @@ retest the retained lighting patch, while continuing B/C independently.
 Physical visual comfort, binocular handoff, tracked gestures, head motion,
 space lifecycle, GPU frame pacing and memory pressure are all unvalidated.
 No physical Vision Pro was used.
+
+## B — Free-standing disk and smaller portal: withheld (2026-09-07)
+
+Evidence is under `/tmp/LM-Explorer-OneZoom-2026-09-07/B/`. The implementation is withheld in `implementation-contact.patch`; only this evidence and status update are committed.
+
+Candidate implementation uses a 1.6 × 1.1 m portal at the existing 2.17 m nearest-surface depth. Interactive width calibration is 1.6 m; explicit reference captures retain their 3 m calibration and do not use the portal. The disk, pins and label are parented to the room root until their projected limb first reaches the rounded frame. Reparenting applies the identical world transform. The frame is a border ring, fading in over the next 0.1375 m of projected overflow. Settings placement still enters the same projection and transform calculation.
+
+Two assumptions needed correction. A circular disk with diameter equal to a rectangle's height cannot cover its corners: the initial numerical example left 42.3% of the full rectangle uncovered. The portal aperture therefore intersects the sphere silhouette with the rounded frame until the sphere covers the whole frame. Also, the off-axis globe's projected center is displaced from the frame center. Switching on diameter alone clipped its top abruptly. The final switch uses the first actual frame contact, including rounded corners, rather than assuming concentric projection.
+
+The first silhouette candidate incorrectly used the synthetic gesture-probe eye at 1.45 m. It exposed a black crescent below the disk. The render-camera calibration at 1.60 m removes that crescent; hardware uses the tracked eye and remains unvalidated. The initial captures are retained in B/Switch-Journey and B/Switch-Eye rather than overwritten.
+
+Final executable: 15b0a7b592e753ee86f19433fe29b0ecee722382d514502692521bff8b3735d2 (B/Candidate-Contact.app). Control: 6f5a320a5220eaa7f3f04830ffa578a7b0efd847b41777f318551c8d82c3716d (B/Control.app), production code from f81410c, unchanged by the preceding documentation commit 6b87f68. B/Tests-Contact.xcresult: 68 passed, zero failed/skipped. An earlier compilation failure from a Float/Double conversion was corrected; B/Tests-Corrected.xcresult also passed 68 tests before the camera/edge correction.
+
+Inspected B/Switch-Contact images individually. Disk is free-standing with room visible around its limb. Switch-before (4,211,610.403212 m across) and switch-after (4,203,195.597211 m) straddle the approximately 4,207,403 m contact threshold: no visible crescent or positional jump; flags and label remain registered. Clipped fills the smaller rounded frame with mapped craters and a narrow dark border. Crossfade remains visibly blurred. Handoff at 42.8 km and terrain at 7.5 km retain the existing weak/noon relief because A is withheld. Immersion removes the room/frame, and return restores the same terrain framing.
+
+The eleven `B/Apollo` PNGs are byte-identical to `/tmp/LM-Stage2-Release-Baseline-2026-09-04-v2`. The final Surface capture waited 90 seconds; its last twelve five-second windows have mean/p99/max 16.67 ms and zero missed callbacks, at 357.0 MiB footprint. The eleven pinned resource digests and five protected method bodies remain unchanged.
+
+Matched Release measurements, using the original seven-stage workload (not the added switch stages):
+
+| Run | Frame-window footprint MiB | Lifetime peak MiB | Max window mean ms | Max window p99 ms | Largest callback ms | Hitches >25 ms |
+|---|---:|---:|---:|---:|---:|---:|
+| Control journey | 116.6–383.1 | 1619.378 | 19.61 | 106.37 | 571.46 | 19 |
+| Control soak | 115.9–632.2 | 1618.972 | 19.75 | 123.29 | 528.71 | 118 |
+| Candidate journey | 117.9–384.3 | 1620.582 | 19.19 | 86.08 | 480.11 | 16 |
+| Candidate soak | 111.5–408.5 | 1614.363 | 19.75 | 115.12 | 504.45 | 116 |
+
+Both apps were explicitly terminated and left closed for ten seconds before each run. This is a harness normalization, not a runtime optimization. No builds, tests, or offline generation overlapped captures. Source preparation in Xcode overlapped the control runs; host activity was not fully isolated, and these single runs do not establish a causal improvement. The candidate is withheld regardless.
+
+Control surface checkpoints: 407.57, 407.50, 407.52, 407.61, 407.67 MiB.
+
+Control returned checkpoints: 408.88, 408.83, 408.86, 408.86, 408.86 MiB.
+
+Candidate surface checkpoints: 407.14, 407.00, 407.24, 407.28, 407.24 MiB.
+
+Candidate returned checkpoints: 408.42, 407.96, 408.30, 408.38, 408.30 MiB.
+
+All five cycles restore camera and sunlight exactly, including persistence reload. The candidate soak's five initial images were inspected: globe shows the free-standing disk at 0°, 0°; selected shows the Apollo flag; immersive shows the panned 180 m terrain with small craters/rocks in the smaller frame; returned shows that coordinate on the disk; restored shows the same terrain pose.
+
+**Landing decision: withheld.** Journey peak rises by 1.203 MiB despite fewer measured hitches. The extra allocation is already present at `globe-start`: 119,490,912 bytes versus 118,376,776 bytes, before the large decode. This localizes the difference to startup but does not prove its allocation owner. The soak's lower peak does not cancel the journey gate. The smallest next experiment is lazy portal mesh/frame realization at the first actual switch, followed by the same matched measurements; keep the corrected projection and captures. Continue with independent item C as requested.
+
+
+Unvalidated: all physical Vision Pro behavior, stereo silhouettes, tracked head movement, pinch recognition/comfort, device memory/GPU pacing, portal stencil cost, and real space/window lifecycle. Simulator camera calibration is not a claim about the device's eye position.

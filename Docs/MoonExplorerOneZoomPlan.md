@@ -36,8 +36,8 @@ explanation and remains unlanded until resolved. All physical gates stay open.
 | Item | State | Gate |
 |---|---|---|
 | A Relief lighting and sun-dependent radiance | Withheld: performance gate | Lighting candidate retained under A/implementation.patch; matched journey peak and hitch regressions prevent landing |
-| B Free-standing disk and smaller portal | In implementation | Both sides of switch, no black background/pop, Apollo identity, matched performance |
-| C Height-field gesture anchor | Not started | <=1 ms pick, measured error bound, removed index memory, matched performance |
+| B Free-standing disk and smaller portal | Withheld: memory gate | Corrected switch and 11 Apollo images pass; journey peak +1.203 MiB. Patch retained; next experiment is lazy portal realization |
+| C Height-field gesture anchor | In implementation | <=1 ms pick, measured error bound, removed index memory, matched performance |
 | D Coarse-first terrain, plan Step 4 | Not started | Highland warm/cold dive, per-level/build costs, no hitch regression |
 | E Tiled globe imagery, plan Step 6 | Not started | Half lifetime peak, disk PSNR, sharper overlap, Apollo identity |
 | F Sliding region, plan Step 5 | Waiting for D and E | 100 km pan, final contact equals rendered |
