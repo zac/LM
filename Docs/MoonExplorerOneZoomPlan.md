@@ -25,6 +25,23 @@ zoom-out stops at the handoff width, and leaving immersion restores the window.
 | 5 Sliding region | Not started | §4 |
 | 6 Tiled globe imagery | Not started | §4; revives the original W2 design |
 
+### Owner review follow-up, 2026-09-07
+
+The owner authorized A–F in order, with Simulator performance as a landing
+gate. Freeze the preceding Release app and compare the seven-stage journey
+and five-cycle restore soak for each item. D/E also require the matched
+highland dive. A regression in hitch count or lifetime peak needs an actionable
+explanation and remains unlanded until resolved. All physical gates stay open.
+
+| Item | State | Gate |
+|---|---|---|
+| A Relief lighting and sun-dependent radiance | Withheld: performance gate | Lighting candidate retained under A/implementation.patch; matched journey peak and hitch regressions prevent landing |
+| B Free-standing disk and smaller portal | In implementation | Both sides of switch, no black background/pop, Apollo identity, matched performance |
+| C Height-field gesture anchor | Not started | <=1 ms pick, measured error bound, removed index memory, matched performance |
+| D Coarse-first terrain, plan Step 4 | Not started | Highland warm/cold dive, per-level/build costs, no hitch regression |
+| E Tiled globe imagery, plan Step 6 | Not started | Half lifetime peak, disk PSNR, sharper overlap, Apollo identity |
+| F Sliding region, plan Step 5 | Waiting for D and E | 100 km pan, final contact equals rendered |
+
 ## 1. Evaluation of the branch at `739a0e5`
 
 The branch does not need a fixing pass before this pivot. The problems worth

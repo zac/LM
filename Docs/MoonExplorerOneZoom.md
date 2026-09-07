@@ -419,3 +419,141 @@ global surface picking still need profiling; the retained Apollo triangle
 index/buffers cost about 69.7 MiB. Entry/publication hitches and texture peaks
 remain future work. Owner document edits, both scheme-user files, all eleven
 terrain resources and the separate AGC checkout are preserved.
+
+
+## Owner review follow-up A: lighting, 2026-09-07
+
+This run starts from `f81410c`. The owner authorized A–F and made matched
+Simulator performance a landing gate. Evidence is under
+`/tmp/LM-Explorer-OneZoom-2026-09-07/`. Only the specified visionOS Simulator
+was booted before the control captures; no XCTest clones were active.
+Control A is a frozen copy of the prior ordinary Release app, executable
+SHA-256 `6f5a320a5220eaa7f3f04830ffa578a7b0efd847b41777f318551c8d82c3716d`.
+
+The control seven-stage journey and five-cycle soak pass. Every image was
+inspected individually. Disk shows the large black portal behind the Moon;
+clipped fills the frame with the WAC map. Crossfade is blurred; handoff at
+42.8 km altitude shows faint crater outlines on a grey field. The 7.5 km
+terrain stop is nearly uniform grey, as are immersion and return. In the soak,
+globe/selected show the disk and Apollo flag, immersive/restored show the same
+panned terrain pose, and returned shows its coordinate on the globe. All five
+cycles preserve camera and sunlight exactly. The over-60s sample has 3,375 of
+3,602 main-thread samples waiting in mach_msg2_trap, with no SwiftUI update loop.
+
+| Control workload | Footprint MiB | Lifetime peak MiB | Max window mean ms | Max window p99 ms | Largest callback ms | Hitches >25 ms |
+|---|---:|---:|---:|---:|---:|---:|
+| Journey | 95.2–364.8 | 1595.9 | 18.38 | 110.12 | 168.03 | 15 |
+| Five-cycle soak | 94.1–470.1 | 1595.5 | 19.67 | 115.86 | 163.54 | 111 |
+
+Control surface checkpoints are 390.42, 390.53, 390.61, 390.61, 390.66 MiB;
+returned checkpoints are 391.39, 391.38, 391.96, 391.97, 391.97 MiB. The
+original per-checkpoint kernel peaks and phase durations remain in metrics.json.
+
+The first 66-test candidate run found a pre-load radiance regression: an
+unresolved site used the browse coordinate, which could be night-side. The
+correction retains the 5.70 reference until a site coordinate resolves.
+The candidate does not yet have a landing pass.
+
+Candidate iteration 1 passed all 66 focused tests after that correction, and
+all eleven Apollo ladder PNGs are byte-identical in `A/Apollo`. Its final
+surface capture settled for 90 seconds; the last twelve five-second windows
+all report 16.67 ms mean/p99/max with no missed callbacks. Executable SHA-256
+is `3af3e17e662a2109f8b566f540d2c22f0e9d44741c8a340907e988d86a878683`.
+
+Its seven journey PNGs were inspected. Crater interiors and rims are clearer
+at the 42.8 km stop, but the 7.5 km stop remains too flat. Place selection
+was retaining the daylight date chosen for the initial browse coordinate.
+Iteration 2 retargets the active daylight preset when selecting a place,
+while manual date edits and saved-view restoration retain their exact instant.
+All 67 focused tests pass for that revision in `A/Tests-Selection.xcresult`;
+ordinary Release SHA-256 is
+`766a963aa5fc0d0ac900db970df2548904ffcbc89f4e0b7a637b080af6d81ca0`.
+
+Iteration 1 fails the matched journey performance gate. Footprint is
+118.4–384.8 MiB, lifetime peak 1621.1 MiB, maximum window mean 19.46 ms,
+p99 109.26 ms, largest callback 444.96 ms, and 16 hitches over 25 ms.
+The largest callback occurs during the monolithic texture interval, which
+takes 1618.67 ms versus 1486.63 ms in control. Peak and hitch count both
+increase; this is not accepted as noise or an improvement. No commit lands
+on those numbers. The source change adds no texture or terrain allocation,
+but that inspection alone does not explain the measured increase.
+
+The initial isolation harness incorrectly selected the tilted Orbit preset;
+`A/Isolation-Selection` is rejected framing evidence. The corrected harness
+uses the original globe preset, 30000 m altitude and 210000 m width, with
+90 seconds per layer. The earlier radiance report is in
+`LandAnywhereMoonPlan.md`, not `MoonExplorerExperience.md`. It records a
+0.376% difference but no explicit tolerance. This run uses a stated 1%
+acceptance limit and records its central ROI, rather than treating that
+limit as an existing plan quotation.
+
+The central 80% crop reproduces the earlier mission numbers to the recorded
+precision: globe 0.133984, site 0.134490, ratio 0.996238. At 25 degrees the
+flat-ground model gives globe 0.133984 and site 0.137054, ratio 0.977600,
+a 2.240% mismatch. `A/Isolation-Registered/luminance.json` records the
+3072-by-1728 ROI at (384,216), linear RGB conversion and luminance weights.
+Both globe images show the same blurred mare/crater features. Mission terrain
+shows dark crater interiors and brighter rims; 25-degree terrain retains those
+features with less severe interior shadow and slightly higher mean radiance.
+
+A measured v1 relief response interpolates that 1.906% terrain-luminance change
+over 10.689–25 degrees, multiplying the existing illuminance model. Beyond the
+measured interval it holds the endpoint response; those angles are unvalidated.
+The mission reference's 0.001-degree rounding cell remains exactly 5.70. A
+focused test caught a 0.00000263 drift before that rounding correction. The
+final 67-test run passes (`A/Tests-Exact-Mission.xcresult`). The frozen calibrated
+Release executable SHA-256 is
+`ab9bbf279ef0ca677121bf005ba21feffc2c5c6d74c897dac3bac9c989b7304a`.
+
+All seven calibrated journey images were inspected. Disk still has the old
+large black portal. Clipped shows mapped craters; crossfade remains blurred.
+At 42.8 km, crater walls now have discernible light and dark sides. At 7.5 km,
+small crater rims and broader low hills are visible in the central/right field.
+Immersion and return preserve that relief while removing/restoring the frame.
+These are low-contrast mare views, not highland-like relief.
+
+The calibrated journey still fails performance: 116.7–382.8 MiB footprint,
+1619.0 MiB lifetime peak, maximum mean 20.04 ms, p99 105.56 ms, largest callback
+664.25 ms, and 18 hitches over 25 ms. It is withheld, with the exact source/test
+patch in `A/implementation.patch`. The source patch was removed from the working
+tree before B implementation validation. Revisit it after the texture load is
+cheaper, rather than committing on an unexplained startup regression.
+
+Final isolated radiance passes at both elevations. With the same 80% ROI,
+mission globe/site means are 0.133984/0.134490, ratio 0.996238 (-0.376%).
+At 25 degrees they are 0.136585/0.137054, ratio 0.996578 (-0.342%). All four
+`A/Isolation-Calibrated` images were inspected individually. Mission images
+retain their prior appearance; the corrected daylight globe is slightly brighter
+and now matches the daylight terrain's mean. Compositing compensation is unchanged.
+
+| A matched workload | Footprint MiB | Lifetime peak MiB | Max window mean ms | Max window p99 ms | Largest callback ms | Hitches >25 ms |
+|---|---:|---:|---:|---:|---:|---:|
+| Control journey | 95.2–364.8 | 1595.9 | 18.38 | 110.12 | 168.03 | 15 |
+| Calibrated candidate journey | 116.7–382.8 | 1619.0 | 20.04 | 105.56 | 664.25 | 18 |
+| Control five-cycle soak | 94.1–470.1 | 1595.5 | 19.67 | 115.86 | 163.54 | 111 |
+| Calibrated candidate five-cycle soak | 94.0–393.6 | 1595.3 | 19.60 | 117.41 | 287.71 | 126 |
+
+Candidate surface checkpoints are 390.96, 390.92, 390.91, 391.00, 390.96 MiB;
+returned checkpoints are 392.11, 392.14, 392.14, 392.19, 392.21 MiB. The kernel
+peak remains 1595.30 MiB at every checkpoint. All five exact camera/sunlight
+cycles and persistence reload pass. All five soak images were inspected:
+globe and selected show the disk and Apollo flag; immersive/restored show
+the same panned 180 m terrain, with rocks and crater shading; returned shows
+that saved coordinate on the globe.
+
+The final `A/Apollo-Calibrated` ladder is **11/11 byte-identical** to the
+September 4 v2 baseline. The last capture settled for 90 seconds; its last
+twelve five-second windows have 16.67 ms mean/p99/max and zero missed callbacks.
+All eleven pinned terrain resource hashes remain unchanged in
+`A/terrain-assets.json`. Four protected bodies remain exact in the candidate;
+only the explicitly requested radiance-factor lookup changes the fifth.
+After withholding A, all five bodies again match `f81410c` exactly.
+
+A is **not landed**. The visual/radiance, test and Apollo gates pass; the
+matched performance gate fails. Single runs do not establish a general
+improvement, and smaller soak footprint does not cancel its additional hitches.
+The smallest next route is to remove the monolithic texture cost in E and then
+retest the retained lighting patch, while continuing B/C independently.
+Physical visual comfort, binocular handoff, tracked gestures, head motion,
+space lifecycle, GPU frame pacing and memory pressure are all unvalidated.
+No physical Vision Pro was used.
