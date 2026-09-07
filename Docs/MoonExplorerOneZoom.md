@@ -599,3 +599,32 @@ All five cycles restore camera and sunlight exactly, including persistence reloa
 
 
 Unvalidated: all physical Vision Pro behavior, stereo silhouettes, tracked head movement, pinch recognition/comfort, device memory/GPU pacing, portal stencil cost, and real space/window lifecycle. Simulator camera calibration is not a claim about the device's eye position.
+
+## C: Height-field gesture anchor, withheld, 2026-09-07
+
+Evidence: `/tmp/LM-Explorer-OneZoom-2026-09-07/C/`. The tested source patch is retained as `implementation.patch` and removed from the checkout. This item removes the entity triangle-index cache, mesh-buffer extraction and LunarExplorerTriangleIndex. Apollo gesture picking marches resident measured grids in Double precision and retains source-frame anchors. Contact and rendered geometry do not change. The near grid is shared; the two outer grids add 2,105,352 bytes of scalar heights. The previous roughly 69.7 MiB index and its detail variants are absent from candidate checkpoints.
+
+The real Apollo pick takes 0.018416 ms. The 61-step anchored pinch passes a 0.0005 m scene-space bound. The source's 1 cm height quantum projects to 0.000081 m at the probe scale; 0.5 mm allows interpolation and transform rounding. The maximum logged anchor error rounds to 0.000000 m at six decimal places. This bounds anchor retention, not the distance to procedural detail or rocks, which the gesture picker intentionally does not sample.
+
+Release tests: 66 passed, zero failed/skipped in `Tests-Edges.xcresult`. The initial run passed 65 and failed one test: a vertical ray exactly on an ownership-hole edge selected only the unowned adjacent cell. The fix checks both adjoining cells for rays parallel to grid lines. Tests compare against an independent brute-force triangle oracle, including oblique/grazing rays, hole boundaries, nested bands and regional-distance precision. The original failure remains in `Tests.xcresult`.
+
+Candidate executable SHA-256: `16d48cb3a396e393ea9c83a4db88fc9b916f393c66b9be320bb9073e13bda151`. Control SHA-256: `6f5a320a5220eaa7f3f04830ffa578a7b0efd847b41777f318551c8d82c3716d`. The control contains the production code from f81410c, unchanged by the preceding documentation-only commits. Both frozen apps were terminated for ten seconds before each matched run. Source edits, builds, tests and offline generation were paused throughout this pair. Only the target Simulator was booted.
+
+| Run | Frame-window footprint MiB | Lifetime peak MiB | Max window mean ms | Max window p99 ms | Largest callback ms | Hitches >25 ms |
+|---|---:|---:|---:|---:|---:|---:|
+| Control journey | 115.9–382.8 | 1618.488 | 19.80 | 85.64 | 562.17 | 18 |
+| Candidate journey | 119.1–322.6 | 1621.128 | 19.26 | 95.08 | 409.50 | 13 |
+| Control soak | 117.1–412.5 | 1620.082 | 19.60 | 125.01 | 207.57 | 115 |
+| Candidate soak | 118.2–405.5 | 1621.441 | 19.44 | 110.12 | 534.04 | 94 |
+
+Control surface checkpoints: 410.081, 410.065, 410.112, 410.159, 410.097 MiB. Returned: 411.206, 411.128, 411.175, 411.097, 411.128 MiB.
+
+Candidate surface checkpoints: 346.143, 346.159, 346.128, 346.221, 346.221 MiB. Returned: 347.503, 347.518, 347.487, 347.487, 347.565 MiB. These repeat the surface/returned locations used by Step2-SitePack-Restore-Soak. Each app retains its reported lifetime peak at every checkpoint. All five camera/sunlight restore cycles and persistence reload pass.
+
+Inspected all four `Gestures` images: pinch-end enlarges the crater pair and rocks from 180 m to 90 m altitude; pan-before/after translate those landmarks without a visible seam. All seven `Candidate-Journey` images were inspected: disk retains the black portal, clipped shows mapped craters, crossfade is blurred, handoff/terrain retain weak noon relief, and immersion/return remove and restore the frame at the same terrain pose. All five `Candidate-Soak` images were inspected: globe is the default coordinate, selected has the Apollo flag, immersive/restored show the same panned 180 m crater/rock field, and returned shows its saved coordinate on the Moon.
+
+Landing is withheld. Journey peak rises 2.641 MiB and soak peak 1.359 MiB during the unchanged globe decode, before gesture height fields are prepared. The soak's largest callback also rises. The lower retained footprint and fewer hitches do not cancel those measurements. These single runs do not establish a general performance improvement. The smallest next route is to retest this retained patch after E removes the dominant monolithic decode; do not claim that changing the picker alone reduces lifetime peak.
+
+Unvalidated: every physical Vision Pro gate, including hand/gaze recognition, head-tracked anchor precision, comfort, stereo appearance, device memory pressure, GPU/compositor pacing and space lifecycle. No physical device was used.
+
+C/Apollo passes all eleven byte comparisons against the September 4 v2 baseline. Its final Surface capture settled for 90 seconds. The last twelve five-second windows have 16.67 ms mean/p99/max and zero missed callbacks, at 351.5–351.6 MiB footprint. All eleven pinned terrain digests and all five protected function bodies remain unchanged.
