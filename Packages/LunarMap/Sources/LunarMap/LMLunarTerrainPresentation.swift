@@ -42,6 +42,10 @@ public final class LMLunarTerrainPresentation {
     }
     struct CacheStatistics {
         var hits = 0, remasked = 0, missing = 0, plan = 0, parents = 0, owners = 0, neighbors = 0
+        mutating func add(_ other: Self) {
+            hits += other.hits; remasked += other.remasked; missing += other.missing
+            plan += other.plan; parents += other.parents; owners += other.owners; neighbors += other.neighbors
+        }
     }
     private(set) var cacheStatistics = CacheStatistics()
     private var cache = [LMTerrainTileID: Cached]()
@@ -72,10 +76,84 @@ public final class LMLunarTerrainPresentation {
     }
 
     package func update(east: Double, north: Double, altitude: Double, metersAcross: Double, heading: Double,
+                coarseFirst: Bool = false,
                 status: @escaping @MainActor (String, Int, Int, Double?, Int?) -> Void) {
         let plans = Self.plans(sourceSpacing: region.terrain.base.spacingMeters, east: east, north: north,
                                altitude: altitude, metersAcross: metersAcross, heading: heading)
-        update(plans: plans, east: east, north: north, status: status)
+        if coarseFirst {
+            updateProgressively(plans: plans, east: east, north: north, status: status)
+        } else {
+            update(plans: plans, east: east, north: north, status: status)
+        }
+    }
+
+    private struct RefinementRequest {
+        let plans: [LMTerrainTilePlan]
+        let east: Double
+        let north: Double
+        let status: @MainActor (String, Int, Int, Double?, Int?) -> Void
+    }
+    private var refinementRequest: RefinementRequest?
+    private var refinementInFlight = false
+
+    /// Explorer requests advance by one spacing level per committed generation.
+    /// New zoom requests update the destination without cancelling the coarse build.
+    func updateProgressively(east: Double, north: Double, altitude: Double, metersAcross: Double, heading: Double,
+        status: @escaping @MainActor (String, Int, Int, Double?, Int?) -> Void) {
+        let plans = Self.plans(sourceSpacing: region.terrain.base.spacingMeters, east: east, north: north,
+            altitude: altitude, metersAcross: metersAcross, heading: heading)
+        updateProgressively(plans: plans, east: east, north: north, status: status)
+    }
+
+    func updateProgressively(plans: [LMTerrainTilePlan], east: Double, north: Double,
+        status: @escaping @MainActor (String, Int, Int, Double?, Int?) -> Void) {
+        refinementRequest = .init(plans: plans, east: east, north: north, status: status)
+        advanceRefinement()
+    }
+
+    nonisolated static func nextRefinement(plans: [LMTerrainTilePlan], residentSpacing: Double?) -> [LMTerrainTilePlan] {
+        let levels = Set(plans.map(\.sampleSpacingMeters)).sorted(by: >)
+        guard let coarsest = levels.first else { return [] }
+        let next = residentSpacing.flatMap { current in levels.first { $0 < current } }
+            ?? residentSpacing ?? coarsest
+        return plans.filter { $0.sampleSpacingMeters >= next }
+    }
+
+    private func advanceRefinement() {
+        guard !refinementInFlight, let request = refinementRequest else { return }
+        let plans = Self.nextRefinement(plans: request.plans,
+            residentSpacing: snapshot.tiles.map(\.plan.sampleSpacingMeters).min())
+        guard !plans.isEmpty, plans != requested else {
+            refinementRequest = nil
+            return
+        }
+        refinementInFlight = true
+        update(plans: plans, east: request.east, north: request.north) { [weak self] message, requested, active, spacing, ms in
+            request.status(message, requested, active, spacing, ms)
+            guard let self else { return }
+            if ms != nil {
+                self.refinementInFlight = false
+                Task { @MainActor [weak self] in
+                    await Task.yield()
+                    self?.advanceRefinement()
+                }
+            } else if message.hasPrefix("Lunar terrain failed") {
+                self.refinementInFlight = false
+                self.refinementRequest = nil
+            }
+        }
+    }
+
+    /// Detached from the visible scene during prefetch, but published through
+    /// the same generation/contact path before being adopted at the handoff.
+    package func prepareCoarse(metersAcross: Double = 600_000) async throws {
+        let plans = Self.plans(sourceSpacing: region.terrain.base.spacingMeters, east: 0, north: 0,
+            altitude: 1_000_000, metersAcross: metersAcross, heading: 0).filter { $0.sampleSpacingMeters == 512 }
+        update(plans: plans, east: 0, north: 0) { _, _, _, _, _ in }
+        let pending = task
+        await withTaskCancellationHandler(operation: { await pending?.value }, onCancel: { pending?.cancel() })
+        try Task.checkCancellation()
+        guard !snapshot.tiles.isEmpty else { throw LMLunarElevationGrid.GridError.invalidDimensions }
     }
 
     /// Also permits small real-baker plans in lifecycle tests.
@@ -98,61 +176,49 @@ public final class LMLunarTerrainPresentation {
                 var nextCache = [LMTerrainTileID: Cached]()
                 var built = [LMLunarTerrainMeshTile]()
                 var statistics = CacheStatistics()
-                // Coarse-to-fine order lets each child read its actual parent
-                // triangles, including the parent's own outer morph collar.
-                for plan in plans {
-                    try Task.checkCancellation()
-                    var field = LMLunarTerrainHeightField(terrain: region.terrain, frame: region.frame)
-                    field.parents = .init(tiles: built.reversed())
-                    let neighbors = Self.samplingDependencies(for: plan, in: plans)
-                    let parents = neighbors.compactMap { dependency -> ParentDependency? in
-                        guard dependency.sampleSpacingMeters > plan.sampleSpacingMeters,
-                              let cached = nextCache[dependency.id] else { return nil }
-                        return .init(id: dependency.id, revision: cached.geometryRevision)
+                // Finish each parent level before starting its children.
+                // Within a level, at most two CPU bakes/imports are in flight.
+                var offset = 0
+                while offset < plans.count {
+                    let spacing = plans[offset].sampleSpacingMeters
+                    var end = offset + 1
+                    while end < plans.count && plans[end].sampleSpacingMeters == spacing { end += 1 }
+                    let parentSnapshot = LMLunarTerrainMeshSnapshot(tiles: built.reversed())
+                    let parentCache = nextCache
+                    let interval = LMLunarTerrainTiming.begin("global-level-\(spacing)m")
+                    var cpuMilliseconds = 0.0, freshTiles = 0
+                    for first in stride(from: offset, to: end, by: 2) {
+                        try Task.checkCancellation()
+                        let results: [TileBuild]
+                        if first + 1 < end {
+                            async let a = Self.buildTile(plans[first], plans: plans, region: region, pipeline: pipeline,
+                                parentSnapshot: parentSnapshot, parentCache: parentCache, previousCache: previousCache)
+                            async let b = Self.buildTile(plans[first + 1], plans: plans, region: region, pipeline: pipeline,
+                                parentSnapshot: parentSnapshot, parentCache: parentCache, previousCache: previousCache)
+                            results = try await [a, b]
+                        } else {
+                            results = [try await Self.buildTile(plans[first], plans: plans, region: region, pipeline: pipeline,
+                                parentSnapshot: parentSnapshot, parentCache: parentCache, previousCache: previousCache)]
+                        }
+                        // Restore planner order independently of completion order.
+                        for result in results {
+                            let cached = result.cached, plan = cached.plan, build = cached.build
+                            nextCache[plan.id] = cached
+                            statistics.add(result.statistics)
+                            if !result.reused {
+                                self?.tileBuildCount += 1
+                                cpuMilliseconds += Double(build.metrics.meshMilliseconds)
+                                freshTiles += 1
+                            }
+                            replacement.addChild(build.entity)
+                            entities.append((build.entity, plan))
+                            built.append(.init(plan: plan, mesh: build.mesh))
+                            self?.logger.info("Global tile L\(plan.id.level) spacing=\(plan.sampleSpacingMeters)m cacheHit=\(result.reused) mesh=\(build.metrics.meshMilliseconds)ms detail=\(build.metrics.detailMilliseconds)ms")
+                        }
                     }
-                    let owners = Self.finerOwners(of: plan, in: plans)
-                    let build: Apollo11TerrainResource.ProgressiveTileEntityBuild
-                    var reused = false
-                    if let cached = previousCache[plan.id], cached.plan == plan,
-                       cached.parents == parents, cached.owners == owners, cached.neighbors == neighbors {
-                        reused = true
-                        statistics.hits += 1
-                        build = .init(entity: cached.build.entity.clone(recursive: true),
-                                      mesh: cached.build.mesh, metrics: cached.build.metrics)
-                    } else if let cached = previousCache[plan.id], cached.plan == plan,
-                              cached.parents == parents, cached.neighbors == neighbors,
-                              cached.build.entity.model != nil {
-                        statistics.remasked += 1
-                        reused = true
-                        build = try await Self.replacingOwnership(cached.build, plan: plan, plans: plans)
-                    } else {
-                        if let cached = previousCache[plan.id] {
-                            if cached.plan != plan { statistics.plan += 1 }
-                            else if cached.parents != parents { statistics.parents += 1 }
-                            else if cached.owners != owners { statistics.owners += 1 }
-                            else { statistics.neighbors += 1 }
-                        } else { statistics.missing += 1 }
-                        self?.tileBuildCount += 1
-                        guard let generated = try await Apollo11TerrainResource.makeProgressiveTileEntityBuild(
-                            heightField: field, plan: plan, activePlans: plans,
-                            geometryReplacementPlans: plans, albedoField: region.albedo, detailPipeline: pipeline
-                        ) else { throw LMLunarElevationGrid.GridError.invalidDimensions }
-                        build = generated
-                    }
-                    // Ownership only changes indices. Preserve the dependency
-                    // revision when sampled positions/normals are byte-identical,
-                    // so a moving child does not invalidate every descendant.
-                    let previous = previousCache[plan.id]
-                    let sameGeometry = previous?.plan == plan &&
-                        previous?.build.mesh.positions == build.mesh.positions &&
-                        previous?.build.mesh.normals == build.mesh.normals
-                    let revision = sameGeometry ? previous!.geometryRevision : UUID()
-                    nextCache[plan.id] = .init(plan: plan, parents: parents, neighbors: neighbors,
-                                              geometryRevision: revision, owners: owners, build: build)
-                    replacement.addChild(build.entity)
-                    entities.append((build.entity, plan))
-                    built.append(.init(plan: plan, mesh: build.mesh))
-                    self?.logger.info("Global tile L\(plan.id.level) spacing=\(plan.sampleSpacingMeters)m cacheHit=\(reused) mesh=\(build.metrics.meshMilliseconds)ms detail=\(build.metrics.detailMilliseconds)ms")
+                    LMLunarTerrainTiming.end(interval)
+                    self?.logger.info("Global level spacing=\(spacing)m freshTiles=\(freshTiles) cpuMeshSum=\(cpuMilliseconds)ms")
+                    offset = end
                 }
                 try Task.checkCancellation()
                 guard let self, self.generation == token else { return }
@@ -282,6 +348,62 @@ public final class LMLunarTerrainPresentation {
         }
     }
 
+    private struct TileBuild {
+        let cached: Cached
+        let reused: Bool
+        let statistics: CacheStatistics
+    }
+
+    private static func buildTile(_ plan: LMTerrainTilePlan, plans: [LMTerrainTilePlan],
+        region: LMLunarTerrainRegion, pipeline: LMTerrainDetailPipeline,
+        parentSnapshot: LMLunarTerrainMeshSnapshot, parentCache: [LMTerrainTileID: Cached],
+        previousCache: [LMTerrainTileID: Cached]) async throws -> TileBuild {
+        try Task.checkCancellation()
+        var field = LMLunarTerrainHeightField(terrain: region.terrain, frame: region.frame)
+        field.parents = parentSnapshot
+        let neighbors = samplingDependencies(for: plan, in: plans)
+        let parents = neighbors.compactMap { dependency -> ParentDependency? in
+            guard dependency.sampleSpacingMeters > plan.sampleSpacingMeters,
+                  let cached = parentCache[dependency.id] else { return nil }
+            return .init(id: dependency.id, revision: cached.geometryRevision)
+        }
+        let owners = Self.finerOwners(of: plan, in: plans)
+        let build: Apollo11TerrainResource.ProgressiveTileEntityBuild
+        var reused = false, statistics = CacheStatistics()
+        if let cached = previousCache[plan.id], cached.plan == plan,
+           cached.parents == parents, cached.owners == owners, cached.neighbors == neighbors {
+            reused = true
+            statistics.hits = 1
+            build = .init(entity: cached.build.entity.clone(recursive: true),
+                          mesh: cached.build.mesh, metrics: cached.build.metrics)
+        } else if let cached = previousCache[plan.id], cached.plan == plan,
+                  cached.parents == parents, cached.neighbors == neighbors,
+                  cached.build.entity.model != nil {
+            statistics.remasked = 1
+            reused = true
+            build = try await replacingOwnership(cached.build, plan: plan, plans: plans)
+        } else {
+            if let cached = previousCache[plan.id] {
+                if cached.plan != plan { statistics.plan = 1 }
+                else if cached.parents != parents { statistics.parents = 1 }
+                else if cached.owners != owners { statistics.owners = 1 }
+                else { statistics.neighbors = 1 }
+            } else { statistics.missing = 1 }
+            guard let generated = try await Apollo11TerrainResource.makeProgressiveTileEntityBuild(
+                heightField: field, plan: plan, activePlans: plans, geometryReplacementPlans: plans,
+                albedoField: region.albedo, detailPipeline: pipeline
+            ) else { throw LMLunarElevationGrid.GridError.invalidDimensions }
+            build = generated
+        }
+        let previous = previousCache[plan.id]
+        let sameGeometry = previous?.plan == plan &&
+            previous?.build.mesh.positions == build.mesh.positions &&
+            previous?.build.mesh.normals == build.mesh.normals
+        let cached = Cached(plan: plan, parents: parents, neighbors: neighbors,
+            geometryRevision: sameGeometry ? previous!.geometryRevision : UUID(), owners: owners, build: build)
+        return TileBuild(cached: cached, reused: reused, statistics: statistics)
+    }
+
     private static func replacingOwnership(_ cached: Apollo11TerrainResource.ProgressiveTileEntityBuild,
                                            plan: LMTerrainTilePlan, plans: [LMTerrainTilePlan]) async throws
         -> Apollo11TerrainResource.ProgressiveTileEntityBuild {
@@ -381,6 +503,8 @@ public final class LMLunarTerrainPresentation {
     }
 
     public func cancel() {
+        refinementRequest = nil
+        refinementInFlight = false
         generation = UUID()
         task?.cancel()
         task = nil

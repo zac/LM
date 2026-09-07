@@ -9,6 +9,17 @@ public struct LMLunarResolvedTerrain: Sendable {
     /// Increasing resolution; overlapping strips from one product share posts.
     let refinements: [LMLunarElevationGrid]
     private let postRelief = LMLunarPostReliefCache()
+    private let parentPPDs: [Double]
+
+    init(base: LMLunarElevationGrid, refinements: [LMLunarElevationGrid]) {
+        self.base = base
+        self.refinements = refinements
+        // Immutable source metadata, formerly filtered/copied per vertex.
+        self.parentPPDs = refinements.map { grid in
+            refinements.filter { $0.pixelsPerDegree < grid.pixelsPerDegree }
+                .map(\.pixelsPerDegree).max() ?? base.pixelsPerDegree
+        }
+    }
 
     struct Sample: Sendable {
         let measuredMeters: Double
@@ -21,19 +32,22 @@ public struct LMLunarResolvedTerrain: Sendable {
 
     func sample(at coordinate: LMSelenographicCoordinate, spacingMeters: Double) -> Sample? {
         guard spacingMeters.isFinite, spacingMeters > 0 else { return nil }
-        let weighted = refinements.map { grid in
-            (grid, influence(of: grid, at: coordinate))
+        // Search ownership without copying grids/Data into a temporary array
+        // for every sample. The last fully owned source still wins.
+        var ownedIndex: Int?
+        for index in refinements.indices.reversed() {
+            if influence(of: refinements[index], parentPPD: parentPPDs[index], at: coordinate) == 1 {
+                ownedIndex = index
+                break
+            }
         }
-        // Start at the highest fully owned source, then apply any finer edge
-        // transitions. A lower-resolution interior cannot suppress a finer halo.
-        let ownedIndex = weighted.lastIndex { $0.1 == 1 }
-        let owner = ownedIndex.map { weighted[$0].0 } ?? base
+        let owner = ownedIndex.map { refinements[$0] } ?? base
         guard var result = resolved(grid: owner, coordinate: coordinate, spacing: spacingMeters) else { return nil }
-        // An edge halo is fallback coverage, never a refinement over a native
-        // peer. Applying a clamped neighboring strip here extruded its final
-        // row over valid posts and made heights depend on strip ordering.
-        for (grid, weight) in weighted.dropFirst(ownedIndex.map { $0 + 1 } ?? 0)
-            where weight > 0 && grid.pixelsPerDegree > owner.pixelsPerDegree {
+        for index in (ownedIndex.map { $0 + 1 } ?? 0)..<refinements.count {
+            let grid = refinements[index]
+            guard grid.pixelsPerDegree > owner.pixelsPerDegree else { continue }
+            let weight = influence(of: grid, parentPPD: parentPPDs[index], at: coordinate)
+            guard weight > 0 else { continue }
             let clamped = clampedCoordinate(coordinate, to: grid)
             guard let finer = resolved(grid: grid, coordinate: clamped, spacing: spacingMeters) else { continue }
             result = Sample(
@@ -101,6 +115,11 @@ public struct LMLunarResolvedTerrain: Sendable {
     func influence(of grid: LMLunarElevationGrid, at coordinate: LMSelenographicCoordinate) -> Double {
         let parentPPD = refinements.filter { $0.pixelsPerDegree < grid.pixelsPerDegree }
             .map(\.pixelsPerDegree).max() ?? base.pixelsPerDegree
+        return influence(of: grid, parentPPD: parentPPD, at: coordinate)
+    }
+
+    private func influence(of grid: LMLunarElevationGrid, parentPPD: Double,
+                           at coordinate: LMSelenographicCoordinate) -> Double {
         func ramp(_ value: Double, low: Double, high: Double, origin: Double) -> Double {
             if value >= low, value <= high { return 1 }
             if value < low {
