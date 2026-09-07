@@ -27,11 +27,46 @@ zoom-out stops at the handoff width, and leaving immersion restores the window.
 
 ### Owner review follow-up, 2026-09-07
 
-The owner authorized A–F in order, with Simulator performance as a landing
-gate. Freeze the preceding Release app and compare the seven-stage journey
-and five-cycle restore soak for each item. D/E also require the matched
-highland dive. A regression in hitch count or lifetime peak needs an actionable
-explanation and remains unlanded until resolved. All physical gates stay open.
+The original single-run rule below is historical and is superseded by the
+owner's corrected rule, revision 2, on 2026-09-07. Earlier withholds remain
+recorded as decisions under revision 1, not fresh failures under revision 2.
+All physical gates stay open.
+
+### Performance protocol revision 2, owner correction
+
+Land in order E, A, C, B, D, then F. Keep each candidate on its own
+`onezoom/A` through `onezoom/E` branch and rebase it onto the current landing
+HEAD before validation. Preserve candidate source in git, including failures.
+Merge one focused commit per item into `terrain-realism-and-explorer`.
+
+1. Freeze the preceding control. Before judging a candidate, collect three
+   control runs for each matched workload, journey and soak where navigation
+   is involved. Report each metric's minimum, maximum and median.
+2. Alternate control, candidate, control, candidate, control, candidate.
+   Terminate the preceding app and wait ten seconds between runs. Keep
+   Release builds, tests and captures serial on Xcode 26.6 and visionOS 26.5
+   Simulator `8F38C0E7-6366-4DAC-9372-DCF6F9151DCB`, with no booted test clones.
+3. A candidate metric passes if its median is better than, or within the
+   measured control spread of, the control median. Also cap lifetime peak
+   increase at `max(25 MiB, 2% of control median)` and hitch-count increase
+   at `max(2, 15% of control median)`. Exclude callbacks overlapping the
+   globe-texture interval when judging largest callback, except for an item
+   that changes texture loading. Keep the raw largest callback in the report.
+4. The final 90-second settled check remains a hard single-run gate:
+   16.67 ms mean/p99/max and zero missed callbacks. The eleven byte-identical
+   Apollo PNGs remain a hard gate.
+5. Record all three-run tables and judge only after the complete alternating
+   set. If an item fails, retain its branch, record the smallest next
+   experiment and continue with the next independent item.
+
+D must compare sibling concurrency 1, 2 and 4 with three warm highland dives
+each, keeping allocation-free source selection and the immutable parent table.
+Ship the fastest regional source-start-to-sixteen-tile-ready result; serial
+is permitted. Report per-generation ready times, not sums of overlapping
+wall intervals. F still requires D and E to land before its 100 km pan gate.
+After F, attribute the remaining Apollo preparation peak and propose the next
+reduction without implementing it. The original 64 ppd JPEG XL remains
+bundled; removing it is a separate owner bundle decision.
 
 | Item | State | Gate |
 |---|---|---|
