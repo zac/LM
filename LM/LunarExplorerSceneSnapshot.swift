@@ -27,6 +27,7 @@ extension LunarExplorerSession {
         let landingRequest: Int
         let landingRunning: Bool
         let bundledSite: Bool
+        let panBounds: LunarExplorerPanBounds
         let browsing: Bool
         let explorer: Bool
         let window: Bool
@@ -53,7 +54,7 @@ extension LunarExplorerSession {
               destination: destinationCoordinate, flight: flightCoordinate,
               navigationRevision: navigationRevision, navigationPhase: navigationPhase,
               pendingArrival: pendingArrival, landingRequest: landingRequest, landingRunning: landingRunning,
-              bundledSite: usesBundledSite, browsing: isBrowsingGlobe, explorer: isExplorerExperience,
+              bundledSite: usesBundledSite, panBounds: residentPanBounds, browsing: isBrowsingGlobe, explorer: isExplorerExperience,
               window: usesWindowContainer, portal: portalEnabled, selectedPlaceID: selectedPlaceID,
               places: catalogPlaces.map { .init(id: $0.id, coordinate: $0.coordinate) },
               preset: selectedPreset, date: sunDate,

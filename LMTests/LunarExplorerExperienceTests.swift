@@ -5,6 +5,50 @@ import simd
 
 @Suite("Moon Explorer experience") @MainActor
 struct LunarExplorerExperienceTests {
+    @Test func sitePackUsesGlobalENUAndLeavesInteractiveCameraUnchanged() throws {
+        let manifest = try LMTerrainManifest.load()
+        let origin = try LMTerrainFrameAlignment(manifest: manifest).terrainReferenceTouchdown
+        let pack = try LunarExplorerSitePack(manifest: manifest, focusOrigin: origin)
+        var camera = LunarExplorerCamera()
+        camera.reference = nil
+        let before = camera
+        pack.configureInspection(&camera)
+        #expect(camera == before)
+        #expect(camera.siteHeightMeters == 1.45)
+        #expect(pack.sourceIDs.contains("nac-dtm-apollo11"))
+        var worst = 0.0
+        for north in [-896.0, 0, 896] {
+            for east in [-896.0, 0, 896] {
+                let source = LMSiteENUPosition(northMeters: north, eastMeters: east, upMeters: -0.25)
+                let coordinate = pack.frame.coordinate(for: source)
+                let restored = pack.frame.position(for: coordinate)
+                worst = max(worst, simd_length(restored.vector - source.vector))
+            }
+        }
+        print("Apollo site-pack ENU round-trip maximum=\(worst)m")
+        #expect(worst < 1e-6)
+        camera.reference = .init(width: 24_000, tilt: 72)
+        pack.configureInspection(&camera)
+        #expect(camera.siteHeightMeters == -0.35)
+        #expect(camera.reference?.fixedGlobeCoordinate == manifest.landingOriginCoordinate)
+    }
+
+    @Test func sitePackPanBoundsProtectMeasuredCollarInSourceCoordinates() throws {
+        let manifest = try LMTerrainManifest.load()
+        let origin = try LMTerrainFrameAlignment(manifest: manifest).terrainReferenceTouchdown
+        let pack = try LunarExplorerSitePack(manifest: manifest, focusOrigin: origin)
+        let session = LunarExplorerSession()
+        session.residentPanBounds = pack.panBounds
+        session.pan(northMeters: 20_000, eastMeters: -20_000)
+        let tile = try #require(manifest.tile(id: "near-field"))
+        #expect(abs(session.focusNorthOffsetMeters + origin.x - (tile.extentMeters / 2 - 128)) < 1e-9)
+        #expect(abs(session.focusEastOffsetMeters + origin.y + (tile.extentMeters / 2 - 128)) < 1e-9)
+        session.residentPanBounds = .regional
+        session.pan(northMeters: 25_000, eastMeters: -25_000)
+        #expect(session.focusNorthOffsetMeters == 20_000)
+        #expect(session.focusEastOffsetMeters == -20_000)
+    }
+
     @Test func fixedDepthPinchReleasesContinuouslyAtLimbWithoutZoomFloor() throws {
         typealias G = LunarExplorerPinchGeometry
         let ray = G.Ray(origin: SIMD3(0, 1.45, 0), through: SIMD3(2.05, 1.45, -2.17))

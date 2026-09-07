@@ -136,7 +136,6 @@ final class LunarExplorerSession {
     static let minimumTiltDegrees = 18.0
     static let minimumGlobeCaptureTiltDegrees = -82.0
     static let maximumTiltDegrees = 82.0
-    static let maximumFocusOffsetMeters = 900.0
     /// Keep the globe outside the viewer while the site presentation grows
     /// out of its Apollo 11 surface point during the measured handoff.
     /// Keep the nearest globe surface at the accepted whole-Moon depth while
@@ -319,6 +318,7 @@ final class LunarExplorerSession {
     }
     var destinationCoordinate: LMSelenographicCoordinate?
     var usesBundledSite = true
+    var residentPanBounds = LunarExplorerPanBounds.regional
     var regionOffline = false
     var navigationRevision = 0
     enum NavigationPhase { case idle, departing, loading, arriving }
@@ -883,15 +883,10 @@ final class LunarExplorerSession {
     }
 
     func pan(northMeters: Double, eastMeters: Double) {
-        let limit = usesBundledSite ? Self.maximumFocusOffsetMeters : 20_000.0
-        focusNorthOffsetMeters = min(
-            max(northMeters, -limit),
-            limit
-        )
-        focusEastOffsetMeters = min(
-            max(eastMeters, -limit),
-            limit
-        )
+        focusNorthOffsetMeters = min(max(northMeters, residentPanBounds.north.lowerBound),
+                                     residentPanBounds.north.upperBound)
+        focusEastOffsetMeters = min(max(eastMeters, residentPanBounds.east.lowerBound),
+                                    residentPanBounds.east.upperBound)
         selectedFocus = .eagle
     }
 

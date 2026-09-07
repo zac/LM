@@ -101,8 +101,12 @@ struct LunarExplorerTests {
         #expect(session.altitudeMeters == altitude)
     }
 
-    @Test func orbitAndPanStayInsideInspectionBounds() {
+    @Test func orbitAndPanStayInsideInspectionBounds() throws {
         let session = LunarExplorerSession()
+        let manifest = try LMTerrainManifest.load()
+        let alignment = try LMTerrainFrameAlignment(manifest: manifest)
+        session.residentPanBounds = try LunarExplorerSitePack(
+            manifest: manifest, focusOrigin: alignment.terrainReferenceTouchdown).panBounds
 
         session.setOrbit(headingDegrees: 725, tiltDegrees: -20)
         session.pan(northMeters: 5_000, eastMeters: -5_000)
@@ -111,11 +115,11 @@ struct LunarExplorerTests {
         #expect(session.tiltDegrees == LunarExplorerSession.minimumTiltDegrees)
         #expect(
             session.focusNorthOffsetMeters
-                == LunarExplorerSession.maximumFocusOffsetMeters
+                == session.residentPanBounds.north.upperBound
         )
         #expect(
             session.focusEastOffsetMeters
-                == -LunarExplorerSession.maximumFocusOffsetMeters
+                == session.residentPanBounds.east.lowerBound
         )
     }
 

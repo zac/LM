@@ -347,8 +347,11 @@ final class LunarExplorerScene {
                 }
                 assembly.worldRoot.addChild(rocks)
                 terrainAnchorRoot.addChild(assembly.worldRoot)
-                self.sourceFrame = assembly.manifest.landingLocalFrame
-                self.floatingOrigin = LMLunarFloatingOrigin(frame: assembly.manifest.landingLocalFrame)
+                let pack = try LunarExplorerSitePack(manifest: assembly.manifest, focusOrigin: eagle)
+                self.sourceFrame = pack.frame
+                self.floatingOrigin = LMLunarFloatingOrigin(frame: pack.frame)
+                session.residentPanBounds = pack.panBounds
+                pack.configureInspection(&session.camera)
                 self.reanchorProbePending = session.captureReanchorProbe
                 if session.captureReanchorProbe {
                     // Hold a stationary view in an offset frame for 100 seconds.
@@ -405,6 +408,9 @@ final class LunarExplorerScene {
     }
 
     private func loadGlobalTerrain(coordinate: LMSelenographicCoordinate, session: LunarExplorerSession) {
+        session.residentPanBounds = .regional
+        session.camera.reference?.siteHeightMeters = 1.45
+        session.camera.reference?.fixedGlobeCoordinate = nil
         activeDetailMode = session.detailMode
         activeGrade = session.presentationGrade
         LMTerrainWorld.presentationGrade = session.presentationGrade
@@ -591,9 +597,7 @@ final class LunarExplorerScene {
         if let frame = sourceFrame {
             let focus = terrainFocus(session)
             let position = LMSiteENUPosition(northMeters: focus.x, eastMeters: focus.y, upMeters: 0)
-            let coordinate = session.usesBundledSite
-                ? frame.coordinateSystem.coordinate(forSitePosition: position, relativeTo: frame.anchor)
-                : frame.coordinate(for: position)
+            let coordinate = frame.coordinate(for: position)
             if session.currentCoordinate != coordinate { session.currentCoordinate = coordinate }
         }
         updatePresentationTransform(session)
@@ -1053,9 +1057,9 @@ final class LunarExplorerScene {
             1.45,
             -(LunarExplorerSession.globeSurfaceDepthMeters + displayedGlobeRadius)
         )
-        // Global navigation promises the selected coordinate at the view center.
-        // Apollo retains its established oblique capture framing.
-        let sitePosition = SIMD3<Float>(0, session.usesBundledSite ? -0.35 : 1.45, -2.35)
+        // Every source uses the same interactive camera. Reference inspection
+        // poses are explicit calibration data, including the pinned Apollo pose.
+        let sitePosition = SIMD3<Float>(0, session.camera.siteHeightMeters, -2.35)
         globePresentationRoot.position = globePosition
         let heading = simd_quatf(
             angle: Float(session.headingDegrees * .pi / 180),
@@ -1146,7 +1150,7 @@ final class LunarExplorerScene {
         )
 
         let globeFocus = (session.isBrowsingGlobe ? session.browseCoordinate : nil) ?? session.flightCoordinate
-            ?? (isLoaded ? (session.usesBundledSite ? siteCoordinate : session.currentCoordinate) : nil)
+            ?? (isLoaded ? (session.camera.reference?.fixedGlobeCoordinate ?? session.currentCoordinate) : nil)
         if let flight = globeFocus, let front = globeFrontCoordinate {
             let rotation = front == flight ? simd_quatf() : LMLunarNavigation.displayRotation(from: front, to: flight)
             globeEntity?.orientation = rotation

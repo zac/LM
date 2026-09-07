@@ -19,7 +19,7 @@ zoom-out stops at the handoff width, and leaving immersion restores the window.
 | Step | State | Notes |
 |---|---|---|
 | 1 Window container and immersion gate | Complete in Simulator | 54 focused tests; 11 byte-identical Apollo captures; seven-stage portal journey including partial opacity. Physical gates remain open. |
-| 2 One camera model and gesture set | Camera/gestures validated; site pack open | 61 focused tests; final Apollo ladder 11/11 byte-identical. Anchored pinch 0.343 ms with 69.7 MiB index; heading sweep generates zero tiles. Faceting and physical gesture acceptance remain open. Apollo migration stays a separate gated commit. |
+| 2 One camera model and gesture set | Implemented; visual/device gates open | `4c8bd2a`: camera/gestures, 61 focused tests. Separate final Apollo adapter: 65 tests, 11/11 byte-identical ladder, eleven-stage journey and five exact restore cycles. Shared camera/ENU uses source-derived coverage bounds. Close-view faceting and physical acceptance remain open. |
 | 3 Scene stepping off the observation graph | Complete in Simulator | 63 focused tests; 11 byte-identical Apollo images; seven-stage portal journey; five restore cycles exact. Over-60s sample shows no SwiftUI update loop. Physical lifecycle/pacing gates remain open. |
 | 4 Coarse-first terrain and prefetch | Not started | §4 |
 | 5 Sliding region | Not started | §4 |
@@ -138,6 +138,11 @@ free-standing globe at full zoom-out is optional polish, not the first cut.
 - Drag: above the handoff, great-circle drag on the sphere (exists as
   `rotateGlobe`). Below it, pan in metres per point scaled by width (exists as
   pan mode). The Rotate / Move picker goes away.
+- Resident source bounds remain in force. Apollo's 2,048 m measured contact
+  tile needs its existing 128 m collar; the pack now supplies those bounds
+  relative to the focus landmark. Removing the old 900 m camera-mode constant
+  does not authorize panning into missing contact data. Region replacement
+  beyond that footprint remains Step 5.
 - Two-hand rotate (`RotateGesture`): heading. Planning quantises it (§1).
 - Tilt gesture: later. Candidates are a vertical component of the two-hand
   gesture or a small ornament. The portal already gives parallax when leaning.

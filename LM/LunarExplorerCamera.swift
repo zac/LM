@@ -7,6 +7,8 @@ struct LunarExplorerCamera: Equatable, Sendable {
     struct Reference: Equatable, Sendable {
         var width: Double
         var tilt: Double
+        var siteHeightMeters: Float = -0.35
+        var fixedGlobeCoordinate: LMSelenographicCoordinate?
     }
 
     var altitude = 7_500.0
@@ -20,6 +22,7 @@ struct LunarExplorerCamera: Equatable, Sendable {
         return calibrated * windowWidthMeters / 3
     }
     var tilt: Double { reference?.tilt ?? Self.inclination.value(at: log(altitude)) }
+    var siteHeightMeters: Float { reference?.siteHeightMeters ?? 1.45 }
 
     mutating func setWidth(_ width: Double) {
         if reference != nil { reference?.width = width }

@@ -319,3 +319,103 @@ Step 3's Simulator gate is complete. Physical gesture comfort and accuracy,
 tracking loss/cancellation, actual space close/reopen, portal stencil cost,
 90 Hz pacing and memory pressure remain unvalidated on Vision Pro. The
 single-run Simulator numbers do not close those device gates.
+
+## Apollo site-pack integration (separate gate)
+
+Step 3 is committed as `96e7df4`. The subsequent site-pack change removes the
+bundled/global presentation-height branch from the interactive renderer and
+uses the common ENU coordinate conversion for camera focus. The shared camera
+centres every interactive source at 1.45 m; the old Apollo -0.35 m pose and
+registered globe coordinate are explicit inspection calibration. The existing
+rigid source-to-floating-ENU placement is retained. Authored planar heights,
+meshes, contact and source selection remain unchanged; the pack is a source
+adapter, not a new terrain bake.
+
+Inspection corrected one plan assumption: the fixed 900 m pan limit cannot
+simply be lifted to the global 20 km bound. Apollo's fine contact evaluator
+returns nil outside its 2,048 m tile; source selection already reserves a
+128 m measured collar. `LunarExplorerSitePack` derives the camera's admissible
+focus offsets from that footprint and the focus landmark's offset. The old
+900 m mode constant is removed. Both global regions and packs now install
+bounds from their resident coverage. Crossing the pack boundary needs another
+resident source/region; it remains Step 5 work. This preserves contact coverage
+rather than interpreting a camera refactor as permission to pan into missing
+data. No source ordering or source data changes are part of this adapter.
+
+`Step2-SitePack.xcresult` passes **65 focused tests**, zero failures/skips.
+Pack-frame coordinate round trips across its nine centre/corner samples pass
+below 0.000001 m. Bounds tests exercise the real manifest and focus landmark,
+verify the 128 m collar in source coordinates, and switch the same camera to
+the existing global region bound. Inspection calibration leaves an interactive
+camera unchanged. Existing saved views beyond the measured collar now clamp
+to that support bound on restore, through the existing shared pan method.
+
+The ordinary Release build succeeds; executable SHA-256 is
+`6f5a320a5220eaa7f3f04830ffa578a7b0efd847b41777f318551c8d82c3716d`.
+All five protected method bodies and all eleven terrain resource hashes remain
+unchanged. The old globe texture API deprecation and elevation-store Sendable
+warning remain outside this camera change. The capture and restore evidence
+for this executable follows below.
+
+`Step2-SitePack-Apollo` passes **11/11 byte-identical PNGs**, with the same
+20-second, one-attempt, pinned-64-ppd protocol. All settled p95/p99/max windows
+are 16.67 ms with zero missed callbacks; footprint is 290.8–363.9 MiB against
+the baseline's 311.5–380.8 MiB. Across all 33 windows: 290.8–365.0 MiB footprint,
+1,603.4 MiB lifetime peak, maximum mean 19.40 ms, p99 124.42 ms and maximum
+callback interval 306.55 ms. The baseline gate passes; those single-run numbers
+do not establish a general improvement or close physical-device pacing.
+
+
+`Step2-SitePack-Journey` completes all eleven stages. Every PNG was inspected
+individually: disk shows the whole Moon and flags; clipped shows the enlarged
+sphere cut by the frame; crossfade and handoff retain terrain coverage without
+an open black gap; terrain shows low-contrast near-noon relief behind the frame;
+immersion removes the room/frame and exposes Leave immersion; return restores
+the room/frame at the same terrain view. Pinch-start/end show 180 → 90 m
+altitude around the picked terrain point. Pan-before/after show the requested
+40 m east translation across the 32 m tile grid. Broad triangular facets remain
+visible in those close views. This is not an unqualified seam-free visual pass.
+
+The prepared exact-triangle pick takes **0.296 ms**. The integration probe logs
+maximum perpendicular ray error `0.000000 m` (six-decimal precision) and passes
+the <0.0001 m scene-space bound. These are simulated gesture inputs, not tracked
+hand measurements. Across 59 frame windows: 116.0–400.7 MiB footprint,
+1,618.1 MiB lifetime peak, maximum mean 19.88 ms, p99 109.67 ms and maximum
+callback interval 587.74 ms. Loading/publication hitches remain; the faster
+prepared pick does not establish an entry-time or device frame-rate improvement.
+
+
+The final restore run is `Step2-SitePack-Restore-Soak`. Its five initial PNGs
+were inspected individually: globe shows the disk and catalogue markers;
+selected shows the Apollo flag; the legacy-named immersive stage shows the
+panned 180 m terrain inside the portal; returned shows that coordinate on the
+globe; restored returns to the saved terrain pose. The latter displays
+“Selected location”, as the saved coordinate is offset from the named site.
+
+The automatic `passed-over-60s.sample.txt` covers the ongoing cycle sequence.
+The main thread is waiting in `mach_msg2_trap` in 3,238 of 3,445 samples (94.0%).
+Scene stepping appears briefly; no SwiftUI observation update-loop stack is
+present. The initial sandbox launch could not access CoreSimulator services;
+the ordinary approved Simulator-access retry ran the capture. This was a
+harness-access failure before app launch, not an application timeout.
+
+
+All **five cycles pass**, with exact camera/sunlight state and persistence
+reload. Surface footprint is 391.61, 391.64, 391.71, 391.67, 391.61 MiB;
+returned footprint is 392.52, 392.49, 392.80, 392.72, 392.55 MiB. The lifetime
+peak stays at 1,595.4 MiB. There is no monotonic retained-memory increase in
+these checkpoints. Across all 94 windows: 94.0–492.9 MiB footprint, maximum
+mean 19.67 ms, p99 129.65 ms, maximum callback interval 170.15 ms. These
+Simulator CADisplayLink intervals do not measure headset GPU frame time.
+
+The site-pack adapter's focused-test, protected-Apollo and restore gates pass.
+Step 2 implementation is complete with the measured-coverage correction above;
+close-view faceting remains an open visual issue. Steps 4–6 are not started.
+The five-cycle test exercises navigation inside the same space, not actual
+ImmersiveSpace close/reopen. Physical Vision Pro gesture comfort/accuracy,
+tracking loss/cancellation, portal placement/stencil cost, space lifecycle,
+90 Hz pacing and memory pressure remain open. Cold pick/index preparation and
+global surface picking still need profiling; the retained Apollo triangle
+index/buffers cost about 69.7 MiB. Entry/publication hitches and texture peaks
+remain future work. Owner document edits, both scheme-user files, all eleven
+terrain resources and the separate AGC checkout are preserved.
