@@ -672,3 +672,59 @@ The eleven pinned resource hashes and five protected bodies remain unchanged in 
 Smallest next route: retain the source-selection optimization and prefetch patch, remove the dominant texture decode in independent E, then repeat D's complete matched suite against that cheaper baseline. The initial parallelism experiment was slower and is not proposed as a stand-alone improvement. F remains gated on D and E landing.
 
 All physical Vision Pro behavior is unvalidated: tracked gestures, stereo handoff and relief, comfort, head motion, device CPU/GPU pacing, memory pressure and space lifecycle. No physical device was used.
+
+## E: Tiled globe imagery, withheld, 2026-09-07
+
+Evidence: `/tmp/LM-Explorer-OneZoom-2026-09-07/E/`. No E runtime or resource changes land. The complete final candidate is preserved in `implementation.patch` (including the binary coarse base) and `Source/`, with per-file digests in `source-sha256.json`. `git apply --check` passes against the restored checkout.
+
+The candidate replaces the interactive monolithic decode with a pinned 5760 × 2880 Display P3 coarse companion and view-selected 32/64 ppd tiles. The 16 ppd PNG and explicit texture-tier/inspection arguments retain their existing path. The original 64 ppd JPEG XL remains bundled and unchanged for deterministic Apollo captures and later device comparison. The new bundled companion is 16,125,401 bytes (15.378 MiB); its manifest is about 0.39 MiB. This is within the new E scope's explicit authorization to bundle a coarse base, not a reinterpretation of the earlier elevation-only 32 MiB approval.
+
+Offline generation produced 2,560 canonical R8 tiles with 360-pixel interiors and two-pixel gutters: 512 at 32 ppd and 2,048 at 64 ppd. The generator and runtime share the exact source transfer function, box reduction, longitude wrapping and polar clamping. Runtime reconstructs missing tiles from verified PDS source-row slabs, then verifies the resulting tile hash against the offline manifest. Fine tiles are not all bundled or hosted on a new server. The independent imagery store bounds source slabs to 128 MiB, derived tiles to 32 MiB and resident GPU textures to sixteen. An offline cache miss keeps the previous verified map; cached slabs can reconstruct evicted or corrupt derived tiles without a fetch. Cancellation drains prior source work before a new request begins.
+
+This experiment adapts W2's pinned tile-pyramid/residency design to the existing equirectangular sphere instead of adding a cube-sphere mesh. Each fine patch owns exactly the same original triangles that its coarse remainder relinquishes in one publication. Positions, normals, source-frame coordinates and opaque material endpoints stay unchanged; no skirts, offsets, new terrain geometry or ShaderGraph materials are involved. A cube-sphere conversion and screen-error-driven geometric subdivision remain outside this experiment. This adaptation preserves the accepted capture geometry; it does not claim completion of every original W2 subtask.
+
+Provenance is preserved in the patch's `LunarImageryPyramid.json` and `generator-provenance.json`:
+
+- Pinned WAC Float32 IMG: `bc1feab6e86ae2cf47798a4f00cdf7f5e73030fcbc2223fba7fab59a5a2a34ec`, 1,061,775,360 bytes; 23,040 × 11,520 samples after a 92,160-byte label. Ninety independently hashed source slabs contain at most 128 rows each.
+- Unchanged bundled JPEG XL: `819ca84afedca9a5fe864a0a3a036bc6384a105f21135614c90808c184355841`.
+- Coarse companion: `840379f0f6cc9311e3674086579bce2a6cc8bd30d822cb1e63e3200e2bc2303e`. It preserves the actual Simulator GPU import pixels from `/tmp/LM-Texture-Publication-2026-09-06/ExportGPUBase.swift` and `GPU-Import/GlobeImport-0.lzfse`; that earlier folder contains the export provenance. Its `.pngdata` extension prevents Xcode's PNG optimizer from rewriting the pinned bytes.
+- Pyramid manifest: `142a5dc06d20f405283460ace716c651f6856abe26c10112216f14910ccb6667`. Generator and shared conversion hashes are recorded separately in `generator-provenance.json`.
+
+The pinned PDS URL now redirects to NASA's archive. A followed HTTP 206 request returned the exact requested 92,160-byte row, the expected total length and bytes identical to the local pinned source (`range-follow.headers`, `range-follow.bin`). Every runtime slab and derived tile still requires a hash match; a redirect does not relax provenance.
+
+Release validation before the scheduling revision: **79 tests passed in eight suites**, zero failed, `Tests-Final.xcresult`. Tests cover manifest/bundle hashes, native and reduced tile generation, dateline/pole selection, complementary triangle ownership, source-to-texture V mapping, offline reconstruction and corrupt-cache recovery. An earlier packaging test failed because Xcode rewrote a `.png` asset; changing only its container extension fixed the hash mismatch. The final scheduling revision built successfully (`paced-build.log`) and completed its integration journey, but the unit suite was not rerun after the failed performance gate. Do not attribute all 79 tests to that later executable.
+
+Control executable SHA-256: `a3c13361703b742c5a52d3610eb3322ad2e8846fac67e1cf9f9d3af0ae5091d0`. First acceptance candidate: `9b7de193fa95397d20d8926fc62e08deb725b52237b34a2b875241fde360dbb0`. Frame-paced candidate: `8fb1decffb7339b860fe16ad61479fa822cc5057f72bcbd98d4db75b7d44bf4a`. The frozen control is the preceding production implementation plus the common diagnostic highland driver from D; `D/control-instrumentation.patch` records that instrumentation. D itself did not land.
+
+All runs use Release, Xcode 26.6 and the specified visionOS 26.5 Simulator. Builds, tests and captures ran serially; only the target Simulator was booted. Each workload terminated the prior app and waited ten seconds before launch. The same frozen control journey is compared with both candidates; it was not rerun immediately before the scheduling revision. These single runs do not establish a general causal improvement or regression.
+
+| Run | Frame-window footprint MiB | Lifetime peak MiB | Max window mean ms | Max window p99 ms | Largest callback ms | Hitches >25 ms |
+|---|---:|---:|---:|---:|---:|---:|
+| Control journey | 111.9–379.2 | 1614.144 | 18.92 | 111.29 | 444.28 | 15 |
+| First candidate journey | 118.9–388.4 | 621.690 | 19.19 | 115.38 | 444.65 | 20 |
+| Frame-paced candidate journey | 118.0–387.5 | 620.815 | 19.12 | 86.25 | 441.48 | 17 |
+| Control five-cycle soak | 117.8–414.2 | 1620.457 | 20.02 | 121.05 | 335.84 | 129 |
+
+The p99 column is the maximum five-second-window p99, not a percentile pooled across the run. Hitches count the individual logged callbacks above 25 ms.
+
+Control surface checkpoints: 410.784, 410.706, 410.706, 410.831, 410.847 MiB. Returned: 412.081, 412.050, 412.050, 412.034, 412.050 MiB. All five restores and persistence reload are exact. Candidate surface/returned checkpoints are unavailable: the first journey failed, and the already-running control soak was allowed to finish before the revised candidate was built. The revised journey also failed, so candidate soaks and matched highland dives were not launched. The prepared serial driver and cache-preserving cold-dive script remain in E for resumption; they are not evidence that those runs occurred.
+
+The globe-texture interval is 1372.826 ms in control, 210.664 ms in the first candidate and 199.085 ms in the paced candidate. At its completion, kernel lifetime peaks are 1614.144, 263.424 and 262.424 MiB respectively. Later Apollo preparation raises candidate lifetime peaks to 621.690 and 620.815 MiB. Thus the measured journey peak is more than halved, but retained frame-window footprint is not lower. The control soak's texture interval was 2355.482 ms; it is reported separately rather than substituted for the matched journey control.
+
+The initial candidate imported nine textures and ten meshes during Apollo's base import. Frame pacing gives that import priority and waits for actual `SceneEvents.Update` events between imagery imports; `Task.yield()` had allowed several imports inside a single frame. Texture uploads then occurred roughly one frame apart and the fine map published at 14:16:51.633. Hitches fell from twenty to seventeen, still above control's fifteen. The final two excess callbacks occur in the arrival interval; timing overlap is not an allocation or causality proof. Lower memory, lower p99 and a slightly lower largest callback do not cancel the failed hitch-count gate.
+
+Visual inspection covered all seven `Candidate-Paced-Journey` images. Disk retains the black portal and Apollo flag. Clipped shows the original broad crater field. Crossfade now resolves small crater rims, narrow ridges and branching channels while retaining the large landmarks. Handoff at 42.8 km still has weak, blurry noon relief; 7.5 km remains a nearly uniform grey terrain field. Immersion removes the room/frame; return restores the same terrain pose. E does not conceal the withheld A/B failures.
+
+The final fixed disk and 210 km overlap are in `Fixed-Paced/`, each after 90 seconds. The disk PNG is byte-identical to the September 4 v2 baseline: zero pixel error, hence infinite PSNR, exceeding the prior accepted 64.75 dB result. The overlap is visibly finer than the blurred baseline: the upper-right crater has a defined rim, the middle crater pair retains position, and thin diagonal ridges and small pits are distinct. The final overlap is byte-identical to the corrected `Fixed-UV` diagnostic image. Both before/after originals remain available; no edited image is used as acceptance evidence.
+
+Earlier `Fixed-Probe`, `Fixed-Origin` and `Fixed-FileImport` images were rejected. Flipping local image rows alone removed a stripe but displaced landmarks. A file-import probe was byte-identical to the original CGImage upload, ruling out that API choice as the cause. Matching both the source tile band and local UVs to the whole-texture sampler removed the stripe and displacement. A smoothed comparison reports 0.986579 correlation and best local translation of zero pixels (`uv-registration.json`); the new mapping test checks equivalence within 0.002 source pixels. This preserves the existing base's V convention, not a new coordinate transform or independent geographic-orientation validation.
+
+The final overlap's last twelve five-second windows have 16.67 ms mean, p99 and largest callback, zero missed callbacks, and 307.0–307.1 MiB footprint (`final-settled.json`). All eleven pinned terrain resource hashes and five protected function bodies match in the candidate and restored checkout. The complete E Apollo ladder was stopped with acceptance; byte identity of its other ten PNGs is not claimed from source equality or the disk result alone.
+
+**Landing decision: withheld.** The smallest next experiment is to validate the pinned coarse companion independently, then prepare the bounded fine imagery resources before the arrival interval. That isolates the measured decode improvement from the added import work. A companion-only change would not satisfy E's sharper-overlap gate; the full E gate remains intact and requires a new complete matched suite, including soak, highland dive and Apollo ladder.
+
+All physical Vision Pro gates remain unvalidated: effective texture resolution and color, stereo appearance, head/gaze/hand input, comfort, device CPU/GPU pacing, memory pressure, thermal behavior and space lifecycle. No physical device was used.
+
+## F: Sliding region, not started, 2026-09-07
+
+F explicitly depends on D and E landing. Both failed measured performance gates and remain preserved patches, so no region-sliding implementation or 100 km pan/contact acceptance was attempted. No independent item remains in this A–F run. The production implementation remains the previously landed Steps 1–3; the follow-up commits record evidence and withheld candidates only.
