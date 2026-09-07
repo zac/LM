@@ -1,7 +1,7 @@
 import Foundation
 
 /// One interactive degree of freedom. The calibrated projection converts virtual
-/// altitude into the extent represented by a three-metre window. Reference
+/// altitude into the extent represented by the 1.6-metre product window. Reference
 /// launches may pin width/tilt to inspect a particular LOD at a particular scale.
 struct LunarExplorerCamera: Equatable, Sendable {
     struct Reference: Equatable, Sendable {
@@ -12,14 +12,15 @@ struct LunarExplorerCamera: Equatable, Sendable {
     }
 
     var altitude = 7_500.0
-    var windowWidthMeters = 3.0
+    static let calibratedWindowWidthMeters = 1.6
+    var windowWidthMeters = calibratedWindowWidthMeters
     var reference: Reference? = .init(width: 24_000, tilt: 72)
 
     var width: Double {
         if let reference { return reference.width }
         let calibrated = Self.altitudes.firstIndex(of: altitude).map { Self.widths[$0] }
             ?? exp(Self.extent.value(at: log(altitude)))
-        return calibrated * windowWidthMeters / 3
+        return calibrated * windowWidthMeters / Self.calibratedWindowWidthMeters
     }
     var tilt: Double { reference?.tilt ?? Self.inclination.value(at: log(altitude)) }
     var siteHeightMeters: Float { reference?.siteHeightMeters ?? 1.45 }
@@ -29,11 +30,11 @@ struct LunarExplorerCamera: Equatable, Sendable {
         else { altitude = Self.altitude(forWidth: width, windowWidthMeters: windowWidthMeters) }
     }
 
-    static func altitude(forWidth width: Double, windowWidthMeters: Double = 3) -> Double {
-        let target = log(width * 3 / windowWidthMeters)
+    static func altitude(forWidth width: Double, windowWidthMeters: Double = calibratedWindowWidthMeters) -> Double {
+        let target = log(width * calibratedWindowWidthMeters / windowWidthMeters)
         // Monotonic projection, with exact calibration endpoints and no
         // iteration on observable state.
-        if let index = widths.firstIndex(of: width * 3 / windowWidthMeters) { return altitudes[index] }
+        if let index = widths.firstIndex(of: width * calibratedWindowWidthMeters / windowWidthMeters) { return altitudes[index] }
         var low = log(1.5), high = log(1_500_000.0)
         for _ in 0..<52 {
             let middle = (low + high) / 2

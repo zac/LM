@@ -18,6 +18,8 @@ final class LunarExplorerScene {
     private let portal = ModelEntity()
     private let portalFrame = ModelEntity()
     private var appliedPortalState: Bool?
+    private var portalAperture: [SIMD2<Float>] = []
+    private var appliedPortalEye: SIMD3<Float>?
     private let presentationRoot = Entity()
     private let terrainAnchorRoot = Entity()
     private var sourceFrame: LMSelenographicLocalFrame?
@@ -132,8 +134,12 @@ final class LunarExplorerScene {
         // Skip redundant planner/entity work, independently of SwiftUI observation.
         // Apply is synchronous on this actor: its derived camera reads cannot
         // interleave with input changes. Async completions request another step.
+        let followsSilhouette = session.usesWindowContainer && !session.isImmersed
+            && Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale < 4
+        let eye = followsSilhouette ? portalEyePosition() : nil
+        let eyeMoved = eye.map { simd_distance($0, appliedPortalEye ?? $0) > 0.001 } ?? false
         if sceneDirty || input != appliedSnapshot || globalTerrain?.isMorphing == true
-            || pendingDiagnostics != session.diagnostics {
+            || pendingDiagnostics != session.diagnostics || eyeMoved {
             sceneDirty = false
             apply(input, to: session)
             appliedSnapshot = session.sceneSnapshot
@@ -157,7 +163,8 @@ final class LunarExplorerScene {
         windowRoot.addChild(worldRoot)
         portal.name = "Moon window"
         portal.model = ModelComponent(
-            mesh: .generatePlane(width: 3, height: 2.2, cornerRadius: 0.12),
+            mesh: .generatePlane(width: LunarExplorerPortalGeometry.width, height: LunarExplorerPortalGeometry.height,
+                                 cornerRadius: LunarExplorerPortalGeometry.cornerRadius),
             materials: [PortalMaterial()])
         portal.position = SIMD3(0, 1.45, -LunarExplorerSession.globeSurfaceDepthMeters)
         // The existing foreground projection deliberately lies in front of
@@ -166,7 +173,7 @@ final class LunarExplorerScene {
             clippingMode: .disabled, crossingMode: .disabled))
         windowRoot.addChild(portal)
         portalFrame.model = ModelComponent(
-            mesh: .generatePlane(width: 3.035, height: 2.235, cornerRadius: 0.135),
+            mesh: try! Self.portalBorderMesh(),
             materials: [UnlitMaterial(color: UIColor(white: 0.08, alpha: 1))])
         portalFrame.position = portal.position + SIMD3(0, 0, -0.002)
         windowRoot.addChild(portalFrame)
@@ -226,7 +233,7 @@ final class LunarExplorerScene {
             for pin in placePins.values { pin.isEnabled = false }
             return
         }
-        let anchor = worldRoot
+        let anchor = globePresentationRoot.parent ?? root
         let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale
         for place in session.catalogPlaces {
             let pin: ModelEntity
@@ -248,7 +255,7 @@ final class LunarExplorerScene {
             pin.position = globePresentationRoot.position + direction * radius * 1.006
             pin.scale = SIMD3(repeating: place.id == session.selectedPlaceID ? 1.6 : 1)
             pin.isEnabled = LunarExplorerMapGeometry.isVisible(direction: direction,
-                globePosition: globePresentationRoot.position, radius: radius)
+                globePosition: globePresentationRoot.position(relativeTo: root), radius: radius)
         }
     }
 
@@ -792,7 +799,7 @@ final class LunarExplorerScene {
         #if targetEnvironment(simulator)
         // Simulator has no WorldTrackingProvider. Its capture camera is fixed;
         // this is an explicit simulator calibration, not a device pose claim.
-        return SIMD3(0, 1.45, 0)
+        return LunarExplorerPortalGeometry.simulatorEyePosition
         #else
         guard let pose = worldTracking?.queryDeviceAnchor(atTimestamp: CACurrentMediaTime()),
               pose.isTracked else { return nil }
@@ -884,7 +891,8 @@ final class LunarExplorerScene {
         let point = LunarExplorerPinchGeometry.point(
             SIMD3(Float(focus.x + 20), Float(terrainDatumElevationMeters), Float(-focus.y - 40)),
             transformedBy: transform)
-        let ray = LunarExplorerPinchGeometry.Ray(origin: SIMD3(0, 1.45, 0), through: point)
+        guard let eye = gestureEyePosition() else { throw CocoaError(.validationMissingMandatoryProperty) }
+        let ray = LunarExplorerPinchGeometry.Ray(origin: eye, through: point)
         let initial = session.altitudeMeters
         session.beginHeadingGesture()
         defer { endPinch(); session.endHeadingGesture() }
@@ -952,21 +960,73 @@ final class LunarExplorerScene {
         return .globe(globeEntity.orientation(relativeTo: root).inverse.act(direction))
     }
 
+    private static func portalMesh(outline: [SIMD2<Float>]) throws -> MeshResource {
+        var descriptor = MeshDescriptor(name: "Moon silhouette aperture")
+        descriptor.positions = .init(outline.map { SIMD3($0.x, $0.y, 0) })
+        descriptor.primitives = .triangles((1..<(outline.count - 1)).flatMap { [0, UInt32($0), UInt32($0 + 1)] })
+        return try MeshResource.generate(from: [descriptor])
+    }
+
+    private static func portalBorderMesh() throws -> MeshResource {
+        let inner = LunarExplorerPortalGeometry.frameOutline
+        let outer = LunarExplorerPortalGeometry.rectangle(width: LunarExplorerPortalGeometry.width + 0.025,
+            height: LunarExplorerPortalGeometry.height + 0.025,
+            radius: LunarExplorerPortalGeometry.cornerRadius + 0.0125)
+        var descriptor = MeshDescriptor(name: "Moon window border ring")
+        descriptor.positions = .init((outer + inner).map { SIMD3($0.x, $0.y, 0) })
+        let n = UInt32(inner.count)
+        descriptor.primitives = .triangles((0..<n).flatMap { i in
+            let j = (i + 1) % n
+            return [i, j, i + n, j, j + n, i + n]
+        })
+        return try MeshResource.generate(from: [descriptor])
+    }
+
+    private func portalEyePosition() -> SIMD3<Float>? {
+        gestureEyePosition()
+    }
+
+    private func portalProjection(_ session: LunarExplorerSession,
+                                  eye: SIMD3<Float>) -> LunarExplorerPortalGeometry.Projection? {
+        let offset = session.globePosition - SIMD3<Float>(0, 0, -2)
+        let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale
+        return LunarExplorerPortalGeometry.project(
+            center: offset + SIMD3(0, 1.45, -(LunarExplorerSession.globeSurfaceDepthMeters + radius)),
+            radius: radius, eye: eye, planeCenter: offset + portal.position)
+    }
+
     private func updatePresentationTransform(_ session: LunarExplorerSession) {
         Self.applyPresentationOpacity(Double(session.transitionOpacity), to: root)
-        if appliedPortalState != session.portalEnabled {
-            appliedPortalState = session.portalEnabled
-            if session.portalEnabled { worldRoot.components.set(WorldComponent()) }
+        let eye = portalEyePosition() ?? LunarExplorerPortalGeometry.simulatorEyePosition
+        appliedPortalEye = eye
+        let projection = session.usesWindowContainer ? portalProjection(session, eye: eye) : nil
+        let enabled = session.usesWindowContainer && !session.isImmersed
+            && (projection?.frameOverflow ?? .infinity) >= 0
+        if appliedPortalState != enabled {
+            appliedPortalState = enabled
+            if enabled { worldRoot.components.set(WorldComponent()) }
             else { worldRoot.components.remove(WorldComponent.self) }
-            portal.isEnabled = session.portalEnabled
-            portalFrame.isEnabled = session.portalEnabled
+            portal.isEnabled = enabled
+            portalFrame.isEnabled = enabled
         }
-        let parent = session.usesWindowContainer ? worldRoot : root
+        if enabled {
+            let outline = projection.map(LunarExplorerPortalGeometry.aperture) ?? LunarExplorerPortalGeometry.frameOutline
+            if outline != portalAperture, outline.count >= 3,
+               let mesh = try? Self.portalMesh(outline: outline) {
+                portal.model = .init(mesh: mesh, materials: [PortalMaterial()])
+                portalAperture = outline
+            }
+            let progress = min(1, max(0, (projection?.frameOverflow ?? 1) / (Double(LunarExplorerPortalGeometry.height) * 0.125)))
+            Self.applyPresentationOpacity(progress, to: portalFrame)
+        }
+        let parent = enabled ? worldRoot : root
         for entity in [presentationRoot, globePresentationRoot, markerBillboard]
             where entity.parent !== parent { parent.addChild(entity) }
+        let placement = session.usesWindowContainer ? session.globePosition - SIMD3<Float>(0, 0, -2) : .zero
+        let directOffset = enabled ? SIMD3<Float>.zero : placement
         if session.usesWindowContainer {
-            windowRoot.position = session.globePosition - SIMD3(0, 0, -2)
-            interactionSurface.position = portal.position + windowRoot.position
+            windowRoot.position = placement
+            interactionSurface.position = portal.position + placement
         }
         updateGlobeRadiance(session)
         let siteScale = session.presentationScale
@@ -988,7 +1048,7 @@ final class LunarExplorerScene {
         // Every source uses the same interactive camera. Reference inspection
         // poses are explicit calibration data, including the pinned Apollo pose.
         let sitePosition = SIMD3<Float>(0, session.camera.siteHeightMeters, -2.35)
-        globePresentationRoot.position = globePosition
+        globePresentationRoot.position = globePosition + directOffset
         let heading = simd_quatf(
             angle: Float(session.headingDegrees * .pi / 180),
             axis: SIMD3(0, 1, 0)
@@ -1077,6 +1137,8 @@ final class LunarExplorerScene {
             progress
         )
 
+        presentationRoot.position += directOffset
+
         let globeFocus = (session.isBrowsingGlobe ? session.browseCoordinate : nil) ?? session.flightCoordinate
             ?? (isLoaded ? (session.camera.reference?.fixedGlobeCoordinate ?? session.currentCoordinate) : nil)
         if let coordinate = globeFocus ?? globeFrontCoordinate {
@@ -1099,7 +1161,7 @@ final class LunarExplorerScene {
             let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale
             markerBillboard.position = globePresentationRoot.position + direction * radius * 1.006
             markerBillboard.isEnabled = LunarExplorerMapGeometry.isVisible(direction: direction,
-                globePosition: globePresentationRoot.position, radius: radius)
+                globePosition: globePresentationRoot.position(relativeTo: root), radius: radius)
         }
         let canPresentSite = !session.isBrowsingGlobe && session.flightCoordinate == nil && isLoaded && (globalTerrain == nil || globalTerrain?.snapshot.tiles.isEmpty == false)
         let globeOpacity = canPresentSite ? blend.globeOpacity : 1

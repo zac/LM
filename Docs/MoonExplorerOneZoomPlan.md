@@ -49,14 +49,14 @@ Merge one focused commit per item into `terrain-realism-and-explorer`.
 3. Gate only lifetime peak at candidate median ≤ control median +
    `max(25 MiB, 2%)`, hitches over 25 ms at candidate median ≤ control median
    + `max(2, 15%)`, and largest callback outside the globe-texture interval at
-   candidate median ≤ control maximum. Percentages use the control median.
+   candidate median ≤ max(control maximum, control median × 1.10). Percentages use the control median.
    The callback exclusion applies to E too; raw maxima remain reported.
-   "Within the spread" means candidate median ≤ control maximum.
+   "Within the spread" uses the control maximum with the explicit callback margin.
    Frame-window footprint min/max, max-window mean and max-window p99 are
    reported, not gated. This owner correction supersedes the earlier
    all-column rule and range arithmetic.
 4. The final 90-second settled check remains a hard single-run gate:
-   16.67 ms mean/p99/max and zero missed callbacks. The eleven byte-identical
+   mean/p99/max ≤ 16.70 ms and zero missed callbacks; faster means pass. The eleven byte-identical
    Apollo PNGs remain a hard gate.
 5. Record all three-run tables and judge only after the complete alternating
    set. E lands by explicit owner acceptance after rebase tests, one journey
@@ -75,7 +75,7 @@ bundled; removing it is a separate owner bundle decision.
 | Item | State | Gate |
 |---|---|---|
 | A Relief lighting and sun-dependent radiance | Landed in Simulator | 74 tests; three-run journey/soak pass; 11 exact Apollo PNGs; mission/daylight radiance within 1%; physical gates open |
-| B Free-standing disk and smaller portal | Parked on `onezoom/B` | Single attempt: 78 tests, exact Apollo and switch inspection pass; callback median 135.88 ms exceeds 130.31 ms control max; exact settled mean also rejected at 16.61 ms |
+| B Free-standing disk and smaller portal | Landed in Simulator | 78 fresh tests; unchanged qualified executable; existing journey passes 10% callback margin, settled windows pass ≤16.70 ms, and 11 exact Apollo PNGs remain valid |
 | C Height-field gesture anchor | Landed in Simulator | 75 tests; retained three-run journey and fresh three-run soak pass; 0.003875 ms pick within 0.0005 m bound; 11 exact Apollo PNGs, settled and contract checks pass |
 | D Coarse-first terrain, plan Step 4 | Parked on `onezoom/D` | 97 focused tests; final Release build check; next experiment is concurrency 1/2/4, three warm dives each, ranked by regional ready time |
 | E Tiled globe imagery, plan Step 6 | Landed by owner decision | Peak reduction accepted with reported regressions and 1.630 ms soak callback excess; fresh rebase gates pass |

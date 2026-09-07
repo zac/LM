@@ -99,14 +99,18 @@ def compare(controls, candidates, changes_texture=False, spread='upper'):
         elif key == 'hitches_over_25ms':
             limit = control['median'] + max(2, control['median'] * .15)
         elif key == 'largest_callback_excluding_texture_ms':
-            limit = control['max']
+            limit = max(control['max'], control['median'] * 1.10)
         metrics[key] = dict(control=control, candidate=candidate,
                             noise_limit=control['max'], hard_cap=limit,
                             gated=limit is not None,
                             passed=candidate['median'] <= limit + 1e-9 if limit is not None else None)
-    return dict(protocol='owner wrap-up named gates', spread='upper',
+    return dict(protocol='owner named gates with callback margin and 16.70 ms settle', spread='upper',
                 changes_texture=changes_texture,
                 passed=all(m['passed'] for m in metrics.values() if m['gated']), metrics=metrics)
+
+
+def settled_window_passes(window):
+    return all(0 <= window[key] <= 16.70 + 1e-9 for key in ['mean', 'p99', 'max']) and window['missed'] == 0
 
 
 def main():
@@ -117,10 +121,28 @@ def main():
     group.add_argument('folder', help='Contains Control-1..3 and Candidate-1..3')
     group.add_argument('--changes-texture', action='store_true')
     group.add_argument('--spread', choices=['range', 'upper'], default='upper')
+    settle = sub.add_parser('settled')
+    settle.add_argument('folder')
+    settle.add_argument('--preset', default='11-surface')
+    settle.add_argument('--windows', type=int, default=12)
     args = parser.parse_args()
     if args.command == 'measure':
         result = measure(args.folder)
         print(json.dumps({k: v for k, v in result.items() if k not in ['phases', 'memory']}, indent=2))
+    elif args.command == 'settled':
+        folder = Path(args.folder)
+        lines = [line for line in (folder / 'performance.log').read_text().splitlines()
+                 if f'Explorer performance preset={args.preset} ' in line][-args.windows:]
+        windows = []
+        for line in lines:
+            values = dict(re.findall(r'(\w+)=([^ ]+)', line))
+            windows.append({key: float(values[key].removesuffix('ms'))
+                            for key in ['mean', 'p99', 'max', 'missed']})
+        result = dict(passed=len(windows) == args.windows and args.windows > 0 and
+                      all(settled_window_passes(w) for w in windows), windows=windows)
+        (folder / 'settled.json').write_text(json.dumps(result, indent=2) + '\n')
+        print(json.dumps(result, indent=2))
+        if not result['passed']: raise SystemExit(1)
     else:
         folder = Path(args.folder)
         controls = [measure(folder / f'Control-{i}') for i in range(1, 4)]

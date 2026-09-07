@@ -1065,13 +1065,13 @@ Only these are gates:
 
 - Lifetime peak: candidate median ≤ control median + max(25 MiB, 2%).
 - Hitches over 25 ms: candidate median ≤ control median + max(2, 15%).
-- Largest callback outside the globe-texture interval: candidate median ≤ control maximum. This applies to E too; the raw maximum remains reported.
-- The 90-second settled window: 16.67 ms mean/p99/max, zero missed callbacks.
+- Largest callback outside the globe-texture interval: candidate median ≤ max(control maximum, control median × 1.10). A tightly clustered control set does not remove the ten-percent margin. This applies to E too; the raw maximum remains reported.
+- The 90-second settled window: mean ≤ 16.70 ms, p99 ≤ 16.70 ms and max ≤ 16.70 ms, with zero missed callbacks. A mean below 16.67 ms passes.
 - All eleven Apollo PNGs byte-identical to the September 4 v2 baseline.
 
 The percentages use the corresponding control median. Frame-window footprint
 minimum/maximum, max-window mean and max-window p99 are reported, not gated.
-"Within the spread" means candidate median ≤ control maximum for that metric.
+"Within the spread" uses the control maximum, with the explicit ten-percent callback margin above. Peak and hitches retain their separately specified allowances. These permanent owner corrections supersede the historical no-margin callback and exact-16.67 decisions below.
 Keep three alternating control/candidate runs for matched comparisons, with
 app termination and ten seconds between runs; judge the medians only after
 the complete set. E's existing triplicates are reused by owner instruction.
@@ -1398,3 +1398,25 @@ Both scheme-user files remain modified and outside commits. All other work
 is committed; parked candidates remain reviewable and rebased onto the closure
 head. The final state artifact records the verified status and runtime-tree
 comparisons after that last documentation-only rebase.
+
+
+### B landed under the permanent gate correction, 2026-09-08
+
+The owner added a ten-percent callback margin and an upper-bound settled rule
+in the protocol section above. Re-evaluating the completed B journey set,
+without recapturing it, gives a callback limit of
+max(130.310, 130.002125 × 1.10) = 143.0023375 ms. The candidate median
+135.880 ms passes; peak 623.237 MiB and 17 hitches already pass their limits.
+All twelve recorded final Apollo windows have mean 16.61–16.67 ms,
+p99/max 16.67 ms and zero misses, so the ≤16.70 ms settled gate passes too.
+The eleven byte-identical Apollo images and switch-pair inspection remain
+valid. The historical parked decision above is superseded, not erased.
+
+`onezoom/B` at `4c5e2e0` was compared again with qualified source `dbbc048`:
+its non-documentation tree is identical. The fresh ordinary Release build
+also reproduces executable SHA-256
+`2d669f868a6c05b05636f8acea23a63bf5d871b906da0bcda6810f18bc26a874`.
+All 78 focused tests and 13 gate-tool tests pass. B is landed as one commit,
+with no new runtime adjustment. Evidence and the recalculated gate records
+are in `/tmp/LM-LunarMap-2026-09-08/B/`. D and F remain parked and are rebased
+onto this landing before package work; physical-device gates remain open.

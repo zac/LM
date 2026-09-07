@@ -25,6 +25,10 @@ fi
 if [[ ${LUNAR_ONE_ZOOM:-0} == 1 ]]; then
     args+=(--lunar-explorer-profile-one-zoom)
     stages=(disk clipped crossfade handoff terrain immersion return)
+    if [[ ${LUNAR_PORTAL_SWITCH_PROBE:-0} == 1 ]]; then
+        args+=(--lunar-explorer-profile-portal-switch)
+        stages=(disk switch-before switch-after clipped crossfade handoff terrain immersion return)
+    fi
     if [[ ${LUNAR_GESTURE_PROBE:-0} == 1 ]]; then
         args+=(--lunar-explorer-profile-gestures)
         stages+=(pinch-start pinch-end pan-before pan-after)

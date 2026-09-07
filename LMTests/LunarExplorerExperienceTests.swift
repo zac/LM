@@ -118,7 +118,7 @@ struct LunarExplorerExperienceTests {
     @Test func immersionGateClampsEveryZoomPathAndRestoresWindowRange() {
         let s = LunarExplorerSession()
         s.configure(arguments: [])
-        #expect(s.portalEnabled && !s.canImmerse)
+        #expect(!s.portalEnabled && !s.canImmerse)
         s.enterImmersion()
         #expect(!s.isImmersed)
         s.exploreZoom(by: s.metersAcross / 120_000, from: s.metersAcross)
@@ -148,7 +148,7 @@ struct LunarExplorerExperienceTests {
         s.diagnostics.loadMessage = "Apollo 11 terrain ready"
         s.enterImmersion()
         s.returnToGlobe()
-        #expect(!s.isImmersed && s.portalEnabled)
+        #expect(!s.isImmersed && !s.portalEnabled)
         #expect(s.metersAcross == 4_400_000)
     }
 
@@ -171,7 +171,7 @@ struct LunarExplorerExperienceTests {
             #expect(abs(camera.tilt - left.1) < 1e-5)
         }
         camera.altitude = 7_500
-        camera.windowWidthMeters = 1.5
+        camera.windowWidthMeters = LunarExplorerCamera.calibratedWindowWidthMeters / 2
         #expect(camera.width == 12_000 && camera.tilt == 72)
         let s = LunarExplorerSession()
         s.configure(arguments: [])

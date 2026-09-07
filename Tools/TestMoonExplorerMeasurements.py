@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Tests for the owner's noise-floor rule and callback exclusion boundary."""
 import unittest
-from MeasureMoonExplorerRuns import compare, distribution, overlaps
+from MeasureMoonExplorerRuns import compare, distribution, overlaps, settled_window_passes
 
 
 def run(value):
@@ -67,6 +67,25 @@ class MeasurementTests(unittest.TestCase):
             row['lifetime_peak_mib'] = 125
             row['hitches_over_25ms'] = 115
         self.assertTrue(compare(control, candidate)['passed'])
+
+    def test_clustered_control_has_ten_percent_callback_margin(self):
+        control = [run(129), run(130.002), run(130.310)]
+        candidate = [run(130) for _ in range(3)]
+        for row in candidate: row['largest_callback_excluding_texture_ms'] = 135.880
+        result = compare(control, candidate)
+        self.assertTrue(result['passed'])
+        self.assertAlmostEqual(result['metrics']['largest_callback_excluding_texture_ms']['hard_cap'], 143.0022)
+
+    def test_settled_mean_below_nominal_is_a_pass(self):
+        self.assertTrue(settled_window_passes(dict(mean=16.61, p99=16.67, max=16.67, missed=0)))
+        self.assertTrue(settled_window_passes(dict(mean=16.70, p99=16.70, max=16.70, missed=0)))
+
+    def test_settled_limit_and_misses_still_gate(self):
+        for key in ['mean', 'p99', 'max']:
+            row = dict(mean=16.67, p99=16.67, max=16.67, missed=0)
+            row[key] = 16.71
+            self.assertFalse(settled_window_passes(row))
+        self.assertFalse(settled_window_passes(dict(mean=16.61, p99=16.67, max=16.67, missed=1)))
 
 
 if __name__ == '__main__':

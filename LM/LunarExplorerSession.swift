@@ -204,7 +204,18 @@ final class LunarExplorerSession {
     /// Fixed reference captures render without the room-facing frame.
     var usesWindowContainer = false
     var isImmersed = false
-    var portalEnabled: Bool { usesWindowContainer && !isImmersed }
+    var portalEnabled: Bool {
+        usesWindowContainer && !isImmersed
+            && (portalProjection?.frameOverflow ?? .infinity) >= 0
+    }
+    var portalProjection: LunarExplorerPortalGeometry.Projection? {
+        let offset = globePosition - SIMD3<Float>(0, 0, -2)
+        let radius = Float(Self.lunarGlobeRadiusMeters) * globePresentationScale
+        return LunarExplorerPortalGeometry.project(
+            center: offset + SIMD3(0, 1.45, -(Self.globeSurfaceDepthMeters + radius)),
+            radius: radius, eye: LunarExplorerPortalGeometry.simulatorEyePosition,
+            planeCenter: offset + SIMD3(0, 1.45, -Self.globeSurfaceDepthMeters))
+    }
     var canImmerse: Bool {
         usesWindowContainer && !isImmersed && !navigationInProgress
             && !landingRunning && metersAcross <= Self.globeSiteBlendEndMetersAcross
@@ -587,9 +598,10 @@ final class LunarExplorerSession {
         }
     }
 
-    /// Three scene meters span the selected inspection width.
+    /// The product window spans 1.6 scene meters; reference inspection keeps
+    /// its original three-metre calibration and all pinned capture transforms.
     var presentationScale: Float {
-        Float(3 / metersAcross)
+        Float((usesWindowContainer ? camera.windowWidthMeters : 3) / metersAcross)
     }
 
     var globePresentationScale: Float {

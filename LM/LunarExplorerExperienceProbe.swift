@@ -54,6 +54,23 @@ import OSLog
                 session.previewPlace(place)
                 if !arguments.contains("--lunar-explorer-profile-gestures-only") {
                 try await stage("disk")
+                if arguments.contains("--lunar-explorer-profile-portal-switch") {
+                    var low = 3_000_000.0, high = 5_000_000.0
+                    for _ in 0..<32 {
+                        let middle = (low + high) / 2
+                        session.exploreZoom(by: session.metersAcross / middle, from: session.metersAcross)
+                        if session.portalEnabled { low = middle } else { high = middle }
+                    }
+                    let threshold = (low + high) / 2
+                    session.exploreZoom(by: session.metersAcross / (threshold * 1.001), from: session.metersAcross)
+                    guard !session.portalEnabled else { throw CocoaError(.validationMissingMandatoryProperty) }
+                    logger.info("Portal switch before width=\(session.metersAcross, privacy: .public)m")
+                    try await stage("switch-before")
+                    session.exploreZoom(by: session.metersAcross / (threshold * 0.999), from: session.metersAcross)
+                    guard session.portalEnabled else { throw CocoaError(.validationMissingMandatoryProperty) }
+                    logger.info("Portal switch after width=\(session.metersAcross, privacy: .public)m")
+                    try await stage("switch-after")
+                }
                 session.exploreZoom(by: session.metersAcross / 1_000_000, from: session.metersAcross)
                 try await stage("clipped")
                 session.exploreZoom(by: session.metersAcross / 210_000, from: session.metersAcross)
