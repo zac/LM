@@ -166,3 +166,13 @@ launch and saved `Entry.trace`; it contains no current-build entry/import
 validation. No on-device app run, visual acceptance, pacing or memory result
 is claimed. Resume with verified signing, installation, then a short targeted
 capture. The physical validation requirements above remain open.
+
+On the same day's retry after the owner addressed signing, the direct Release
+build succeeded with exit 0. `codesign --verify --deep --strict` also passed;
+`retry-build.log` and `signature-verification.txt` retain those results. The
+signed executable SHA-256 is
+`f14f1df1b59e2f3098b27618fc4fb4aa85b3ebd87345908d35a196952b8fd458`.
+Installation then failed with `IXRemoteErrorDomain` code 6, connection
+interrupted. A contemporaneous device query reported `passcodeRequired: true`.
+Signing is resolved; unlock the headset before retrying installation. This
+retry still does not establish that the current build runs on the device.
