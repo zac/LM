@@ -877,3 +877,82 @@ Smallest next experiment: remove the full-width source-slab concatenation in `LM
 Owner bundle note, no action taken: the original 64 ppd JPEG XL (76,112,646 bytes, approximately 76 MB) remains bundled for deterministic capture alongside the 15.378 MiB companion. Removing it remains an owner decision.
 
 All physical gates remain open: tracked head/hand/gaze input, stereo registration and relief, comfort, effective device imagery resolution/color, CPU/GPU pacing, thermal behavior, memory pressure and space lifecycle. F and the post-F Apollo-peak attribution remain gated on D and E landing. Continue with independent A on the current landed baseline because E did not land.
+
+## A revalidation under protocol 2, accepted, 2026-09-07
+
+Evidence: `/tmp/LM-Explorer-OneZoom-2026-09-07/Revalidation/A/`. A rebased onto `db86a0c`, the current landed baseline; E remains withheld, so this is an independent lighting validation with the original monolithic globe. Iteration 2 is retained: Explorer launch and “Daylight here” target 25° elevation in the existing 30-day window, preferring morning; place selection retargets the active daylight preset. Manual dates and saved views keep their exact instant. The measured relief response and exposure model return exactly 5.70 at the Apollo mission instant; compositing compensation is unchanged.
+
+**74 selected Release Simulator tests passed**, zero failures/skips (`Tests.xcresult`, `tests-summary.json`). Tests include daylight selection, polar fallback, manual-date/saved-view semantics, radiance calibration, navigation, transitions and contact. Ordinary Release build succeeded. Frozen control executable SHA-256: `6f5a320a5220eaa7f3f04830ffa578a7b0efd847b41777f318551c8d82c3716d`; candidate: `ab9bbf279ef0ca677121bf005ba21feffc2c5c6d74c897dac3bac9c989b7304a`.
+
+The journey and soak each alternate three control/candidate pairs with app termination and a ten-second pause. Same Xcode 26.6 and specified visionOS 26.5 Simulator; no booted test clones, serial builds/tests/captures. Protocol 2 uses the stated median-plus-control-range interpretation and independent peak/hitch caps. Largest-callback judgment excludes texture-overlapping intervals because A does not change texture loading; raw maxima remain reported. Both complete comparisons pass. All thirty repeated restores and six persistence reloads pass.
+
+### journey: passes corrected performance comparison
+
+| Run | Footprint MiB | Peak MiB | Max mean ms | Max p99 ms | Largest ms (outside texture) | Hitches >25 ms |
+|---|---:|---:|---:|---:|---:|---:|
+| Control 1 | 110.5–377.8 | 1612.894 | 20.30 | 108.58 | 715.25 (136.52) | 15 |
+| Candidate 1 | 116.4–382.6 | 1618.878 | 19.55 | 113.80 | 318.93 (165.54) | 18 |
+| Control 2 | 116.5–383.3 | 1619.222 | 18.68 | 114.17 | 293.51 (147.53) | 19 |
+| Candidate 2 | 117.8–384.1 | 1620.191 | 19.79 | 84.14 | 469.01 (129.82) | 17 |
+| Control 3 | 116.9–383.1 | 1619.238 | 19.34 | 105.56 | 491.31 (178.71) | 19 |
+| Candidate 3 | 116.8–383.6 | 1619.910 | 18.47 | 111.00 | 312.72 (171.32) | 17 |
+
+| Metric | Control min / median / max | Candidate min / median / max | Noise limit | Additional cap | Pass |
+|---|---:|---:|---:|---:|---|
+| footprint_min_mib | 110.500 / 116.500 / 116.900 | 116.400 / 116.800 / 117.800 | 122.900 | — | True |
+| footprint_max_mib | 377.800 / 383.100 / 383.300 | 382.600 / 383.600 / 384.100 | 388.600 | — | True |
+| lifetime_peak_mib | 1612.894 / 1619.222 / 1619.238 | 1618.878 / 1619.910 / 1620.191 | 1625.566 | 1651.607 | True |
+| max_window_mean_ms | 18.680 / 19.340 / 20.300 | 18.470 / 19.550 / 19.790 | 20.960 | — | True |
+| max_window_p99_ms | 105.560 / 108.580 / 114.170 | 84.140 / 111.000 / 113.800 | 117.190 | — | True |
+| hitches_over_25ms | 15.000 / 19.000 / 19.000 | 17.000 / 17.000 / 18.000 | 23.000 | 21.850 | True |
+| largest_callback_excluding_texture_ms | 136.525 / 147.533 / 178.713 | 129.820 / 165.540 / 171.323 | 189.721 | — | True |
+
+### soak: passes corrected performance comparison
+
+| Run | Footprint MiB | Peak MiB | Max mean ms | Max p99 ms | Largest ms (outside texture) | Hitches >25 ms |
+|---|---:|---:|---:|---:|---:|---:|
+| Control 1 | 115.6–409.0 | 1618.550 | 19.83 | 120.73 | 499.43 (168.82) | 111 |
+| Candidate 1 | 116.7–416.0 | 1619.847 | 19.67 | 121.32 | 400.96 (184.53) | 119 |
+| Control 2 | 116.1–586.3 | 1619.503 | 20.23 | 122.55 | 574.49 (184.93) | 122 |
+| Candidate 2 | 116.7–683.2 | 1619.925 | 19.91 | 130.97 | 436.45 (168.93) | 114 |
+| Control 3 | 116.3–414.5 | 1619.191 | 19.83 | 115.91 | 506.42 (172.22) | 131 |
+| Candidate 3 | 111.4–406.6 | 1614.285 | 19.60 | 124.89 | 479.97 (175.65) | 125 |
+
+| Metric | Control min / median / max | Candidate min / median / max | Noise limit | Additional cap | Pass |
+|---|---:|---:|---:|---:|---|
+| footprint_min_mib | 115.600 / 116.100 / 116.300 | 111.400 / 116.700 / 116.700 | 116.800 | — | True |
+| footprint_max_mib | 409.000 / 414.500 / 586.300 | 406.600 / 416.000 / 683.200 | 591.800 | — | True |
+| lifetime_peak_mib | 1618.550 / 1619.191 / 1619.503 | 1614.285 / 1619.847 / 1619.925 | 1620.144 | 1651.575 | True |
+| max_window_mean_ms | 19.830 / 19.830 / 20.230 | 19.600 / 19.670 / 19.910 | 20.230 | — | True |
+| max_window_p99_ms | 115.910 / 120.730 / 122.550 | 121.320 / 124.890 / 130.970 | 127.370 | — | True |
+| hitches_over_25ms | 111.000 / 122.000 / 131.000 | 114.000 / 119.000 / 125.000 | 142.000 | 140.300 | True |
+| largest_callback_excluding_texture_ms | 168.820 / 172.220 / 184.930 | 168.930 / 175.650 / 184.535 | 188.330 | — | True |
+
+| Run | Surface checkpoints, cycles 1–5 (MiB) | Returned checkpoints, cycles 1–5 (MiB) |
+|---|---|---|
+| Control 1 | 406.831, 406.503, 406.503, 406.612, 406.597 | 407.847, 407.831, 407.847, 407.847, 407.831 |
+| Candidate 1 | 413.456, 413.581, 413.440, 413.503, 413.503 | 414.987, 414.909, 414.768, 414.722, 414.753 |
+| Control 2 | 409.284, 409.206, 409.065, 409.175, 409.175 | 410.565, 410.597, 410.409, 410.440, 410.362 |
+| Candidate 2 | 408.206, 408.175, 408.143, 408.237, 408.112 | 409.534, 409.534, 409.487, 409.456, 409.331 |
+| Control 3 | 411.909, 411.972, 411.784, 411.925, 411.878 | 413.284, 413.128, 413.128, 413.159, 413.128 |
+| Candidate 3 | 405.393, 405.425, 405.565, 405.393, 405.472 | 406.346, 406.268, 406.143, 406.112, 406.143 |
+
+
+The comparison wrapper initially failed after all six journeys completed because Bash 3 treats an empty array as unbound under `set -u`. Its argument array now always contains the spread option. The six original runs were retained and compared; no app binary changed or run was selected out. The subsequent complete soak exercised the corrected wrapper successfully. This validation-tool fix is included with A.
+
+All eleven fresh Apollo PNGs are byte-identical to the September 4 v2 baseline. The eleven pinned resource hashes match. Four protected bodies are text-identical to f81410c; the radiance body differs only by the explicitly authorized constant-to-sun-dependent lookup substitution, verified by an exact transformed-body comparison. No compositing compensation, terrain geometry, residual, source ordering or AGC change is included.
+
+Fresh layer-isolation captures at 210 km use the same central 80% ROI (384,216,3072,1728) and linear RGB luminance with alpha excluded. All four PNGs are byte-identical to the earlier calibrated iteration-2 originals. Recomputed means:
+
+| Sun | Globe-only mean | Site-only mean | Globe/site | Difference |
+|---|---:|---:|---:|---:|
+| Mission, about 10.689° | 0.133984 | 0.134490 | 0.996238 | −0.3762% |
+| Daylight, about 25° | 0.136585 | 0.137054 | 0.996578 | −0.3422% |
+
+Both pass the established 1% radiance tolerance. The initial analysis included alpha in ImageMagick's mean; removing alpha restored the correct RGB measurement above. No image was edited for acceptance. The mission value remains exactly 5.70 by test, not inferred from an approximately matched image.
+
+The seven-stage journey was recaptured in all three candidate runs. Inspected `journey/Candidate-1/handoff.png` and `terrain.png`: at 42.8 km crater bowls have distinct opposing lit and dark sides and narrow ridges are visible. At 7.5 km, small pits have bright rims and darker interiors; low ridges and surface undulations read around the center. The Apollo mare remains low contrast and distant detail remains soft. The daylight globe/site isolation pair was also inspected: mean brightness matches while the site layer reveals more relief than the blurred monolithic globe. This accepts the lighting improvement without claiming E's imagery improvement has landed.
+
+Both the final Apollo stop and final daylight site isolation wait 90 seconds; their last twelve windows have 16.67 ms mean/p99/max and zero missed callbacks. See `Apollo/final-settled.json`, `Isolation/final-settled.json` and `Isolation/luminance.json`.
+
+Physical Vision Pro gates remain open: stereo relief and crossfade, tracked head/hand/gaze input, comfort, device CPU/GPU pacing, memory pressure, thermal behavior and space lifecycle. No physical device was used. C proceeds against the accepted A baseline; E remains independently reviewable on its branch.

@@ -70,7 +70,7 @@ bundled; removing it is a separate owner bundle decision.
 
 | Item | State | Gate |
 |---|---|---|
-| A Relief lighting and sun-dependent radiance | Withheld: performance gate | Lighting candidate retained under A/implementation.patch; matched journey peak and hitch regressions prevent landing |
+| A Relief lighting and sun-dependent radiance | Complete in Simulator under protocol 2 | 74 tests; three-run journey/soak pass; 11 exact Apollo PNGs; mission/daylight radiance within 1%; physical gates open |
 | B Free-standing disk and smaller portal | Withheld: memory gate | Corrected switch and 11 Apollo images pass; journey peak +1.203 MiB. Patch retained; next experiment is lazy portal realization |
 | C Height-field gesture anchor | Withheld: performance gate | 0.0184 ms pick and about 64 MiB lower retained footprint; matched lifetime peaks rise, patch retained |
 | D Coarse-first terrain, plan Step 4 | Withheld: performance gate | Coarse prefetch ready before handoff in diagnostic dive; matched journey peak +1.063 MiB and hitches 15→18. Full patch retained |

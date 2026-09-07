@@ -34,7 +34,7 @@ for repetition in 1 2 3; do
   python3 Tools/MeasureMoonExplorerRuns.py measure "$out/$role-$repetition" > "$out/$role-$repetition/summary.json"
  done
 done
-flags=()
+flags=(--spread "${LUNAR_NOISE_SPREAD:-range}")
 [[ ${LUNAR_CHANGES_TEXTURE:-0} != 1 ]] || flags+=(--changes-texture)
-python3 Tools/MeasureMoonExplorerRuns.py compare "$out" --spread "${LUNAR_NOISE_SPREAD:-range}" "${flags[@]}"
+python3 Tools/MeasureMoonExplorerRuns.py compare "$out" "${flags[@]}"
 printf 'complete\n' > "$out/current-run.txt"

@@ -303,8 +303,15 @@ final class LunarExplorerSession {
     /// single baked-in direction. The anchor is a named instant and the offset
     /// is the scrub around it, which keeps "return to the landing" one tap
     /// away no matter how far the terminator has been swept.
-    var sunAnchorDate = LunarExplorerSession.apollo11TouchdownUTC
-    var sunOffsetHours = 0.0
+    var sunAnchorDate = LunarExplorerSession.apollo11TouchdownUTC {
+        didSet { followsDaylightSelection = false }
+    }
+    var sunOffsetHours = 0.0 {
+        didSet { followsDaylightSelection = false }
+    }
+    /// Reapply the selected daylight preset at a newly selected place. Manual
+    /// date/offset edits and saved-view restoration leave the chosen instant fixed.
+    var followsDaylightSelection = false
     /// Tonal presentation. Changing this rebuilds resident tiles, because the
     /// exposure floor is baked into each tile's material.
     var presentationGrade: LMTerrainPresentationGrade = .calibrated
@@ -601,7 +608,7 @@ final class LunarExplorerSession {
     /// equal mean radiance prevents opacity itself from producing a flash.
     var globeHandoffLinearRadianceMultiplier: Double {
         if captureUnmatchedGlobeRadiance { return 1 }
-        let matched = 1 + (Self.globeSiteLinearRadianceMultiplier - 1)
+        let matched = 1 + (sunMatchedGlobeRadiance - 1)
             * globeHandoffRampProgress
         guard capturePresentation == nil else { return matched }
         let siteOpacity = automaticGlobeSiteBlend.siteOpacity
@@ -609,6 +616,43 @@ final class LunarExplorerSession {
             + Self.globeCrossfadeCompositingCompensation
                 * sin(.pi * siteOpacity)
         return matched * compositingCompensation
+    }
+
+    @ObservationIgnored private var radianceCache: (date: Date, coordinate: LMSelenographicCoordinate, value: Double)?
+
+    private var sunMatchedGlobeRadiance: Double {
+        // Before a source resolves there is no site radiance to match. Keep
+        // the reference calibration, rather than metering a browse coordinate.
+        guard let coordinate = currentCoordinate ?? destinationCoordinate else {
+            return Self.globeSiteLinearRadianceMultiplier
+        }
+        if let cached = radianceCache, cached.date == sunDate, cached.coordinate == coordinate { return cached.value }
+        let elevation = LMLunarEphemeris.sunAngles(at: sunDate, site: coordinate).elevationDegrees
+        let value = Self.globeRadianceMatch(elevationDegrees: elevation)
+        radianceCache = (sunDate, coordinate, value)
+        return value
+    }
+
+    static func globeRadianceMatch(elevationDegrees: Double) -> Double {
+        let reference = LMTerrainWorld.referenceSunElevationDegrees
+        func groundIlluminance(_ elevation: Double) -> Double {
+            Double(LMTerrainWorld.missionSunIlluminance(elevationDegrees: elevation))
+                * max(0, sin(elevation * .pi / 180))
+        }
+        let ratio = groundIlluminance(elevationDegrees) / groundIlluminance(reference)
+        // The exposure model holds sunlit flat ground constant. Remove Float
+        // roundoff on that plateau to preserve the exact mission calibration.
+        let exposure = abs(ratio - 1) < 1e-6 ? 1 : ratio
+        // Central 80% overlap captures at the mission instant and 25 degrees
+        // measure 0.134490 and 0.137054 site luminance. Flat-ground exposure
+        // alone misses this measured relief response. Interpolate only inside
+        // the calibrated band and retain its endpoints beyond it (calibration v1).
+        // The exposure reference is rounded to 0.001 degree. Retain the exact
+        // reference within that rounding cell, including the mission ephemeris.
+        let reliefElevation = abs(elevationDegrees - reference) < 0.001 ? reference : elevationDegrees
+        let reliefProgress = min(1, max(0, (reliefElevation - reference) / (25 - reference)))
+        let reliefResponse = 1 + (0.137054 / 0.134490 - 1) * reliefProgress
+        return globeSiteLinearRadianceMultiplier * exposure * reliefResponse
     }
 
     private var globeHandoffRampProgress: Double {
@@ -828,6 +872,14 @@ final class LunarExplorerSession {
             ), let tilt = Double(value), tilt.isFinite {
                 tiltOverride = tilt
             }
+        }
+
+        // Opt-in lighting isolation uses the same daylight selector. Ordinary
+        // inspection launches keep their pinned mission instant.
+        if isCapture, arguments.contains("--lunar-explorer-capture-daylight"),
+           let coordinate = captureElevationCoordinate ?? (try? LMTerrainManifest.load().landingOriginCoordinate) {
+            sunAnchorDate = Self.daylightDate(near: Self.apollo11TouchdownUTC, coordinate: coordinate)
+            sunOffsetHours = 0
         }
 
         // Apply numeric overrides after named presets so launch argument order

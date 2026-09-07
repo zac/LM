@@ -284,15 +284,47 @@ struct LunarExplorerExperienceTests {
         #expect(LMLunarNavigation.draggedCoordinate(from: origin, northDegrees: .nan, eastDegrees: 0) == origin)
     }
 
-    @Test func daylightChoosesAnEphemerisTimeNearLocalNoon() {
+    @Test func daylightChoosesMorningReliefLighting() {
         let s = LunarExplorerSession()
         s.configure(arguments: [])
         s.browseCoordinate = .init(latitudeDegrees: 0, longitudeDegrees: -179)
         let before = s.sunDate
         s.showDaylight()
         #expect(abs(s.sunDate.timeIntervalSince(before)) <= 15 * 86_400)
-        #expect(LMLunarEphemeris.sunAngles(at: s.sunDate, site: s.browseCoordinate).elevationDegrees > 85)
+        let sun = LMLunarEphemeris.sunAngles(at: s.sunDate, site: s.browseCoordinate)
+        #expect(abs(sun.elevationDegrees - 25) < 0.001)
+        #expect(sun.azimuthDegreesClockwiseFromNorth < 180)
         #expect(s.sunOffsetHours == 0)
+    }
+
+    @Test func placeSelectionRetargetsDaylightButPreservesManualSunlight() throws {
+        let session = LunarExplorerSession()
+        session.configure(arguments: [])
+        let place = try #require(session.catalogPlaces.first { $0.id == "apollo-11" })
+        session.previewPlace(place)
+        let sun = LMLunarEphemeris.sunAngles(at: session.sunDate, site: place.coordinate)
+        #expect(abs(sun.elevationDegrees - 25) < 0.001)
+        #expect(sun.azimuthDegreesClockwiseFromNorth < 180)
+        session.sunOffsetHours = 12
+        let manualDate = session.sunDate
+        session.previewPlace(place)
+        #expect(session.sunDate == manualDate)
+    }
+
+    @Test func daylightHandlesPolarSitesAndPreservesMissionCalibration() throws {
+        let coordinate = LMSelenographicCoordinate(latitudeDegrees: 90, longitudeDegrees: 0)
+        let reference = LunarExplorerSession.apollo11TouchdownUTC
+        let date = LunarExplorerSession.daylightDate(near: reference, coordinate: coordinate)
+        #expect(abs(date.timeIntervalSince(reference)) <= 15 * 86_400)
+        #expect(LMLunarEphemeris.sunAngles(at: date, site: coordinate).elevationDegrees.isFinite)
+        let manifest = try LMTerrainManifest.load()
+        let mission = LMLunarEphemeris.sunAngles(at: reference, site: manifest.landingOriginCoordinate)
+        #expect(LunarExplorerSession.globeRadianceMatch(elevationDegrees: mission.elevationDegrees) == 5.70)
+        #expect(abs(LunarExplorerSession.globeRadianceMatch(elevationDegrees: 25) - 5.80867) < 0.0001)
+        #expect(LunarExplorerSession.globeRadianceMatch(elevationDegrees: 1) < 5.70)
+        let inspection = LunarExplorerSession()
+        inspection.configure(arguments: ["--lunar-explorer-capture"])
+        #expect(inspection.sunDate == reference)
     }
 
     @Test func productZoomRequestsFinerTerrainWhileInspectorZoomDoesNot() {

@@ -97,6 +97,7 @@ extension LunarExplorerSession {
         returnToGlobe()
         browseCoordinate = place.coordinate
         selectedPlaceID = place.id
+        if followsDaylightSelection { showDaylight() }
     }
 
     func exploreSelectedPlace(altitude: Double = Preset.regional.altitudeMeters, heading: Double = 0) {
@@ -107,14 +108,41 @@ extension LunarExplorerSession {
     }
 
     func showDaylight() {
-        let reference = sunDate
-        let coordinate = displayedCoordinate
-        let candidates = (-60...60).map { reference.addingTimeInterval(Double($0) * 6 * 3_600) }
-        sunAnchorDate = candidates.max {
-            LMLunarEphemeris.sunAngles(at: $0, site: coordinate).elevationDegrees
-                < LMLunarEphemeris.sunAngles(at: $1, site: coordinate).elevationDegrees
-        } ?? reference
+        sunAnchorDate = Self.daylightDate(near: sunDate, coordinate: displayedCoordinate)
         sunOffsetHours = 0
+        followsDaylightSelection = true
+    }
+
+    /// Search the existing 30-day window for 25-degree relief lighting.
+    /// Prefer a morning crossing, then the nearest instant. Polar sites that
+    /// never reach the target use the closest sampled elevation in the window.
+    static func daylightDate(near reference: Date, coordinate: LMSelenographicCoordinate) -> Date {
+        func elevation(_ date: Date) -> Double {
+            LMLunarEphemeris.sunAngles(at: date, site: coordinate).elevationDegrees
+        }
+        let dates = (-60...60).map { reference.addingTimeInterval(Double($0) * 21_600) }
+        let samples = dates.map { (date: $0, elevation: elevation($0)) }
+        var crossings = [(date: Date, morning: Bool)]()
+        for (a, b) in zip(samples, samples.dropFirst()) {
+            guard (a.elevation - 25) * (b.elevation - 25) <= 0 else { continue }
+            var low = a.date, high = b.date
+            let rising = b.elevation > a.elevation
+            for _ in 0..<20 {
+                let middle = low.addingTimeInterval(high.timeIntervalSince(low) / 2)
+                if (elevation(middle) < 25) == rising { low = middle } else { high = middle }
+            }
+            let date = low.addingTimeInterval(high.timeIntervalSince(low) / 2)
+            let azimuth = LMLunarEphemeris.sunAngles(at: date, site: coordinate).azimuthDegreesClockwiseFromNorth
+            crossings.append((date, azimuth >= 0 && azimuth < 180))
+        }
+        if let choice = crossings.min(by: {
+            if $0.morning != $1.morning { return $0.morning }
+            return abs($0.date.timeIntervalSince(reference)) < abs($1.date.timeIntervalSince(reference))
+        }) { return choice.date }
+        return samples.min {
+            let a = abs($0.elevation - 25), b = abs($1.elevation - 25)
+            return a == b ? abs($0.date.timeIntervalSince(reference)) < abs($1.date.timeIntervalSince(reference)) : a < b
+        }?.date ?? reference
     }
 
     func rotateGlobe(from start: LMSelenographicCoordinate, horizontal: Double, vertical: Double) {
