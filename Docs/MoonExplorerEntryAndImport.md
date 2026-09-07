@@ -176,3 +176,38 @@ Installation then failed with `IXRemoteErrorDomain` code 6, connection
 interrupted. A contemporaneous device query reported `passcodeRequired: true`.
 Signing is resolved; unlock the headset before retrying installation. This
 retry still does not establish that the current build runs on the device.
+
+The owner's subsequent Xcode-run device session exposed a much longer global
+terrain load. The live Xcode console was captured to
+`/tmp/LM-Device-Entry-2026-09-06/xcode-live-console.txt`, with extracted values
+in `live-console-summary.json`. Device process discovery identified LM PID
+1945; Xcode displayed "Running LM on Apple Vision Pro". A freshly built Debug
+device artifact was present, but the running image's UUID/configuration was
+not independently recovered. Treat this as a development-session observation,
+not a matched Release measurement.
+
+The console reports a 16-tile global generation of 112,198 ms, with initial
+per-tile CPU mesh generation between 6,138 and 7,925 ms and detail generation
+between 190 and 201 ms. These mesh metrics time `timedProgressiveTileMesh`,
+not RealityKit import. A following 12-tile generation reports 6,761 ms with
+12 ownership remasks. One hundred re-anchor generation messages follow the
+initial load; they do not establish a cause for that initial wait and need a
+stationary reproduction before being classified as a fault.
+
+The same console reports a realized globe texture of 11,520 by 5,760 pixels,
+format 71, 14 mip levels. Simulator realized 5,760 by 2,880 pixels. The pending
+smaller texture candidate's Simulator byte equality therefore cannot establish
+device visual equivalence at the device's larger realized resolution.
+
+Instruments could not resolve the app by name or PID. A bounded device-wide
+attempt disconnected and reported overlapping dylib mappings. These failed
+trace attempts are not CPU-stack or frame-time evidence. The next comparison
+must install the signature-verified Release product and repeat the same global
+destination with explicit phase logging before deciding how much of the wait
+comes from Debug overhead, CPU sampling, framework import, or publication.
+The Release install command was interrupted after more than five minutes
+without completion. A device query during that attempt reported an unlocked
+headset and the same installed bundle URL as before replacement. No successful
+Release replacement or launch is claimed; `surface-release-install.log` and
+`replacement-state.json` retain the attempt's evidence. The app's assets and
+terrain code were not changed during this investigation.
