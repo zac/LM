@@ -18,6 +18,10 @@ logger=$!
 trap 'kill "$logger" 2>/dev/null || true; wait "$logger" 2>/dev/null || true; rm -f "$stage_file" "$ack_file"' EXIT
 args=(--lunar-explorer --lunar-explorer-profile --lunar-explorer-profile-label=experience-journey --lunar-explorer-profile-journey "--lunar-explorer-profile-capture-token=$token")
 stages=(globe selected immersive returned restored)
+if [[ ${LUNAR_HIGHLAND_DIVE:-0} == 1 ]]; then
+    args+=(--lunar-explorer-profile-highland-dive)
+    stages=(highland-disk highland-arrival highland-overlap highland-regional highland-settled)
+fi
 if [[ ${LUNAR_ONE_ZOOM:-0} == 1 ]]; then
     args+=(--lunar-explorer-profile-one-zoom)
     stages=(disk clipped crossfade handoff terrain immersion return)
@@ -73,6 +77,6 @@ for ((attempt=0; attempt<90; attempt++)); do
 done
 awk -v pid="$pid" '$6 == pid && /Moon experience stage=passed/ {found=1} END {exit !found}' "$out/performance.log"
 container=$(xcrun simctl get_app_container "$udid" io.positron.LM data)
-if [[ ${LUNAR_ONE_ZOOM:-0} != 1 ]]; then
+if [[ ${LUNAR_ONE_ZOOM:-0} != 1 && ${LUNAR_HIGHLAND_DIVE:-0} != 1 ]]; then
     cp "$container/Documents/MoonExplorerJourney.json" "$out/camera-and-sunlight.json"
 fi

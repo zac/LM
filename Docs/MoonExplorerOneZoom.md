@@ -1182,3 +1182,50 @@ columns, the control-maximum callback boundary and independent peak/hitch
 allowances. C is accepted in Simulator. No terrain data, residual, contact
 geometry, source-order or AGC change is included. All physical-device gates
 remain open.
+
+## E wrap-up acceptance by owner decision, 2026-09-07
+
+C landed as `f9e7b143ff0c3aff24cc80627a31fa675814d025`. E was rebased onto
+that baseline as `d742c35`; no runtime conflict required a behavior change.
+The rebased suite passes 82 tests, including the former 79-test selection's
+coverage plus the landed lighting and replacement height-field tests.
+Release executable SHA-256:
+`d08b291820d537f3dd9b3ee850a0155cf5a3e2ef4fa721eb527af57338707a04`.
+Evidence: `/tmp/LM-Explorer-OneZoom-2026-09-07/Wrapup/E/`.
+
+The single rebase-confirmation journey passes all seven stages. This is not
+a new three-run performance decision. Its observations are:
+
+| Footprint MiB | Lifetime peak MiB | Max mean ms | Max p99 ms | Largest ms / outside texture | Hitches >25 ms | Texture interval ms |
+|---:|---:|---:|---:|---:|---:|---:|
+| 117.3–323.1 | 619.456 | 19.43 | 117.48 | 544.090 / 152.100 | 17 | 307.783 |
+
+Inspected `journey/crossfade.png`, `handoff.png` and `terrain.png`. The overlap
+shows distinct rims, craterlets and ridges where the old monolithic map was
+blurred. The terrain stops preserve lit/shadowed crater sides and small pits;
+the mare remains low contrast. The unchanged wide portal is still present,
+with its room placement to be addressed by B's separate attempt.
+
+The completed E triplicates were not repeated. The owner accepted the peak
+reduction despite the reported regressions: soak max-window mean and p99,
+warm/cold highland maximum footprint, and the cold dive's raw largest callback.
+Warm highland p99 also exceeded its previous control range. These columns are
+reported, not gated by the corrected rule. The soak outside-texture callback
+also exceeds the corrected control-maximum gate by 1.630 ms, as recorded in
+the protocol reassessment above; E lands by explicit owner acceptance, not a
+claim that every named gate passed. All peak and hitch gates pass in the
+existing complete tables. No failing-item iteration was performed.
+
+Tracked follow-ups, not implemented: sample verified slabs directly in
+`LMLunarImageryTileStore.pixels(for:)` instead of concatenating full-width
+source slabs; defer fine-imagery imports around Apollo mesh/material
+publication. The 76 MB 64 ppd JPEG XL remains bundled for the deterministic
+capture path alongside the 15.4 MiB companion. Its removal remains an owner
+bundle decision.
+
+All eleven rebased Apollo PNGs are byte-identical to the pinned baseline.
+Eleven resource hashes and five protected-body comparisons pass, allowing
+only A's radiance substitution. The final 90-second capture wait ends with
+twelve 16.67 ms mean/p99/max windows and zero missed callbacks. E is accepted
+and landed by owner decision. Physical stereo, tracked gestures, pacing,
+memory pressure, thermals, comfort and lifecycle remain unvalidated.

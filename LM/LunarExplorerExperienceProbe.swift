@@ -41,6 +41,12 @@ import OSLog
                 }
                 try await minimumHold
             }
+            if arguments.contains("--lunar-explorer-profile-highland-dive") {
+                try await runHighlandDive(session, scene: scene, stage: stage)
+                logger.info("Moon experience stage=passed highlandDive=true")
+                if let stageURL { try Data("passed".utf8).write(to: stageURL, options: .atomic) }
+                return
+            }
             if arguments.contains("--lunar-explorer-profile-one-zoom") {
                 guard let place = session.catalogPlaces.first(where: { $0.id == "apollo-11" }) else {
                     throw CocoaError(.fileReadUnknown)
@@ -163,6 +169,65 @@ import OSLog
         } catch {
             logger.error("Moon experience stage=failed error=\(error.localizedDescription, privacy: .public)")
         }
+    }
+
+    /// The same driver is compiled into the frozen control and candidate.
+    /// No pause at 600 km: the prefetch margin is earned during the dive.
+    private static func runHighlandDive(_ session: LunarExplorerSession, scene: LunarExplorerScene,
+        stage: @MainActor (String) async throws -> Void) async throws {
+        let logger = Logger(subsystem: "io.positron.LM", category: "MoonExperience")
+        session.returnToGlobe()
+        session.selectedPlaceID = nil
+        session.automaticallyRotatesGlobe = false
+        session.browseCoordinate = .init(latitudeDegrees: -42, longitudeDegrees: 120)
+        session.sunAnchorDate = LunarExplorerSession.apollo11TouchdownUTC
+        session.sunOffsetHours = 0
+        session.showDaylight()
+        try await stage("highland-disk")
+        session.logarithmicMetersAcross = log10(1_000_000)
+        let start = ContinuousClock.now
+        var crossed600 = false, crossed240 = false
+        for step in 0...180 {
+            let width = exp(log(1_000_000.0) + Double(step) / 180 * log(0.21))
+            session.logarithmicMetersAcross = log10(width)
+            try await Task.sleep(for: .milliseconds(33))
+            let state = scene.regionalProbeState
+            if !crossed600 && session.metersAcross < 600_000 {
+                crossed600 = true
+                logger.info("Highland dive threshold=600000 actual=\(session.metersAcross)m tiles=\(state.tiles)")
+                LMLunarTerrainTiming.memory("highland-600km")
+            }
+            if !crossed240 && session.metersAcross < 240_000 {
+                crossed240 = true
+                logger.info("Highland dive threshold=240000 actual=\(session.metersAcross)m tiles=\(state.tiles) spacing=\(state.spacing ?? 0)m globe=\(state.globe) site=\(state.site)")
+                LMLunarTerrainTiming.memory("highland-240km")
+            }
+            if state.tiles == 0 && (state.globe != 1 || state.site != 0) {
+                throw CocoaError(.validationMissingMandatoryProperty)
+            }
+        }
+        logger.info("Highland dive elapsed=\(String(describing: start.duration(to: .now)))")
+        try await stage("highland-arrival")
+        for _ in 0..<1_200 where scene.regionalProbeState.tiles == 0 {
+            try await Task.sleep(for: .milliseconds(100))
+        }
+        guard scene.regionalProbeState.tiles > 0 else { throw CocoaError(.fileReadUnknown) }
+        try await stage("highland-overlap")
+        let regionalStart = ContinuousClock.now
+        session.logarithmicMetersAcross = log10(24_000)
+        for _ in 0..<1_200 {
+            let state = scene.regionalProbeState
+            if state.spacing == 8 && !state.morphing && session.diagnostics.loadMessage == "Lunar terrain ready" { break }
+            try await Task.sleep(for: .milliseconds(100))
+        }
+        let final = scene.regionalProbeState
+        guard final.spacing == 8 && !final.morphing else { throw CocoaError(.fileReadUnknown) }
+        logger.info("Highland regional ready tiles=\(final.tiles) elapsed=\(String(describing: regionalStart.duration(to: .now)))")
+        LMLunarTerrainTiming.memory("highland-regional")
+        try await stage("highland-regional")
+        // Final image has a 90-second settled observation in every run.
+        try await Task.sleep(for: .seconds(90))
+        try await stage("highland-settled")
     }
 
     /// Repeat the owner's default-location device check using production actions.

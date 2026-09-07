@@ -27,6 +27,10 @@
     ]
   },
   "globe" : {
+    "imageryPyramid" : {
+      "file": "LunarImageryPyramid.json",
+      "sha256": "142a5dc06d20f405283460ace716c651f6856abe26c10112216f14910ccb6667"
+    },
     "coordinateSystemName" : "IAU_ME",
     "detail" : "Whole-Moon map-scale presentation in the Mean Earth/Polar-axis frame. The WAC base remains unlit; a detrended LOLA normal field perturbs only the ephemeris terminator multiplier.",
     "generatorSHA256" : "1dcd7091ec5dcb370ece0196f02510d33aab48510a44f4ca7571a2b898567711",

@@ -19,6 +19,7 @@ enum LMLunarGlobeResource {
         let entity: ModelEntity
         let textureTier: LMTerrainManifest.Globe.TextureTier
         let usedFallback: Bool
+        var imagery: LMLunarGlobeImagery? = nil
     }
 
     /// A low-frequency black overlay whose opacity is `1 - illumination`.
@@ -77,12 +78,36 @@ enum LMLunarGlobeResource {
             radiusMeters: manifest.globe.radiusMeters,
             frontCoordinate: frontCoordinate ?? manifest.landingOriginCoordinate
         )
+        let pyramid: LMLunarImageryPyramid?
+        if LMLunarGlobeImagery.isEnabled(arguments: arguments), let reference = manifest.globe.imageryPyramid {
+            let preparation = Task.detached(priority: .userInitiated) {
+                let url = try resourceURL(bundle: bundle, file: reference.file)
+                let data = try Data(contentsOf: url)
+                guard LMLunarImageryPyramid.digest(data) == reference.sha256 else { throw CocoaError(.fileReadCorruptFile) }
+                let pyramid = try JSONDecoder().decode(LMLunarImageryPyramid.self, from: data)
+                try pyramid.validate()
+                let base = try Data(contentsOf: resourceURL(bundle: bundle, file: pyramid.base.file), options: .mappedIfSafe)
+                guard base.count == pyramid.base.bytes, LMLunarImageryPyramid.digest(base) == pyramid.base.sha256 else {
+                    throw CocoaError(.fileReadCorruptFile)
+                }
+                return pyramid
+            }
+            pyramid = try? await withTaskCancellationHandler(operation: { try await preparation.value },
+                onCancel: { preparation.cancel() })
+            try Task.checkCancellation()
+        } else { pyramid = nil }
+        // A damaged/missing tiled base falls back to the original deterministic
+        // PNG, never to the monolithic decoder whose peak this path removes.
+        let effectiveTiers = LMLunarGlobeImagery.isEnabled(arguments: arguments) && pyramid == nil
+            ? Array(tiers.sorted { $0.mapResolutionPixelsPerDegree < $1.mapResolutionPixelsPerDegree }.prefix(1))
+            : tiers
         var lastTextureError: Error?
-        for tier in tiers {
+        for tier in effectiveTiers {
             guard manifest.sources.contains(where: { $0.id == tier.sourceID }) else {
                 throw ResourceError.missingSource(tier.sourceID)
             }
-            let file = textureFile(bundledFile: tier.file, arguments: arguments)
+            let file = tier.id == tiers[0].id ? pyramid?.base.file ?? textureFile(bundledFile: tier.file, arguments: arguments)
+                : textureFile(bundledFile: tier.file, arguments: arguments)
             do {
                 let textureURL = try resourceURL(bundle: bundle, file: file)
                 let textureInterval = LMLunarTerrainTiming.begin("globe-texture")
@@ -114,7 +139,9 @@ enum LMLunarGlobeResource {
                 return GlobeResource(
                     entity: entity,
                     textureTier: tier,
-                    usedFallback: tier.id != tiers[0].id
+                    usedFallback: tier.id != tiers[0].id,
+                    imagery: pyramid.map { LMLunarGlobeImagery(entity: entity, pyramid: $0,
+                        radius: manifest.globe.radiusMeters, front: frontCoordinate ?? manifest.landingOriginCoordinate) }
                 )
             } catch {
                 lastTextureError = error

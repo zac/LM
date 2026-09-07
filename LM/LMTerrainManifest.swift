@@ -69,6 +69,11 @@ struct LMTerrainManifest: Equatable, Decodable {
     }
 
     struct Globe: Equatable, Decodable {
+        struct ImageryPyramid: Equatable, Decodable {
+            let file: String
+            let sha256: String
+        }
+        let imageryPyramid: ImageryPyramid?
         struct TextureTier: Equatable, Decodable {
             let id: String
             let file: String

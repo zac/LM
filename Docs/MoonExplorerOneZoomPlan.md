@@ -23,7 +23,7 @@ zoom-out stops at the handoff width, and leaving immersion restores the window.
 | 3 Scene stepping off the observation graph | Complete in Simulator | 63 focused tests; 11 byte-identical Apollo images; seven-stage portal journey; five restore cycles exact. Over-60s sample shows no SwiftUI update loop. Physical lifecycle/pacing gates remain open. |
 | 4 Coarse-first terrain and prefetch | Pending protocol-2 revalidation | `onezoom/D` preserved; concurrency 1/2/4 experiment outstanding; §4 contracts unchanged |
 | 5 Sliding region | Waiting for Steps 4 and 6 | F was not started; §4 |
-| 6 Tiled globe imagery | Withheld under protocol 2 | Journey passes; three-run soak mean/p99 and highland footprint/callback gates fail. 79 tests and 11 exact Apollo images pass; source on `onezoom/E` |
+| 6 Tiled globe imagery | Landed by owner decision | 82 rebased tests, one journey, 11 exact Apollo PNGs and settled/contracts pass; completed triplicates retained with accepted regressions |
 
 ### Owner review follow-up, 2026-09-07
 
@@ -78,8 +78,18 @@ bundled; removing it is a separate owner bundle decision.
 | B Free-standing disk and smaller portal | Pending calibration fix and protocol-2 revalidation | `onezoom/B` at `8693749`; historical single-run result is not a protocol-2 failure |
 | C Height-field gesture anchor | Landed in Simulator | 75 tests; retained three-run journey and fresh three-run soak pass; 0.003875 ms pick within 0.0005 m bound; 11 exact Apollo PNGs, settled and contract checks pass |
 | D Coarse-first terrain, plan Step 4 | Pending concurrency experiment and protocol-2 revalidation | `onezoom/D` at `06fb4ab`; historical coarse prefetch ready before handoff; no fresh acceptance result |
-| E Tiled globe imagery, plan Step 6 | Withheld under protocol 2 | Three-run journey passes; soak and highland fail. Complete evidence appended; `onezoom/E` preserves source |
+| E Tiled globe imagery, plan Step 6 | Landed by owner decision | Peak reduction accepted with reported regressions and 1.630 ms soak callback excess; fresh rebase gates pass |
 | F Sliding region, plan Step 5 | Waiting for D and E | 100 km pan, final contact equals rendered |
+
+### Tracked imagery follow-ups
+
+| Item | State | Next change |
+|---|---|---|
+| E1 Avoid duplicate source-slab buffer | Not started | Sample verified slabs directly in `LMLunarImageryTileStore.pixels(for:)` instead of concatenating full-width source slabs |
+| E2 Reduce publication overlap | Not started | Defer fine-imagery imports around Apollo mesh/material publication |
+
+The 76 MB 64 ppd JPEG XL remains bundled for the deterministic capture path.
+Its removal remains an owner decision.
 
 ### Stop checkpoint, 2026-09-07 20:53 PDT
 

@@ -44,6 +44,7 @@ final class LunarExplorerScene {
     private var ownershipPreparationIDs: Set<LMTerrainTileID>?
     private var preparedOwnershipMesh: MeshResource?
     private var globeEntity: ModelEntity?
+    private var globeImagery: LMLunarGlobeImagery?
     private var appliedGlobeLinearRadianceMultiplier: Double?
     private var globeTerminator: LMLunarGlobeResource.TerminatorResource?
     private var globeTerminatorDate: Date?
@@ -107,7 +108,16 @@ final class LunarExplorerScene {
         }
     }
 
+    private func configureGlobeImagery(_ imagery: LMLunarGlobeImagery?) {
+        globeImagery = imagery
+        imagery?.realizationAllowed = { [weak self] in
+            guard let self else { return false }
+            return self.loadTask == nil
+        }
+    }
+
     func stopStepping() {
+        globeImagery?.suspend()
         updateSubscription?.cancel(); updateSubscription = nil
         updateContinuation?.finish(); updateContinuation = nil
         updateTask?.cancel(); updateTask = nil
@@ -283,6 +293,7 @@ final class LunarExplorerScene {
                     if session.pendingArrival { session.flightCoordinate = nil }
                     self.globePresentationRoot.addChild(globe.entity)
                     self.globeEntity = globe.entity
+                    self.configureGlobeImagery(globe.imagery)
                     self.appliedGlobeLinearRadianceMultiplier = nil
                     self.pendingDiagnostics.globeTierState = "bundled "
                         + "\(globe.textureTier.mapResolutionPixelsPerDegree) ppd"
@@ -432,6 +443,7 @@ final class LunarExplorerScene {
                     self.globeFrontCoordinate = coordinate
                     self.globePresentationRoot.addChild(globe.entity)
                     self.globeEntity = globe.entity
+                    self.configureGlobeImagery(globe.imagery)
                     self.appliedGlobeLinearRadianceMultiplier = nil
                     let terminatorDate = session.sunDate
                     let terminatorInterval = LMLunarTerrainTiming.begin("global-terminator")
@@ -856,6 +868,15 @@ final class LunarExplorerScene {
 
     /// Deterministic integration probe of the same anchored gesture handler.
     /// Hardware recognition and head movement remain separate device gates.
+    /// Read-only state for the opt-in matched highland dive.
+    var regionalProbeState: (tiles: Int, spacing: Double?, morphing: Bool, globe: Float, site: Float) {
+        (globalTerrain?.snapshot.tiles.count ?? 0,
+         globalTerrain?.snapshot.tiles.map(\.plan.sampleSpacingMeters).min(),
+         globalTerrain?.isMorphing ?? false,
+         globePresentationRoot.isEnabled ? globePresentationRoot.components[OpacityComponent.self]?.opacity ?? 1 : 0,
+         presentationRoot.isEnabled ? presentationRoot.components[OpacityComponent.self]?.opacity ?? 1 : 0)
+    }
+
     func probeAnchoredPinch(_ session: LunarExplorerSession) async throws {
         updatePresentationTransform(session)
         guard let transform = pinchSourceTransform(session) else { throw CocoaError(.validationMissingMandatoryProperty) }
@@ -1058,6 +1079,9 @@ final class LunarExplorerScene {
 
         let globeFocus = (session.isBrowsingGlobe ? session.browseCoordinate : nil) ?? session.flightCoordinate
             ?? (isLoaded ? (session.camera.reference?.fixedGlobeCoordinate ?? session.currentCoordinate) : nil)
+        if let coordinate = globeFocus ?? globeFrontCoordinate {
+            globeImagery?.update(width: session.metersAcross, coordinate: coordinate, offline: session.regionOffline)
+        }
         if let flight = globeFocus, let front = globeFrontCoordinate {
             let rotation = front == flight ? simd_quatf() : LMLunarNavigation.displayRotation(from: front, to: flight)
             globeEntity?.orientation = rotation
@@ -1163,6 +1187,7 @@ final class LunarExplorerScene {
         material.color.tint = UIColor(cgColor: tint)
         model.materials[0] = material
         globeEntity.components.set(model)
+        globeImagery?.setRadiance(multiplier)
         appliedGlobeLinearRadianceMultiplier = multiplier
     }
 
