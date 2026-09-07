@@ -487,6 +487,7 @@ final class LunarExplorerScene {
         let navigationPhase = session.navigationPhase
         if appliedNavigationRevision != session.navigationRevision {
             appliedNavigationRevision = session.navigationRevision
+            if resumeResidentGlobalTerrain(session) { return }
             loadTask?.cancel(); loadTask = nil
             globalTerrain?.cancel(); globalTerrain = nil
             generationTasks.values.forEach { $0.cancel() }
@@ -618,6 +619,34 @@ final class LunarExplorerScene {
             altitudeMeters: session.altitudeMeters
         )
         updateDiagnostics(session)
+    }
+
+    private func resumeResidentGlobalTerrain(_ session: LunarExplorerSession) -> Bool {
+        guard session.isExplorerExperience, !session.isBrowsingGlobe,
+              session.pendingArrival, !session.landingRunning, landingEntity == nil,
+              loadTask == nil, let terrain = globalTerrain,
+              let destination = session.destinationCoordinate,
+              terrain.region.unavailableSourceIDs.isEmpty,
+              destination.latitudeDegrees == terrain.region.frame.anchor.latitudeDegrees,
+              destination.longitudeDegrees == terrain.region.frame.anchor.longitudeDegrees,
+              activeGrade == session.presentationGrade, activeDetailMode == session.detailMode else { return false }
+        let plans = LMLunarTerrainPresentation.plans(
+            sourceSpacing: terrain.region.terrain.base.spacingMeters,
+            east: session.focusEastOffsetMeters, north: session.focusNorthOffsetMeters,
+            altitude: LunarExplorerSession.Preset.regional.altitudeMeters,
+            metersAcross: LunarExplorerSession.Preset.regional.metersAcross,
+            heading: session.headingDegrees)
+        guard terrain.resumeIfReady(plans: plans) else { return false }
+        session.diagnostics.loadMessage = "Lunar terrain ready"
+        session.diagnostics.requestedTileCount = plans.count
+        session.diagnostics.activeTileCount = plans.count
+        session.diagnostics.finestSpacingMeters = plans.map(\.sampleSpacingMeters).min()
+        session.diagnostics.latestGenerationMilliseconds = 0
+        session.navigationMessage = ""
+        session.flightCoordinate = nil
+        session.beginArrival()
+        apply(session)
+        return true
     }
 
     private func updateGlobeTerminator(_ session: LunarExplorerSession) {

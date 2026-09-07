@@ -5,6 +5,11 @@ import OSLog
 /// the buttons; it does not certify physical gesture or UI hit-target comfort.
 @MainActor enum LunarExplorerExperienceProbe {
     static func run(_ session: LunarExplorerSession) async {
+        if ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile"),
+           ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile-reentry") {
+            await runReentry(session)
+            return
+        }
         let logger = Logger(subsystem: "io.positron.LM", category: "MoonExperience")
         let originalLibrary = session.library
         defer { session.library = originalLibrary }
@@ -106,6 +111,44 @@ import OSLog
             if let stageURL { try Data("passed".utf8).write(to: stageURL, options: .atomic) }
         } catch {
             logger.error("Moon experience stage=failed error=\(error.localizedDescription, privacy: .public)")
+        }
+    }
+
+    /// Repeat the owner's default-location device check using production actions.
+    /// Both profile flags are required; ordinary launches never navigate themselves.
+    private static func runReentry(_ session: LunarExplorerSession) async {
+        let logger = Logger(subsystem: "io.positron.LM", category: "MoonExperience")
+        do {
+            for _ in 0..<240 where session.diagnostics.globeTierState == "pending" {
+                try await Task.sleep(for: .milliseconds(500))
+            }
+            session.selectedPlaceID = nil
+            session.browseCoordinate = .init(latitudeDegrees: 0, longitudeDegrees: 0)
+            try await Task.sleep(for: .seconds(5))
+            session.exploreSelectedPlace()
+            try await waitForArrival(session)
+            let first = session.diagnostics.latestGenerationMilliseconds ?? -1
+            let source = session.diagnostics.sourceDescription
+            let floor = session.diagnostics.measuredFloorMeters
+            let count = session.diagnostics.activeTileCount
+            LMLunarTerrainTiming.memory("reentry-first")
+            session.returnToGlobeGently()
+            for _ in 0..<200 where session.navigationInProgress {
+                try await Task.sleep(for: .milliseconds(20))
+            }
+            guard session.isBrowsingGlobe, !session.navigationInProgress else { throw CocoaError(.fileReadUnknown) }
+            try await Task.sleep(for: .seconds(5))
+            session.exploreSelectedPlace()
+            try await waitForArrival(session)
+            guard session.diagnostics.latestGenerationMilliseconds == 0,
+                  session.diagnostics.activeTileCount == count,
+                  session.diagnostics.sourceDescription == source,
+                  session.diagnostics.measuredFloorMeters == floor else { throw CocoaError(.validationMissingMandatoryProperty) }
+            LMLunarTerrainTiming.memory("reentry-second")
+            logger.info("Moon reentry passed first=\(first)ms second=0ms tiles=\(count) sourceExact=true")
+            session.returnToGlobeGently()
+        } catch {
+            logger.error("Moon reentry failed error=\(error.localizedDescription, privacy: .public)")
         }
     }
 

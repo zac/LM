@@ -104,6 +104,34 @@ struct LMLunarCockpitStreamingTests {
         presentation.cancel()
     }
 
+    @Test @MainActor func residentReentryRetainsEntitiesAndRejectsDifferentLOD() async throws {
+        let region = try LMLunarContactTests().region(at: .init(latitudeDegrees: -42, longitudeDegrees: 120))
+        let presentation = LMLunarTerrainPresentation(region: region, mode: .procedural)
+        let plans = [plan(0)]
+        #expect(!presentation.resumeIfReady(plans: plans))
+        var ready = false
+        presentation.update(plans: plans, east: 0, north: 0) { _, _, _, _, ms in
+            if ms != nil { ready = true }
+        }
+        let deadline = ContinuousClock.now.advanced(by: .seconds(30))
+        while !ready && ContinuousClock.now < deadline { try await Task.sleep(for: .milliseconds(10)) }
+        #expect(ready)
+        let entities = presentation.root.children.map(\.id)
+        let positions = try #require(presentation.snapshot.tiles.first).mesh.positions
+        #expect(!presentation.resumeIfReady(plans: [plan(0, spacing: 1)]))
+        #expect(!presentation.resumeIfReady(plans: []))
+        for _ in 0..<3 {
+            #expect(presentation.resumeIfReady(plans: plans))
+            #expect(presentation.root.children.map(\.id) == entities)
+            #expect(presentation.snapshot.tiles.first?.mesh.positions == positions)
+            #expect(presentation.cacheStatistics.hits == 1)
+            var callback = false
+            presentation.update(plans: plans, east: 0, north: 0) { _, _, _, _, _ in callback = true }
+            #expect(!callback)
+        }
+        presentation.cancel()
+    }
+
     @Test func dependencySupportIncludesEdgeNormalsButExcludesDistantTiles() {
         let center = plan(0)
         let edge = plan(16), distant = plan(256, size: 64, spacing: 8, level: 2)

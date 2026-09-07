@@ -361,6 +361,21 @@ final class LMLunarTerrainPresentation {
         return plans
     }
 
+    /// Re-enter the already resident, fully published surface without cloning
+    /// meshes or running a no-op morph. No second region or resource cache exists.
+    func resumeIfReady(plans: [LMTerrainTilePlan]) -> Bool {
+        guard !plans.isEmpty, !isMorphing, registeringEntities.isEmpty,
+              snapshot.tiles.count == plans.count, cache.count == plans.count,
+              plans.allSatisfy({ cache[$0.id]?.plan == $0 }),
+              snapshot.tiles.allSatisfy({ plans.contains($0.plan) }) else { return false }
+        cancel()
+        requested = plans
+        cacheStatistics = CacheStatistics()
+        cacheStatistics.hits = plans.count
+        logger.info("Global terrain reused tiles=\(plans.count) generation=0ms")
+        return true
+    }
+
     func cancel() {
         generation = UUID()
         task?.cancel()

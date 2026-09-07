@@ -66,8 +66,11 @@ puts default-location terrain construction at 7.6 seconds, including 6.9 seconds
 of CPU mesh preparation but only 32–34 ms of summed mesh imports. Source
 resolution falls from 24 seconds on first entry to 62 ms on repeat. The device
 realizes an 11,520 × 5,760 globe texture and reaches a 2,234 MiB lifetime
-footprint peak. Optimize CPU preparation and source-entry behavior next;
-the pending texture candidate still needs device-resolution visual validation.
+footprint peak. `MoonExplorerSourceLoadingAndReuse.md` records the follow-up:
+bounded concurrent source loads, exact-sample reuse reducing the physical
+Release construction to 6.064 seconds, and unchanged Globe returns reusing
+all 16 published tiles without rebuilding. Cold-source timing and the pending
+texture candidate still need device validation.
 Surface display-link cadence includes 22.22 ms windows, so the 90 Hz physical
 performance gate remains open.
 
