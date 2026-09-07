@@ -14,13 +14,47 @@ struct LunarExplorerMapTests {
         } onChange: {
             invalidated.withLock { $0 = true }
         }
-        session.publishDiagnostics(session.diagnostics)
+        let scene = LunarExplorerScene()
+        scene.pendingDiagnostics = session.diagnostics
+        scene.publishPendingDiagnostics(to: session)
         #expect(!invalidated.withLock { $0 })
         var changed = session.diagnostics
         changed.activeTileCount = 1
-        session.publishDiagnostics(changed)
+        scene.pendingDiagnostics = changed
+        scene.publishPendingDiagnostics(to: session)
         #expect(invalidated.withLock { $0 })
         #expect(session.diagnostics.activeTileCount == 1)
+    }
+
+    @Test func sceneSnapshotExcludesUIAndDiagnosticOutputs() {
+        let session = LunarExplorerSession()
+        session.configure(arguments: [])
+        let original = session.sceneSnapshot
+        let invalidated = Mutex(false)
+        withObservationTracking { _ = session.sceneSnapshot } onChange: {
+            invalidated.withLock { $0 = true }
+        }
+        session.diagnostics.activeTileCount = 4
+        session.diagnosticsVisible.toggle()
+        #expect(session.sceneSnapshot == original)
+        #expect(!invalidated.withLock { $0 })
+        session.headingDegrees += 30
+        #expect(session.sceneSnapshot != original)
+        #expect(invalidated.withLock { $0 })
+    }
+
+    @Test func changedDiagnosticsPublishOnlyOnce() {
+        let session = LunarExplorerSession()
+        let scene = LunarExplorerScene()
+        scene.pendingDiagnostics.activeTileCount = 2
+        scene.publishPendingDiagnostics(to: session)
+        let invalidated = Mutex(false)
+        withObservationTracking { _ = session.diagnostics } onChange: {
+            invalidated.withLock { $0 = true }
+        }
+        for _ in 0..<120 { scene.publishPendingDiagnostics(to: session) }
+        #expect(!invalidated.withLock { $0 })
+        #expect(session.diagnostics.activeTileCount == 2)
     }
 
     @Test func selectedDestinationSurvivesRotationAndModeSwitch() throws {

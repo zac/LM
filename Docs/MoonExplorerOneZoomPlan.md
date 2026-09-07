@@ -20,7 +20,7 @@ zoom-out stops at the handoff width, and leaving immersion restores the window.
 |---|---|---|
 | 1 Window container and immersion gate | Complete in Simulator | 54 focused tests; 11 byte-identical Apollo captures; seven-stage portal journey including partial opacity. Physical gates remain open. |
 | 2 One camera model and gesture set | Camera/gestures validated; site pack open | 61 focused tests; final Apollo ladder 11/11 byte-identical. Anchored pinch 0.343 ms with 69.7 MiB index; heading sweep generates zero tiles. Faceting and physical gesture acceptance remain open. Apollo migration stays a separate gated commit. |
-| 3 Scene stepping off the observation graph | Not started | §4 |
+| 3 Scene stepping off the observation graph | Complete in Simulator | 63 focused tests; 11 byte-identical Apollo images; seven-stage portal journey; five restore cycles exact. Over-60s sample shows no SwiftUI update loop. Physical lifecycle/pacing gates remain open. |
 | 4 Coarse-first terrain and prefetch | Not started | §4 |
 | 5 Sliding region | Not started | §4 |
 | 6 Tiled globe imagery | Not started | §4; revives the original W2 design |

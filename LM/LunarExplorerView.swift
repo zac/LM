@@ -24,12 +24,12 @@ struct LunarExplorerView: View {
             if let marker = attachments.entity(for: "selected-place") {
                 scene.installPlaceMarker(marker, scale: Float(markerScale))
             }
+            scene.startStepping(session: explorer, content: content)
             scene.loadIfNeeded(session: explorer)
         } update: { _, attachments in
             if let marker = attachments.entity(for: "selected-place") {
                 scene.installPlaceMarker(marker, scale: Float(markerScale))
             }
-            scene.apply(explorer)
         } attachments: {
             if explorer.isExplorerExperience {
                 Attachment(id: "selected-place") {
@@ -74,6 +74,7 @@ struct LunarExplorerView: View {
         .onDisappear {
             LunarExplorerPerformanceProbe.shared.stop()
             scene.stopGestureTracking()
+            scene.stopStepping()
             zoomStartAltitude = nil; headingStart = nil; pinchRay = nil
             globeDragStart = nil; panStart = nil
             explorer.endHeadingGesture()
@@ -332,13 +333,6 @@ struct LunarExplorerInspector: View {
             }
             .pickerStyle(.menu)
 
-            Picker("Navigation", selection: $session.navigationMode) {
-                ForEach(LunarExplorerSession.NavigationMode.allCases) { mode in
-                    Text(mode.title).tag(mode)
-                }
-            }
-            .pickerStyle(.segmented)
-
             Picker("Appearance", selection: $session.detailMode) {
                 ForEach(LMTerrainDetailMode.allCases) { mode in
                     Text(mode.title).tag(mode)
@@ -577,12 +571,7 @@ struct LunarExplorerInspector: View {
     }
 
     private var navigationHelp: String {
-        switch session.navigationMode {
-        case .orbit:
-            "Drag to orbit. Pinch to zoom without changing LOD."
-        case .pan:
-            "Drag to pan across the site. Pinch to zoom without changing LOD."
-        }
+        "Drag to move. Pinch to zoom. Rotate with two hands to change heading."
     }
 }
 

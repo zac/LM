@@ -2,6 +2,7 @@ import ARKit
 import LMCore
 import OSLog
 import RealityKit
+import SwiftUI
 import UIKit
 import simd
 
@@ -79,6 +80,64 @@ final class LunarExplorerScene {
     private var globeFrontCoordinate: LMSelenographicCoordinate?
     private var isLoaded = false
     private var loadTask: Task<Void, Never>?
+
+    private var updateSubscription: EventSubscription?
+    private var updateTask: Task<Void, Never>?
+    private var updateContinuation: AsyncStream<Void>.Continuation?
+    private var appliedSnapshot: LunarExplorerSession.SceneSnapshot?
+    private var sceneDirty = true
+    var pendingDiagnostics = LunarExplorerSession.Diagnostics()
+
+    func startStepping(session: LunarExplorerSession, content: RealityViewContent) {
+        stopStepping()
+        // A load can finish while detached. Keep its unpublished outputs
+        // when this same session's view returns.
+        if self.session !== session { pendingDiagnostics = session.diagnostics }
+        self.session = session
+        let (updates, continuation) = AsyncStream<Void>.makeStream(bufferingPolicy: .bufferingNewest(1))
+        updateContinuation = continuation
+        updateSubscription = content.subscribe(to: SceneEvents.Update.self) { _ in
+            continuation.yield(())
+        }
+        updateTask = Task { @MainActor [weak self, weak session] in
+            for await _ in updates {
+                guard !Task.isCancelled, let self, let session else { break }
+                self.step(session)
+            }
+        }
+    }
+
+    func stopStepping() {
+        updateSubscription?.cancel(); updateSubscription = nil
+        updateContinuation?.finish(); updateContinuation = nil
+        updateTask?.cancel(); updateTask = nil
+        appliedSnapshot = nil
+        sceneDirty = true
+    }
+
+    private func requestSceneUpdate() { sceneDirty = true }
+
+    private func step(_ session: LunarExplorerSession) {
+        let input = session.sceneSnapshot
+        // Skip redundant planner/entity work, independently of SwiftUI observation.
+        // Apply is synchronous on this actor: its derived camera reads cannot
+        // interleave with input changes. Async completions request another step.
+        if sceneDirty || input != appliedSnapshot || globalTerrain?.isMorphing == true
+            || pendingDiagnostics != session.diagnostics {
+            sceneDirty = false
+            apply(input, to: session)
+            appliedSnapshot = session.sceneSnapshot
+        }
+        publishPendingDiagnostics(to: session)
+    }
+
+    func publishPendingDiagnostics(to session: LunarExplorerSession) {
+        // This is the sole scene-to-UI publication boundary, once per changed
+        // value. Diagnostics are outputs, excluded from the scene snapshot.
+        if pendingDiagnostics != session.diagnostics {
+            session.publishDiagnostics(pendingDiagnostics)
+        }
+    }
 
     init() {
         root.name = "Lunar Explorer"
@@ -186,7 +245,7 @@ final class LunarExplorerScene {
     func loadIfNeeded(session: LunarExplorerSession) {
         self.session = session
         guard !isLoaded, loadTask == nil else {
-            apply(session)
+            requestSceneUpdate()
             return
         }
         if let coordinate = session.captureElevationCoordinate {
@@ -225,7 +284,7 @@ final class LunarExplorerScene {
                     self.globePresentationRoot.addChild(globe.entity)
                     self.globeEntity = globe.entity
                     self.appliedGlobeLinearRadianceMultiplier = nil
-                    session.diagnostics.globeTierState = "bundled "
+                    self.pendingDiagnostics.globeTierState = "bundled "
                         + "\(globe.textureTier.mapResolutionPixelsPerDegree) ppd"
                         + (globe.usedFallback ? " fallback" : "")
                     let terminatorDate = session.sunDate
@@ -238,10 +297,10 @@ final class LunarExplorerScene {
                     self.globeTerminator = terminator
                     self.globeTerminatorDate = terminatorDate
                     } else {
-                        session.diagnostics.globeTierState = "resident global atlas"
+                        self.pendingDiagnostics.globeTierState = "resident global atlas"
                     }
-                    session.diagnostics.loadMessage = "Global WAC Moon ready"
-                    self.apply(session)
+                    self.pendingDiagnostics.loadMessage = "Global WAC Moon ready"
+                    self.requestSceneUpdate()
                 } catch is CancellationError { return }
                 catch {
                     self.logger.error(
@@ -300,9 +359,9 @@ final class LunarExplorerScene {
                     self.floatingOrigin?.reanchor(at: offset)
                     Task { @MainActor [weak self, weak session] in
                         try? await Task.sleep(for: .seconds(100))
-                        guard let self, let session else { return }
+                        guard let self, session != nil else { return }
                         self.reanchorProbePending = false
-                        self.apply(session)
+                        self.requestSceneUpdate()
                     }
                 }
 
@@ -325,19 +384,19 @@ final class LunarExplorerScene {
                 self.isLoaded = true
                 self.loadTask = nil
                 session.navigationMessage = ""
-                session.diagnostics.measuredFloorMeters = assembly.manifest
+                self.pendingDiagnostics.measuredFloorMeters = assembly.manifest
                     .measuredFloorMeters(at: assembly.manifest.landingOriginCoordinate)
-                session.diagnostics.loadMessage = "Apollo 11 terrain ready"
+                self.pendingDiagnostics.loadMessage = "Apollo 11 terrain ready"
                 session.beginArrival()
-                session.diagnostics.sourceDescription = self.sourceDescription(
+                self.pendingDiagnostics.sourceDescription = self.sourceDescription(
                     altitudeMeters: session.altitudeMeters
                 )
-                self.apply(session)
+                self.requestSceneUpdate()
             } catch is CancellationError { return }
             catch {
                 self.loadTask = nil
                 session.navigationPhase = .idle
-                session.diagnostics.loadMessage = "Terrain failed: \(error.localizedDescription)"
+                self.pendingDiagnostics.loadMessage = "Terrain failed: \(error.localizedDescription)"
                 self.logger.error(
                     "Lunar Explorer load failed: \(error.localizedDescription, privacy: .public)"
                 )
@@ -372,11 +431,11 @@ final class LunarExplorerScene {
                     self.globePresentationRoot.addChild(terminator.entity)
                     self.globeTerminator = terminator
                     self.globeTerminatorDate = terminatorDate
-                    session.diagnostics.globeTierState = "bundled \(globe.textureTier.mapResolutionPixelsPerDegree) ppd"
+                    self.pendingDiagnostics.globeTierState = "bundled \(globe.textureTier.mapResolutionPixelsPerDegree) ppd"
                 } else {
-                    session.diagnostics.globeTierState = "resident global atlas"
+                    self.pendingDiagnostics.globeTierState = "resident global atlas"
                 }
-                self.updatePresentationTransform(session)
+                self.requestSceneUpdate()
                 let directory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
                     .appendingPathComponent("LunarElevation-v1", isDirectory: true)
                 let store = try LMLunarElevationStore(directory: directory)
@@ -395,9 +454,8 @@ final class LunarExplorerScene {
                 self.terrainAnchorRoot.addChild(world)
                 self.terrainEnvironment = world
                 self.globalTerrain = terrain
-                terrain.presentationChanged = { [weak self, weak session] in
-                    guard let self, let session else { return }
-                    self.updatePresentationTransform(session)
+                terrain.presentationChanged = { [weak self] in
+                    self?.requestSceneUpdate()
                 }
                 self.sourceFrame = region.frame
                 self.floatingOrigin = .init(frame: region.frame)
@@ -414,17 +472,17 @@ final class LunarExplorerScene {
                 self.isLoaded = true
                 self.loadTask = nil
                 session.navigationMessage = ""
-                session.diagnostics.measuredFloorMeters = region.measuredFloorMeters
-                session.diagnostics.sourceDescription = region.sourceIDs.joined(separator: ", ")
+                self.pendingDiagnostics.measuredFloorMeters = region.measuredFloorMeters
+                self.pendingDiagnostics.sourceDescription = region.sourceIDs.joined(separator: ", ")
                     + (region.albedo.lunarField?.slabs.isEmpty == true ? "; uniform modeled reflectance" : "; normalized WAC reflectance")
                     + (region.unavailableSourceIDs.isEmpty ? "" : "; \(region.unavailableSourceIDs.count) sources unavailable")
                 self.logger.info("Global sources ready floor=\(region.measuredFloorMeters)m missing=\(region.unavailableSourceIDs.count)")
-                self.apply(session)
+                self.requestSceneUpdate()
             } catch is CancellationError { return }
             catch {
                 self.loadTask = nil
                 session.navigationPhase = .idle
-                session.diagnostics.loadMessage = "Global terrain failed: \(error.localizedDescription)"
+                self.pendingDiagnostics.loadMessage = "Global terrain failed: \(error.localizedDescription)"
             }
         }
     }
@@ -491,25 +549,23 @@ final class LunarExplorerScene {
                 self.isLoaded = true
                 self.loadTask = nil
                 session.navigationMessage = ""
-                session.diagnostics.measuredFloorMeters = assembly.sourceSpacingMeters
-                session.diagnostics.loadMessage = "Measured elevation ready"
+                self.pendingDiagnostics.measuredFloorMeters = assembly.sourceSpacingMeters
+                self.pendingDiagnostics.loadMessage = "Measured elevation ready"
                 self.logger.info("Elevation preview source=\(assembly.sourceID, privacy: .public) floor=\(assembly.sourceSpacingMeters)m load=\(assembly.loadMilliseconds)ms fallback=\(assembly.fallbackReason ?? "none", privacy: .public)")
-                self.apply(session)
+                self.requestSceneUpdate()
             } catch is CancellationError { return }
             catch {
                 self.loadTask = nil
-                session.diagnostics.loadMessage = "Elevation failed: " + error.localizedDescription
+                self.pendingDiagnostics.loadMessage = "Elevation failed: " + error.localizedDescription
                 self.logger.error("Elevation preview failed: \(String(describing: error), privacy: .public)")
             }
         }
     }
 
-    func apply(_ session: LunarExplorerSession) {
+    private func apply(_ input: LunarExplorerSession.SceneSnapshot, to session: LunarExplorerSession) {
         self.session = session
-        // Read action state even while destination loading takes the early path.
-        // RealityView tracks only reads made synchronously in its update closure.
-        let landingRequest = session.landingRequest
-        let navigationPhase = session.navigationPhase
+        let landingRequest = input.landingRequest
+        let navigationPhase = input.navigationPhase
         if appliedNavigationRevision != session.navigationRevision {
             appliedNavigationRevision = session.navigationRevision
             if resumeResidentGlobalTerrain(session) { return }
@@ -527,7 +583,7 @@ final class LunarExplorerScene {
             terrainRockField = nil; measuredNearFieldEntity = nil; measuredNearFieldGrid = nil
             measuredNearFieldMask = []; terrainSun = nil; terrainEarthshine = nil
             terrainEnvironment = nil; isLoaded = false; activeDetailMode = nil
-            session.diagnostics = .init()
+            self.pendingDiagnostics = .init()
             loadIfNeeded(session: session)
             updatePresentationTransform(session)
             return
@@ -577,8 +633,8 @@ final class LunarExplorerScene {
         if let globalTerrain {
             if session.landingRunning { return }
             if landingRequest != appliedLandingRequest,
-               session.diagnostics.loadMessage == "Lunar terrain ready",
-               session.diagnostics.finestSpacingMeters == 0.125 {
+               self.pendingDiagnostics.loadMessage == "Lunar terrain ready",
+               self.pendingDiagnostics.finestSpacingMeters == 0.125 {
                 appliedLandingRequest = session.landingRequest
                 beginLanding(session: session, terrain: globalTerrain, focus: focus)
                 return
@@ -588,18 +644,18 @@ final class LunarExplorerScene {
                                  metersAcross: session.pendingArrival ? LunarExplorerSession.Preset.regional.metersAcross : session.metersAcross,
                                  heading: session.terrainPlanningHeadingDegrees) { [weak self, weak session] message, requested, active, spacing, milliseconds in
                 guard let self, let session else { return }
-                session.diagnostics.loadMessage = message
+                self.pendingDiagnostics.loadMessage = message
                 if message.hasPrefix("Lunar terrain failed") {
                     session.navigationPhase = .idle
                     session.pendingArrival = false
                     session.flightCoordinate = nil
                     session.navigationMessage = "Destination terrain failed. Reload to retry."
                 }
-                session.diagnostics.requestedTileCount = requested
-                session.diagnostics.activeTileCount = active
-                session.diagnostics.finestSpacingMeters = spacing
-                session.diagnostics.latestGenerationMilliseconds = milliseconds
-                self.updatePresentationTransform(session)
+                self.pendingDiagnostics.requestedTileCount = requested
+                self.pendingDiagnostics.activeTileCount = active
+                self.pendingDiagnostics.finestSpacingMeters = spacing
+                self.pendingDiagnostics.latestGenerationMilliseconds = milliseconds
+                self.requestSceneUpdate()
                 if milliseconds != nil {
                     if ProcessInfo.processInfo.arguments.contains("--lunar-explorer-ownership-probe") {
                         let snapshot = globalTerrain.snapshot
@@ -622,14 +678,14 @@ final class LunarExplorerScene {
                     if session.pendingArrival { session.flightCoordinate = nil }
                     session.beginArrival()
                 }
-                if session.landingRequest != self.appliedLandingRequest, milliseconds != nil { self.apply(session) }
+                if session.landingRequest != self.appliedLandingRequest, milliseconds != nil { self.requestSceneUpdate() }
                 if active > 0, milliseconds != nil, self.reanchorProbePending, !self.globalReanchorProbeStarted {
                     self.globalReanchorProbeStarted = true
                     Task { @MainActor [weak self, weak session] in
                         try? await Task.sleep(for: .seconds(100))
-                        guard let self, let session else { return }
+                        guard let self, session != nil else { return }
                         self.reanchorProbePending = false
-                        self.apply(session)
+                        self.requestSceneUpdate()
                     }
                 }
             }
@@ -662,15 +718,15 @@ final class LunarExplorerScene {
             metersAcross: LunarExplorerSession.Preset.regional.metersAcross,
             heading: session.terrainPlanningHeadingDegrees)
         guard terrain.resumeIfReady(plans: plans) else { return false }
-        session.diagnostics.loadMessage = "Lunar terrain ready"
-        session.diagnostics.requestedTileCount = plans.count
-        session.diagnostics.activeTileCount = plans.count
-        session.diagnostics.finestSpacingMeters = plans.map(\.sampleSpacingMeters).min()
-        session.diagnostics.latestGenerationMilliseconds = 0
+        self.pendingDiagnostics.loadMessage = "Lunar terrain ready"
+        self.pendingDiagnostics.requestedTileCount = plans.count
+        self.pendingDiagnostics.activeTileCount = plans.count
+        self.pendingDiagnostics.finestSpacingMeters = plans.map(\.sampleSpacingMeters).min()
+        self.pendingDiagnostics.latestGenerationMilliseconds = 0
         session.navigationMessage = ""
         session.flightCoordinate = nil
         session.beginArrival()
-        apply(session)
+        requestSceneUpdate()
         return true
     }
 
@@ -1380,8 +1436,8 @@ final class LunarExplorerScene {
                         elapsed.components.seconds * 1_000
                             + elapsed.components.attoseconds / 1_000_000_000_000_000
                     )
-                    self.session?.diagnostics.latestGenerationMilliseconds = milliseconds
-                    self.session?.diagnostics.latestGenerationMetrics = build.metrics
+                    self.pendingDiagnostics.latestGenerationMilliseconds = milliseconds
+                    self.pendingDiagnostics.latestGenerationMetrics = build.metrics
                     self.logger.info(
                         "Terrain tile ready L\(plan.id.level, privacy: .public) E\(plan.id.eastIndex, privacy: .public) N\(plan.id.northIndex, privacy: .public) spacing=\(plan.sampleSpacingMeters, privacy: .public)m generation=\(milliseconds, privacy: .public)ms"
                     )
@@ -1396,7 +1452,7 @@ final class LunarExplorerScene {
                     self.logger.error(
                         "Terrain tile failed L\(plan.id.level, privacy: .public) E\(plan.id.eastIndex, privacy: .public) N\(plan.id.northIndex, privacy: .public) spacing=\(plan.sampleSpacingMeters, privacy: .public)m: \(error.localizedDescription, privacy: .public)"
                     )
-                    self.session?.diagnostics.loadMessage =
+                    self.pendingDiagnostics.loadMessage =
                         "Tile L\(plan.id.level) failed: \(error.localizedDescription)"
                 }
             }
@@ -1642,18 +1698,9 @@ final class LunarExplorerScene {
             illuminatedFraction: illuminatedFraction,
             grade: grade
         )
-        // RealityView observes diagnostics while deciding whether an arrival
-        // is ready. Publishing identical values here can retrigger its update
-        // closure indefinitely when returning to an already resident site.
-        if session.diagnostics.sunAzimuthDegrees != sun.azimuthDegreesClockwiseFromNorth {
-            session.diagnostics.sunAzimuthDegrees = sun.azimuthDegreesClockwiseFromNorth
-        }
-        if session.diagnostics.sunElevationDegrees != sun.elevationDegrees {
-            session.diagnostics.sunElevationDegrees = sun.elevationDegrees
-        }
-        if session.diagnostics.earthIlluminatedFraction != illuminatedFraction {
-            session.diagnostics.earthIlluminatedFraction = illuminatedFraction
-        }
+        pendingDiagnostics.sunAzimuthDegrees = sun.azimuthDegreesClockwiseFromNorth
+        pendingDiagnostics.sunElevationDegrees = sun.elevationDegrees
+        pendingDiagnostics.earthIlluminatedFraction = illuminatedFraction
     }
 
     private func updateRockDetail(altitudeMeters: Double) {
@@ -1732,8 +1779,8 @@ final class LunarExplorerScene {
         }
         progressiveEntities.removeAll(keepingCapacity: false)
         refreshMeasuredNearFieldOwnership()
-        session.diagnostics.latestGenerationMilliseconds = nil
-        session.diagnostics.latestGenerationMetrics = nil
+        self.pendingDiagnostics.latestGenerationMilliseconds = nil
+        self.pendingDiagnostics.latestGenerationMetrics = nil
         let detailPipeline = pipeline(for: mode)
         Task {
             await detailPipeline.prepare()
@@ -1742,7 +1789,7 @@ final class LunarExplorerScene {
 
     private func updateDiagnostics(_ session: LunarExplorerSession) {
         preparePinchIndices(session)
-        var diagnostics = session.diagnostics
+        var diagnostics = self.pendingDiagnostics
         diagnostics.requestedTileCount = requestedPlans.count
         diagnostics.activeTileCount = progressiveEntities.count
         diagnostics.finestSpacingMeters = requestedPlans.values
@@ -1751,7 +1798,7 @@ final class LunarExplorerScene {
         diagnostics.sourceDescription = sourceDescription(
             altitudeMeters: session.altitudeMeters
         )
-        session.publishDiagnostics(diagnostics)
+        pendingDiagnostics = diagnostics
     }
 
     private func sourceDescription(altitudeMeters: Double) -> String {

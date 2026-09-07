@@ -312,10 +312,9 @@ final class LunarExplorerSession {
     var diagnosticsVisible = true
     var diagnostics = Diagnostics()
 
-    /// Scene updates must not invalidate their own observed diagnostic input
-    /// when the resident terrain has not changed.
+    /// Called at the scene's frame publication boundary. Diagnostics are
+    /// outputs and do not participate in the scene input snapshot.
     func publishDiagnostics(_ value: Diagnostics) {
-        guard diagnostics != value else { return }
         diagnostics = value
     }
     var destinationCoordinate: LMSelenographicCoordinate?
@@ -343,6 +342,8 @@ final class LunarExplorerSession {
     func fly(to coordinate: LMSelenographicCoordinate, remember: Bool = true,
              altitude: Double = Preset.regional.altitudeMeters, heading targetHeading: Double = 0) {
         guard !landingRunning else { return }
+        // Explicit inspection calibration retains the scripted flight used by
+        // --lunar-explorer-fly-to captures; normal navigation uses the portal.
         if isExplorerExperience {
             navigateWithFade(to: coordinate, remember: remember, altitude: altitude, heading: targetHeading)
             return
@@ -400,6 +401,8 @@ final class LunarExplorerSession {
         pendingArrival = false
         navigationPhase = .arriving
         navigationMessage = "Arriving"
+        // Inspection configuration preserves independent width/tilt endpoints
+        // for the pinned ladders. The product camera derives both from altitude.
         if isExplorerExperience {
             select(closestPreset(to: arrivalAltitude))
             altitudeMeters = arrivalAltitude

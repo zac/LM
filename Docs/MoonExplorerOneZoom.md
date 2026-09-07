@@ -251,3 +251,71 @@ loading/publication hitch; this change does not close entry pacing. See
 `comparison.json`, `settled.json`, `metrics.json` and `performance.log` in that
 folder. The camera/gesture portion is validated; Apollo site-pack migration,
 scene stepping, the soak and physical acceptance remain separate work.
+
+## Step 3 scene stepping
+
+The camera/gesture portion of Step 2 is committed as `4c8bd2a`.
+Scene stepping now subscribes to `SceneEvents.Update` through a one-element
+buffered stream consumed on the main actor. Each step reads immutable session
+inputs; the synchronous apply cannot interleave with another actor mutation.
+A snapshot comparison avoids redundant entity/planner work. Async completions
+request a step; morphing remains eligible every frame. The RealityView update
+closure only maintains the place-label attachment.
+
+Diagnostics accumulate in the unobserved scene and publish at one frame
+boundary when the value changes. The old `publishDiagnostics` equality guard
+and mission-sun per-field guards are removed. Reopening keeps unpublished
+results if a load completed while detached. The subscription and consumer
+are cancelled when the view disappears. Existing material/resource/ownership
+caches still guard real work, independently of SwiftUI observation.
+
+`Step3-Scene.xcresult` and `Step3-Final.xcresult` each pass **63 tests, zero
+failures/skips**. The added tests show that UI/diagnostic outputs leave the
+scene snapshot unchanged, camera inputs change it, and repeated frame
+publication emits a changed diagnostic value only once. The obsolete
+inspection Rotate/Move picker and its incorrect no-LOD-change help are gone.
+Explicit inspection flight/calibration branches still preserve the scripted
+`--lunar-explorer-fly-to` endpoint behavior and independent width/tilt probes;
+comments identify those compatibility reasons. This does not claim every
+`isExplorerExperience` branch has been retired.
+
+The ordinary Release executable is
+`cb181b0347b3a83de8c1ff4375cbecc83f76749fa7484d9d3fc252a670a263f1`.
+`Step3-Apollo` passes **11/11 byte-identical images**, 20 seconds, one attempt,
+pinned 64 ppd. Settled p95/p99/max are 16.67 ms with zero missed callbacks;
+footprint is 304.1–369.3 MiB (baseline 311.5–380.8 MiB). Across 33 windows,
+footprint is 304.1–370.1 MiB, lifetime peak 1,604.0 MiB, maximum mean 20.63 ms,
+p99 123.96 ms, and maximum callback interval 501.43 ms. Entry/publication
+hitches remain; a single run does not establish a general pacing improvement.
+
+`Step3-Restore-Soak` passes all five restore cycles, with exact saved camera
+and sunlight state and persistence reload. All five journey PNGs were
+inspected individually: `globe` shows the whole Moon and location pins;
+`selected` shows Apollo's flag and selected card; the legacy-named `immersive`
+stage shows terrain inside the portal; `returned` restores the Moon at the
+panned location; `restored` reproduces the saved terrain view and coordinates.
+This is a same-space navigation soak, not a physical close/reopen test.
+
+The automatic `passed-over-60s.sample.txt` was inspected. 3,086 of 3,406 main
+thread samples wait in `mach_msg2_trap` (90.6%); brief scene-step work appears,
+with no SwiftUI update-loop stack. The five surface checkpoints are
+410.925, 410.925, 410.878, 411.034 and 410.940 MiB. Returned checkpoints are
+412.268, 412.284, 412.300, 412.347 and 412.253 MiB. Peak remains 1,618.99 MiB
+through all cycles. Across all 95 frame windows, footprint varies
+116.0–685.4 MiB during loading/replacement, maximum mean is 19.71 ms, p99
+108.78 ms and maximum callback interval 434.82 ms. Stable checkpoints do not
+prove the absence of leaks beyond this bounded run.
+
+`Step3-Portal-Journey` passes all seven stages; every PNG was inspected.
+`disk` contains the whole Moon/flag; `clipped` fills the rounded frame;
+`crossfade` and `handoff` retain terrain without an open black gap; `terrain`
+is low contrast at near noon; `immersion` removes the frame and shows Leave
+immersion; `return` restores the room/frame and Immerse. Its 37 windows report
+95.3–365.1 MiB footprint, 1,595.3 MiB lifetime peak, maximum mean 18.38 ms,
+p99 109.58 ms and maximum callback interval 151.95 ms. No journey stage
+required another over-60-second sample.
+
+Step 3's Simulator gate is complete. Physical gesture comfort and accuracy,
+tracking loss/cancellation, actual space close/reopen, portal stencil cost,
+90 Hz pacing and memory pressure remain unvalidated on Vision Pro. The
+single-run Simulator numbers do not close those device gates.
