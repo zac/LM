@@ -79,26 +79,34 @@ def distribution(values):
     return dict(min=min(values), max=max(values), median=statistics.median(values))
 
 
-def compare(controls, candidates, changes_texture=False, spread='range'):
+def compare(controls, candidates, changes_texture=False, spread='upper'):
+    """Owner wrap-up correction: only peak, hitch count and non-texture max gate.
+
+    Legacy flags remain accepted so saved drivers still run. They do not change
+    the gate definitions; texture/raw maxima and window summaries are reported.
+    """
     assert len(controls) == len(candidates) == 3
     keys = ['footprint_min_mib', 'footprint_max_mib', 'lifetime_peak_mib',
             'max_window_mean_ms', 'max_window_p99_ms', 'hitches_over_25ms',
-            'largest_callback_ms' if changes_texture else 'largest_callback_excluding_texture_ms']
+            'largest_callback_ms', 'largest_callback_excluding_texture_ms']
     metrics = {}
     for key in keys:
         control = distribution([r[key] for r in controls])
         candidate = distribution([r[key] for r in candidates])
-        limit = control['median'] + control['max'] - control['min'] if spread == 'range' else control['max']
-        cap = None
+        limit = None
         if key == 'lifetime_peak_mib':
-            cap = control['median'] + max(25, control['median'] * .02)
-        if key == 'hitches_over_25ms':
-            cap = control['median'] + max(2, control['median'] * .15)
-        metrics[key] = dict(control=control, candidate=candidate, noise_limit=limit,
-                            hard_cap=cap, passed=candidate['median'] <= limit + 1e-9 and
-                            (cap is None or candidate['median'] <= cap + 1e-9))
-    return dict(protocol=2, spread=spread, changes_texture=changes_texture,
-                passed=all(m['passed'] for m in metrics.values()), metrics=metrics)
+            limit = control['median'] + max(25, control['median'] * .02)
+        elif key == 'hitches_over_25ms':
+            limit = control['median'] + max(2, control['median'] * .15)
+        elif key == 'largest_callback_excluding_texture_ms':
+            limit = control['max']
+        metrics[key] = dict(control=control, candidate=candidate,
+                            noise_limit=control['max'], hard_cap=limit,
+                            gated=limit is not None,
+                            passed=candidate['median'] <= limit + 1e-9 if limit is not None else None)
+    return dict(protocol='owner wrap-up named gates', spread='upper',
+                changes_texture=changes_texture,
+                passed=all(m['passed'] for m in metrics.values() if m['gated']), metrics=metrics)
 
 
 def main():
@@ -108,7 +116,7 @@ def main():
     group = sub.add_parser('compare')
     group.add_argument('folder', help='Contains Control-1..3 and Candidate-1..3')
     group.add_argument('--changes-texture', action='store_true')
-    group.add_argument('--spread', choices=['range', 'upper'], default='range')
+    group.add_argument('--spread', choices=['range', 'upper'], default='upper')
     args = parser.parse_args()
     if args.command == 'measure':
         result = measure(args.folder)

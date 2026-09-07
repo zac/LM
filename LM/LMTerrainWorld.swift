@@ -223,6 +223,7 @@ enum LMTerrainWorld {
         let nearAlbedoTexture: TextureResource
         let nearFieldEntity: ModelEntity
         let nearFieldGrid: LMTerrainMeshBuilder.VertexData
+        let gestureHeightFields: [LunarExplorerHeightFieldPicker]
     }
 
     enum WorldError: Error, Equatable {
@@ -236,7 +237,8 @@ enum LMTerrainWorld {
     static func load(
         bundle: Bundle = .main,
         detailPipeline: LMTerrainDetailPipeline = Apollo11TerrainResource
-            .detailPipeline
+            .detailPipeline,
+        prepareGesturePicking: Bool = false
     ) async throws -> Assembly {
         let loadInterval = LMLunarTerrainTiming.begin("apollo-base-load")
         LMLunarTerrainTiming.memory("apollo-base-before")
@@ -261,6 +263,16 @@ enum LMTerrainWorld {
             onCancel: { preparation.cancel() }
         )
         try Task.checkCancellation()
+        let gestureHeightFields: [LunarExplorerHeightFieldPicker]
+        if prepareGesturePicking {
+            gestureHeightFields = await Task.detached(priority: .userInitiated) {
+                bands.enumerated().map { index, band in
+                    LunarExplorerHeightFieldPicker(grid: band.grid, tile: band.tile,
+                        retainingResidentPositions: index == 0,
+                        holeHalfExtentMeters: index == 0 ? 0 : bands[index - 1].tile.extentMeters / 2)
+                }
+            }.value
+        } else { gestureHeightFields = [] }
         let nearGrid = bands[0].grid
         var nearAlbedoTexture: TextureResource?
         var nearFieldEntity: ModelEntity?
@@ -321,7 +333,8 @@ enum LMTerrainWorld {
             manifest: manifest,
             nearAlbedoTexture: nearAlbedoTexture,
             nearFieldEntity: nearFieldEntity,
-            nearFieldGrid: nearGrid
+            nearFieldGrid: nearGrid,
+            gestureHeightFields: gestureHeightFields
         )
     }
 

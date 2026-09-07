@@ -328,7 +328,8 @@ final class LunarExplorerScene {
                 )
                 try Task.checkCancellation()
                 let assembly = try await LMTerrainWorld.load(
-                    detailPipeline: detailPipeline
+                    detailPipeline: detailPipeline,
+                    prepareGesturePicking: session.usesAltitudeCamera
                 )
                 try Task.checkCancellation()
                 let alignment = try LMTerrainFrameAlignment(manifest: assembly.manifest)
@@ -381,6 +382,9 @@ final class LunarExplorerScene {
                 self.terrainEnvironment = assembly.worldRoot
                 self.measuredNearFieldEntity = assembly.nearFieldEntity
                 self.measuredNearFieldGrid = assembly.nearFieldGrid
+                self.gestureHeightFields = assembly.gestureHeightFields
+                LMLunarTerrainTiming.memory("pinch-height-fields-ready", resourceBytes:
+                    assembly.gestureHeightFields.reduce(0) { $0 + $1.additionalHeightBytes })
                 self.terrainSun = assembly.sun
                 self.terrainEarthshine = assembly.earthshine
                 self.terrainRockField = rocks
@@ -587,6 +591,7 @@ final class LunarExplorerScene {
             heightField = nil; albedoField = nil; sourceFrame = nil; floatingOrigin = nil
             cancelOwnershipPreparation()
             terrainRockField = nil; measuredNearFieldEntity = nil; measuredNearFieldGrid = nil
+            gestureHeightFields = []
             measuredNearFieldMask = []; terrainSun = nil; terrainEarthshine = nil
             terrainEnvironment = nil; isLoaded = false; activeDetailMode = nil
             self.pendingDiagnostics = .init()
@@ -784,73 +789,14 @@ final class LunarExplorerScene {
         #endif
     }
 
-    private struct PinchMeshIndex {
-        weak var entity: Entity?
-        let parts: [String: LunarExplorerTriangleIndex]
-    }
-    private var pinchIndices: [UInt64: PinchMeshIndex] = [:]
-    private var pinchIndexRevisions: [UInt64: Int] = [:]
-    private var pinchIndexQueue: [(Entity, MeshResource, Int)] = []
-    private var pendingPinchIndices: Set<UInt64> = []
-    private var pinchIndexTask: Task<Void, Never>?
-
-    private func invalidatePinchIndex(for entity: Entity) {
-        pinchIndices.removeValue(forKey: entity.id)
-        pinchIndexRevisions[entity.id, default: 0] += 1
-    }
-
-    private func preparePinchIndices(_ session: LunarExplorerSession) {
-        guard session.usesAltitudeCamera, globalTerrain == nil, let terrainEnvironment else { return }
-        pinchIndices = pinchIndices.filter { $0.value.entity != nil }
-        func visit(_ entity: Entity) {
-            if entity === terrainRockField { return } // Tiny rock meshes use the bounded direct query.
-            if let mesh = entity.components[ModelComponent.self]?.mesh {
-                let id = entity.id
-                if pinchIndices[id] == nil, pendingPinchIndices.insert(id).inserted {
-                    pinchIndexQueue.append((entity, mesh, pinchIndexRevisions[id, default: 0]))
-                }
-            }
-            for child in entity.children { visit(child) }
-        }
-        visit(terrainEnvironment)
-        guard pinchIndexTask == nil, !pinchIndexQueue.isEmpty else { return }
-        pinchIndexTask = Task { @MainActor [weak self] in
-            guard let self else { return }
-            defer { self.pinchIndexTask = nil }
-            while !self.pinchIndexQueue.isEmpty, !Task.isCancelled {
-                let (entity, mesh, revision) = self.pinchIndexQueue.removeFirst()
-                let id = entity.id
-                var parts: [String: LunarExplorerTriangleIndex] = [:]
-                let started = ContinuousClock.now
-                for model in mesh.contents.models {
-                    for part in model.parts {
-                        guard let indices = part.triangleIndices?.elements else { continue }
-                        let positions = part.positions.elements
-                        let index = await Task.detached(priority: .utility) {
-                            LunarExplorerTriangleIndex(positions: positions, indices: indices)
-                        }.value
-                        parts[model.id + "/" + part.id] = index
-                    }
-                }
-                self.pendingPinchIndices.remove(id)
-                if revision == self.pinchIndexRevisions[id, default: 0] {
-                    self.pinchIndices[id] = PinchMeshIndex(entity: entity, parts: parts)
-                }
-                if let session = self.session { self.preparePinchIndices(session) }
-                let bytes = self.pinchIndices.values.reduce(0) { total, mesh in
-                    total + mesh.parts.values.reduce(0) { $0 + $1.byteCount }
-                }
-                self.logger.info("Pinch index ready bytes=\(bytes) preparation=\(String(describing: started.duration(to: .now)))")
-            }
-        }
-    }
+    private var gestureHeightFields: [LunarExplorerHeightFieldPicker] = []
 
     private var pinchAnchor: PinchAnchor?
     private var pinchOnTerrain = false
     func endPinch() { pinchAnchor = nil }
 
     /// Pick at gesture start and representation handoff. Terrain hits use
-    /// submitted triangles; revisioned CPU buffers avoid conversion during a pick.
+    /// resident measured height posts; no mesh-buffer extraction occurs during a pick.
     func magnify(_ session: LunarExplorerSession, magnification: Double, initialAltitude: Double,
                  ray: LunarExplorerPinchGeometry.Ray) {
         typealias Geometry = LunarExplorerPinchGeometry
@@ -932,7 +878,12 @@ final class LunarExplorerScene {
             try await Task.sleep(for: .milliseconds(16))
         }
         logger.info("Pinch integration maximumRayError=\(maximumError, privacy: .public)m")
-        guard maximumError < 0.0001 else { throw CocoaError(.validationMissingMandatoryProperty) }
+        // 0.5 mm in scene space: above the 1 cm measured-post quantization
+        // projected at the probe's final scale, while still submillimetre.
+        // This bounds anchor retention, not the omitted procedural detail.
+        let bound: Float = 0.0005
+        logger.info("Pinch integration bound=\(bound, privacy: .public)m sourceQuantumScene=\(session.presentationScale * 0.01, privacy: .public)m")
+        guard maximumError < bound else { throw CocoaError(.validationMissingMandatoryProperty) }
     }
 
     private enum PinchAnchor {
@@ -960,60 +911,16 @@ final class LunarExplorerScene {
                 if let hit = globalTerrain.snapshot.raycast(origin: origin, direction: direction) {
                     return .terrain(hit.position)
                 }
-            } else if let terrainEnvironment {
-                var nearest = Float.infinity
-                var hit: SIMD3<Float>?
-                func visit(_ entity: Entity) {
-                    guard entity.isEnabled else { return }
-                    if let opacity = entity.components[OpacityComponent.self], opacity.opacity < 0.5 { return }
-                    if let model = entity.components[ModelComponent.self] {
-                        // Reject bounds before asking RealityKit to expose mesh
-                        // buffers, especially the many small surface rocks.
-                        let bounds = entity.visualBounds(recursive: false, relativeTo: root)
-                        if !Geometry.intersectsBounds(origin: ray.origin, direction: ray.direction,
-                                                      minimum: bounds.min, maximum: bounds.max) {
-                            for child in entity.children { visit(child) }
-                            return
-                        }
-                        let meshStarted = ContinuousClock.now
-                        let contents = model.mesh.contents
-                        let meshRead = ContinuousClock.now
-                        var triangleCount = 0
-                        for instance in contents.instances {
-                            guard let mesh = contents.models.first(where: { $0.id == instance.model }) else { continue }
-                            let matrix = entity.transformMatrix(relativeTo: root) * instance.transform
-                            let localOrigin = Geometry.point(ray.origin, transformedBy: matrix.inverse)
-                            let localDirection = simd_normalize(Geometry.direction(ray.direction, transformedBy: matrix.inverse))
-                            for part in mesh.parts {
-                                let search = pinchIndices[entity.id]?.parts[mesh.id + "/" + part.id]
-                                guard let indices = search?.indices ?? part.triangleIndices?.elements else { continue }
-                                let positions = search?.positions ?? part.positions.elements
-                                let ranges = search?.candidates(origin: localOrigin, direction: localDirection)
-                                    ?? [0..<indices.count]
-                                triangleCount += ranges.reduce(0) { $0 + $1.count / 3 }
-                                for range in ranges {
-                                for i in stride(from: range.lowerBound, to: range.upperBound, by: 3) {
-                                    guard let t = Geometry.triangleDistance(origin: localOrigin, direction: localDirection,
-                                        a: positions[Int(indices[i])], b: positions[Int(indices[i + 1])],
-                                        c: positions[Int(indices[i + 2])]) else { continue }
-                                    let point = Geometry.point(localOrigin + localDirection * t, transformedBy: matrix)
-                                    let distance = simd_distance(point, ray.origin)
-                                    if distance < nearest {
-                                        nearest = distance
-                                        hit = Geometry.point(point, transformedBy: inverse)
-                                    }
-                                }
-                                }
-                            }
-                        }
-                        if ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile-gestures") {
-                            logger.info("Pinch mesh name=\(entity.name, privacy: .public) triangles=\(triangleCount) read=\(String(describing: meshStarted.duration(to: meshRead))) scan=\(String(describing: meshRead.duration(to: .now)))")
-                        }
+            } else {
+                var nearest: SIMD3<Float>?
+                var nearestDistance = Float.infinity
+                for field in gestureHeightFields {
+                    if let hit = field.raycast(origin: origin, direction: direction) {
+                        let distance = simd_distance_squared(hit, origin)
+                        if distance < nearestDistance { nearest = hit; nearestDistance = distance }
                     }
-                    for child in entity.children { visit(child) }
                 }
-                visit(terrainEnvironment)
-                if let hit { return .terrain(hit) }
+                if let nearest { return .terrain(nearest) }
             }
         }
         guard globePresentationRoot.isEnabled, let globeEntity,
@@ -1557,11 +1464,9 @@ final class LunarExplorerScene {
            var model = entity.model {
             model.mesh = mesh
             entity.model = model
-            invalidatePinchIndex(for: entity)
             measuredNearFieldMask = nextMask
         }
         preparedOwnershipMesh = nil
-        if let session { preparePinchIndices(session) }
     }
 
     static func finerOwners(
@@ -1657,7 +1562,6 @@ final class LunarExplorerScene {
             guard var model = entity.model else { return }
             model.mesh = mesh
             entity.model = model
-            invalidatePinchIndex(for: entity)
             measuredNearFieldMask = ids
         } catch {
             logger.error("Measured terrain ownership reset failed: \(error.localizedDescription, privacy: .public)")
@@ -1792,7 +1696,6 @@ final class LunarExplorerScene {
     }
 
     private func updateDiagnostics(_ session: LunarExplorerSession) {
-        preparePinchIndices(session)
         var diagnostics = self.pendingDiagnostics
         diagnostics.requestedTileCount = requestedPlans.count
         diagnostics.activeTileCount = progressiveEntities.count

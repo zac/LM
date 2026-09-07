@@ -46,18 +46,22 @@ Merge one focused commit per item into `terrain-realism-and-explorer`.
    Terminate the preceding app and wait ten seconds between runs. Keep
    Release builds, tests and captures serial on Xcode 26.6 and visionOS 26.5
    Simulator `8F38C0E7-6366-4DAC-9372-DCF6F9151DCB`, with no booted test clones.
-3. A candidate metric passes if its median is better than, or within the
-   measured control spread of, the control median. Also cap lifetime peak
-   increase at `max(25 MiB, 2% of control median)` and hitch-count increase
-   at `max(2, 15% of control median)`. Exclude callbacks overlapping the
-   globe-texture interval when judging largest callback, except for an item
-   that changes texture loading. Keep the raw largest callback in the report.
+3. Gate only lifetime peak at candidate median ≤ control median +
+   `max(25 MiB, 2%)`, hitches over 25 ms at candidate median ≤ control median
+   + `max(2, 15%)`, and largest callback outside the globe-texture interval at
+   candidate median ≤ control maximum. Percentages use the control median.
+   The callback exclusion applies to E too; raw maxima remain reported.
+   "Within the spread" means candidate median ≤ control maximum.
+   Frame-window footprint min/max, max-window mean and max-window p99 are
+   reported, not gated. This owner correction supersedes the earlier
+   all-column rule and range arithmetic.
 4. The final 90-second settled check remains a hard single-run gate:
    16.67 ms mean/p99/max and zero missed callbacks. The eleven byte-identical
    Apollo PNGs remain a hard gate.
 5. Record all three-run tables and judge only after the complete alternating
-   set. If an item fails, retain its branch, record the smallest next
-   experiment and continue with the next independent item.
+   set. E lands by explicit owner acceptance after rebase tests, one journey
+   and the full Apollo ladder; do not repeat its completed triplicates.
+   Attempt B once, then land or park. D is parked for the next run.
 
 D must compare sibling concurrency 1, 2 and 4 with three warm highland dives
 each, keeping allocation-free source selection and the immutable parent table.
@@ -72,7 +76,7 @@ bundled; removing it is a separate owner bundle decision.
 |---|---|---|
 | A Relief lighting and sun-dependent radiance | Complete in Simulator under protocol 2 | 74 tests; three-run journey/soak pass; 11 exact Apollo PNGs; mission/daylight radiance within 1%; physical gates open |
 | B Free-standing disk and smaller portal | Pending calibration fix and protocol-2 revalidation | `onezoom/B` at `8693749`; historical single-run result is not a protocol-2 failure |
-| C Height-field gesture anchor | Validation stopped by owner; not landed | `onezoom/C` at `afef8c7`, based on A; 75 tests and three-run journey pass; soak incomplete (four runs complete, Control-3 interrupted); fresh pinch/Apollo/settle gates outstanding |
+| C Height-field gesture anchor | Landed in Simulator | 75 tests; retained three-run journey and fresh three-run soak pass; 0.003875 ms pick within 0.0005 m bound; 11 exact Apollo PNGs, settled and contract checks pass |
 | D Coarse-first terrain, plan Step 4 | Pending concurrency experiment and protocol-2 revalidation | `onezoom/D` at `06fb4ab`; historical coarse prefetch ready before handoff; no fresh acceptance result |
 | E Tiled globe imagery, plan Step 6 | Withheld under protocol 2 | Three-run journey passes; soak and highland fail. Complete evidence appended; `onezoom/E` preserves source |
 | F Sliding region, plan Step 5 | Waiting for D and E | 100 km pan, final contact equals rendered |

@@ -26,7 +26,7 @@ class MeasurementTests(unittest.TestCase):
 
     def test_noise_range_does_not_override_hitch_cap(self):
         result = compare([run(15), run(19), run(18)], [run(22), run(22), run(22)])
-        self.assertEqual(result['metrics']['hitches_over_25ms']['noise_limit'], 22)
+        self.assertEqual(result['metrics']['hitches_over_25ms']['noise_limit'], 19)
         self.assertFalse(result['metrics']['hitches_over_25ms']['passed'])
 
     def test_peak_cap_survives_wide_control_spread(self):
@@ -38,12 +38,35 @@ class MeasurementTests(unittest.TestCase):
         self.assertTrue(overlaps(9.95, 10.15, [(9, 10)]))
         self.assertFalse(overlaps(10.01, 10.15, [(9, 10)]))
 
-    def test_texture_change_uses_raw_callback(self):
+    def test_texture_change_still_excludes_texture_callback(self):
         control, candidate = [run(10)] * 3, [run(10) for _ in range(3)]
         for row in candidate:
             row['largest_callback_ms'] = 100
         self.assertTrue(compare(control, candidate)['passed'])
-        self.assertFalse(compare(control, candidate, changes_texture=True)['passed'])
+        self.assertTrue(compare(control, candidate, changes_texture=True)['passed'])
+
+    def test_reported_columns_do_not_gate(self):
+        control, candidate = [run(10)] * 3, [run(10) for _ in range(3)]
+        for row in candidate:
+            for key in ['footprint_min_mib', 'footprint_max_mib', 'max_window_mean_ms',
+                        'max_window_p99_ms', 'largest_callback_ms']:
+                row[key] = 1000
+        result = compare(control, candidate)
+        self.assertTrue(result['passed'])
+        self.assertIsNone(result['metrics']['max_window_p99_ms']['passed'])
+
+    def test_callback_uses_control_max_not_median_plus_range(self):
+        control, candidate = [run(10), run(12), run(14)], [run(12) for _ in range(3)]
+        for row in candidate:
+            row['largest_callback_excluding_texture_ms'] = 15
+        self.assertFalse(compare(control, candidate)['passed'])
+
+    def test_peak_and_hitches_use_allowance_without_extra_spread_gate(self):
+        control, candidate = [run(100)] * 3, [run(100) for _ in range(3)]
+        for row in candidate:
+            row['lifetime_peak_mib'] = 125
+            row['hitches_over_25ms'] = 115
+        self.assertTrue(compare(control, candidate)['passed'])
 
 
 if __name__ == '__main__':

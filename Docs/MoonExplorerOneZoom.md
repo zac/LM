@@ -1057,3 +1057,128 @@ pressure, thermal behavior and space lifecycle remain unvalidated. No AGC,
 terrain data, residual caps, source ordering or contact geometry was changed.
 Unrelated owner documents, both scheme-user files and RealityKitContent
 xcuserdata remain outside this checkpoint commit.
+
+## Performance protocol, owner gate correction for wrap-up
+
+This correction supersedes the historical decisions and arithmetic above.
+Only these are gates:
+
+- Lifetime peak: candidate median ≤ control median + max(25 MiB, 2%).
+- Hitches over 25 ms: candidate median ≤ control median + max(2, 15%).
+- Largest callback outside the globe-texture interval: candidate median ≤ control maximum. This applies to E too; the raw maximum remains reported.
+- The 90-second settled window: 16.67 ms mean/p99/max, zero missed callbacks.
+- All eleven Apollo PNGs byte-identical to the September 4 v2 baseline.
+
+The percentages use the corresponding control median. Frame-window footprint
+minimum/maximum, max-window mean and max-window p99 are reported, not gated.
+"Within the spread" means candidate median ≤ control maximum for that metric.
+Keep three alternating control/candidate runs for matched comparisons, with
+app termination and ten seconds between runs; judge the medians only after
+the complete set. E's existing triplicates are reused by owner instruction.
+The wrap-up adds one E journey and an Apollo ladder to verify its rebase,
+not to replace the completed triplicates with a single-run decision.
+
+Re-evaluating E's completed tables without new captures: peak and hitch gates
+pass for journey, soak, warm highland and cold highland; the callback gate
+passes except for the soak, whose outside-texture median is 176.610 ms against
+a 174.980 ms control maximum. The former footprint/mean/p99 failures are now
+reported-only differences. The cold dive's raw largest callback is 558.14 ms
+against a 379.74 ms control maximum, while its outside-texture median passes
+at 136.543 ms against 159.824 ms. The owner accepts E for its peak reduction,
+including these reported regressions and the 1.630 ms soak callback excess.
+The journey peak median is 621.159 MiB versus 1,620.269 MiB control; the soak
+median is 919.144 MiB, so 621 MiB is not a universal peak ceiling. Fresh
+rebase tests, journey and exact Apollo verification remain required before
+landing. Recomputed gate records are `Wrapup/E-existing-*.json` under
+`/tmp/LM-Explorer-OneZoom-2026-09-07/`.
+
+### Initial wrap-up rebases and focused tests
+
+All four candidates were rebased onto `2ae5bc5` before acceptance work. E's
+only conflict was the comparison script; the landed Bash 3 empty-array fix
+was retained. No runtime conflict required a behavior change. These are
+initial candidate hashes; accepted and parked final refs are recorded below.
+
+| Branch | Rebased commit | Passed tests | Failed tests | Evidence |
+|---|---|---:|---:|---|
+| `onezoom/B` | `bcb9f6ba083981664c41d1dc4cbf9ab440cc897d` | 70 | 0 | `Wrapup/Initial-B/Tests.xcresult` |
+| `onezoom/C` | `7d6e69165c619ab90e48b7612ad51cc49a02d733` | 75 | 0 | `Wrapup/Initial-C/Tests.xcresult` |
+| `onezoom/D` | `d8a87dd4201a8613a4b8b03c8818e76689977531` | 86 | 0 | `Wrapup/Initial-D/Tests.xcresult` |
+| `onezoom/E` | `ed2d65b3f49a9af59dbc312d026068d21875b5d3` | 81 | 0 | `Wrapup/Initial-E/Tests.xcresult` |
+
+## C wrap-up acceptance, 2026-09-07
+
+Evidence: `/tmp/LM-Explorer-OneZoom-2026-09-07/Wrapup/C/`.
+Rebased candidate `7d6e691` builds to SHA-256
+`6a336ca18628b9059adb2d78a50e21e19790fb4ac79e03a05958ce8f360293c9`,
+byte-identical to the preceding C candidate. Its 75 selected Release Simulator
+tests pass. The retained complete journey comparison therefore applies without
+a recapture and passes the named gates; see `Wrapup/C-retained-journey.json`
+and the six original runs in `Revalidation/C/journey/`.
+Control is the accepted A executable,
+`ab9bbf279ef0ca677121bf005ba21feffc2c5c6d74c897dac3bac9c989b7304a`.
+
+The fresh six-run alternating soak passed all named performance gates. All
+thirty repeated restores and six persistence reloads passed. No run was
+restarted or omitted. The previous interrupted set remains separate and
+incomplete. Surface and returned entries below are physical-footprint
+checkpoints, not lifetime peaks. Full texture/kernel markers remain in each
+run's `metrics-v2.json` and `performance.log`.
+
+| Run | Footprint MiB | Peak MiB | Max mean ms | Max p99 ms | Largest ms / outside texture | Hitches >25 ms | Texture ms |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Control 1 | 116.6–411.2 | 1619.535 | 19.60 | 114.08 | 476.740 / 184.890 | 124 | 1623.793 |
+| Candidate 1 | 117.6–348.4 | 1620.722 | 19.44 | 110.29 | 395.830 / 181.273 | 95 | 1434.383 |
+| Control 2 | 116.1–502.9 | 1619.066 | 19.63 | 125.10 | 416.130 / 150.373 | 128 | 1375.490 |
+| Candidate 2 | 111.9–502.4 | 1614.894 | 18.99 | 108.24 | 472.370 / 168.004 | 101 | 1436.268 |
+| Control 3 | 117.5–503.4 | 1620.332 | 19.44 | 131.10 | 582.060 / 146.380 | 122 | 1445.601 |
+| Candidate 3 | 110.8–389.2 | 1613.800 | 19.04 | 97.85 | 487.260 / 165.724 | 96 | 1368.914 |
+
+| Metric | Control min / median / max | Candidate min / median / max | Gate limit | Result |
+|---|---:|---:|---:|---|
+| footprint_min_mib | 116.100 / 116.600 / 117.500 | 110.800 / 111.900 / 117.600 | — | Reported |
+| footprint_max_mib | 411.200 / 502.900 / 503.400 | 348.400 / 389.200 / 502.400 | — | Reported |
+| lifetime_peak_mib | 1619.066 / 1619.535 / 1620.332 | 1613.800 / 1614.894 / 1620.722 | 1651.925 | Pass |
+| max_window_mean_ms | 19.440 / 19.600 / 19.630 | 18.990 / 19.040 / 19.440 | — | Reported |
+| max_window_p99_ms | 114.080 / 125.100 / 131.100 | 97.850 / 108.240 / 110.290 | — | Reported |
+| largest_callback_ms | 416.130 / 476.740 / 582.060 | 395.830 / 472.370 / 487.260 | — | Reported |
+| largest_callback_excluding_texture_ms | 146.380 / 150.373 / 184.890 | 165.724 / 168.004 / 181.273 | 184.890 | Pass |
+| hitches_over_25ms | 122.000 / 124.000 / 128.000 | 95.000 / 96.000 / 101.000 | 142.600 | Pass |
+
+| Run | Surface checkpoints, cycles 1–5 MiB | Returned checkpoints, cycles 1–5 MiB |
+|---|---|---|
+| Control 1 | 409.253, 409.268, 409.284, 409.409, 409.331 | 410.472, 410.487, 410.487, 410.472, 410.440 |
+| Candidate 1 | 346.425, 346.300, 346.362, 346.440, 346.425 | 347.722, 347.675, 347.628, 347.690, 347.675 |
+| Control 2 | 408.722, 408.972, 408.878, 408.956, 409.065 | 411.675, 411.440, 411.472, 411.268, 411.378 |
+| Candidate 2 | 342.393, 342.425, 342.596, 342.550, 342.550 | 343.362, 343.362, 343.253, 343.331, 343.300 |
+| Control 3 | 409.878, 409.847, 409.909, 409.972, 410.034 | 411.222, 411.222, 411.222, 411.222, 411.315 |
+| Candidate 3 | 343.659, 343.581, 343.596, 343.518, 343.471 | 344.628, 344.706, 344.487, 344.596, 344.596 |
+
+
+The median of each run's five surface checkpoints falls from 409.284 to
+343.581 MiB; returned checkpoints fall from 411.222 to 344.596 MiB. The net
+reductions are 65.703 and 66.625 MiB. `LunarExplorerTriangleIndex`, its entity
+cache and mesh-buffer extraction are absent from the candidate. The former
+69.7 MiB retained index is replaced by shared measured posts plus 2,105,352
+bytes of additional outer height grids, recorded at `pinch-height-fields-ready`.
+Process-footprint differences are not asserted to equal the index's allocation
+size exactly. Lifetime peak still comes from the unchanged monolithic texture.
+
+The fresh anchored-pinch integration passes its 0.0005 m scene-space bound.
+The printed maximum ray error rounds to 0.000000 m; that is log precision,
+not a claim of mathematically zero error. Source quantization at the probe
+scale is 0.000081 m. Pick duration is 0.003875 ms, below 1 ms. Pan and pinch
+stages complete with `oneZoom=true`. Inspected `Gestures/pinch-end.png`:
+crater bowls and scattered rocks remain visible behind the portal and browser;
+the displayed altitude is 90 m. Anchor accuracy comes from the numerical probe,
+not this still image. Physical tracking and gesture recognition remain open.
+
+All eleven fresh Apollo PNGs are byte-identical to the pinned baseline.
+All eleven pinned resource hashes and all five protected-body comparisons pass,
+with only A's authorized radiance lookup substitution. After the final
+90-second capture wait, the last twelve windows are 16.67 ms mean/p99/max
+with zero missed callbacks. The ten gate-tool tests pass, including reported
+columns, the control-maximum callback boundary and independent peak/hitch
+allowances. C is accepted in Simulator. No terrain data, residual, contact
+geometry, source-order or AGC change is included. All physical-device gates
+remain open.

@@ -72,49 +72,6 @@ struct LunarExplorerExperienceTests {
         #expect(maximumStep < 0.015)
     }
 
-    @Test func triangleSearchPreservesNearestHitsAndOwnershipHoles() {
-        typealias G = LunarExplorerPinchGeometry
-        var positions: [SIMD3<Float>] = []
-        var indices: [UInt32] = []
-        for row in 0...32 {
-            for column in 0...32 {
-                positions.append(SIMD3(Float(column), sin(Float(column + row) * 0.2), Float(row)))
-            }
-        }
-        for row in 0..<32 {
-            for column in 0..<32 where !(10..<15).contains(column) || !(10..<15).contains(row) {
-                let a = UInt32(row * 33 + column)
-                indices += [a, a + 1, a + 33, a + 1, a + 34, a + 33]
-            }
-        }
-        let index = LunarExplorerTriangleIndex(positions: positions, indices: indices)
-        func nearest(_ ranges: [Range<Int>], _ origin: SIMD3<Float>, _ direction: SIMD3<Float>) -> Float? {
-            var result: Float?
-            for range in ranges {
-                for i in stride(from: range.lowerBound, to: range.upperBound, by: 3) {
-                    if let hit = G.triangleDistance(origin: origin, direction: direction,
-                        a: positions[Int(indices[i])], b: positions[Int(indices[i + 1])], c: positions[Int(indices[i + 2])]) {
-                        result = min(result ?? .infinity, hit)
-                    }
-                }
-            }
-            return result
-        }
-        var tested = 0
-        for row in stride(from: 0, through: 34, by: 2) {
-            for column in stride(from: 0, through: 34, by: 2) {
-                let origin = SIMD3<Float>(Float(column) + 0.3, 10, Float(row) + 0.2)
-                let direction = simd_normalize(SIMD3<Float>(0.1, -1, -0.05))
-                let candidates = index.candidates(origin: origin, direction: direction)
-                tested += candidates.reduce(0) { $0 + $1.count }
-                #expect(nearest(candidates, origin, direction) == nearest([0..<indices.count], origin, direction))
-            }
-        }
-        #expect(tested < indices.count * 324 / 8)
-        #expect(nearest(index.candidates(origin: SIMD3(12, 10, 12), direction: SIMD3(0, -1, 0)),
-                        SIMD3(12, 10, 12), SIMD3(0, -1, 0)) == nil)
-    }
-
     @Test func pinchBoundsKeepParallelAndEdgeHits() {
         typealias G = LunarExplorerPinchGeometry
         let minimum = SIMD3<Float>(-1, -1, -1), maximum = SIMD3<Float>(1, 1, 1)
