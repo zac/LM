@@ -211,3 +211,75 @@ headset and the same installed bundle URL as before replacement. No successful
 Release replacement or launch is claimed; `surface-release-install.log` and
 `replacement-state.json` retain the attempt's evidence. The app's assets and
 terrain code were not changed during this investigation.
+
+## Completed Release device comparison
+
+The next installation succeeded in 6.178 seconds. The owner confirmed that
+both the slow development session and this comparison used the default globe
+position with no site selected. The signature-verified Release executable
+above ran as PID 1971 on the same visionOS 27 beta headset. Its app source is
+`c82fa12`; intervening commits only changed documentation. Launch arguments
+were `--lunar-explorer --lunar-explorer-profile
+--lunar-explorer-profile-label=device-release-global`, with
+`OS_ACTIVITY_DT_MODE=enable` to bridge logs through devicectl. The owner
+selected Surface, then returned to Globe and selected Surface again without
+changing location. No Instruments recording was started during these entries.
+
+Evidence in `/tmp/LM-Device-Entry-2026-09-06/` includes
+`comparison-install.json`, `Release-Comparison.log` and
+`release-comparison-summary.json`. The initial source interval begins at
+21:09:09.692362 PDT and terrain is ready at 21:09:41.316457. The second begins
+at 21:10:10.154471 and is ready at 21:10:17.793250. Source-start-to-ready timing
+excludes the preceding UI fade and any delay before the source task starts.
+
+| Device interval | First Release entry | Second Release entry |
+| --- | ---: | ---: |
+| Source resolution | 24,041.634 ms | 61.553 ms |
+| 16-tile terrain construction | 7,581 ms | 7,576 ms |
+| Source start to terrain ready | 31,624.095 ms | 7,638.779 ms |
+| CPU mesh work, 16 intervals summed | 6,866.086 ms | 6,882.476 ms |
+| Mesh import, 16 intervals summed | 32.215 ms | 33.732 ms |
+| Largest individual mesh import | 2.130 ms | 2.312 ms |
+| Async material import, 16 intervals summed | 656.160 ms | 634.589 ms |
+| Atomic publication | 0.173 ms | 0.190 ms |
+
+CPU appearance baking overlaps mesh preparation, so its 730/724 ms sums must
+not be added to the serial total. Every tile reports a mesh-cache miss on both
+entries. Returning to Globe discards the terrain presentation and its mesh
+cache; the elevation store persists verified source bytes. The 24-second
+source interval includes obtaining and verifying data. The existing logging
+does not isolate network time from cache I/O, but the second entry confirms
+that cached source resolution is fast. There were no unavailable sources.
+
+The earlier 112,198 ms development-session construction is about 14.8 times
+this Release construction time for the same requested destination and tile
+count. This supports development-build overhead as a major contributor to
+the owner's original wait; it is not a controlled compiler-only benchmark.
+Release still spends about 91% of terrain construction in CPU mesh preparation.
+Prioritize equivalent-output sampling/mesh preparation optimizations and
+evaluate bounded reuse across Globe returns before replacing RealityKit's
+importer. Source loading also needs clearer progress and consideration of
+prefetch for first entry. Keep source verification, memory budgets, cancellation,
+parent/child dependencies, exact contact geometry and Apollo image identity.
+
+The original globe texture takes 2,903.123 ms to load and reaches a kernel
+lifetime footprint peak of 2,234.424 MiB. The realized texture remains
+11,520 by 5,760 with 14 mip levels. The globe subsequently settles at 278.9 MiB;
+surface windows settle around 437.4 MiB after the first entry and 370.5 MiB
+after the second. These are process-footprint observations, not a leak verdict
+or GPU-memory accounting. No re-anchor messages occur in the captured Release
+comparison. The earlier re-anchor sequence remains an unreproduced observation.
+
+Globe windows deliver 11.11 ms callbacks. Settled surface windows also include
+22.22 ms callbacks with the reported nominal interval at 22.22 ms. The probe's
+adaptive missed-callback count can be zero at that cadence; it does not prove
+90 Hz surface rendering or compositor pacing. Surface-entry callback gaps
+remain, including 139.784 ms around the first source start. RealityKit/compositor
+frame tracing, thermal behavior and longer physical-device testing remain open.
+
+After saving the comparison, the instrumented app was terminated by the normal
+relaunch command. Release reopened without profiling as PID 1976, recorded in
+`normal-release-launch.json`. No source or asset change was made, so this
+documentation update uses `git diff --check` rather than rerunning the earlier
+82 tests or eleven-image Simulator ladder. Those earlier Simulator results
+remain distinct from this successful physical-device load comparison.

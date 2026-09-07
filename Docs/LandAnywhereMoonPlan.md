@@ -61,6 +61,15 @@ Vision Pro gates still open.
 fix and sampled evidence that RealityKit still conditions descriptor meshes
 on the main thread internally. A direct-buffer alternative failed Apollo image
 identity and was rejected; the rendering contract remains intact.
+The completed September 6 physical-device Release comparison in that report
+puts default-location terrain construction at 7.6 seconds, including 6.9 seconds
+of CPU mesh preparation but only 32–34 ms of summed mesh imports. Source
+resolution falls from 24 seconds on first entry to 62 ms on repeat. The device
+realizes an 11,520 × 5,760 globe texture and reaches a 2,234 MiB lifetime
+footprint peak. Optimize CPU preparation and source-entry behavior next;
+the pending texture candidate still needs device-resolution visual validation.
+Surface display-link cadence includes 22.22 ms windows, so the 90 Hz physical
+performance gate remains open.
 
 The September 6 startup and repeated-navigation profiling follow-up is in
 `MoonExplorerPerformance.md`. It attributes the approximately 1.6 GiB startup
