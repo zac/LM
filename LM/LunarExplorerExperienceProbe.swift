@@ -41,6 +41,34 @@ import OSLog
                 }
                 try await minimumHold
             }
+            if arguments.contains("--lunar-explorer-profile-one-zoom") {
+                guard let place = session.catalogPlaces.first(where: { $0.id == "apollo-11" }) else {
+                    throw CocoaError(.fileReadUnknown)
+                }
+                session.previewPlace(place)
+                try await stage("disk")
+                session.exploreZoom(by: session.metersAcross / 1_000_000, from: session.metersAcross)
+                try await stage("clipped")
+                session.exploreZoom(by: session.metersAcross / 210_000, from: session.metersAcross)
+                for _ in 0..<600 where !session.diagnostics.loadMessage.hasSuffix("terrain ready") {
+                    try await Task.sleep(for: .milliseconds(100))
+                }
+                guard session.diagnostics.loadMessage.hasSuffix("terrain ready") else { throw CocoaError(.fileReadUnknown) }
+                try await stage("crossfade")
+                session.exploreZoom(by: session.metersAcross / 180_000, from: session.metersAcross)
+                try await stage("handoff")
+                session.exploreZoom(by: session.metersAcross / 24_000, from: session.metersAcross)
+                try await stage("terrain")
+                session.enterImmersion()
+                guard session.isImmersed else { throw CocoaError(.validationMissingMandatoryProperty) }
+                try await stage("immersion")
+                session.leaveImmersion()
+                guard session.portalEnabled else { throw CocoaError(.validationMissingMandatoryProperty) }
+                try await stage("return")
+                logger.info("Moon experience stage=passed oneZoom=true")
+                if let stageURL { try Data("passed".utf8).write(to: stageURL, options: .atomic) }
+                return
+            }
             try await stage("globe")
             let place = try LMLunarPOICatalog.load().features.first { $0.id == "apollo-11" }
             guard let place else { throw CocoaError(.fileReadCorruptFile) }

@@ -17,6 +17,11 @@ xcrun simctl spawn "$udid" log stream --level=info --predicate 'subsystem == "io
 logger=$!
 trap 'kill "$logger" 2>/dev/null || true; wait "$logger" 2>/dev/null || true; rm -f "$stage_file" "$ack_file"' EXIT
 args=(--lunar-explorer --lunar-explorer-profile --lunar-explorer-profile-label=experience-journey --lunar-explorer-profile-journey "--lunar-explorer-profile-capture-token=$token")
+stages=(globe selected immersive returned restored)
+if [[ ${LUNAR_ONE_ZOOM:-0} == 1 ]]; then
+    args+=(--lunar-explorer-profile-one-zoom)
+    stages=(disk clipped crossfade handoff terrain immersion return)
+fi
 cycles=${LUNAR_PROFILE_SOAK_CYCLES:-0}
 [[ "$cycles" =~ ^[0-9]+$ && "$cycles" -le 20 ]] || exit 64
 if [[ "$cycles" -gt 0 ]]; then args+=("--lunar-explorer-profile-soak-cycles=$cycles"); fi
@@ -33,12 +38,15 @@ wait_stage() {
             exit 70
         fi
         if [[ -f "$stage_file" && $(cat "$stage_file") == "$1" ]]; then return; fi
+        if [[ "$attempt" == 60 ]]; then
+            sample "$pid" 5 -file "$out/$1-over-60s.sample.txt" >/dev/null 2>&1 || true
+        fi
         sleep 1
     done
     echo "Timed out waiting for $1" >&2
     exit 70
 }
-for stage in globe selected immersive returned restored; do
+for stage in "${stages[@]}"; do
     wait_stage "$stage"
     sleep 10
     xcrun simctl io "$udid" screenshot "$out/$stage.png"
@@ -57,4 +65,6 @@ for ((attempt=0; attempt<90; attempt++)); do
 done
 awk -v pid="$pid" '$6 == pid && /Moon experience stage=passed/ {found=1} END {exit !found}' "$out/performance.log"
 container=$(xcrun simctl get_app_container "$udid" io.positron.LM data)
-cp "$container/Documents/MoonExplorerJourney.json" "$out/camera-and-sunlight.json"
+if [[ ${LUNAR_ONE_ZOOM:-0} != 1 ]]; then
+    cp "$container/Documents/MoonExplorerJourney.json" "$out/camera-and-sunlight.json"
+fi

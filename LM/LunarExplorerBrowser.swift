@@ -52,17 +52,6 @@ struct LunarExplorerControls: View {
         // A quiet tint improves text contrast in bright surroundings; the system still supplies the glass.
         .background(.black.opacity(0.22), in: ContainerRelativeShape())
         .ornament(attachmentAnchor: .scene(.bottom), contentAlignment: .top) { sceneControls }
-        .ornament(visibility: session.isBrowsingGlobe ? .hidden : .visible,
-                  attachmentAnchor: .scene(.top), contentAlignment: .bottom) {
-            Button { session.returnToGlobeGently() } label: {
-                Label("Exit surface", systemImage: "arrow.down.right.and.arrow.up.left")
-                    .frame(minHeight: 60)
-            }
-            .buttonStyle(.borderless).padding(.horizontal, 20)
-            .glassBackgroundEffect(in: .capsule)
-            .help("Return to the globe in your surroundings").hoverEffect()
-            .disabled(session.landingRunning)
-        }
         .alert("Save view", isPresented: $showsSave) {
             TextField("Name", text: $savedName)
             Button("Save") { session.library.save(session.savedView(named: savedName)) }
@@ -258,15 +247,18 @@ struct LunarExplorerControls: View {
 
     private var sceneControls: some View {
         HStack(spacing: 16) {
-            Picker("View mode", selection: Binding(
-                get: { session.isBrowsingGlobe ? "globe" : "surface" },
-                set: { session.setExplorerMode($0) })) {
-                    Text("Globe").tag("globe")
-                    Text("Surface").tag("surface")
-                }
-                .pickerStyle(.segmented).frame(minHeight: 60)
-                .help("Enter immersive terrain")
-                .accessibilityIdentifier("moon.mode")
+            Button {
+                if session.isImmersed { session.leaveImmersion() }
+                else { session.enterImmersion() }
+            } label: {
+                Label(session.isImmersed ? "Leave immersion" : "Immerse",
+                      systemImage: session.isImmersed ? "arrow.down.right.and.arrow.up.left" : "arrow.up.left.and.arrow.down.right")
+                    .frame(maxWidth: .infinity, minHeight: 60)
+            }
+            .buttonStyle(.borderless).hoverEffect()
+            .disabled(!session.isImmersed && !session.canImmerse)
+            .help(session.isImmersed ? "Return to the window" : "Available below 120 km across")
+            .accessibilityIdentifier("moon.immersion")
             Button { showsSun = true } label: {
                 Label("Lighting", systemImage: "sun.max")
                     .labelStyle(.iconOnly).frame(width: 60, height: 60)
@@ -351,7 +343,7 @@ struct LunarExplorerControls: View {
                 Slider(value: Binding(
                     get: { log(session.metersAcross) },
                     set: { session.exploreZoom(by: session.metersAcross / exp($0), from: session.metersAcross) }),
-                    in: session.isBrowsingGlobe ? log(3_400_000)...log(5_000_000) : log(8)...log(5_000_000))
+                    in: log(8)...log(5_000_000))
                     .accessibilityLabel("View width")
                 Text(distance(session.metersAcross) + " across").monospacedDigit()
             }
@@ -399,7 +391,7 @@ struct LunarExplorerControls: View {
                             .font(.headline).frame(maxWidth: .infinity, minHeight: 44)
                     }
                     .buttonStyle(.borderedProminent).tint(.blue)
-                    .help("Open immersive terrain at this location").hoverEffect()
+                    .help("Zoom to terrain at this location").hoverEffect()
                     .accessibilityIdentifier("moon.exploreSite")
                 }
                 Button(action: saveView) {

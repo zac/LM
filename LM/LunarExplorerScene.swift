@@ -11,6 +11,11 @@ final class LunarExplorerScene {
     let root = Entity()
     let interactionSurface = Entity()
 
+    private let windowRoot = Entity()
+    private let worldRoot = Entity()
+    private let portal = ModelEntity()
+    private let portalFrame = ModelEntity()
+    private var appliedPortalState: Bool?
     private let presentationRoot = Entity()
     private let terrainAnchorRoot = Entity()
     private var sourceFrame: LMSelenographicLocalFrame?
@@ -22,9 +27,6 @@ final class LunarExplorerScene {
     private let globePresentationRoot = Entity()
     private let selectionMarker = Entity()
     private let markerBillboard = Entity()
-    private var globePlacementRoot: AnchorEntity?
-    private var appliedPlacementRevision = -1
-    private var appliedInteractionRadius: Float?
     private var placePins = [String: ModelEntity]()
     private var appliedMarkerScale: Float?
     private let logger = Logger(
@@ -79,6 +81,27 @@ final class LunarExplorerScene {
 
     init() {
         root.name = "Lunar Explorer"
+        windowRoot.name = "Moon window placement"
+        worldRoot.name = "Moon portal world"
+        root.addChild(windowRoot)
+        windowRoot.addChild(worldRoot)
+        portal.name = "Moon window"
+        portal.model = ModelComponent(
+            mesh: .generatePlane(width: 3, height: 2.2, cornerRadius: 0.12),
+            materials: [PortalMaterial()])
+        portal.position = SIMD3(0, 1.45, -LunarExplorerSession.globeSurfaceDepthMeters)
+        // The existing foreground projection deliberately lies in front of
+        // this plane. Use the portal's screen mask, not a geometry clip plane.
+        portal.components.set(PortalComponent(target: worldRoot,
+            clippingMode: .disabled, crossingMode: .disabled))
+        windowRoot.addChild(portal)
+        portalFrame.model = ModelComponent(
+            mesh: .generatePlane(width: 3.035, height: 2.235, cornerRadius: 0.135),
+            materials: [UnlitMaterial(color: UIColor(white: 0.08, alpha: 1))])
+        portalFrame.position = portal.position + SIMD3(0, 0, -0.002)
+        windowRoot.addChild(portalFrame)
+        portal.isEnabled = false
+        portalFrame.isEnabled = false
         presentationRoot.name = "Lunar Explorer presentation"
         root.addChild(presentationRoot)
         terrainAnchorRoot.name = "Floating lunar ENU"
@@ -129,11 +152,12 @@ final class LunarExplorerScene {
     }
 
     private func updatePlacePins(_ session: LunarExplorerSession) {
-        guard session.isExplorerExperience, session.isBrowsingGlobe, let anchor = globePlacementRoot else {
+        guard session.isExplorerExperience, session.isBrowsingGlobe else {
             for pin in placePins.values { pin.isEnabled = false }
             return
         }
-        let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale * 0.32
+        let anchor = worldRoot
+        let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale
         for place in session.catalogPlaces {
             let pin: ModelEntity
             if let existing = placePins[place.id] { pin = existing }
@@ -151,10 +175,10 @@ final class LunarExplorerScene {
             }
             if pin.parent !== anchor { anchor.addChild(pin) }
             let direction = LunarExplorerMapGeometry.direction(to: place.coordinate, centeredOn: session.browseCoordinate)
-            pin.position = session.globePosition + direction * radius * 1.006
+            pin.position = globePresentationRoot.position + direction * radius * 1.006
             pin.scale = SIMD3(repeating: place.id == session.selectedPlaceID ? 1.6 : 1)
             pin.isEnabled = LunarExplorerMapGeometry.isVisible(direction: direction,
-                globePosition: session.globePosition, radius: radius)
+                globePosition: globePresentationRoot.position, radius: radius)
         }
     }
 
@@ -667,28 +691,20 @@ final class LunarExplorerScene {
     }
 
     private func updatePresentationTransform(_ session: LunarExplorerSession) {
-        if session.isExplorerExperience {
-            root.components.set(OpacityComponent(opacity: session.transitionOpacity))
+        Self.applyPresentationOpacity(Double(session.transitionOpacity), to: root)
+        if appliedPortalState != session.portalEnabled {
+            appliedPortalState = session.portalEnabled
+            if session.portalEnabled { worldRoot.components.set(WorldComponent()) }
+            else { worldRoot.components.remove(WorldComponent.self) }
+            portal.isEnabled = session.portalEnabled
+            portalFrame.isEnabled = session.portalEnabled
         }
-        if session.isBrowsingGlobe {
-            if globePlacementRoot == nil || appliedPlacementRevision != session.globePlacementRevision {
-                let previous = globePlacementRoot
-                let anchor = AnchorEntity(.head, trackingMode: .once)
-                root.addChild(anchor)
-                for entity in [globePresentationRoot, interactionSurface, markerBillboard] {
-                    anchor.addChild(entity)
-                }
-                previous?.removeFromParent()
-                globePlacementRoot = anchor
-                appliedPlacementRevision = session.globePlacementRevision
-            }
-            if let anchor = globePlacementRoot {
-                for entity in [globePresentationRoot, interactionSurface, markerBillboard]
-                    where entity.parent !== anchor { anchor.addChild(entity) }
-            }
-        } else {
-            for entity in [globePresentationRoot, interactionSurface, markerBillboard]
-                where entity.parent !== root { root.addChild(entity) }
+        let parent = session.usesWindowContainer ? worldRoot : root
+        for entity in [presentationRoot, globePresentationRoot, markerBillboard]
+            where entity.parent !== parent { parent.addChild(entity) }
+        if session.usesWindowContainer {
+            windowRoot.position = session.globePosition - SIMD3(0, 0, -2)
+            interactionSurface.position = portal.position + windowRoot.position
         }
         updateGlobeRadiance(session)
         let siteScale = session.presentationScale
@@ -804,37 +820,16 @@ final class LunarExplorerScene {
             globeEntity?.orientation = .init()
             globeTerminator?.entity.orientation = .init()
         }
-        if session.isBrowsingGlobe {
-            // A bounded, reachable globe in passthrough. Zoom cannot turn it
-            // into a room-filling surface; Explore explicitly enters full space.
-            let scale = session.globePresentationScale * 0.32
-            globePresentationRoot.scale = SIMD3(repeating: scale)
-            globePresentationRoot.position = session.globePosition
-            globePresentationRoot.orientation = .init()
-            interactionSurface.position = globePresentationRoot.position
-            let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * scale
-            if appliedInteractionRadius != radius {
-                appliedInteractionRadius = radius
-                interactionSurface.components.set(CollisionComponent(shapes: [.generateSphere(radius: radius)]))
-            }
-        } else {
-            interactionSurface.position = SIMD3(0, 0, -1.15)
-            if appliedInteractionRadius != nil {
-                appliedInteractionRadius = nil
-                interactionSurface.components.set(CollisionComponent(shapes: [
-                    .generateBox(size: SIMD3(3.8, 2.6, 0.02))
-                ]))
-            }
-        }
+        if !session.usesWindowContainer { interactionSurface.position = SIMD3(0, 0, -1.15) }
         updatePlacePins(session)
         markerBillboard.isEnabled = session.isExplorerExperience && session.isBrowsingGlobe
         if markerBillboard.isEnabled {
             let coordinate = session.selectedMarkerPlace?.coordinate ?? session.browseCoordinate
             let direction = LunarExplorerMapGeometry.direction(to: coordinate, centeredOn: session.browseCoordinate)
-            let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale * 0.32
-            markerBillboard.position = session.globePosition + direction * radius * 1.006
+            let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale
+            markerBillboard.position = globePresentationRoot.position + direction * radius * 1.006
             markerBillboard.isEnabled = LunarExplorerMapGeometry.isVisible(direction: direction,
-                globePosition: session.globePosition, radius: radius)
+                globePosition: globePresentationRoot.position, radius: radius)
         }
         let canPresentSite = !session.isBrowsingGlobe && session.flightCoordinate == nil && isLoaded && (globalTerrain == nil || globalTerrain?.snapshot.tiles.isEmpty == false)
         let globeOpacity = canPresentSite ? blend.globeOpacity : 1

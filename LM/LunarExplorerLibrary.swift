@@ -88,9 +88,9 @@ extension LunarExplorerSession {
         if !isBrowsingGlobe { selectedPlaceID = nil }
         isBrowsingGlobe = true
         browseCoordinate = coordinate
+        leaveImmersion()
         select(.globe)
         headingDegrees = 0
-        immersionStyle = .mixed
     }
 
     func previewPlace(_ place: LMLunarPOICatalog.Place) {
@@ -144,11 +144,8 @@ extension LunarExplorerSession {
     /// zoom remains available in the inspector and all old capture arguments.
     func exploreZoom(by magnification: Double, from initialWidth: Double) {
         guard magnification.isFinite, magnification > 0, initialWidth.isFinite else { return }
-        if isBrowsingGlobe {
-            metersAcross = min(5_000_000, max(3_400_000, initialWidth / magnification))
-            return
-        }
         zoom(by: magnification, from: initialWidth)
+        defer { synchronizeZoomDestination() }
         let stops = [(5_000_000.0, 1_500_000.0, 0.0)]
             + Preset.allCases.map { ($0.metersAcross, $0.altitudeMeters, $0.tiltDegrees) }
             + [(8.0, 1.5, 38.0)]
@@ -157,6 +154,19 @@ extension LunarExplorerSession {
             altitudeMeters = exp(log(a.1) * (1 - t) + log(b.1) * t)
             tiltDegrees = a.2 * (1 - t) + b.2 * t
             break
+        }
+        if usesWindowContainer {
+            // The accepted handoff keeps the selected radial facing the eye.
+            // The scene already morphs the tangent plane toward Orbit tilt;
+            // tilting the sphere too would rotate the selected site out of frame.
+            if metersAcross >= Self.globeSiteBlendEndMetersAcross {
+                selectedPreset = .globe
+                tiltDegrees = 0
+            } else {
+                selectedPreset = Preset.allCases.min {
+                    abs(log($0.altitudeMeters / altitudeMeters)) < abs(log($1.altitudeMeters / altitudeMeters))
+                } ?? .orbit
+            }
         }
     }
 
@@ -184,7 +194,8 @@ extension LunarExplorerSession {
         if view.isGlobe {
             returnToGlobe()
             browseCoordinate = view.coordinate
-            metersAcross = min(5_000_000, max(3_400_000, view.width))
+            metersAcross = min(Self.maximumMetersAcross, max(Self.minimumMetersAcross, view.width))
+            synchronizeZoomDestination()
         } else {
             if isBrowsingGlobe { flightCoordinate = browseCoordinate }
             if !isExplorerExperience {

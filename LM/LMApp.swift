@@ -62,7 +62,7 @@ struct LMApp: App {
                     viewModel.lunarExplorerSpaceState = .closed
                 }
         }
-        .immersionStyle(selection: Bindable(viewModel.lunarExplorerSession).immersionStyle, in: .mixed, .full)
+        .immersionStyle(selection: Bindable(viewModel.lunarExplorerSession).immersionStyle, in: .mixed, .progressive, .full)
 
         ImmersiveSpace(id: viewModel.descentSpaceID) {
             PoweredDescentImmersiveView()

@@ -201,6 +201,55 @@ final class LunarExplorerSession {
     var isExplorerExperience = false
     var isBrowsingGlobe = false
     var immersionStyle: any ImmersionStyle = .full
+    /// Container configuration, independent of the camera and terrain pipeline.
+    /// Fixed reference captures render without the room-facing frame.
+    var usesWindowContainer = false
+    var isImmersed = false
+    var portalEnabled: Bool { usesWindowContainer && !isImmersed }
+    var canImmerse: Bool {
+        usesWindowContainer && !isImmersed && !navigationInProgress
+            && !landingRunning && metersAcross <= Self.globeSiteBlendEndMetersAcross
+            && diagnostics.loadMessage.hasSuffix("terrain ready")
+    }
+    var maximumZoomWidth: Double {
+        isImmersed ? Self.globeSiteBlendEndMetersAcross : Self.maximumMetersAcross
+    }
+
+    func enterImmersion() {
+        guard canImmerse else { return }
+        isImmersed = true
+        immersionStyle = .full
+    }
+
+    func leaveImmersion() {
+        isImmersed = false
+        immersionStyle = .mixed
+    }
+
+    /// Product zoom crosses the handoff without changing immersion. Keep the
+    /// globe visible while the existing terrain load catches up.
+    func synchronizeZoomDestination() {
+        guard usesWindowContainer else { return }
+        if metersAcross < Self.globeSiteBlendStartMetersAcross {
+            guard isBrowsingGlobe else { return }
+            let coordinate = selectedMarkerPlace?.coordinate ?? browseCoordinate
+            let apollo = try? LMTerrainManifest.load().landingOriginCoordinate
+            let next: LMSelenographicCoordinate? = coordinate == apollo ? nil : coordinate
+            isBrowsingGlobe = false
+            if destinationCoordinate != next || diagnostics.activeTileCount == 0 {
+                destinationCoordinate = next
+                currentCoordinate = nil
+                focusNorthOffsetMeters = 0
+                focusEastOffsetMeters = 0
+                navigationRevision += 1
+            }
+        } else if !isImmersed {
+            if !isBrowsingGlobe {
+                browseCoordinate = currentCoordinate ?? destinationCoordinate ?? browseCoordinate
+            }
+            isBrowsingGlobe = true
+        }
+    }
     var browseCoordinate = LMSelenographicCoordinate(latitudeDegrees: 0, longitudeDegrees: 0)
     var selectedPlaceID: String?
     var pendingSavedView: LunarExplorerSavedView?
@@ -211,7 +260,13 @@ final class LunarExplorerSession {
     var navigationMode: NavigationMode = .orbit
     var detailMode: LMTerrainDetailMode = .automatic
     var altitudeMeters = Preset.regional.altitudeMeters
-    var metersAcross = Preset.regional.metersAcross
+    var metersAcross = Preset.regional.metersAcross {
+        didSet {
+            if isImmersed && metersAcross > Self.globeSiteBlendEndMetersAcross {
+                metersAcross = Self.globeSiteBlendEndMetersAcross
+            }
+        }
+    }
     var headingDegrees = 0.0
     var tiltDegrees = Preset.regional.tiltDegrees
     var focusNorthOffsetMeters = 0.0
@@ -367,7 +422,7 @@ final class LunarExplorerSession {
             guard let self else { return }
             do { try await self.fadePresentation(to: 0) } catch { return }
             self.isBrowsingGlobe = false
-            self.immersionStyle = .full
+            if !self.usesWindowContainer { self.immersionStyle = .full }
             let apollo = try? LMTerrainManifest.load().landingOriginCoordinate
             self.destinationCoordinate = coordinate.latitudeDegrees == apollo?.latitudeDegrees
                 && coordinate.longitudeDegrees == apollo?.longitudeDegrees ? nil : coordinate
@@ -644,6 +699,7 @@ final class LunarExplorerSession {
             $0.hasPrefix("--lunar-explorer-") && !$0.hasPrefix("--lunar-explorer-profile")
         }
         isExplorerExperience = !isCapture && !inspectionOptions
+        usesWindowContainer = isExplorerExperience
         if isExplorerExperience { returnToGlobe(); showDaylight() }
         captureReanchorProbe = isCapture && arguments.contains("--lunar-explorer-reanchor-probe")
         captureElevationOffline = isCapture && arguments.contains("--lunar-explorer-elevation-offline")
@@ -778,10 +834,13 @@ final class LunarExplorerSession {
 
     func zoom(by magnification: Double, from initialMetersAcross: Double) {
         guard magnification.isFinite, magnification > 0 else { return }
-        metersAcross = min(
+        let width = min(
             max(initialMetersAcross / magnification, Self.minimumMetersAcross),
-            Self.maximumMetersAcross
+            maximumZoomWidth
         )
+        // Division at the exact handoff can round one ULP above the gate.
+        let gate = Self.globeSiteBlendEndMetersAcross
+        metersAcross = abs(width - gate) <= gate.ulp ? gate : width
     }
 
     func pan(northMeters: Double, eastMeters: Double) {

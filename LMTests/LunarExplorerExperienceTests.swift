@@ -9,14 +9,52 @@ struct LunarExplorerExperienceTests {
         normal.configure(arguments: [])
         #expect(normal.isBrowsingGlobe && normal.isExplorerExperience)
         normal.exploreZoom(by: 1_000, from: normal.metersAcross)
-        #expect(normal.metersAcross == 3_400_000)
-        #expect(!normal.presentsSite)
-        normal.exploreZoom(by: 0.001, from: normal.metersAcross)
+        #expect(normal.metersAcross == 4_400)
+        #expect(normal.presentsSite && normal.portalEnabled)
+        #expect(!normal.isImmersed)
+        normal.exploreZoom(by: 0.0001, from: normal.metersAcross)
         #expect(normal.metersAcross == 5_000_000)
         let capture = LunarExplorerSession()
         capture.configure(arguments: ["--lunar-explorer-capture", "--lunar-explorer-preset=terminal"])
         #expect(!capture.isBrowsingGlobe && !capture.isExplorerExperience)
         #expect(capture.altitudeMeters == 180 && capture.metersAcross == 700)
+    }
+
+    @Test func immersionGateClampsEveryZoomPathAndRestoresWindowRange() {
+        let s = LunarExplorerSession()
+        s.configure(arguments: [])
+        #expect(s.portalEnabled && !s.canImmerse)
+        s.enterImmersion()
+        #expect(!s.isImmersed)
+        s.exploreZoom(by: s.metersAcross / 120_000, from: s.metersAcross)
+        #expect(!s.canImmerse) // The globe still covers a destination that is loading.
+        s.diagnostics.loadMessage = "Apollo 11 terrain ready"
+        #expect(s.canImmerse)
+        s.enterImmersion()
+        #expect(s.isImmersed && !s.portalEnabled)
+        s.exploreZoom(by: 0.001, from: s.metersAcross)
+        #expect(s.metersAcross == 120_000)
+        s.logarithmicMetersAcross = 7
+        #expect(s.metersAcross == 120_000)
+        s.leaveImmersion()
+        #expect(s.portalEnabled)
+        s.exploreZoom(by: 0.001, from: s.metersAcross)
+        #expect(s.metersAcross == 5_000_000 && s.isBrowsingGlobe)
+    }
+
+    @Test func windowHandoffKeepsTheSelectedRadialFacingTheEye() {
+        let s = LunarExplorerSession()
+        s.configure(arguments: [])
+        s.exploreZoom(by: s.metersAcross / 180_000, from: s.metersAcross)
+        #expect(s.selectedPreset == .globe && s.tiltDegrees == 0)
+        #expect(s.presentsSite)
+        s.exploreZoom(by: s.metersAcross / 24_000, from: s.metersAcross)
+        #expect(s.selectedPreset == .regional && s.tiltDegrees == 72)
+        s.diagnostics.loadMessage = "Apollo 11 terrain ready"
+        s.enterImmersion()
+        s.returnToGlobe()
+        #expect(!s.isImmersed && s.portalEnabled)
+        #expect(s.metersAcross == 4_400_000)
     }
 
     @Test func draggingCrossesDatelineAndPoleWithoutClamping() {
