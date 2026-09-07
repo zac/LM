@@ -628,3 +628,47 @@ Landing is withheld. Journey peak rises 2.641 MiB and soak peak 1.359 MiB during
 Unvalidated: every physical Vision Pro gate, including hand/gaze recognition, head-tracked anchor precision, comfort, stereo appearance, device memory pressure, GPU/compositor pacing and space lifecycle. No physical device was used.
 
 C/Apollo passes all eleven byte comparisons against the September 4 v2 baseline. Its final Surface capture settled for 90 seconds. The last twelve five-second windows have 16.67 ms mean/p99/max and zero missed callbacks, at 351.5–351.6 MiB footprint. All eleven pinned terrain digests and all five protected function bodies remain unchanged.
+
+## D: Coarse-first terrain and prefetch, withheld, 2026-09-07
+
+Evidence: `/tmp/LM-Explorer-OneZoom-2026-09-07/D/`. The complete source patch, including new tests and the common highland driver, is retained in `implementation.patch` and removed from the checkout. No D runtime changes land.
+
+The candidate starts cancellable source resolution and a 512 m generation below 600 km, adopts that prepared generation at the handoff, and publishes subsequent levels separately. Siblings run two at a time, with every parent level complete before its children. Existing ownership, morph, contact publication and floating-origin behavior remain intact. A new immutable parent-resolution table and allocation-free ownership search remove per-sample temporary grid arrays while preserving source order and arithmetic.
+
+Release validation: 78 passed, zero failed in `Tests-SourceSelection.xcresult`. Coverage includes concurrent versus serial mesh positions/normals/indices, uncancelled coarse-first progression, and bit-exact comparison with the former source-selection algorithm across interiors, overlap halos, edges and native posts at seven sample spacings. Measured elevation, residual, cap, resolution and source ID match. The initial compile failure and corrected 68-test run are preserved.
+
+Control executable SHA-256: `a3c13361703b742c5a52d3610eb3322ad2e8846fac67e1cf9f9d3af0ae5091d0`. Candidate: `52018dd2c744488315b8efb85ad9dfeee826a90dbdbf1a9476acb929d9d9c9b9`. Control uses the preceding production code plus the same diagnostic-only highland driver as the candidate, recorded in `control-instrumentation.patch`. It is not an unmodified prior-commit binary. No source edits, builds, tests or offline generation overlapped the matched acceptance runs. Only the specified Simulator was booted.
+
+| Run | Frame-window footprint MiB | Lifetime peak MiB | Max window mean ms | Max window p99 ms | Largest callback ms | Hitches >25 ms |
+|---|---:|---:|---:|---:|---:|---:|
+| Control Journey | 118.1–384.4 | 1620.050 | 19.96 | 85.40 | 582.72 | 15 |
+| Candidate Journey | 118.8–385.2 | 1621.113 | 19.11 | 111.51 | 461.93 | 18 |
+| Control Soak | 116.6–413.6 | 1620.519 | 19.83 | 113.97 | 602.49 | 128 |
+| Control Highland Warm | 111.2–149.3 | 1613.972 | 19.48 | 67.21 | 545.80 | 18 |
+| Control Highland Cold | 110.8–171.8 | 1613.332 | 19.20 | 68.50 | 509.92 | 20 |
+| Candidate Highland SourceSelection (diagnostic, not matched) | 112.2–180.1 | 1614.738 | 19.29 | 83.33 | 486.27 | 19 |
+
+Control surface checkpoints: 410.784, 410.815, 410.518, 411.253, 410.706 MiB.
+
+Control returned checkpoints: 413.268, 413.409, 413.300, 412.175, 412.175 MiB.
+
+All five control restore cycles and persistence reload pass. Candidate soak checkpoints are not available: acceptance stopped after the completed candidate journey failed both peak memory and hitch count. Candidate peak increases 1.063 MiB, already during the unchanged globe decode, and hitches increase from 15 to 18. Its smaller largest callback does not cancel those failures. These are single runs, not evidence of a general causal improvement or regression.
+
+The initial two-sibling candidate took 8.807 seconds to prefetch and missed the 240 km handoff. The aligned `coarse-concurrency.sample.txt` identified frequent Swift retain/release and temporary source-array work. The allocation-free selection candidate reduced diagnostic prefetch to 3.215 seconds. It completed at 12:20:17.817, before the 240 km crossing at 12:20:18.448; adoption followed at 12:20:18.452. The crossing log itself has zero visible tiles because it precedes the scene update. It did not wait on a CPU build. This is one diagnostic dive, not the completed matched warm-dive gate.
+
+| Regional 16-tile build | 512 m sum | 128 m sum | 32 m sum | 8 m sum | Total ready time |
+|---|---:|---:|---:|---:|---:|
+| Matched control warm | 797 ms | 827 ms | 892 ms | 984 ms | 6.208 s |
+| Candidate diagnostic after source optimization | 1208 ms | 1179 ms | 1207 ms | 1260 ms | 6.482 s |
+
+These sums are the existing per-tile CPU mesh preparation wall intervals; concurrent intervals overlap and must not be called CPU utilization. The candidate's initial 16-tile 512 m generation sums 5356 ms and publishes in 3136 ms. The subsequent four-tile 128 m refinement sums 1198 ms and completes its generation in 2419 ms. The initial slower candidate's regional ready time was 12.736 seconds. All logs and the failed candidate binary remain available.
+
+The control warm dive published its initial 20 tiles in 5049 ms, about 5.14 seconds after the 240 km crossing. Cold control resolved all sources with zero missing slabs and published about 10.54 seconds after crossing; its regional ready time was 6.530 seconds. Globe/site endpoints at both crossings were 1/0. The cache was moved aside, preserved and restored for the cold run. A matched candidate cold run was not performed after the journey gate failed.
+
+Inspected all seven candidate journey images individually. Disk retains the black rectangular portal; clipped shows mapped crater rims; crossfade is conspicuously blurred; handoff at 42.8 km has very weak relief; terrain at 7.5 km remains a nearly uniform grey field with faint craters; immersion removes the room/frame; return restores the same framing. The diagnostic highland overlap shows blurred hills and craters; its regional and final settled views show broad low-contrast hills without a black hole. The final diagnostic highland image follows a 90-second settle. The final twelve logged windows have 16.67 ms mean/p99, a 20.98 ms largest callback and zero missed callbacks, at 136.2–136.3 MiB footprint.
+
+The eleven pinned resource hashes and five protected bodies remain unchanged in the candidate and restored checkout. D's Apollo ladder, final Apollo settled check, candidate restore soak and matched warm/cold highland acceptance remain unvalidated because the journey gate stopped this item. No Apollo identity pass is inferred from unchanged source files.
+
+Smallest next route: retain the source-selection optimization and prefetch patch, remove the dominant texture decode in independent E, then repeat D's complete matched suite against that cheaper baseline. The initial parallelism experiment was slower and is not proposed as a stand-alone improvement. F remains gated on D and E landing.
+
+All physical Vision Pro behavior is unvalidated: tracked gestures, stereo handoff and relief, comfort, head motion, device CPU/GPU pacing, memory pressure and space lifecycle. No physical device was used.
