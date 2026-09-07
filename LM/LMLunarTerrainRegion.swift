@@ -50,10 +50,17 @@ struct LMLunarTerrainRegion: Sendable {
         var reflectance = [LMLunarReflectanceField.Slab]()
         var unavailable = [String]()
         var identifiers = [source.id]
-        for source in sources(at: coordinate, manifest: manifest, catalog: catalog) {
+        let requestedSources = sources(at: coordinate, manifest: manifest, catalog: catalog)
+        let fetchInterval = LMLunarTerrainTiming.begin("source-batch")
+        let results: [Result<Data, Error>]
+        do {
+            defer { LMLunarTerrainTiming.end(fetchInterval) }
+            results = try await store.data(for: requestedSources, offline: offline)
+        }
+        for (source, result) in zip(requestedSources, results) {
             try Task.checkCancellation()
             do {
-                let data = try await store.data(for: source, offline: offline)
+                let data = try result.get()
                 if source.productId.hasPrefix("WAC_EMP_") {
                     reflectance.append(try .init(data: data, source: source))
                 } else {

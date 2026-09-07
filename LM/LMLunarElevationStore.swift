@@ -77,6 +77,39 @@ actor LMLunarElevationStore {
         }
     }
 
+    /// Bound network fan-out while returning results in catalog order. A failed
+    /// slab still permits the region's existing measured fallback; cancellation
+    /// stops the whole batch and never turns into an unavailable-source result.
+    func data(for sources: [LMTerrainManifest.Source], offline: Bool = false)
+        async throws -> [Result<Data, Error>] {
+        try Task.checkCancellation()
+        return try await withThrowingTaskGroup(of: (Int, Result<Data, Error>).self) { group in
+            var results = [Result<Data, Error>?](repeating: nil, count: sources.count)
+            var next = 0
+            func enqueue(_ index: Int) {
+                group.addTask {
+                    try Task.checkCancellation()
+                    do {
+                        let data = try await self.data(for: sources[index], offline: offline)
+                        try Task.checkCancellation()
+                        return (index, .success(data))
+                    } catch {
+                        try Task.checkCancellation()
+                        if error is CancellationError { throw error }
+                        return (index, .failure(error))
+                    }
+                }
+            }
+            while next < min(4, sources.count) { enqueue(next); next += 1 }
+            while let (index, result) = try await group.next() {
+                results[index] = result
+                if next < sources.count { enqueue(next); next += 1 }
+            }
+            try Task.checkCancellation()
+            return results.map { $0! }
+        }
+    }
+
     /// Re-running an interrupted region skips its complete, verified products.
     /// Reject a region larger than the persistent cap instead of evicting its
     /// first tile before the final tile arrives.

@@ -283,6 +283,79 @@ struct LMLunarElevationTests {
         #expect(!FileManager.default.fileExists(atPath: path.appendingPathComponent(source.sha256 + ".bin").path))
     }
 
+    private actor BatchTransport {
+        var active = 0
+        var peak = 0
+        var calls = 0
+        let blobs: [String: Data]
+        let failed: String?
+        init(blobs: [String: Data], failed: String? = nil) {
+            self.blobs = blobs
+            self.failed = failed
+        }
+        func read(_ source: LMTerrainManifest.Source) async throws -> Data {
+            active += 1
+            calls += 1
+            peak = max(peak, active)
+            defer { active -= 1 }
+            // Different lengths force completion order to differ from catalog order.
+            try await Task.sleep(for: .milliseconds(source.sha256 == failed ? 10 : 100))
+            if source.sha256 == failed { throw URLError(.networkConnectionLost) }
+            return try #require(blobs[source.sha256])
+        }
+    }
+
+    @Test func regionBatchBoundsConcurrencyPreservesOrderAndIsolatesFailures() async throws {
+        let fixtures = try (1...9).map { try fixture(seed: Float($0)) }
+        let path = try directory()
+        defer { try? FileManager.default.removeItem(at: path) }
+        let failed = fixtures[2].1.sha256
+        let transport = BatchTransport(
+            blobs: Dictionary(uniqueKeysWithValues: fixtures.map { ($0.1.sha256, $0.0) }),
+            failed: failed)
+        let store = try LMLunarElevationStore(directory: path) { try await transport.read($0) }
+        let results = try await store.data(for: fixtures.map(\.1))
+        #expect(results.count == fixtures.count)
+        for (index, result) in results.enumerated() {
+            if index == 2 {
+                if case .success = result { Issue.record("Failed source was accepted") }
+            } else { #expect(try result.get() == fixtures[index].0) }
+        }
+        let peak = await transport.peak
+        #expect(peak > 1 && peak <= 4)
+        let cached = try await store.data(for: fixtures.enumerated().filter { $0.offset != 2 }.map { $0.element.1 }, offline: true)
+        #expect(cached.count == 8)
+        #expect(try cached.map { try $0.get() } == fixtures.enumerated().filter { $0.offset != 2 }.map { $0.element.0 })
+        #expect(await transport.calls == 9)
+        #expect(try await store.data(for: []).isEmpty)
+    }
+
+    @Test func cancelledRegionBatchCancelsWorkersAndPublishesNoPartialSlabs() async throws {
+        let fixtures = try (1...8).map { try fixture(seed: Float($0)) }
+        let path = try directory()
+        defer { try? FileManager.default.removeItem(at: path) }
+        let counter = Counter()
+        let store = try LMLunarElevationStore(directory: path) { _ in
+            await counter.increment()
+            try await Task.sleep(for: .seconds(30))
+            return fixtures[0].0
+        }
+        let task = Task { try await store.data(for: fixtures.map(\.1)) }
+        for _ in 0..<200 {
+            if await counter.calls == 4 { break }
+            try await Task.sleep(for: .milliseconds(5))
+        }
+        #expect(await counter.calls == 4)
+        task.cancel()
+        do {
+            _ = try await task.value
+            Issue.record("Cancelled batch completed")
+        } catch { #expect(error is CancellationError) }
+        #expect(await counter.calls == 4)
+        let files = try FileManager.default.contentsOfDirectory(atPath: path.path)
+        #expect(!files.contains { $0.hasSuffix(".bin") })
+    }
+
     @Test @MainActor func elevationDiagnosticRequiresCaptureMode() {
         let session = LunarExplorerSession()
         session.configure(arguments: ["--lunar-explorer-elevation-preview=0.67,25"])
