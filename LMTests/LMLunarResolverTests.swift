@@ -148,6 +148,62 @@ struct LMLunarResolverTests {
         }
     }
 
+    private struct UnpreparedField: LMTerrainHeightField {
+        let field: LMLunarTerrainHeightField
+        var spacingMeters: Double { field.spacingMeters }
+        var width: Int { field.width }
+        var height: Int { field.height }
+        var craterCatalog: LMLunarCraterCatalog? { nil }
+        var resolvesProceduralSamples: Bool { true }
+        func relativeElevation(eastMeters: Double, northMeters: Double) -> Float? {
+            field.relativeElevation(eastMeters: eastMeters, northMeters: northMeters)
+        }
+        func interpolatedSurfaceNormal(eastMeters: Double, northMeters: Double) -> SIMD3<Float>? {
+            field.interpolatedSurfaceNormal(eastMeters: eastMeters, northMeters: northMeters)
+        }
+        func resolvedSample(eastMeters: Double, northMeters: Double, requestedSpacingMeters: Double) -> LMResolvedTerrainSample? {
+            field.resolvedSample(eastMeters: eastMeters, northMeters: northMeters, requestedSpacingMeters: requestedSpacingMeters)
+        }
+        func renderedParent(eastMeters: Double, northMeters: Double, spacingMeters: Double) -> LMLunarTerrainMeshTile.Sample? {
+            field.renderedParent(eastMeters: eastMeters, northMeters: northMeters, spacingMeters: spacingMeters)
+        }
+    }
+
+    @Test func preparedGraphProducesIdenticalMeshAndMeasuresRepeatedSampling() throws {
+        let terrain = LMLunarResolvedTerrain(base: try base(),
+            refinements: [try strip(first: 11_519, last: 11_552)])
+        let field = LMLunarTerrainHeightField(terrain: terrain,
+            frame: LMSelenographicCoordinateSystem().localFrame(at: .init(latitudeDegrees: 0, longitudeDegrees: 0)))
+        let plan = LMTerrainTilePlan(id: .init(level: 3, eastIndex: 0, northIndex: 0),
+            centerEastMeters: 0, centerNorthMeters: 0, sizeMeters: 512,
+            sampleSpacingMeters: 8, containsProceduralSubresolution: true)
+        var durations = [Double]()
+        var meshes = [LMProgressiveTerrainMeshData]()
+        // Warm the shared post-relief cache for both variants.
+        _ = try Apollo11TerrainResource.makeProgressiveTileMeshData(heightField: UnpreparedField(field: field), plan: plan)
+        for candidate: any LMTerrainHeightField in [UnpreparedField(field: field), field] {
+            let start = ContinuousClock.now
+            meshes.append(try #require(try Apollo11TerrainResource.makeProgressiveTileMeshData(heightField: candidate, plan: plan)))
+            let elapsed = start.duration(to: .now).components
+            durations.append(Double(elapsed.seconds) * 1_000 + Double(elapsed.attoseconds) / 1e15)
+        }
+        #expect(meshes[0].positions == meshes[1].positions)
+        #expect(meshes[0].normals == meshes[1].normals)
+        #expect(meshes[0].tangents == meshes[1].tangents)
+        #expect(meshes[0].bitangents == meshes[1].bitangents)
+        #expect(meshes[0].textureCoordinates == meshes[1].textureCoordinates)
+        #expect(meshes[0].indices == meshes[1].indices)
+        print("Global mesh sample reuse uncached=\(durations[0])ms cached=\(durations[1])ms exact=true")
+        let prepared = field.prepared(eastMetersRange: -1000...1000, northMetersRange: -1000...1000)
+        // Exercise eviction and interleaved spacings, not just repeated hits.
+        for i in 0..<17_000 {
+            let e = Double(i % 131) * 0.125, n = Double(i / 131) * 0.125
+            let spacing = i % 2 == 0 ? 0.125 : 2.0
+            #expect(prepared.resolvedSample(eastMeters: e, northMeters: n, requestedSpacingMeters: spacing)
+                == field.resolvedSample(eastMeters: e, northMeters: n, requestedSpacingMeters: spacing))
+        }
+    }
+
     @Test func sphericalGraphRetainsCurvatureAndMeasuresKernelCost() throws {
         let base = try base()
         let terrain = LMLunarResolvedTerrain(base: base, refinements: [])

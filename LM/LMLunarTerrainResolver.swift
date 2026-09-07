@@ -209,6 +209,39 @@ enum LMLunarGlobalGeology {
     }
 }
 
+/// Exact-input memoization of the four-iteration spherical graph solve.
+/// FIFO eviction only changes computation cost. Each instance belongs to one
+/// immutable field and one preparation; coordinates and requested spacing are
+/// keyed by their Double bits, with no quantization or interpolation.
+final class LMLunarLocalSampleCache: @unchecked Sendable {
+    private struct Key: Hashable {
+        let east: UInt64, north: UInt64, spacing: UInt64
+    }
+    private let lock = NSLock()
+    private let capacity = 16_384
+    private var values = [Key: (measured: Double, rendered: Double)]()
+    private var keys = [Key]()
+    private var cursor = 0
+
+    func value(east: Double, north: Double, spacing: Double,
+               compute: () -> (measured: Double, rendered: Double)?)
+        -> (measured: Double, rendered: Double)? {
+        let key = Key(east: east.bitPattern, north: north.bitPattern, spacing: spacing.bitPattern)
+        if let found = lock.withLock({ values[key] }) { return found }
+        guard let result = compute() else { return nil }
+        lock.withLock {
+            if values[key] != nil { return }
+            if keys.count == capacity {
+                values.removeValue(forKey: keys[cursor])
+                keys[cursor] = key
+                cursor = (cursor + 1) % capacity
+            } else { keys.append(key) }
+            values[key] = result
+        }
+        return result
+    }
+}
+
 /// Projects the immutable lunar source into one local graph for the existing
 /// clipmap builder. Solve radius along the local up line, preserving requested
 /// north/east coordinates and lunar curvature. No tangent-plane flattening.
@@ -216,6 +249,22 @@ struct LMLunarTerrainHeightField: LMTerrainHeightField {
     let terrain: LMLunarResolvedTerrain
     let frame: LMSelenographicLocalFrame
     var parents = LMLunarTerrainMeshSnapshot(tiles: [])
+    private var sampleCache: LMLunarLocalSampleCache?
+
+    init(terrain: LMLunarResolvedTerrain, frame: LMSelenographicLocalFrame) {
+        self.terrain = terrain
+        self.frame = frame
+    }
+
+    func prepared(eastMetersRange: ClosedRange<Double>,
+                  northMetersRange: ClosedRange<Double>) -> any LMTerrainHeightField {
+        var prepared = self
+        // One bounded cache per mesh preparation. It is never retained by the
+        // terrain snapshot, rendered entities or contact sampler.
+        prepared.sampleCache = LMLunarLocalSampleCache()
+        return prepared
+    }
+
     var spacingMeters: Double { terrain.base.spacingMeters }
     var width: Int { 1_025 }
     var height: Int { 1_025 }
@@ -244,6 +293,15 @@ struct LMLunarTerrainHeightField: LMTerrainHeightField {
 
     private func localSample(east: Double, north: Double, spacing: Double) -> (measured: Double, rendered: Double)? {
         guard east.isFinite, north.isFinite else { return nil }
+        if let sampleCache {
+            return sampleCache.value(east: east, north: north, spacing: spacing) {
+                uncachedLocalSample(east: east, north: north, spacing: spacing)
+            }
+        }
+        return uncachedLocalSample(east: east, north: north, spacing: spacing)
+    }
+
+    private func uncachedLocalSample(east: Double, north: Double, spacing: Double) -> (measured: Double, rendered: Double)? {
         let anchorRadius = frame.coordinateSystem.datumRadiusMeters + frame.anchor.heightMeters
         let horizontalSquared = east * east + north * north
         var up = 0.0

@@ -381,6 +381,10 @@ enum Apollo11TerrainResource {
         let surfaceSampler = LMProgressiveTerrainSurfaceSampler(
             heightField: heightField
         ).prepared(for: plan)
+        // Normals and residual slopes must share the prepared field used for
+        // vertices, so repeated exact samples reuse the same bounded cache.
+        let heightField = heightField.resolvesProceduralSamples
+            ? surfaceSampler.terrainSampler.heightField : heightField
         // A standalone tile has no same-level neighbors, even if its plan was
         // copied from a larger footprint. Production callers pass the complete
         // residency set so shared edges retain their actual ownership.
