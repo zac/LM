@@ -1,15 +1,109 @@
 import Foundation
 import Testing
+import simd
 @testable import LM
 
 @Suite("Moon Explorer experience") @MainActor
 struct LunarExplorerExperienceTests {
+    @Test func fixedDepthPinchReleasesContinuouslyAtLimbWithoutZoomFloor() throws {
+        typealias G = LunarExplorerPinchGeometry
+        let ray = G.Ray(origin: SIMD3(0, 1.45, 0), through: SIMD3(2.05, 1.45, -2.17))
+        var previous: SIMD3<Float>?
+        var maximumStep: Float = 0
+        for width in stride(from: 1_000_000.0, through: 5_000_000, by: 1_000) {
+            let radius = Float(1_737_400 * 3 / width)
+            let center = SIMD3<Float>(1.05, 1.45, -(2.17 + radius))
+            let direction = try #require(G.sphereDirection(ray: ray, center: center, radius: radius, releaseAtLimb: true))
+            #expect(abs(simd_length(direction) - 1) < 1e-5)
+            if let previous { maximumStep = max(maximumStep, simd_distance(previous, direction)) }
+            previous = direction
+            if width == 1_000_000 {
+                let hit = center + radius * direction
+                #expect(simd_length(simd_cross(hit - ray.origin, ray.direction)) < 1e-5)
+            }
+            if width == 5_000_000 {
+                #expect(G.sphereDirection(ray: ray, center: center, radius: radius, releaseAtLimb: false) == nil)
+            }
+        }
+        #expect(maximumStep < 0.015)
+    }
+
+    @Test func triangleSearchPreservesNearestHitsAndOwnershipHoles() {
+        typealias G = LunarExplorerPinchGeometry
+        var positions: [SIMD3<Float>] = []
+        var indices: [UInt32] = []
+        for row in 0...32 {
+            for column in 0...32 {
+                positions.append(SIMD3(Float(column), sin(Float(column + row) * 0.2), Float(row)))
+            }
+        }
+        for row in 0..<32 {
+            for column in 0..<32 where !(10..<15).contains(column) || !(10..<15).contains(row) {
+                let a = UInt32(row * 33 + column)
+                indices += [a, a + 1, a + 33, a + 1, a + 34, a + 33]
+            }
+        }
+        let index = LunarExplorerTriangleIndex(positions: positions, indices: indices)
+        func nearest(_ ranges: [Range<Int>], _ origin: SIMD3<Float>, _ direction: SIMD3<Float>) -> Float? {
+            var result: Float?
+            for range in ranges {
+                for i in stride(from: range.lowerBound, to: range.upperBound, by: 3) {
+                    if let hit = G.triangleDistance(origin: origin, direction: direction,
+                        a: positions[Int(indices[i])], b: positions[Int(indices[i + 1])], c: positions[Int(indices[i + 2])]) {
+                        result = min(result ?? .infinity, hit)
+                    }
+                }
+            }
+            return result
+        }
+        var tested = 0
+        for row in stride(from: 0, through: 34, by: 2) {
+            for column in stride(from: 0, through: 34, by: 2) {
+                let origin = SIMD3<Float>(Float(column) + 0.3, 10, Float(row) + 0.2)
+                let direction = simd_normalize(SIMD3<Float>(0.1, -1, -0.05))
+                let candidates = index.candidates(origin: origin, direction: direction)
+                tested += candidates.reduce(0) { $0 + $1.count }
+                #expect(nearest(candidates, origin, direction) == nearest([0..<indices.count], origin, direction))
+            }
+        }
+        #expect(tested < indices.count * 324 / 8)
+        #expect(nearest(index.candidates(origin: SIMD3(12, 10, 12), direction: SIMD3(0, -1, 0)),
+                        SIMD3(12, 10, 12), SIMD3(0, -1, 0)) == nil)
+    }
+
+    @Test func pinchBoundsKeepParallelAndEdgeHits() {
+        typealias G = LunarExplorerPinchGeometry
+        let minimum = SIMD3<Float>(-1, -1, -1), maximum = SIMD3<Float>(1, 1, 1)
+        #expect(G.intersectsBounds(origin: SIMD3(1, 0, 2), direction: SIMD3(0, 0, -1), minimum: minimum, maximum: maximum))
+        #expect(!G.intersectsBounds(origin: SIMD3(2, 0, 2), direction: SIMD3(0, 0, -1), minimum: minimum, maximum: maximum))
+        #expect(!G.intersectsBounds(origin: SIMD3(0, 0, 2), direction: SIMD3(0, 0, 1), minimum: minimum, maximum: maximum))
+        #expect(G.intersectsBounds(origin: .zero, direction: SIMD3(0, 1, 0), minimum: minimum, maximum: maximum))
+    }
+
+    @Test func terrainAnchorSolvesPanAfterScaleAndTiltChange() throws {
+        typealias G = LunarExplorerPinchGeometry
+        let sourcePoint = SIMD3<Float>(140, 19, -80)
+        let ray = G.Ray(origin: SIMD3(0, 1.45, 0), through: SIMD3(0.2, 1.3, -2.35))
+        for tilt in [38.0, 58, 72, 90] {
+            for heading in [0.0, 27, 90, 179] {
+                let rotation = simd_quatf(angle: Float(tilt * .pi / 180), axis: SIMD3(1, 0, 0))
+                    * simd_quatf(angle: Float(heading * .pi / 180), axis: SIMD3(0, 1, 0))
+                let north = rotation.act(SIMD3<Float>(1, 0, 0)) * 0.003
+                let east = rotation.act(SIMD3<Float>(0, 0, -1)) * 0.003
+                let point = SIMD3<Float>(0, 1.45, -2.35) + rotation.act(sourcePoint) * 0.003
+                let correction = try #require(G.panCorrection(point: point, north: north, east: east, ray: ray))
+                let corrected = point - north * Float(correction.x) - east * Float(correction.y)
+                #expect(simd_length(simd_cross(corrected - ray.origin, ray.direction)) < 1e-5)
+            }
+        }
+    }
+
     @Test func ordinaryLaunchStartsWithBoundedMixedGlobeAndCaptureKeepsInspection() {
         let normal = LunarExplorerSession()
         normal.configure(arguments: [])
         #expect(normal.isBrowsingGlobe && normal.isExplorerExperience)
         normal.exploreZoom(by: 1_000, from: normal.metersAcross)
-        #expect(normal.metersAcross == 4_400)
+        #expect(abs(normal.metersAcross - 4_400) < 1e-8)
         #expect(normal.presentsSite && normal.portalEnabled)
         #expect(!normal.isImmersed)
         normal.exploreZoom(by: 0.0001, from: normal.metersAcross)
@@ -46,7 +140,7 @@ struct LunarExplorerExperienceTests {
         let s = LunarExplorerSession()
         s.configure(arguments: [])
         s.exploreZoom(by: s.metersAcross / 180_000, from: s.metersAcross)
-        #expect(s.selectedPreset == .globe && s.tiltDegrees == 0)
+        #expect(s.usesAltitudeCamera && s.tiltDegrees <= 72)
         #expect(s.presentsSite)
         s.exploreZoom(by: s.metersAcross / 24_000, from: s.metersAcross)
         #expect(s.selectedPreset == .regional && s.tiltDegrees == 72)
@@ -55,6 +149,83 @@ struct LunarExplorerExperienceTests {
         s.returnToGlobe()
         #expect(!s.isImmersed && s.portalEnabled)
         #expect(s.metersAcross == 4_400_000)
+    }
+
+    @Test func altitudeCameraPreservesNamedFramingAndHasContinuousHandoff() {
+        var camera = LunarExplorerCamera()
+        camera.reference = nil
+        for preset in LunarExplorerSession.Preset.allCases {
+            camera.altitude = preset.altitudeMeters
+            #expect(camera.width == preset.metersAcross)
+            #expect(abs(camera.tilt - preset.tiltDegrees) < 1e-10)
+            camera.setWidth(preset.metersAcross)
+            #expect(camera.altitude == preset.altitudeMeters)
+        }
+        for width in [240_000.0, 180_000, 120_000] {
+            let altitude = LunarExplorerCamera.altitude(forWidth: width)
+            camera.altitude = altitude * (1 - 1e-8)
+            let left = (camera.width, camera.tilt)
+            camera.altitude = altitude * (1 + 1e-8)
+            #expect(abs(camera.width - left.0) / width < 1e-6)
+            #expect(abs(camera.tilt - left.1) < 1e-5)
+        }
+        camera.altitude = 7_500
+        camera.windowWidthMeters = 1.5
+        #expect(camera.width == 12_000 && camera.tilt == 72)
+        let s = LunarExplorerSession()
+        s.configure(arguments: [])
+        s.magnifyAltitude(by: 2, from: 7_500)
+        #expect(s.altitudeMeters == 3_750 && s.usesAltitudeCamera)
+    }
+
+    @Test func planningHeadingUsesFifteenDegreeBinsWithHysteresisAcrossNorth() {
+        var heading = LunarExplorerPlanningHeading()
+        for value in [7.4, 8, 9.9, -9.9, 360, -720] { heading.commit(value); #expect(heading.degrees == 0) }
+        heading.commit(10.1)
+        #expect(heading.degrees == 15)
+        heading.commit(6)
+        #expect(heading.degrees == 15)
+        heading.commit(4)
+        #expect(heading.degrees == 0)
+        heading.commit(349)
+        #expect(heading.degrees == 345)
+        heading.commit(354)
+        #expect(heading.degrees == 345)
+        heading.commit(356)
+        #expect(heading.degrees == 0)
+    }
+
+    @Test func headingGestureAtSevenHundredMetersStartsNoTerrainGenerations() async throws {
+        let s = LunarExplorerSession()
+        s.configure(arguments: [])
+        s.select(.terminal)
+        let region = try LMLunarContactTests().region(at: .init(latitudeDegrees: -42, longitudeDegrees: 120))
+        let terrain = LMLunarTerrainPresentation(region: region, mode: .procedural)
+        defer { terrain.cancel() }
+        var ready = false
+        func update() {
+            terrain.update(east: 0, north: 0, altitude: s.altitudeMeters,
+                           metersAcross: s.metersAcross, heading: s.terrainPlanningHeadingDegrees) { _, _, _, _, ms in
+                ready = ms != nil
+            }
+        }
+        update()
+        let deadline = ContinuousClock.now.advanced(by: .seconds(60))
+        while !ready && ContinuousClock.now < deadline { try await Task.sleep(for: .milliseconds(10)) }
+        try #require(ready)
+        let requests = terrain.generationRequestCount, builds = terrain.tileBuildCount
+        s.beginHeadingGesture()
+        for angle in stride(from: 0.0, through: 90.0, by: 1.5) {
+            s.headingDegrees = angle
+            update()
+            try await Task.sleep(for: .milliseconds(2))
+            #expect(terrain.generationRequestCount == requests)
+            #expect(terrain.tileBuildCount == builds)
+        }
+        s.endHeadingGesture()
+        update()
+        #expect(s.terrainPlanningHeadingDegrees == 90)
+        #expect(terrain.generationRequestCount == requests + 1)
     }
 
     @Test func draggingCrossesDatelineAndPoleWithoutClamping() {
@@ -88,7 +259,11 @@ struct LunarExplorerExperienceTests {
         #expect(abs(s.tiltDegrees - 58) < 1e-8)
         #expect(s.metersAcross == 700)
         s.zoom(by: 2, from: 700)
-        #expect(abs(s.altitudeMeters - 180) < 1e-8)
+        #expect(s.altitudeMeters < 180)
+        let reference = LunarExplorerSession()
+        reference.configure(arguments: ["--lunar-explorer-capture", "--lunar-explorer-preset=terminal"])
+        reference.zoom(by: 2, from: 700)
+        #expect(reference.altitudeMeters == 180 && reference.metersAcross == 350)
     }
 
     @Test func readyResidentGlobeHandsOffToTerrain() {

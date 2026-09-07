@@ -19,7 +19,7 @@ zoom-out stops at the handoff width, and leaving immersion restores the window.
 | Step | State | Notes |
 |---|---|---|
 | 1 Window container and immersion gate | Complete in Simulator | 54 focused tests; 11 byte-identical Apollo captures; seven-stage portal journey including partial opacity. Physical gates remain open. |
-| 2 One camera model and gesture set | Not started | §4 |
+| 2 One camera model and gesture set | Camera/gestures validated; site pack open | 61 focused tests; final Apollo ladder 11/11 byte-identical. Anchored pinch 0.343 ms with 69.7 MiB index; heading sweep generates zero tiles. Faceting and physical gesture acceptance remain open. Apollo migration stays a separate gated commit. |
 | 3 Scene stepping off the observation graph | Not started | §4 |
 | 4 Coarse-first terrain and prefetch | Not started | §4 |
 | 5 Sliding region | Not started | §4 |
@@ -131,6 +131,10 @@ free-standing globe at full zoom-out is optional polish, not the first cut.
 - Pinch: altitude, logarithmic, anchored at the gaze point so the place under
   the hand stays put. No floors other than 1.5 m altitude; the 3,400 km browse
   floor and the 5,000 km ceiling remain only as the disk-fits-window bound.
+  Owner-approved boundary rule (2026-09-07): when zoom-out makes the fixed
+  pinch ray miss the whole disk, smoothly release the anchor at the limb.
+  Keep the fixed sphere depth and full zoom range; do not translate the
+  sphere sideways or introduce another zoom floor.
 - Drag: above the handoff, great-circle drag on the sphere (exists as
   `rotateGlobe`). Below it, pan in metres per point scaled by width (exists as
   pan mode). The Rotate / Move picker goes away.

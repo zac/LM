@@ -111,3 +111,143 @@ No Step 1 test or Apollo comparison remains failed. The initial black handoff
 is retained as rejected evidence, followed by two passing visual journeys.
 Steps 2 and 3, the separate Apollo site-pack gate, the five-cycle soak and all
 physical Vision Pro gates remain outstanding.
+
+
+## Step 2 boundary decision
+
+Step 1 is committed as `ed9bd84`. Step 2 is not landed. Its altitude-camera
+and heading-planning prototype passes 57 focused tests with zero failures or
+skips in `Step2-Camera-Prototype-Retry.xcresult`. The initial prototype run
+passed 55 and failed two: an obsolete independent-interactive-zoom expectation,
+and a real arrival bug where the old `altitude * 3.2` assignment overwrote the
+new camera's requested altitude. Both are corrected in the saved prototype.
+The real terrain planner/baker test warms a 700 m view, sweeps heading through
+90 degrees, and observes zero new generation requests or tile builds during
+the gesture. The release requests the newly quantised corridor. This does not
+yet test physical two-hand recognition or the complete gesture UI.
+
+The prototype has been archived at
+`/tmp/LM-Explorer-OneZoom-2026-09-06/Step2-Anchor-Boundary/camera-heading-prototype.patch`,
+SHA-256 `1a4c760d63cae6a02854a309e84c94493fc75d9efe5cbfb25ae7d2611056e956`.
+`git apply --check` succeeds against `ed9bd84`. The app source in the checkout
+has been restored to that validated Step 1 commit; the owner document and
+scheme changes are preserved. No Step 2 Apollo ladder or visual acceptance has
+been claimed. The patch still needs gesture wiring, pinch anchoring and pin
+heading alignment before its final validation.
+
+The existing fixed-centre globe placement creates a boundary case for §3.3's
+unqualified requirement that the point under the hand stays fixed. A ray
+through a point 1 m right of the portal centre intersects the enlarged Moon
+at 1,000 km across. At 4,400 km across, its closest approach to the centre is
+1.5404 scene metres while the sphere radius is only 1.1846 m. It misses the
+sphere. A lunar coordinate/heading change rotates the sphere and cannot make
+it reach that ray. The same ray misses at the 5,000 km upper bound.
+
+This is analytic evidence for the current placement, not a claim that portals
+or anchored zoom in general are impossible. Reproduction and constants are
+in `Step2-Anchor-Boundary/reproduce.py`, `geometry.json` and `README.md`.
+The owner request says to stop and propose a bounded alternative when a
+specified combination proves infeasible. The pending choice is:
+
+- **Recommended:** preserve the anchor while the ray intersects the Moon,
+  then release it continuously at the limb and keep the full zoom-out range.
+  This keeps the accepted placement but qualifies the anchored-pinch contract.
+- Allow a lateral camera offset inside the portal, preserving the fixed
+  nearest-surface depth while letting the whole disk move off-centre. This
+  adds a placement/bookmark rule and needs its own visual acceptance.
+
+No new zoom floor was added, and neither boundary behavior was chosen silently.
+Apollo site-pack migration, Step 3 scene stepping, the five-cycle soak,
+physical gesture comfort, portal stencil cost and device 90 Hz pacing remain
+open. Steps 4–6 were not started; AGC and terrain data were not changed.
+
+Automatic approval review rejected removal of the existing browse-mode globe
+brightness multiplier, classifying it as a protected radiance change. That
+edit was not applied; the existing brightness policy is retained, including
+in the saved prototype. No workaround was used.
+
+### Approved continuation, 2026-09-07
+
+The owner approved the recommended limb release. The prototype above is now
+restored in the checkout. The camera derives width and tilt from altitude
+using monotone C1 calibration; named presets select altitudes. Pinch reads a
+submitted terrain triangle at gesture start and reuses that source-frame
+point during the gesture. It re-picks when the visible representation changes.
+The globe anchor eases through the last 2% of squared radial clearance before
+releasing along the limb. The sphere retains its fixed depth and zoom range.
+Terrain remains bounded by the existing resident-region pan limits; anchoring
+cannot promise to follow a point beyond those limits before the sliding-region
+work in Step 5.
+
+Dragging pans below the handoff and moves over the sphere above it. Two-hand
+rotation changes heading; planning holds the prior corridor until release,
+then commits a 15-degree bin with a 2.5-degree hysteresis margin. Place pins
+and the flag label follow the globe's heading. The Apollo site-pack migration
+has not been applied.
+
+`Step2-Gestures.xcresult` passes all 59 focused tests, zero failures/skips.
+The initial gesture build rejected `.camera` coordinate conversion because
+that API is unavailable in visionOS. The corrected implementation queries an
+ARKit device anchor. Simulator uses an explicitly fixed calibration because
+it has no world-tracking provider. Loss of device tracking preserves zoom and
+skips anchoring; device pose/gesture accuracy remains unvalidated.
+
+The ordinary Release build passes. Apollo, journey and interaction-probe
+acceptance are in progress; no Step 2 commit or final visual pass is claimed.
+
+### Camera and gesture validation
+
+`Step2-Final.xcresult`: **61 passed, zero failed/skipped** in the six focused
+suites. Tests cover C1 width/tilt calibration, limb release, exact triangle
+queries including an ownership hole, pan correction, heading hysteresis,
+and a real terrain planner at 700 m across: zero generation requests or tile
+builds during the heading sweep, one planning request after release.
+The ordinary Release executable is
+`63435ec850e2788997717e6fc882ffea8ea796b7afb9b5caceb2fc1fbb52b0c0`.
+All eleven resource hashes and the five protected method bodies are unchanged.
+
+`Step2-Journey` completed the seven product stages plus four interaction
+stages. Each image was inspected: disk shows the whole Moon and flag within
+the room/frame; clipped sphere fills the frame; crossfade and handoff have
+terrain without an open black gap; terrain is very low contrast under the
+near-noon lighting; immersion removes the frame; return restores the room
+and frame. The anchored 180 m to 90 m altitude pinch retains its submitted
+source-frame point within 0.0001 scene metres of the fixed ray (maximum error
+logs as 0.000000). Pan advances 40 m east across the 32 m tile grid. Broad
+triangular facets remain visible before and after; there is no newly opened
+gap in these captures, but the unqualified seam-free visual gate remains open.
+These probes do not validate physical hand tracking or anchoring outside the
+resident-region bounds.
+
+The first exact Apollo pick scanned roughly 3.2 million triangles and took
+199 ms. Bounds rejection alone still took 146 ms. A triangle hierarchy reduced
+the candidate set to 1,333 triangles, but extracting RealityKit buffers still
+cost 133 ms. Retaining the extracted buffers in the revisioned entity index
+reduced the final observed pick to **0.343 ms**. Cache invalidation follows
+mesh replacement; the cache holds weak entity references and prunes retired
+entities. The hierarchy and buffers account for **73,047,712 bytes (69.7 MiB)**
+at this view. Index preparation and a cold pick before preparation can still
+hitch; the global terrain query uses its existing exact morph snapshot and
+has not been profiled by this Apollo probe.
+
+`Step2-Final-Gestures` completed all four stages; each PNG was inspected.
+Pinch start/end show the same terrain feature at different altitudes, with
+facets still visible. Pan before/after moves the surface without exposing an
+open gap. Its 22 frame windows report 381.0–384.8 MiB footprint, 1,595.6 MiB
+lifetime peak, maximum window mean 20.30 ms, p99 116.57 ms and maximum callback
+interval 208.96 ms. These include loading/publication, and are CADisplayLink
+observations rather than GPU or headset pacing. The earlier full journey had
+117.7–339.1 MiB footprint and 1,620.3 MiB lifetime peak; those different paths
+and single runs are not evidence of a general improvement. The cache's memory
+cost is deliberate and remains part of the physical-device review.
+
+`Step2-Apollo-Final` passes **11/11 byte-identical PNGs** against the item-0
+baseline, 20 seconds per stop, one attempt, pinned 64 ppd. All eleven final
+settled windows have p95/p99/max 16.67 ms and zero missed callbacks; footprint
+is 291.4–368.3 MiB versus baseline 311.5–380.8 MiB. Across all 33 windows,
+footprint is 291.4–369.4 MiB, lifetime peak 1,604.1 MiB, maximum mean 26.54 ms,
+p99 153.53 ms and maximum callback interval 1,229.50 ms. The latter is a
+loading/publication hitch; this change does not close entry pacing. See
+`comparison.json`, `settled.json`, `metrics.json` and `performance.log` in that
+folder. The camera/gesture portion is validated; Apollo site-pack migration,
+scene stepping, the soak and physical acceptance remain separate work.

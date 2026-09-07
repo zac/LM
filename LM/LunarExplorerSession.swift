@@ -232,7 +232,7 @@ final class LunarExplorerSession {
         guard usesWindowContainer else { return }
         if metersAcross < Self.globeSiteBlendStartMetersAcross {
             guard isBrowsingGlobe else { return }
-            let coordinate = selectedMarkerPlace?.coordinate ?? browseCoordinate
+            let coordinate = browseCoordinate
             let apollo = try? LMTerrainManifest.load().landingOriginCoordinate
             let next: LMSelenographicCoordinate? = coordinate == apollo ? nil : coordinate
             isBrowsingGlobe = false
@@ -259,16 +259,43 @@ final class LunarExplorerSession {
     var selectedFocus: Focus = .eagle
     var navigationMode: NavigationMode = .orbit
     var detailMode: LMTerrainDetailMode = .automatic
-    var altitudeMeters = Preset.regional.altitudeMeters
-    var metersAcross = Preset.regional.metersAcross {
-        didSet {
-            if isImmersed && metersAcross > Self.globeSiteBlendEndMetersAcross {
-                metersAcross = Self.globeSiteBlendEndMetersAcross
-            }
+    var camera = LunarExplorerCamera()
+    var usesAltitudeCamera: Bool { camera.reference == nil }
+    var altitudeMeters: Double {
+        get { camera.altitude }
+        set {
+            guard newValue.isFinite else { return }
+            camera.altitude = min(Self.maximumAltitudeMeters, max(Self.minimumAltitudeMeters, newValue))
+            if isImmersed && camera.width > maximumZoomWidth { camera.setWidth(maximumZoomWidth) }
         }
     }
-    var headingDegrees = 0.0
-    var tiltDegrees = Preset.regional.tiltDegrees
+    var metersAcross: Double {
+        get { camera.width }
+        set {
+            guard newValue.isFinite else { return }
+            let width = min(maximumZoomWidth, max(Self.minimumMetersAcross, newValue))
+            let gate = Self.globeSiteBlendEndMetersAcross
+            camera.setWidth(abs(width - gate) <= gate.ulp ? gate : width)
+        }
+    }
+    var headingDegrees = 0.0 {
+        didSet { if !headingGestureActive { planningHeading.commit(headingDegrees) } }
+    }
+    private(set) var headingGestureActive = false
+    private(set) var planningHeading = LunarExplorerPlanningHeading()
+    var terrainPlanningHeadingDegrees: Double {
+        // Reference captures can pin a deliberately unquantised corridor.
+        usesAltitudeCamera ? planningHeading.degrees : headingDegrees
+    }
+    func beginHeadingGesture() { headingGestureActive = true }
+    func endHeadingGesture() {
+        headingGestureActive = false
+        planningHeading.commit(headingDegrees)
+    }
+    var tiltDegrees: Double {
+        get { camera.tilt }
+        set { if newValue.isFinite { camera.reference?.tilt = newValue } }
+    }
     var focusNorthOffsetMeters = 0.0
     var focusEastOffsetMeters = 0.0
     var missionShadowsEnabled = true
@@ -376,8 +403,10 @@ final class LunarExplorerSession {
         if isExplorerExperience {
             select(closestPreset(to: arrivalAltitude))
             altitudeMeters = arrivalAltitude
-            metersAcross = arrivalAltitude * 3.2
-            tiltDegrees = Preset.regional.tiltDegrees
+            if !usesAltitudeCamera {
+                metersAcross = arrivalAltitude * 3.2
+                tiltDegrees = Preset.regional.tiltDegrees
+            }
             headingDegrees = arrivalHeading
             applyPendingSavedView()
             flightTask = Task { [weak self] in
@@ -533,6 +562,7 @@ final class LunarExplorerSession {
                 Self.maximumAltitudeMeters
             )
             selectedPreset = closestPreset(to: altitudeMeters)
+            synchronizeZoomDestination()
         }
     }
 
@@ -541,8 +571,9 @@ final class LunarExplorerSession {
         set {
             metersAcross = min(
                 max(pow(10, newValue), Self.minimumMetersAcross),
-                Self.maximumMetersAcross
+                maximumZoomWidth
             )
+            synchronizeZoomDestination()
         }
     }
 
@@ -673,8 +704,12 @@ final class LunarExplorerSession {
     func select(_ preset: Preset) {
         selectedPreset = preset
         altitudeMeters = preset.altitudeMeters
-        metersAcross = preset.metersAcross
-        tiltDegrees = preset.tiltDegrees
+        // Explicit reference configuration preserves inspection-scale captures.
+        // Interactive presets are named altitudes in the calibrated camera.
+        if !usesAltitudeCamera {
+            metersAcross = preset.metersAcross
+            tiltDegrees = preset.tiltDegrees
+        }
     }
 
     func focus(on focus: Focus) {
@@ -700,6 +735,7 @@ final class LunarExplorerSession {
         }
         isExplorerExperience = !isCapture && !inspectionOptions
         usesWindowContainer = isExplorerExperience
+        if isExplorerExperience { camera.reference = nil }
         if isExplorerExperience { returnToGlobe(); showDaylight() }
         captureReanchorProbe = isCapture && arguments.contains("--lunar-explorer-reanchor-probe")
         captureElevationOffline = isCapture && arguments.contains("--lunar-explorer-elevation-offline")

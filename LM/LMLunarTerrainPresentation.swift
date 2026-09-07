@@ -13,6 +13,8 @@ final class LMLunarTerrainPresentation {
     private(set) var boundsMinimum = SIMD3<Float>.zero
     private(set) var boundsMaximum = SIMD3<Float>.zero
     private var requested = [LMTerrainTilePlan]()
+    private(set) var generationRequestCount = 0
+    private(set) var tileBuildCount = 0
     private var task: Task<Void, Never>?
     private var morphTask: Task<Void, Never>?
     private var anchor: LMSelenographicLocalFrame?
@@ -81,6 +83,7 @@ final class LMLunarTerrainPresentation {
                 status: @escaping @MainActor (String, Int, Int, Double?, Int?) -> Void) {
         guard plans != requested else { return }
         requested = plans
+        generationRequestCount += 1
         task?.cancel()
         let token = UUID()
         generation = token
@@ -129,6 +132,7 @@ final class LMLunarTerrainPresentation {
                             else if cached.owners != owners { statistics.owners += 1 }
                             else { statistics.neighbors += 1 }
                         } else { statistics.missing += 1 }
+                        self?.tileBuildCount += 1
                         guard let generated = try await Apollo11TerrainResource.makeProgressiveTileEntityBuild(
                             heightField: field, plan: plan, activePlans: plans,
                             geometryReplacementPlans: plans, albedoField: region.albedo, detailPipeline: pipeline

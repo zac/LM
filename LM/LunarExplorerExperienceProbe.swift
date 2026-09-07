@@ -4,7 +4,7 @@ import OSLog
 /// Opt-in Simulator integration sequence. Uses the same session actions as
 /// the buttons; it does not certify physical gesture or UI hit-target comfort.
 @MainActor enum LunarExplorerExperienceProbe {
-    static func run(_ session: LunarExplorerSession) async {
+    static func run(_ session: LunarExplorerSession, scene: LunarExplorerScene) async {
         if ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile"),
            ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile-reentry") {
             await runReentry(session)
@@ -46,6 +46,7 @@ import OSLog
                     throw CocoaError(.fileReadUnknown)
                 }
                 session.previewPlace(place)
+                if !arguments.contains("--lunar-explorer-profile-gestures-only") {
                 try await stage("disk")
                 session.exploreZoom(by: session.metersAcross / 1_000_000, from: session.metersAcross)
                 try await stage("clipped")
@@ -65,6 +66,28 @@ import OSLog
                 session.leaveImmersion()
                 guard session.portalEnabled else { throw CocoaError(.validationMissingMandatoryProperty) }
                 try await stage("return")
+                } else {
+                    session.exploreZoom(by: session.metersAcross / 700, from: session.metersAcross)
+                    for _ in 0..<600 where !session.diagnostics.loadMessage.hasSuffix("terrain ready") {
+                        try await Task.sleep(for: .milliseconds(100))
+                    }
+                    guard session.diagnostics.loadMessage.hasSuffix("terrain ready") else { throw CocoaError(.fileReadUnknown) }
+                }
+                if arguments.contains("--lunar-explorer-profile-gestures") {
+                    session.select(.terminal)
+                    session.pan(northMeters: 0, eastMeters: 0)
+                    try await stage("pinch-start")
+                    try await scene.probeAnchoredPinch(session)
+                    try await stage("pinch-end")
+                    session.select(.terminal)
+                    session.pan(northMeters: 0, eastMeters: 0)
+                    try await stage("pan-before")
+                    for step in 1...80 {
+                        session.pan(northMeters: 0, eastMeters: Double(step) / 2)
+                        try await Task.sleep(for: .milliseconds(33))
+                    }
+                    try await stage("pan-after")
+                }
                 logger.info("Moon experience stage=passed oneZoom=true")
                 if let stageURL { try Data("passed".utf8).write(to: stageURL, options: .atomic) }
                 return

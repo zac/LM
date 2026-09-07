@@ -1,3 +1,4 @@
+import ARKit
 import LMCore
 import OSLog
 import RealityKit
@@ -174,7 +175,7 @@ final class LunarExplorerScene {
                 placePins[place.id] = pin
             }
             if pin.parent !== anchor { anchor.addChild(pin) }
-            let direction = LunarExplorerMapGeometry.direction(to: place.coordinate, centeredOn: session.browseCoordinate)
+            let direction = globePresentationRoot.orientation.act(LunarExplorerMapGeometry.direction(to: place.coordinate, centeredOn: session.browseCoordinate))
             pin.position = globePresentationRoot.position + direction * radius * 1.006
             pin.scale = SIMD3(repeating: place.id == session.selectedPlaceID ? 1.6 : 1)
             pin.isEnabled = LunarExplorerMapGeometry.isVisible(direction: direction,
@@ -585,7 +586,7 @@ final class LunarExplorerScene {
             globalTerrain.update(east: focus.y, north: focus.x,
                                  altitude: session.pendingArrival ? LunarExplorerSession.Preset.regional.altitudeMeters : session.altitudeMeters,
                                  metersAcross: session.pendingArrival ? LunarExplorerSession.Preset.regional.metersAcross : session.metersAcross,
-                                 heading: session.headingDegrees) { [weak self, weak session] message, requested, active, spacing, milliseconds in
+                                 heading: session.terrainPlanningHeadingDegrees) { [weak self, weak session] message, requested, active, spacing, milliseconds in
                 guard let self, let session else { return }
                 session.diagnostics.loadMessage = message
                 if message.hasPrefix("Lunar terrain failed") {
@@ -659,7 +660,7 @@ final class LunarExplorerScene {
             east: session.focusEastOffsetMeters, north: session.focusNorthOffsetMeters,
             altitude: LunarExplorerSession.Preset.regional.altitudeMeters,
             metersAcross: LunarExplorerSession.Preset.regional.metersAcross,
-            heading: session.headingDegrees)
+            heading: session.terrainPlanningHeadingDegrees)
         guard terrain.resumeIfReady(plans: plans) else { return false }
         session.diagnostics.loadMessage = "Lunar terrain ready"
         session.diagnostics.requestedTileCount = plans.count
@@ -688,6 +689,279 @@ final class LunarExplorerScene {
                 "Lunar globe terminator update failed: \(error.localizedDescription, privacy: .public)"
             )
         }
+    }
+
+    private let trackingSession = ARKitSession()
+    private var worldTracking: WorldTrackingProvider?
+
+    func startGestureTracking() async {
+        guard WorldTrackingProvider.isSupported else { return }
+        let provider = WorldTrackingProvider()
+        do {
+            try await trackingSession.run([provider])
+            worldTracking = provider
+        } catch {
+            logger.error("Pinch device tracking unavailable: \(error.localizedDescription, privacy: .public)")
+        }
+    }
+
+    func stopGestureTracking() {
+        trackingSession.stop()
+        worldTracking = nil
+        endPinch()
+    }
+
+    func gestureEyePosition() -> SIMD3<Float>? {
+        #if targetEnvironment(simulator)
+        // Simulator has no WorldTrackingProvider. Its capture camera is fixed;
+        // this is an explicit simulator calibration, not a device pose claim.
+        return SIMD3(0, 1.45, 0)
+        #else
+        guard let pose = worldTracking?.queryDeviceAnchor(atTimestamp: CACurrentMediaTime()),
+              pose.isTracked else { return nil }
+        let p = pose.originFromAnchorTransform.columns.3
+        return root.convert(position: SIMD3(p.x, p.y, p.z), from: nil)
+        #endif
+    }
+
+    private struct PinchMeshIndex {
+        weak var entity: Entity?
+        let parts: [String: LunarExplorerTriangleIndex]
+    }
+    private var pinchIndices: [UInt64: PinchMeshIndex] = [:]
+    private var pinchIndexRevisions: [UInt64: Int] = [:]
+    private var pinchIndexQueue: [(Entity, MeshResource, Int)] = []
+    private var pendingPinchIndices: Set<UInt64> = []
+    private var pinchIndexTask: Task<Void, Never>?
+
+    private func invalidatePinchIndex(for entity: Entity) {
+        pinchIndices.removeValue(forKey: entity.id)
+        pinchIndexRevisions[entity.id, default: 0] += 1
+    }
+
+    private func preparePinchIndices(_ session: LunarExplorerSession) {
+        guard session.usesAltitudeCamera, globalTerrain == nil, let terrainEnvironment else { return }
+        pinchIndices = pinchIndices.filter { $0.value.entity != nil }
+        func visit(_ entity: Entity) {
+            if entity === terrainRockField { return } // Tiny rock meshes use the bounded direct query.
+            if let mesh = entity.components[ModelComponent.self]?.mesh {
+                let id = entity.id
+                if pinchIndices[id] == nil, pendingPinchIndices.insert(id).inserted {
+                    pinchIndexQueue.append((entity, mesh, pinchIndexRevisions[id, default: 0]))
+                }
+            }
+            for child in entity.children { visit(child) }
+        }
+        visit(terrainEnvironment)
+        guard pinchIndexTask == nil, !pinchIndexQueue.isEmpty else { return }
+        pinchIndexTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            defer { self.pinchIndexTask = nil }
+            while !self.pinchIndexQueue.isEmpty, !Task.isCancelled {
+                let (entity, mesh, revision) = self.pinchIndexQueue.removeFirst()
+                let id = entity.id
+                var parts: [String: LunarExplorerTriangleIndex] = [:]
+                let started = ContinuousClock.now
+                for model in mesh.contents.models {
+                    for part in model.parts {
+                        guard let indices = part.triangleIndices?.elements else { continue }
+                        let positions = part.positions.elements
+                        let index = await Task.detached(priority: .utility) {
+                            LunarExplorerTriangleIndex(positions: positions, indices: indices)
+                        }.value
+                        parts[model.id + "/" + part.id] = index
+                    }
+                }
+                self.pendingPinchIndices.remove(id)
+                if revision == self.pinchIndexRevisions[id, default: 0] {
+                    self.pinchIndices[id] = PinchMeshIndex(entity: entity, parts: parts)
+                }
+                if let session = self.session { self.preparePinchIndices(session) }
+                let bytes = self.pinchIndices.values.reduce(0) { total, mesh in
+                    total + mesh.parts.values.reduce(0) { $0 + $1.byteCount }
+                }
+                self.logger.info("Pinch index ready bytes=\(bytes) preparation=\(String(describing: started.duration(to: .now)))")
+            }
+        }
+    }
+
+    private var pinchAnchor: PinchAnchor?
+    private var pinchOnTerrain = false
+    func endPinch() { pinchAnchor = nil }
+
+    /// Pick at gesture start and representation handoff. Terrain hits use
+    /// submitted triangles; revisioned CPU buffers avoid conversion during a pick.
+    func magnify(_ session: LunarExplorerSession, magnification: Double, initialAltitude: Double,
+                 ray: LunarExplorerPinchGeometry.Ray) {
+        typealias Geometry = LunarExplorerPinchGeometry
+        updatePresentationTransform(session)
+        let onTerrain = presentationRoot.isEnabled && session.globeSiteBlend.siteOpacity >= 0.5
+        if pinchAnchor == nil || onTerrain != pinchOnTerrain {
+            let started = ContinuousClock.now
+            pinchAnchor = pickPinchAnchor(session, ray: ray)
+            pinchOnTerrain = onTerrain
+            logger.info("Pinch surface pick duration=\(String(describing: started.duration(to: .now)), privacy: .public)")
+        }
+        let previous = pinchAnchor
+        session.magnifyAltitude(by: magnification, from: initialAltitude, synchronize: false)
+        updatePresentationTransform(session)
+        switch previous {
+        case .globe(let localDirection):
+            guard let globeEntity, let front = globeFrontCoordinate else { break }
+            let center = globePresentationRoot.position(relativeTo: root)
+            let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale
+            guard let target = Geometry.sphereDirection(ray: ray, center: center, radius: radius,
+                                                       releaseAtLimb: true) else { break }
+            let orientation = globeEntity.orientation(relativeTo: root)
+            let rotation = simd_quatf(from: orientation.act(localDirection), to: target) * orientation
+            let radial = rotation.inverse.act(SIMD3<Float>(0, 0, 1))
+            let frame = LMSelenographicCoordinateSystem().localFrame(at: front)
+            let fixed = frame.moonFixedDirection(SIMD3(Double(radial.y), Double(radial.x), Double(radial.z)))
+            let coordinate = LMSelenographicCoordinateSystem().coordinate(for:
+                LMMoonCenteredPosition(fixed * LunarExplorerSession.lunarGlobeRadiusMeters))
+            let base = LMLunarNavigation.displayRotation(from: front, to: coordinate)
+            let roll = rotation * base.inverse
+            session.headingDegrees = Double(2 * atan2(roll.imag.z, roll.real)) * 180 / .pi
+            session.browseCoordinate = coordinate
+            if !session.isBrowsingGlobe, let sourceFrame {
+                let position = sourceFrame.position(for: coordinate)
+                session.pan(northMeters: position.northMeters - eagleTerrainPosition.x,
+                            eastMeters: position.eastMeters - eagleTerrainPosition.y)
+            }
+        case .terrain(let sourcePoint):
+            // Iterate the small focus-height correction as well as horizontal
+            // pan. The source point survives atomic publication and re-anchoring.
+            for _ in 0..<4 {
+                guard let transform = pinchSourceTransform(session) else { break }
+                let point = Geometry.point(sourcePoint, transformedBy: transform)
+                let north = Geometry.direction(SIMD3(1, 0, 0), transformedBy: transform)
+                let east = Geometry.direction(SIMD3(0, 0, -1), transformedBy: transform)
+                guard let delta = Geometry.panCorrection(point: point, north: north, east: east, ray: ray) else { break }
+                session.pan(northMeters: session.focusNorthOffsetMeters + delta.x,
+                            eastMeters: session.focusEastOffsetMeters + delta.y)
+                updatePresentationTransform(session)
+                if simd_length(delta) < 0.0001 { break }
+            }
+        case nil: break
+        }
+        session.synchronizeZoomDestination()
+        updatePresentationTransform(session)
+    }
+
+    /// Deterministic integration probe of the same anchored gesture handler.
+    /// Hardware recognition and head movement remain separate device gates.
+    func probeAnchoredPinch(_ session: LunarExplorerSession) async throws {
+        updatePresentationTransform(session)
+        guard let transform = pinchSourceTransform(session) else { throw CocoaError(.validationMissingMandatoryProperty) }
+        let focus = terrainFocus(session)
+        let point = LunarExplorerPinchGeometry.point(
+            SIMD3(Float(focus.x + 20), Float(terrainDatumElevationMeters), Float(-focus.y - 40)),
+            transformedBy: transform)
+        let ray = LunarExplorerPinchGeometry.Ray(origin: SIMD3(0, 1.45, 0), through: point)
+        let initial = session.altitudeMeters
+        session.beginHeadingGesture()
+        defer { endPinch(); session.endHeadingGesture() }
+        var maximumError: Float = 0
+        for step in 0...60 {
+            magnify(session, magnification: pow(2, Double(step) / 60), initialAltitude: initial, ray: ray)
+            guard case .terrain(let anchor) = pinchAnchor, let transform = pinchSourceTransform(session) else {
+                throw CocoaError(.validationMissingMandatoryProperty)
+            }
+            let projected = LunarExplorerPinchGeometry.point(anchor, transformedBy: transform)
+            maximumError = max(maximumError, simd_length(simd_cross(projected - ray.origin, ray.direction)))
+            try await Task.sleep(for: .milliseconds(16))
+        }
+        logger.info("Pinch integration maximumRayError=\(maximumError, privacy: .public)m")
+        guard maximumError < 0.0001 else { throw CocoaError(.validationMissingMandatoryProperty) }
+    }
+
+    private enum PinchAnchor {
+        case globe(SIMD3<Float>)
+        case terrain(SIMD3<Float>)
+    }
+
+    private func pinchSourceTransform(_ session: LunarExplorerSession) -> simd_float4x4? {
+        guard let sourceFrame, let floatingOrigin else { return nil }
+        let source = LMLunarAnchoredPlacement.chunkTransform(
+            origin: .init(northMeters: 0, eastMeters: 0, upMeters: 0),
+            source: sourceFrame, anchor: floatingOrigin.frame)
+        return terrainAnchorRoot.transformMatrix(relativeTo: root) * source.matrix
+    }
+
+    private func pickPinchAnchor(_ session: LunarExplorerSession,
+                                 ray: LunarExplorerPinchGeometry.Ray) -> PinchAnchor? {
+        typealias Geometry = LunarExplorerPinchGeometry
+        if presentationRoot.isEnabled, session.globeSiteBlend.siteOpacity >= 0.5,
+           let transform = pinchSourceTransform(session) {
+            let inverse = transform.inverse
+            let origin = Geometry.point(ray.origin, transformedBy: inverse)
+            let direction = simd_normalize(Geometry.direction(ray.direction, transformedBy: inverse))
+            if let globalTerrain {
+                if let hit = globalTerrain.snapshot.raycast(origin: origin, direction: direction) {
+                    return .terrain(hit.position)
+                }
+            } else if let terrainEnvironment {
+                var nearest = Float.infinity
+                var hit: SIMD3<Float>?
+                func visit(_ entity: Entity) {
+                    guard entity.isEnabled else { return }
+                    if let opacity = entity.components[OpacityComponent.self], opacity.opacity < 0.5 { return }
+                    if let model = entity.components[ModelComponent.self] {
+                        // Reject bounds before asking RealityKit to expose mesh
+                        // buffers, especially the many small surface rocks.
+                        let bounds = entity.visualBounds(recursive: false, relativeTo: root)
+                        if !Geometry.intersectsBounds(origin: ray.origin, direction: ray.direction,
+                                                      minimum: bounds.min, maximum: bounds.max) {
+                            for child in entity.children { visit(child) }
+                            return
+                        }
+                        let meshStarted = ContinuousClock.now
+                        let contents = model.mesh.contents
+                        let meshRead = ContinuousClock.now
+                        var triangleCount = 0
+                        for instance in contents.instances {
+                            guard let mesh = contents.models.first(where: { $0.id == instance.model }) else { continue }
+                            let matrix = entity.transformMatrix(relativeTo: root) * instance.transform
+                            let localOrigin = Geometry.point(ray.origin, transformedBy: matrix.inverse)
+                            let localDirection = simd_normalize(Geometry.direction(ray.direction, transformedBy: matrix.inverse))
+                            for part in mesh.parts {
+                                let search = pinchIndices[entity.id]?.parts[mesh.id + "/" + part.id]
+                                guard let indices = search?.indices ?? part.triangleIndices?.elements else { continue }
+                                let positions = search?.positions ?? part.positions.elements
+                                let ranges = search?.candidates(origin: localOrigin, direction: localDirection)
+                                    ?? [0..<indices.count]
+                                triangleCount += ranges.reduce(0) { $0 + $1.count / 3 }
+                                for range in ranges {
+                                for i in stride(from: range.lowerBound, to: range.upperBound, by: 3) {
+                                    guard let t = Geometry.triangleDistance(origin: localOrigin, direction: localDirection,
+                                        a: positions[Int(indices[i])], b: positions[Int(indices[i + 1])],
+                                        c: positions[Int(indices[i + 2])]) else { continue }
+                                    let point = Geometry.point(localOrigin + localDirection * t, transformedBy: matrix)
+                                    let distance = simd_distance(point, ray.origin)
+                                    if distance < nearest {
+                                        nearest = distance
+                                        hit = Geometry.point(point, transformedBy: inverse)
+                                    }
+                                }
+                                }
+                            }
+                        }
+                        if ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile-gestures") {
+                            logger.info("Pinch mesh name=\(entity.name, privacy: .public) triangles=\(triangleCount) read=\(String(describing: meshStarted.duration(to: meshRead))) scan=\(String(describing: meshRead.duration(to: .now)))")
+                        }
+                    }
+                    for child in entity.children { visit(child) }
+                }
+                visit(terrainEnvironment)
+                if let hit { return .terrain(hit) }
+            }
+        }
+        guard globePresentationRoot.isEnabled, let globeEntity,
+              let direction = Geometry.sphereDirection(ray: ray,
+                center: globePresentationRoot.position(relativeTo: root),
+                radius: Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale,
+                releaseAtLimb: false) else { return nil }
+        return .globe(globeEntity.orientation(relativeTo: root).inverse.act(direction))
     }
 
     private func updatePresentationTransform(_ session: LunarExplorerSession) {
@@ -735,7 +1009,12 @@ final class LunarExplorerScene {
             angle: Float(session.tiltDegrees * .pi / 180),
             axis: SIMD3(1, 0, 0)
         )
-        let globeOrientation = tilt * heading
+        // Camera heading rolls the cartographic globe around its selected
+        // radial, keeping that place registered at the fixed surface depth.
+        // Reference calibration may explicitly rotate the globe for inspection.
+        let globeOrientation = session.usesAltitudeCamera
+            ? simd_quatf(angle: Float(session.headingDegrees * .pi / 180), axis: SIMD3(0, 0, 1))
+            : tilt * heading
         globePresentationRoot.orientation = globeOrientation
 
         // The globe coordinate authority authors Apollo 11 at +z. Project its
@@ -764,7 +1043,7 @@ final class LunarExplorerScene {
         // A zoom that starts from the globe also eases into the Orbit viewing
         // angle. Named site presets retain their own calibrated angles exactly
         // (Approach through Surface are intentionally shallower than Orbit).
-        let siteTiltDegrees = session.selectedPreset == .globe
+        let siteTiltDegrees = !session.usesAltitudeCamera && session.selectedPreset == .globe
             ? LunarExplorerSession.Preset.orbit.tiltDegrees
             : session.tiltDegrees
         let siteTilt = simd_quatf(
@@ -825,7 +1104,7 @@ final class LunarExplorerScene {
         markerBillboard.isEnabled = session.isExplorerExperience && session.isBrowsingGlobe
         if markerBillboard.isEnabled {
             let coordinate = session.selectedMarkerPlace?.coordinate ?? session.browseCoordinate
-            let direction = LunarExplorerMapGeometry.direction(to: coordinate, centeredOn: session.browseCoordinate)
+            let direction = globePresentationRoot.orientation.act(LunarExplorerMapGeometry.direction(to: coordinate, centeredOn: session.browseCoordinate))
             let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale
             markerBillboard.position = globePresentationRoot.position + direction * radius * 1.006
             markerBillboard.isEnabled = LunarExplorerMapGeometry.isVisible(direction: direction,
@@ -981,7 +1260,7 @@ final class LunarExplorerScene {
                 LMTerrainDetailPolicy().landingAltitudeMeters + 1
             )
             : altitudeMeters
-        let heading = session?.headingDegrees ?? 0
+        let heading = session?.terrainPlanningHeadingDegrees ?? 0
         let metersAcross = session?.metersAcross ?? 0
         // The compact footprint owns contact around the selected point. The
         // oblique Explorer camera also needs a bounded forward corridor so its
@@ -1218,9 +1497,11 @@ final class LunarExplorerScene {
            var model = entity.model {
             model.mesh = mesh
             entity.model = model
+            invalidatePinchIndex(for: entity)
             measuredNearFieldMask = nextMask
         }
         preparedOwnershipMesh = nil
+        if let session { preparePinchIndices(session) }
     }
 
     static func finerOwners(
@@ -1316,6 +1597,7 @@ final class LunarExplorerScene {
             guard var model = entity.model else { return }
             model.mesh = mesh
             entity.model = model
+            invalidatePinchIndex(for: entity)
             measuredNearFieldMask = ids
         } catch {
             logger.error("Measured terrain ownership reset failed: \(error.localizedDescription, privacy: .public)")
@@ -1459,6 +1741,7 @@ final class LunarExplorerScene {
     }
 
     private func updateDiagnostics(_ session: LunarExplorerSession) {
+        preparePinchIndices(session)
         var diagnostics = session.diagnostics
         diagnostics.requestedTileCount = requestedPlans.count
         diagnostics.activeTileCount = progressiveEntities.count

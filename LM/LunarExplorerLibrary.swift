@@ -140,34 +140,29 @@ extension LunarExplorerSession {
             northDegrees: 0, eastDegrees: min(0.1, max(0, seconds)) * 0.35)
     }
 
-    /// Product zoom requests matching geometry. The independent inspection
-    /// zoom remains available in the inspector and all old capture arguments.
+    /// The width adapter is for saved views and the scale slider. Gestures
+    /// use their starting altitude directly, so magnification is logarithmic
+    /// altitude rather than interpolation among independent camera controls.
     func exploreZoom(by magnification: Double, from initialWidth: Double) {
-        guard magnification.isFinite, magnification > 0, initialWidth.isFinite else { return }
-        zoom(by: magnification, from: initialWidth)
-        defer { synchronizeZoomDestination() }
-        let stops = [(5_000_000.0, 1_500_000.0, 0.0)]
-            + Preset.allCases.map { ($0.metersAcross, $0.altitudeMeters, $0.tiltDegrees) }
-            + [(8.0, 1.5, 38.0)]
-        for (a, b) in zip(stops, stops.dropFirst()) where metersAcross <= a.0 && metersAcross >= b.0 {
-            let t = (log(metersAcross) - log(a.0)) / (log(b.0) - log(a.0))
-            altitudeMeters = exp(log(a.1) * (1 - t) + log(b.1) * t)
-            tiltDegrees = a.2 * (1 - t) + b.2 * t
-            break
-        }
-        if usesWindowContainer {
-            // The accepted handoff keeps the selected radial facing the eye.
-            // The scene already morphs the tangent plane toward Orbit tilt;
-            // tilting the sphere too would rotate the selected site out of frame.
-            if metersAcross >= Self.globeSiteBlendEndMetersAcross {
-                selectedPreset = .globe
-                tiltDegrees = 0
-            } else {
-                selectedPreset = Preset.allCases.min {
-                    abs(log($0.altitudeMeters / altitudeMeters)) < abs(log($1.altitudeMeters / altitudeMeters))
-                } ?? .orbit
-            }
-        }
+        guard magnification.isFinite, magnification > 0, initialWidth.isFinite, initialWidth > 0 else { return }
+        camera.reference = nil
+        metersAcross = initialWidth / magnification
+        updateCameraSelection()
+        synchronizeZoomDestination()
+    }
+
+    func magnifyAltitude(by magnification: Double, from initialAltitude: Double, synchronize: Bool = true) {
+        guard magnification.isFinite, magnification > 0, initialAltitude.isFinite, initialAltitude > 0 else { return }
+        camera.reference = nil
+        altitudeMeters = initialAltitude / magnification
+        updateCameraSelection()
+        if synchronize { synchronizeZoomDestination() }
+    }
+
+    private func updateCameraSelection() {
+        selectedPreset = Preset.allCases.min {
+            abs(log($0.altitudeMeters / altitudeMeters)) < abs(log($1.altitudeMeters / altitudeMeters))
+        } ?? .orbit
     }
 
     func savedView(named name: String) -> LunarExplorerSavedView {

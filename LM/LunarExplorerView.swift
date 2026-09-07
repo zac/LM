@@ -8,10 +8,13 @@ struct LunarExplorerView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @ScaledMetric(relativeTo: .body) private var markerScale = 1.0
     @State private var scene = LunarExplorerScene()
-    @State private var orbitStart: SIMD2<Double>?
+    @State private var headingStart: Double?
+    @State private var pinchRay: LunarExplorerPinchGeometry.Ray?
     @State private var panStart: SIMD2<Double>?
     @State private var globeDragStart: LMSelenographicCoordinate?
-    @State private var zoomStartMetersAcross: Double?
+    @State private var zoomStartAltitude: Double?
+    @GestureState private var pinchActive = false
+    @GestureState private var rotationActive = false
 
     var body: some View {
         @Bindable var explorer = appModel.lunarExplorerSession
@@ -55,6 +58,14 @@ struct LunarExplorerView: View {
         }
         .gesture(orbitGesture(explorer))
         .simultaneousGesture(zoomGesture(explorer))
+        .simultaneousGesture(headingGesture(explorer))
+        .onChange(of: pinchActive) { _, active in
+            if !active { finishPinch(explorer) }
+        }
+        .onChange(of: rotationActive) { _, active in
+            if !active { finishHeading(explorer) }
+        }
+        .task { await scene.startGestureTracking() }
         .onAppear {
             LunarExplorerPerformanceProbe.shared.start(
                 arguments: ProcessInfo.processInfo.arguments
@@ -62,12 +73,17 @@ struct LunarExplorerView: View {
         }
         .onDisappear {
             LunarExplorerPerformanceProbe.shared.stop()
+            scene.stopGestureTracking()
+            zoomStartAltitude = nil; headingStart = nil; pinchRay = nil
+            globeDragStart = nil; panStart = nil
+            explorer.endHeadingGesture()
+            explorer.isManipulatingGlobe = false
             if explorer.isExplorerExperience { explorer.cancelNavigation() }
         }
         .task {
             let arguments = ProcessInfo.processInfo.arguments
             if arguments.contains("--lunar-explorer-profile-journey") {
-                await LunarExplorerExperienceProbe.run(explorer)
+                await LunarExplorerExperienceProbe.run(explorer, scene: scene)
                 return
             }
             guard arguments.contains("--lunar-explorer-capture") else { return }
@@ -121,76 +137,95 @@ struct LunarExplorerView: View {
     }
 
     private func orbitGesture(_ session: LunarExplorerSession) -> some Gesture {
-        DragGesture(minimumDistance: 0)
+        DragGesture(minimumDistance: 3)
             .targetedToEntity(scene.interactionSurface)
             .onChanged { value in
-                guard !session.landingRunning, !session.navigationInProgress else { return }
-                if session.isBrowsingGlobe {
-                    session.isManipulatingGlobe = true
+                guard !session.landingRunning, !session.navigationInProgress,
+                      zoomStartAltitude == nil, headingStart == nil else { return }
+                session.isManipulatingGlobe = true
+                if session.metersAcross >= LunarExplorerSession.globeSiteBlendStartMetersAcross {
                     if globeDragStart == nil { globeDragStart = session.browseCoordinate }
                     if let start = globeDragStart {
-                        session.rotateGlobe(from: start, horizontal: Double(value.translation.width),
-                                            vertical: Double(value.translation.height))
+                        let sensitivity = session.metersAcross / LunarExplorerSession.Preset.globe.metersAcross
+                        session.rotateGlobe(from: start,
+                            horizontal: Double(value.translation.width) * sensitivity,
+                            vertical: Double(value.translation.height) * sensitivity)
                     }
-                    return
-                }
-                switch session.navigationMode {
-                case .orbit:
-                    panStart = nil
-                    if orbitStart == nil {
-                        orbitStart = SIMD2(session.headingDegrees, session.tiltDegrees)
-                    }
-                    guard let start = orbitStart else { return }
-                    session.setOrbit(
-                        headingDegrees: start.x + Double(value.translation.width) * 0.22,
-                        tiltDegrees: start.y - Double(value.translation.height) * 0.18
-                    )
-                case .pan:
-                    orbitStart = nil
+                } else {
                     if panStart == nil {
-                        panStart = SIMD2(
-                            session.focusNorthOffsetMeters,
-                            session.focusEastOffsetMeters
-                        )
+                        panStart = SIMD2(session.focusNorthOffsetMeters, session.focusEastOffsetMeters)
                     }
                     guard let start = panStart else { return }
-                    let metersPerPoint = session.metersAcross / 900
-                    session.pan(
-                        northMeters: start.x
-                            + Double(value.translation.height) * metersPerPoint,
-                        eastMeters: start.y
-                            - Double(value.translation.width) * metersPerPoint
-                    )
+                    let scale = session.metersAcross / 900
+                    let angle = session.headingDegrees * .pi / 180
+                    let x = -Double(value.translation.width) * scale
+                    let y = Double(value.translation.height) * scale
+                    session.pan(northMeters: start.x + y * cos(angle) + x * sin(angle),
+                                eastMeters: start.y + x * cos(angle) - y * sin(angle))
                 }
             }
             .onEnded { _ in
-                orbitStart = nil
                 panStart = nil
                 globeDragStart = nil
-                session.isManipulatingGlobe = zoomStartMetersAcross != nil
+                session.isManipulatingGlobe = zoomStartAltitude != nil || headingStart != nil
             }
     }
 
     private func zoomGesture(_ session: LunarExplorerSession) -> some Gesture {
         MagnifyGesture()
             .targetedToEntity(scene.interactionSurface)
+            .updating($pinchActive) { _, state, _ in state = true }
             .onChanged { value in
                 guard !session.landingRunning, !session.navigationInProgress else { return }
-                if session.isBrowsingGlobe { session.isManipulatingGlobe = true }
-                if zoomStartMetersAcross == nil {
-                    zoomStartMetersAcross = session.metersAcross
+                session.isManipulatingGlobe = true
+                if zoomStartAltitude == nil {
+                    zoomStartAltitude = session.altitudeMeters
+                    if let eye = scene.gestureEyePosition() {
+                        let point = value.convert(value.startLocation3D, from: .local, to: scene.root)
+                        pinchRay = .init(origin: eye, through: point)
+                    }
+                    session.beginHeadingGesture()
                 }
-                guard let start = zoomStartMetersAcross else { return }
-                if session.isExplorerExperience {
-                    session.exploreZoom(by: Double(value.magnification), from: start)
+                guard let start = zoomStartAltitude else { return }
+                if let pinchRay {
+                    scene.magnify(session, magnification: Double(value.magnification),
+                                  initialAltitude: start, ray: pinchRay)
                 } else {
-                    session.zoom(by: Double(value.magnification), from: start)
+                    // Tracking loss preserves zoom; do not invent an eye pose.
+                    session.magnifyAltitude(by: Double(value.magnification), from: start)
                 }
             }
-            .onEnded { _ in
-                zoomStartMetersAcross = nil
-                session.isManipulatingGlobe = globeDragStart != nil
+            .onEnded { _ in finishPinch(session) }
+    }
+
+    private func finishPinch(_ session: LunarExplorerSession) {
+        zoomStartAltitude = nil
+        pinchRay = nil
+        scene.endPinch()
+        if headingStart == nil { session.endHeadingGesture() }
+        session.isManipulatingGlobe = globeDragStart != nil || headingStart != nil
+    }
+
+    private func headingGesture(_ session: LunarExplorerSession) -> some Gesture {
+        RotateGesture()
+            .targetedToEntity(scene.interactionSurface)
+            .updating($rotationActive) { _, state, _ in state = true }
+            .onChanged { value in
+                guard !session.landingRunning, !session.navigationInProgress else { return }
+                if headingStart == nil {
+                    headingStart = session.headingDegrees
+                    session.beginHeadingGesture()
+                }
+                session.isManipulatingGlobe = true
+                session.headingDegrees = (headingStart ?? 0) + value.rotation.degrees
             }
+            .onEnded { _ in finishHeading(session) }
+    }
+
+    private func finishHeading(_ session: LunarExplorerSession) {
+        headingStart = nil
+        if zoomStartAltitude == nil { session.endHeadingGesture() }
+        session.isManipulatingGlobe = globeDragStart != nil || zoomStartAltitude != nil
     }
 }
 

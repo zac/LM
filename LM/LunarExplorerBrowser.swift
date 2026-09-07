@@ -171,11 +171,7 @@ struct LunarExplorerControls: View {
                     List {
                         Section {
                             Label(distance(session.altitudeMeters) + " above terrain", systemImage: "arrow.up.and.down")
-                            Picker("Drag action", selection: $session.navigationMode) {
-                                Text("Rotate").tag(LunarExplorerSession.NavigationMode.orbit)
-                                Text("Move").tag(LunarExplorerSession.NavigationMode.pan)
-                            }.pickerStyle(.segmented)
-                            Text("Drag to \(session.navigationMode == .orbit ? "rotate" : "move"). Pinch to explore closer.")
+                            Text("Drag to move. Pinch to zoom. Rotate with two hands to change heading.")
                                 .font(.subheadline).foregroundStyle(.secondary)
                             Button { session.back() } label: { Label("Previous location", systemImage: "arrow.uturn.backward") }
                                 .disabled(session.navigationHistory.isEmpty || session.navigationInProgress).hoverEffect()
