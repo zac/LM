@@ -1,0 +1,11 @@
+# Systems integration — validation in progress
+
+The app installs mission/event readouts together in Panel1's timer region and event switches in the upper part of Panel3's timer/heater region. Both regions retain backing and partial-equipment planning labels. Blocked Panel5 mission controls remain uninstalled. The event timer is session-owned, uses simulation timestamps, and resets on a new timeline/checkpoint/restart or backwards time. Replay/missing time blanks the event readout. Pause rebases without catch-up, and scene loss/cancellation releases held slew. Momentary control gestures retain an invalidated token until their end, preventing a still-held gesture from restarting after pause. All event switches return physically to center; logical count direction remains independent. See `Docs/EventTimerStateHandoff.md` for sourced later-mission countdown reversal and application timing conventions.
+
+Mission time is unavailable. The presence of a landing-pad clock helper or PDI epoch is insufficient proof that the actual session initializes launch GET; simulation elapsed time is not presented as mission elapsed time.
+
+Engine START/STOP/reset hardware is inert and has no collision/input binding. It installs only beside a successfully registered DescentRate component; it defers when that peer is absent, preserving the supported control's retry path. The sole complementary occupancy exception is this exact reviewed pair. Propulsion needles/segments remain unavailable and disabled at their authored parked transforms; tank quantities, pressure, engine thrust and acceleration are not synthesized.
+
+The two contact lamps use only optional `landingGear.isProbeContact`. Unknown remains distinct from false in the adapter. Optional training text reports probe availability and clarifies that power/test/reset circuitry is not modeled. The historical face is unchanged. The experience cue no longer substitutes pad contact for missing probe data. Caution/warning hardware installs through the existing two-slot transaction, preserves neutral unpowered appearance and has no live signal or master-alarm binding.
+
+Exact package/Swift source hashes, test result and selected native images will be added after final package acceptance. Preliminary builds are not final validation. No AGC/LMCore or mission-light behavior is changed.

@@ -120,7 +120,9 @@ struct LMCommanderLandingInstrumentTests {
         #expect(zip(enabledBefore, enabledAfter).filter { $0 && !$1 }.count == 9)
         let withoutDetails = LMCommanderStationScene()
         #expect(try await withoutDetails.loadArtistCabinIfAvailable(arguments: ["--no-interior-details"]))
-        #expect(withoutDetails.staticOverlays.isEmpty)
+        #expect(withoutDetails.staticOverlays["InteriorDetails"] == nil)
+        #expect(withoutDetails.staticOverlays["BreakerBanks"] == nil)
+        #expect(withoutDetails.staticOverlays["CautionWarning"] != nil)
         let bare = try #require(withoutDetails.commanderAssembly)
         for slot in slots where slot.id.hasPrefix("Panel11__") || slot.id.hasPrefix("Panel16__") {
             #expect(try LMCommanderStationAssembly.path(slot.default_placeholder_node, in: bare.panelInventory).isEnabled)

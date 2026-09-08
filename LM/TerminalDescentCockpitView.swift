@@ -16,6 +16,12 @@ struct TerminalDescentCockpitView: View {
     @State private var acaInteractionGeneration: UUID?
     @State private var cockpitVisible = false
     @State private var acaGestureOrigin: SIMD3<Float>?
+    @State private var timerGestureOrigin: SIMD3<Float>?
+    @State private var timerGestureGeneration: UInt64?
+    @State private var timerGestureID: String?
+    @State private var timerDidLeaveCenter = false
+    @State private var timerLastPosition: Int?
+    @GestureState private var timerGestureActive = false
     @State private var rodGestureOrigin: SIMD3<Float>?
     @State private var rodInteractionGeneration: UUID?
     @State private var showsFallbackControls = false
@@ -57,10 +63,17 @@ struct TerminalDescentCockpitView: View {
         }
         .gesture(acaGesture)
         .simultaneousGesture(rodGesture)
+        .simultaneousGesture(timerGesture)
         .simultaneousGesture(attitudeModeGesture)
         .simultaneousGesture(cockpitTapGesture)
         .ornament(attachmentAnchor: .scene(.bottom)) {
             VStack(spacing: 8) {
+                if presentation.trainingEnabled {
+                    Text(appModel.session.vehicleState?.landingGear.map {
+                        "Contact lamps: probe " + ($0.isProbeContact ? "contact" : "clear") + "; lamp power, test and stop-reset circuits are not modeled."
+                    } ?? "Contact lamps: probe data unavailable; lamp power, test and stop-reset circuits are not modeled.")
+                        .font(.caption)
+                }
                 HStack(spacing: 10) {
                     Button {
                         restartExperience()
@@ -300,6 +313,9 @@ struct TerminalDescentCockpitView: View {
                 releaseRODControl(endingGesture: true)
             }
         }
+        .onChange(of: timerGestureActive) { wasActive, active in
+            if wasActive && !active { releaseTimerControl(endingGesture: true) }
+        }
         .onAppear { cockpitVisible = true }
         .onChange(of: appModel.session.isRunning) { _, running in
             if !running { releaseSpatialControls() }
@@ -345,6 +361,55 @@ struct TerminalDescentCockpitView: View {
                 acaGestureOrigin = nil
                 acaInteractionGeneration = nil
             }
+    }
+
+    private var timerGesture: some Gesture {
+        DragGesture(minimumDistance: 0).targetedToEntity(where: .has(LMEventTimerControlTarget.self))
+            .updating($timerGestureActive) { _, active, _ in active = true }
+            .onChanged { value in
+                guard cockpitVisible, scenePhase == .active, timerGestureActive,
+                      let timers = station.importedTimers,
+                      let target = value.entity.components[LMEventTimerControlTarget.self],
+                      appModel.session.isRunning, !appModel.session.isPaused, appModel.session.replayFrame == nil else { return }
+                let point = value.convert(value.location3D, from: .local, to: timers.controls)
+                if timerGestureOrigin == nil {
+                    timerGestureOrigin = point
+                    timerGestureGeneration = appModel.session.eventTimerInteractionGeneration
+                    timerGestureID = target.id
+                }
+                guard timerGestureID == target.id, let origin = timerGestureOrigin,
+                      let generation = timerGestureGeneration else { return }
+                let delta = point.y - origin.y
+                let position = delta > 0.005 ? 0 : delta < -0.005 ? 2 : 1
+                guard timerLastPosition != position else { return }
+                if position != 1 { timerDidLeaveCenter = true }
+                let command = LMEventTimerControlRouting.command(id: target.id, position: position)
+                if let command, !appModel.session.sendEventTimer(command, generation: generation) { return }
+                guard generation == appModel.session.eventTimerInteractionGeneration else { return }
+                timerLastPosition = position
+                timers.setControl(target.id, position: position)
+                timers.apply(appModel.session.eventTimer)
+            }
+            .onEnded { _ in
+                if !timerDidLeaveCenter, let id = timerGestureID, let generation = timerGestureGeneration,
+                   cockpitVisible, scenePhase == .active,
+                   let command = LMEventTimerControlRouting.command(id: id, position: 1, explicitCenterSelection: true) {
+                    _ = appModel.session.sendEventTimer(command, generation: generation)
+                }
+                releaseTimerControl(endingGesture: true)
+            }
+    }
+
+    private func releaseTimerControl(endingGesture: Bool = false) {
+        appModel.session.releaseEventTimerControls()
+        station.importedTimers?.releaseControls(direction: appModel.session.eventTimer.selectedDirection)
+        if endingGesture {
+            timerGestureOrigin = nil
+            timerGestureGeneration = nil
+            timerGestureID = nil
+            timerLastPosition = nil
+            timerDidLeaveCenter = false
+        }
     }
 
     private var rodGesture: some Gesture {
@@ -404,6 +469,8 @@ struct TerminalDescentCockpitView: View {
     }
 
     private func applySceneState() {
+        appModel.session.synchronizeEventTimer()
+        station.importedTimers?.apply(appModel.session.eventTimer)
         station.apply(appModel.session.vehicleState)
         station.applyLandingReadouts(appModel.session.vehicleState, program: appModel.session.programNumber)
         station.applyDSKY(appModel.session.dsky)
@@ -428,6 +495,7 @@ struct TerminalDescentCockpitView: View {
     private func releaseSpatialControls() {
         releaseACAControl()
         releaseRODControl()
+        releaseTimerControl()
     }
 
     private func releaseACAControl() {
@@ -461,8 +529,7 @@ struct TerminalDescentCockpitView: View {
             verticalSpeedMetersPerSecond: session.vehicleState?.verticalSpeedMetersPerSecond,
             downrangeSpeedMetersPerSecond: session.vehicleState?.velocityMetersPerSecond.y,
             outcome: session.vehicleState?.flightOutcome,
-            hasSurfaceContact: session.vehicleState?.landingGear?.isProbeContact
-                ?? (session.vehicleState?.surfaceContact != nil),
+            hasSurfaceContact: session.vehicleState?.landingGear?.isProbeContact,
             landingFailure: session.vehicleState?.landingGear?.failure,
             surfaceContact: session.vehicleState?.surfaceContact,
             landingGear: session.vehicleState?.landingGear

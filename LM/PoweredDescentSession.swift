@@ -44,6 +44,26 @@ final class PoweredDescentSession {
 
     private(set) var status: Status = .unloaded
     private(set) var isRunning = false
+    @ObservationIgnored private(set) var eventTimer = LMEventTimerState()
+    private(set) var eventTimerTimeline: UInt64 = 0
+    private(set) var eventTimerInteractionGeneration: UInt64 = 0
+
+    func synchronizeEventTimer() {
+        eventTimer.update(.init(timelineID: eventTimerTimeline, elapsedSeconds: snapshot?.timeSeconds,
+            isPaused: isPaused || !isRunning, isReplay: replayFrame != nil))
+    }
+    @discardableResult
+    func sendEventTimer(_ command: LMEventTimerState.Command, generation: UInt64) -> Bool {
+        guard generation == eventTimerInteractionGeneration, isRunning, !isPaused,
+              isSceneActive, replayFrame == nil else { return false }
+        synchronizeEventTimer()
+        return eventTimer.send(command)
+    }
+    func releaseEventTimerControls() {
+        eventTimer.cancelSlew()
+        eventTimerInteractionGeneration &+= 1
+    }
+
     private(set) var isPaused = false
     private(set) var snapshot: LMSimulationSnapshot?
     private(set) var replayFrame: LMFlightReplayFrame?
@@ -307,6 +327,7 @@ final class PoweredDescentSession {
                 let snap = await loaded.snapshot()
                 guard !Task.isCancelled else { return }
                 self.snapshot = snap
+                self.synchronizeEventTimer()
                 self.snapshotTask = nil
             }
         } catch {
@@ -346,6 +367,8 @@ final class PoweredDescentSession {
         publicationWaitSeconds = 0
         maximumPublicationWaitSeconds = 0
         realtimeClampedSeconds = 0
+        eventTimerTimeline &+= 1
+        releaseEventTimerControls()
         let runID = UUID()
         self.runID = runID
         lastStartPoint = startPoint
@@ -366,6 +389,7 @@ final class PoweredDescentSession {
                     let restored = try await runtime.restore(from: checkpoint)
                     guard self.runID == runID else { return }
                     self.snapshot = restored
+                    self.synchronizeEventTimer()
                     self.record(restored)
                     self.loadMessage = "Live · restored \(startPoint.programLabel) at "
                         + Self.altitudeText(restored.vehicleState.altitudeMeters)
@@ -390,6 +414,7 @@ final class PoweredDescentSession {
                     }
                     guard !Task.isCancelled, self.runID == runID else { return }
                     self.snapshot = prepared
+                    self.synchronizeEventTimer()
                     self.record(prepared)
                     self.loadMessage = self.autoLandMessage(program: prepared.agc.dsky.programNumber, accelerated: true)
                 } catch {
@@ -437,6 +462,7 @@ final class PoweredDescentSession {
                 guard self.runID == runID else { return }
                 guard let snap = result else { continue }
                 self.snapshot = snap
+                self.synchronizeEventTimer()
                 self.vehicleDidAdvance?(snap.vehicleState)
                 self.record(snap)
                 if snap.vehicleState.flightOutcome.isTerminal {
@@ -467,6 +493,8 @@ final class PoweredDescentSession {
     }
 
     func stop() {
+        eventTimerTimeline &+= 1
+        releaseEventTimerControls()
         captureExport?.cancel()
         captureExport = nil
         runID = UUID()
@@ -506,6 +534,7 @@ final class PoweredDescentSession {
                 let snapshot = try await runtime.reset()
                 guard !Task.isCancelled else { return }
                 self.snapshot = snapshot
+                self.synchronizeEventTimer()
                 self.status = .idle
             } catch {
                 guard !Task.isCancelled else { return }
@@ -524,7 +553,9 @@ final class PoweredDescentSession {
 
     func pause() {
         guard canPause else { return }
+        synchronizeEventTimer()
         isPaused = true
+        releaseEventTimerControls()
         releaseCrewControls()
     }
 
@@ -554,6 +585,7 @@ final class PoweredDescentSession {
                 let snap = await runtime.snapshot()
                 guard !Task.isCancelled else { return }
                 self.snapshot = snap
+                self.synchronizeEventTimer()
             }
         )
     }
@@ -586,6 +618,7 @@ final class PoweredDescentSession {
     /// Neutralize every momentary crew input. This is the fail-safe path for
     /// gesture cancellation, scene deactivation, tracking interruption, and stop.
     func releaseCrewControls() {
+        releaseEventTimerControls()
         rhcPitch = 0
         rhcYaw = 0
         rhcRoll = 0

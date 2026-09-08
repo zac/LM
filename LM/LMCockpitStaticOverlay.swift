@@ -20,7 +20,8 @@ struct LMCockpitStaticOverlay {
             throw LMCommanderStationAssembly.AssemblyError.invalidContract("Optional overlay contract")
         }
         slots = try JSONDecoder().decode(Mappings.self, from: interfaceData).slots ?? []
-        guard (name == "BreakerBanks" && slots.count == 9) || (name == "InteriorDetails" && slots.isEmpty) else {
+        guard (name == "BreakerBanks" && slots.count == 9) || (name == "InteriorDetails" && slots.isEmpty) ||
+              (name == "CautionWarning" && Set(slots.map(\.id)) == ["Panel1__Warning", "Panel2__Caution"] && slots.count == 2) else {
             throw LMCommanderStationAssembly.AssemblyError.invalidContract("Overlay mapped slot count")
         }
         root = try LMCockpitComponentSupport.neutralRoot(name, asset: asset)
@@ -39,6 +40,18 @@ struct LMCockpitStaticOverlay {
         for slot in contract["slots"] as? [[String: Any]] ?? [] {
             guard let path = slot["overlay_path"] as? String else { throw LMCommanderStationAssembly.AssemblyError.invalidContract("Overlay slot path") }
             _ = try LMCommanderStationAssembly.path(path, in: root)
+        }
+        if name == "CautionWarning" {
+            guard let lamps = contract["lamps"] as? [[String: Any]], lamps.count == 40 else {
+                throw LMCommanderStationAssembly.AssemblyError.invalidContract("Caution/warning lamp inventory")
+            }
+            for lamp in lamps {
+                guard let path = lamp["lens_path"] as? String,
+                      lamp["runtime_signal"] is NSNull else {
+                    throw LMCommanderStationAssembly.AssemblyError.invalidContract("Unqualified caution/warning binding")
+                }
+                _ = try LMCommanderStationAssembly.path(path, in: root)
+            }
         }
         LMCockpitComponentSupport.removeInput(root)
     }
