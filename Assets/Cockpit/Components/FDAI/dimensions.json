@@ -1,0 +1,17 @@
+{
+  "historically_verified_mechanical_dimensions": [],
+  "provisional": {
+    "nominal_face_width_height_m": 0.14605,
+    "overall_width_height_m": 0.14805,
+    "overall_depth_m": 0.2795,
+    "ball_radius_m": 0.05,
+    "rear_housing_m": [
+      0.127,
+      0.127,
+      0.208
+    ],
+    "glass_plane_z_m": 0.043,
+    "mounting_plane_z_m": 0
+  },
+  "note": "Actual asset bounds validated in validation.json; these do not qualify historical dimensions or a panel cutout. All unspecified physical dimensions are provisional."
+}

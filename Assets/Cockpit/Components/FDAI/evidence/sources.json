@@ -1,0 +1,56 @@
+{
+  "retrieved": "2026-09-08",
+  "scope": "See research.md for per-source URLs, usage, rights and limitations",
+  "files": [
+    {
+      "file": "evidence/AS11-36-5389HR.jpg",
+      "bytes": 876209,
+      "sha256": "9a87df320e1fcd6c624ebb14ac2980bc72e4d3173a323e6197dd44c4469be5a1"
+    },
+    {
+      "file": "evidence/CSM012-page185.png",
+      "bytes": 122575,
+      "sha256": "73ecb655fe8e8027fd397ac6fd90ea6c0d3f54b47e6811a2e562efdbd5978bb5"
+    },
+    {
+      "file": "evidence/CSM012-page186.png",
+      "bytes": 182569,
+      "sha256": "c5f3f0c8cf161fd18c3dbc0ed227325d981031a8b8e45ecf7332e54b78483772"
+    },
+    {
+      "file": "evidence/LM-FDAI.usda",
+      "bytes": 2302,
+      "sha256": "e1d0001649bb2dbd3d752359d56015273d1e0370b47d8e5fb219d2922a6b68c9"
+    },
+    {
+      "file": "evidence/LM-FDAIPanel.swift",
+      "bytes": 7413,
+      "sha256": "7608bec8306dd8c5dfb19a55626deb027ad893f20cd67ca0acfc70c668284a91"
+    },
+    {
+      "file": "evidence/LM-texture-generator.swift",
+      "bytes": 15789,
+      "sha256": "e484ca5212e3d22b2b1c7b6bb4bf5ba9bbb4ec6e04aacf94261a0934e2247a6c"
+    },
+    {
+      "file": "evidence/LM5-FDAI-drawing-10-4-3.png",
+      "bytes": 807751,
+      "sha256": "8b92dac9d38d5182b5093fc902419b6b8f2bae190110ce74bcf7921646fb3d88"
+    },
+    {
+      "file": "evidence/LM5-LM9-systems-excerpt.pdf",
+      "bytes": 7911792,
+      "sha256": "e5e4d20b69b67ffd001b7fc906d89516fe7cfa9b758a12ae18ec4433f0faf23e"
+    },
+    {
+      "file": "evidence/apollo14-fdai.jpg",
+      "bytes": 63250,
+      "sha256": "dd679cd0472e49c08f5ca19379301d3b69fe256cdde4e2e21da1fc46ec8811ec"
+    },
+    {
+      "file": "evidence/csm-fdai-comparison.jpg",
+      "bytes": 55052,
+      "sha256": "95d73e67f918be4a040d17b17685d15e17fe92d7216778e65dd29f1d8875d4c5"
+    }
+  ]
+}
