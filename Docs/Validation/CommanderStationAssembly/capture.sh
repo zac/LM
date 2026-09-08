@@ -19,6 +19,7 @@ xcrun simctl launch --terminate-running-process "$udid" io.positron.LM \
     --terminal-descent-cockpit --commander-station-assembly \
     --instrument-validation > "$out/instrument-observer-launch.txt"
 sleep 12
+date -u +%FT%TZ > "$out/instrument-observer-time.txt"
 xcrun simctl io "$udid" screenshot "$out/instrument-observer.png"
 container=$(xcrun simctl get_app_container "$udid" io.positron.LM data)
 cp "$container/Documents/InstrumentValidation.jsonl" "$out/observation.jsonl"

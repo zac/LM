@@ -1,5 +1,4 @@
 {
-  "source": "acff0aeac62fc3c009831f0234d56205d36011e4",
   "LMKit": "75bdea77b57e0ae4971bb4ffbee21c4643e3b4cf",
   "AGC_LMCore": "b3f15533db335ee882dc07401790c93010809e8f",
   "simulator": "94C9CF9E-5495-4431-88AF-F3C211FD04C6",
@@ -46,5 +45,7 @@
       "sha256": "becce552cc9a3e31dbf89a1440cdefcc550d09a2e6a7e1fc43ee31ae76e81072",
       "hydrated": true
     }
-  ]
+  ],
+  "sourceBaseline": "acff0aeac62fc3c009831f0234d56205d36011e4",
+  "validatedSource": "7a4247cfee6d16dd815aebc00c927b034049cccf"
 }

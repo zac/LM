@@ -1,0 +1,69 @@
+{
+  "optical" : [
+    {
+      "cornerErrorMeters" : 0,
+      "node" : "CDR_Window_Inner",
+      "normalError" : 2.1490760104825313e-07,
+      "pass" : true
+    },
+    {
+      "cornerErrorMeters" : 0,
+      "node" : "CDR_Window_Outer",
+      "normalError" : 5.9604644775390625e-08,
+      "pass" : true
+    }
+  ],
+  "rootRelativeMounts" : [
+    {
+      "maximumColumnError" : 8.4293695579162886e-08,
+      "mount" : "Mount_CDR_MiddleTier",
+      "pass" : true
+    },
+    {
+      "maximumColumnError" : 2.1490760104825313e-07,
+      "mount" : "Mount_DSKY",
+      "pass" : true
+    },
+    {
+      "maximumColumnError" : 2.4027400513659813e-07,
+      "mount" : "Mount_FDAI",
+      "pass" : true
+    },
+    {
+      "maximumColumnError" : 8.4293695579162886e-08,
+      "mount" : "Mount_LMP_MiddleTier",
+      "pass" : true
+    },
+    {
+      "maximumColumnError" : 1.7943374075457541e-07,
+      "mount" : "Mount_Panel_1",
+      "pass" : true
+    },
+    {
+      "maximumColumnError" : 1.7943374075457541e-07,
+      "mount" : "Mount_Panel_2",
+      "pass" : true
+    },
+    {
+      "maximumColumnError" : 1.3328003944934608e-07,
+      "mount" : "Mount_Panel_3",
+      "pass" : true
+    },
+    {
+      "maximumColumnError" : 1.3328003944934608e-07,
+      "mount" : "Mount_Panel_4",
+      "pass" : true
+    },
+    {
+      "maximumColumnError" : 1.9082797564351495e-07,
+      "mount" : "Mount_Panel_5",
+      "pass" : true
+    },
+    {
+      "maximumColumnError" : 1.9082797564351495e-07,
+      "mount" : "Mount_Panel_6",
+      "pass" : true
+    }
+  ],
+  "runtime" : "macOS RealityKit; no simulator or headset claim"
+}
