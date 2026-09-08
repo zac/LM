@@ -1,0 +1,58 @@
+{
+  "source_revision": "cfdc5ed68084ab9a9b99cca2011588ca9e595c9c",
+  "baseline": "9016960683efabb491dfed16f10ea3ef90196d01",
+  "dependencies": {
+    "LMKit": "3ad1a999ff17aea859eaea5750f1c65e66fad673",
+    "AGC_LMCore": "b3f15533db335ee882dc07401790c93010809e8f"
+  },
+  "resources": [
+    {
+      "path": "HandControllers/ACA.usdz",
+      "bytes": 96068,
+      "sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5",
+      "hydrated": true
+    },
+    {
+      "path": "HandControllers/interface.json",
+      "bytes": 4647,
+      "sha256": "6a08a37335981e7b76c312a491d38dc07d39ef474fb52e49ae132453fcea5142",
+      "hydrated": true
+    },
+    {
+      "path": "HandControllers/TTCA.usdz",
+      "bytes": 133464,
+      "sha256": "c8d165c723aa253868483d959ead394d32c07c766c2af08b731317d1aa371eb6",
+      "hydrated": true
+    }
+  ],
+  "simulator": "6EB2B257-9EFE-4CEB-A64A-5EF0086FFF85",
+  "xcresult": "/tmp/lm-aca-acceptance.xcresult",
+  "parallel_testing": false,
+  "captures": {
+    "neutral": {
+      "sha256": "43065dfab0261cf4c745277bf2bf0741c5d4fa5d40b280556dd89dbb86bf99cb",
+      "utc": "2026-09-08T20:32:56Z",
+      "launch": "io.positron.LM: 16308",
+      "visual_only": true
+    },
+    "positive": {
+      "sha256": "431b67d961b715ccb4f67a433a0aaa0a9d01db750b308ef8f8b1261c1960e2f5",
+      "utc": "2026-09-08T20:33:09Z",
+      "launch": "io.positron.LM: 16420",
+      "visual_only": true
+    },
+    "negative": {
+      "sha256": "306da77fc13d5591a7e0cff2c7d5fa89a32a116c856fb36c051d73f0338eee19",
+      "utc": "2026-09-08T20:33:21Z",
+      "launch": "io.positron.LM: 16542",
+      "visual_only": true
+    }
+  },
+  "test_result": {
+    "discovered": 30,
+    "passed": 30,
+    "failed": 0,
+    "skipped": 0
+  },
+  "simulator_final_state": "Shutdown"
+}
