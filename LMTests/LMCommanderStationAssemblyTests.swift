@@ -109,6 +109,8 @@ struct LMCommanderStationAssemblyTests {
             try assembly.installOccupant(slotID: slot.id) { throw LMCommanderStationAssembly.AssemblyError.invalidContract("load failed") }
         }
         #expect(blank.isEnabled && peerBlank.isEnabled)
+        #expect(assembly.slotOccupancy[slot.id] == nil)
+        #expect(assembly.planningStatusLabels[slot.id] == nil)
         #expect(throws: (any Error).self) { try assembly.installOccupant(slotID: slot.id) { Entity() } }
         #expect(blank.isEnabled)
         var attemptedBlockedLoad = false
@@ -117,12 +119,48 @@ struct LMCommanderStationAssemblyTests {
         }
         #expect(!attemptedBlockedLoad)
         let model = ModelEntity(mesh: .generateBox(size: 0.01), materials: [SimpleMaterial()])
-        try assembly.installOccupant(slotID: slot.id) { model }
+        try assembly.installOccupant(slotID: slot.id, componentID: "Test equipment") { model }
+        #expect(assembly.slotOccupancy[slot.id]?.componentIDs == ["Test equipment"])
+        #expect(assembly.slotOccupancy[slot.id]?.coverage == .occupiedRegion)
+        #expect(assembly.slotOccupancy["Panel5__Timer"] == nil)
         #expect(!blank.isEnabled && peerBlank.isEnabled)
         #expect(model.parent?.name == slot.id)
         assembly.setPlanningLabelsVisible(true)
         #expect(assembly.planningLabelsVisible)
         #expect(!blank.isEnabled && peerBlank.isEnabled)
+    }
+
+    @Test func partialPlanningStatusRetainsBackingAndPendingEquipmentCaveat() throws {
+        let assembly = try LMCommanderStationAssembly.load()
+        let slot = try #require(assembly.inventory.panels.flatMap(\.slots).first { $0.id == "Panel1__RangeThrust" })
+        let blank = try LMCommanderStationAssembly.path(slot.default_placeholder_node, in: assembly.panelInventory)
+        let label = try LMCommanderStationAssembly.path(slot.label_node, in: assembly.panelInventory)
+        let originalTransform = label.transform
+        #expect(throws: (any Error).self) {
+            try assembly.installPartialOccupant(slotID: slot.id, componentID: "AltitudeRate") { Entity() }
+        }
+        #expect(label.isEnabled && blank.isEnabled)
+        #expect(assembly.slotOccupancy[slot.id] == nil)
+        try assembly.installPartialOccupant(slotID: slot.id, componentID: "AltitudeRate") {
+            ModelEntity(mesh: .generateBox(size: 0.01), materials: [SimpleMaterial()])
+        }
+        let status = try #require(assembly.slotOccupancy[slot.id])
+        #expect(status.coverage == .partialRegion)
+        #expect(status.planningText.contains("Other equipment pending"))
+        #expect(!status.planningText.contains("not modeled"))
+        #expect(blank.isEnabled && !label.isEnabled)
+        let replacement = try #require(assembly.planningStatusLabels[slot.id])
+        #expect(replacement.parent === label.parent)
+        #expect(replacement.transform == originalTransform)
+        #expect(LMCommanderStationAssembly.descendants(replacement).allSatisfy {
+            $0.components[InputTargetComponent.self] == nil && $0.components[CollisionComponent.self] == nil
+        })
+        #expect(!assembly.planningLabelsVisible)
+        assembly.setPlanningLabelsVisible(true)
+        #expect(assembly.planningLabelsVisible && replacement.isEnabled)
+        assembly.setPlanningLabelsVisible(false)
+        #expect(!assembly.planningLabelsVisible && replacement.isEnabled)
+        #expect(blank.isEnabled)
     }
 
     @Test func planningLayerRetainsTextMeshesAndTogglePreservesAllBlankStates() throws {
