@@ -37,8 +37,15 @@ Evidence: `Docs/CommanderStationAssemblyHandoff.md`, `Docs/Validation/CommanderS
 - Assembly task `01a08296-4048-7503-b057-03345be7d15b` completed the combined regression and released the simulator slot. Serialize simulator test/capture jobs; concurrent clones previously interfered with both workers.
 - Interaction task `01a08296-4c42-7dd0-b073-dfd4b3712bbf` delivered and released its simulator.
 - No heavy render/bake is active. Continue limiting heavy jobs to one per machine; independent light headless authoring can run concurrently.
-- Publish the accepted assembly merge with its verification record, then scope hand-controller runtime installation in LM against accepted mounting and existing simulation input APIs. That runtime task has not been created.
+- Publish the accepted assembly merge with its verification record, then scope hand-controller runtime installation in LM against accepted mounting and existing simulation input APIs. ACA runtime integration has now been dispatched below; TTCA remains an audit.
 - Do not infer switch/controller semantics from geometry names or invent unavailable dynamics. Component workers keep assigned asset-directory ownership; coordinator handles shared APIs and master assembly.
+
+## Next assignments dispatched — 2026-09-08
+
+- ACA integration: task `01a082b1-da15-7642-9195-0a71036a38be`, worktree `/Users/zac/.codex/worktrees/313f/LM`, branch `codex/aca-integration`, base LM `9016960`, LMKit `3ad1a99`, AGC/LMCore `b3f1553`. Owns ACA adapter/scene/input lifecycle integration and focused verification. TTCA is API audit only. Sole simulator runtime slot assigned to this worker.
+- Commander panel fit: local LMKit worktree `/Users/zac/.codex/worktrees/8891/LMKit`, branch `cockpit/commander-panel-surrounds`, base `3ad1a99`. Owns only `Assets/Cockpit/Components/CommanderPanels/`. Scope is surrounds/backing/openings for existing DSKY/FDAI poses, numeric clearances, provenance and provisional mounting interfaces; no shared resources or master assembly edits.
+- Coordinator retains packaging, merge review and combined validation. Workers return scoped commits; no worker publishes integration/main.
+- Hardware readiness checked: physical Vision Pro unavailable. `Docs/CockpitNextAcceptance.md` records merge order and subsequent physical session checks. Neither new delivery nor hardware acceptance is complete.
 
 ## Historical setup and extraction record
 
