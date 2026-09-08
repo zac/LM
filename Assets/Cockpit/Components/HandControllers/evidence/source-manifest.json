@@ -1,0 +1,37 @@
+{
+  "date": "2026-09-08",
+  "sources": [
+    {
+      "file": "tnD7884.pdf",
+      "url": "https://ntrs.nasa.gov/api/citations/19750010202/downloads/19750010202.pdf",
+      "revision": "NASA TN D-7884 March 1975",
+      "bytes": 2602553,
+      "sha256": "1b8ca1a1db1d235193fb3181d631ba5e7051675720f50a78a3cda147e1f9590e"
+    },
+    {
+      "file": "lm10-aoh-vol1-controls-excerpts.pdf",
+      "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+      "revision": "LM10 and Subsequent; basic February 1970, change pages through April 1971; inherited excerpt manifest",
+      "bytes": 6974978,
+      "sha256": "6194242b2dd076a469474d5bcdb5f4a6bddf9929aedf543d8911fd5f9ca63e2c"
+    },
+    {
+      "file": "AS11-36-5390.jpg",
+      "url": "https://www.nasa.gov/wp-content/uploads/2023/03/9460194568_b8f0110e97_o.jpg",
+      "revision": "Apollo 11 flown Eagle",
+      "bytes": 152668,
+      "sha256": "aea796e5e5686c34ecb92ee0f4aeda3e0027d37e83b2d58f5e6191f95b26b77c"
+    }
+  ],
+  "read_only_research_checkout": "/Users/zac/.codex/worktrees/591e/LM",
+  "research_head": "acff0aeac62fc3c009831f0234d56205d36011e4",
+  "compatibility_files": [
+    "LM/LMCommanderStationScene.swift",
+    "LM/LMCommanderStationGeometry.swift"
+  ],
+  "note": "Working tree research may include uncommitted work; source file hashes accompany this record",
+  "compatibility_sha256": {
+    "LM/LMCommanderStationScene.swift": "f04cc31373101db323a132b349f01dbb465b946607b46e45ab92c25be22f6846",
+    "LM/LMCommanderStationGeometry.swift": "447ce35526b475ad71b889083c3cf28f0d673ca0b22076e37a6c00336d371659"
+  }
+}
