@@ -49,3 +49,7 @@ Compile `check-aca-clearance.swift` the same way; arguments are the materialized
 2. Install WindowsLPD separately at identity, using its corrected contract and historical-view policy. Cabin Optical nodes are metadata only. Install PanelInventory blanks and separate planning labels; preserve its unresolved ACA/Timer slot.
 3. All `Cutaway_*` groups and `Hatches` start visible. Inspection may disable named cutaway groups; restore them for the enclosed view. Hatch leaves are static authored surfaces, not actuated or certified hinge pivots.
 4. Coordinator refreshes shared runtime resources using the approved Tools workflow, including `Tools/sync_dsky.py`, then validates packaging and serial LM integration. This worker intentionally did not touch shared packaging or run a simulator.
+
+## Late user-reference review
+
+All three images from coordinator reference commit `a525dd6` were visually inspected after the asset commit. `reviews/USER-REFERENCE-COMPARISON.md` records visible deviations: smooth/faceted lining lacks perforated ceiling and detailed hatch hardware; side equipment bays remain intentionally empty; the coarse central cover is not positively identified with the photographed obstruction. Unknown image provenance and Smithsonian LM-2 restoration applicability remain explicit. This is a qualified foundation, not a finished historical cabin. No agreed interface or geometry changed from those qualitative images.

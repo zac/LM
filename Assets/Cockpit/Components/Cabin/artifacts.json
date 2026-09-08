@@ -35,8 +35,8 @@
     },
     {
       "path": "HANDOFF.md",
-      "bytes": 7573,
-      "sha256": "fff8b7d58eac31802a894d10ae132865238f12318c90b4f8eb343ccc8de16e8f"
+      "bytes": 8219,
+      "sha256": "03c99a7dcf10145ef34483ba88512d1dd25f91a3829a3e1f6bbba1728acd85d9"
     },
     {
       "path": "aca-clearance.json",
@@ -194,6 +194,11 @@
       "sha256": "e2d93165800a697f9397bf123b563f7d740e3a091b33bb229dcbbd2484c81179"
     },
     {
+      "path": "evidence/foundation/user-reference-manifest-a525dd6.json",
+      "bytes": 1815,
+      "sha256": "0db53442a5d03c87768377319af78f14034d25feb6c5f1048c0823bceacd8f74"
+    },
+    {
       "path": "evidence/foundation/windows-interface-80c9b2d.json",
       "bytes": 4374,
       "sha256": "28bb74258353bbc8365b7a54011782332ff69927c0683154a46b80b8ad24f22f"
@@ -237,6 +242,11 @@
       "path": "reviews/REVIEW.md",
       "bytes": 2208,
       "sha256": "ec837e0629069292082291dca609e4ac793ec6e38a2ca8dd175c0075b6f29896"
+    },
+    {
+      "path": "reviews/USER-REFERENCE-COMPARISON.md",
+      "bytes": 3202,
+      "sha256": "ea3a57a34c013a9743758513079f88bc8b3e913559b2025338dbb33a52dcffd4"
     },
     {
       "path": "reviews/combined-crew-eye.png",
