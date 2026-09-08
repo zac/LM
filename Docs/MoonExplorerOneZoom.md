@@ -728,3 +728,152 @@ All physical Vision Pro gates remain unvalidated: effective texture resolution a
 ## F: Sliding region, not started, 2026-09-07
 
 F explicitly depends on D and E landing. Both failed measured performance gates and remain preserved patches, so no region-sliding implementation or 100 km pan/contact acceptance was attempted. No independent item remains in this A–F run. The production implementation remains the previously landed Steps 1–3; the follow-up commits record evidence and withheld candidates only.
+
+## E revalidation under protocol 2, withheld, 2026-09-07
+
+Evidence: `/tmp/LM-Explorer-OneZoom-2026-09-07/Revalidation/E/`. Candidate source is committed on `onezoom/E` (`b750e58` before rebasing the evidence report); it no longer depends on a temporary patch. No E runtime change lands. The final frame-paced revision was rebuilt and its **79 tests in eight suites passed**, zero failed (`Tests.xcresult`, `tests-summary.json`). The reusable measurement tools have **7 passing tests**, including inclusive decimal boundaries, three-run medians, noise/cap interaction and texture-interval overlap exclusion.
+
+Frozen control executable SHA-256: `a3c13361703b742c5a52d3610eb3322ad2e8846fac67e1cf9f9d3af0ae5091d0`. Candidate: `8fb1decffb7339b860fe16ad61479fa822cc5057f72bcbd98d4db75b7d44bf4a`, byte-identical to the final paced executable from the earlier E experiment. Control remains f81410c production behavior plus the shared diagnostic highland driver documented above; the intervening landing commits change documentation only.
+
+Each workload below alternates Control 1, Candidate 1, Control 2, Candidate 2, Control 3, Candidate 3, terminating and waiting ten seconds between launches. Release/Xcode 26.6/visionOS 26.5 on the specified Simulator; only that Simulator was booted. Builds, app tests and captures ran serially. One lightweight measurement-script unit invocation overlapped an earlier Xcode build/test, before acceptance captures; no build or test overlapped these capture sets.
+
+For the owner's unspecified arithmetic interpretation of “spread,” these tables use control median + (control maximum − control minimum), with the separate peak/hitch caps still applied. This assumption was stated while an optional clarification remained unanswered. Both raw and texture-excluded callback maxima are reported; **E is judged on the raw maximum** because it changes texture loading. The p99 is the maximum five-second-window p99, not a pooled-run percentile. All decisions use completed triplicates. Numeric comparisons allow only 1e-9 arithmetic roundoff at an exact decimal boundary.
+
+**Decision: withheld under revision 2.** Journey passes. Soak fails maximum-window mean (19.91 ms > 19.67 ms noise limit) and p99 (132.42 > 129.24 ms). Warm highland fails maximum footprint (221.9 > 159.5 MiB) and p99 (97.66 > 75.64 ms). Cold highland fails maximum footprint (246.5 > 214.3 MiB) and largest callback (558.14 > 420.47 ms). These are fresh three-run failures, not a reuse of revision 1's withholds. All navigation integration checks passed: thirty repeated restores across the six soaks, plus persistence reload and all twelve highland dives.
+
+The journey lifetime peak median falls from 1620.269 to 621.159 MiB (61.7%). The five-cycle soak reaches 919.144 MiB median, so the journey's 621 MiB value is not a universal lifetime ceiling. Candidate journey outliers include 24 hitches and a 633.90 ms callback; they are retained in the table rather than discarded. Reduced peak and sharper imagery do not cancel the failed metrics.
+
+### journey: passes corrected performance comparison
+
+| Run | Footprint MiB | Peak MiB | Max mean ms | Max p99 ms | Largest ms (outside texture) | Hitches >25 ms |
+|---|---:|---:|---:|---:|---:|---:|
+| Control 1 | 111.4–378.9 | 1614.066 | 19.49 | 114.33 | 464.24 (183.40) | 18 |
+| Candidate 1 | 117.9–387.8 | 621.159 | 18.58 | 88.89 | 287.54 (187.76) | 18 |
+| Control 2 | 118.3–384.7 | 1620.269 | 19.74 | 118.51 | 483.42 (150.31) | 18 |
+| Candidate 2 | 118.5–387.9 | 621.737 | 18.72 | 89.12 | 187.72 (137.78) | 24 |
+| Control 3 | 117.9–385.1 | 1620.285 | 19.22 | 112.85 | 482.33 (127.05) | 16 |
+| Candidate 3 | 117.8–386.8 | 620.675 | 20.00 | 85.44 | 633.90 (144.98) | 18 |
+
+| Metric | Control min / median / max | Candidate min / median / max | Noise limit | Additional cap | Pass |
+|---|---:|---:|---:|---:|---|
+| footprint_min_mib | 111.400 / 117.900 / 118.300 | 117.800 / 117.900 / 118.500 | 124.800 | — | True |
+| footprint_max_mib | 378.900 / 384.700 / 385.100 | 386.800 / 387.800 / 387.900 | 390.900 | — | True |
+| lifetime_peak_mib | 1614.066 / 1620.269 / 1620.285 | 620.675 / 621.159 / 621.737 | 1626.488 | 1652.674 | True |
+| max_window_mean_ms | 19.220 / 19.490 / 19.740 | 18.580 / 18.720 / 20.000 | 20.010 | — | True |
+| max_window_p99_ms | 112.850 / 114.330 / 118.510 | 85.440 / 88.890 / 89.120 | 119.990 | — | True |
+| hitches_over_25ms | 16.000 / 18.000 / 18.000 | 18.000 / 18.000 / 24.000 | 20.000 | 20.700 | True |
+| largest_callback_ms | 464.240 / 482.330 / 483.420 | 187.720 / 287.540 / 633.900 | 501.510 | — | True |
+
+### soak: fails corrected performance comparison
+
+| Run | Footprint MiB | Peak MiB | Max mean ms | Max p99 ms | Largest ms (outside texture) | Hitches >25 ms |
+|---|---:|---:|---:|---:|---:|---:|
+| Control 1 | 117.8–513.0 | 1620.753 | 19.67 | 117.42 | 480.82 (163.04) | 121 |
+| Candidate 1 | 117.3–459.0 | 917.394 | 19.91 | 139.02 | 280.31 (280.31) | 118 |
+| Control 2 | 110.9–448.3 | 1613.832 | 19.52 | 114.73 | 478.30 (174.98) | 122 |
+| Candidate 2 | 111.8–411.9 | 919.144 | 19.67 | 132.42 | 470.90 (167.89) | 120 |
+| Control 3 | 118.9–415.5 | 1622.019 | 19.52 | 126.55 | 477.43 (146.29) | 112 |
+| Candidate 3 | 117.4–413.3 | 944.316 | 20.15 | 117.99 | 280.36 (176.61) | 116 |
+
+| Metric | Control min / median / max | Candidate min / median / max | Noise limit | Additional cap | Pass |
+|---|---:|---:|---:|---:|---|
+| footprint_min_mib | 110.900 / 117.800 / 118.900 | 111.800 / 117.300 / 117.400 | 125.800 | — | True |
+| footprint_max_mib | 415.500 / 448.300 / 513.000 | 411.900 / 413.300 / 459.000 | 545.800 | — | True |
+| lifetime_peak_mib | 1613.832 / 1620.753 / 1622.019 | 917.394 / 919.144 / 944.316 | 1628.941 | 1653.169 | True |
+| max_window_mean_ms | 19.520 / 19.520 / 19.670 | 19.670 / 19.910 / 20.150 | 19.670 | — | False |
+| max_window_p99_ms | 114.730 / 117.420 / 126.550 | 117.990 / 132.420 / 139.020 | 129.240 | — | False |
+| hitches_over_25ms | 112.000 / 121.000 / 122.000 | 116.000 / 118.000 / 120.000 | 131.000 | 139.150 | True |
+| largest_callback_ms | 477.430 / 478.300 / 480.820 | 280.310 / 280.360 / 470.900 | 481.690 | — | True |
+
+| Run | Surface checkpoints, cycles 1–5 (MiB) | Returned checkpoints, cycles 1–5 (MiB) |
+|---|---|---|
+| Control 1 | 412.847, 412.675, 412.628, 412.768, 412.737 | 414.081, 413.862, 413.878, 413.847, 413.893 |
+| Candidate 1 | 413.472, 413.534, 413.378, 413.440, 413.550 | 414.628, 414.534, 414.534, 414.487, 414.565 |
+| Control 2 | 402.472, 402.409, 402.675, 402.581, 402.659 | 403.378, 403.378, 403.268, 403.300, 403.347 |
+| Candidate 2 | 408.643, 408.581, 408.612, 408.643, 408.612 | 409.253, 409.300, 409.315, 409.253, 409.268 |
+| Control 3 | 413.878, 413.847, 413.831, 413.893, 413.909 | 415.112, 415.034, 415.050, 415.034, 415.050 |
+| Candidate 3 | 411.393, 411.518, 411.472, 411.534, 411.581 | 412.675, 412.753, 412.722, 412.753, 412.706 |
+
+### highland-warm: fails corrected performance comparison
+
+| Run | Footprint MiB | Peak MiB | Max mean ms | Max p99 ms | Largest ms (outside texture) | Hitches >25 ms |
+|---|---:|---:|---:|---:|---:|---:|
+| Control 1 | 117.2–154.2 | 1620.222 | 19.80 | 68.73 | 562.75 (144.46) | 24 |
+| Candidate 1 | 117.6–199.3 | 245.737 | 19.27 | 63.72 | 445.97 (132.85) | 24 |
+| Control 2 | 118.0–154.3 | 1620.957 | 19.04 | 75.22 | 457.94 (152.10) | 24 |
+| Candidate 2 | 118.2–221.9 | 262.518 | 19.13 | 101.72 | 295.59 (122.71) | 26 |
+| Control 3 | 112.0–149.0 | 1614.425 | 19.44 | 68.31 | 483.77 (143.62) | 25 |
+| Candidate 3 | 117.4–223.1 | 257.112 | 19.27 | 97.66 | 443.64 (128.14) | 21 |
+
+| Metric | Control min / median / max | Candidate min / median / max | Noise limit | Additional cap | Pass |
+|---|---:|---:|---:|---:|---|
+| footprint_min_mib | 112.000 / 117.200 / 118.000 | 117.400 / 117.600 / 118.200 | 123.200 | — | True |
+| footprint_max_mib | 149.000 / 154.200 / 154.300 | 199.300 / 221.900 / 223.100 | 159.500 | — | False |
+| lifetime_peak_mib | 1614.425 / 1620.222 / 1620.957 | 245.737 / 257.112 / 262.518 | 1626.753 | 1652.627 | True |
+| max_window_mean_ms | 19.040 / 19.440 / 19.800 | 19.130 / 19.270 / 19.270 | 20.200 | — | True |
+| max_window_p99_ms | 68.310 / 68.730 / 75.220 | 63.720 / 97.660 / 101.720 | 75.640 | — | False |
+| hitches_over_25ms | 24.000 / 24.000 / 25.000 | 21.000 / 24.000 / 26.000 | 25.000 | 27.600 | True |
+| largest_callback_ms | 457.940 / 483.770 / 562.750 | 295.590 / 443.640 / 445.970 | 588.580 | — | True |
+
+### highland-cold: fails corrected performance comparison
+
+| Run | Footprint MiB | Peak MiB | Max mean ms | Max p99 ms | Largest ms (outside texture) | Hitches >25 ms |
+|---|---:|---:|---:|---:|---:|---:|
+| Control 1 | 117.2–182.9 | 1619.847 | 19.18 | 76.43 | 326.45 (159.82) | 30 |
+| Candidate 1 | 118.2–246.5 | 260.815 | 19.47 | 111.11 | 305.18 (164.79) | 25 |
+| Control 2 | 117.6–212.9 | 1620.738 | 19.79 | 102.23 | 379.74 (127.96) | 24 |
+| Candidate 2 | 117.4–234.8 | 258.424 | 19.78 | 87.06 | 614.56 (128.85) | 20 |
+| Control 3 | 117.8–181.5 | 1620.425 | 18.41 | 68.73 | 285.72 (133.00) | 22 |
+| Candidate 3 | 118.3–249.1 | 264.612 | 19.65 | 85.14 | 558.14 (136.54) | 19 |
+
+| Metric | Control min / median / max | Candidate min / median / max | Noise limit | Additional cap | Pass |
+|---|---:|---:|---:|---:|---|
+| footprint_min_mib | 117.200 / 117.600 / 117.800 | 117.400 / 118.200 / 118.300 | 118.200 | — | True |
+| footprint_max_mib | 181.500 / 182.900 / 212.900 | 234.800 / 246.500 / 249.100 | 214.300 | — | False |
+| lifetime_peak_mib | 1619.847 / 1620.425 / 1620.738 | 258.424 / 260.815 / 264.612 | 1621.316 | 1652.834 | True |
+| max_window_mean_ms | 18.410 / 19.180 / 19.790 | 19.470 / 19.650 / 19.780 | 20.560 | — | True |
+| max_window_p99_ms | 68.730 / 76.430 / 102.230 | 85.140 / 87.060 / 111.110 | 109.930 | — | True |
+| hitches_over_25ms | 22.000 / 24.000 / 30.000 | 19.000 / 20.000 / 25.000 | 32.000 | 27.600 | True |
+| largest_callback_ms | 285.720 / 326.450 / 379.740 | 305.180 / 558.140 / 614.560 | 420.470 | — | False |
+
+
+### Globe-texture intervals and kernel peak markers
+
+| Workload/run | Texture interval ms | Kernel peak immediately after texture MiB | Lifetime peak MiB |
+|---|---:|---:|---:|
+| journey Control 1 | 1483.926 | 1614.066 | 1614.066 |
+| journey Candidate 1 | 473.682 | 263.674 | 621.159 |
+| journey Control 2 | 1409.959 | 1620.269 | 1620.269 |
+| journey Candidate 2 | 395.726 | 263.143 | 621.737 |
+| journey Control 3 | 1397.403 | 1620.285 | 1620.285 |
+| journey Candidate 3 | 397.162 | 262.502 | 620.675 |
+| soak Control 1 | 1346.790 | 1620.753 | 1620.753 |
+| soak Candidate 1 | 467.571 | 262.846 | 917.394 |
+| soak Control 2 | 1426.615 | 1613.832 | 1613.832 |
+| soak Candidate 2 | 415.263 | 232.627 | 919.144 |
+| soak Control 3 | 1411.889 | 1622.019 | 1622.019 |
+| soak Candidate 3 | 476.722 | 262.612 | 944.316 |
+| highland-warm Control 1 | 1413.391 | 1620.222 | 1620.222 |
+| highland-warm Candidate 1 | 477.066 | 245.737 | 245.737 |
+| highland-warm Control 2 | 1374.247 | 1620.957 | 1620.957 |
+| highland-warm Candidate 2 | 203.165 | 262.518 | 262.518 |
+| highland-warm Control 3 | 1518.816 | 1614.425 | 1614.425 |
+| highland-warm Candidate 3 | 205.907 | 257.112 | 257.112 |
+| highland-cold Control 1 | 1839.506 | 1619.847 | 1619.847 |
+| highland-cold Candidate 1 | 529.023 | 260.815 | 260.815 |
+| highland-cold Control 2 | 1435.966 | 1620.738 | 1620.738 |
+| highland-cold Candidate 2 | 389.023 | 258.424 | 258.424 |
+| highland-cold Control 3 | 1353.343 | 1620.425 | 1620.425 |
+| highland-cold Candidate 3 | 322.026 | 264.612 | 264.612 |
+
+All eleven fresh `Apollo/*.png` files are byte-identical to `/tmp/LM-Stage2-Release-Baseline-2026-09-04-v2`; all eleven pinned terrain hashes and all five protected method bodies match. `Apollo/comparison.json`, `terrain-assets.json` and `protected-functions.json` record each result. The final Apollo stop waits 90 seconds (despite the helper's generic “20s” log text); its last twelve windows have 16.67 ms mean/p99/max and zero missed callbacks. The final fixed overlap also waits 90 seconds and passes the same values (`Fixed/final-settled.json`).
+
+`Fixed/01-globe.png` is byte-identical to the baseline disk, giving infinite PSNR and exceeding the accepted 64.75 dB comparison. Inspected `Fixed/03-crossfade.png`: small crater rims, narrow diagonal ridges and branching channels remain distinct across the mare. The prior blurred baseline and the new original are both retained. All seven `journey/Candidate-1` images were inspected individually: disk retains the black rectangular portal and flag; clipped fills the aperture with mapped craters; crossfade resolves small pits that the control blurs; 42.8 km handoff has weak, blurred relief; 7.5 km remains mostly gray with faint pits; immersion removes the room/frame; return restores the original pose. A and B remain necessary. Cold candidate arrival and overlap were inspected: a coarse map covers the aperture before fine imagery arrives, without a black loading hole; the later map resolves dark crater interiors and small rims. `inspection-notes.md` names the originals.
+
+The initial cold control completed, but a reinstall rotated its Simulator data-container UUID and the wrapper attempted to restore caches to the stale path. Both original caches were recovered, and newly fetched elevation cache was preserved. The fixed wrapper resolves the live container again on exit. The entire alternating cold set restarted; the interrupted run remains separately labeled under `highland-cold-interrupted/` and is not part of these tables. The app binary did not change.
+
+Smallest next experiment: remove the full-width source-slab concatenation in `LMLunarImageryTileStore.pixels(for:)` and sample verified slabs directly, retaining exact offline tile hashes. This targets a concrete duplicate allocation seen in code; its benefit is not yet measured. Separately test stricter fine-imagery import deferral around Apollo mesh/material publication: all three soak maximum-mean windows overlap that publication, which is evidence for an isolation experiment rather than proof of causality. No such optimization was implemented in this revalidation.
+
+Owner bundle note, no action taken: the original 64 ppd JPEG XL (76,112,646 bytes, approximately 76 MB) remains bundled for deterministic capture alongside the 15.378 MiB companion. Removing it remains an owner decision.
+
+All physical gates remain open: tracked head/hand/gaze input, stereo registration and relief, comfort, effective device imagery resolution/color, CPU/GPU pacing, thermal behavior, memory pressure and space lifecycle. F and the post-F Apollo-peak attribution remain gated on D and E landing. Continue with independent A on the current landed baseline because E did not land.

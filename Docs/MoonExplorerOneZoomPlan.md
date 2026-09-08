@@ -23,7 +23,7 @@ zoom-out stops at the handoff width, and leaving immersion restores the window.
 | 3 Scene stepping off the observation graph | Complete in Simulator | 63 focused tests; 11 byte-identical Apollo images; seven-stage portal journey; five restore cycles exact. Over-60s sample shows no SwiftUI update loop. Physical lifecycle/pacing gates remain open. |
 | 4 Coarse-first terrain and prefetch | Withheld: performance gate | D candidate and measurements retained; §4 contracts unchanged |
 | 5 Sliding region | Waiting for Steps 4 and 6 | F was not started; §4 |
-| 6 Tiled globe imagery | Withheld: hitch gate | E halves measured journey peak and sharpens overlap, but hitches rise 15→17 |
+| 6 Tiled globe imagery | Withheld under protocol 2 | Journey passes; three-run soak mean/p99 and highland footprint/callback gates fail. 79 tests and 11 exact Apollo images pass; source on `onezoom/E` |
 
 ### Owner review follow-up, 2026-09-07
 
@@ -74,7 +74,7 @@ bundled; removing it is a separate owner bundle decision.
 | B Free-standing disk and smaller portal | Withheld: memory gate | Corrected switch and 11 Apollo images pass; journey peak +1.203 MiB. Patch retained; next experiment is lazy portal realization |
 | C Height-field gesture anchor | Withheld: performance gate | 0.0184 ms pick and about 64 MiB lower retained footprint; matched lifetime peaks rise, patch retained |
 | D Coarse-first terrain, plan Step 4 | Withheld: performance gate | Coarse prefetch ready before handoff in diagnostic dive; matched journey peak +1.063 MiB and hitches 15→18. Full patch retained |
-| E Tiled globe imagery, plan Step 6 | Withheld: hitch gate | Peak 1614→621 MiB; disk exact, overlap sharper; paced journey hitches 15→17. Full patch retained |
+| E Tiled globe imagery, plan Step 6 | Withheld under protocol 2 | Three-run journey passes; soak and highland fail. Complete evidence appended; `onezoom/E` preserves source |
 | F Sliding region, plan Step 5 | Waiting for D and E | 100 km pan, final contact equals rendered |
 
 ## 1. Evaluation of the branch at `739a0e5`
