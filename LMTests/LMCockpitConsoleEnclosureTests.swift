@@ -30,6 +30,17 @@ struct LMCockpitConsoleEnclosureTests {
         Dictionary(uniqueKeysWithValues: LMCommanderStationAssembly.descendants(assembly.root).map { (ObjectIdentifier($0), $0.isEnabled) })
     }
 
+    @Test func opticalInspectionUsesFrozenCommanderEyeAndWindowCenter() {
+        let pose = LMCommanderStationAssemblyObserver.pose(for: .lpd)
+        let optics = LMLandingPointDesignator()
+        #expect(pose.eye == optics.commanderEyeMeters)
+        let center = LMLPDWindowCorner.allCases.reduce(SIMD3<Float>.zero) {
+            $0 + optics.windowCorner($1, on: .inner)
+        } / Float(LMLPDWindowCorner.allCases.count)
+        #expect(pose.target == center)
+        #expect(LMCommanderStationAssemblyObserver.selected(arguments: ["--assembly-validation-view=lpd"]) == .lpd)
+    }
+
     @Test func allThreeEnclosuresPreserveMountsOccupancyAndRestoreQualifiedCasters() throws {
         let assembly = try LMCommanderStationAssembly.load()
         let occupancy = assembly.slotOccupancy
