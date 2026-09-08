@@ -1,0 +1,15 @@
+{
+  "inputs": {
+    "WindowsLPD.usdz": "a9a8cc1fd43f5c95a3be729d44afbe8704f07ac551cea9e1518479b96e0c9c18",
+    "interface-v1.json": "2d20b0247250853e073720c993f0a42fa23a3b21f223d8c3019ddf1cf53c4a72"
+  },
+  "crossings": {
+    "InstrumentConsole": [],
+    "LowerConsole": [],
+    "WindowSurrounds": []
+  },
+  "rays": {
+    "tested": 1560,
+    "blocked": []
+  }
+}

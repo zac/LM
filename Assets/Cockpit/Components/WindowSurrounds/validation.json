@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "checks": 1281,
+  "meshes": 44,
+  "triangles": 820,
+  "aperture_grid_rays": 1560,
+  "blocked_rays": [],
+  "compliance_warnings": [],
+  "hashes": {
+    "build.py": "7d3a07a7285ee138c728a7a425be87b01df80dbb943264df956622c5c3ad4688",
+    "WindowSurrounds.usdz": "1c5e9057ed75469edc3d63524680cada285b14ca6143acd7cc82f58a761ce9a6",
+    "WindowSurrounds.usda": "c213699f53ba5f682de647874ec118084bb7e42a1f082ca40ad2ebc1bf845f8c",
+    "WindowSurrounds.usdc": "3695635157d2a74786c32c1979f7e5e84eca37bc3a42a6ed2046b94892ec54cb",
+    "WindowSurrounds.blend": "fb9bda2cb101102c1ebe80b4b088dac3c53c18d1273e141d4547a532d35908c0",
+    "interface.json": "835e611453b732b6c894cf2c27326629dc6628b58578048d34db759b379473ee"
+  },
+  "protected_source_hashes": {
+    "Cabin": "9b30f113235bea7832dd0d9f245d3f6ad98bd8a64af2d217943a5489e498c21b",
+    "WindowsLPD": "91c03cc4b6826473cfdccdce195fece5f591b778b8afdb3a71505df8f528cc32"
+  },
+  "limitations": [
+    "Crew rays use accepted provisional eye and triangular aperture datums",
+    "Does not certify optical survey, full movement clearance or headset appearance"
+  ]
+}

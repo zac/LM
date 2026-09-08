@@ -1,0 +1,3118 @@
+{
+  "method": "Raw USD points transformed by authored world matrices and coordinator placement; no Blender import axis conversion; triangle BVH overlaps and eye-to-face rays",
+  "inputs": {
+    "Cabin": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/Cabin/Cabin.usdz",
+      "sha256": "9b30f113235bea7832dd0d9f245d3f6ad98bd8a64af2d217943a5489e498c21b",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 229
+    },
+    "WindowsLPD": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/WindowsLPD/WindowsLPD.usdz",
+      "sha256": "91c03cc4b6826473cfdccdce195fece5f591b778b8afdb3a71505df8f528cc32",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 194
+    },
+    "PanelInventory": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/PanelInventory/PanelInventory.usdz",
+      "sha256": "4b95b051b27831c97a47e9ccfb36b2f62e23469d3be50a09225e57685dc56b24",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 105
+    },
+    "CommanderPanels": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/CommanderPanels/CommanderPanels.usdz",
+      "sha256": "52e4c13cf302e080edbd163fb3f6d26ce53785c28bc49dcefd3a75c876f9d604",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 32
+    },
+    "InteriorDetails": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/InteriorDetails/InteriorDetails.usdz",
+      "sha256": "069cdfb9923a6953f1ce4ffc5053a948e0c4f76840866553435d778dfd84b201",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 557
+    },
+    "BreakerBanks": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/BreakerBanks/BreakerBanks.usdz",
+      "sha256": "fce4e4248806f4ff963775bc8013e17e6dee370671e656390bb8d05fcddfc217",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 383
+    },
+    "AltitudeRate": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/AltitudeRate/AltitudeRate.usdz",
+      "sha256": "047bd435c51ecb1920aedc8f8b1cefbc9ea9056ac1139503a81abe29b42254c1",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.12000000476837158
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.5614835023880005
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.8692932724952698
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 633
+    },
+    "CrossPointer": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/CrossPointer/CrossPointer.usdz",
+      "sha256": "8095cdf3c12c4b77025e415ad21ea24a5bf51615674fd076f7458b9369ae1eae",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.3149999976158142
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.70289146900177
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.9023507237434387
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 127
+    },
+    "DSKY": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/DSKY/DSKY.usdz",
+      "sha256": "e20a69864d4c7e0ff068172e0e672d9fbcc510c1dc4e97e4db0246fde08fbdfd",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.7071067690849304,
+          0.7071068286895752,
+          1.0871126651763916
+        ],
+        [
+          0.0,
+          -0.7071068286895752,
+          0.7071067690849304,
+          -0.6021004915237427
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 390
+    },
+    "FDAI": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/FDAI/FDAI.usdz",
+      "sha256": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.30000001192092896
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.5924168825149536
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.8666242957115173
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 223
+    },
+    "PilotFDAI": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/FDAI/FDAI.usdz",
+      "sha256": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.3050000071525574
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.4911577701568604
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.8650164008140564
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 223
+    },
+    "ACA": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/HandControllers/ACA.usdz",
+      "sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.49000000953674316
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.9075000286102295
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.3700000047683716
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 13
+    },
+    "AttitudeMode": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/DescentControls/AttitudeMode.usdz",
+      "sha256": "4e7b811a7ed251bd9065a852a2ed652ca16a5fd06b48beea98702a492dc63f86",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.11999999731779099
+        ],
+        [
+          0.0,
+          0.7071067690849304,
+          0.7071068286895752,
+          1.2781422138214111
+        ],
+        [
+          0.0,
+          -0.7071068286895752,
+          0.7071067690849304,
+          -0.8058578372001648
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 12
+    },
+    "DescentRate": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/DescentControls/DescentRate.usdz",
+      "sha256": "ffa295038be35261353a8a0c8fe35316647d4e0b910b7ca108e97f55375cf078",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.6387999653816223
+        ],
+        [
+          0.0,
+          0.258819043636322,
+          0.9659258127212524,
+          0.9164698719978333
+        ],
+        [
+          0.0,
+          -0.9659258127212524,
+          0.258819043636322,
+          -0.3626972436904907
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 9
+    },
+    "EngineButtons": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/EngineControls/EngineButtons.usdz",
+      "sha256": "eedf4dcadf8e075bc3d6084c273ea5a335506d3680966aa528298dcae7bec369",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.6387999653816223
+        ],
+        [
+          0.0,
+          0.258819043636322,
+          0.9659258127212524,
+          0.9164698719978333
+        ],
+        [
+          0.0,
+          -0.9659258127212524,
+          0.258819043636322,
+          -0.3626972436904907
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 32
+    },
+    "CommanderLunarContact": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/EngineControls/LunarContact.usdz",
+      "sha256": "6f97cc39c398f9f19555d7ea283e8d1c711deedd9b762cc529b53725d5f31346",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.20399999618530273
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.7019586563110352
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.9018816351890564
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 6
+    },
+    "PilotLunarContact": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/EngineControls/LunarContact.usdz",
+      "sha256": "6f97cc39c398f9f19555d7ea283e8d1c711deedd9b762cc529b53725d5f31346",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.43800002336502075
+        ],
+        [
+          0.0,
+          0.7071067690849304,
+          0.7071068286895752,
+          1.3023959398269653
+        ],
+        [
+          0.0,
+          -0.7071068286895752,
+          0.7071067690849304,
+          -0.8296873569488525
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 6
+    },
+    "PropulsionInstruments": {
+      "path": "/private/tmp/lmkit-propulsion-instruments/Assets/Cockpit/Components/PropulsionInstruments/PropulsionInstruments.usdz",
+      "sha256": "9eedc3e28ebc5be2b5da07c5c5ff99176c17df66df974879d0348d8061d8d1e8",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.06800000369548798
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.7092045545578003
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.8953405022621155
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 364
+    },
+    "MissionTimer": {
+      "path": "/private/tmp/lmkit-timers/Assets/Cockpit/Components/Timers/MissionTimer.usdz",
+      "sha256": "ef6eb8d8d54de5dc39b31f0f9f38a3151343dc8c73ede7762615c41613570bea",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.33500000834465027
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.7607048749923706
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.9084831476211548
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 65
+    },
+    "EventTimer": {
+      "path": "/private/tmp/lmkit-timers/Assets/Cockpit/Components/Timers/EventTimer.usdz",
+      "sha256": "d22f9ec7b70c28a12725414f9150f2edb3f641c97c91c67cd0b7409326d8b540",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.2120000123977661
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.7607048749923706
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.9084831476211548
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 39
+    },
+    "EventTimerControls": {
+      "path": "/private/tmp/lmkit-timers/Assets/Cockpit/Components/Timers/EventTimerControls.usdz",
+      "sha256": "3cf2edba9154f991e386337acda721a3cd163c5cef22c5164f889ec28cce3cbb",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.11999999731779099
+        ],
+        [
+          0.0,
+          0.7071067690849304,
+          0.7071068286895752,
+          1.3064265251159668
+        ],
+        [
+          0.0,
+          -0.7071068286895752,
+          0.7071067690849304,
+          -0.8284852504730225
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 31
+    },
+    "CautionWarning": {
+      "path": "/private/tmp/lmkit-caution-warning/Assets/Cockpit/Components/CautionWarning/CautionWarning.usdz",
+      "sha256": "580b16119a484c1a6138731e81e6960aab12324524dd267c0b227628e23b743b",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 85
+    },
+    "WindowSurrounds": {
+      "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/WindowSurrounds/WindowSurrounds.usdz",
+      "sha256": "1c5e9057ed75469edc3d63524680cada285b14ca6143acd7cc82f58a761ce9a6",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 44
+    },
+    "InstrumentConsole": {
+      "path": "/private/tmp/lmkit-instrument-console/Assets/Cockpit/Components/InstrumentConsole/InstrumentConsole.usdz",
+      "sha256": "27a29aee1d909d482b0a4edcca5fbdf1ba227bebcb85bcee1c94405ac1475b26",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 39
+    },
+    "LowerConsole": {
+      "path": "/private/tmp/lmkit-lower-console/Assets/Cockpit/Components/LowerConsole/LowerConsole.usdz",
+      "sha256": "8ee9a28d08735a225c081e96509b611cdaf552f6af8f59d7ed7ca6874d4bc4f0",
+      "stage_up_axis": "Y",
+      "meters_per_unit": 1.0,
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 30
+    }
+  },
+  "suppressed": [
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Inboard_00"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Inboard_01"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Lower_00"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Lower_01"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Lower_02"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_00"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_01"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_02"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_03"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_04"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_05"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_06"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_07"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_08"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_09"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_10"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_11"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_12"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_13"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Inboard_00"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Inboard_01"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Lower_00"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Lower_01"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Lower_02"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_00"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_01"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_02"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_03"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_04"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_05"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_06"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_07"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_08"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_09"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_10"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_11"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_12"
+    },
+    {
+      "asset": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_13"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/AftCDU/AftCDU__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/AftGuidance/AftGuidance__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/AftGuidance/AftGuidance__Region2/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/AftStowage/AftStowage__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/AftStowage/AftStowage__Region2/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/AftWaste/AftWaste__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/ECSCartridgeStowage/ECSCartridgeStowage__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/ECSOxygen/ECSOxygen__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/ECSOxygen/ECSOxygen__Region2/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/ECSRecirculation/ECSRecirculation__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/ECSRecirculation/ECSRecirculation__Region2/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/ECSWater/ECSWater__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/ECSWater/ECSWater__Region2/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/ForwardRelief/ForwardRelief__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/ForwardStowageCDR/ForwardStowageCDR__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/ForwardStowageLMP/ForwardStowageLMP__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/ORDEAL/ORDEAL__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/OpticalAOT/OpticalAOT__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/OpticalCOAS/OpticalCOAS__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/OverheadRelief/OverheadRelief__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__CrossPointer/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__FDAI/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__Guidance/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__Propulsion/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__RangeThrust/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__Timers/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__Warning/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel11/Panel11__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel11/Panel11__Region2/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel11/Panel11__Region3/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel11/Panel11__Region4/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel11/Panel11__Region5/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel12/Panel12__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel12/Panel12__Region2/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel12/Panel12__Region3/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel14/Panel14__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel14/Panel14__Region2/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel16/Panel16__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel16/Panel16__Region2/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel16/Panel16__Region3/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel16/Panel16__Region4/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__Caution/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__CrossPointer/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__FDAI/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__Lower/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__RCSECS/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__Systems/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Panel3__EngineRadar/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Panel3__Lighting/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Panel3__Stability/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Panel3__TimerHeaters/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel4/Panel4__DSKY/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel4/Panel4__EnableLeft/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel4/Panel4__EnableRight/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel4/Panel4__Lower/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel5/Panel5__Engine/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel5/Panel5__Lighting/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel5/Panel5__Translation/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel6/Panel6__AGS/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel6/Panel6__DEDA/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel8/Panel8__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel8/Panel8__Region2/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel8/Panel8__Region3/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/SequenceCamera/SequenceCamera__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/Panels/UtilityLights/UtilityLights__Region1/Placeholder"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/AftCDU_Labels/AftCDU__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/AftGuidance_Labels/AftGuidance__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/AftGuidance_Labels/AftGuidance__Region2_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/AftStowage_Labels/AftStowage__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/AftStowage_Labels/AftStowage__Region2_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/AftWaste_Labels/AftWaste__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/ECSCartridgeStowage_Labels/ECSCartridgeStowage__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/ECSOxygen_Labels/ECSOxygen__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/ECSOxygen_Labels/ECSOxygen__Region2_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/ECSRecirculation_Labels/ECSRecirculation__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/ECSRecirculation_Labels/ECSRecirculation__Region2_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/ECSWater_Labels/ECSWater__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/ECSWater_Labels/ECSWater__Region2_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/ForwardRelief_Labels/ForwardRelief__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/ForwardStowageCDR_Labels/ForwardStowageCDR__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/ForwardStowageLMP_Labels/ForwardStowageLMP__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/ORDEAL_Labels/ORDEAL__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/OpticalAOT_Labels/OpticalAOT__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/OpticalCOAS_Labels/OpticalCOAS__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/OverheadRelief_Labels/OverheadRelief__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region2_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region3_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region4_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region5_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region2_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region3_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel14_Labels/Panel14__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel14_Labels/Panel14__Region2_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region2_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region3_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region4_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__CrossPointer_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__FDAI_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Guidance_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Propulsion_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__RangeThrust_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Timers_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Warning_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Caution_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__CrossPointer_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__FDAI_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Lower_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__RCSECS_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Systems_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__EngineRadar_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__Lighting_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__Stability_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__TimerHeaters_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__DSKY_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__EnableLeft_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__EnableRight_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__Lower_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Engine_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Lighting_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Timer_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Translation_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel6_Labels/Panel6__AGS_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel6_Labels/Panel6__DEDA_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region2_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region3_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/SequenceCamera_Labels/SequenceCamera__Region1_Label/Text"
+    },
+    {
+      "asset": "PanelInventory",
+      "path": "/PanelInventory/PlanningLabels/UtilityLights_Labels/UtilityLights__Region1_Label/Text"
+    },
+    {
+      "asset": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Bottom"
+    },
+    {
+      "asset": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Left"
+    },
+    {
+      "asset": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Right"
+    },
+    {
+      "asset": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Top"
+    },
+    {
+      "asset": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Bottom"
+    },
+    {
+      "asset": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Left"
+    },
+    {
+      "asset": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Right"
+    },
+    {
+      "asset": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Top"
+    }
+  ],
+  "results": [
+    {
+      "peer": "Cabin",
+      "surface_crossings": [
+        {
+          "surround": "CDR_BreakerReliefBacking",
+          "peer": "CDR_Crown_06_00",
+          "triangle_pairs": 8
+        },
+        {
+          "surround": "CDR_BreakerReliefBacking",
+          "peer": "CDR_Crown_06_01",
+          "triangle_pairs": 7
+        },
+        {
+          "surround": "CDR_InboardCheek_00",
+          "peer": "Forward_Above_Hatch",
+          "triangle_pairs": 30
+        },
+        {
+          "surround": "CDR_InboardCheek_00",
+          "peer": "Forward_Threshold",
+          "triangle_pairs": 6
+        },
+        {
+          "surround": "CDR_InboardCheek_00",
+          "peer": "Hatch_Jamb_N1",
+          "triangle_pairs": 14
+        },
+        {
+          "surround": "CDR_InboardCheek_00",
+          "peer": "Forward_Hatch_Leaf",
+          "triangle_pairs": 6
+        },
+        {
+          "surround": "CDR_InboardCheek_00",
+          "peer": "Center_Stack_Support_N0_4",
+          "triangle_pairs": 31
+        },
+        {
+          "surround": "CDR_InboardCheek_01",
+          "peer": "Forward_Threshold",
+          "triangle_pairs": 1
+        },
+        {
+          "surround": "CDR_InboardCheek_01",
+          "peer": "Center_Stack_Support_N0_4",
+          "triangle_pairs": 26
+        },
+        {
+          "surround": "CDR_LowerCheek_00",
+          "peer": "CDR_Lower_Liner",
+          "triangle_pairs": 4
+        },
+        {
+          "surround": "CDR_LowerCheek_01",
+          "peer": "CDR_Lower_Liner",
+          "triangle_pairs": 7
+        },
+        {
+          "surround": "CDR_LowerCheek_02",
+          "peer": "CDR_Crown_06_00",
+          "triangle_pairs": 20
+        },
+        {
+          "surround": "CDR_LowerCheek_02",
+          "peer": "CDR_Crown_06_01",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "CDR_LowerCheek_02",
+          "peer": "CDR_Crown_07_00",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "CDR_LowerCheek_02",
+          "peer": "CDR_Crown_07_01",
+          "triangle_pairs": 12
+        },
+        {
+          "surround": "CDR_LowerCheek_02",
+          "peer": "CDR_Crown_08_00",
+          "triangle_pairs": 12
+        },
+        {
+          "surround": "CDR_LowerCheek_02",
+          "peer": "CDR_Crown_08_01",
+          "triangle_pairs": 12
+        },
+        {
+          "surround": "CDR_LowerCheek_02",
+          "peer": "CDR_Crown_09_00",
+          "triangle_pairs": 14
+        },
+        {
+          "surround": "CDR_LowerCheek_02",
+          "peer": "CDR_Crown_09_01",
+          "triangle_pairs": 12
+        },
+        {
+          "surround": "CDR_LowerCheek_02",
+          "peer": "CDR_Crown_10_00",
+          "triangle_pairs": 12
+        },
+        {
+          "surround": "CDR_LowerCheek_02",
+          "peer": "CDR_Crown_10_01",
+          "triangle_pairs": 14
+        },
+        {
+          "surround": "CDR_LowerCheek_02",
+          "peer": "CDR_Crown_11_00",
+          "triangle_pairs": 9
+        },
+        {
+          "surround": "CDR_GasketEdge",
+          "peer": "CDR_Crown_06_00",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "CDR_SlopingReveal",
+          "peer": "CDR_Crown_06_00",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "CDR_SlopingReveal",
+          "peer": "Center_Stack_Support_N0_4",
+          "triangle_pairs": 30
+        },
+        {
+          "surround": "CDR_UpperCheek_00",
+          "peer": "CDR_Crown_00_00",
+          "triangle_pairs": 1
+        },
+        {
+          "surround": "CDR_UpperCheek_02",
+          "peer": "CDR_Crown_04_00",
+          "triangle_pairs": 7
+        },
+        {
+          "surround": "CDR_UpperCheek_02",
+          "peer": "CDR_Crown_04_01",
+          "triangle_pairs": 6
+        },
+        {
+          "surround": "CDR_UpperCheek_02",
+          "peer": "CDR_Crown_05_00",
+          "triangle_pairs": 8
+        },
+        {
+          "surround": "CDR_UpperCheek_03",
+          "peer": "CDR_Crown_09_00",
+          "triangle_pairs": 10
+        },
+        {
+          "surround": "CDR_UpperCheek_03",
+          "peer": "CDR_Crown_09_01",
+          "triangle_pairs": 12
+        },
+        {
+          "surround": "CDR_UpperCheek_03",
+          "peer": "CDR_Crown_10_00",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "CDR_UpperCheek_03",
+          "peer": "CDR_Crown_10_01",
+          "triangle_pairs": 8
+        },
+        {
+          "surround": "CDR_UpperCheek_03",
+          "peer": "CDR_Crown_11_00",
+          "triangle_pairs": 8
+        },
+        {
+          "surround": "CDR_UpperCheek_04",
+          "peer": "CDR_Crown_09_00",
+          "triangle_pairs": 14
+        },
+        {
+          "surround": "CDR_UpperCheek_04",
+          "peer": "CDR_Crown_09_01",
+          "triangle_pairs": 12
+        },
+        {
+          "surround": "CDR_UpperCheek_04",
+          "peer": "CDR_Crown_10_00",
+          "triangle_pairs": 11
+        },
+        {
+          "surround": "CDR_UpperCheek_05",
+          "peer": "CDR_Crown_08_00",
+          "triangle_pairs": 10
+        },
+        {
+          "surround": "CDR_UpperCheek_05",
+          "peer": "CDR_Crown_08_01",
+          "triangle_pairs": 8
+        },
+        {
+          "surround": "CDR_UpperCheek_05",
+          "peer": "CDR_Crown_09_00",
+          "triangle_pairs": 12
+        },
+        {
+          "surround": "CDR_UpperCheek_06",
+          "peer": "CDR_Crown_07_00",
+          "triangle_pairs": 10
+        },
+        {
+          "surround": "CDR_UpperCheek_06",
+          "peer": "CDR_Crown_07_01",
+          "triangle_pairs": 8
+        },
+        {
+          "surround": "CDR_UpperCheek_06",
+          "peer": "CDR_Crown_08_00",
+          "triangle_pairs": 12
+        },
+        {
+          "surround": "CDR_UpperCheek_07",
+          "peer": "CDR_Crown_06_00",
+          "triangle_pairs": 12
+        },
+        {
+          "surround": "CDR_UpperCheek_07",
+          "peer": "CDR_Crown_06_01",
+          "triangle_pairs": 8
+        },
+        {
+          "surround": "CDR_UpperCheek_07",
+          "peer": "CDR_Crown_07_00",
+          "triangle_pairs": 14
+        },
+        {
+          "surround": "CDR_UpperCheek_08",
+          "peer": "CDR_Crown_06_00",
+          "triangle_pairs": 23
+        },
+        {
+          "surround": "CDR_UpperCheek_10",
+          "peer": "CDR_Crown_06_00",
+          "triangle_pairs": 8
+        },
+        {
+          "surround": "CDR_UpperCheek_10",
+          "peer": "CDR_Crown_05_00",
+          "triangle_pairs": 13
+        },
+        {
+          "surround": "CDR_UpperCheek_10",
+          "peer": "CDR_Crown_05_01",
+          "triangle_pairs": 7
+        },
+        {
+          "surround": "CDR_UpperCheek_11",
+          "peer": "CDR_Crown_01_00",
+          "triangle_pairs": 2
+        },
+        {
+          "surround": "CDR_UpperCheek_13",
+          "peer": "CDR_Crown_03_00",
+          "triangle_pairs": 1
+        },
+        {
+          "surround": "LMP_InboardCheek_00",
+          "peer": "Forward_Above_Hatch",
+          "triangle_pairs": 27
+        },
+        {
+          "surround": "LMP_InboardCheek_00",
+          "peer": "Forward_Threshold",
+          "triangle_pairs": 7
+        },
+        {
+          "surround": "LMP_InboardCheek_00",
+          "peer": "Hatch_Jamb_1",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "LMP_InboardCheek_00",
+          "peer": "Forward_Hatch_Leaf",
+          "triangle_pairs": 8
+        },
+        {
+          "surround": "LMP_InboardCheek_00",
+          "peer": "Center_Stack_Support_0_4",
+          "triangle_pairs": 35
+        },
+        {
+          "surround": "LMP_InboardCheek_01",
+          "peer": "Forward_Threshold",
+          "triangle_pairs": 1
+        },
+        {
+          "surround": "LMP_InboardCheek_01",
+          "peer": "Center_Stack_Support_0_4",
+          "triangle_pairs": 27
+        },
+        {
+          "surround": "LMP_LowerCheek_00",
+          "peer": "LMP_Lower_Liner",
+          "triangle_pairs": 6
+        },
+        {
+          "surround": "LMP_LowerCheek_01",
+          "peer": "LMP_Lower_Liner",
+          "triangle_pairs": 9
+        },
+        {
+          "surround": "LMP_LowerCheek_02",
+          "peer": "LMP_Crown_06_00",
+          "triangle_pairs": 20
+        },
+        {
+          "surround": "LMP_LowerCheek_02",
+          "peer": "LMP_Crown_06_01",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "LMP_LowerCheek_02",
+          "peer": "LMP_Crown_07_00",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "LMP_LowerCheek_02",
+          "peer": "LMP_Crown_07_01",
+          "triangle_pairs": 12
+        },
+        {
+          "surround": "LMP_LowerCheek_02",
+          "peer": "LMP_Crown_08_00",
+          "triangle_pairs": 12
+        },
+        {
+          "surround": "LMP_LowerCheek_02",
+          "peer": "LMP_Crown_08_01",
+          "triangle_pairs": 12
+        },
+        {
+          "surround": "LMP_LowerCheek_02",
+          "peer": "LMP_Crown_09_00",
+          "triangle_pairs": 14
+        },
+        {
+          "surround": "LMP_LowerCheek_02",
+          "peer": "LMP_Crown_09_01",
+          "triangle_pairs": 10
+        },
+        {
+          "surround": "LMP_LowerCheek_02",
+          "peer": "LMP_Crown_10_00",
+          "triangle_pairs": 14
+        },
+        {
+          "surround": "LMP_LowerCheek_02",
+          "peer": "LMP_Crown_10_01",
+          "triangle_pairs": 12
+        },
+        {
+          "surround": "LMP_LowerCheek_02",
+          "peer": "LMP_Crown_11_00",
+          "triangle_pairs": 9
+        },
+        {
+          "surround": "LMP_GasketEdge",
+          "peer": "LMP_Crown_06_00",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "LMP_SlopingReveal",
+          "peer": "LMP_Crown_06_00",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "LMP_SlopingReveal",
+          "peer": "Center_Stack_Support_0_4",
+          "triangle_pairs": 33
+        },
+        {
+          "surround": "LMP_UpperCheek_00",
+          "peer": "LMP_Crown_00_00",
+          "triangle_pairs": 4
+        },
+        {
+          "surround": "LMP_UpperCheek_02",
+          "peer": "LMP_Crown_04_00",
+          "triangle_pairs": 7
+        },
+        {
+          "surround": "LMP_UpperCheek_02",
+          "peer": "LMP_Crown_04_01",
+          "triangle_pairs": 8
+        },
+        {
+          "surround": "LMP_UpperCheek_02",
+          "peer": "LMP_Crown_05_00",
+          "triangle_pairs": 8
+        },
+        {
+          "surround": "LMP_UpperCheek_03",
+          "peer": "LMP_Crown_09_00",
+          "triangle_pairs": 10
+        },
+        {
+          "surround": "LMP_UpperCheek_03",
+          "peer": "LMP_Crown_09_01",
+          "triangle_pairs": 14
+        },
+        {
+          "surround": "LMP_UpperCheek_03",
+          "peer": "LMP_Crown_10_00",
+          "triangle_pairs": 15
+        },
+        {
+          "surround": "LMP_UpperCheek_03",
+          "peer": "LMP_Crown_10_01",
+          "triangle_pairs": 8
+        },
+        {
+          "surround": "LMP_UpperCheek_03",
+          "peer": "LMP_Crown_11_00",
+          "triangle_pairs": 7
+        },
+        {
+          "surround": "LMP_UpperCheek_04",
+          "peer": "LMP_Crown_09_00",
+          "triangle_pairs": 15
+        },
+        {
+          "surround": "LMP_UpperCheek_04",
+          "peer": "LMP_Crown_09_01",
+          "triangle_pairs": 14
+        },
+        {
+          "surround": "LMP_UpperCheek_04",
+          "peer": "LMP_Crown_10_00",
+          "triangle_pairs": 8
+        },
+        {
+          "surround": "LMP_UpperCheek_05",
+          "peer": "LMP_Crown_08_00",
+          "triangle_pairs": 13
+        },
+        {
+          "surround": "LMP_UpperCheek_05",
+          "peer": "LMP_Crown_08_01",
+          "triangle_pairs": 8
+        },
+        {
+          "surround": "LMP_UpperCheek_05",
+          "peer": "LMP_Crown_09_00",
+          "triangle_pairs": 9
+        },
+        {
+          "surround": "LMP_UpperCheek_06",
+          "peer": "LMP_Crown_07_00",
+          "triangle_pairs": 13
+        },
+        {
+          "surround": "LMP_UpperCheek_06",
+          "peer": "LMP_Crown_07_01",
+          "triangle_pairs": 8
+        },
+        {
+          "surround": "LMP_UpperCheek_06",
+          "peer": "LMP_Crown_08_00",
+          "triangle_pairs": 10
+        },
+        {
+          "surround": "LMP_UpperCheek_07",
+          "peer": "LMP_Crown_06_00",
+          "triangle_pairs": 13
+        },
+        {
+          "surround": "LMP_UpperCheek_07",
+          "peer": "LMP_Crown_06_01",
+          "triangle_pairs": 10
+        },
+        {
+          "surround": "LMP_UpperCheek_07",
+          "peer": "LMP_Crown_07_00",
+          "triangle_pairs": 11
+        },
+        {
+          "surround": "LMP_UpperCheek_08",
+          "peer": "LMP_Crown_06_00",
+          "triangle_pairs": 28
+        },
+        {
+          "surround": "LMP_UpperCheek_09",
+          "peer": "LMP_Crown_00_00",
+          "triangle_pairs": 1
+        },
+        {
+          "surround": "LMP_UpperCheek_10",
+          "peer": "LMP_Crown_05_00",
+          "triangle_pairs": 15
+        },
+        {
+          "surround": "LMP_UpperCheek_10",
+          "peer": "LMP_Crown_05_01",
+          "triangle_pairs": 7
+        },
+        {
+          "surround": "LMP_UpperCheek_10",
+          "peer": "LMP_Crown_06_00",
+          "triangle_pairs": 7
+        },
+        {
+          "surround": "LMP_UpperCheek_13",
+          "peer": "LMP_Crown_02_00",
+          "triangle_pairs": 1
+        }
+      ]
+    },
+    {
+      "peer": "WindowsLPD",
+      "surface_crossings": []
+    },
+    {
+      "peer": "PanelInventory",
+      "surface_crossings": [
+        {
+          "surround": "CDR_BreakerReliefBacking",
+          "peer": "FrameHB",
+          "triangle_pairs": 20
+        },
+        {
+          "surround": "CDR_BreakerReliefBacking",
+          "peer": "FrameVA",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "CDR_BreakerReliefBacking",
+          "peer": "FrameVB",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "CDR_LowerCheek_01",
+          "peer": "FrameHA",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "CDR_LowerCheek_01",
+          "peer": "FrameHB",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "CDR_LowerCheek_02",
+          "peer": "FrameHA",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "CDR_LowerCheek_02",
+          "peer": "FrameHB",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "LMP_BreakerReliefBacking",
+          "peer": "FrameHB",
+          "triangle_pairs": 20
+        },
+        {
+          "surround": "LMP_BreakerReliefBacking",
+          "peer": "FrameVA",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "LMP_BreakerReliefBacking",
+          "peer": "FrameVB",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "LMP_LowerCheek_01",
+          "peer": "FrameHA",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "LMP_LowerCheek_01",
+          "peer": "FrameHB",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "LMP_LowerCheek_01",
+          "peer": "FrameHA",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "LMP_LowerCheek_02",
+          "peer": "FrameHB",
+          "triangle_pairs": 20
+        },
+        {
+          "surround": "LMP_LowerCheek_02",
+          "peer": "FrameHA",
+          "triangle_pairs": 16
+        },
+        {
+          "surround": "LMP_LowerCheek_02",
+          "peer": "FrameHB",
+          "triangle_pairs": 16
+        }
+      ]
+    },
+    {
+      "peer": "CommanderPanels",
+      "surface_crossings": []
+    },
+    {
+      "peer": "InteriorDetails",
+      "surface_crossings": [
+        {
+          "surround": "CDR_InboardCheek_00",
+          "peer": "CDR_HeaderReturnBolt_0",
+          "triangle_pairs": 10
+        },
+        {
+          "surround": "LMP_InboardCheek_00",
+          "peer": "LMP_HeaderReturnBolt_0",
+          "triangle_pairs": 10
+        }
+      ]
+    },
+    {
+      "peer": "BreakerBanks",
+      "surface_crossings": []
+    },
+    {
+      "peer": "AltitudeRate",
+      "surface_crossings": []
+    },
+    {
+      "peer": "CrossPointer",
+      "surface_crossings": []
+    },
+    {
+      "peer": "DSKY",
+      "surface_crossings": []
+    },
+    {
+      "peer": "FDAI",
+      "surface_crossings": []
+    },
+    {
+      "peer": "PilotFDAI",
+      "surface_crossings": []
+    },
+    {
+      "peer": "ACA",
+      "surface_crossings": []
+    },
+    {
+      "peer": "AttitudeMode",
+      "surface_crossings": []
+    },
+    {
+      "peer": "DescentRate",
+      "surface_crossings": []
+    },
+    {
+      "peer": "EngineButtons",
+      "surface_crossings": []
+    },
+    {
+      "peer": "CommanderLunarContact",
+      "surface_crossings": []
+    },
+    {
+      "peer": "PilotLunarContact",
+      "surface_crossings": []
+    },
+    {
+      "peer": "PropulsionInstruments",
+      "surface_crossings": []
+    },
+    {
+      "peer": "MissionTimer",
+      "surface_crossings": []
+    },
+    {
+      "peer": "EventTimer",
+      "surface_crossings": []
+    },
+    {
+      "peer": "EventTimerControls",
+      "surface_crossings": []
+    },
+    {
+      "peer": "CautionWarning",
+      "surface_crossings": []
+    },
+    {
+      "peer": "InstrumentConsole",
+      "surface_crossings": []
+    },
+    {
+      "peer": "LowerConsole",
+      "surface_crossings": []
+    }
+  ],
+  "face_rays": [
+    {
+      "asset": "AltitudeRate",
+      "surface": "Lens_Glass",
+      "target_cabin_m": [
+        -0.12000000476837158,
+        1.5633935928344727,
+        -0.8584604263305664
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CrossPointer",
+      "surface": "DialFace",
+      "target_cabin_m": [
+        -0.3149999678134918,
+        1.702978253364563,
+        -0.9018582701683044
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CrossPointer",
+      "surface": "PowerFailureLens",
+      "target_cabin_m": [
+        -0.3149999976158142,
+        1.7311087846755981,
+        -0.9052953720092773
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "DSKY",
+      "surface": "DSKY_Lamp_UPLINK_ACTY_Lens_Geometry",
+      "target_cabin_m": [
+        -0.06599999219179153,
+        1.1477761268615723,
+        -0.6469247341156006
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "DSKY",
+      "surface": "DSKY_Lamp_ALT_Lens_Geometry",
+      "target_cabin_m": [
+        -0.028999969363212585,
+        1.0943434238433838,
+        -0.5934922695159912
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "DSKY",
+      "surface": "DSKY_Lamp_STBY_Lens_Geometry",
+      "target_cabin_m": [
+        -0.06599999219179153,
+        1.1264032125473022,
+        -0.6255516409873962
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "DSKY",
+      "surface": "DSKY_Lamp_KEY_REL_Lens_Geometry",
+      "target_cabin_m": [
+        -0.06599999219179153,
+        1.115716576576233,
+        -0.6148651838302612
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "DSKY",
+      "surface": "DSKY_COMP_ACTY_Lens_Geometry",
+      "target_cabin_m": [
+        0.01599999889731407,
+        1.1449477672576904,
+        -0.6440963745117188
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "DSKY",
+      "surface": "DSKY_Lamp_OPR_ERR_Lens_Geometry",
+      "target_cabin_m": [
+        -0.06599999219179153,
+        1.1050300598144531,
+        -0.6041786670684814
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "DSKY",
+      "surface": "DSKY_Lamp_TRACKER_Lens_Geometry",
+      "target_cabin_m": [
+        -0.028999969363212585,
+        1.1050300598144531,
+        -0.6041786670684814
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "DSKY",
+      "surface": "DSKY_Lamp_TEMP_Lens_Geometry",
+      "target_cabin_m": [
+        -0.028999969363212585,
+        1.1477761268615723,
+        -0.6469247341156006
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "DSKY",
+      "surface": "DSKY_Lamp_NO_ATT_Lens_Geometry",
+      "target_cabin_m": [
+        -0.06599999219179153,
+        1.137089729309082,
+        -0.636238157749176
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "DSKY",
+      "surface": "DSKY_Lamp_GIMBAL_LOCK_Lens_Geometry",
+      "target_cabin_m": [
+        -0.028999969363212585,
+        1.137089729309082,
+        -0.636238157749176
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "DSKY",
+      "surface": "DSKY_Lamp_VEL_Lens_Geometry",
+      "target_cabin_m": [
+        -0.028999969363212585,
+        1.083657145500183,
+        -0.5828056931495667
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "DSKY",
+      "surface": "DSKY_Lamp_PROG_Lens_Geometry",
+      "target_cabin_m": [
+        -0.028999969363212585,
+        1.1264032125473022,
+        -0.6255516409873962
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "DSKY",
+      "surface": "DSKY_Lamp_RESTART_Lens_Geometry",
+      "target_cabin_m": [
+        -0.028999969363212585,
+        1.115716576576233,
+        -0.6148651838302612
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "FDAI",
+      "surface": "FDAI_FaceGasket",
+      "target_cabin_m": [
+        -0.30000025033950806,
+        1.592331051826477,
+        -0.8671165704727173
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "FDAI",
+      "surface": "FDAI_FaceBezel",
+      "target_cabin_m": [
+        -0.29999998211860657,
+        1.5931973457336426,
+        -0.8621926307678223
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "PilotFDAI",
+      "surface": "FDAI_BallSurround",
+      "target_cabin_m": [
+        0.304999977350235,
+        1.4958467483520508,
+        -0.8384259939193726
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "EngineButtons",
+      "surface": "EngineButtons__StartLightFace",
+      "target_cabin_m": [
+        -0.6207997798919678,
+        0.938204288482666,
+        -0.33099162578582764
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "EngineButtons",
+      "surface": "EngineButtons__StopLightFace",
+      "target_cabin_m": [
+        -0.6207999587059021,
+        0.9697147607803345,
+        -0.3670653700828552
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CommanderLunarContact",
+      "surface": "LunarContact__Lens",
+      "target_cabin_m": [
+        -0.20399992167949677,
+        1.7024449110031128,
+        -0.8991240859031677
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CommanderLunarContact",
+      "surface": "LunarContact__LightFace",
+      "target_cabin_m": [
+        -0.20400002598762512,
+        1.7025489807128906,
+        -0.8985333442687988
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "PilotLunarContact",
+      "surface": "LunarContact__Lens",
+      "target_cabin_m": [
+        0.4379998445510864,
+        1.3043760061264038,
+        -0.8277074694633484
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "PilotLunarContact",
+      "surface": "LunarContact__LightFace",
+      "target_cabin_m": [
+        0.4379998445510864,
+        1.304800033569336,
+        -0.8272832632064819
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "PropulsionInstruments",
+      "surface": "DarkWindow",
+      "target_cabin_m": [
+        -0.04800000786781311,
+        1.7486835718154907,
+        -0.9017940759658813
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "PropulsionInstruments",
+      "surface": "DialFace",
+      "target_cabin_m": [
+        -0.03999999910593033,
+        1.685655951499939,
+        -0.8906805515289307
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "PropulsionInstruments",
+      "surface": "PowerFailureLens",
+      "target_cabin_m": [
+        -0.040000006556510925,
+        1.7243238687515259,
+        -0.8959755897521973
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "PropulsionInstruments",
+      "surface": "DarkWindow",
+      "target_cabin_m": [
+        -0.08999999612569809,
+        1.7486836910247803,
+        -0.9017940163612366
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "PropulsionInstruments",
+      "surface": "DialFace",
+      "target_cabin_m": [
+        -0.06800001114606857,
+        1.685655951499939,
+        -0.8906805515289307
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "PropulsionInstruments",
+      "surface": "DialFace",
+      "target_cabin_m": [
+        -0.09600000828504562,
+        1.685655951499939,
+        -0.8906805515289307
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "PropulsionInstruments",
+      "surface": "PowerFailureLens",
+      "target_cabin_m": [
+        -0.09600000083446503,
+        1.7243238687515259,
+        -0.8959755897521973
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "PropulsionInstruments",
+      "surface": "DialFace",
+      "target_cabin_m": [
+        -0.046000007539987564,
+        1.561570167541504,
+        -0.8688008785247803
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "MissionTimer",
+      "surface": "MissionTimer_LensMesh",
+      "target_cabin_m": [
+        -0.33500003814697266,
+        1.7606403827667236,
+        -0.9030900001525879
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "EventTimer",
+      "surface": "EventTimer_LensMesh",
+      "target_cabin_m": [
+        -0.2120000272989273,
+        1.7606403827667236,
+        -0.9030900001525879
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "EventTimerControls",
+      "surface": "EventTimer_MinutesSlew_Grip",
+      "target_cabin_m": [
+        0.14299999177455902,
+        1.319861650466919,
+        -0.8108075857162476
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "EventTimerControls",
+      "surface": "EventTimer_ResetCount_Grip",
+      "target_cabin_m": [
+        0.05100000277161598,
+        1.319861650466919,
+        -0.8108075857162476
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "EventTimerControls",
+      "surface": "EventTimer_SecondsSlew_Grip",
+      "target_cabin_m": [
+        0.18900001049041748,
+        1.319861650466919,
+        -0.8108075857162476
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "EventTimerControls",
+      "surface": "EventTimer_TimerControl_Grip",
+      "target_cabin_m": [
+        0.09699998795986176,
+        1.319861650466919,
+        -0.8108075857162476
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B1R1C1",
+      "target_cabin_m": [
+        -0.20774994790554047,
+        1.8288118839263916,
+        -0.9161261320114136
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B1R1C2",
+      "target_cabin_m": [
+        -0.18324998021125793,
+        1.8288118839263916,
+        -0.9161261320114136
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B1R2C1",
+      "target_cabin_m": [
+        -0.20774994790554047,
+        1.8222144842147827,
+        -0.9149627089500427
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B1R2C2",
+      "target_cabin_m": [
+        -0.18324998021125793,
+        1.8222144842147827,
+        -0.9149627089500427
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B1R3C1",
+      "target_cabin_m": [
+        -0.20774994790554047,
+        1.8156161308288574,
+        -0.9137992262840271
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B1R3C2",
+      "target_cabin_m": [
+        -0.18324998021125793,
+        1.8156161308288574,
+        -0.9137992262840271
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B1R4C1",
+      "target_cabin_m": [
+        -0.20774994790554047,
+        1.8090181350708008,
+        -0.9126358032226562
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B1R4C2",
+      "target_cabin_m": [
+        -0.18324998021125793,
+        1.8090181350708008,
+        -0.9126358032226562
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B1R5C1",
+      "target_cabin_m": [
+        -0.20774994790554047,
+        1.8024191856384277,
+        -0.9114722609519958
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B1R5C2",
+      "target_cabin_m": [
+        -0.18324998021125793,
+        1.8024191856384277,
+        -0.9114722609519958
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B2R1C1",
+      "target_cabin_m": [
+        -0.1467500627040863,
+        1.8288118839263916,
+        -0.9161261320114136
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B2R1C2",
+      "target_cabin_m": [
+        -0.12224999070167542,
+        1.8288118839263916,
+        -0.9161261320114136
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B2R2C1",
+      "target_cabin_m": [
+        -0.1467500627040863,
+        1.8222144842147827,
+        -0.9149627089500427
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B2R2C2",
+      "target_cabin_m": [
+        -0.12224999070167542,
+        1.8222144842147827,
+        -0.9149627089500427
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B2R3C1",
+      "target_cabin_m": [
+        -0.1467500627040863,
+        1.8156161308288574,
+        -0.9137992262840271
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B2R3C2",
+      "target_cabin_m": [
+        -0.12224999070167542,
+        1.8156161308288574,
+        -0.9137992262840271
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B2R4C1",
+      "target_cabin_m": [
+        -0.1467500627040863,
+        1.8090181350708008,
+        -0.9126358032226562
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B2R4C2",
+      "target_cabin_m": [
+        -0.12224999070167542,
+        1.8090181350708008,
+        -0.9126358032226562
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B2R5C1",
+      "target_cabin_m": [
+        -0.1467500627040863,
+        1.8024191856384277,
+        -0.9114722609519958
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel1__Warning__B2R5C2",
+      "target_cabin_m": [
+        -0.12224999070167542,
+        1.8024191856384277,
+        -0.9114722609519958
+      ],
+      "eye": "CDR",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B1R1C1",
+      "target_cabin_m": [
+        0.1872500479221344,
+        1.8091166019439697,
+        -0.912652850151062
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B1R1C2",
+      "target_cabin_m": [
+        0.21174995601177216,
+        1.8091166019439697,
+        -0.912652850151062
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B1R2C1",
+      "target_cabin_m": [
+        0.1872500479221344,
+        1.8025181293487549,
+        -0.9114892482757568
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B1R2C2",
+      "target_cabin_m": [
+        0.21174995601177216,
+        1.8025181293487549,
+        -0.9114892482757568
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B1R3C1",
+      "target_cabin_m": [
+        0.1872500479221344,
+        1.795919418334961,
+        -0.9103259444236755
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B1R3C2",
+      "target_cabin_m": [
+        0.21174995601177216,
+        1.795919418334961,
+        -0.9103259444236755
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B1R4C1",
+      "target_cabin_m": [
+        0.1872500479221344,
+        1.7893214225769043,
+        -0.9091624617576599
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B1R4C2",
+      "target_cabin_m": [
+        0.21174995601177216,
+        1.7893214225769043,
+        -0.9091624617576599
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B1R5C1",
+      "target_cabin_m": [
+        0.1872500479221344,
+        1.7827229499816895,
+        -0.9079991579055786
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B1R5C2",
+      "target_cabin_m": [
+        0.21174995601177216,
+        1.7827229499816895,
+        -0.9079991579055786
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B2R1C1",
+      "target_cabin_m": [
+        0.24825012683868408,
+        1.8091166019439697,
+        -0.912652850151062
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B2R1C2",
+      "target_cabin_m": [
+        0.27275004982948303,
+        1.8091166019439697,
+        -0.912652850151062
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B2R2C1",
+      "target_cabin_m": [
+        0.24825012683868408,
+        1.8025181293487549,
+        -0.9114892482757568
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B2R2C2",
+      "target_cabin_m": [
+        0.27275004982948303,
+        1.8025181293487549,
+        -0.9114892482757568
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B2R3C1",
+      "target_cabin_m": [
+        0.24825012683868408,
+        1.795919418334961,
+        -0.9103259444236755
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B2R3C2",
+      "target_cabin_m": [
+        0.27275004982948303,
+        1.795919418334961,
+        -0.9103259444236755
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B2R4C1",
+      "target_cabin_m": [
+        0.24825012683868408,
+        1.7893214225769043,
+        -0.9091624617576599
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B2R4C2",
+      "target_cabin_m": [
+        0.27275004982948303,
+        1.7893214225769043,
+        -0.9091624617576599
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B2R5C1",
+      "target_cabin_m": [
+        0.24825012683868408,
+        1.7827229499816895,
+        -0.9079991579055786
+      ],
+      "eye": "LMP",
+      "hits": []
+    },
+    {
+      "asset": "CautionWarning",
+      "surface": "Lens_Panel2__Caution__B2R5C2",
+      "target_cabin_m": [
+        0.27275004982948303,
+        1.7827229499816895,
+        -0.9079991579055786
+      ],
+      "eye": "LMP",
+      "hits": []
+    }
+  ],
+  "blocked_face_rays": 0,
+  "limitations": [
+    "Static source meshes; joint-contact intersections require classification",
+    "No inferred physical survey or optical calibration",
+    "Companion new enclosure files may be supplied from explicitly recorded sibling worktrees"
+  ]
+}
