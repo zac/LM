@@ -335,6 +335,66 @@ final class LMCommanderStationAssembly {
         recordOccupancy(slotID: slotID, occupancy: .init(coverage: .partialRegion, componentIDs: [componentID], note: nil))
     }
 
+    func installTimers(_ timers: LMImportedTimers) throws {
+        guard !installedPartialComponents.contains("TimerReadouts"),
+              !installedPartialComponents.contains("EventTimerControls") else {
+            throw AssemblyError.invalidContract("Duplicate timer components")
+        }
+        for (id, component) in [("Panel1__Timers", timers.readouts), ("Panel3__TimerHeaters", timers.controls)] {
+            guard let slot = slots[id], slot.replacement_allowed, slot.external_occupant == nil,
+                  !installedSlots.contains(id), component.parent == nil,
+                  Self.near(component.transform.matrix, matrix_identity_float4x4),
+                  Self.descendants(component).contains(where: { $0.components[ModelComponent.self] != nil }) else {
+                throw AssemblyError.invalidContract("Timer installation transaction")
+            }
+            _ = try Self.path(slot.node, in: panelInventory)
+            _ = try Self.path(slot.default_placeholder_node, in: panelInventory)
+        }
+        // Both roots and reservations passed all fallible validation before mutation.
+        try installPartialOccupant(slotID: "Panel1__Timers", componentID: "TimerReadouts") { timers.readouts }
+        try installPartialOccupant(slotID: "Panel3__TimerHeaters", componentID: "EventTimerControls", pose: timers.controlsPose) { timers.controls }
+    }
+
+    /// Only the reviewed engine-button/DescentRate pair may share an occupied slot.
+    func installComplementaryEngineButtons(_ occupant: Entity) throws {
+        let id = "Panel5__Engine"
+        guard let slot = slots[id], slot.replacement_allowed,
+              slotOccupancy[id]?.coverage == .partialRegion,
+              slotOccupancy[id]?.componentIDs == ["DescentRate"],
+              installedPartialComponents.contains("DescentRate"),
+              !installedPartialComponents.contains("EngineButtons"),
+              occupant.parent == nil, occupant.name == "EngineButtons_Mount",
+              Self.near(occupant.transform.matrix, matrix_identity_float4x4),
+              Self.descendants(occupant).contains(where: { $0.components[ModelComponent.self] != nil }) else {
+            throw AssemblyError.invalidContract("Undeclared complementary engine occupant")
+        }
+        let mount = try Self.path(slot.node, in: panelInventory)
+        guard mount.children.contains(where: { $0.name == "DescentRate_Mount" }) else {
+            throw AssemblyError.invalidContract("Missing registered descent-rate hardware")
+        }
+        mount.addChild(occupant)
+        installedPartialComponents.insert("EngineButtons")
+        recordOccupancy(slotID: id, occupancy: .init(coverage: .partialRegion,
+            componentIDs: ["DescentRate", "EngineButtons"], note: "Engine buttons inert"))
+    }
+
+    /// This source-documented contact lamp occupies a panel gap, not an invented slot.
+    func installCommanderContact(_ contact: LMImportedLunarContact) throws {
+        guard contact.instanceID == "CommanderLunarContact", contact.slot == nil,
+              !installedPartialComponents.contains(contact.instanceID), contact.root.parent == nil,
+              let panel = inventory.panels.first(where: { $0.node == contact.parentPath }),
+              panel.id == "Panel1", Self.near(contact.root.transform.matrix, matrix_identity_float4x4) else {
+            throw AssemblyError.invalidContract("Commander contact registration")
+        }
+        let parent = try Self.path(contact.parentPath, in: panelInventory)
+        guard Self.near(parent.transformMatrix(relativeTo: panelInventory), try panel.pose.transform().matrix) else {
+            throw AssemblyError.invalidContract("Commander contact panel moved")
+        }
+        contact.root.transform = contact.pose
+        parent.addChild(contact.root)
+        installedPartialComponents.insert(contact.instanceID)
+    }
+
     /// Called only after the corresponding installer has completed validation.
     /// Complementary installers can publish all registered component IDs here;
     /// this metadata method deliberately does not grant installation permission.

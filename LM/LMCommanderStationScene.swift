@@ -163,6 +163,9 @@ final class LMCommanderStationScene {
     private var importedFDAI: LMImportedFDAI?
     private(set) var importedPilotFDAI: LMImportedFDAI?
     private(set) var importedACA: LMImportedACA?
+    private(set) var importedTimers: LMImportedTimers?
+    private(set) var systemsHardware: [String: LMImportedSystemsHardware] = [:]
+    private(set) var lunarContacts: [String: LMImportedLunarContact] = [:]
     private(set) var importedAltitudeRate: LMImportedAltitudeRate?
     private(set) var importedCrossPointer: LMImportedCrossPointer?
     private(set) var importedAttitudeMode: LMImportedDescentControl?
@@ -694,6 +697,13 @@ final class LMCommanderStationScene {
             _ = installCrossPointer()
             _ = installDescentControl(.attitudeMode)
             _ = installDescentControl(.descentRate)
+            _ = installTimers()
+            _ = installSystemsHardware("EngineButtons")
+            _ = installSystemsHardware("PropulsionInstruments")
+            _ = installLunarContact(pilot: false)
+            _ = installLunarContact(pilot: true)
+            _ = installStaticOverlay("CautionWarning", assetURL: LMKitAssets.cautionWarningURL,
+                interfaceURL: LMKitAssets.cautionWarningInterfaceURL, schema: "lmkit.caution-warning.interface.v1")
             if !arguments.contains("--no-interior-details") {
                 _ = installStaticOverlay("InteriorDetails", assetURL: LMKitAssets.interiorDetailsURL,
                     interfaceURL: LMKitAssets.interiorDetailsInterfaceURL, schema: "lmkit.interior-details.v1")
@@ -810,7 +820,60 @@ final class LMCommanderStationScene {
         }
     }
 
+    @discardableResult
+    func installTimers(loader: @MainActor () throws -> LMImportedTimers = { try LMImportedTimers.load() }) -> Bool {
+        guard importedTimers == nil, let assembly = commanderAssembly else { return importedTimers != nil }
+        do {
+            let timers = try loader()
+            try assembly.installTimers(timers)
+            importedTimers = timers
+            return true
+        } catch {
+            logger.error("Timers unavailable; reservations retained: \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    @discardableResult
+    func installSystemsHardware(_ kind: String) -> Bool {
+        guard systemsHardware[kind] == nil, let assembly = commanderAssembly else { return systemsHardware[kind] != nil }
+        do {
+            let engine = kind == "EngineButtons"
+            let hardware = try LMImportedSystemsHardware(asset: Entity.load(contentsOf: engine ? LMKitAssets.engineButtonsURL : LMKitAssets.propulsionInstrumentsURL),
+                interfaceData: Data(contentsOf: engine ? LMKitAssets.engineControlsInterfaceURL : LMKitAssets.propulsionInstrumentsInterfaceURL), kind: kind)
+            if engine {
+                try assembly.installComplementaryEngineButtons(hardware.root)
+            } else {
+                try assembly.installPartialOccupant(slotID: hardware.slot, componentID: kind, pose: hardware.pose) { hardware.root }
+            }
+            systemsHardware[kind] = hardware
+            return true
+        } catch {
+            logger.error("Systems hardware unavailable: \(kind, privacy: .public): \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    @discardableResult
+    func installLunarContact(pilot: Bool) -> Bool {
+        let id = pilot ? "PilotLunarContact" : "CommanderLunarContact"
+        guard lunarContacts[id] == nil, let assembly = commanderAssembly else { return lunarContacts[id] != nil }
+        do {
+            let contact = try LMImportedLunarContact(asset: Entity.load(contentsOf: LMKitAssets.lunarContactURL),
+                interfaceData: Data(contentsOf: LMKitAssets.engineControlsInterfaceURL), pilot: pilot)
+            if let slot = contact.slot {
+                try assembly.installPartialOccupant(slotID: slot, componentID: id, pose: contact.pose) { contact.root }
+            } else { try assembly.installCommanderContact(contact) }
+            lunarContacts[id] = contact
+            return true
+        } catch {
+            logger.error("Contact lamp unavailable: \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
     func applyLandingReadouts(_ state: LMVehicleStateSnapshot?, program: Int?) {
+        for contact in lunarContacts.values { contact.apply(state?.landingGear?.isProbeContact) }
         importedAltitudeRate?.apply(LMAltitudeRateReading(state: state))
         importedCrossPointer?.apply(LMCrossPointerReading(state: state, program: program))
     }

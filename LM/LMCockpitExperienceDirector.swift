@@ -68,7 +68,7 @@ struct LMCockpitExperienceDirector: Equatable, Sendable {
         verticalSpeedMetersPerSecond: Double? = nil,
         downrangeSpeedMetersPerSecond: Double? = nil,
         outcome: LMFlightOutcome?,
-        hasSurfaceContact: Bool,
+        hasSurfaceContact: Bool?,
         landingFailure: LMLandingGearFailure? = nil,
         surfaceContact: LMSurfaceContactSnapshot? = nil,
         landingGear: LMLandingGearState? = nil
@@ -122,7 +122,7 @@ struct LMCockpitExperienceDirector: Equatable, Sendable {
             }
             previousInFlightAltitudeFeet = altitudeFeet
         }
-        if hasSurfaceContact {
+        if hasSurfaceContact == true {
             emit(
                 .contact,
                 title: "CONTACT LIGHT",

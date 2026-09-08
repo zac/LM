@@ -1,6 +1,6 @@
 # Event timer state handoff
 
-`LMEventTimerState` is app-owned event-instrument state. It exposes MM:SS from 00:00 through 59:59, start/stop/reset, maintained count direction, and independently held minute/second TENS/UNITS slew. It consumes supplied simulation time only. It neither changes flight dynamics nor supplies mission elapsed time (GET).
+`LMEventTimerState` is app-owned event-instrument state. It exposes MM:SS from 00:00 through 59:59, start/stop/reset, latched logical count direction, and independently held minute/second TENS/UNITS slew. It consumes supplied simulation time only. It neither changes flight dynamics nor supplies mission elapsed time (GET).
 
 ## Source qualification
 
@@ -27,7 +27,7 @@ timer.send(.start) // Bool reports acceptance
 
 Commands are `.start`, `.stop`, `.reset`, `.selectDirection(.up/.down)`, `.minuteSlew(.tens/.units/nil)`, and `.secondSlew(.tens/.units/nil)`. Nil releases a spring-centered slew switch. State owns the two-digit-per-second repeat; the view must not generate its own repeat pulses. Call `cancelSlew()` on cancelled gestures, focus loss, or dismissal. This releases held switches without stopping a running count. A validated `.set(minutes:seconds:)` is available for coordinator presets; invalid values reject atomically. Physical setting should use the slew switches.
 
-Pause freezes counting and held slew. Paused updates and the first resumed sample rebase the timestamp without catch-up. Preserve state across ordinary pause; the simulation clock need not be started/stopped by timer controls. Stop freezes count phase; held slew can still set digits. START resumes the current effective direction. RESET clears to zero and stops, restores the selected direction, releases slew, and requires another START. Selecting a direction changes the effective direction but does not independently start a stopped timer. Automatic countdown reversal changes `countingDirection` while leaving the maintained `selectedDirection` unchanged; do not animate the selector when the counter reverses.
+Pause freezes counting and held slew. Paused updates and the first resumed sample rebase the timestamp without catch-up. Preserve state across ordinary pause; the simulation clock need not be started/stopped by timer controls. Stop freezes count phase; held slew can still set digits. START resumes the current effective direction. RESET clears to zero and stops, restores the selected direction, releases slew, and requires another START. Selecting a direction changes the effective direction but does not independently start a stopped timer. Automatic countdown reversal changes `countingDirection` while leaving the latched logical `selectedDirection` unchanged; do not animate the selector when the counter reverses.
 
 Entering replay clears/stops/releases the instrument and makes it unavailable. Commands are rejected there. Returning live initializes zero/stopped and requires START; the implementation does not invent recorded timer control history. Missing, negative, nonfinite, or arithmetic-overflow time also clears/stops/blanks; recovery rebases at zero/stopped without catch-up. Finite large gaps are processed with bounded cycle skipping.
 
@@ -44,3 +44,5 @@ Only `LM/LMEventTimerState.swift`, `LMTests/LMEventTimerStateTests.swift`, and t
 Native macOS Swift Testing: **12 tests passed**, using Swift 6.3.3 in a temporary SwiftPM module containing the exact source and tests. Tests cover fractional timing, stop/pause, both range boundaries, automatic reversal, no selector motion, reset, replay, backwards/new timelines, unavailable data, invalid presets, independent held digit slew, cancellation, bounded large-gap equivalence to 40,000 individual half ticks, and huge finite offsets. No simulator/headset or app-integration acceptance is claimed.
 
 Reproduce the isolated harness by copying the two Swift files into a temporary package with a target named `LM` and a test target depending on it; use Swift tools version 6.0 or later. Local validation scratch: `/private/tmp/lm-event-timer-validation`. Run `swift test --package-path /private/tmp/lm-event-timer-validation --scratch-path /private/tmp/lm-event-timer-validation/build --disable-sandbox` with `CLANG_MODULE_CACHE_PATH` and `SWIFTPM_MODULECACHE_OVERRIDE` pointed into that scratch directory if the default caches are sandbox-restricted.
+
+Physical RESET/COUNT uses the sourced momentary upper/lower detents. Spring return is not an UP command; the host maps a deliberate center tap with no excursion to explicit UP.

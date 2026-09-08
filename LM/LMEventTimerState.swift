@@ -29,7 +29,8 @@ struct LMEventTimerState: Equatable, Sendable {
     private(set) var seconds = 0
     private(set) var isRunning = false
     private(set) var selectedDirection: Direction = .up
-    /// May differ from the maintained selector after the later timer reverses at zero.
+    /// May differ from the latched logical selection after the later timer reverses at zero.
+    /// The physical RESET/COUNT toggle springs to center independently.
     private(set) var countingDirection: Direction = .up
     private(set) var minuteSlew: SlewPosition?
     private(set) var secondSlew: SlewPosition?

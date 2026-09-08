@@ -20,7 +20,7 @@ struct LMCockpitSlotOccupancy: Equatable {
             }
         }.joined(separator: " + ")
         let status = coverage == .partialRegion ? "PARTIAL REGION" : "INSTALLED EQUIPMENT"
-        let caveat = coverage == .partialRegion ? "Other equipment pending" : note
+        let caveat = coverage == .partialRegion ? (["Other equipment pending"] + [note].compactMap { $0 }).joined(separator: "\n") : note
         return ([status, names] + [caveat].compactMap { $0 }).joined(separator: "\n")
     }
 }
