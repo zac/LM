@@ -111,7 +111,7 @@ def main():
  screws=material('Fastener_heads',(.30,.31,.30))
  bus=material('Defog_busbar_silver',(.58,.59,.56))
  root=node('WindowsLPD');datums=node('Datums',parent=root)
- contract=json.loads((OUT/'interface-v1.json').read_text()); manifest={'schema':'lmkit.windows-lpd.manifest.v1','contract':'interface-v1.json','units':'meters','root':'/WindowsLPD','pane_transforms':{},'marking_owner':'WindowsLPD exclusively; disable procedural LM grids when imported','placeholder_bounds':{},'eye_positions':contract['eyes'],'qualification':'approximate visual hardware; not surveyed optics','artwork_layout':'photo-inspired physical layout, not angular-calibrated; do not use for numeric targeting','optical_baseline':'evidence/BASELINE-LMLandingPointDesignator.swift'}
+ contract=json.loads((OUT/'interface-v1.json').read_text()); manifest={'schema':'lmkit.windows-lpd.manifest.v1','contract':'interface-v1.json','units':'meters','root':'/WindowsLPD','pane_transforms':{},'marking_owner':'WindowsLPD exclusively; disable procedural LM grids when imported','placeholder_bounds':{},'eye_positions':contract['eyes'],'qualification':'approximate visual hardware; not surveyed optics','artwork_layout':'forward-axis spine consistent with frozen datums; crossbar widths visual; not qualified numeric targeting','optical_baseline':'evidence/BASELINE-LMLandingPointDesignator.swift'}
  for side,eye in contract['eyes'].items():node(side+'_Eye',eye,parent=datums)
  for side in ['CDR','LMP']:
   row=contract['forward'][side+'_Window_Inner'];origin=Vector(row['position']);n=Vector(row['normal']).normalized();right=Vector(row['right']).normalized();up=n.cross(right).normalized();basis=Matrix((right,up,n)).transposed();eye=Vector(contract['eyes'][side]);corners=[Vector(p) for p in row['corners']]
@@ -146,26 +146,30 @@ def main():
    if side!='CDR':continue
    marks=node('LPD_'+layer,parent=pane)
    def point(elev,az=0):
-    # Visual trace from photo, intentionally separate from old angular calibration.
-    # Project outer artwork from inner eye rays to keep paired layers aligned.
-    top=poly[0].lerp(poly[1],.58); bottom=poly[2]
-    t=(elev+7)/75; q=top.lerp(bottom,t)
+    # NASA TN D-6846: zero is along the vehicle forward body axis.
+    # Correct the spine using the frozen eye and plane; this does not survey
+    # either datum. Crossbar widths remain explicitly visual, NOT azimuth angles.
+    radians=math.radians(elev)
+    ray=Vector((0,-math.sin(radians),-math.cos(radians)))
+    distance=n.dot(origin-eye)/n.dot(ray)
+    center=eye+ray*distance
+    q=basis.transposed()@(center-origin)
     q.x += az*(.0075 if elev<25 else .0040)
     world=origin+basis@q
     world=eye+(world-eye)*scale
     local=basis.transposed()@(world-o);local.z=.00012;return local
-   def line(name,a,b,w=.00065):stroke(layer+'_'+name,a,b,w,mark,marks)
-   # Three points ensure vertical spine follows plane (straight in this projective construction).
-   line('Spine',point(-5),point(61))
+   def line(name,a,b,w=.00065):stroke(layer+'_'+name,a,b,w*scale,mark,marks)
+   # The zero-azimuth spine is the plane's intersection with Cabin X=eye.X.
+   line('Spine',point(-2),point(61))
    for e in range(0,61,2):
     half=1.2 if e%10==0 else .7
     line('Elevation_%02d'%e,point(e,-half),point(e,half))
-    if e%10==0:label(layer+'_Label_%02d'%e,str(e),point(e,1.8),mark,marks)
+    if e%10==0:label(layer+'_Label_%02d'%e,str(e),point(e,1.8),mark,marks,.007*scale)
    for e in [0,50]:
     line('Crossbar_%d'%e,point(e,-10),point(e,10))
     for a in [-10,-5,5,10]:
      line('CrossTick_%d_%d'%(e,a),point(e-.65,a),point(e+.65,a))
-     label(layer+'_CrossLabel_%d_%d'%(e,a),str(abs(a)),point(e-1.6,a),mark,marks,.006)
+     label(layer+'_CrossLabel_%d_%d'%(e,a),str(abs(a)),point(e-1.6,a),mark,marks,.006*scale)
  # Docking module: curved structural pane, protective outer pane and independent rim.
  d=contract['docking'];o=Vector(d['center']);right=Vector(d['right']);up=Vector(d['up']);n=Vector(d['normal_toward_cabin']);basis=Matrix((right,up,n)).transposed()
  dock=node('DockingWindow',o,basis,root);w,h=d['viewing_size_m'];poly=[Vector((-w/2,-h/2,0)),Vector((w/2,-h/2,0)),Vector((w/2,h/2,0)),Vector((-w/2,h/2,0))]

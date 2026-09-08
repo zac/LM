@@ -148,22 +148,24 @@
     "optical_certification": false
   },
   "marking_layout": {
-    "id": "photo-inspired-visual-v1",
+    "id": "forward-axis-spine-visual-crossbars-v2",
     "angular_targeting_qualified": false,
     "baseline_angular_targeting_qualified": false,
     "degree_numbers": "visual historical artwork only",
-    "spine_reference": "inner triangle top edge at58percent, interpolated toward lower vertex by(degrees+7)/75",
+    "spine_reference": "intersect frozen inner pane with rays (0,-sin(elevation),-cos(elevation)) from fixed CDR design eye; zero lies along Cabin -Z",
     "crossbars_degrees": [
       0,
       50
     ],
     "azimuth_visual_spacing_m_per_label_degree": {
       "upper": 0.0075,
-      "lower": 0.004
+      "lower": 0.004,
+      "qualification": "visual width only; horizontal numeric labels are not calibrated azimuth angles"
     },
-    "outer_copy": "project inner artwork through comparison eye onto outer plane; numeric angular accuracy not implied",
+    "outer_copy": "project complete inner artwork including stroke widths and glyph dimensions through fixed comparison eye to parallel outer pane",
     "baseline_reference": "evidence/BASELINE-LMLandingPointDesignator.swift",
-    "source": "NASA Eppler slide38 photograph; vehicle/mission uncaptioned",
-    "migration": "old app single upper bar/angular artwork replaced by photo-inspired layout; suppress app projected digital targeting marker under imported ownership"
+    "source": "NASA TN D-6846 printed6/PDF11 for zero axis; Eppler slide38 for paired artwork and crossbars",
+    "migration": "v1 arbitrary triangle interpolation corrected to forward-axis spine; panes/eyes/hardware unchanged; preserve non-targeting qualification",
+    "spine_degrees_relative_to_frozen_datums": true
   }
 }

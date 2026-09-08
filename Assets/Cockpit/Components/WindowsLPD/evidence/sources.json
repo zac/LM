@@ -105,6 +105,25 @@
       "locator": "original PDF44 / printed36 / T30915-38",
       "mission_applicability": "1967 LM2-era training",
       "confidence": "high drawing content, limited LM5 applicability"
+    },
+    {
+      "review_date": "2026-09-08",
+      "source_url": "https://www.nasa.gov/wp-content/uploads/static/history/alsj/nasa-tnd-6846pt.1.pdf",
+      "locator": "printed6 / PDF11, LPD system description and figure4",
+      "title": "NASA TN D-6846 Apollo Lunar Descent and Ascent Trajectories",
+      "retrieval": "browser PDF text; direct archival curl returned404; no local full-report file",
+      "supports": "LPD zero along forward body Z_B; both commander panes marked",
+      "does_not_establish": "current model pane coordinates or surveyed optical accuracy"
+    },
+    {
+      "review_date": "2026-09-08",
+      "source_origin": "user-supplied local photograph",
+      "original_path": "/Users/zac/Downloads/SI 99-15229h.jpg",
+      "sha256": "663ed06e149f3aeb991c5589835bfb1afda5c908b23c668a1853d7546572dd6d",
+      "bytes": 2634088,
+      "retrieval": "visually inspected; image not copied or republished",
+      "supports": "contextual inboard scale placement; reflective museum display limits precision",
+      "mission_applicability": "Smithsonian LM-2 display, not LM-5 optical survey"
     }
   ],
   "original_grumman_full_pdf_sha256": "0efc74091c24db547bcbc634124a21f8e2b3fa0c0e14e59d0339a6b868768108"

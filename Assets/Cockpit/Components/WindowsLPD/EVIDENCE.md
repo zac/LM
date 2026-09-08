@@ -1,3 +1,21 @@
+# Current placement correction — 2026-09-08
+
+The v2 correction below supersedes the v1 triangle-interpolation artwork described in the original evidence audit retained further below. Window/eye geometry remains unchanged.
+
+NASA TN D-6846, *Apollo Lunar Descent and Ascent Trajectories*, printed p6 / split PDF p11, specifies LPD zero along forward body axis Z_B. Primary text was read through the browser at https://www.nasa.gov/wp-content/uploads/static/history/alsj/nasa-tnd-6846pt.1.pdf ; full-report alternate https://www.nasa.gov/wp-content/uploads/static/history/alsj/nasa58040.pdf . Direct archival downloads returned404, so no locally downloaded report is claimed. The archived original Grumman figure T30915-38 is LOOKING INBOARD; its lettering must be interpreted from the opposite crew-facing side. Eppler slide38 remains the appearance reference for the paired marks and second crossbar.
+
+The supplied Smithsonian photograph `/Users/zac/Downloads/SI 99-15229h.jpg` and previously documented LM-2 panorama were visually inspected. They support contextual placement toward the inboard side of the commander's pane, but reflections/museum display cannot establish precise optical coordinates or absence of markings. They do not supersede the primary forward-axis rule.
+
+v1 placed the top of its spine58% along the top edge and interpolated toward the lower vertex. From the frozen design eye, its zero tick was16.7669degrees outboard and2.2496degrees depressed, with heading drifting to0.725degrees inboard at60. This was an authored visual approximation, not an importer transform bug. `evidence/placement-before-rays.json` records measurements.
+
+v2 projects each elevation tick center along Cabin `(0,-sin(e),-cos(e))` from the existing CDR eye onto the existing inner pane. Cabin -Z maps to vehicle forward, independently confirmed by the runtime owner. The spine lies in Cabin X=-.5588. Complete corresponding outer strokes and glyph dimensions are projected consistently, correcting the previous unscaled outer text/line-width approximation. The original pane/eye/hardware transforms, mesh geometry and materials are unchanged, verified by109 non-LPD prim fingerprints.
+
+This is mathematical consistency with existing provisional datums, **not full flight optical calibration**. Actual eye/pane placement, spacing and manufacture are not surveyed. In particular, a true+10degree azimuth point on the50degree lower bar falls15.89mm outside the current sharp pane. The retained crossbars therefore use explicitly visual widths (upper7.5mm and lower4mm per printed degree); their numbers must not be treated as measured azimuth guidance. No hidden angular squeeze, pane enlargement or eye relocation was introduced. The import remains unqualified for numeric targeting.
+
+`placement-validation.json` records actual exported tick rays and paired-vertex alignment; `validation.json` checks all marks inside rounded glass with7.96mm minimum clearance. The before/after commander-eye and closeup images share cameras, omit glazing for geometry inspection, and do not certify photometry, stereo or headset usability.
+
+---
+
 # Evidence audit — 2026-09-08
 
 This is an approximate flight-window visual reconstruction, not surveyed LM-5 optics.

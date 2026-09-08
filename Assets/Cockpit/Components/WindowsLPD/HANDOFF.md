@@ -1,3 +1,19 @@
+# LPD placement correction v2 — current handoff
+
+Branch `cockpit/lpd-placement`, base `70c091471bbc1af6f82ba277f6c9cccc7caf01b3`. Changes remain exclusively in WindowsLPD. The original enclosed-cabin handoff below is preserved as history; its v1 interpolation and13.59mm clearance statements are superseded here.
+
+Corrected arbitrary sideways-drifting spine to vehicle-forward projection from the frozen CDR eye, following NASA TN D-6846 printedp6. Zero now follows Cabin -Z; all elevation tick centers agree with their assigned angles relative to the provisional datums. Projected outer glyph size and stroke width now match the inner layer. Pane/opening/eye/material/hardware attributes are unchanged:109 non-LPD prim fingerprints match baseline. Root and all paths retained.
+
+194 mesh export and macOS RealityKit load pass. All536 paired artwork vertices agree within0.000624degrees from the fixed eye; minimum rounded-pane marking clearance7.96mm. `validate_placement.py` reproduces the source-independent exported-coordinate/frozen-geometry checks using committed baseline fingerprints. No simulator used.
+
+Review `reviews/before-placement-commander-eye.png` versus `reviews/commander-eye.png`, and matching before/after cdr-closeup views. These are small Workbench geometry views with glazing hidden. Geometry change shifts the upper spine toward the inboard edge and removes changing azimuth with elevation. Coordinator reviewed before/after.
+
+**Optical limit:** numerical spine consistency does not survey the original provisional eyes/panes. Crossbar widths and numeral dimensions remain visual approximations; true lower+10degree azimuth falls outside the provisional pane. No pane geometry was distorted to fit. Imported artwork remains unqualified for numeric targeting, and headset/stereo/native appearance acceptance remains pending. `EVIDENCE.md` distinguishes verified forward-axis rule, observed appearance, current mathematical tests and unresolved historical geometry.
+
+Shared package resource refresh and application acceptance belong to the coordinator; no Sources/Tests/Tools changes or push.
+
+---
+
 # WindowsLPD enclosed-cabin handoff
 
 Branch `work/windows-lpd-enclosed`, based on requested `09364460e8be570338f3d39a07067fe2bee0b044`. Owned changes exclusively in this directory. No app/shared Sources/Tests/Tools/master changes, no simulator, no merge or push. Shared mesh/export helper provenance is recorded in build.py.
