@@ -1,6 +1,6 @@
 # ControlLibrary handoff
 
-Status: six authored families; local Blender/USD and macOS RealityKit validation passed. Component branch: `codex/control-library`. Base: `d8e35fa3ec8dc400cbb2762c24953022b07e8ebb`. Exact asset commit is recorded below after publication.
+Status: six authored families; local Blender/USD and macOS RealityKit validation passed. Component branch: `codex/control-library`. Base: `d8e35fa3ec8dc400cbb2762c24953022b07e8ebb`. Exact asset/build/validation commit: `01e0900f994a7b2f68ac0aa288be196a24e30659`. A following documentation-only commit records this immutable asset revision; the branch tip includes both.
 
 ## Proposed interface for coordinator acceptance
 
