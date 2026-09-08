@@ -1,0 +1,11 @@
+{
+  "base_lm": "82a21da2189541ec210bf33d5be0a0cd01b8dac6",
+  "lmkit": "d8c24dd5591bc8b874e643df65932ac863713832",
+  "agc": "b3f15533db335ee882dc07401790c93010809e8f",
+  "diagnostic_uncommitted": true,
+  "swift_sha256": {
+    "LMCommanderStationScene.swift": "52b05fe3108581e97ec65d8066c818b0af88f04ae5d37c2945490e6056cf810b",
+    "TerminalDescentCockpitView.swift": "b3809e8e40988421bf6beb772568d11e1fe1f3bd69c2db458148925b7a0c5bb3"
+  },
+  "note": "Diagnostic build only. Culling option added after first fixed projection captures; no production light/material changes. All fixed captures launch existing P64 checkpoint paused."
+}

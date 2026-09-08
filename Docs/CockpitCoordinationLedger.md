@@ -2,7 +2,28 @@
 
 Updated 2026-09-08. This section supersedes the historical records below.
 
-## Current accepted phase
+## Pilot station and systems phase
+
+LMKit `main` package `d8c24dd5591bc8b874e643df65932ac863713832` is published with all required LFS objects. Component deliveries and source evidence are preserved in its `Provenance/pilot-systems-acceptance.json`. AGC/LMCore remains `b3f15533db335ee882dc07401790c93010809e8f`; canonical LM terrain/LunarMap work is untouched. LM runtime source `bdbf70f8b47f744c78dac7352477a6cd699754c5` passes 98 native visionOS tests across 18 suites, with zero failures or skipped tests. Corrected-lighting views, both crew stations, planning/fallback and near-ground lander shadows are accepted in Docs/Validation/SystemsIntegration/Captures. The simulator is shut down and released.
+
+| Addition | Runtime behavior / qualification |
+|---|---|
+| Pilot FDAI | Second independent instance at Panel2__FDAI; uses the existing supported attitude source. Independent PGNS/AGS source selection remains unavailable. |
+| Readability and planning | Scoped instrument material treatment; occupancy labels reflect actual installed components and partial regions. Mission lighting policy preserved. |
+| Event timer | Simulation-time counting, start/stop/reset, direction and held digit adjustment; explicit pause/restart/replay availability and gesture cancellation. Later Apollo 13 countdown-to-count-up behavior is documented. |
+| Mission timer | Installed hardware and addressable digits; blank because a supported mission epoch/preset is absent. Mission control bank is uninstalled due to Panel5 clearance. |
+| Engine controls/contact | Neutral engine guard and buttons coexist with DES RATE; engine buttons stay inert. Both contact lamps use optional landing-gear probe state; host training status distinguishes missing data from clear. Power/test/stop-reset circuits remain unmodeled. |
+| Propulsion instruments | Source-qualified faces and independent needles/digits; quantities, pressures and historical T/W indications remain unavailable. |
+| Caution/warning | Two installed dark arrays, 40 cells including nine source blanks. No fabricated CWEA behavior; master-alarm reference remains unmounted. |
+| Interior details | Thirteen independently removable groups, including overhead liners, mesh, hatch fittings and cables. Hatch-attached detail requires coordinated removal if the hatch opens later. |
+
+LMKit native package checks pass all 13 test functions, including two parameterized functions with 14 cases each. Combined geometry checks cover 153 installed component pairs and 61 named face/grip sightlines; no new-component intersections or blocked sampled rays remain. Fourteen rear seating/backing mesh-pair intersections are retained and documented; dimensions, fabrication fit, hand reach and headset optics remain unqualified.
+
+Initial native integration found JSON numeric-array decoding failures and stale test assumptions. Typed numeric decoding preserves strict mounting checks; pilot tests now use scoped instance identity, and optional-detail tests distinguish the warning overlay. The affected 15-test native run passes. The initial 90-test combined run passed. The user then correctly rejected the white ceiling in native images: imported-shell shadow casting was disabled. Restored shell casting and a fitted local shadow map correct that cause without repainting or changing sunlight intensity/direction. The corrected source passes 98 tests; final production screenshots and per-launch installation/shadow reports are reviewed and retained with SHA-256 hashes. Local shadow coverage excludes distant terrain outside the cabin/lander footprint.
+
+Remaining priorities: physical Vision Pro appearance/input acceptance; authoritative crew engine and TTCA input semantics; mission clock preset and replayable event history; pressure/quantity/CWEA models; AGS/DEDA, radar and ECS/power equipment; optical LPD calibration and provisional mechanical clearances. Priority governs work order; the user manages time, with no estimated-time omissions.
+
+## Historical commander-instrument acceptance
 
 LM `cockpit/integration` source `5ec10b8404130b1b0cefdbdc28d93aa3d221ec4a` integrates the commander instruments and interior details. LMKit runtime package `1285040dbaa1e4c3c4002975764a58fc49018012` is published; component histories and LFS authoring assets are preserved. AGC/LMCore remains `b3f15533db335ee882dc07401790c93010809e8f`. Canonical LM terrain/LunarMap work is untouched.
 

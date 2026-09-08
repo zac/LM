@@ -1,0 +1,14 @@
+{
+  "baseline-installation.json": "8b28500a29613f8e481c02a6fe5c87eab4808ff86ffb2814bffaa74afabecf51",
+  "baseline-launch.txt": "8c101d98b05b764c13af193dbbf2455d4748ff1f1948be87340f32ac084b68fc",
+  "baseline.json": "5d242d89d3b2fb71afdb36cb368800b1df05b8b3fa68e9616b6109a448a9103b",
+  "baseline.png": "397e5934cfa5ad137011d74f6832f3598d78d8c800f18215e5c47f73d5fea4d3",
+  "shell-installation.json": "2e1996119196f9e0a30b7896c0187bd8d814f2bbc55e7388b94d66149c47dba5",
+  "shell-launch.txt": "430a1b4784eced3f5b2b0203aada7eea732f86ddb5b779e06289d1918f63c5bb",
+  "shell.json": "00b58d88e782479a901d092f92de20c67841d65f4b7564211502624b896b9174",
+  "shell.png": "c398601226b44e0cb2f9710d3ae86c60f84394aa4e927cfbfe51daef53b13dbd",
+  "sun-off-installation.json": "8dd9edf60b8e9172cfa16af88e636e4454178bd9e6d52e4dab9914a82b595876",
+  "sun-off-launch.txt": "a8271fe8823e6349a5e66817666223eef80a310ab74a8ff36c8e69862fc489ed",
+  "sun-off.json": "1939e7b6907c70716949d5a23a9277b18dd95144da826f6f22a0b6624da2a439",
+  "sun-off.png": "f66949e6d03e45eb67cd1645b7835e7ffa4c7fbde797102082b81c68b926dd44"
+}

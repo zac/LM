@@ -1,0 +1,24 @@
+{
+  "altitude_m" : 2226.7022314050701,
+  "caster_corner_count" : 16,
+  "coverage" : "Local cockpit and lander footprint; distant terrain shadows outside this footprint are not represented",
+  "far" : 51.609756469726562,
+  "fitted" : true,
+  "near" : 0.05000000074505806,
+  "projection" : "Optional((extension in RealityFoundation):RealityKit.DirectionalLightComponent.Shadow.ShadowProjectionType.fixed(zNear: 0.05, zFar: 51.609756, orthographicScale: 7.712018))",
+  "span" : 7.7120180130004883,
+  "sun_enabled" : true,
+  "sun_lux" : 24999.998046875,
+  "sun_position" : [
+    0.10004523396492004,
+    -1.1269207000732422,
+    -2.4321584701538086
+  ],
+  "sun_quaternion" : [
+    0.92302227020263672,
+    -0.095915429294109344,
+    0.052118197083473206,
+    0.36893603205680847
+  ],
+  "time" : 810602729.49884796
+}

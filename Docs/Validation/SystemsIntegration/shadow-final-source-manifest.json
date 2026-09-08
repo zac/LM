@@ -1,0 +1,18 @@
+{
+  "lm": "bdbf70f8b47f744c78dac7352477a6cd699754c5",
+  "lmkit": "d8c24dd5591bc8b874e643df65932ac863713832",
+  "agc": "b3f15533db335ee882dc07401790c93010809e8f",
+  "changed_file_sha256": {
+    "Docs/CockpitShadowHandoff.md": "1d75dae7eb1ca64ba1cb60e7ecc8ba4d710fbcb2567632a89045557fffc64a5e",
+    "LM/LMCockpitShadowFit.swift": "8f2da67c6aecd521f767287f8e84efb2fcb27d72ef4c23e35d522262689a24a5",
+    "LM/LMCommanderStationAssembly.swift": "2da7dcb7e5295b5c4911a2cfa7b07f864d066e8b1503f2727c3f4a3e27da256e",
+    "LM/LMCommanderStationAssemblyObserver.swift": "bad329cbe7f75a33edf6f848f3e0766feaa8399d7afc722b17e0f57009af3347",
+    "LM/LMCommanderStationScene.swift": "821f2f8dea423c9bf3240b29e1be1333234eda3cba06950f1bc0ab0f1d04a0ef",
+    "LM/TerminalDescentCockpitView.swift": "9f689211fe02244cdd475779284f052dfc8e94e0a66909e4e99e95e7c9ba46a2",
+    "LMTests/LMCockpitShadowFitTests.swift": "f82a29fa3d45c0c6b9ffaf5adeca4d96fadac6a73fbcfbc6167ce845c005a9a3",
+    "LMTests/LMCockpitStartupLightingTests.swift": "904f69b7614712eae52916a3b39ad6beaa72f4ea0dacc666fb6d1538b0c69747",
+    "LMTests/LMCommanderStationAssemblyTests.swift": "bbe99599d6051cc0c1b0cbf186d562bcdccca6a061eb59ee5c45ac11fdc5e173",
+    "LMTests/LMLunarCockpitMissionTests.swift": "6cea552a153e7d0ef9adb9c6ed1ae7d93a586b0e96a7ca26b65c11d134b47456"
+  },
+  "snapshot_matches_changed_files": true
+}

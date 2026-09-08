@@ -1,0 +1,32 @@
+{
+  "arguments" : [
+    "\/Users\/zac\/Library\/Developer\/CoreSimulator\/Devices\/DE0FAD53-2A01-4B96-95D3-3505E6900DA3\/data\/Containers\/Bundle\/Application\/DEC7FA42-D2CF-47C1-8D8B-7C1645169D05\/LM.app\/LM",
+    "--terminal-descent-cockpit",
+    "--assembly-validation-view=front",
+    "--procedural-cockpit"
+  ],
+  "breaker_banks" : false,
+  "captured_at" : "2026-09-08T23:28:53Z",
+  "caution_warning" : false,
+  "commander_fdai" : true,
+  "descent_rate" : false,
+  "engine_buttons" : false,
+  "event_timer_controls" : false,
+  "foundation" : false,
+  "interior_detail_groups" : [
+
+  ],
+  "lunar_contact_instances" : [
+
+  ],
+  "mission_time_available" : false,
+  "mission_timer_controls_installed" : false,
+  "occupied_slots" : {
+
+  },
+  "pilot_fdai" : false,
+  "propulsion" : false,
+  "timer_readouts" : [
+
+  ]
+}
