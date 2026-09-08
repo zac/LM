@@ -1420,3 +1420,16 @@ All 78 focused tests and 13 gate-tool tests pass. B is landed as one commit,
 with no new runtime adjustment. Evidence and the recalculated gate records
 are in `/tmp/LM-LunarMap-2026-09-08/B/`. D and F remain parked and are rebased
 onto this landing before package work; physical-device gates remain open.
+
+The landing commit is `ba0b87e`. D rebased to
+`7283b992ffdaf2ecaff4603ba95acedce5a50caa` and again passes its ordinary
+Release build and all 97 focused tests; F's unimplemented parked reference
+is at `ba0b87e`. The fresh landed journey, including both switch probes, is
+recorded in `/tmp/LM-LunarMap-2026-09-08/Baseline/journey/`. It measured
+615.143 MiB lifetime peak, 21 hitches over 25 ms, 187.354 ms largest callback
+outside the texture interval, and a 396.750 ms texture interval. The reported
+frame-window footprint range is 111.9–318.7 MiB, maximum mean 19.41 ms and
+p99 117.64 ms. This is the requested single post-B baseline, not a new
+three-run landing decision. The fresh eleven Apollo PNGs are byte-identical
+and the final 90-second settled check passes at 16.67 ms mean/p99/max with
+zero misses. Package work starts from this frozen executable.
