@@ -726,7 +726,7 @@ final class LMCommanderStationScene {
             }
             LMCockpitComponentSupport.removeInput(root)
             if let state = lastVehicleState { instrument.apply(state.attitude) }
-            try assembly.installOccupant(slotID: "Panel2__FDAI") { root }
+            try assembly.installOccupant(slotID: "Panel2__FDAI", componentID: "Pilot FDAI") { root }
             importedPilotFDAI = instrument
             return true
         } catch {
