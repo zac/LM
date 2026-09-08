@@ -16,12 +16,13 @@ one test suite, two thin app shells.
 
 | Step | State | Notes |
 |---|---|---|
-| 1 Package skeleton and file moves | Blocked, candidate `lunar-map/step-1` | Release builds; 315/317 tests pass. Both failures reproduce on post-B control. Captures and performance not run. |
+| 1 Package skeleton and file moves | Withheld on `lunar-map/step-1`; stopped by owner | Runtime `3e94add` on `89ecb0f`. Tests, Apollo, contracts and journey pass. Fresh soak peak exceeds gate by 1.563 MiB; warm-highland incomplete. See stop checkpoint in `LunarMapPackage.md`. |
 | 2 Decouple the six seams | Not started | §4 |
 | 3 Moon app target | Not started | §4 |
 | 4 Tests and tools move into the package | Not started | §4 |
 | 5 Optional: `LunarMapCore` split for macOS-hosted tests | Not started | §4 |
 | 6 Later: sibling repository split | Not started | §7 |
+| Baseline P64 test exemption | Owner accepted | `p64PROAndACAChangeLuminaryLandingTarget` fails unchanged on control with the same AGC state; handed to cockpit owner; no changes to that test or AGC |
 
 ## 1. What exists today (refreshed 2026-09-08 after B)
 
@@ -204,6 +205,17 @@ and descent-session cases in LM. If a moved test exercises
 
 ## 4. Steps and gates
 
+**Test gate, owner restatement 2026-09-08:** each package step must preserve
+the complete baseline control pass/fail set using the same AGC checkout
+state. A changed outcome in either direction stops the step. Pre-existing
+failures do not block extraction, but list each by name with unchanged-control
+evidence. The sole exempted failure is
+`PoweredDescentCheckpointSessionTests.p64PROAndACAChangeLuminaryLandingTarget`.
+The control at `89ecb0f` has 316 passes and this one failure. AGC is at
+`166b5860f19ea5a4ced0b0d6d36b4e779d530935`, with an uncommitted modification to
+`Sources/LMCore/LMAGCPadLoad.swift`; the failure belongs to the cockpit owner.
+This supersedes the earlier all-tests-pass wording in this plan.
+
 Before step 1, create the acceptance baseline from the current build:
 the eleven Apollo ladder PNGs, the seven-stage portal journey, the five-cycle
 restore soak and the highland warm dive, all captured with the existing
@@ -230,7 +242,7 @@ ten-percent margin; settled mean/p99/max are ≤16.70 ms with zero misses).
    may disambiguate the existing capture-probe expression without changing
    its arithmetic or evaluation order; record that diagnostic and verify
    the same capture behavior.
-   *Gate:* LM app builds Release; all 25 test files pass in their current
+   *Gate:* LM app builds Release; all 25 test files preserve the baseline outcome set in their current
    home (`LMTests` may `@testable import LunarMap` temporarily); eleven
    Apollo PNGs byte-identical; journey, soak and highland dive match the
    baseline visually and within the noise floor. Confirm the Metal kernels
@@ -265,12 +277,16 @@ ten-percent margin; settled mean/p99/max are ≤16.70 ms with zero misses).
    uses `LunarMap.resources`. Run them with
    `xcodebuild test -scheme LunarMap -destination 'platform=visionOS Simulator,id=8F38C0E7-…'`.
    If a RealityKit-dependent test cannot run unhosted, keep that test in an
-   app-hosted bundle in the Moon target and say which. Point
-   `Tools/TerrainGenerator` and `pin_lola_strips.py` at
+   app-hosted bundle in the Moon target and say which.
+   Owner clarification: move map-only suites from `LMTests.swift` verbatim
+   into files named after each suite. Change only imports and `Bundle.main`
+   to `LunarMap.resources` within the moved blocks. Preserve every remaining
+   cockpit/AGC test, especially the exempted P64 case, byte-identically apart
+   from removed map blocks; record moved suites and show the residual diff.
+   Point `Tools/TerrainGenerator` and `pin_lola_strips.py` at
    `Packages/LunarMap/Sources/LunarMap/Resources/Terrain`. Update
    `Docs/LunarTerrainPipeline.md` paths.
-   *Gate:* same test count passes (currently 25 files, 65+ tests in the
-   focused suites plus the rest); no test remains that imports `LM` for map
+   *Gate:* same complete baseline test count and pass/fail set are preserved; no test remains that imports `LM` for map
    behavior; generator dry run writes to the new path.
 5. **Optional: `LunarMapCore`.** Split the RealityKit-free files
    (coordinates, ephemeris, grids, catalogs, store, resolver, planner, morph

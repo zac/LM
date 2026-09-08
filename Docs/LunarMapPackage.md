@@ -250,3 +250,221 @@ restoration because it could overwrite files the owner asked to preserve;
 the current contents were left untouched. Both observed and reconstructed
 original bytes are retained under `Step1/UserFilePreservation/`, with the
 hash comparison in `Step1/user-file-drift.json`.
+
+## Step 1 resumed, then stopped by owner, 2026-09-08
+
+Step 1 remains **unlanded** on `lunar-map/step-1`. Its runtime commit is
+`3e94addd0b687c133d100c466166009a010335d8`, rebased from `88ce755` onto
+`89ecb0fe641292640a56e37ddf72587c342a4066`. The latter is the only landed
+change from this resumed run: `test(explorer): assert Apollo pan bounds from
+the site pack`. It checks the real manifest/Eagle focus, the shifted bounds
+with the 128 m collar, all four clamp edges, and the existing global 20 km
+bounds. The documentation checkpoint follows the candidate runtime commit;
+no package runtime changes are merged to `terrain-realism-and-explorer`.
+
+Evidence root: `/tmp/LM-LunarMap-2026-09-08/Resume/`.
+Ordinary Release candidate: `Step1/Candidate.app`, executable SHA-256
+`160b382a8ac9abdac019b806483f3d5d2c16cbb6e442c72130f594408d2d9956`.
+Frozen post-B control: `../Baseline/Control.app`, executable SHA-256
+`2d669f868a6c05b05636f8acea23a63bf5d871b906da0bcda6810f18bc26a874`.
+All measurements below are Simulator results, using Xcode 26.6 Release and
+the pinned visionOS 26.5 Simulator. Builds, tests and captures ran serially.
+
+### Completed gates and exemption
+
+| Gate | Result | Evidence under Resume/ |
+|---|---|---|
+| Full baseline/candidate test outcome set | Identical: 316 pass, one exempt failure, all 317 identifiers | `ControlTests/Tests.xcresult`, `Step1Tests/Tests.xcresult`, `Step1Tests/outcome-comparison.json` |
+| Ordinary Release build | Pass; executable frozen above | `Step1/build.log` |
+| Eleven Apollo PNGs | All byte-identical to the pinned Release baseline | `Step1/Apollo/comparison.json` |
+| Final 90-second Apollo hold | Twelve windows, 16.67 ms mean/p99/max, zero misses | `Step1/Apollo/settled.json` |
+| Pinned resources / protected bodies | 11/11 resources, 5/5 bodies | `Step1/Contracts/`, `Step1/contracts.log` |
+| Mechanical extraction audit | 54/54 source checks; prior 23 resource/Metal byte comparisons remain unchanged | `../Step1/` source/resource audits |
+| Alternating journey triplicates | All named gates pass | `Step1/journey/comparison-v2.json` |
+| Fresh alternating five-cycle soak triplicates | Peak-memory gate fails; hitch and callback gates pass | `Step1/soak-awake/comparison-v2.json` |
+| Warm-highland comparison | Incomplete; no conclusion | `Step1/highland-warm/incomplete.json` |
+
+The sole exempted test is
+`PoweredDescentCheckpointSessionTests.p64PROAndACAChangeLuminaryLandingTarget`.
+It fails unchanged on control and candidate. Both full-test summaries have
+exactly the same failure record: positive-pitch CH31 bit is 1 where the test
+expects 0, with held CH31 57777. `Step1Tests/exempt-failure-comparison.json`
+records this equality. The failure is outside package scope and is handed
+to the cockpit owner. No P64, cockpit/AGC test, PoweredDescentSession or AGC
+repair was made.
+
+The AGC checkout was identical for both test runs and at stop:
+
+```text
+$ git -C ../AGC rev-parse HEAD
+166b5860f19ea5a4ced0b0d6d36b4e779d530935
+$ git -C ../AGC status --short
+ M Sources/LMCore/LMAGCPadLoad.swift
+```
+
+The existing modified file SHA-256 remains
+`9a2a31a38b024e4f1bf92e34a499d146a16a1583ba33908f5db3f1b9a8b165c0`.
+See `agc-state.json`. The two scheme-user files and RKC xcuserdata were
+left untouched and excluded from the checkpoint commit.
+
+### Inspected images
+
+All nine images in `Step1/journey/Candidate-1/` were inspected against
+control. Disk and switch-before/after show the free-standing Moon, Apollo
+flag and glass label without exposed black background or apparent size
+jump. Clipped fills the rounded frame. Crossfade retains crater rims with
+contrasting lit and shadowed sides. The 42.8 km handoff remains low contrast
+with small visible rims; the 7.5 km stop has clustered central pits and
+softer surrounding terrain, matching control. Immersion fills the
+background with the same terrain; return restores the framed view. The
+immersion PNG is also byte-identical to Control-1's.
+
+The original soak's `Candidate-1/immersive.png` and `restored.png` were
+inspected beside `Control-1/restored.png` before the later host interruption.
+The same crater field, heading, sunlight and 180 m altitude return. Both
+builds show "Selected location" after restoring a saved coordinate. The
+system-placed controls window differs in position between launches; the
+terrain frame and crater positions remain fixed. These image observations
+do not qualify the interrupted performance set. No highland image was
+captured or inspected in the resumed run.
+
+### journey alternating triplicates
+
+| Run | Footprint min/max MiB | Lifetime peak MiB | Max mean ms | Max p99 ms | Raw callback ms | Outside-texture callback ms | Hitches >25 ms | Texture intervals ms |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Control-1 | 118.300 / 324.500 | 621.675 | 18.480 | 74.210 | 293.500 | 184.350 | 17 | 502.023 |
+| Candidate-1 | 117.500 / 323.300 | 619.831 | 18.240 | 111.520 | 206.790 | 150.750 | 16 | 390.007 |
+| Control-2 | 119.400 / 325.600 | 622.831 | 19.490 | 56.990 | 579.770 | 148.691 | 14 | 599.184 |
+| Candidate-2 | 117.800 / 323.700 | 620.925 | 19.580 | 150.210 | 400.740 | 150.211 | 17 | 313.515 |
+| Control-3 | 118.200 / 349.900 | 620.878 | 18.370 | 116.960 | 280.270 | 145.441 | 16 | 489.404 |
+| Candidate-3 | 111.800 / 318.800 | 615.143 | 19.350 | 117.400 | 440.690 | 164.861 | 22 | 390.453 |
+
+| Metric | Control min / median / max | Candidate min / median / max | Gate limit | Result |
+|---|---:|---:|---:|---|
+| footprint_min_mib | 118.200 / 118.300 / 119.400 | 111.800 / 117.500 / 117.800 | Reported only | Not gated |
+| footprint_max_mib | 324.500 / 325.600 / 349.900 | 318.800 / 323.300 / 323.700 | Reported only | Not gated |
+| lifetime_peak_mib | 620.878 / 621.675 / 622.831 | 615.143 / 619.831 / 620.925 | 646.675 | Pass |
+| max_window_mean_ms | 18.370 / 18.480 / 19.490 | 18.240 / 19.350 / 19.580 | Reported only | Not gated |
+| max_window_p99_ms | 56.990 / 74.210 / 116.960 | 111.520 / 117.400 / 150.210 | Reported only | Not gated |
+| hitches_over_25ms | 14.000 / 16.000 / 17.000 | 16.000 / 17.000 / 22.000 | 18.400 | Pass |
+| largest_callback_ms | 280.270 / 293.500 / 579.770 | 206.790 / 400.740 / 440.690 | Reported only | Not gated |
+| largest_callback_excluding_texture_ms | 145.441 / 148.691 / 184.350 | 150.211 / 150.750 / 164.861 | 184.350 | Pass |
+
+| Run / texture marker | Physical MiB | Kernel lifetime peak MiB |
+|---|---:|---:|
+| Control-1 / globe-texture-before | 119.424 | 120.768 |
+| Control-1 / globe-texture-after | 117.815 | 263.706 |
+| Candidate-1 / globe-texture-before | 118.112 | 119.330 |
+| Candidate-1 / globe-texture-after | 116.112 | 252.440 |
+| Control-2 / globe-texture-before | 117.737 | 119.987 |
+| Control-2 / globe-texture-after | 118.424 | 263.768 |
+| Candidate-2 / globe-texture-before | 132.659 | 132.659 |
+| Candidate-2 / globe-texture-after | 117.080 | 262.956 |
+| Control-3 / globe-texture-before | 118.487 | 119.893 |
+| Control-3 / globe-texture-after | 113.299 | 263.612 |
+| Candidate-3 / globe-texture-before | 119.127 | 120.440 |
+| Candidate-3 / globe-texture-after | 106.830 | 245.909 |
+
+### soak-awake alternating triplicates
+
+| Run | Footprint min/max MiB | Lifetime peak MiB | Max mean ms | Max p99 ms | Raw callback ms | Outside-texture callback ms | Hitches >25 ms | Texture intervals ms |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Control-1 | 119.300 / 381.800 | 844.519 | 19.070 | 117.680 | 468.610 | 175.220 | 102 | 495.630 |
+| Candidate-1 | 118.100 / 346.700 | 842.378 | 19.290 | 121.650 | 187.120 | 187.120 | 95 | 390.809 |
+| Control-2 | 117.700 / 348.900 | 810.394 | 19.150 | 109.850 | 446.610 | 167.770 | 107 | 315.242 |
+| Candidate-2 | 118.000 / 344.800 | 844.112 | 18.860 | 116.230 | 451.180 | 175.360 | 105 | 209.586 |
+| Control-3 | 118.200 / 391.300 | 817.550 | 19.250 | 112.380 | 392.230 | 173.813 | 102 | 583.063 |
+| Candidate-3 | 117.800 / 350.800 | 846.597 | 19.650 | 114.510 | 642.700 | 190.405 | 97 | 646.431 |
+
+| Metric | Control min / median / max | Candidate min / median / max | Gate limit | Result |
+|---|---:|---:|---:|---|
+| footprint_min_mib | 117.700 / 118.200 / 119.300 | 117.800 / 118.000 / 118.100 | Reported only | Not gated |
+| footprint_max_mib | 348.900 / 381.800 / 391.300 | 344.800 / 346.700 / 350.800 | Reported only | Not gated |
+| lifetime_peak_mib | 810.394 / 817.550 / 844.519 | 842.378 / 844.112 / 846.597 | 842.550 | Fail |
+| max_window_mean_ms | 19.070 / 19.150 / 19.250 | 18.860 / 19.290 / 19.650 | Reported only | Not gated |
+| max_window_p99_ms | 109.850 / 112.380 / 117.680 | 114.510 / 116.230 / 121.650 | Reported only | Not gated |
+| hitches_over_25ms | 102.000 / 102.000 / 107.000 | 95.000 / 97.000 / 105.000 | 117.300 | Pass |
+| largest_callback_ms | 392.230 / 446.610 / 468.610 | 187.120 / 451.180 / 642.700 | Reported only | Not gated |
+| largest_callback_excluding_texture_ms | 167.770 / 173.813 / 175.220 | 175.360 / 187.120 / 190.405 | 191.194 | Pass |
+
+| Run / texture marker | Physical MiB | Kernel lifetime peak MiB |
+|---|---:|---:|
+| Control-1 / globe-texture-before | 117.096 | 121.362 |
+| Control-1 / globe-texture-after | 118.721 | 246.581 |
+| Candidate-1 / globe-texture-before | 118.721 | 120.284 |
+| Candidate-1 / globe-texture-after | 117.112 | 264.065 |
+| Control-2 / globe-texture-before | 133.315 | 133.315 |
+| Control-2 / globe-texture-after | 112.705 | 243.487 |
+| Candidate-2 / globe-texture-before | 133.268 | 133.268 |
+| Candidate-2 / globe-texture-after | 117.455 | 263.143 |
+| Control-3 / globe-texture-before | 117.534 | 121.190 |
+| Control-3 / globe-texture-after | 117.690 | 248.956 |
+| Candidate-3 / globe-texture-before | 117.362 | 120.393 |
+| Candidate-3 / globe-texture-after | 124.377 | 247.409 |
+
+
+The fresh soak set completed all six runs with continuous logs and all five
+exact camera/sunlight restore checks per run. Its candidate peak median is
+844.112396 MiB against control 817.549850 MiB: +26.562546 MiB. The allowed
+limit is 842.549850 MiB, so the peak gate **fails by 1.562546 MiB**. Candidate
+hitches have median 97 against control 102, and outside-texture callback
+median 187.120 ms is below the 191.193841 ms limit. Those gates pass. The
+peak failure is retained without rounding, changing the rule or drawing a
+conclusion from selected runs. Full texture markers and all 60 surface/
+returned checkpoints are retained in `Step1/soak-awake-tables.md` and the
+six `summary.json` files.
+
+| Run | Surface physical range MiB | Returned physical range MiB |
+|---|---:|---:|
+| Control-1 | 347.409 / 378.471 | 348.706 / 381.706 |
+| Candidate-1 | 345.065 / 345.175 | 346.315 / 346.471 |
+| Control-2 | 347.003 / 347.096 | 348.237 / 348.300 |
+| Candidate-2 | 343.175 / 343.284 | 344.378 / 344.550 |
+| Control-3 | 345.471 / 345.753 | 346.846 / 346.893 |
+| Candidate-3 | 349.112 / 349.253 | 350.440 / 350.487 |
+
+### Stop checkpoint and resume work
+
+The original `Step1/soak/` set was interrupted by host sleep during
+Candidate-2. Gaps were 4,438.88 seconds from 07:56:34 PDT and 246.07 seconds
+later; `incomplete.json` and `host-power-log.txt` retain the evidence. That
+driver was stopped during Control-3. No pass/fail conclusion is drawn from
+that set. The separate `soak-awake/` replacement ran from the first control
+through the third candidate with a process-bounded idle-sleep assertion and
+continuity checks; it did not mix samples from the interrupted set.
+
+At the owner's stop request, the replacement soak completed as the driver
+advanced to warm-highland Control-1 setup. The entire process group and app
+were terminated. Highland has zero completed capture stages and no valid
+measurement or gate conclusion. No further builds, captures, soaks or
+benchmarks were started. No validation process or sleep assertion remains.
+
+Step 1 remains withheld because the completed soak peak gate fails and the
+warm-highland gate is outstanding. The next useful action is read-only
+attribution of the roughly 26.56 MiB soak peak difference using the retained
+phase markers. Do not change behavior or the acceptance rule to force a
+landing. Any subsequent validation needs a new authorized run; warm-highland
+still requires a complete alternating three-pair set and image inspection.
+Allow roughly 15–20 minutes for that set, or about 75–90 minutes if a newly
+justified soak set is also needed, excluding implementation and builds.
+
+Steps 2, 3 and 4 have not started. There is no Moon app or Moon executable.
+For step 4 the owner permits moving map-only suites out of `LMTests.swift`,
+verbatim into files named for their suites, changing only imports and
+`Bundle.main` to `LunarMap.resources`. Remaining cockpit/AGC tests, including
+P64, must remain byte-identical apart from removed map blocks. Record which
+suites move and show the residual-file diff. `step4-suite-inventory.json`
+is read-only preparation, not a completed extraction.
+
+All candidate branches are preserved. `lunar-map/step-1` contains runtime
+`3e94add` plus this documentation checkpoint. Main remains `89ecb0f`.
+`onezoom/D` remains `7283b992ffdaf2ecaff4603ba95acedce5a50caa`, and
+`onezoom/F` remains `ba0b87e10fc438fde4330c89dccd7794b9ab20ff`; their rebase
+onto the package result is outstanding because no package step landed.
+All onezoom branch hashes before this docs commit are retained in
+`Step1/branches-before-checkpoint.txt`. Nothing was pushed.
+
+All physical Vision Pro gates remain open: stereo/crossfade perception,
+tracked head/hand/gaze input, gesture comfort, CPU/GPU pacing, memory
+pressure, thermal behavior and long-session stability. Simulator acceptance
+does not establish physical-device performance or comfort.
