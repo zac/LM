@@ -1,0 +1,242 @@
+{
+  "source_repository": "https://github.com/zac/LM",
+  "records": [
+    {
+      "path": "Assets/Cockpit/Components/DSKY/.gitattributes",
+      "sha256": "cc1efbd21350f2a2aa55768efc1263b89dd137ad3a84e0cf938081833f1887f7",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/.gitignore",
+      "sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/DSKY-BacklightPreview.usda",
+      "sha256": "1a7362118b104b9e8f5960820a0c863bcf9c376d6ff230cc23ac592f53497dcf",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/DSKY-BacklightPreview.usdc",
+      "sha256": "4219c6fd3800cc950084a7a1356f5719e6452f08655e4669002d9fe1aed8826e",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/DSKY-BacklightPreview.usdz",
+      "sha256": "8f266812ed719f48f63be2e3a0364fa2f08a5d07119b77224eeb617ec378888d",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/DSKY-DisplayPreview.usda",
+      "sha256": "ddafc888c59e9b109fe3fbfe67fac625d8c508857753affe9973c636d09c319c",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/DSKY-DisplayPreview.usdc",
+      "sha256": "7f105490c0f748bb7b28d8811d3bad5d512a3a1076c2bdac72034d6c19fae89e",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/DSKY-DisplayPreview.usdz",
+      "sha256": "c83926228af7e35d631724301c283e47ca12d2451600a04f70201d1bce8d8742",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/DSKY-LightingPreview.usda",
+      "sha256": "d305b5562a00e6a2c9b5ee30ca02b65b318152a722f30efa584085c63a3c65c1",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/DSKY-LightingPreview.usdc",
+      "sha256": "8c9deb9878083825430b15f27ce8d7d849d97b092beb2f2ac7c2bef7e4a296b7",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/DSKY-LightingPreview.usdz",
+      "sha256": "aef3d4115c206e8c7f3a7443f58b83d91617cdb45d55f50a4fe83a08eb9cfcdd",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/DSKY.blend",
+      "sha256": "0916fd1e5210c23c2404dbae65ea5d643472fe4730d56dd3f96c0774d3821048",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/DSKY.usda",
+      "sha256": "1998ae2bd50825fe98bc2132f54f1d938156a9be95f448b7f70c5fb95a932084",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/DSKY.usdc",
+      "sha256": "f40d0c6737854638816778706c05a0d7b81ffbc81661a9d698ac1108fd072773",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/DSKY.usdz",
+      "sha256": "e20a69864d4c7e0ff068172e0e672d9fbcc510c1dc4e97e4db0246fde08fbdfd",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/HANDOFF.md",
+      "sha256": "aff924c6887ab59256f2eb8a2c1690c96712b965e6ee066c8ca927ea8feb34c3",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/INTEGRATION.md",
+      "sha256": "8e12b66d60af3ce5847c29316f80d815967b3d10671517b41bea92dbd3c0e69c",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/bindings.json",
+      "sha256": "b052bc19b6167210cfb608c4908618f078fbe57ba387033e5870b786e0e9151d",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/build.py",
+      "sha256": "70949018c22adec1ef9d8ed4f71e255395a13a2c4464beefa81f451e7a15b61f",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/evidence/2003956-B.png",
+      "sha256": "b42b39b21a0117ce274d9ea5cb5287336744a87af276df5140f636b8b4fbf85d",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/evidence/2003994-G.png",
+      "sha256": "e691ab93c1f59081ee2ce4676883c4b95d1fe9d139a6e0a2abaa48d88625a595",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/evidence/comparison.md",
+      "sha256": "c1904055ec3f89a3f6a1e1c7f01e934b26460baaf8fdfbdeb49b8e23d50f32e9",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/evidence/mount-fit-research.md",
+      "sha256": "db26641236c258d3d3380950ab703cd9d872d4e379e72f2b70dd41584ad6c313",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/evidence/research-1005025-sheet2.jpg",
+      "sha256": "0cf14516eb72e32ff0101f2783472d3fbb7bd2df48e61f1f9d78602835cb56eb",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/evidence/research-1005025-sheet3.jpg",
+      "sha256": "b6c9c192d4052c74b61cac9947c1bc3be5c5ed4903491e489e7f6f8124424e80",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/evidence/research-1005025.jpg",
+      "sha256": "8a68785bd259889c86edde06e3e07bc1c4fbf6f86f228809caa4540ca8340327",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/evidence/research.md",
+      "sha256": "5d8ae2b4f46233ccaed33cb0c53731046159253aa057382879f341e8d6bceb46",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/evidence/sources.json",
+      "sha256": "cde3538d9070ec2b1f2d7b5ed1a1b356d4398de873a87e6f05eb344d3cc51cd3",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/evidence/user-backlight-reference.png",
+      "sha256": "9257e95efc767dc89c43837b6eb14fcfb163d6982d4d04e01f4fd3541a7c99b9",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/evidence/user-display-style-reference.png",
+      "sha256": "d9166aad12b4c5c8f0342fafedfa27b646c65b22e6920a00a83b666924a40f73",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/export-settings.json",
+      "sha256": "ad278c4d784191a787d50958e8a7e9b90181f408cfdc0856ef1099c82fbd6d69",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/fit-interface.json",
+      "sha256": "053447ad401fac2b53451a46809417e5164adfe02693805c62c2c12de7122b61",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/native-validation.json",
+      "sha256": "d4aba7b78eb03463f3d997e99c392589b03dce9ba5ee5f05ab97bcd122797288",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/review/backlight-preview.png",
+      "sha256": "9a4977bb3059cd8d21f5188e8fe88ec071223e20d4f0ee6ca483ef52d99a1cc8",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/review/display-preview.png",
+      "sha256": "c4ede0db5f5b258d830e5a6625df8ff5c85891eec4da348a468fbdb143780678",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/review/front.png",
+      "sha256": "9082c4024f19d58bb4e2397ac1b1130549c1276c2312e28409d861095741e60a",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/review/key-detail.png",
+      "sha256": "dcc72d68777b69a80c134d7885421e61c944066f6464275521de41e9a33102c3",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/review/lighting-preview.png",
+      "sha256": "09db1c16d7bae220f7f929bf3e6c0c3f0521245a6d883fec6e5c5f87b15f8773",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/review/oblique.png",
+      "sha256": "66a3e3c00fae4b7b2e0bc4d3dc99f1191fe58ec223dccea0b31ffbf1c96c4b4b",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/review/render-cost.json",
+      "sha256": "669647ddbaec62a1675f913fcb3c71f1f1bd6fe58d2c2dc2c8c85c1265de5a90",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/usd_pipeline.py",
+      "sha256": "9951047d477778fc29ed60a47c3161556df74910e4251b30439ef95245904b67",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/validate.py",
+      "sha256": "ea7ec64f8622c839647c54895238aead0a43fd4dcccd39d1eb2eb0875ca42b0c",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/validate_native.swift",
+      "sha256": "3b78e6aa9e422d897d2aef93cf872de2e604ad0edc3fb1748ede34ee0a523609",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Assets/Cockpit/Components/DSKY/validation.json",
+      "sha256": "02e2e584366851753f30634e471121a49b44fb4a3efc0933f335abe9ad66e2c2",
+      "source_commit": "c655fe5c6bcc4cfb854713f823a7fc40dc95edeb"
+    },
+    {
+      "path": "Sources/LMKit/Resources/Legacy/lm.usda",
+      "sha256": "bce47c60d93e192688b83a77cd54675e3db9db5981998a94f786c0656050cd5c",
+      "source_path": "Packages/RealityKitContent/Sources/RealityKitContent/RealityKitContent.rkassets/lm.usda",
+      "source_commit": "97f877b52bf569656c6798cff5790b7207c42af0"
+    },
+    {
+      "path": "Sources/LMKit/Resources/Legacy/lunar_module.usdz",
+      "sha256": "e2588937370ed21d2c84be88c47c35bd3b588f5c9fb0bc9410b3ec89bcf6bb91",
+      "source_path": "Packages/RealityKitContent/Sources/RealityKitContent/RealityKitContent.rkassets/lunar_module.usdz",
+      "source_commit": "97f877b52bf569656c6798cff5790b7207c42af0"
+    }
+  ]
+}
