@@ -95,7 +95,7 @@ final class PoweredDescentSession {
     @ObservationIgnored private var loopTask: Task<Void, Never>?
     @ObservationIgnored private var replayTask: Task<Void, Never>?
     @ObservationIgnored private var dskyTask: Task<Void, Never>?
-    @ObservationIgnored private var dskyKeyTask: Task<Void, Never>?
+    @ObservationIgnored private let dskyInputQueue = LMDSKYInputQueue()
     @ObservationIgnored private var snapshotTask: Task<Void, Never>?
     @ObservationIgnored private var recordedFrames: [LMFlightFrame] = []
     @ObservationIgnored private var runID = UUID()
@@ -431,8 +431,7 @@ final class PoweredDescentSession {
         replayTask = nil
         dskyTask?.cancel()
         dskyTask = nil
-        dskyKeyTask?.cancel()
-        dskyKeyTask = nil
+        dskyInputQueue.cancelPendingAndRelease()
         snapshotTask?.cancel()
         snapshotTask = nil
         replayFrame = nil
@@ -497,45 +496,34 @@ final class PoweredDescentSession {
         guard let runtime else { return }
         dskyTask?.cancel()
         dskyTask = nil
-        dskyKeyTask?.cancel()
-        dskyKeyTask = Task { @MainActor [weak self] in
-            guard let self else { return }
-            if key == .pro {
-                // PROCEED is a spring-loaded channel-032 discrete. Luminary's
-                // P64 flash handler consumes the press and then requires the
-                // release edge before later PRO operations can be recognized.
-                await runtime.sendPRO(pressed: true)
-                try? await Task.sleep(for: .milliseconds(120))
-                // Cancellation by a subsequent DSKY key must not strand the
-                // spring-loaded switch in its pressed state.
-                await runtime.sendPRO(pressed: false)
-            } else {
-                await runtime.sendDSKYKey(key)
-            }
-            guard !Task.isCancelled else { return }
-            if !self.isRunning {
+        enqueueDSKYKey(key, runtime: runtime)
+    }
+
+    private func enqueueDSKYKey(_ key: DSKYKeyCode, runtime: LMSimulationRuntime) {
+        dskyInputQueue.enqueue(
+            key,
+            sendKey: { await runtime.sendDSKYKey($0) },
+            sendPRO: { await runtime.sendPRO(pressed: $0) },
+            didSend: { [weak self] in
+                guard let self, !self.isRunning else { return }
                 let snap = await runtime.snapshot()
                 guard !Task.isCancelled else { return }
                 self.snapshot = snap
             }
-            self.dskyKeyTask = nil
-        }
+        )
     }
 
     func sendDSKYScript(_ script: DSKYScript) {
         guard let runtime else { return }
-        dskyKeyTask?.cancel()
-        dskyKeyTask = nil
         dskyTask?.cancel()
         dskyTask = Task { @MainActor [weak self] in
             guard let self else { return }
+            await self.dskyInputQueue.waitUntilIdle()
             for key in script.keys {
                 if Task.isCancelled { break }
-                await runtime.sendDSKYKey(key)
+                self.enqueueDSKYKey(key, runtime: runtime)
+                await self.dskyInputQueue.waitUntilIdle()
                 guard !Task.isCancelled else { break }
-                if !self.isRunning {
-                    self.snapshot = await runtime.snapshot()
-                }
                 try? await Task.sleep(for: .milliseconds(180))
             }
             guard !Task.isCancelled else { return }

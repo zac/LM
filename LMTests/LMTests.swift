@@ -430,11 +430,11 @@ struct PoweredDescentCheckpointSessionTests {
         }
         let heldChannel31 = try #require(redesigned.agc.inputChannels[0o31])
         #expect(
-            (heldChannel31 & LMPoweredDescentPanel.channel31PositivePitch) == 0,
+            (heldChannel31 & 0o00001 /* CH31 positive pitch breakout */) == 0,
             "held CH31 was \(String(heldChannel31, radix: 8))"
         )
         #expect(
-            (heldChannel31 & LMPoweredDescentPanel.channel31PositiveRoll) == 0,
+            (heldChannel31 & 0o00020 /* CH31 positive roll breakout */) == 0,
             "held CH31 was \(String(heldChannel31, radix: 8))"
         )
         let heldCheckpoint = await redesignationRuntime.captureCheckpoint()

@@ -118,9 +118,11 @@ final class LMCommanderStationScene {
     private var artistCabin: Entity?
     private var exteriorLunarModule: Entity?
     private var fdaiBall: Entity?
+    private var importedFDAI: LMImportedFDAI?
     private var retiredCommanderEntryAnchors = [AnchorEntity]()
     private var lastVehicleState: LMVehicleStateSnapshot?
-    private var dskyKeyEntitiesByRawValue = [Int: ModelEntity]()
+    private var dskyKeyEntitiesByRawValue = [Int: Entity]()
+    private var importedDSKY: LMImportedDSKY?
     private var dskyKeyRestPositions = [Int: SIMD3<Float>]()
     private var dskyKeyResetTasks = [Int: Task<Void, Never>]()
     private var lastPhysicalDSKYSignature: String?
@@ -162,6 +164,7 @@ final class LMCommanderStationScene {
         buildCabin()
         buildLandingPointCalledAngleMarker()
         buildPhysicalDSKY()
+        installImportedDSKY()
         buildPhysicalControls()
         // RealityKit models cast dynamic-light shadows by default, even when
         // they have no DynamicLightShadowComponent. Explicitly opt every
@@ -180,16 +183,7 @@ final class LMCommanderStationScene {
         root.addChild(lunarWorld)
         cabinFrame.addChild(fdaiMount)
         buildPhysicalFDAI()
-    }
-
-    func mountFDAI(_ entity: Entity) {
-        guard entity.parent == nil else { return }
-        entity.name = "Commander FDAI"
-        entity.position = SIMD3(0, 0, 0.004)
-        entity.orientation = simd_quatf(angle: 0, axis: SIMD3(0, 1, 0))
-        entity.scale = SIMD3(repeating: 0.00095)
-        fdaiMount.addChild(entity)
-        logger.notice("Mounted live FDAI flight face")
+        installImportedFDAI()
     }
 
     /// Re-captures the current headset pose while preserving the live vehicle,
@@ -212,20 +206,9 @@ final class LMCommanderStationScene {
         return retiredCommanderEntryAnchors
     }
 
-    func mountDSKYDisplay(_ entity: Entity) {
-        guard entity.parent == nil else { return }
-        entity.name = "Live Apollo 11 DSKY display"
-        entity.position = SIMD3(0, 0, 0.012)
-        entity.scale = SIMD3(repeating: 0.00035)
-        dskyDisplayMount.addChild(entity)
-        logger.notice("Mounted live DSKY display")
-    }
-
-    /// Keeps the flight display readable when RealityView has not mounted its
-    /// SwiftUI attachment yet. The physical text sits behind that attachment,
-    /// so the live SwiftUI face remains the preferred presentation while both
-    /// renderers consume the same immutable AGC snapshot.
+    /// Both imported and fallback renderers consume the same AGC snapshot.
     func applyDSKY(_ snapshot: DSKYSnapshot?) {
+        importedDSKY?.apply(snapshot)
         let presentation = LMPhysicalDSKYPresentation(snapshot: snapshot)
         guard presentation.signature != lastPhysicalDSKYSignature else { return }
         lastPhysicalDSKYSignature = presentation.signature
@@ -312,12 +295,10 @@ final class LMCommanderStationScene {
         lastVehicleState = state
         if let globalCockpitTerrain {
             globalCockpitTerrain.apply(state)
-            fdaiBall?.orientation = FDAIOrientation.ballOrientation(for: state.attitude)
+            applyFDAIAttitude(state.attitude)
             return
         }
-        fdaiBall?.orientation = FDAIOrientation.ballOrientation(
-            for: state.attitude
-        )
+        applyFDAIAttitude(state.attitude)
         updateMissionShadow(altitudeMeters: state.altitudeMeters)
         updateRockDetail(altitudeMeters: state.altitudeMeters)
         let terrainPosition = terrainPosition(for: state.positionMeters)
@@ -650,6 +631,9 @@ final class LMCommanderStationScene {
         let issues = LMCockpitAssetContract.validate(cabin)
         guard issues.isEmpty else {
             throw AssetError.invalidArtistCabin(issues)
+        }
+        for name in ["DSKY_Mount", "FDAI_Mount"] {
+            cabin.findEntity(named: name)?.isEnabled = false
         }
         artistCabin?.removeFromParent()
         cabin.name = LMCockpitAssetContract.Node.cabinRoot.rawValue
@@ -1335,6 +1319,22 @@ final class LMCommanderStationScene {
         }
     }
 
+    private func installImportedDSKY() {
+        do {
+            let asset = try Entity.load(contentsOf: LMKitAssets.dskyURL)
+            let binding = try LMImportedDSKY(asset: asset)
+            // Commit replacement only after the complete contract validates.
+            for child in Array(dskyFaceRoot.children) { child.removeFromParent() }
+            dskyFaceRoot.addChild(binding.root)
+            dskyKeyEntitiesByRawValue = binding.keys
+            dskyKeyRestPositions = binding.keys.mapValues(\.position)
+            importedDSKY = binding
+            binding.apply(nil)
+        } catch {
+            logger.error("Imported DSKY unavailable; procedural fallback retained: \(String(describing: error), privacy: .public)")
+        }
+    }
+
     private func buildPhysicalDSKY() {
         let faceMaterial = SimpleMaterial(
             color: UIColor(red: 0.20, green: 0.205, blue: 0.18, alpha: 1),
@@ -1537,6 +1537,24 @@ final class LMCommanderStationScene {
         )
     }
 
+    private func installImportedFDAI() {
+        do {
+            let binding = try LMImportedFDAI(asset: Entity.load(contentsOf: LMKitAssets.fdaiURL))
+            for child in Array(fdaiMount.children) { child.removeFromParent() }
+            fdaiMount.addChild(binding.root)
+            importedFDAI = binding
+            fdaiBall = nil
+            binding.apply(lastVehicleState?.attitude ?? .identity)
+        } catch {
+            logger.error("Imported FDAI unavailable; legacy fallback retained: \(String(describing: error), privacy: .public)")
+        }
+    }
+
+    private func applyFDAIAttitude(_ attitude: LMQuaternion) {
+        if let importedFDAI { importedFDAI.apply(attitude) }
+        else { fdaiBall?.orientation = FDAIOrientation.ballOrientation(for: attitude) }
+    }
+
     private func buildPhysicalFDAI() {
         guard let instrument = try? Entity.load(
             named: "FDAI",
@@ -1600,7 +1618,7 @@ final class LMCommanderStationScene {
         key.addChild(label)
     }
 
-    var dskyKeyEntities: [ModelEntity] {
+    var dskyKeyEntities: [Entity] {
         LMDSKYGeometry.keyPlacements.compactMap {
             dskyKeyEntitiesByRawValue[$0.code.rawValue]
         }
@@ -1639,16 +1657,16 @@ final class LMCommanderStationScene {
         pressedPosition.z -= 0.003
         key.move(
             to: Transform(translation: pressedPosition),
-            relativeTo: dskyFaceRoot,
+            relativeTo: key.parent,
             duration: 0.035,
             timingFunction: .easeInOut
         )
         dskyKeyResetTasks[rawValue] = Task { @MainActor [weak self, weak key] in
             try? await Task.sleep(for: .milliseconds(90))
-            guard !Task.isCancelled, let self, let key else { return }
+            guard !Task.isCancelled, self != nil, let key else { return }
             key.move(
                 to: Transform(translation: restPosition),
-                relativeTo: self.dskyFaceRoot,
+                relativeTo: key.parent,
                 duration: 0.065,
                 timingFunction: .easeInOut
             )

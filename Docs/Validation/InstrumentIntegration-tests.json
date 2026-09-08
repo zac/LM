@@ -1,0 +1,42 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "8F38C0E7-6366-4DAC-9372-DCF6F9151DCB",
+        "deviceName" : "Apple Vision Pro",
+        "modelName" : "Apple Vision Pro",
+        "osBuildNumber" : "23O470",
+        "osVersion" : "26.5",
+        "platform" : "visionOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 0,
+      "passedTests" : 7,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "LM · Built with macOS 26.5.1",
+  "expectedFailures" : 0,
+  "failedTests" : 0,
+  "finishTime" : 1788895034.694,
+  "passedTests" : 7,
+  "result" : "Passed",
+  "skippedTests" : 0,
+  "startTime" : 1788894972.705,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+
+  ],
+  "title" : "Test - LM",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 7
+}

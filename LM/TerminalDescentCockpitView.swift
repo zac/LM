@@ -34,16 +34,10 @@ struct TerminalDescentCockpitView: View {
     )
 
     var body: some View {
-        RealityView { content, attachments in
+        RealityView { content in
             content.add(station.commanderEntryAnchor)
-            if let fdai = attachments.entity(for: "commander-fdai") {
-                station.mountFDAI(fdai)
-            }
-            if let dskyDisplay = attachments.entity(for: "commander-dsky-display") {
-                station.mountDSKYDisplay(dskyDisplay)
-            }
             applySceneState()
-        } update: { content, attachments in
+        } update: { content in
             _ = recenterGeneration
             for retiredAnchor in station.takeRetiredCommanderEntryAnchors() {
                 content.remove(retiredAnchor)
@@ -51,28 +45,7 @@ struct TerminalDescentCockpitView: View {
             if !content.entities.contains(where: { $0 === station.commanderEntryAnchor }) {
                 content.add(station.commanderEntryAnchor)
             }
-            if let fdai = attachments.entity(for: "commander-fdai") {
-                station.mountFDAI(fdai)
-            }
-            if let dskyDisplay = attachments.entity(for: "commander-dsky-display") {
-                station.mountDSKYDisplay(dskyDisplay)
-            }
             applySceneState()
-        } attachments: {
-            Attachment(id: "commander-fdai") {
-                FDAIPanel(session: appModel.session, presentsFlightFace: true)
-                    .frame(width: 205, height: 205)
-            }
-            Attachment(id: "commander-dsky-display") {
-                DSKYPanel(
-                    session: appModel.session,
-                    showsScripts: false,
-                    showsKeypad: false,
-                    presentsFlightFace: true
-                )
-                .frame(width: 420, height: 250)
-                .background(Color.black.opacity(0.94))
-            }
         }
         .gesture(acaGesture)
         .simultaneousGesture(rodGesture)
