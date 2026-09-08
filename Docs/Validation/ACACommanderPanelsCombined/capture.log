@@ -1,0 +1,19 @@
+Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: D0A47174-DF29-4608-8A2A-5ED182087853 (screenID: 1, name: LCD)
+Wrote screenshot to: /tmp/lm-aca-panels-verification/evidence/front.png
+Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: D0A47174-DF29-4608-8A2A-5ED182087853 (screenID: 1, name: LCD)
+Wrote screenshot to: /tmp/lm-aca-panels-verification/evidence/side.png
+Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: D0A47174-DF29-4608-8A2A-5ED182087853 (screenID: 1, name: LCD)
+Wrote screenshot to: /tmp/lm-aca-panels-verification/evidence/crew-eye.png
+Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: D0A47174-DF29-4608-8A2A-5ED182087853 (screenID: 1, name: LCD)
+Wrote screenshot to: /tmp/lm-aca-panels-verification/evidence/aca-neutral.png
+Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: D0A47174-DF29-4608-8A2A-5ED182087853 (screenID: 1, name: LCD)
+Wrote screenshot to: /tmp/lm-aca-panels-verification/evidence/aca-positive.png
+Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: D0A47174-DF29-4608-8A2A-5ED182087853 (screenID: 1, name: LCD)
+Wrote screenshot to: /tmp/lm-aca-panels-verification/evidence/aca-negative.png
+getpwuid_r did not find a match for uid 501

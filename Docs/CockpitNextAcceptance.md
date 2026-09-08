@@ -1,6 +1,6 @@
 # Commander cockpit next acceptance
 
-Prepared 2026-09-08 from LM `9016960683efabb491dfed16f10ea3ef90196d01` and LMKit `3ad1a999ff17aea859eaea5750f1c65e66fad673`. ACA integration and CommanderPanels are in progress; neither is accepted by this document. Refresh exact revisions and app hashes after reviewing/merging both deliveries. Keep AGC/LMCore pinned to `b3f15533db335ee882dc07401790c93010809e8f` unless a separately reviewed change requires otherwise.
+Prepared 2026-09-08 from LM `9016960683efabb491dfed16f10ea3ef90196d01` and LMKit `3ad1a999ff17aea859eaea5750f1c65e66fad673`. ACA integration and CommanderPanels have now passed combined source verification at LM `7c1b4a751570cd8cdec35acac5c6fe976d53dfdf` with LMKit `86aa71b4b9ed203f11e8b572e23da2b0285a0ad8`: 31 tests passed. See `Docs/Validation/ACACommanderPanelsCombined/` for six simulator captures and source/binary hashes. The remaining sequence below describes physical acceptance and future refinements; historical merge steps 1-3 are completed for provisional scope. Refresh exact app/device-build hashes before hardware execution. Keep AGC/LMCore pinned to `b3f15533db335ee882dc07401790c93010809e8f` unless a separately reviewed change requires otherwise.
 
 ## Merge sequence
 
