@@ -190,6 +190,7 @@ struct LMInstrumentIntegrationTests {
 
     @Test @MainActor func importedFDAINativeHierarchyKeepsFixedStructureStill() throws {
         let binding = try LMImportedFDAI(asset: Entity.load(contentsOf: LMKitAssets.fdaiURL))
+        #expect(binding.readabilitySurfaceCount == 3)
         let fixed = binding.fixed.transform
         let ballPosition = binding.ball.position
         binding.apply(.fromAxisAngle(axis: LMVector3D(x: 1), radians: 0.5))

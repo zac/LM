@@ -1,0 +1,3 @@
+Command: axe describe-ui --udid 31D2A5CF-B052-42BC-86B3-590CABDDDA49
+Exit: 1
+Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog

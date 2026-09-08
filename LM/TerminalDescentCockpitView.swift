@@ -354,13 +354,18 @@ struct TerminalDescentCockpitView: View {
         SpatialTapGesture()
             .targetedToAnyEntity()
             .onEnded { value in
-                if let key = station.dskyKeyCode(for: value.entity) {
-                    logger.notice("Physical DSKY key: \(key.label, privacy: .public)")
-                    station.animateDSKYKeyPress(key)
-                    appModel.session.sendDSKYKey(key)
-                    recordValidation { $0.observeDirectDSKY(key) }
-                    return
-                }
+                if LMInstrumentInteraction.completedTap(
+                    on: value.entity,
+                    station: station,
+                    sendKey: { appModel.session.sendDSKYKey($0) },
+                    didAccept: { key in
+                        logger.notice("Physical DSKY key: \(key.label, privacy: .public)")
+                        #if DEBUG
+                        LMInstrumentValidation.recordCompletedTap(key, entity: value.entity)
+                        #endif
+                        recordValidation { $0.observeDirectDSKY(key) }
+                    }
+                ) { return }
                 if station.isMissionControlButton(value.entity) {
                     logger.notice("Physical mission control button")
                     presentMissionControlWindow()

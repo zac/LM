@@ -24,6 +24,7 @@ final class LMImportedFDAI {
     let root: Entity
     let ball: Entity
     let fixed: Entity
+    private(set) var readabilitySurfaceCount = 0
     static let unboundNames = [
         "FDAI_RollBug_Pivot", "FDAI_Rate_Roll_Pivot", "FDAI_Rate_Pitch_Pivot",
         "FDAI_Rate_Yaw_Pivot", "FDAI_Error_Roll_Pivot", "FDAI_Error_Pitch_Pivot",
@@ -36,6 +37,19 @@ final class LMImportedFDAI {
         for node in [ball, fixed] {
             guard node.parent === root else { throw LMImportedDSKY.ContractError.invalidParent(node.name) }
         }
+        // Reduce distracting reflections on the fixed surround. Preserve ball
+        // texture, glass, fixed transforms and all live attitude behavior.
+        let matteNames: Set<String> = ["FDAI_BallSurround", "FDAI_InnerOctagonalMask", "FDAI_FaceBezel"]
+        func visit(_ node: Entity) {
+            // USD imports can repeat a cosmetic object's name on its mesh
+            // child. These are not semantic binding/identity contracts.
+            if matteNames.contains(node.name) {
+                readabilitySurfaceCount += Self.matte(in: node)
+            } else {
+                for child in node.children { visit(child) }
+            }
+        }
+        visit(fixed)
         for name in Self.unboundNames {
             let node = try LMImportedDSKY.unique(name, in: root)
             guard node.parent === root else { throw LMImportedDSKY.ContractError.invalidParent(name) }
@@ -43,6 +57,23 @@ final class LMImportedFDAI {
             node.isEnabled = false
         }
     }
+    private static func matte(in node: Entity) -> Int {
+        var count = 0
+        if var model = node.components[ModelComponent.self] {
+            model.materials = model.materials.map { material in
+                guard var pbr = material as? PhysicallyBasedMaterial else { return material }
+                count += 1
+                pbr.metallic = .init(floatLiteral: 0)
+                pbr.roughness = .init(floatLiteral: 0.9)
+                pbr.specular = .init(floatLiteral: 0.1)
+                return pbr
+            }
+            node.components.set(model)
+        }
+        for child in node.children { count += matte(in: child) }
+        return count
+    }
+
     func apply(_ attitude: LMQuaternion) {
         ball.orientation = LMImportedFDAIOrientation.ballOrientation(for: attitude)
     }

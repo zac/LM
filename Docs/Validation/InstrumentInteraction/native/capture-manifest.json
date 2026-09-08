@@ -1,0 +1,11 @@
+{
+  "simulatorUDID": "31D2A5CF-B052-42BC-86B3-590CABDDDA49",
+  "captureMode": "observe",
+  "sourceCommit": "f1f612ed6e4440fb8977c0776b3cc335ee7791e9",
+  "trackedSourcePatchSHA256": "5ebabdb0a30c278315db985cca55d653d91caded1d04d6b2d3dc28e1c9d81e35",
+  "lmkitRevision": "75bdea77b57e0ae4971bb4ffbee21c4643e3b4cf",
+  "agcRevision": "b3f15533db335ee882dc07401790c93010809e8f",
+  "inputMethod": "native Simulator interaction; completion must be proven by trace",
+  "camera": "reset simulator camera; inverse DEBUG observer recorded in state",
+  "xcode": "Xcode 26.6\nBuild version 17F113"
+}
