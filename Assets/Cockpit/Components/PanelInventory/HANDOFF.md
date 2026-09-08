@@ -52,7 +52,7 @@ xcrun swiftc -module-cache-path /tmp/panel-inventory-swift-cache -parse-as-libra
 /tmp/panel-inventory-native "$PWD/Assets/Cockpit/Components/PanelInventory"
 ```
 
-Validator requires the pinned ACA and Windows LFS objects locally and reads them without changing peer files; temporary hydrated copies go to a new temporary directory. In this desktop sandbox Blender and RealityKit required approved native execution. Coordinator owns `Tools/sync_dsky.py` resource refresh and package tests after cherry-picking; they have not been run from this worker.
+Validator verifies ACA bytes against reviewed revision `750caea3dea7feeaf5ffea15eedcf2d031cca0be` (SHA-256 `df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5`, 96,068 bytes), whether the sibling file is hydrated or an LFS pointer. It requires the pinned Windows LFS object locally and reads references without changing peer files; temporary hydrated copies go to a new temporary directory. In this desktop sandbox Blender and RealityKit required approved native execution. Coordinator owns `Tools/sync_dsky.py` resource refresh and package tests after cherry-picking; they have not been run from this worker.
 
 ## Panel 2 window correction
 
@@ -61,3 +61,14 @@ Exact final Windows `5699e64d29ee0ec77c60d2324f64e51fe68156e3` mesh comparison i
 Final worker result: **1,315 manifest/USD/physical-transform checks, zero failures; native RealityKit 66 slots pass; corrected P5 zero ACA surface-crossing mesh pairs over 27 sampled poses; zero surface-crossing mesh pairs against final Windows geometry.** These statements refer to the artifact hashes in `artifact-hashes.json`, not an assembled or deployed application.
 
 The three late user-supplied reference images at shared commit `a525dd6065c5ddb1ea12c971a996b018943c4a96` were visually compared after asset validation. `evidence/USER_REFERENCE_COMPARISON.md` records agreement in major-region organization and remaining stepped-bank/overhead density limits. No new measured datum was inferred; interactive LM-2 panorama inspection remains with the coordinator.
+
+
+## Validator followup
+
+The validator now returns exit code 1 for any failed manifest/USD check, compliance error, neutral/sampled ACA intersection, window intersection, or exception. Reports are written before the final result gate for ordinary reported failures. An explicit exception boundary flushes diagnostics and terminates nonzero even when Blender would otherwise swallow Python script errors without `--python-exit-code`.
+
+`python3 Assets/Cockpit/Components/PanelInventory/check_validator.py` checks this policy without Blender. Its 19 focused cases include the existing passing reports, synthetic failure/collision reports, malformed/missing files, the actual reviewed hydrated ACA and LFS cache input, a changed same-size hydrated file, a changed pointer, corrupt cache bytes and a missing cache. Results are in `evidence/validator-policy-check.json`. These are validator/error-path tests, not a new geometry qualification. All delivered geometry, render and original clearance/native report bytes are unchanged. `artifact-hashes.json` updates only the validator entry and adds the focused check script/result hashes.
+
+Coordinator's subsequent Smithsonian panorama inspection confirms terrace depth, projecting lower consoles/cables and shaped solid cream overhead covers interspersed with mesh; no numeric datum correction was identified. This remains qualitative LM-2 restoration context, not measured LM-5 geometry.
+
+Windows LFS lookup reuses the already-resolved `gitdir` from the ACA section. A focused fixture executes that actual source-path expression using canonical Git's relative common-directory result while the process remains outside the fixture repository. No geometry regeneration was needed.
