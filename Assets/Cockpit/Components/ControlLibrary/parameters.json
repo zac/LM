@@ -1,0 +1,121 @@
+{
+  "schema": 1,
+  "scope": "Representative families, not LM-5 part certification. All physical sizes provisional unless stated.",
+  "families": [
+    {
+      "id": "MaintainedToggle",
+      "detents_deg": [
+        -17,
+        0,
+        17
+      ],
+      "axis_usd": [
+        1,
+        0,
+        0
+      ],
+      "return": "maintained",
+      "travel_evidence": "NASA TN D-7919 p10: nominal 17 +/-4 degrees for three-position switches; exact flight part unresolved",
+      "panel_hole_diameter_m": 0.009,
+      "rear_clearance_m": 0.027,
+      "handle_tip_z_m": 0.023
+    },
+    {
+      "id": "MomentaryToggle",
+      "detents_deg": [
+        -17,
+        0,
+        17
+      ],
+      "axis_usd": [
+        1,
+        0,
+        0
+      ],
+      "return": "spring to center on release; return time unverified",
+      "travel_evidence": "NASA TN D-7919 p10; C1 p3-26/27 valve example, later handbook substitution",
+      "panel_hole_diameter_m": 0.009,
+      "rear_clearance_m": 0.027,
+      "handle_tip_z_m": 0.023
+    },
+    {
+      "id": "GuardedSwitch",
+      "detents_deg": [
+        -17,
+        17
+      ],
+      "axis_usd": [
+        1,
+        0,
+        0
+      ],
+      "return": "maintained",
+      "guard_axis_usd": [
+        1,
+        0,
+        0
+      ],
+      "guard_limits_deg": [
+        -100,
+        0
+      ],
+      "guard_dependency": "Open guard before actuation; proposed clearance threshold -90 degrees. Generic cage and interlock are provisional, not a flight-unit reconstruction; no automatic actuator reset on closure is claimed.",
+      "neutral_actuator_deg": -17,
+      "panel_hole_diameter_m": 0.009,
+      "rear_clearance_m": 0.027,
+      "handle_tip_z_m": 0.023
+    },
+    {
+      "id": "RotarySelector",
+      "detents_deg": [
+        -45,
+        -15,
+        15,
+        45
+      ],
+      "axis_usd": [
+        0,
+        0,
+        1
+      ],
+      "return": "maintained detent",
+      "skirt_radius_m": 0.018,
+      "travel_evidence": "NASA TN D-7919 pp11-12 figure7: circular skirt and pointer, standard 30-degree spacing. Count and end stops provisional.",
+      "neutral_actuator_deg": -15,
+      "panel_hole_diameter_m": 0.01,
+      "rear_clearance_m": 0.034
+    },
+    {
+      "id": "CircuitBreaker",
+      "positions_m": [
+        0,
+        0.005
+      ],
+      "axis_usd": [
+        0,
+        0,
+        1
+      ],
+      "return": "push/pull retained; trip-free mechanism belongs to host simulation",
+      "knob_radius_m": 0.006,
+      "travel_evidence": "NASA TN D-7919 p13: approximately 0.5 cm travel, black knob, exposed aluminum open band; not an LM-5 configuration guarantee",
+      "panel_hole_diameter_m": 0.01,
+      "rear_clearance_m": 0.032
+    },
+    {
+      "id": "Talkback",
+      "states": [
+        "gray",
+        "barber_pole"
+      ],
+      "return": "indication independent of switch position",
+      "indication_control": "BarberPole local USD Z=-0.002 gray, +0.002 striped. Translation is presentation staging, not a reconstructed flight mechanism.",
+      "semantics": "C1 p3-26/27 later ascent-helium example: gray=open, barber-pole=closed. Never universalize.",
+      "panel_aperture_m": [
+        0.021,
+        0.013
+      ],
+      "rear_clearance_m": 0.018
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "research_checkout_head": "ed230a6ee4286bc2385f44bc8f1889bdcc39a8ab",
+  "lmkit_base": "d8e35fa3ec8dc400cbb2762c24953022b07e8ebb",
+  "sources": [
+    {
+      "source_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Research/LunarModuleInterior/geometry-materials-and-evidence.md",
+      "sha256": "b5845e1c869b3240a8652861733a202e5c7a490d37b24e5492cbf47981194b13",
+      "bytes": 12857
+    },
+    {
+      "source_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Research/LunarModuleInterior/controls-and-panels.md",
+      "sha256": "8dcef0e36e81fffa1b6fbfc52b3d1646b42f45f51ae7b1dbee90ef946909fea2",
+      "bytes": 23802
+    },
+    {
+      "source_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Research/LunarModuleInterior/references/manifest.json",
+      "sha256": "954d318823f256f5ef2ef0d2cadcd48a6e4d6a3e591cf5ad6803b32db1bfc086",
+      "bytes": 8308
+    },
+    {
+      "source_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Research/LunarModuleInterior/references/documents/19750012347-crew-station-displays-controls.pdf",
+      "sha256": "2f1352ae80c0baea40dc7e04eca52d1dd2cb2ae15c4ab529f9033d4bbebec550",
+      "bytes": 19749161
+    },
+    {
+      "source_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Research/LunarModuleInterior/references/documents/lm10-aoh-vol1-controls-excerpts.pdf",
+      "sha256": "6194242b2dd076a469474d5bcdb5f4a6bddf9929aedf543d8911fd5f9ca63e2c",
+      "bytes": 6974978
+    },
+    {
+      "source_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Research/LunarModuleInterior/references/documents/lm10-aoh-vol1-controls-excerpts.manifest.json",
+      "sha256": "102c0570c83f17d1d03ac19408210862f5a4686ff864b78ac745f9a9710650d8",
+      "bytes": 4117
+    }
+  ],
+  "primary_url": "https://ntrs.nasa.gov/api/citations/19750012347/downloads/19750012347.pdf",
+  "primary_title": "NASA TN D-7919, Apollo Experience Report: Crew Station Integration, Volume II - Crew Station Displays and Controls, April 1975",
+  "inspected": "Printed pp7,10-13; PDF pp18-20 visually inspected for toggle and rotary silhouettes; p13 text for breakers. Program-wide description, not LM-5 manifest.",
+  "retained_evidence": [
+    {
+      "path": "ASSESSMENT.md",
+      "sha256": "2e02c3cbc8e1ea7a9981cce633e104da61d435451a7d62a41429b01d3d309e00"
+    },
+    {
+      "path": "controls-and-panels.md",
+      "sha256": "8dcef0e36e81fffa1b6fbfc52b3d1646b42f45f51ae7b1dbee90ef946909fea2"
+    },
+    {
+      "path": "geometry-materials-and-evidence.md",
+      "sha256": "b5845e1c869b3240a8652861733a202e5c7a490d37b24e5492cbf47981194b13"
+    },
+    {
+      "path": "nasa-d7919-p10-toggle.png",
+      "sha256": "0a1ad7694ce7a08051aea5b66f7d3aa3b7e8d952344778df3a4fc7c9f992cdf1"
+    },
+    {
+      "path": "nasa-d7919-p12-rotary.png",
+      "sha256": "274bd8bbcf74653ef343d4ca85a55e384409c27d99be931799a4aac8f23b461b"
+    },
+    {
+      "path": "primary-controls-excerpt.txt",
+      "sha256": "94c4c66a301db2b4cda5c49875d3f331a4cfc22ea37ae13fcedc8bd44b7cfe85"
+    }
+  ]
+}

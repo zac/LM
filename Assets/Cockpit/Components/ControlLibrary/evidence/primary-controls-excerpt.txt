@@ -1,0 +1,207 @@
+ORIGINAL PDF PAGE 18
+to actuate o r select operating conditions o r components. A four-position (up/down,
+left/right) momentary switch was also used on the LM for manual positioning of the
+rendezvous radar antenna. Momentary positions were used to initiate a specific action
+requiring current for only a short time, such as jettisoning the launch-escape tower or
+operating a latching relay o r valve.
+
+       Maintaining switches were used for most applications. An inherent advantage of
+the maintaining-type switch is a visual indication of switch position and, therefore, of
+system and vehicle configuration. The momentary-type switch, in which the handle is
+spring-loaded to return to another position, does not give such inherent status indica-
+tion. For most functions initiated with momentary switches, such a s opening a latching
+valve, some type of adjacent status indicator was necessary. This requirement f o r a
+status indicator to be used with most momentary toggle switches meant that a n addi-
+tional component and more panel space would be required than if a maintaining-type
+toggle switch were used. Status indicators provided with momentary switches,
+however, had the added advantage of providing the end-item status of the equipment
+being controlled, whereas a maintaining switch, i n itself, gave no such information.
+
+         Most of the toggle switches used on the Apollo vehicles had a wedge-shaped tab
+handle that provided the crewman a large purchase a r e a with which to actuate the
+switch while wearing a pressurized glove. Toggle switches that had locking mecha-
+nisms incorporated into the handle to keep the switch f r om being thrown inadvertently
+were also used. These lever-lock switches (fig. 5) had la r ge , bat-shaped handles and
+were used extensively on the LM spacecraft. An additional feature of the LM toggle
+switches was a radioluminescent (RL) tip on both regular and lever-lock handles. The
+RL tips enabled quick determination of the switch position even when the cabin flood-
+lights were dimmed. Alternate approaches
+were used to guard and to illuminate C M
+toggle switches. Command module toggle
+switches were recessed within a trough and
+guarded with adjacent wickets (fig. 6). The
+toggle switches were lit by spill lighting
+from the edge of the electroluminescent
+( E L ) nomenclature overlay.
+
+      The operating characteristics of the
+toggle switches were approximately 3 to
+44.5 newtons (10 to 160 ounces) of actu-
+ating force (depending on the number of
+poles), 34" f 8" of throw for two-position
+switches, and 17"  *  4" of throw for three-
+position switches. The force values were
+acceptable, but a lower value for the upper
+limit of actuating force would have been
+preferable from an operational viewpoint.
+The possibility of increasing the deflection
+for three-position switches should a lso be
+considered in future designs because many
+of these switches have been mistakenly
+mispositioned o r monitored (or both) on                    -
+                                                  Figure 5. Control panel showing
+Apollo missions.                                        lever -lock switches.
+
+
+10
+
+
+ORIGINAL PDF PAGE 19
+                              -
+      Pushbutton switches. Pushbutton
+switches were used for applic ations requir ing
+the rapid initiation of a function, for high-
+frequency-of-use situations, and for appli-
+cations requiring a combined control/signal
+device. Pushbutton switches were most
+widely used for applications requiring the
+rapid initiation of a function. In the CM,
+pushbutton switches were used mostly as
+manual backup controls to initiate various
+sequential events during launch and entry;
+in the LM, they were used to back up main
+engine commands and to shut down the
+descent engine on lunar touchdown. Push-
+button switches, i n a keyboard format,
+w ere used to enter data into the guidance
+computers. Master a l a r m pushbutton/
+signal lights i n both vehicles servi?d to
+indicate caution and warning (C&W)condi-             Figure 6. - Wickets guarding the CM
+tions and to reset the a l a r m circuitry.                     toggle switches.
+
+      Square pushbuttons, slightly larger than those normally used in a ir c r a f t o r i n the
+Gemini spacecraft, were used f o r most applications. The la r ge r siz e (approximately
+2.03 centimeters. (0.8 inch) on a side) aided actuation and permitted the u s e of la r ge r
+legends.
+
+          Rectangular mas t er a l a r m pushbutton lights, approximately 6.5 square centi-
+m e t e r s (1 square inch) i n area, were used in both the CM and the LM. Pushbutton-
+switch operating characteristics were 3 to 21 newtons (10 to 74 ounces) of actuating
+f o r c e and 0.317 to 1.5 centimeters (0.125 to 0.6 inch) of travel.
+
+                         -
+      Rotary switches. Rotary switches were used when four o r more detent positions
+w ere required for discrete functions, o r i n applications that required many poles o r
+high-current capacities. In the latter applications, the design of a rotary switch was
+generally m o r e suitable than the design of a toggle switch.
+
+       Rotary switches were highly advantageous i n accomplishing numerous switching
+functions, but this capability i n turn increased the criticality of a failure. A mechan-
+ically jammed rotary switch, for example, could inhibit all the switching functions
+normally performed by the control. Therefore, the LM rotary switches we r e posi-
+tioned in the most critical detent positions before Earth launch; and, in later lunar
+modules, mission-critical rotary switches were replaced with (and by an additional
+number of) toggle switches.
+
+     A standardized rotary control knob (fig. 7) was used in both the Apollo vehicles.
+The knob was equipped with a circular s k i r t to allow f or transillumination of an integral
+
+
+
+
+                                                                                              11
+
+
+ORIGINAL PDF PAGE 20
+pointer indicium. Actuating forces ranged
+f r o m 8.5 to 85 centimeter-newtons (12 to
+120 inch-ounces). A standard 30" spacing
+between adjacent positions w a s used f or all
+rotary switches.
+
+       Continuously variable controls. -
+Continuously variable controls, such as
+potentiometers, rheostats, and variable
+transformers, were used for functions
+requiring precise control and adjustment
+of system o r equipment parameters. Some
+of these functions included the control of
+lighting intensities, audio volume, and
+antenna positioning . Conti nuou sly vari ab1e
+controls were equipped with thumbwheel
+and rotary-switch-type knobs. Thumb-
+wheels were used predominantly for audio
+controls and knobs for lighting and antenna
+controls. The periphery of thumbwheels                        -
+                                                   Figure 7. Standardized rotary control
+was marked with integers from one to nine            knobs used in both the LM and
+for indexing the control.                            the CM.
+
+      A slightly different type of rotary control knob was used to operate a stepper
+motor. Because a stepper motor has little inherent friction to maintain it at the set
+position, a device that would hold the control a t the selected position w a s necessary.
+This locking was accomplished by the use of a knob resembling the other rotary con-
+trol knobs but having an internal locking mechanism. Pushing in the top portion of
+the knob unlocked the control and allowed i t to be positioned freely. Releasing the
+knob locked the stepper motor in place.
+
+       To operate continuously variable controls with rotary-switch-type knobs required
+a torque of 6 to 25 centimeter-newtons (8 to 36 inch-ounces). Failure to specify a
+lower acceptable limit for rheostat actuating torque in the LM procurement specifica-
+tion resulted i n the delivery of several units having torques of l e s s than 1. 4 centimeter-
+newtons ( 2 inch-ounces). The addition of external friction washers between the control
+knob and the panel compensated for this improper torque value. Thumbwheel controls
+required 1.4 to 4 centimeter-newtons (2 to 6 inch-ounces) to operate. Early LM
+thumbwheels were also delivered with improper torque values. Because requirements
+documentation w a s misinterpreted, early thumbwheel units having torques of
+14 centimeter-newtons (20 inch-ounces) and gr e a te r we r e delivered; but these units
+were used "as is" in nonflight applications. A standard 300" deflection was imple-
+mented for all continuously variable controls.
+
+      Circuit breakers. - Circuit bre a ke r s we r e used primarily to protect electrical
+circuits. Sometimes, however, circuit b r e a k e r s we r e used as control devices; this
+application occurred mostly on the LM, where weight was very critical. In all these
+instances, though, an attempt was made to design the syste m s so that switching actions
+were limited in number and conducted under a no-load condition. Circuit br e a ke r s
+were procedurally used on both vehicles to disable c r itic a l circuits during periods
+when they were not required.
+
+12
+
+
+ORIGINAL PDF PAGE 21
+       The circuit breakers used on the Apollo vehicles were the push/pull type and had
+a small, black knob. An aluminum band was displayed when the breaker was open. A
+white band originally used was deleted because the paint flaked and chaffed. Some
+difficulty was encountered i n visually monitoring the lower contrast silver-colored
+bands in the lower level lighting environment of the LM. This condition resulted i n
+the misconfiguration of certain circuit breakers by the Apollo flight crews. To avoid
+this situation in future programs, crew station lighting simulations should be per-
+formed to verify altered D&C color schemes.
+
+       Circuit breakers were particularly susceptible to inadvertent actuation o r
+damage. This susceptibility was especially prevalent on the LM because of the amount
+of crew activity associated with lunar surface operations (e. g. , backpack donning and
+doffing). Therefore, special precautions were taken in both vehicles to protect the
+circuit breakers by recessing the panels (fig. 8) or by providing b a r r i e r guards
+(fig. 9) o r by both methods.
+
+
+                                         .
+
+
+
+
+      Figure 8. - Recessed panel.                    Figure 9. - B a r r ie r guards.
+
+
+      All circuit breakers were the "trip free" type currently used on military air-
+craft; that is, a "tripped" breaker could not be manually overridden (closed).
+Nominally, 53.4 newtons (192 ounces) of force were required to close and 27 newtons
+(96 ounces) to open the circuit breakers. Total travel w a s approximately 0.5 centi-
+meter (0.2 inch).
+
+
+
+
+                                                                                        13
