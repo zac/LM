@@ -6,7 +6,7 @@ import simd
 /// Assembly review cameras, in cabin coordinates. Does not alter local mounts.
 @MainActor
 enum LMCommanderStationAssemblyObserver {
-    enum View: String { case exterior, front, side, cdr, lmp, rear, overhead, timers, contact, crewEye = "crew-eye", controls = "control-closeup", details = "detail-side", crossPointer = "cross-pointer" }
+    enum View: String { case exterior, front, side, cdr, lmp, lpd, rear, overhead, timers, contact, crewEye = "crew-eye", controls = "control-closeup", details = "detail-side", crossPointer = "cross-pointer" }
     static func selected(arguments: [String]) -> View? {
         guard !arguments.contains("--instrument-validation"),
               let flag = arguments.first(where: { $0.hasPrefix("--assembly-validation-view=") }) else { return nil }
@@ -14,6 +14,12 @@ enum LMCommanderStationAssemblyObserver {
     }
     static func pose(for view: View) -> (eye: SIMD3<Float>, target: SIMD3<Float>) {
         switch view {
+        case .lpd:
+            let optics = LMLandingPointDesignator()
+            let center = LMLPDWindowCorner.allCases.reduce(SIMD3<Float>.zero) {
+                $0 + optics.windowCorner($1, on: .inner)
+            } / Float(LMLPDWindowCorner.allCases.count)
+            return (optics.commanderEyeMeters, center)
         case .exterior: return ([9, 6, 9], [0, -1.6, 0])
         case .timers: return ([-0.245, 1.79, -0.27], [-0.245, 1.84, -0.91])
         case .contact: return ([-0.245, 1.72, -0.28], [-0.204, 1.70, -0.90])
