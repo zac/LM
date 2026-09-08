@@ -1,0 +1,11 @@
+# Timer inspection
+
+Workbench geometry views show all four assets, including both control banks in front and oblique views. Review digits100:50:49 and02:15 are transient fixtures, not authored epoch values. Neutral USDZ and Blender files have every segment dark. Workbench lens meshes are hidden only for clear geometry inspection.
+
+Native SceneKit views with and without the transparent lens show readable segments, labels and bezel. The independent RealityKit test successfully loads all four neutral USDZs, changes every digit through all ten numeric segment masks, rotates every switch to all three detents, and checks that fixed geometry stays fixed. These are complementary checks: SceneKit imagery does not establish Vision Pro RealityKit appearance.
+
+Panel1 and Panel3 front fit views load the real CommanderPanels and PanelInventory models without modifying them. Panel1 shows the timer pair plus remaining unpopulated instrument blanks; this is an isolated fit review, not a claim about the complete current cockpit. Both readouts were shifted20 mm inward after the first view exposed an overhang of the original placeholder beyond the structural panel. LocalX is now-.030 for MissionTimer and+.093 for EventTimer, with unchanged size and unchanged slot/panel datum. This is an approved20 mm exception to the nominal right edge of the blank. Event controls sit on the upper part of the timer/heater blank, leaving the heater area untouched.
+
+The readable faces and native lens pass visual inspection at these review scales. Fine font weight, real panel typography, bolt head machining, lens tint/spectrum, switch reach, rear chassis dimensions and headset readability are provisional. No animation, clock correctness, illumination photometry, hardware electrical behavior, or flight qualification is inferred from a successful render.
+
+Final independent assembly audit: MissionTimer rear housing was narrowed to 116 mm behind its unchanged 130 mm face, leaving a measured 1 mm gap to CommanderPanels left return at the approved mounting pose. Both readouts and EventTimerControls clear the other installed new components; all selected timer face/grip crew rays are unobstructed. Remaining timer intersections are only the intentional retained blank/rear-housing seating. See `assembly-clearance.json` for exact input hashes, tested pairs and limits.

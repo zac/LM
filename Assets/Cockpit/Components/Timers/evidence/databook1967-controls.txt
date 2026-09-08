@@ -1,0 +1,57 @@
+ Code    Control/Indicator                   Function
+
+                              momentary spring loaded RESET
+                              position immediately resets 9-M-ll
+                              to zero. Zero is maintained until a
+                              start pulse is initiated by actuation of
+                              9-S-12. In the UP position the timer
+                              will count in an increasing direction
+                              to 59 minutes and 59 seconds, return
+                              to zero, and begin counting up again.
+                              In the DOWN position the timer will
+                              count in a decreasing direction from
+                              a preset value to 0 minutes and 0 sec­
+                              onds, then return to 59 minutes and
+                              59 seconds, and count down again.
+
+9-S-12   TIMER CONT switch This t h r e e -position toggle (START-
+         Mom-main-mom      STOP) has two momentary spring
+                           loaded positions. In the START posi­
+                           tion the event timer will begin count­
+                           ing in a direction selected by 9-S-li.
+                           In the STOP position the count is
+                           stopped and frozen until either the
+                           START position is again selected or
+                           the RESET/COUNT switch is
+                           actuated.
+
+9-S-13   MIN SLEW             These toggles are used to set the
+         CONTROL switch       four digits of 9-M-ll. They have two
+                              momentary spring loaded positions
+                              (TENS-UNITS), which permit reset­
+                              ting each of the four digits indepen­
+9-S-14   SEC SLEW             dently. Positioning 9-S-13 to the
+         CONTROL switch       TENS position slews the tens column
+         Two 3-position       digit of the minutes pair at the rate
+         Toggles Mom-         of two digits per second as long as
+         main-mom             the toggle is held in this position. In
+                              the UNITS position the unit column
+                              digit of the minutes pair is changed
+                              at a rate of two digits per second.
+                              All digits change in an increasing
+                              direction, regardless of the posi­
+                              tion of 9-S-ll. In the center main­
+                              tain position the slewing function is
+                              disabled. 9-S-14 is used in the same
+                              manner to set the seconds pair of
+                              digits on the events timer indicator.
+
+9-S-17   X-POINTER SCALE      These two-position toggles (HI MULT-
+         switch (CDR)         LO MULT) control the scale range of
+                              9-M-2 and 9-M-3.
+
+
+
+
+                             4-63
+
