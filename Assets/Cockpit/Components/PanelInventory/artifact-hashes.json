@@ -24,8 +24,8 @@
     "bytes": 20645
   },
   "validate.py": {
-    "sha256": "88948f43bda8427bc357f49c3b419ee4ced00a7d26952a135c39ff576f96a0af",
-    "bytes": 10212
+    "sha256": "073b25fec2d9c0a6f8d9ae5080818c8f307ed25b8d9fdf18e1f830ac9b352752",
+    "bytes": 10109
   },
   "validate_native.swift": {
     "sha256": "b4ef3b862531fc5795c5dcdca6dfe9c56ac683499f7193c77427fd5b1effb536",
@@ -48,11 +48,11 @@
     "bytes": 205
   },
   "check_validator.py": {
-    "sha256": "be13310ef0d95f8352945bf2220711d8a1481fb4f8bbce68dc665258bb61ede6",
-    "bytes": 4421
+    "sha256": "0b3d2f36e5703a93bc0d3a46ddd6deb763458b84c88dc7622e74a7a353123751",
+    "bytes": 5456
   },
   "evidence/validator-policy-check.json": {
-    "sha256": "d70d3f4b9c56befb7b061bef1fac0c2240adfc50f5270ecdbaa19d69588cc855",
-    "bytes": 2199
+    "sha256": "d8a32fbf8aab23e56f5edc26436d07686218d9afb3b2cc9d7d71d67794177b4e",
+    "bytes": 2339
   }
 }

@@ -52,6 +52,18 @@ with tempfile.TemporaryDirectory(prefix='panel-validator-policy-') as temp:
  calls={n.func.id for n in ast.walk(main) if isinstance(n,ast.Call) and isinstance(n.func,ast.Name)}
  assert {'read_pinned_aca','require_passing_reports'}<=calls
  results.append({'case':'geometry main invokes digest and result gates','pass':True})
+ # Execute the actual Windows source-path expression with canonical Git's relative result,
+ # while this test process remains outside the synthetic repository.
+ source_assignment=next(n for n in ast.walk(main) if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='source' for t in n.targets))
+ fixture_out=temp/'canonical/Assets/Cockpit/Components/PanelInventory';fixture_out.mkdir(parents=True)
+ relative_common=Path('../../../../.git');resolved_gitdir=fixture_out/relative_common
+ expected=temp/'canonical/.git/lfs/objects'/digest[:2]/digest[2:4]/digest
+ expected.parent.mkdir(parents=True);expected.write_bytes(b'windows-path-fixture')
+ source=eval(compile(ast.Expression(source_assignment.value),str(SCRIPT),'eval'),{'gitdir':resolved_gitdir,'digest':digest})
+ assert source.is_absolute() and source.resolve()==expected.resolve()
+ assert source.read_bytes()==b'windows-path-fixture'
+ results.append({'case':'Windows uses resolved Git directory with relative canonical path and unrelated process cwd','pass':True})
+
 report={'scope':'synthetic policy/error-path checks only; no geometry rerun or render','ACA_revision':'750caea3dea7feeaf5ffea15eedcf2d031cca0be','ACA_sha256':digest,'ACA_bytes':len(payload),'cases':results,'result':'PASS'}
 (OUT/'evidence/validator-policy-check.json').write_text(json.dumps(report,indent=2)+'\n')
 print('POLICY_PASS',len(results),'cases; pinned ACA',digest)

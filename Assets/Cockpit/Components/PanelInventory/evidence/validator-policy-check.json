@@ -92,6 +92,10 @@
     {
       "case": "geometry main invokes digest and result gates",
       "pass": true
+    },
+    {
+      "case": "Windows uses resolved Git directory with relative canonical path and unrelated process cwd",
+      "pass": true
     }
   ],
   "result": "PASS"

@@ -114,7 +114,7 @@ def main():
  import hashlib,subprocess,shutil
  pointer=subprocess.check_output(['git','show','5699e64:Assets/Cockpit/Components/WindowsLPD/WindowsLPD.usdz'],cwd=OUT)
  if pointer.startswith(b'version https://git-lfs'):
-  digest=pointer.decode().split('sha256:')[1].split()[0];common=Path(subprocess.check_output(['git','rev-parse','--git-common-dir'],cwd=OUT,text=True).strip());source=common/'lfs/objects'/digest[:2]/digest[2:4]/digest
+  digest=pointer.decode().split('sha256:')[1].split()[0];source=gitdir/'lfs/objects'/digest[:2]/digest[2:4]/digest
   assert hashlib.sha256(source.read_bytes()).hexdigest()==digest
   shutil.copyfile(source,tmp/'WindowsLPD.usdz')
  else:(tmp/'WindowsLPD.usdz').write_bytes(pointer)
