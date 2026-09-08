@@ -1,4 +1,8 @@
 {
+  ".gitignore": {
+    "bytes": 19,
+    "sha256": "862263fa1f46c20f0d1e4dac5ffcc75abd55c08211b2c3864c5f8764b9d87793"
+  },
   "AltitudeRate.blend": {
     "bytes": 398924,
     "sha256": "b02b38bfc8bb10a152f1598f163f4361481a980a70280ac21ab77c5170f6f96a"
@@ -36,8 +40,8 @@
     "sha256": "069531c72bb0e53bdf8f7c2c1216c346584e7be5242b8277992045c8a8df94c0"
   },
   "evidence/sources.json": {
-    "bytes": 2341,
-    "sha256": "c6c57cfaa4399fb2aae97a8c68169e7c679ae9ac4b1ddfa33af5d62ef749f7d6"
+    "bytes": 1741,
+    "sha256": "395efc8ac3e4b59b21bb030fc4b61fe961fa847168452991399cec05828464c8"
   },
   "evidence/tnD6722-p18.png": {
     "bytes": 462937,
@@ -46,14 +50,6 @@
   "evidence/tnD6722-p20.png": {
     "bytes": 434458,
     "sha256": "b165fff63abbe9174551f76267d4bfc7eb0b19ee98c72bf8dee90a448f564a0f"
-  },
-  "evidence/tnD6722-page-20.png": {
-    "bytes": 434458,
-    "sha256": "b165fff63abbe9174551f76267d4bfc7eb0b19ee98c72bf8dee90a448f564a0f"
-  },
-  "evidence/tnD6722-page-21.png": {
-    "bytes": 421674,
-    "sha256": "58757763ba0e39ff093bb869ba2eeaa1e3886c722b97a325d927a75ff3d11981"
   },
   "evidence/tnD6722.pdf": {
     "bytes": 666829,
