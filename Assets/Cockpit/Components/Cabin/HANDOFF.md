@@ -4,7 +4,7 @@
 
 Owned directory: `Assets/Cockpit/Components/Cabin/` only. Branch `codex/cabin-structure` created because the provisioned worktree was detached; verified clean baseline `d8e35fa3ec8dc400cbb2762c24953022b07e8ebb`. Main was not checked out or modified. Git LFS 3.8.0; Blender 5.2.1 LTS build 9e2066aef7ef. No heavy render/bake was started.
 
-Exact asset commit: recorded after the asset commit in the final handoff-only commit.
+Exact asset commit: `eb4efc12614ad45bd7df1d82e848f5f41b776c1e`. This following handoff-only commit records that immutable asset revision.
 
 New authored geometry, not an import of the legacy exterior. Consulted LM revision `ed230a6ee4286bc2385f44bc8f1889bdcc39a8ab`. Exact local evidence snapshots, byte counts and SHA-256 hashes are in `evidence/sources.json`; source manifests preserve original URLs and photograph scan provenance. `capture_evidence.py` documents the source paths used. No app calibration, AGC, LMCore, DSKY, FDAI, package Sources/Tests/Tools or master assembly was edited.
 
