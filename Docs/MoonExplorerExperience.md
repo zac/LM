@@ -6,6 +6,10 @@ Apollo capture path remain shared with LM.
 
 ## Presentation decision
 
+This decision is superseded by `MoonExplorerOneZoomPlan.md`, which replaces
+the Globe / Surface mode split with one continuous zoom through a clipped
+window and an immersion gate. The text below records the original rationale.
+
 The supplied mockup informs the compact place browser, floating globe and
 small bottom toolbar. Start in mixed immersion with a bounded globe beside a
 native glass window. Globe dragging changes the geographic focus across the

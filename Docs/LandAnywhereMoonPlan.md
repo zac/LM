@@ -48,6 +48,17 @@ The Explorer navigation/presentation follow-up is recorded in
 terrain entry, native place browser, sunlight controls and saved views. It
 shares this terrain pipeline and retains all capture and provenance contracts.
 
+`MoonExplorerOneZoomPlan.md` (2026-09-06) is the next Explorer direction: it
+replaces the Globe / Surface mode split with one continuous zoom through a
+clipped window, an immersion gate below the handoff, and a streaming track
+(coarse-first terrain, prefetch, sliding region, tiled globe imagery). It
+supersedes the presentation decision in `MoonExplorerExperience.md`.
+
+`LunarMapPackagePlan.md` (2026-09-07) plans the extraction of the map,
+terrain engine and Explorer product into a `LunarMap` Swift package consumed
+by a standalone Moon app and by LM. It changes where code lives and how it is
+linked, not terrain behavior; every capture contract applies unchanged.
+
 The texture/import follow-up is recorded in
 `MoonExplorerTextureAndPublication.md`. Source pixel dimensions are not GPU
 residency dimensions: the current Simulator imports the 23,040 × 11,520
