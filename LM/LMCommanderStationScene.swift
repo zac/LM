@@ -161,6 +161,7 @@ final class LMCommanderStationScene {
     private var exteriorLunarModule: Entity?
     private var fdaiBall: Entity?
     private var importedFDAI: LMImportedFDAI?
+    private(set) var importedPilotFDAI: LMImportedFDAI?
     private(set) var importedACA: LMImportedACA?
     private(set) var importedAltitudeRate: LMImportedAltitudeRate?
     private(set) var importedCrossPointer: LMImportedCrossPointer?
@@ -688,6 +689,7 @@ final class LMCommanderStationScene {
         guard !arguments.contains("--procedural-cockpit") else { return false }
         let installed = installCommanderAssembly()
         if installed {
+            _ = installPilotFDAI()
             _ = installAltitudeRate()
             _ = installCrossPointer()
             _ = installDescentControl(.attitudeMode)
@@ -700,6 +702,37 @@ final class LMCommanderStationScene {
             }
         }
         return installed
+    }
+
+    /// The pilot uses the same supported attitude source as the commander.
+    /// Source selection, rate/error needles and mechanical seating remain unqualified.
+    @discardableResult
+    func installPilotFDAI(loader: @MainActor () throws -> LMImportedFDAI = {
+        try LMImportedFDAI(asset: Entity.load(contentsOf: LMKitAssets.fdaiURL))
+    }) -> Bool {
+        guard importedPilotFDAI == nil else { return true }
+        guard let assembly = commanderAssembly else { return false }
+        do {
+            let instrument = try loader()
+            // Scope semantic lookup to this newly loaded instance. Duplicate FDAI
+            // names in the commander subtree are intentional and never searched here.
+            let root = try LMCockpitComponentSupport.neutralRoot("FDAI_Mount", asset: instrument.root)
+            let bounds = root.visualBounds(relativeTo: root)
+            // The accepted Panel 2 reservation is 150 mm square. This checks the
+            // visual face envelope only; the rear housing is not a qualified cutout.
+            guard !bounds.isEmpty, bounds.min.x >= -0.075, bounds.max.x <= 0.075,
+                  bounds.min.y >= -0.075, bounds.max.y <= 0.075 else {
+                throw LMCommanderStationAssembly.AssemblyError.invalidContract("Pilot FDAI face exceeds its reservation")
+            }
+            LMCockpitComponentSupport.removeInput(root)
+            if let state = lastVehicleState { instrument.apply(state.attitude) }
+            try assembly.installOccupant(slotID: "Panel2__FDAI") { root }
+            importedPilotFDAI = instrument
+            return true
+        } catch {
+            logger.error("Pilot FDAI unavailable; panel blank retained: \(String(describing: error), privacy: .public)")
+            return false
+        }
     }
 
     @discardableResult
@@ -1827,6 +1860,7 @@ final class LMCommanderStationScene {
     private func applyFDAIAttitude(_ attitude: LMQuaternion) {
         if let importedFDAI { importedFDAI.apply(attitude) }
         else { fdaiBall?.orientation = FDAIOrientation.ballOrientation(for: attitude) }
+        importedPilotFDAI?.apply(attitude)
     }
 
     private func buildPhysicalFDAI() {
