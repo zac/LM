@@ -1,0 +1,99 @@
+{
+  "source": "supplied Lunar Module Controls and Displays.pdf p1; revision unknown",
+  "layout": "two banks per panel, five rows by two columns per bank; blank cells retained",
+  "normalization": "ASC He REG uses standard helium chemical typography; source raster shape is ambiguous between He and HI. O2 plain ASCII; no label semantics invented.",
+  "slots": {
+    "Panel1__Warning": [
+      [
+        [
+          "",
+          "CES AC"
+        ],
+        [
+          "ASC PRESS",
+          "CES DC"
+        ],
+        [
+          "DES REG",
+          "AGS"
+        ],
+        [
+          "DES QTY",
+          "LGC"
+        ],
+        [
+          "",
+          "ISS"
+        ]
+      ],
+      [
+        [
+          "RCS TCA",
+          "CABIN"
+        ],
+        [
+          "RCS A REG",
+          "SUIT/FAN"
+        ],
+        [
+          "RCS B REG",
+          ""
+        ],
+        [
+          "DC BUS",
+          ""
+        ],
+        [
+          "",
+          ""
+        ]
+      ]
+    ],
+    "Panel2__Caution": [
+      [
+        [
+          "ASC He REG",
+          "INVERTER"
+        ],
+        [
+          "ASC QTY",
+          "BATTERY"
+        ],
+        [
+          "ENG GMBL",
+          "RNDZ RDR"
+        ],
+        [
+          "",
+          "LDG RDR"
+        ],
+        [
+          "",
+          "PRE AMPS"
+        ]
+      ],
+      [
+        [
+          "ED RELAYS",
+          "ECS"
+        ],
+        [
+          "RCS",
+          "O2 QTY"
+        ],
+        [
+          "HEATER",
+          "GLYCOL"
+        ],
+        [
+          "C/W PWR",
+          "WATER QTY"
+        ],
+        [
+          "",
+          "S-BD RCVR"
+        ]
+      ]
+    ]
+  }
+}

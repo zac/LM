@@ -1,0 +1,157 @@
+{
+  "base": "035c5b3ad1a522cf6d25fb222d46c2fb4a4a8de8",
+  "authoring": "Blender5.2.1LTS9e2066aef7ef; bundledBfont; scene and USD Y-up/meters",
+  "sources": [
+    {
+      "name": "Lunar Module Controls and Displays.pdf",
+      "sha256": "8b5b96fece2fd5fcdbb5b5ceb22f8492033569c52aff8db36a4e82009703828b",
+      "bytes": 10883155,
+      "page": 1,
+      "applicability": "Generic raster controls overview. Supplied by user; mission/revision not established. No dimensional scale.",
+      "crop_500dpi_pixels": {
+        "panel1-source.png": [
+          2900,
+          100,
+          760,
+          370
+        ],
+        "panel2-source.png": [
+          5700,
+          100,
+          760,
+          370
+        ],
+        "master-alarm-source.png": [
+          2560,
+          1150,
+          200,
+          250
+        ]
+      }
+    },
+    {
+      "name": "LM10+ Apollo Operations Handbook Vol1",
+      "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+      "pages": [
+        {
+          "excerpt_page": 7,
+          "original_pdf_page": 121,
+          "printed": "2.1-77",
+          "use": "Alarm detection and additionalLGCpowerfailure warning"
+        },
+        {
+          "excerpt_page": 25,
+          "original_pdf_page": 666,
+          "printed": "3-72",
+          "use": "Distinct hardware masteralarmtone/CWlamp-test routes"
+        }
+      ],
+      "applicability": "Later missions reference. Not mission-exactLM5. Full selected excerpt retained in PanelInventory/evidence.",
+      "excerpt_sha256": "6194242b2dd076a469474d5bcdb5f4a6bddf9929aedf543d8911fd5f9ca63e2c"
+    },
+    {
+      "name": "PanelInventory",
+      "use": "Exact2 accepted slot coordinateframes, provisionalfootprints. Locally pinned inventory."
+    },
+    {
+      "name": "CommanderPanels",
+      "use": "NarrowedP1support geometry informs decision not toinvent masteralarm installation."
+    },
+    {
+      "name": "LM/AGC source audit",
+      "use": "Read-only available-vs-unavailable capability assessment; exact hashes/revisions in runtime-sources.json. No live runtime verification."
+    }
+  ],
+  "retained_files": [
+    {
+      "path": "evidence/aoh-lamp-tone.png",
+      "bytes": 99264,
+      "sha256": "d3b59b4f8be5449bb125153dc230a74e69b18364b67e8e2187fe59d5d883eb6e"
+    },
+    {
+      "path": "evidence/aoh-lgc-warning.png",
+      "bytes": 224911,
+      "sha256": "35d9dd28650fd973651c89bbe8478ecc04badc03c8e32769c0ce7603a9bbd2bb"
+    },
+    {
+      "path": "evidence/commander-mounting.json",
+      "bytes": 5451,
+      "sha256": "eb1efb3ab4ef0d43fc6036ec676431bf8b861cc69e83d26bc15cf2ed0182dde8"
+    },
+    {
+      "path": "evidence/inventory.json",
+      "bytes": 190532,
+      "sha256": "f315bdcbd8a6e597231b33420652fb6297241bf3af7c585708f472583522ec49"
+    },
+    {
+      "path": "evidence/master-alarm-source.png",
+      "bytes": 28740,
+      "sha256": "914260decf5aa538d07a21784ce5233ca36317e62c451defbcc023d5c1c31308"
+    },
+    {
+      "path": "evidence/panel1-source.png",
+      "bytes": 144042,
+      "sha256": "1445b061edecf4e3376f943b98b68b85c01c1ccf8e5fea182615ae9aea3aeb46"
+    },
+    {
+      "path": "evidence/panel2-source.png",
+      "bytes": 157288,
+      "sha256": "aac1109f5b458e06ca0e4018ea864b158e90fa48ee791ea7893e39d3c979c071"
+    },
+    {
+      "path": "evidence/runtime/AGC/Sources/AGC/AGC.swift",
+      "bytes": 25042,
+      "sha256": "af9f6a6d55aa6d39e7dc9a179e920eb906f90e9efdeebf70c73e5098a2e26803"
+    },
+    {
+      "path": "evidence/runtime/AGC/Sources/AGC/AGCEngine.swift",
+      "bytes": 7102,
+      "sha256": "b11000e2e9d6a0fb85b837498b3f002d6fe428c222daa5834b2eed5ce1522b20"
+    },
+    {
+      "path": "evidence/runtime/AGC/Sources/AGC/AGCEngineRuntimeIO.swift",
+      "bytes": 4462,
+      "sha256": "a1da879554e1bcdf5cb9abfa9b266ab9436119be09a7117332d1973e8e56d654"
+    },
+    {
+      "path": "evidence/runtime/AGC/Sources/AGC/DSKY.swift",
+      "bytes": 18047,
+      "sha256": "9d48fcf13bf1e6d7b2c2684f4556a09df887dc31166514b8bfca0018d16ef434"
+    },
+    {
+      "path": "evidence/runtime/AGC/Sources/AGC/DSKYSnapshot.swift",
+      "bytes": 5388,
+      "sha256": "fb0fd002fd107beffbe181ae4de0cca78d609bc116c6f9ed34cb3a6e3d9ae2f5"
+    },
+    {
+      "path": "evidence/runtime/AGC/Sources/LMCore/LMLandingGear.swift",
+      "bytes": 30164,
+      "sha256": "0cadb0313aae9b54f69bcfe7901c90103285592ced7b503aa045536823a690ed"
+    },
+    {
+      "path": "evidence/runtime/AGC/Sources/LMCore/LMSimulation.swift",
+      "bytes": 82579,
+      "sha256": "75c27b1e0bc3630372f6f093c1becbed8c1f1b96759dbff5101674990f694ab6"
+    },
+    {
+      "path": "evidence/runtime/LM/LM/LMCockpitExperienceDirector.swift",
+      "bytes": 10554,
+      "sha256": "095bef15b9eb4d5dabce67ac7e350d23b576f879d436b2a96e60e263904c3a67"
+    },
+    {
+      "path": "evidence/runtime/LM/LM/LMPhysicalDSKYPresentation.swift",
+      "bytes": 2664,
+      "sha256": "dbc2baac44ab61b554d87153a2f73de69d75e014fd912178822c6d2a2d06a851"
+    },
+    {
+      "path": "evidence/runtime/LM/LM/PoweredDescentSession.swift",
+      "bytes": 32957,
+      "sha256": "e2446e39c89b59c3365cbb55651777c7b5505529da9f7e88a0feef9ef6ac09e7"
+    },
+    {
+      "path": "evidence/runtime-sources.json",
+      "bytes": 2531,
+      "sha256": "b72efcecd088be9b76d23be7656d32415bec6238b484ac46e74de07042b527a2"
+    }
+  ]
+}
