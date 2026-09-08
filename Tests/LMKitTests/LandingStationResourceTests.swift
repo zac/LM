@@ -8,6 +8,8 @@ private enum LandingResource: String, CaseIterable, Sendable {
     case altitudeRate, attitudeMode, descentRate, crossPointer, interiorDetails, breakerBanks
     case missionTimer, eventTimer, missionTimerControls, eventTimerControls, engineButtons, lunarContact, propulsionInstruments, cautionWarning
 
+    case instrumentConsole, lowerConsole, windowSurrounds
+
     var asset: URL {
         switch self {
         case .altitudeRate: LMKitAssets.altitudeRateURL
@@ -23,6 +25,9 @@ private enum LandingResource: String, CaseIterable, Sendable {
         case .engineButtons: LMKitAssets.engineButtonsURL
         case .lunarContact: LMKitAssets.lunarContactURL
         case .propulsionInstruments: LMKitAssets.propulsionInstrumentsURL
+        case .instrumentConsole: LMKitAssets.instrumentConsoleURL
+        case .lowerConsole: LMKitAssets.lowerConsoleURL
+        case .windowSurrounds: LMKitAssets.windowSurroundsURL
         case .cautionWarning: LMKitAssets.cautionWarningURL
         }
     }
@@ -36,6 +41,9 @@ private enum LandingResource: String, CaseIterable, Sendable {
         case .missionTimer, .eventTimer, .missionTimerControls, .eventTimerControls: LMKitAssets.timersInterfaceURL
         case .engineButtons, .lunarContact: LMKitAssets.engineControlsInterfaceURL
         case .propulsionInstruments: LMKitAssets.propulsionInstrumentsInterfaceURL
+        case .instrumentConsole: LMKitAssets.instrumentConsoleInterfaceURL
+        case .lowerConsole: LMKitAssets.lowerConsoleInterfaceURL
+        case .windowSurrounds: LMKitAssets.windowSurroundsInterfaceURL
         case .cautionWarning: LMKitAssets.cautionWarningInterfaceURL
         }
     }

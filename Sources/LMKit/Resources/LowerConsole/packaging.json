@@ -1,0 +1,15 @@
+{
+  "schema": "lmkit.component-packaging.v1",
+  "component": "LowerConsole",
+  "derivation": "byte-identical copy of accepted authoring resources",
+  "files": {
+    "LowerConsole.usdz": {
+      "sha256": "8ee9a28d08735a225c081e96509b611cdaf552f6af8f59d7ed7ca6874d4bc4f0",
+      "bytes": 28300
+    },
+    "interface.json": {
+      "sha256": "70d9a87334b353f490a06b02b9585d52252c9e6fd202992195393d73eb15f18f",
+      "bytes": 6805
+    }
+  }
+}

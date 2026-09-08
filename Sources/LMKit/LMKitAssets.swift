@@ -161,4 +161,24 @@ public enum LMKitAssets {
     public static var cautionWarningInterfaceURL: URL {
         Bundle.module.url(forResource: "interface", withExtension: "json", subdirectory: "CautionWarning")!
     }
+
+    // Solid visual enclosures; mounting and transactional replacement are host-owned.
+    public static var instrumentConsoleURL: URL {
+        Bundle.module.url(forResource: "InstrumentConsole", withExtension: "usdz", subdirectory: "InstrumentConsole")!
+    }
+    public static var instrumentConsoleInterfaceURL: URL {
+        Bundle.module.url(forResource: "interface", withExtension: "json", subdirectory: "InstrumentConsole")!
+    }
+    public static var lowerConsoleURL: URL {
+        Bundle.module.url(forResource: "LowerConsole", withExtension: "usdz", subdirectory: "LowerConsole")!
+    }
+    public static var lowerConsoleInterfaceURL: URL {
+        Bundle.module.url(forResource: "interface", withExtension: "json", subdirectory: "LowerConsole")!
+    }
+    public static var windowSurroundsURL: URL {
+        Bundle.module.url(forResource: "WindowSurrounds", withExtension: "usdz", subdirectory: "WindowSurrounds")!
+    }
+    public static var windowSurroundsInterfaceURL: URL {
+        Bundle.module.url(forResource: "interface", withExtension: "json", subdirectory: "WindowSurrounds")!
+    }
 }

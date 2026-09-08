@@ -1,0 +1,749 @@
+{
+  "inputs": {
+    "InstrumentConsole": {
+      "InstrumentConsole.usdz": "27a29aee1d909d482b0a4edcca5fbdf1ba227bebcb85bcee1c94405ac1475b26",
+      "interface.json": "1e8de14c9220d95955aede45760934e8f404f9113ec3b1c636e7e328d7692735",
+      "build.py": "5d8a1879284b43a9bca5e4d068109ef6532de351c4dc67a4f676606ac5ab36d6"
+    },
+    "LowerConsole": {
+      "LowerConsole.usdz": "8ee9a28d08735a225c081e96509b611cdaf552f6af8f59d7ed7ca6874d4bc4f0",
+      "interface.json": "70d9a87334b353f490a06b02b9585d52252c9e6fd202992195393d73eb15f18f",
+      "build.py": "afc5583e7341ed625df3c1135b539fe5fdd91a55f900d8153e9bcea7f9968ee8"
+    },
+    "WindowSurrounds": {
+      "WindowSurrounds.usdz": "250c71433eb0f014c242948055752a578c04b7fb0fb51173366874e873ed3009",
+      "interface.json": "0938840437af735f1d5903b0ed2f81a4b04b5f640ced58eaa3d10ad18dd63529",
+      "build.py": "b21a9dda557bb15831f7a55af9375ad559514f39daeb45b26b6ab62716152d66"
+    }
+  },
+  "crossings": {
+    "InstrumentConsole__LowerConsole": [],
+    "InstrumentConsole__WindowSurrounds": [
+      {
+        "a": "/InstrumentConsole/Enclosure/Panel1Body/OutboardReturnPanel1",
+        "b": "/WindowSurrounds/CDR/CDR_InboardCheek",
+        "triangle_pairs": 86,
+        "aabb_overlap_m": [
+          0.0040000081062316895,
+          0.5335237979888916,
+          0.18577343225479126
+        ],
+        "intersection_min": [
+          -0.3999999761581421,
+          1.3284177780151367,
+          -1.0146359205245972
+        ],
+        "intersection_max": [
+          -0.3959999680519104,
+          1.8364124298095703,
+          -0.8880966305732727
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Enclosure/Panel1Body/OutboardReturnPanel1",
+        "b": "/WindowSurrounds/CDR/CDR_RevealDatum/CDR_SlopingReveal",
+        "triangle_pairs": 46,
+        "aabb_overlap_m": [
+          0.0040000081062316895,
+          0.5335237979888916,
+          0.16279011964797974
+        ],
+        "intersection_min": [
+          -0.3999999761581421,
+          1.807803988456726,
+          -0.9609905481338501
+        ],
+        "intersection_max": [
+          -0.3959999680519104,
+          1.8465155363082886,
+          -0.9249773025512695
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Enclosure/Panel1Body/TopReturnPanel1",
+        "b": "/WindowSurrounds/CDR/CDR_InboardCheek",
+        "triangle_pairs": 34,
+        "aabb_overlap_m": [
+          0.03526562452316284,
+          0.04509377479553223,
+          0.09966135025024414
+        ],
+        "intersection_min": [
+          -0.3999999761581421,
+          1.8313968181610107,
+          -1.014636754989624
+        ],
+        "intersection_max": [
+          -0.36809733510017395,
+          1.8492374420166016,
+          -0.9334816932678223
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Enclosure/Panel1Body/TopReturnPanel1",
+        "b": "/WindowSurrounds/CDR/CDR_RevealDatum/CDR_SlopingReveal",
+        "triangle_pairs": 30,
+        "aabb_overlap_m": [
+          0.03526574373245239,
+          0.04509377479553223,
+          0.07667803764343262
+        ],
+        "intersection_min": [
+          -0.3999999761581421,
+          1.8414275646209717,
+          -0.9610432386398315
+        ],
+        "intersection_max": [
+          -0.38048815727233887,
+          1.8492374420166016,
+          -0.9334816932678223
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Enclosure/Panel2Body/OutboardReturnPanel2",
+        "b": "/WindowSurrounds/LMP/LMP_InboardCheek",
+        "triangle_pairs": 84,
+        "aabb_overlap_m": [
+          0.0040000081062316895,
+          0.5335237979888916,
+          0.18577343225479126
+        ],
+        "intersection_min": [
+          0.3959999680519104,
+          1.3284177780151367,
+          -1.0146359205245972
+        ],
+        "intersection_max": [
+          0.3999999761581421,
+          1.8364124298095703,
+          -0.8880966305732727
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Enclosure/Panel2Body/OutboardReturnPanel2",
+        "b": "/WindowSurrounds/LMP/LMP_RevealDatum/LMP_SlopingReveal",
+        "triangle_pairs": 46,
+        "aabb_overlap_m": [
+          0.0040000081062316895,
+          0.5335237979888916,
+          0.16279000043869019
+        ],
+        "intersection_min": [
+          0.3959999680519104,
+          1.807803988456726,
+          -0.9609905481338501
+        ],
+        "intersection_max": [
+          0.3999999761581421,
+          1.8465155363082886,
+          -0.9249773025512695
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Enclosure/Panel2Body/TopReturnPanel2",
+        "b": "/WindowSurrounds/LMP/LMP_InboardCheek",
+        "triangle_pairs": 34,
+        "aabb_overlap_m": [
+          0.03526562452316284,
+          0.04509377479553223,
+          0.09966135025024414
+        ],
+        "intersection_min": [
+          0.36809736490249634,
+          1.8313968181610107,
+          -1.014636754989624
+        ],
+        "intersection_max": [
+          0.3999999761581421,
+          1.8492374420166016,
+          -0.9334816932678223
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Enclosure/Panel2Body/TopReturnPanel2",
+        "b": "/WindowSurrounds/LMP/LMP_RevealDatum/LMP_SlopingReveal",
+        "triangle_pairs": 30,
+        "aabb_overlap_m": [
+          0.03526574373245239,
+          0.04509377479553223,
+          0.07667791843414307
+        ],
+        "intersection_min": [
+          0.3804881274700165,
+          1.8414275646209717,
+          -0.9610432386398315
+        ],
+        "intersection_max": [
+          0.3999999761581421,
+          1.8492374420166016,
+          -0.9334816932678223
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Enclosure/Panel3Body/Panel3BottomReturn",
+        "b": "/WindowSurrounds/CDR/CDR_InboardCheek",
+        "triangle_pairs": 48,
+        "aabb_overlap_m": [
+          0.1202656626701355,
+          0.035648345947265625,
+          0.035648226737976074
+        ],
+        "intersection_min": [
+          -0.45590537786483765,
+          1.1786471605300903,
+          -0.7809019684791565
+        ],
+        "intersection_max": [
+          -0.4376673400402069,
+          1.214295506477356,
+          -0.7452537417411804
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Enclosure/Panel3Body/Panel3BottomReturn",
+        "b": "/WindowSurrounds/LMP/LMP_InboardCheek",
+        "triangle_pairs": 48,
+        "aabb_overlap_m": [
+          0.1202656626701355,
+          0.035648345947265625,
+          0.035648226737976074
+        ],
+        "intersection_min": [
+          0.43766725063323975,
+          1.1786471605300903,
+          -0.7809019684791565
+        ],
+        "intersection_max": [
+          0.4559054374694824,
+          1.214295506477356,
+          -0.7452537417411804
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Enclosure/Panel3Body/Panel3RearCover",
+        "b": "/WindowSurrounds/CDR/CDR_InboardCheek",
+        "triangle_pairs": 48,
+        "aabb_overlap_m": [
+          0.1202656626701355,
+          0.1296933889389038,
+          0.12969344854354858
+        ],
+        "intersection_min": [
+          -0.4504445791244507,
+          1.1758188009262085,
+          -0.9081811904907227
+        ],
+        "intersection_max": [
+          -0.4072006344795227,
+          1.3055121898651123,
+          -0.7784877419471741
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Enclosure/Panel3Body/Panel3RearCover",
+        "b": "/WindowSurrounds/LMP/LMP_InboardCheek",
+        "triangle_pairs": 48,
+        "aabb_overlap_m": [
+          0.1202656626701355,
+          0.1296933889389038,
+          0.12969344854354858
+        ],
+        "intersection_min": [
+          0.4072006344795227,
+          1.1758188009262085,
+          -0.9081811904907227
+        ],
+        "intersection_max": [
+          0.4504445493221283,
+          1.3055121898651123,
+          -0.7784877419471741
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Enclosure/UpperLowerClosure",
+        "b": "/WindowSurrounds/CDR/CDR_InboardCheek",
+        "triangle_pairs": 4,
+        "aabb_overlap_m": [
+          0.03526565432548523,
+          0.04098093509674072,
+          0.18587768077850342
+        ],
+        "intersection_min": [
+          -0.4000000059604645,
+          1.328360915184021,
+          -1.010849118232727
+        ],
+        "intersection_max": [
+          -0.3864557147026062,
+          1.3414901494979858,
+          -0.9363899827003479
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Enclosure/UpperLowerClosure",
+        "b": "/WindowSurrounds/LMP/LMP_InboardCheek",
+        "triangle_pairs": 4,
+        "aabb_overlap_m": [
+          0.03526565432548523,
+          0.04098093509674072,
+          0.18587768077850342
+        ],
+        "intersection_min": [
+          0.3864557147026062,
+          1.328360915184021,
+          -1.010849118232727
+        ],
+        "intersection_max": [
+          0.4000000059604645,
+          1.3414901494979858,
+          -0.9363899230957031
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Faces/Panel1/Panel1SkinLeft",
+        "b": "/WindowSurrounds/CDR/CDR_InboardCheek",
+        "triangle_pairs": 14,
+        "aabb_overlap_m": [
+          0.034999996423721313,
+          0.49309849739074707,
+          0.09076327085494995
+        ],
+        "intersection_min": [
+          -0.3999999761581421,
+          1.5861393213272095,
+          -0.9362764358520508
+        ],
+        "intersection_max": [
+          -0.38047268986701965,
+          1.8492374420166016,
+          -0.8877805471420288
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Faces/Panel1/Panel1SkinLeft",
+        "b": "/WindowSurrounds/CDR/CDR_RevealDatum/CDR_SlopingReveal",
+        "triangle_pairs": 14,
+        "aabb_overlap_m": [
+          0.034999996423721313,
+          0.49309849739074707,
+          0.09076327085494995
+        ],
+        "intersection_min": [
+          -0.3999999761581421,
+          1.8073326349258423,
+          -0.9362764358520508
+        ],
+        "intersection_max": [
+          -0.38048815727233887,
+          1.8492374420166016,
+          -0.924828290939331
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Faces/Panel2/Panel2SkinRight",
+        "b": "/WindowSurrounds/LMP/LMP_InboardCheek",
+        "triangle_pairs": 18,
+        "aabb_overlap_m": [
+          0.030000001192092896,
+          0.49309849739074707,
+          0.09076327085494995
+        ],
+        "intersection_min": [
+          0.38047268986701965,
+          1.5861393213272095,
+          -0.9362764358520508
+        ],
+        "intersection_max": [
+          0.3999999761581421,
+          1.8492374420166016,
+          -0.8877805471420288
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Faces/Panel2/Panel2SkinRight",
+        "b": "/WindowSurrounds/LMP/LMP_RevealDatum/LMP_SlopingReveal",
+        "triangle_pairs": 18,
+        "aabb_overlap_m": [
+          0.030000001192092896,
+          0.49309849739074707,
+          0.09076327085494995
+        ],
+        "intersection_min": [
+          0.3804881274700165,
+          1.8073326349258423,
+          -0.9362764358520508
+        ],
+        "intersection_max": [
+          0.3999999761581421,
+          1.8492374420166016,
+          -0.924828290939331
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Faces/Panel3/Panel3Skin",
+        "b": "/WindowSurrounds/CDR/CDR_InboardCheek",
+        "triangle_pairs": 48,
+        "aabb_overlap_m": [
+          0.1202656626701355,
+          0.12961053848266602,
+          0.12961053848266602
+        ],
+        "intersection_min": [
+          -0.45589709281921387,
+          1.2090942859649658,
+          -0.8749057054519653
+        ],
+        "intersection_max": [
+          -0.41266176104545593,
+          1.3387048244476318,
+          -0.7452951669692993
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Faces/Panel3/Panel3Skin",
+        "b": "/WindowSurrounds/LMP/LMP_InboardCheek",
+        "triangle_pairs": 48,
+        "aabb_overlap_m": [
+          0.1202656626701355,
+          0.12961053848266602,
+          0.12961053848266602
+        ],
+        "intersection_min": [
+          0.41266176104545593,
+          1.2090942859649658,
+          -0.8749057054519653
+        ],
+        "intersection_max": [
+          0.4558969736099243,
+          1.3387048244476318,
+          -0.7452951669692993
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Faces/UpperToSlopingBridge",
+        "b": "/WindowSurrounds/CDR/CDR_InboardCheek",
+        "triangle_pairs": 46,
+        "aabb_overlap_m": [
+          0.12003400921821594,
+          0.01856076717376709,
+          0.032382309436798096
+        ],
+        "intersection_min": [
+          -0.42833709716796875,
+          1.3389533758163452,
+          -0.8781123161315918
+        ],
+        "intersection_max": [
+          -0.41190069913864136,
+          1.3540674448013306,
+          -0.8510415554046631
+        ]
+      },
+      {
+        "a": "/InstrumentConsole/Faces/UpperToSlopingBridge",
+        "b": "/WindowSurrounds/LMP/LMP_InboardCheek",
+        "triangle_pairs": 46,
+        "aabb_overlap_m": [
+          0.12003400921821594,
+          0.01856076717376709,
+          0.032382309436798096
+        ],
+        "intersection_min": [
+          0.41190069913864136,
+          1.3389533758163452,
+          -0.878112256526947
+        ],
+        "intersection_max": [
+          0.42833709716796875,
+          1.3540674448013306,
+          -0.8510415554046631
+        ]
+      }
+    ],
+    "LowerConsole__WindowSurrounds": []
+  },
+  "rays": {
+    "windows": {
+      "tested": 1560,
+      "blocked": []
+    },
+    "instruments": {
+      "tested": 13,
+      "blocked": [
+        {
+          "component": "PilotLunarContact",
+          "surface": "/LunarContact_Mount/LunarContact__LightFace",
+          "target_cabin_m": [
+            0.4379998445510864,
+            1.304800033569336,
+            -0.8272832632064819
+          ],
+          "console_hit": null,
+          "hit": [
+            0.4791896343231201,
+            1.4668312072753906,
+            -0.6747709512710571
+          ]
+        }
+      ]
+    },
+    "dsky_front_aperture": {
+      "tested": 25,
+      "blocked": []
+    }
+  },
+  "limits": [
+    "Surface crossings include intentional contact; containment and all seams are not decided by BVH alone.",
+    "Finite rays are not continuous head/reach clearance or native visual acceptance."
+  ],
+  "peer_checks": {
+    "ACA": {
+      "input": {
+        "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/HandControllers/ACA.usdz",
+        "sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5",
+        "matrix_cabin_row_major": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.49000000953674316
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.9075000286102295
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -0.3700000047683716
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "meshes": 13,
+        "new": false,
+        "aabb_cabin_m": [
+          [
+            -0.5408000349998474,
+            0.8225500583648682,
+            -0.6255000233650208
+          ],
+          [
+            -0.4392000138759613,
+            0.9924500584602356,
+            -0.3699999749660492
+          ]
+        ]
+      },
+      "actual_bounds": [
+        [
+          -0.5408000349998474,
+          0.9075000286102295,
+          -0.4549500048160553
+        ],
+        [
+          -0.4392000138759613,
+          1.1629999876022339,
+          -0.28505000472068787
+        ]
+      ],
+      "crossings": {
+        "InstrumentConsole": [],
+        "LowerConsole": [],
+        "WindowSurrounds": []
+      }
+    },
+    "MissionTimer": {
+      "input": {
+        "path": "/private/tmp/lmkit-timers/Assets/Cockpit/Components/Timers/MissionTimer.usdz",
+        "sha256": "ef6eb8d8d54de5dc39b31f0f9f38a3151343dc8c73ede7762615c41613570bea",
+        "matrix_cabin_row_major": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.33500000834465027
+          ],
+          [
+            0.0,
+            0.9848077297210693,
+            0.1736481636762619,
+            1.7607048749923706
+          ],
+          [
+            0.0,
+            -0.1736481636762619,
+            0.9848077297210693,
+            -0.9084831476211548
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "meshes": 65,
+        "new": true,
+        "aabb_cabin_m": [
+          [
+            -0.4000000059604645,
+            1.744080901145935,
+            -0.924295961856842
+          ],
+          [
+            -0.27000001072883606,
+            1.7768959999084473,
+            -0.9012317657470703
+          ]
+        ]
+      },
+      "actual_bounds": [
+        [
+          -0.4000000059604645,
+          1.744080901145935,
+          -0.924295961856842
+        ],
+        [
+          -0.27000001072883606,
+          1.7768958806991577,
+          -0.9012317657470703
+        ]
+      ],
+      "crossings": {
+        "InstrumentConsole": [
+          {
+            "a": "/InstrumentConsole/Faces/Panel1/Panel1SkinLeft",
+            "b": "/MissionTimer/MissionTimer_Fixed/MissionTimer_Housing",
+            "triangle_pairs": 16,
+            "aabb_overlap_m": [
+              0.02800002694129944,
+              0.031164169311523438,
+              0.019807934761047363
+            ],
+            "intersection_min": [
+              -0.3930000066757202,
+              1.7443413734436035,
+              -0.9228187203407288
+            ],
+            "intersection_max": [
+              -0.3649999797344208,
+              1.7735954523086548,
+              -0.9138436913490295
+            ]
+          },
+          {
+            "a": "/InstrumentConsole/Faces/Panel1/Panel1SkinUpper",
+            "b": "/MissionTimer/MissionTimer_Fixed/MissionTimer_Housing",
+            "triangle_pairs": 20,
+            "aabb_overlap_m": [
+              0.08799996972084045,
+              0.031164169311523438,
+              0.019807934761047363
+            ],
+            "intersection_min": [
+              -0.3649999797344208,
+              1.7443413734436035,
+              -0.9228187203407288
+            ],
+            "intersection_max": [
+              -0.2770000100135803,
+              1.7735954523086548,
+              -0.9138436913490295
+            ]
+          }
+        ],
+        "LowerConsole": [],
+        "WindowSurrounds": [
+          {
+            "a": "/WindowSurrounds/CDR/CDR_InboardCheek",
+            "b": "/MissionTimer/MissionTimer_Fixed/MissionTimer_Housing",
+            "triangle_pairs": 8,
+            "aabb_overlap_m": [
+              0.028265655040740967,
+              0.031164169311523438,
+              0.019807934761047363
+            ],
+            "intersection_min": [
+              -0.3908604681491852,
+              1.744080901145935,
+              -0.924295961856842
+            ],
+            "intersection_max": [
+              -0.3858484625816345,
+              1.7752450704574585,
+              -0.9044880270957947
+            ]
+          },
+          {
+            "a": "/WindowSurrounds/CDR/CDR_InboardCheek",
+            "b": "/MissionTimer/MissionTimer_Fixed/MissionTimer_MountingFace",
+            "triangle_pairs": 8,
+            "aabb_overlap_m": [
+              0.03526565432548523,
+              0.03203475475311279,
+              0.008511126041412354
+            ],
+            "intersection_min": [
+              -0.3911629021167755,
+              1.744861125946045,
+              -0.9117538928985596
+            ],
+            "intersection_max": [
+              -0.3882453739643097,
+              1.7768958806991577,
+              -0.9032427668571472
+            ]
+          },
+          {
+            "a": "/WindowSurrounds/CDR/CDR_InboardCheek",
+            "b": "/MissionTimer/MissionTimer_Fixed/MissionTimer_ReadoutBacking",
+            "triangle_pairs": 8,
+            "aabb_overlap_m": [
+              0.029265642166137695,
+              0.016915321350097656,
+              0.003936827182769775
+            ],
+            "intersection_min": [
+              -0.3908805847167969,
+              1.7517833709716797,
+              -0.9073234796524048
+            ],
+            "intersection_max": [
+              -0.38944512605667114,
+              1.7686986923217773,
+              -0.903386652469635
+            ]
+          },
+          {
+            "a": "/WindowSurrounds/CDR/CDR_InboardCheek",
+            "b": "/MissionTimer/MissionTimer_Lens/MissionTimer_LensMesh",
+            "triangle_pairs": 8,
+            "aabb_overlap_m": [
+              0.029765665531158447,
+              0.017830729484558105,
+              0.0037165284156799316
+            ],
+            "intersection_min": [
+              -0.3913220465183258,
+              1.7517250776290894,
+              -0.9049482941627502
+            ],
+            "intersection_max": [
+              -0.3898906111717224,
+              1.7695558071136475,
+              -0.9012317657470703
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

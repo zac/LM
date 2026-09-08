@@ -21,6 +21,9 @@ COMPONENTS = {
     "Timers": ("MissionTimer.usdz", "EventTimer.usdz", "MissionTimerControls.usdz", "EventTimerControls.usdz", "interface.json"),
     "EngineControls": ("EngineButtons.usdz", "LunarContact.usdz", "interface.json"),
     "PropulsionInstruments": ("PropulsionInstruments.usdz", "interface.json"),
+    "InstrumentConsole": ("InstrumentConsole.usdz", "interface.json"),
+    "LowerConsole": ("LowerConsole.usdz", "interface.json"),
+    "WindowSurrounds": ("WindowSurrounds.usdz", "interface.json"),
     "CautionWarning": ("CautionWarning.usdz", "interface.json"),
 }
 
