@@ -20,7 +20,7 @@ Housing depth, rear details, bevels, fastener sizes, display subdivision and typ
 
 ## Delivered revision
 
-- Exact component commit: COMPONENT_COMMIT_PENDING (filled in a following handoff-only commit, since a commit cannot contain its own hash).
+- Exact component commit: `85c072502a087aadf97c118e5de8bad9a2b6ba5d`. The following handoff-only commit records this immutable asset revision; no asset changes in that follow-up.
 - Blender: 5.2.1 LTS, build 9e2066aef7ef; no add-ons. Native smoke check: Apple Swift 6.3.3, macOS RealityKit.
 - Editable source: `DSKY.blend`; reproducible builder: `build.py`; USD coordinate bake/package: `usd_pipeline.py`.
 - Neutral exports: `DSKY.usda`, `DSKY.usdc`, `DSKY.usdz`. Lighting exports: `DSKY-LightingPreview.usda`, `.usdc`, `.usdz` (STATIC lamp-test lookdev, never live output).
@@ -58,6 +58,7 @@ Blender requires host execution on this machine: sandboxed startup crashed; the 
 - Source complexity: 70,135 triangles, 372 meshes, 10 used neutral materials, zero textures. Extra lookdev material states are separate. No scene budget was specified; integration should profile draw calls before optimizing.
 - Native macOS RealityKit load **passed**: all 19 direct keys, positions, required parents and scale (`native-validation.json`, reproducible `validate_native.swift`). This is not an app build or on-device interaction check.
 - Final front, oblique, key-detail and lit images visually inspected. Corrected thin-fastener degenerate bevels, lower-register bezel occlusion and overexposed preview lighting before final acceptance. No measured camera match or photometric calibration claimed.
+- LFS verification: all seven Blender/USD asset files contain real local asset bytes; each staged pointer OID matches its local SHA-256. Scoped `.gitattributes` adds USDC coverage; existing root rules cover Blender/USDA/USDZ.
 - OpenUSD compliance: zero errors, failed checks or warnings for both packages. Reimport preserved key/face parent paths and materials. Native shader visual appearance in RCP remains untested.
 - Reality Composer Pro GUI, visionOS app, gaze/hover/pinch, PRO runtime behavior, frame timing and Vision Pro hardware: **not tested**; coordinator-owned gates.
 - Review wall time per image (seconds): front 0.215, oblique 0.094, key-detail 0.091, lighting-preview 0.401. Peak memory not measured. Machine zacbookpro.local; no heavy render/bake.
