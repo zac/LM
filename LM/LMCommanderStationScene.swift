@@ -131,6 +131,13 @@ final class LMCommanderStationScene {
     private var fdaiBall: Entity?
     private var importedFDAI: LMImportedFDAI?
     private(set) var importedACA: LMImportedACA?
+    private(set) var importedAltitudeRate: LMImportedAltitudeRate?
+    private(set) var importedCrossPointer: LMImportedCrossPointer?
+    private(set) var importedAttitudeMode: LMImportedDescentControl?
+    private(set) var importedDescentRate: LMImportedDescentControl?
+    private(set) var staticOverlays: [String: Entity] = [:]
+    private var lastAttitudeHold = false
+    private var lastRODPosition = PoweredDescentSession.RODSwitchPosition.neutral
     private var retiredCommanderEntryAnchors = [AnchorEntity]()
     private var lastVehicleState: LMVehicleStateSnapshot?
     private var dskyKeyEntitiesByRawValue = [Int: Entity]()
@@ -644,7 +651,110 @@ final class LMCommanderStationScene {
     @discardableResult
     func loadArtistCabinIfAvailable(arguments: [String] = ProcessInfo.processInfo.arguments) async throws -> Bool {
         guard !arguments.contains("--procedural-cockpit") else { return false }
-        return installCommanderAssembly()
+        let installed = installCommanderAssembly()
+        if installed {
+            _ = installAltitudeRate()
+            _ = installCrossPointer()
+            _ = installDescentControl(.attitudeMode)
+            _ = installDescentControl(.descentRate)
+            if !arguments.contains("--no-interior-details") {
+                _ = installStaticOverlay("InteriorDetails", assetURL: LMKitAssets.interiorDetailsURL,
+                    interfaceURL: LMKitAssets.interiorDetailsInterfaceURL, schema: "lmkit.interior-details.v1")
+                _ = installStaticOverlay("BreakerBanks", assetURL: LMKitAssets.breakerBanksURL,
+                    interfaceURL: LMKitAssets.breakerBanksInterfaceURL, schema: "lmkit.breaker-banks.interface.v1")
+            }
+        }
+        return installed
+    }
+
+    @discardableResult
+    func installAltitudeRate(loader: @MainActor () throws -> LMImportedAltitudeRate = { try LMImportedAltitudeRate.load() }) -> Bool {
+        guard importedAltitudeRate == nil else { return true }
+        guard let assembly = commanderAssembly else { return false }
+        do {
+            let instrument = try loader()
+            try assembly.installPartialOccupant(slotID: instrument.contract.slot, componentID: "AltitudeRate", pose: instrument.slotPose) { instrument.root }
+            importedAltitudeRate = instrument
+            return true
+        } catch {
+            logger.error("Altitude/rate unavailable; blank retained: \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    @discardableResult
+    func installCrossPointer(loader: @MainActor () throws -> LMImportedCrossPointer = { try LMImportedCrossPointer.load() }) -> Bool {
+        guard importedCrossPointer == nil else { return true }
+        guard let assembly = commanderAssembly else { return false }
+        do {
+            let instrument = try loader()
+            try assembly.installPartialOccupant(slotID: instrument.contract.mounting.slot_id, componentID: "CrossPointer") { instrument.root }
+            importedCrossPointer = instrument
+            return true
+        } catch {
+            logger.error("Cross-pointer unavailable; blank retained: \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    @discardableResult
+    func installDescentControl(_ kind: LMImportedDescentControl.Kind,
+        loader: (@MainActor () throws -> LMImportedDescentControl)? = nil) -> Bool {
+        if kind == .attitudeMode ? importedAttitudeMode != nil : importedDescentRate != nil { return true }
+        guard let assembly = commanderAssembly else { return false }
+        do {
+            let control = try loader?() ?? LMImportedDescentControl.load(kind)
+            guard control.kind == kind else { throw LMCommanderStationAssembly.AssemblyError.invalidContract("Control kind") }
+            try assembly.installPartialOccupant(slotID: control.definition.slot, componentID: kind.rawValue) { control.root }
+            if kind == .attitudeMode {
+                importedAttitudeMode = control
+                attitudeModeSwitch.isEnabled = false
+                setAttitudeHoldVisual(lastAttitudeHold)
+            } else {
+                importedDescentRate = control
+                rodSwitch.isEnabled = false
+                for node in LMCommanderStationAssembly.descendants(cabinFrame)
+                    where node.name == "Panel 5 DES RATE legend" || node.name == "Panel 5 DES RATE switch plate" { node.isEnabled = false }
+                setRODVisual(lastRODPosition)
+            }
+            return true
+        } catch {
+            logger.error("Descent control unavailable; functional fallback retained: \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    @discardableResult
+    func installStaticOverlay(_ name: String, assetURL: URL, interfaceURL: URL, schema: String,
+        loader: (@MainActor () throws -> LMCockpitStaticOverlay)? = nil) -> Bool {
+        guard staticOverlays[name] == nil else { return true }
+        guard let assembly = commanderAssembly else { return false }
+        do {
+            let overlay = try loader?() ?? LMCockpitStaticOverlay(asset: Entity.load(contentsOf: assetURL),
+                interfaceData: Data(contentsOf: interfaceURL), name: name, schema: schema)
+            try assembly.installStaticOverlay(overlay)
+            staticOverlays[name] = overlay.root
+            return true
+        } catch {
+            logger.error("Optional detail unavailable: \(name, privacy: .public): \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    func applyLandingReadouts(_ state: LMVehicleStateSnapshot?, program: Int?) {
+        importedAltitudeRate?.apply(LMAltitudeRateReading(state: state))
+        importedCrossPointer?.apply(LMCrossPointerReading(state: state, program: program))
+    }
+
+    var rodGestureCoordinateSpace: Entity { importedDescentRate?.root ?? cabinFrame }
+    var rodGestureActuationAxis: SIMD3<Float> { importedDescentRate == nil ? LMCommanderStationGeometry.rodActuationAxis : [0, 1, 0] }
+
+    func isRODEntity(_ entity: Entity) -> Bool { isDescendant(entity, of: importedDescentRate?.target ?? rodSwitch) }
+    func isAttitudeModeEntity(_ entity: Entity) -> Bool { isDescendant(entity, of: importedAttitudeMode?.target ?? attitudeModeSwitch) }
+    private func isDescendant(_ entity: Entity, of root: Entity) -> Bool {
+        var node: Entity? = entity
+        while let current = node { if current === root { return true }; node = current.parent }
+        return false
     }
 
     @discardableResult
@@ -742,6 +852,12 @@ final class LMCommanderStationScene {
     }
 
     func setRODVisual(_ position: PoweredDescentSession.RODSwitchPosition) {
+        lastRODPosition = position
+        if let importedDescentRate {
+            let value: String = switch position { case .descendPlus: "descendPlus"; case .neutral: "center"; case .descendMinus: "descendMinus" }
+            importedDescentRate.apply(runtimeValue: value)
+            return
+        }
         rodSwitch.position = rodNeutralPosition
         rodSwitch.orientation = LMCommanderStationGeometry.rodNeutralOrientation * simd_quatf(
             angle: controlMapper.visualRODDeflectionRadians(for: position),
@@ -750,6 +866,11 @@ final class LMCommanderStationScene {
     }
 
     func setAttitudeHoldVisual(_ isAttitudeHold: Bool) {
+        lastAttitudeHold = isAttitudeHold
+        if let importedAttitudeMode {
+            importedAttitudeMode.apply(runtimeValue: isAttitudeHold ? "attitudeHold" : "automatic")
+            return
+        }
         attitudeModeSwitch.position = attitudeModeAutomaticPosition
             + SIMD3(0, isAttitudeHold ? 0.028 : 0, 0)
         attitudeModeSwitch.orientation = LMCommanderStationGeometry.attitudeHoldOrientation * simd_quatf(
@@ -1841,6 +1962,7 @@ final class LMCommanderStationScene {
         rodSwitch.position = rodNeutralPosition
         addDescentRateSwitchGeometry(to: rodSwitch, material: switchMaterial)
         rodSwitch.components.set(InputTargetComponent())
+        rodSwitch.components.set(LMDescentRateInteractionTarget())
         rodSwitch.components.set(HoverEffectComponent())
         rodSwitch.components.set(CollisionComponent(shapes: [
             .generateBox(size: SIMD3(0.075, 0.12, 0.10))
@@ -1857,6 +1979,7 @@ final class LMCommanderStationScene {
         attitudeModeSwitch.position = attitudeModeAutomaticPosition
         attitudeModeSwitch.orientation = LMCommanderStationGeometry.attitudeHoldOrientation
         attitudeModeSwitch.components.set(InputTargetComponent())
+        attitudeModeSwitch.components.set(LMAttitudeModeInteractionTarget())
         attitudeModeSwitch.components.set(HoverEffectComponent())
         attitudeModeSwitch.components.set(CollisionComponent(shapes: [
             .generateBox(size: SIMD3(0.16, 0.20, 0.12))

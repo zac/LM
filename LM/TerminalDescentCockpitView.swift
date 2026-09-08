@@ -17,6 +17,7 @@ struct TerminalDescentCockpitView: View {
     @State private var cockpitVisible = false
     @State private var acaGestureOrigin: SIMD3<Float>?
     @State private var rodGestureOrigin: SIMD3<Float>?
+    @State private var rodInteractionGeneration: UUID?
     @State private var showsFallbackControls = false
     @State private var showsValidationChecklist = false
     #if DEBUG
@@ -154,6 +155,10 @@ struct TerminalDescentCockpitView: View {
                             .font(.caption2)
                         Text(crewControlHint)
                             .font(.caption2)
+                        if presentation.trainingEnabled && (station.importedAltitudeRate != nil || station.importedCrossPointer != nil) {
+                            Text("Simulated altitude/rate · later fly-to velocity aid")
+                                .font(.caption2)
+                        }
                     }
                     .foregroundStyle(.secondary)
                 }
@@ -241,6 +246,8 @@ struct TerminalDescentCockpitView: View {
             do {
                 try station.loadExteriorLunarModule()
                 let artistCabinLoaded = try await station.loadArtistCabinIfAvailable()
+                // A paused session may never emit another snapshot after installation.
+                applySceneState()
                 if let coordinate = appModel.cockpitCoordinate {
                     terrainStatus = "Loading selected lunar site…"
                     try await station.loadGlobalTerrain(at: coordinate, session: appModel.session,
@@ -288,12 +295,15 @@ struct TerminalDescentCockpitView: View {
         }
         .onChange(of: rodGestureIsActive) { wasActive, isActive in
             if wasActive && !isActive {
-                releaseRODControl()
+                releaseRODControl(endingGesture: true)
             }
         }
         .onAppear { cockpitVisible = true }
         .onChange(of: appModel.session.isRunning) { _, running in
-            if !running { releaseACAControl() }
+            if !running { releaseSpatialControls() }
+        }
+        .onChange(of: appModel.session.isPaused) { _, paused in
+            if paused { releaseSpatialControls() }
         }
         .onDisappear {
             cockpitVisible = false
@@ -337,38 +347,34 @@ struct TerminalDescentCockpitView: View {
 
     private var rodGesture: some Gesture {
         DragGesture(minimumDistance: 0)
-            .targetedToEntity(station.rodSwitch)
-            .updating($rodGestureIsActive) { _, isActive, _ in
-                isActive = true
-            }
+            .targetedToEntity(where: .has(LMDescentRateInteractionTarget.self))
+            .updating($rodGestureIsActive) { _, isActive, _ in isActive = true }
             .onChanged { value in
-                let sceneLocation = value.convert(value.location3D, from: .local, to: .scene)
+                guard cockpitVisible, scenePhase == .active, rodGestureIsActive,
+                      station.isRODEntity(value.entity) else { return }
+                let location = value.convert(value.location3D, from: .local, to: station.rodGestureCoordinateSpace)
                 if rodGestureOrigin == nil {
-                    rodGestureOrigin = sceneLocation
+                    rodGestureOrigin = location
+                    rodInteractionGeneration = appModel.session.beginRODInteraction()
                 }
-                guard let origin = rodGestureOrigin else { return }
-                let position = controlMapper.rodPosition(
-                    for: sceneLocation - origin,
-                    along: LMCommanderStationGeometry.rodActuationAxis
-                )
+                guard let origin = rodGestureOrigin, let generation = rodInteractionGeneration else { return }
+                let position = controlMapper.rodPosition(for: location - origin, along: station.rodGestureActuationAxis)
+                guard appModel.session.updateRODInteraction(position, generation: generation) else { return }
+                station.setRODVisual(appModel.session.rodSwitchPosition)
                 recordValidation { $0.observeDirectROD(position) }
-                applyROD(position)
             }
-            .onEnded { _ in
-                releaseRODControl()
-            }
+            .onEnded { _ in releaseRODControl(endingGesture: true) }
     }
 
     private var attitudeModeGesture: some Gesture {
         TapGesture()
-            .targetedToEntity(station.attitudeModeSwitch)
-            .onEnded { _ in
-                let selectsP66 = appModel.session.attitudeMode != .attitudeHold
-                appModel.session.attitudeMode = selectsP66 ? .attitudeHold : .automatic
-                station.setAttitudeHoldVisual(selectsP66)
-                if selectsP66 {
-                    recordValidation { $0.observeDirectAttitudeHold() }
-                }
+            .targetedToEntity(where: .has(LMAttitudeModeInteractionTarget.self))
+            .onEnded { value in
+                guard cockpitVisible, scenePhase == .active, station.isAttitudeModeEntity(value.entity) else { return }
+                let selectsHold = appModel.session.attitudeMode != .attitudeHold
+                guard appModel.session.selectPhysicalAttitudeMode(selectsHold ? .attitudeHold : .automatic) else { return }
+                station.setAttitudeHoldVisual(selectsHold)
+                if selectsHold { recordValidation { $0.observeDirectAttitudeHold() } }
             }
     }
 
@@ -397,6 +403,7 @@ struct TerminalDescentCockpitView: View {
 
     private func applySceneState() {
         station.apply(appModel.session.vehicleState)
+        station.applyLandingReadouts(appModel.session.vehicleState, program: appModel.session.programNumber)
         station.applyDSKY(appModel.session.dsky)
         station.setACAVisual(appModel.session.aca)
         #if DEBUG
@@ -416,12 +423,6 @@ struct TerminalDescentCockpitView: View {
         )
     }
 
-    private func applyROD(_ position: PoweredDescentSession.RODSwitchPosition) {
-        appModel.session.setROD(.descendPlus, held: position == .descendPlus)
-        appModel.session.setROD(.descendMinus, held: position == .descendMinus)
-        station.setRODVisual(position)
-    }
-
     private func releaseSpatialControls() {
         releaseACAControl()
         releaseRODControl()
@@ -433,9 +434,15 @@ struct TerminalDescentCockpitView: View {
         recordValidation { $0.observeDirectACARelease() }
     }
 
-    private func releaseRODControl() {
-        rodGestureOrigin = nil
-        applyROD(.neutral)
+    private func releaseRODControl(endingGesture: Bool = false) {
+        // Keep a stale gesture's origin/token until its actual end; pause/resume
+        // must not let a still-held hand reacquire a fresh generation.
+        if endingGesture {
+            rodGestureOrigin = nil
+            rodInteractionGeneration = nil
+        }
+        appModel.session.releaseRODInteraction()
+        station.setRODVisual(.neutral)
         recordValidation { $0.observeDirectROD(.neutral) }
     }
 

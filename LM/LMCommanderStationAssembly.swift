@@ -86,6 +86,7 @@ final class LMCommanderStationAssembly {
     private let planningLabels: Entity
     private var slots: [String: Inventory.Slot] = [:]
     private var installedSlots = Set<String>()
+    private var installedPartialComponents = Set<String>()
 
     static func load() throws -> LMCommanderStationAssembly {
         try LMCommanderStationAssembly(asset: Entity.load(contentsOf: LMKitAssets.cabinURL),
@@ -249,6 +250,64 @@ final class LMCommanderStationAssembly {
         }
         mount.addChild(occupant)
         placeholder.isEnabled = false
+        installedSlots.insert(slotID)
+    }
+
+    /// Validate every mapped datum before publishing a multi-slot overlay or hiding blanks.
+    func installStaticOverlay(_ overlay: LMCockpitStaticOverlay) throws {
+        guard overlay.root.parent == nil, Self.near(overlay.root.transform.matrix, matrix_identity_float4x4),
+              Set(overlay.slots.map(\.id)).count == overlay.slots.count else {
+            throw AssemblyError.invalidContract("Static overlay root or duplicate slots")
+        }
+        var placeholders: [Entity] = []
+        for mapped in overlay.slots {
+            guard let slot = slots[mapped.id], slot.replacement_allowed, mapped.replacement_allowed,
+                  slot.external_occupant == nil, !installedSlots.contains(slot.id),
+                  slot.default_placeholder_node == mapped.default_placeholder_node else {
+                throw AssemblyError.invalidContract("Static overlay slot ownership")
+            }
+            let live = try Self.path(slot.node, in: panelInventory)
+            let authored = try Self.path(mapped.overlay_path, in: overlay.root)
+            let expected = try mapped.panel_pose.transform().matrix * mapped.slot_pose.transform().matrix
+            guard let livePanel = live.parent, let authoredPanel = authored.parent,
+                  Self.near(livePanel.transformMatrix(relativeTo: panelInventory), try mapped.panel_pose.transform().matrix),
+                  Self.near(authoredPanel.transformMatrix(relativeTo: overlay.root), try mapped.panel_pose.transform().matrix),
+                  Self.near(live.transform.matrix, try mapped.slot_pose.transform().matrix),
+                  Self.near(authored.transform.matrix, try mapped.slot_pose.transform().matrix),
+                  Self.near(live.transformMatrix(relativeTo: panelInventory), expected),
+                  Self.near(authored.transformMatrix(relativeTo: overlay.root), expected) else {
+                throw AssemblyError.invalidContract("Static overlay mapped datum: \(slot.id)")
+            }
+            placeholders.append(try Self.path(slot.default_placeholder_node, in: panelInventory))
+        }
+        root.addChild(overlay.root)
+        for placeholder in placeholders { placeholder.isEnabled = false }
+        installedSlots.formUnion(overlay.slots.map(\.id))
+    }
+
+    /// Partial equipment leaves the original neutral region backing in place.
+    /// A failed optional component cannot remove a peer or publish an empty slot.
+    func installPartialOccupant(slotID: String, componentID: String,
+                                pose: Transform = Transform(),
+                                loadAndValidate: @MainActor () throws -> Entity) throws {
+        guard let slot = slots[slotID], slot.replacement_allowed, slot.external_occupant == nil,
+              !installedSlots.contains(slotID), !installedPartialComponents.contains(componentID),
+              pose.translation.x.isFinite, pose.translation.y.isFinite, pose.translation.z.isFinite,
+              pose.rotation.vector.x.isFinite, pose.rotation.vector.y.isFinite,
+              pose.rotation.vector.z.isFinite, pose.rotation.vector.w.isFinite,
+              abs(simd_length(pose.rotation.vector) - 1) < 0.00001,
+              simd_distance(pose.scale, SIMD3<Float>(repeating: 1)) < 0.00001 else {
+            throw AssemblyError.invalidContract("Unavailable partial slot: \(slotID)")
+        }
+        let mount = try Self.path(slot.node, in: panelInventory)
+        let occupant = try loadAndValidate()
+        guard occupant.parent == nil, Self.near(occupant.transform.matrix, matrix_identity_float4x4),
+              Self.descendants(occupant).contains(where: { $0.components[ModelComponent.self] != nil }) else {
+            throw AssemblyError.invalidContract("Non-neutral or empty partial occupant")
+        }
+        occupant.transform = pose
+        mount.addChild(occupant)
+        installedPartialComponents.insert(componentID)
         installedSlots.insert(slotID)
     }
 

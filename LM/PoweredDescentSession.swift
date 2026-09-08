@@ -85,6 +85,36 @@ final class PoweredDescentSession {
     var aca = LMACANormalizedInput.neutral
     private var acaInteractionGeneration = UUID()
     private(set) var rodSwitchPosition = RODSwitchPosition.neutral
+    private var rodInteractionGeneration = UUID()
+
+    /// Physical momentary input uses a generation so a late drag sample cannot
+    /// reassert DES RATE after pause, release, stop, or scene deactivation.
+    func beginRODInteraction() -> UUID? {
+        guard isRunning, !isPaused, isSceneActive, replayFrame == nil else { return nil }
+        return rodInteractionGeneration
+    }
+
+    @discardableResult
+    func updateRODInteraction(_ position: RODSwitchPosition, generation: UUID) -> Bool {
+        guard generation == rodInteractionGeneration, isRunning, !isPaused,
+              isSceneActive, replayFrame == nil else { return false }
+        setROD(.descendPlus, held: position == .descendPlus)
+        setROD(.descendMinus, held: position == .descendMinus)
+        return true
+    }
+
+    func releaseRODInteraction() {
+        rodInteractionGeneration = UUID()
+        rodSwitchPosition = .neutral
+    }
+
+    @discardableResult
+    func selectPhysicalAttitudeMode(_ mode: LMPoweredDescentAttitudeMode) -> Bool {
+        guard isRunning, !isPaused, isSceneActive, replayFrame == nil else { return false }
+        attitudeMode = mode
+        return true
+    }
+
 
     let terrainSimulationGate = LMTerrainSimulationGate()
     @ObservationIgnored var terrainReady: (() -> Bool)?
@@ -560,7 +590,7 @@ final class PoweredDescentSession {
         rhcYaw = 0
         rhcRoll = 0
         releaseACA()
-        rodSwitchPosition = .neutral
+        releaseRODInteraction()
     }
 
     func setROD(_ position: RODSwitchPosition, held: Bool) {
