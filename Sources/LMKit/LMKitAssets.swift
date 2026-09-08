@@ -16,4 +16,27 @@ public enum LMKitAssets {
     public static var fdaiURL: URL {
         Bundle.module.url(forResource: "FDAI", withExtension: "usdz", subdirectory: "FDAI")!
     }
+    /// Generic control specimens. Mounting dimensions and per-panel semantics are provisional.
+    public enum ControlFamily: String, CaseIterable, Sendable {
+        case maintainedToggle = "MaintainedToggle"
+        case momentaryToggle = "MomentaryToggle"
+        case guardedSwitch = "GuardedSwitch"
+        case rotarySelector = "RotarySelector"
+        case circuitBreaker = "CircuitBreaker"
+        case talkback = "Talkback"
+    }
+    public static func controlURL(_ family: ControlFamily) -> URL {
+        Bundle.module.url(forResource: family.rawValue, withExtension: "usdz", subdirectory: "ControlLibrary")!
+    }
+    public static var controlInterfacesURL: URL {
+        Bundle.module.url(forResource: "components", withExtension: "json", subdirectory: "ControlLibrary")!
+    }
+    /// Optional open structural skeleton; proposed panel placement is not runtime-approved.
+    public static var cabinSkeletonURL: URL {
+        Bundle.module.url(forResource: "Cabin", withExtension: "usdz", subdirectory: "Cabin")!
+    }
+    /// Positions and rotations are Cabin-root-relative, even for nested instrument nodes.
+    public static var cabinMountsURL: URL {
+        Bundle.module.url(forResource: "mounts", withExtension: "json", subdirectory: "Cabin")!
+    }
 }

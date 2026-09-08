@@ -4,6 +4,10 @@ Reusable lunar-module models and independently addressable cockpit components fo
 
 ## Initial components
 
+- **Control library**: six reusable neutral control specimens from `3963737`: maintained/momentary toggles, guarded switch, rotary selector, circuit breaker and talkback. Load with `LMKitAssets.controlURL(_:)`; metadata is at `controlInterfacesURL`. Every mounting dimension is provisional and the generic hinged guard is not verified flown hardware. Detents, returns and indication semantics require per-panel application bindings. Refresh accepted exports with `Tools/sync_control_library.py`.
+- **Cabin skeleton**: optional open structural resource from `8956702`, available through `LMKitAssets.cabinSkeletonURL` and `cabinMountsURL`. Panel positions, shields, clearances and 20 mm pane cavity are provisional. It does not replace the running cockpit. **Manifest mount positions and rotations are relative to the Cabin root, including nested DSKY/FDAI nodes; they are not parent-local transforms.** Resolve the named nodes and convert coordinate spaces deliberately. Refresh with `Tools/sync_cabin.py`.
+
+
 - **FDAI**: standalone component from `c4c565f`, available through `LMKitAssets.fdaiURL`. Eight independent moving groups; all physical dimensions and pivots remain provisional. New ball UV mapping needs an explicit runtime adapter; do not blindly reuse the legacy texture-alignment quaternion. Live state/calibration and Vision Pro appearance remain open. Use `Tools/sync_fdai.py` after accepted source export changes. See `Provenance/fdai-acceptance.json` and the component handoff.
 
 - **DSKY**: imported from `zac/LM` commit `c655fe5` (full SHA in `Provenance/imports.json`). Source Blender file, reproducible scripts, evidence, preview exports, validation and handoff are under `Assets/Cockpit/Components/DSKY/`. Only the neutral `DSKY.usdz` ships as a runtime resource. The original worker reported 276 checks and native loading; this package separately tests its bundled asset. Live AGC, hover/pinch bindings and Vision Pro verification remain unimplemented. Rear housing and mounting aperture remain provisional; do not derive a panel cutout from that box.
@@ -22,3 +26,7 @@ Run `swift test` on macOS. Tests load the actual packaged assets in RealityKit a
 Workers own one component directory and a separate branch/worktree. Commit source assets through LFS, scripts, small review images, evidence and HANDOFF.md. Deliver an exact SHA to the coordinator; only the coordinator accepts component changes, refreshes shipping resources, edits shared contracts or builds the master assembly. One heavy render per machine initially. Keep disposable renders and scratch files ignored.
 
 Keep imports and new work distinguishable. Record source revision, dimensions, axes, pivots, moving parts, materials, bounds, packaging hashes, validation actually performed and unresolved issues. Preserve names consumed by LM until a coordinated replacement updates and verifies its bindings.
+
+## Current acceptance evidence
+
+Seven package tests pass after the control/cabin imports. Native RealityKit checks load all six controls, verify independent moving nodes, and validate the cabin root, full mount paths/positions/rotations, optical pane origins/right/up/normal basis, crew eye and separate LPD layers. Shipping asset bytes match accepted authoring exports. This establishes packaged resource compatibility, not historical fit, final panel placement, live simulation behavior or Vision Pro acceptance. Per-delivery acceptance records are under `Provenance/`.
