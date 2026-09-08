@@ -1,0 +1,12 @@
+{
+  "cases" : 21,
+  "checks" : 1151,
+  "headset" : "NOT TESTED",
+  "input_cases" : "altitude zero\/interior\/piecewise\/boundary\/negative\/overrange\/NaN; rate positive\/up negative\/down\/zero\/piecewise\/endpoints\/overrange\/NaN",
+  "max_row_half_height_m" : 0.0020500000100582838,
+  "native_load" : "PASS",
+  "native_render" : "not covered by this test",
+  "no_simulation_signal_fidelity_claim" : true,
+  "parent_poses_and_shutters" : "PASS",
+  "platform" : "macOS RealityKit"
+}

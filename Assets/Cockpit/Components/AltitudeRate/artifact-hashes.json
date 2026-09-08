@@ -1,0 +1,154 @@
+{
+  "AltitudeRate.blend": {
+    "bytes": 398924,
+    "sha256": "b02b38bfc8bb10a152f1598f163f4361481a980a70280ac21ab77c5170f6f96a"
+  },
+  "AltitudeRate.usda": {
+    "bytes": 1309767,
+    "sha256": "4d6080b1b9c1eb3f15c70ac60e9c98d5afb3143781521c9363969a0627408e78"
+  },
+  "AltitudeRate.usdc": {
+    "bytes": 177763,
+    "sha256": "84a0e6d104415fe1c0265ea02bb7bfcf46689389a3843b7f93d935562edd0aa1"
+  },
+  "AltitudeRate.usdz": {
+    "bytes": 177929,
+    "sha256": "047bd435c51ecb1920aedc8f8b1cefbc9ea9056ac1139503a81abe29b42254c1"
+  },
+  "EVIDENCE.md": {
+    "bytes": 4372,
+    "sha256": "f1269586f28fbffd94898c82de4579dd37fd03a33327e23d2da9c450cebfc699"
+  },
+  "HANDOFF.md": {
+    "bytes": 6315,
+    "sha256": "6d777e01d40ccda1d1f711aedc536a3caf0e025d3393340440b816b23de6dc9c"
+  },
+  "build.py": {
+    "bytes": 10143,
+    "sha256": "f656737cb1ffa4eb67a042de12e9cf685052ae9f4e6b166feb137b569ed54655"
+  },
+  "evidence/lm-tapemeter-simulator.jpg": {
+    "bytes": 73008,
+    "sha256": "74798dcb42826ab3e1162dea0e7c56a86f6dded19740219b2e6e111cc9b86ba7"
+  },
+  "evidence/panel1-handbook.png": {
+    "bytes": 231340,
+    "sha256": "069531c72bb0e53bdf8f7c2c1216c346584e7be5242b8277992045c8a8df94c0"
+  },
+  "evidence/sources.json": {
+    "bytes": 2341,
+    "sha256": "c6c57cfaa4399fb2aae97a8c68169e7c679ae9ac4b1ddfa33af5d62ef749f7d6"
+  },
+  "evidence/tnD6722-p18.png": {
+    "bytes": 462937,
+    "sha256": "03618fe7375ffb5ca50a21dacf7c6889e110fa6e701e203515de07e69d0040c6"
+  },
+  "evidence/tnD6722-p20.png": {
+    "bytes": 434458,
+    "sha256": "b165fff63abbe9174551f76267d4bfc7eb0b19ee98c72bf8dee90a448f564a0f"
+  },
+  "evidence/tnD6722-page-20.png": {
+    "bytes": 434458,
+    "sha256": "b165fff63abbe9174551f76267d4bfc7eb0b19ee98c72bf8dee90a448f564a0f"
+  },
+  "evidence/tnD6722-page-21.png": {
+    "bytes": 421674,
+    "sha256": "58757763ba0e39ff093bb869ba2eeaa1e3886c722b97a325d927a75ff3d11981"
+  },
+  "evidence/tnD6722.pdf": {
+    "bytes": 666829,
+    "sha256": "9b79e66083a17824b41622c1d7f361c218128a9b9dbbe86b10b1bed4277ef054"
+  },
+  "evidence/tnD6722.txt": {
+    "bytes": 98127,
+    "sha256": "2adcee5febe688e6a4d02d1070d2a4f3beff72f9cd7be30caeb77a623816fcc2"
+  },
+  "interface.json": {
+    "bytes": 95096,
+    "sha256": "3325743a54604abc6b41d3cd9bd285f3fb68a3f47b1150d8d1e9bc7b89fda7f2"
+  },
+  "mounting.json": {
+    "bytes": 2909,
+    "sha256": "4097a28fe553c1d478ebe53ad3bbda84855f39ae8c19b6d712b2b99535a12bcf"
+  },
+  "review.py": {
+    "bytes": 2558,
+    "sha256": "66d321418b36685c390a55e5007cdd6e8e9b12724758c810f121af9775a54c7a"
+  },
+  "review_fit.py": {
+    "bytes": 3156,
+    "sha256": "e98d2a9d2ab1788a35a66d2e2ee28f1f1b7678342b04bcc0d3b19c19697864ca"
+  },
+  "review_native.swift": {
+    "bytes": 2176,
+    "sha256": "71bd01213dd0e0e7b6ae435d76095d1c402bc1fb1d774260de4fd4fb3edcb49f"
+  },
+  "reviews/REVIEW.md": {
+    "bytes": 1732,
+    "sha256": "0fbcadd5f3c0f537db2fcf7e116c5f96d605d3ba9c4a080af6f3e98b09caee04"
+  },
+  "reviews/commander-eye-isolated.png": {
+    "bytes": 893452,
+    "sha256": "318f59b378cffcbdb592661c19a112f79d082860ffc848a395967be3ad3d53ec"
+  },
+  "reviews/descent-5000ft-minus50fps.png": {
+    "bytes": 1074732,
+    "sha256": "52fd071fac525b07580daf773cc9e043e5a017d7a75a4e8717ab15eab1b2e060"
+  },
+  "reviews/landing-100ft-minus5fps.png": {
+    "bytes": 1062751,
+    "sha256": "2cb188d702756a091800470810eb3ab60e1cc243a1a0a1e0b532dc1bb14a0de2"
+  },
+  "reviews/maximum-60000ft-minus700fps.png": {
+    "bytes": 1060988,
+    "sha256": "f5dc2416048cd63caf382ce25b9de10840434e2c2d6a6afed48f7435d2facd92"
+  },
+  "reviews/native-with-lens.png": {
+    "bytes": 77562,
+    "sha256": "d1140e19aa4f5149dce240b6e36f1d8cc0638a1cff802bcd21167b308bfdc656"
+  },
+  "reviews/native-without-lens.png": {
+    "bytes": 35133,
+    "sha256": "86e484f8fc59e70bf2e0199daee6569209c571c0c54cfc1d2d3c8bf2d4412cb0"
+  },
+  "reviews/neutral.png": {
+    "bytes": 1056977,
+    "sha256": "b4d4721a6d4c8f2702aaa94410c7e6b962aa1d16c1a7114ce9ff31df6aa25e57"
+  },
+  "reviews/panel1-crew-fit.png": {
+    "bytes": 1129537,
+    "sha256": "ea30c755a9d72fa27c943d57ec2604448d5314c851dcc481dc000a8e1bd4617f"
+  },
+  "reviews/panel1-front-fit.png": {
+    "bytes": 1339206,
+    "sha256": "aeb6d36cc7b774e7ebff7c9287092b852df7d18f96dc5e36805244eb1ed19f13"
+  },
+  "reviews/positive-rate-1000ft-plus10fps.png": {
+    "bytes": 1053560,
+    "sha256": "42b7ab3f235090fd7db4d33266befd87b977c6c0b53999768edbb2f8f868aaef"
+  },
+  "reviews/unavailable.png": {
+    "bytes": 1067664,
+    "sha256": "48c6fc73bc11135f8065f2a7de219e22ccec9e4370d17d43176afca4431531ff"
+  },
+  "validate.py": {
+    "bytes": 3431,
+    "sha256": "547838b13e13c13df8b4277acc125c2d1c793eb1d731b7bab2f221f5c9abeb49"
+  },
+  "validate_fit.py": {
+    "bytes": 2537,
+    "sha256": "fe7be9f2598f7a3144754cb50c0de84eb42811097617c66a3a4a527f3fb7e95c"
+  },
+  "validate_native.swift": {
+    "bytes": 4018,
+    "sha256": "0c309fc8c309a0dac013d964e50d556ddd45fb1d6097546a0e26a832d056ccdf"
+  },
+  "validation-native.json": {
+    "bytes": 484,
+    "sha256": "b232508ad70e1f1ad574268ab9c9b9bd6bae5b27a469c579d379ecbecc498ca9"
+  },
+  "validation.json": {
+    "bytes": 1039,
+    "sha256": "f6680bc04833d233f328ca496428ffbfade0eaa9a0af046f1eca253c266fa22a"
+  }
+}

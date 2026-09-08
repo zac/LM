@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "checks": 13143,
+  "meshes": 633,
+  "triangles": 11171,
+  "bounds_min": [
+    -0.04100000113248825,
+    -0.07249999791383743,
+    -0.015000000596046448
+  ],
+  "bounds_max": [
+    0.04100000113248825,
+    0.07249999791383743,
+    0.01140000019222498
+  ],
+  "usdz_compliance": "PASS",
+  "compliance_warnings": [],
+  "visibility": "all inherited; unused rows/shutters parked inside opaque housing",
+  "mesh_clip_margin_m": 0.0035,
+  "source_and_interface_hashes": {
+    "build.py": "f656737cb1ffa4eb67a042de12e9cf685052ae9f4e6b166feb137b569ed54655",
+    "AltitudeRate.usda": "4d6080b1b9c1eb3f15c70ac60e9c98d5afb3143781521c9363969a0627408e78",
+    "AltitudeRate.usdz": "047bd435c51ecb1920aedc8f8b1cefbc9ea9056ac1139503a81abe29b42254c1",
+    "AltitudeRate.blend": "b02b38bfc8bb10a152f1598f163f4361481a980a70280ac21ab77c5170f6f96a",
+    "AltitudeRate.usdc": "84a0e6d104415fe1c0265ea02bb7bfcf46689389a3843b7f93d935562edd0aa1",
+    "interface.json": "3325743a54604abc6b41d3cd9bd285f3fb68a3f47b1150d8d1e9bc7b89fda7f2"
+  }
+}
