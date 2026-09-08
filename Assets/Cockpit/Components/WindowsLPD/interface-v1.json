@@ -1,6 +1,6 @@
 {
   "schema": "lmkit.windows-lpd.interface.v1",
-  "status": "agreed forward opening with Cabin 2fafa5b; docking proposal pending",
+  "status": "forward and docking accepted by Cabin worker against 8dc1b6c; baseline optical dimensions remain provisional",
   "baseline": "09364460e8be570338f3d39a07067fe2bee0b044",
   "units": "meters",
   "axes": "+X right +Y overhead -Z forward",
@@ -113,7 +113,7 @@
     "up": [
       0,
       0,
-      -1
+      1
     ],
     "normal_toward_cabin": [
       0.4782608695652173,
@@ -130,7 +130,8 @@
     ],
     "frame_band_m": 0.025,
     "inner_curvature_radius_m": 1.1684,
-    "status": "TN D-7439 p9 nominal area/curvature; pose and axis assignment approximate; no docking reticle calibration"
+    "status": "TN D-7439 p9 nominal area/curvature; pose and axis assignment approximate; no docking reticle calibration",
+    "axis_correction": "8dc1b6c had reflection; local up now aft to preserve right-handed basis. Symmetric hole unchanged."
   },
   "migration": {
     "eye_delta_m": [
@@ -145,5 +146,24 @@
     ],
     "marking_changes": "thin warm etched visual approximation; add photo-supported 50deg crossbar; remove neon/digital duplicates",
     "optical_certification": false
+  },
+  "marking_layout": {
+    "id": "photo-inspired-visual-v1",
+    "angular_targeting_qualified": false,
+    "baseline_angular_targeting_qualified": false,
+    "degree_numbers": "visual historical artwork only",
+    "spine_reference": "inner triangle top edge at58percent, interpolated toward lower vertex by(degrees+7)/75",
+    "crossbars_degrees": [
+      0,
+      50
+    ],
+    "azimuth_visual_spacing_m_per_label_degree": {
+      "upper": 0.0075,
+      "lower": 0.004
+    },
+    "outer_copy": "project inner artwork through comparison eye onto outer plane; numeric angular accuracy not implied",
+    "baseline_reference": "evidence/BASELINE-LMLandingPointDesignator.swift",
+    "source": "NASA Eppler slide38 photograph; vehicle/mission uncaptioned",
+    "migration": "old app single upper bar/angular artwork replaced by photo-inspired layout; suppress app projected digital targeting marker under imported ownership"
   }
 }
