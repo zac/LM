@@ -245,6 +245,9 @@ struct TerminalDescentCockpitView: View {
                     ? .p65TerminalDescent
                     : .p64Approach
                 appModel.session.start(from: startPoint)
+                #if DEBUG
+                if ProcessInfo.processInfo.arguments.contains("--cockpit-validation-paused") { appModel.session.pause() }
+                #endif
             }
             if ProcessInfo.processInfo.arguments.contains("--cockpit-recenter-after-launch") {
                 try? await Task.sleep(for: .milliseconds(500))

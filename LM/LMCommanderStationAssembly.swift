@@ -89,6 +89,7 @@ final class LMCommanderStationAssembly {
     private var installedPartialComponents = Set<String>()
     private(set) var slotOccupancy: [String: LMCockpitSlotOccupancy] = [:]
     private var planningLabelSources: [String: Entity] = [:]
+    private(set) var planningAnnotationTexts: [String: String] = [:]
     private var planningLabelBounds: [String: BoundingBox] = [:]
     private(set) var planningStatusLabels: [String: Entity] = [:]
 
@@ -230,6 +231,13 @@ final class LMCommanderStationAssembly {
         planningLabels.isEnabled = false
         Self.removeInput(in: root)
         Self.noShadows(in: root)
+        // The pressure shell replaces the procedural enclosure, including its
+        // sunlight occlusion. Layered panels and instruments remain noncasters.
+        let shell = try Self.path("/Cabin/Shell", in: cabin)
+        for entity in Self.descendants(shell) where entity.components[ModelComponent.self] != nil {
+            entity.components.set(DynamicLightShadowComponent(castsShadow: true))
+        }
+        renderPlanningAnnotation(slotID: "Panel5__Translation", text: "Translation controls pending")
     }
 
     func setPlanningLabelsVisible(_ visible: Bool) { planningLabels.isEnabled = visible }
@@ -400,9 +408,13 @@ final class LMCommanderStationAssembly {
     /// this metadata method deliberately does not grant installation permission.
     func recordOccupancy(slotID: String, occupancy: LMCockpitSlotOccupancy) {
         slotOccupancy[slotID] = occupancy
+        renderPlanningAnnotation(slotID: slotID, text: occupancy.planningText)
+    }
+
+    private func renderPlanningAnnotation(slotID: String, text annotation: String) {
         guard let source = planningLabelSources[slotID], let parent = source.parent,
               let sourceBounds = planningLabelBounds[slotID] else { return }
-        let mesh = MeshResource.generateText(occupancy.planningText, extrusionDepth: 0,
+        let mesh = MeshResource.generateText(annotation, extrusionDepth: 0,
             font: .monospacedSystemFont(ofSize: 0.008, weight: .medium),
             containerFrame: .zero, alignment: .center, lineBreakMode: .byWordWrapping)
         let materials = Self.descendants(source).compactMap { $0.components[ModelComponent.self] }.first?.materials ?? []
@@ -426,6 +438,7 @@ final class LMCommanderStationAssembly {
         parent.addChild(replacement)
         source.isEnabled = false
         planningStatusLabels[slotID] = replacement
+        planningAnnotationTexts[slotID] = annotation
     }
 
     private static func validateInterfaces(cabin: Entity, windows: Entity, cabinData: Data, windowData: Data) throws {

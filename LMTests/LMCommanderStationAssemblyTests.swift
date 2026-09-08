@@ -8,6 +8,30 @@ import simd
 @MainActor
 @Suite(.serialized)
 struct LMCommanderStationAssemblyTests {
+    @Test func structuralShellCastsShadowsWithoutLayeredPanelCasters() throws {
+        let assembly = try LMCommanderStationAssembly.load()
+        let shell = try LMCommanderStationAssembly.path("/Cabin/Shell", in: assembly.cabin)
+        let shellModels = LMCommanderStationAssembly.descendants(shell).filter { $0.components[ModelComponent.self] != nil }
+        #expect(!shellModels.isEmpty)
+        #expect(shellModels.allSatisfy { $0.components[DynamicLightShadowComponent.self]?.castsShadow == true })
+        for layered in [assembly.panels, assembly.panelInventory, assembly.windows] {
+            #expect(LMCommanderStationAssembly.descendants(layered).filter { $0.components[ModelComponent.self] != nil }
+                .allSatisfy { $0.components[DynamicLightShadowComponent.self]?.castsShadow == false })
+        }
+    }
+
+    @Test func translationPlanningNoteDoesNotClaimDescentRateOrOccupySlot() throws {
+        let assembly = try LMCommanderStationAssembly.load()
+        let slotID = "Panel5__Translation"
+        #expect(assembly.planningAnnotationTexts[slotID] == "Translation controls pending")
+        #expect(assembly.slotOccupancy[slotID] == nil)
+        let slot = try #require(assembly.inventory.panels.flatMap(\.slots).first { $0.id == slotID })
+        #expect(try LMCommanderStationAssembly.path(slot.default_placeholder_node, in: assembly.panelInventory).isEnabled)
+        #expect(!assembly.planningLabelsVisible)
+        assembly.setPlanningLabelsVisible(true)
+        #expect(assembly.planningLabelsVisible)
+    }
+
     @Test func assemblesEnclosureAtIdentityAndKeepsEveryDatum() throws {
         let assembly = try LMCommanderStationAssembly.load()
         #expect(Set(assembly.root.children.map(\.name)) == ["Cabin", "WindowsLPD", "PanelInventory", "CommanderPanels"])
