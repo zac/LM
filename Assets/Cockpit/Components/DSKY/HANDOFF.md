@@ -20,7 +20,7 @@ Housing depth, rear details, bevels, fastener sizes, display subdivision and typ
 
 ## Delivered revision
 
-- Exact component commit: REFINEMENT_COMMIT_PENDING. Previous delivered asset revision was `85c072502a087aadf97c118e5de8bad9a2b6ba5d`; this display refinement started at `d3cd89721f5b788ebca1984c90c029a42e9cc010`.
+- Exact component commit: `1e706939ab6f2bfa51ac42ef3db620ccd1ab0f67`. Previous delivered asset revision was `85c072502a087aadf97c118e5de8bad9a2b6ba5d`; this display refinement started at `d3cd89721f5b788ebca1984c90c029a42e9cc010`.
 - Blender: 5.2.1 LTS, build 9e2066aef7ef; no add-ons. Native smoke check: Apple Swift 6.3.3, macOS RealityKit.
 - Editable source: `DSKY.blend`; reproducible builder: `build.py`; USD coordinate bake/package: `usd_pipeline.py`.
 - Neutral exports: `DSKY.usda`, `DSKY.usdc`, `DSKY.usdz`. Lighting exports: `DSKY-LightingPreview.usda`, `.usdc`, `.usdz` (STATIC lamp-test lookdev, never live output).
@@ -85,3 +85,7 @@ No push or merge was performed. All delivered changes are confined to this compo
 ## Display refinement
 
 User-requested refinement uses the supplied craft-model image solely as a visual reference (`evidence/user-display-style-reference.png`); primary evidence and frozen key/envelope dimensions remain unchanged. Added heavier tapered six-sided segments, ~13.5° slant, stronger yellow-green emission, backlit label strips with dark text, thicker register rules, mask dots and continuous rounded bezels. Segment names, separate lamps, key hierarchy and press transforms are preserved. Exact glow, hue and photometry remain renderer-dependent; no RCP or Vision Pro appearance claim. Lamp backgrounds are emissive and individually addressable, but still require coordinator-owned live AGC material/state binding. Both the lit-lamp view and selective static readout were visually reviewed.
+
+## Mechanical-fit clarification
+
+The face envelope is verified; the external rear box is **not a qualified mating/cutout solid**. `fit-interface.json` separates current visual bounds from a mechanical interface. The model root is the app's face-plate midpoint, not the drawing's UNIT MTG SURFACE. Drawing 7.700 in is mounting-thread pitch, not housing width; the 6.900 in shoulder span and nominal 2.000 in front-to-mount reference must not be confused with a qualified panel aperture. Later E/L cover exceptions also prevent interpreting 6.91 in MAX REF as an unconditional -091 hardware bound. Current body width 195.58 mm and height 191.77 mm are provisional; do not cut an adjacent panel to those values or assume the face back (-6 mm) is the historical mounting seat. The panel aperture, clearances and mounting-plane transform remain null pending drawing interpretation and coordinator approval. Full detail: `evidence/mount-fit-research.md`.

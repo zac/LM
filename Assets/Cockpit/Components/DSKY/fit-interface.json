@@ -1,0 +1,83 @@
+{
+  "status": "visual_envelope_verified__mechanical_slot_fit_not_qualified",
+  "units": "meters",
+  "asset_revision": "1e706939ab6f2bfa51ac42ef3db620ccd1ab0f67",
+  "root": "/DSKY_Mount",
+  "root_transform": "identity",
+  "axes": "+X right +Y overhead +Z toward crew",
+  "origin": "center of app compatibility face plate at its mid-depth; NOT a verified panel mounting surface",
+  "asset_bounds_m": [
+    [
+      -0.10317479819059372,
+      -0.10159999877214432,
+      -0.1602140029426664
+    ],
+    [
+      0.10317479819059372,
+      0.10159999877214432,
+      0.015200000256299962
+    ]
+  ],
+  "verified_drawing_front_envelope_m": [
+    0.2063496,
+    0.2032
+  ],
+  "drawing_total_depth_max_reference_m": 0.175514,
+  "current_visual_housing_m": {
+    "width": 0.19558,
+    "height": 0.19177,
+    "z_front": -0.006,
+    "z_back": -0.160214,
+    "evidence": "Provisional box. 7.700-inch width was reused from app mounting-face constant; not a verified housing/cutout width. 7.550-inch height is inferred."
+  },
+  "panel_cutout_m": null,
+  "insertion_clearance_m": null,
+  "panel_seat_transform": null,
+  "fit_acceptance": "Requires approved panel aperture, mounting-plane interpretation, and clearance contract. Do not derive a fabrication/cutout model by subtracting the current visual housing.",
+  "drawing_mounting_thread_pitch_m": {
+    "x": 0.19558,
+    "outer_y": 0.1778,
+    "intermediate_y": 0.059436
+  },
+  "drawing_shoulder_width_m": 0.17526,
+  "drawing_mount_surface_reference": {
+    "nominal_front_to_mount_m": 0.0508,
+    "rear_from_mount_max_m": 0.12446,
+    "confidence": "Reference axial relationship, not yet reconciled to app face midpoint. Not the panel cutout size."
+  },
+  "later_configuration_exception": "Outline note 5 permits applicable later E/L cover surface to exceed the shown envelope by up to 0.09in (0.002286m); 6.91in MAX REF is not an unconditional complete -091 hardware bound.",
+  "mounting_points_face_center_xy_m": [
+    [
+      -0.09779,
+      -0.0889
+    ],
+    [
+      -0.09779,
+      -0.029718
+    ],
+    [
+      -0.09779,
+      0.029718
+    ],
+    [
+      -0.09779,
+      0.0889
+    ],
+    [
+      0.09779,
+      -0.0889
+    ],
+    [
+      0.09779,
+      -0.029718
+    ],
+    [
+      0.09779,
+      0.029718
+    ],
+    [
+      0.09779,
+      0.0889
+    ]
+  ]
+}
