@@ -220,8 +220,8 @@
     },
     {
       "path": "interface-v2.json",
-      "bytes": 7008,
-      "sha256": "1e1991db8f12d1b4432a966f90d5d78062176a150e66622998ce9dceae330d6e"
+      "bytes": 7263,
+      "sha256": "8cf5e986f63a46cd03518a526438781a6259e0d8377bb00336633ac1c2a149f9"
     },
     {
       "path": "migration.json",

@@ -239,7 +239,7 @@
     "status": "Closed static visual leaf; old opening Z -.95 retained in evidence; proposed -70 mm shift behind panel structure"
   },
   "overhead_window": {
-    "status": "Await WindowsLPD proposal; nominal 5 x 13 inch viewing area above CDR per TN D-7439 p9"
+    "status": "Accepted approximate docking proposal from WindowsLPD contract 80c9b2d; supersedes the initial awaiting-proposal status. See docking and windows_dependency for the agreed pose, opening dimensions, proper-rotation basis and exact reference hash. Nominal 5 x 13 inch viewing area above CDR per TN D-7439 p9; no optical or survey qualification."
   },
   "migration": {
     "eye_delta": [
