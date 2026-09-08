@@ -4,6 +4,8 @@ Reusable lunar-module models and independently addressable cockpit components fo
 
 ## Initial components
 
+- **Commander panel surrounds**: provisional Panel 1/FDAI and Panel 4/DSKY backing/openings from `6c8c271`, via `LMKitAssets.commanderPanelsURL` and `commanderPanelMountsURL`. Install once at Cabin identity while keeping original Panel 1/4 reservations disabled. The 3 mm visual-envelope allowance and narrowed Panel 1 outline do not qualify instrument seating, structural attachment or runtime control clearance. Refresh with `Tools/sync_commander_panels.py`; rebuild only against pinned source references.
+
 - **Hand controllers**: ACA and TTCA prototypes from `750caea`, via `LMKitAssets.handControllerURL(_:)` and `handControllerInterfacesURL`. Separate nested pivots support future input adapters; no runtime bindings or cabin placements are included. Neutral origins are parent-local. ACA has a program-level maximum-envelope reference; TTCA dimensions, mechanism coupling and motion limits remain provisional. Refresh accepted exports with `Tools/sync_hand_controllers.py`.
 
 
@@ -32,4 +34,4 @@ Keep imports and new work distinguishable. Record source revision, dimensions, a
 
 ## Current acceptance evidence
 
-Seven package tests pass after the control/cabin imports. Native RealityKit checks load all six controls, verify independent moving nodes, and validate the cabin root, full mount paths/positions/rotations, optical pane origins/right/up/normal basis, crew eye and separate LPD layers. Shipping asset bytes match accepted authoring exports. This establishes packaged resource compatibility, not historical fit, final panel placement, live simulation behavior or Vision Pro acceptance. Per-delivery acceptance records are under `Provenance/`.
+Nine package tests pass after the commander-panel import. Native RealityKit checks load the controls, hand controllers and surrounds, verify independent moving/removable nodes, and validate cabin/panel mount transforms, optical pane bases, crew eye and separate LPD layers. Shipping asset bytes match accepted authoring exports. This establishes packaged resource compatibility, not historical fit, final panel placement, live simulation behavior or Vision Pro acceptance. Per-delivery acceptance records are under `Provenance/`.

@@ -39,6 +39,14 @@ public enum LMKitAssets {
     public static var cabinMountsURL: URL {
         Bundle.module.url(forResource: "mounts", withExtension: "json", subdirectory: "Cabin")!
     }
+    /// Provisional instrument surrounds; install at identity under the Cabin root.
+    public static var commanderPanelsURL: URL {
+        Bundle.module.url(forResource: "CommanderPanels", withExtension: "usdz", subdirectory: "CommanderPanels")!
+    }
+    /// Explicit parent-local and Cabin-relative interfaces; mechanical seating is unresolved.
+    public static var commanderPanelMountsURL: URL {
+        Bundle.module.url(forResource: "mounting", withExtension: "json", subdirectory: "CommanderPanels")!
+    }
     /// Standalone hand-controller prototypes; installation and input mappings are app-owned.
     public enum HandController: String, CaseIterable, Sendable {
         case aca = "ACA"
