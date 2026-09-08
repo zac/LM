@@ -1,0 +1,1959 @@
+NASA TECHNICAL NOTE                                               NASA TN D-6722
+
+
+
+
+APOLLO EXPERIENCE REPORT -
+LUNAR MODULE DISPLAY AND
+CONTROL SUBSYSTEM
+
+
+by   Andreu; J. Farkas
+Manned Spacecraft Center
+Houston, Texas 77058
+
+NATIONAL AERONAUTICS AND SPACE ADMINISTRATION   •   WASHINGTON, D. C.   •   MARCH 1972
+1.11
+il
+                                                        I
+     1 . Report No.                                         2. Government Accession No.                           3. Recipient's Catalog No.
+       NASA TN D-6722
+     4. Title and Subtitle                                                                                        5. Report Date
+        APOLLO EXPERIENCE REPORT                                                                                    March 1972
+        LUNAR MODULE DISPLAY AND CO NTROL SUBSYSTEM                                                               6. Performing Organization Code
+
+
+
+     7. Author(s}                                                                                                 8. Performing Organization Report No.
+
+       Andrew J. Farkas, MSC                                                                                         MSC S-285
+
+                                                                                                              10. Work Unit No.
+     9. Performing Organization Name and Address                                                                     914-13-00-00-72
+       M anned Spacecraft Center
+                                                                                                              11. Contract or Grant No.
+       Houston, Texas 77058
+
+
+                                                                                                              13. Type of Report and Period Covered
+    12. Sponsoring Agency Name and Address                                                                           Technical Note
+
+       National Aeronautics and Space Administration                                                          14. Sponsoring Agency Code
+       Washington, D.C. 20546
+
+r
+    15. Supplementary Notes
+                              The MSC Director waived the use of the International System of Units (SI) for
+         this Apollo Experience Report, because, in his judgment, use of SI Units would impair the usefulness
+         of the report or result in excessive cost.
+
+    16. Abstract
+
+
+       The lunar module display and control subsystem equipment is described, with emphasis on
+       major problems and their solutions. Included in the discussion of each item is a description
+       of what the item does and how the item is constructed. The development, hardware history,
+       and testing for each item are also presented.
+
+
+
+
+    17. Key Words (Suggested by Author(s})                                           18. Distribution Statement
+
+       ·Switches                              ·Status Indicators
+       · Variable Controls                    · Electroluminescent
+
+
+       ·Servo metric Meters                   · Incandescent
+
+
+       · Numeric Display                      ·Self-Luminous
+
+
+    19. Security C1assif. (of this report)                  20. Security Classif. (of this page)                  21. No. of Pages       22. Price"
+       None                                                   None                                                       35                    $3.00
+                                      "
+                                          For sale by the National Technical Information Service, Springfield, Virginia       22151
+Il
+!'•. ]
+
+I !I
+                             APOLLO EXPERIENCE REPORT
+
+                 LUNAR MODULE DISPLA Y AND CONTROL SUB S YSTEM
+
+                                 By An d re w J. Fa rka s
+                               Ma n n ed S pacec ra ft Ce n te r
+
+
+                                        SUMMARY
+
+
+      The lunar module display and control subsystem provides interface between the
+astronauts and the spacecraft. During a mission, this subsystem enables the crew to
+accomplish the following:
+
+      1.   Manual subsystem operation under normal or contingency conditions
+
+      2.   Safe shutdown of equipment
+
+      3.   Monitoring of conditions of subsystems and reserves of propellant and energy
+
+      4. Recognition o f malfunctions and incipient hazards
+
+      5.   Adjustment or selection of alternate subsystem operating modes
+
+      This paper describes the equipment required to accomplish these functions suc­
+cessfully . Considerations regarding the philosophy, general requirements, configura­
+tion, and selection of the types of displays and controls are not discussed in this
+report .
+
+
+                                     INTRODUCTION
+
+
+       The lunar module (LM) display and control subsystem consists of a variety of
+equipment . All controls are of two basic types: (1) switches and (2) variable controls.
+Displays are of four basic types: (1) moving pointer, (2) fixed pointer, (3) numeric,
+and (4) status indicators. Included within the display subsystem is interior and ex­
+terior vehicle lighting. Interior lighting, used to illuminate the cabin, consists of
+floodlights, electroluminescent panels, luminescent switch tips, and utility lights .
+Exterior ligliting, consisting of a docking target, docking lights, and a tracking light,
+is used by the astronaut to visually guide and orient the spacecraft to achieve a suc­
+cessful docking.
+      The equipment in this subsystem is generally located on panels within the space­
+craft. Interconnection among the various equipment is accomplished by cables and
+"black boxes. " These black boxes include control assemblies, and time-delay r elays
+(which are also part of this subsystem ) , and other relay, resistor, and diode
+assemblies.
+
+      The subsystem equipment is discussed, with emphasis on major problems and
+their solutions . Included in the discussion of each item is a description of what the
+item does and how the item is constructed.
+
+
+                                     DEVELOPMENT
+
+
+      Specifications were developed by the prime contractor to meet the basic system
+and specific subsystem requirements . The specifications were submitted to industry
+for competitive bidding and proposals. A manufacturer for each item was selected on
+the basis of the manufacturer's response to the specifications . To ascertain that each
+selected component would meet design requirements and to ensure adequate system
+operation, a test program was established. The test program for each component in­
+cluded the following.
+
+      1. Design feasibility tests - Tests performed on a breadboard model to estab­
+lish confidence in the electrical concepts and to serve as an aid in selecting components.
+
+      2 . Design verification tests- Tests performed on a working model to evaluate
+the design by comparing actual performance with design predictions , while determining
+the effect of varying environmental conditions .
+
+      3. Qualification tests- Tests performed on actual flight-type hardware to en­
+sure its ability to m eet design and mission requirements under varying environmental
+conditions . Testing is generally performed on two separate items, one of which is
+used for design limit tests and the other for endurance tests .
+
+       4 . Acceptance tests - Tests performed on each flight item to ensure its ability
+to meet technical requirements. This testing includes vibration and temperature tests,
+in addition to normal functional tests. Successful completion of this test indicates that
+the item is ready for delivery.
+
+      5. Preinstallation tests- Tests are performed on a completed subassembly,
+usually to the panel level, j ust before spacecraft installation. This testing is per­
+formed to ascertain that the components are installed properly and were not damaged
+during subassembly fabrication.
+
+      The subsystem test program , in addition to various system-level tests, provided
+the components required for an operational LM spacecraft. In some cases, additional
+qualification testing (�qual) was required to meet changing or new requirements.
+Generally each component required at least one �qual because of changing vibration
+acceptance test requirements.
+
+
+
+
+2
+
+
+
+
+                                                           I
+                                          HARDWARE HI STORY
+
+
+     The LM display and control subsystem consists of a variety of components .
+These components and the quantity used on each vehicle are presented i n table I . The
+LM cabin control and display panels are shown in figure 1.
+
+
+                      TABLE I.- LUNAR MODULE DISPLAY AND CONTROL COMPONENTS
+
+
+
+
+                                                                Specification   Quantity per
+                                    Components
+                                                                     number       vehicle
+
+
+                                                      Controls
+
+
+                       Switches:
+                          Toggle                                 LSP-350-802        140
+                          Rotary                                 LSP-350-803         10
+                          Pushbutton                             LSP-350-808          8
+
+
+                        Variable:
+                          Potentiometer                          LSP-350-604         14
+                          Synchro                                LSP-350-606          2
+
+
+                                                      Display
+
+
+                        Moving pointer:
+                          Meter                                  LSP-350-801         18
+                          Cross pointer                          LSP-350-305          2
+                          Thrust to weight                       LSP-350-306          I
+
+                        Fixed pointer:
+                          Range indicator                        LSP-350-307          I
+
+                        Numeric:
+                          Helium pressure,'temperature           LSP-350-2QI          I
+                          Propellant quantity                    LSP-350-40 I         I
+                          Mission timer                          LSP-355-316          I
+                          Event timer                            LSP-355-315          I
+
+                        Status:
+                          Flag                                   LSP-350-804         32
+                          Component caution                      LSP- 350-806        20
+                          Caution and warning display            LSP-350-809          4
+
+
+                                                    Interior light
+
+
+                        Floodlights                              LSP-340-410         20
+
+                        Utility light                            LSP-340-412          I
+
+                        Electroluminescent panels                LSP-340-402         --
+
+                        Switch tlps                              LSP- 340-404       140
+
+
+
+
+                                                   Exterior light
+
+
+
+                        Self-luminous exterior                   LSP-340-406         67
+
+                        Docking light                            LSP-340-412          5
+
+
+                        Tracking light                           LSP-340-411          I
+
+
+                                                 Miscellaneous items
+
+
+                        Time delay                               LSP-350-202          2
+
+
+                        Coot rol assembly                        LSP-350-308          3
+
+
+                        Overlays                                 LSP-340-407         --
+
+
+
+
+                                                                                               3
+                                     Center
+                                     panel 2                     Upper side
+                                                                 panel 16
+
+
+
+
+                                                                 Bottom
+                                                                 side
+                          side
+                                                                 panel 6
+                          panel 5
+                                                      lower side panel 12
+
+                 Figure 1. - Lunar module cabin control display panels.
+
+
+                                       Swi tches
+
+       Toggle switches . - Toggle switches are used to manually control the operation of
+the spacecraft. The LM contains approximately 140 toggle switches in 33 configura­
+tions. These configurations were selected to simplify system function and electrical
+operation. The types of toggle switches include momentary, maintain, and lock actu­
+ations , in either double- or triple-throw actions. Electrically, the configurations
+vary in size from one to eight poles.
+
+      Toggle switches are o f two basic types, AT and LS. The AT-type switch con­
+tains hermetically sealed modules where electrical switching takes place and an
+environmentally sealed housing where mechanical actuation takes place . The LS-type
+switch has electrical and mechanical actuation taking place within a completely her­
+metically sealed case . Sealing i s accomplished b y using glass headers, a bellows , and
+a heliarc-welded case.
+
+
+
+4
+
+
+
+
+                                                            I
+       The toggle switch program was marked by numerous failures, each of a poten­
+tially serious nature . These failures occurred throughout the program from initial
+design through qualification testing, during manufacturing, and during vehicle testing.
+Major problems included the following.
+
+      1.   Contact resistance
+
+      2.   Lifetime limitations
+
+      3.   Pressure sensitivity
+
+     4 . Weld plate
+
+      5.   Shorting
+
+      6.   Hangup
+
+      7. Inverted contact button
+
+      8.   Solder balls
+
+     9.    Short springs
+
+      Solutions to these problems have been expensive in both time and money. In re­
+viewing the program , it becomes obvious that many problems could have been averted .
+Tighter manufacturing controls should have been initiated early in the program by the
+switch manufacturer. Most of the corrective actions required modifications to normal
+switch handling or manufacturing procedures pertaining to small details. Examples of
+some of these actions are as follows.
+
+     1 . Contact resistance has been a problem since the inception of the program.
+Improvements have been made by storing the contacts in a dry nitrogen atmosphere,
+mechanically cleaning the parts, and storing complete assemblies in a clean, dry area.
+
+      2. Shorting occurred in momentary switches when the contact arm whipped and
+made contact with the toggle return spring. The contact arm shaping was not properly
+controlled ; therefore, a tolerance buildup could have caused this problem . Revised
+processes and in-process checks eliminated this problem .
+
+      3. Inverted contact buttons, which reduce switch lifetime, were found on numer­
+ous switches . These buttons were assembled incorrectly by a subcontractor. Initially,
+the switch manufacturer did not inspect the subassemblies 100 percent before installing
+them into switches. Revised inspection procedures corrected this problem.
+
+      4. Short springs were found in momentary switches. These springs fell out of
+place and caused internal shorts . Analysis indicated that overheating of the spring
+under compression during case welding was causing the problem. An improved weld­
+ing technique and proper fixture cooling corrected this problem .
+
+
+
+
+                                                                                     5
+      5. The AT-type switches were found to be pressure sensitive. These switches
+would not release under ambient pressure greater than 1 atmosphere. The cause was
+traced to the use of modules with low release force. The force degraded during switch
+cycling to the point of failure. The problem was corrected by increasing the module
+release force and reducing the module actuating force. In addition to this corrective
+action, all critical AT-type switches were replaced with LS-type switches .
+
+      In all the corrective actions taken, X-ray of the switches has become an important
+and valuable tool. The impact of the problems would have been greatly reduced if
+adequate X-rays had been available. At present, all switches are X-rayed, and multi­
+ple views are taken of momentary switches.
+
+      Rotary switches . - Rotary switches are used to manually select various spacecraft
+system operating parameters for display purposes. Each spacecraft contains approxi­
+mately 10 rotary switches which, depending on use, vary in the number of decks, poles,
+and positions . The basic switch mechanism is solder sealed within a cylindrical hous ­
+ing with a bellows assembly at one end and a header at the other . The basic mecha­
+nism consists of a stator and a rotor. Rotation of a cylindrical rotor shorting- rod
+shorts out the stator element, providing the switcting. Positive detent is provided by
+a spring-held roller which rides in a star-shaped detent gear.
+
+       Design and testing of the rotary switch presented a few minor problems. Early
+in the design phase, problems were encountered with vibration on five deck switches
+and with the ability to m eet lifetime requirements on high- current switches. The
+vibration problem was resolved by adding structural support to the switch. The life­
+time problem was eliminated by reducing the lifetime requirements from 25 000 to
+10 000 cycles . Although this reduction did not solve the problem, the switches worked
+well in the spacecraft because the 10 000-cycle lifetime was in excess of normal switch
+usage.
+
+      The use of these switches in the LM has been successful and trouble-free. There
+has never been a vehicle testing or confirmed flight problem . During the flight of
+Apollo 10 (LM-4) , the probable cause of a nonfunctioning meter was determined by
+analysis to be a broken wire within a rotary switch. This type of failure has not been
+experienced in any phase of the switch program and seems to be an unlikely failure
+mode.
+
+      Pushbutton switches . - Pushbutton switches are used to m anually override or
+alter automatic system operation in normal or emergency situations . Each spacecraft
+contains eight of these switches to perform the following six functions.
+
+      1. Abort
+
+      2. Abort stage
+
+      3.   Master alarm
+
+      4.   Engine stop
+
+      5.   Engine start
+
+      6 . X-translation
+
+6
+
+
+
+
+                                                       .l
+       The switch mechanism actuates a lever to energize individual hermetically sealed
+snap - switch elements. The mechanism may also actuate a cam follower in a stationary
+cam to provide the actuation position required by the switch. Lighting is provided with­
+in the pushbutton to indicate status or action information to the astronauts . Switches
+were designed to perform specific electric al functions and therefore are not inter­
+c hangeable . E ach switch varies in the number of snap-switch elements, the amount of
+lighting, cam action, and shape . A typical pushbutton switch is presented in figure 2,
+and a comparison of the types of switches is shown in table II.
+
+
+
+
+                          P u s h b u tton
+
+
+
+
+                                                                                    Teflo n
+                                                                                     ca m
+
+
+
+                                                                   Gu ide pos t (4 eac h )
+
+      Con tract a r m                                             E lec tro lu m i n esce n t
+                                                                  l i gh t w i re
+
+
+
+       Ba s ic s w itch
+
+
+
+
+                                             (a ) Cutaway view.
+
+               Figure 2. - Schematic diagram of a typical pushbutton switch.
+
+
+
+
+                                                                                                7
+                 Basic switch (4 shown)
+
+
+
+
+                                                               @�
+                                                               @
+                                                               @¢
+                                                               ®¢
+
+
+
+
+                                                     0
+
+                                 (b) Bottom view.
+
+                                Figure 2. - Concluded .
+
+
+                 TABLE II. - PUSHBUTTON SWITCH COMPARISON
+
+
+
+
+                             Number of basic
+    Switch        Light                             Movement          Function
+                                switches
+                            -
+
+
+
+
+               a     b
+     1 15    EL and I                4           Lock and button    Stop
+                                                   return
+
+     1 16    EL                     4            Lock               Abort stage
+
+     1 17    EL and I                2           Momentary          Start
+
+     1 18    I                       2           Momentary          Master alarm
+
+     1 19    EL                     4            Lock               Abort
+
+     120     EL                     4            Momentary          X-translation
+
+       a
+          Electroluminescent lamp .
+        b
+         Incandescent lamp.
+
+
+
+
+8
+
+
+
+
+                                                          .I
+      The pushbutton switches have been marked by numerous failures, including the
+following.
+
+      1. Problems were caused by incorrect manufacturing techniques and procedures
+easily corrected by revisions.
+
+      2. Contact bounce occurred during random vibration testing; corrective action
+included changing the size of a compression spring to increase actuating force from
+13 to 20 ounces to 15 to 30 ounces and reduction of the vibration level. Vibration
+levels were reduced on the basis of more realistic levels determined during LM test
+article 3 testing.
+
+     3. Lighting problems normally required changing of incandescent lamps or the
+correction of color and brightness of electroluminescent lamps by traditional techniques.
+
+In addition to these minor problem areas, more significant failures were experienced:
+contamination and stop-switch latching.
+
+     Contamination found in many of the switches prohibited proper switch actuation.
+Contamination included the following.
+
+      1.   Potting in the housing
+
+      2.   Cement particles
+
+      3.   A rubber stamp wedged into a switch
+
+      4.   Dirt
+
+Contamination can enter through various openings in the switch, including the unsealed
+rear of the switch. Some problems were associated with attempts to seal the rear of
+the switch with potting. Corrective action to preclude contamination problems included
+the following.
+
+      1. The X-ray techniques were developed to detect metallic and nonmetallic
+particles.
+
+      2. A new design rubber (Silastic) seal was added at the rear of the switch. This
+rubber seal provided better adhesion to the cement, therefore preventing a flow of the
+potting which could cause contamination.
+
+     3. Switches were fitted with dust covers before and after installation into panels.
+These covers remain on the switch until just before launch.
+
+      4. L�yout changes were also made to check button-to-case alinement, and spac­
+ing was added to preclude binding.
+
+Since the initiation of these procedures, contamination problems have been minimized
+during panel fabrication and eliminated once the switches are installed.
+
+
+
+
+                                                                                     9
+       During vehicle testing, it was determined that when the engine stop switches
+were depressed, they could be inadvertently reset, which caused the engine to start
+again. To preclude this action, an external latch mechanism was added to this switch.
+The external latch mechanism was designed so that two actions were required to reset
+the stop switch, thereby eliminating the possibility of an engine restart. The design of
+this latch mechanism created many other problems before the latch could be properly
+installed in the vehicle. At present, this mechanism is working properly and has not
+caused any problems.
+
+      Pushbutton switches have performed well in flight. No failures have been attrib­
+uted to these switches. The only recommendation as a result of this review is to make
+certain, during initial system design, that electronic circuits perform all complicated
+system switching and that mechanical switches be used to actuate this switching.
+
+
+                                   Variable Controls
+
+      Potentiometers.- Potentiometers are used within the spacecraft to provide con­
+tinuous level adjustment, generally as volume controls. Each LM contains 14 of
+these devices in three basic configurations. The configurations include linear taper,
+nonlinear taper, clockwise rotation, and nonlinear taper counterclockwise rotation.
+The potentiometers are contained in a hermetically sealed housing that uses a bellows
+assembly to allow shaft rotation. Mechanical stops limit rotation to 300 o. Basic
+resistance is provided by a carbon element that can vary between 2. 5 and 25 000 ohms.
+Development, including qualification and acceptance testing, was satisfactory in that
+few failures occurred. Failures that did occur included leakage and dielectric absorp­
+tion, which were easily detected and corrected.
+
+      Use of these potentiometers in the spacecraft presented numerous problems.
+During panel acceptance testing, many potentiometers were found to have been open
+or discontinuous. Analysis revealed that this problem was caused by inadequate con­
+tact pressure due to tolerance buildup between contact and contact cavity. Acceptance
+testing did not reveal this lack of buildup, because the potentiometers were checked
+only at four points. Corrective action included selective fitting of the contact into the
+contact housing and a screening test. The screening test consisted of monitoring the
+resistance over the dynamic range of the potentiometer. These potentiometers used
+a simple carbon element to provide resistance changes. Attempts have been made to
+use these devices as precision potentiometers, without success. Using these poten­
+tiometers as volume controls presented no problems during vehicle testing or flight.
+
+      Synchro. - The synchro is a rotary control used to actuate a synchro transmitter.
+This transmitter generates position commands to an antenna drive assembly in either
+the pitch or the yaw axis. The synchro is housed in a hermetically sealed case and
+uses a bellows assembly to provide continuous shaft rotation. Construction is that of
+a standard synchro with a single-phase rotor and a three-phase, delta-wound stator
+with carbon brushes. Development of this device was successful, resulting in only
+one problem. During qualification testing, the rotating (slip) torque increased after
+
+
+
+
+10
+
+
+
+
+                                                           ill
+a few cycles of operation. Analysis indicated that this increase in torque was caused
+by high-friction areas developing between brake surfaces. This problem was corrected
+by the following.
+
+      1.   Lapping and smoothing of the contact surfaces of the brake
+
+      2. Reduction of the spring constant of the spring that provides force between
+the brake contact surfaces
+
+      3.   Installation of a glass-filled Teflon bushing on the output shaft
+
+The effect of this corrective action was demonstrated by rotating a test model over
+100 000 times, with negligible increase in torque and no appreciable wear.
+
+       Synchros have operated successfully on all vehicles during both testing and flight.
+However, a problem did occur during vehicle testing. Concern was expressed regard­
+ing the setting accuracy of the synchro. Normally, synchros of this type have accura­
+cies in the ±0. 5° range, while the accuracy for this particular synchro was ±2. 0°,
+Investigation indicated that, while the basic accuracy of the synchro is approximately
+±0. 5o, hermetically sealing the device by using a bellows assembly decreased this
+accuracy to the specified ±2. 0°. In designing future devices of this type, considera­
+tion should be given to the need for hermetic sealing, because sealing causes increased
+cost and weight and reduces accuracy.
+
+
+                                     Moving Pointer
+
+      Servometric meters. - Servometric meters are used to display to the astronaut
+various operational parameters of the spacecraft. Included in each spacecraft are
+six round, two single-vertical, 10 dual-vertical, and two cross-pointer meters. The
+name "servometric" was coined to describe a device that is somewhat similar to a
+D'Arsonval meter movement. As shown in figure 3, a closed-loop rebalance principle
+is used to position the pointer in accord with the input signal. This concept provides
+fast response, high accuracy, stability, and mechanical ruggedness not found in other
+devices. Dial faces and legends, illuminated by electroluminescent patches, are im­
+printed to reflect the parameter displayed. Maximum accuracy is ensured by cali­
+brating each device for full-scale operation.
+
+
+                                                               Dial face
+                                                               and pointer
+
+
+
+                                                      ' Reba lance
+                                                       ,
+   V de                                                 �
+
+   Input                                                    Feedback
+                                                            element
+
+
+                         Figure 3.- Servomatic meter concept.
+
+                                                                                      11
+       The meters are packaged within a hermetically sealed enclosure. The case is
+an aluminum investment casting with integral mounting flanges. The cover glass is
+cemented onto the case from the front, and a cast bezel is cemented over the glass
+to the case.
+
+      The back plate, with glass headers, is connected to the case by a solder-seal
+strip. The electronics, amplifier, and power supply are packaged in a conventional
+welded cordwood module that is solidly potted. Electrical adjustments, when required,
+are made by soldering discrete components to circuit boards mounted to the module.
+
+      During meter development through qualification testing, many problems were
+encountered. As they developed, these problems were reviewed, analyzed, and cor­
+rected. Some of the more significant problems and their corrective actions were as
+follows.
+
+      1. Vibration- The structure of the meter was not isolated, causing vibration
+problems. Corrective action included providing vibration isolation between the meter
+case and the internal components.
+
+     2 . Uneven optical coating- Optical coating on the glass was not applied evenly.
+Corrective action included the fabrication of special jigs and fixtures to handle the
+odd-shaped glass and tight process control.
+
+       3 . Cleanliness- Foreign materials of many types were found inside the meters.
+The materials included metal shims picked up by the torquer magnet. Corrective ac­
+tion included the use of brass shims and tighter control to keep work areas clean.
+
+       4. Sealing cases- The most significant problem during early testing of meters
+was in sealing the front glass within the case. Failures occurred during thermal
+vacuum testing. Specifically, breaks occurred in the bond between the glass and the
+case. During the thermal vacuum test,
+stresses developed which pulled the bond
+apart. Changing the potting to a stronger,
+more rigid material improved the bond,
+but caused the glass to crack. In analyz­
+ing the problem (fig. 4) , the determination
+was made that a material had to be selected
+that had the proper shear strength, yet was
+flexible. The potting material between the
+meter case seal, the glass; and the case
+was changed to a flexible polyurethane,
+and the glass was made smaller to allow
+more potting. This change reduced the
+stress at the bond line so that seal break­
+ing was prevented and the bond was flexible
+enough at a low temperature to prevent the
+glass from breaking.                               Figure 4. Meter case seal.
+                                                           _
+
+
+
+
+12
+      Upon completion of this phase of the program, problems continued. In addition
+to numerous minor acceptance test problems such as lighting and case leaks, several
+major problems appeared. The problems were as follows.
+
+       1 . Cleanliness- Contamination similar to that found prior to qualification
+testing was again found within the meters. A contamination review team visited the
+meter manufacturer and recommended improvements in many areas.
+
+       2. Dial-holder adhesive- The technique used to bond the meter dial holder was
+changed to facilitate production. The change included the addition of a black dye to the
+adhesive holding the dial. The addition of this dye reduced the strength of the adhesive,
+thus allowing the dials to fall off. This change did not have program approval and,
+when detected, the manfacturer was directed to return to the original technique which
+did not include the black dye. In the interim, while the change was in effect, several
+meters were manufactured, shipped, and installed in a spacecraft. Additional testing
+of the meters was required, including X-ray analysis, before the meters could be
+certified for flight.
+
+      3 . Sticking meter pointer- A sticking meter pointer is the most significant
+meter problem. After qualification and shipment of many meters, the pointers were
+found to be sticking. Sticking occurred at either end of the meter scale or in the mid­
+dle. Many corrective actions were incorporated into the meters to correct this prob­
+lem, but none have been completely successful. Corrective actions include the
+following.
+
+          a. Sticking in the center of the scale was caused by inadequate clearance
+between the dial and dial-holder tabs, causing the dial holder to raise in the center
+when expanded. Distortion of the dial was caused by unequal pressure between the
+dial-holder tabs and the bezel. Corrective action for these problems included chang­
+ing the dial-holder and dial dimensions to provide adequate clearance for expansion.
+In addition, the center of the dial was cemented to prevent movement.
+
+           b. Pointer sticking against the stops was caused by cement on the stops.
+Several corrective actions were taken to correct this problem, including (1) produc­
+tion instructions to require cleaning the movable stops with alcohol; (2) removal of
+chromate protective coating on the stationary stops; (3) cleaning of the torquer assem­
+bly at the subassembly level; ( 4) revision of production procedures to ensure proper
+adjustment of the pointer arm counterweight; (5) examination for excess cement along
+the dial edge; and (6) the addition of a fluorescent dye to tl)e cement and the use of
+black light to detect any residue.
+
+          c. Corrective action for sticky pointer stops was also instituted on the
+completed assembly after delivery. Each meter pointer was cycled stop-to-stop,
+100 times, in an attempt to break through any chromate film. If the meter still
+stuck, the instrument was returned to the manufacturer for repair.
+
+      In summary, with all the problems, the meters have functionea satisfactorily
+during all Apollo flights. Future programs, however, should reconsider the need for
+such a complex meter. The meters used in the command module are less complex,
+less costly, and less troublesome than the LM servometric meters. Finally, when
+
+
+
+                                                                                    13
+servometric meters lose power, they continue to provide some on-sc_al!! indication.
+On critical LM meters, small red lights were added to the system to indicate power
+loss. If the servometric meters are used, this detection system should be built into
+the meters to provide a more positive indication of power and signal loss.
+
+      Thurst-to-weight indicator.- The thrust-to-weight indicator- an indicating,
+acceleration-measuring device- is used to measure acceleration during lunar land­
+ing. Indication is provided by a moving pointer on a fixed vertical scale illuminated
+by an electroluminescent lamp. The scale is calibrated from 0 to 6 lunar g. The dis­
+play is packaged within a hermetically sealed magnesium enclosure. The enclosure
+consists of a housing to which a cover and a plate glass window are epoxy sealed. The
+internal mechanism is basically a simple accelerometer consisting of a seismic mass,
+guide rods, a cord, a pulley, a calibration spring, a damper assembly, and a pointer
+assembly.
+
+       The initial development of this indicator required design changes to resolve two
+problems: sealing and corrosion. The indicator sealing problem, similar to the meter
+sealing problems, was solved in essentially the same manner. The initial solution was
+to use a heavier bezel and thinner glass. The heavier bezel provided more bonding
+area; however, the thin glass broke under test. The glass was made thicker, thus
+solving the problem. Corrosion problems during salt-fog testing were caused by the
+interaction of the salt and the magnesium case. This problem was resolved by treat­
+ing the case with epoxy before final painting. With the solution of these problems,
+qualification and testing proceeded without incident.
+
+      After an interval of approximately 2 years, the manufacturer was required to
+fabricate additional indicators. During acceptance vibration testing of these indica­
+tors, a screw fell out. A review of the assembly procedure determined that there
+was no torque requirement for screw installation. At that time, a decision was made
+to return all indicators to the vendor for screw tightening. The manufacturers started
+to comply with this requirement and ran into many problems. A thorough review of
+assembly procedures indicated that they were incomplete and that the technicians were
+not familiar with them. Corrective action included calling back the original technician
+to comply with the update of all the process specification and assembly procedures.
+Since this action was taken, no problems have occurred. This required action indi­
+cated the importance of thorough procedures and the advantage of completing fabrica­
+tion of all devices without interruption.
+
+
+                                    Fixed Pointer
+
+       The range indicator is a vertical-scale indicator displaying range/altitude and
+range-rate/altitude-rate by means of a moving scale indicating against a fixed pointer.
+Two 10-foot tapes supply the moving scales that range up to 400 nautical miles for
+range/altitude and ±700 ft/sec for range-rate/altitude-rate. The tape is part of a
+digital servofeedback loop with a gray code word on the back corresponding to numbers
+observed on the front. An electrostatic sensor, or read head, determines the position
+of the tape by this coded word for comparison to the commanded position. H these two
+positions disagree, digital logic commands a direct current (de) stepper motor to
+drive the tape to the correct position.
+
+
+
+14
+
+
+
+
+                                                          I
+      The indicator , in addition to the stepper motor and tape circuitry section, has
+two other operating sections: the processor and the interface (fig. 5) . The processor
+contains the basic time-generating circuits for the indicator and performs the com­
+parison of input against feedback to operate the motors. The interface section allows
+for the selection of the desired information source, stores needed input information,
+and provides digital conversion. Digital conversion is required because information
+enters the system as either a frequency word or as 1 5 - to 18-bit digital words.
+
+
+          Inter                                    ProcHsor                 Slltlllrlllalilf
+                                                                            drlw ...
+                                                                            fJIIIclrcultry
+                  R
+
+
+ ,..
+ ,.
+ A, I
+
+
+
+
+ ...
+ ,.
+ C,D
+
+
+
+
+ ...
+ A,E,F                                     I npullo bloch
+                                           6,1, 10, 13, 16, II, 19,
+                                           21. z•. 21. �. 15, l6
+                                                         T•output fedllck
+
+
+
+
+ ...
+ I,C,D
+
+
+
+
+                                 +B
+
+
+
+
+Figure 5 . - Simplified signal f low diagram, lunar module range/range- rate indicator .
+
+
+                                                                                               15
+        The indicator is packaged within a hermetically sealed enclosure . For the most
+part, the system electronics consist of micrologic (flat packs) integrated circuits
+that are mounted on 10 multilayer circuit boards . Each tape is made of l-inch-wide,
+3 - mil-thick H film . One side of the tape has the range and range- rate display scales
+painted in black and white, while the other side has the gray code word with an exposed
+copper coating signifying a "1" and the lack of copper signifying a "0." A variable­
+polarity stepper motor is used to drive each tape. These 600-rpm motors operate
+through an 86:1 gear ratio for range tape drive and a 5 5 :1 gear ratio for r ange r ate
+tape drive. The gear train is connected to a spring that is attached to separate rollers
+to maintain constant tension on the tape .
+
+       The indicator, actually a complex digital computer , was developed under a two­
+phase program . The first phase produced a standard version for use on early space­
+craft, and the second phase produced a high- reliability version for use on manned
+spacecraft. The high-reliability version was basically identical to the standard
+version, with the following improvements added .
+
+       1 . Power signal monitor - The power signal monitor provides an alarm light
+in the event of (a) alternating current vo ltage be low 85 volts , (b) direct current voltage
+be low 20 vo lts, o r (c) input data loss.
+
+       2 . High-reliability parts - The read head and all electronic components are
+subjected to a 1 68-hour burn-in, with a 100-hour burn-in at 160° F for the 10 circuit
+cards . In addition, each card is tested at - 30 o, + 25 o, and +80 F, and each ass em ­
+                                                                   o
+
+
+
+bly is subj ected to a 32-hour temperature cycling.
+
+      3 . Mechanical improvements - Mechanical improvements included the use of
+a 7-watt permanent-magnet motor to replace the 4-watt four-pole variable- reluctance
+motor ; a 100-percent-helium filling medium for improved heat transfer ; enlarged tape
+spools ; and a heat sink for the motors .
+
+       The high-reliability indicator has been the source of many problems throughout
+the program . The most significant problem occurred on the Apollo 9 mission (LM- 3)
+just before launch. Test personnel observed erratic range tape operation while con­
+ducting various tests . The tape dropped below zero off-scale, oscillated below zero,
+or moved slightly below zero and then continued normal operation. Extensive testing
+on the vehicle could not duplicate the failure . A decision was made to replace the
+indicator and return the malfunctioning equipment to the manufacturer for failure
+analysis. Extensive testing by the manufacturer, including vibration and thermal
+environment, reproduced the failure; however, failure occurrence was random. Anal­
+ysis finally identified two causes for the problems:
+
+       1. Oscillation below z ero was caused by the serial number on the tap e . This
+failure occurred only if the tape went below zero, not a normal condition.
+
+       2. A dual inverter gate micrologic circuit was found to have a poor weld on the
+common emitter connection. Visual inspection showed the lead surface to be mottled.
+This failure caus ed incorrect information to be shifted into the comparator, and this
+shift resulted in the tape slewing below zero.
+
+
+
+
+ 16
+
+
+
+
+                                                             1l
+        A thorough analysis of the micrologic circuit indicated that the emitter weld
+j oint, a thermal compression bond, did not adhere to the pad . Tests were conducted
+on similar circuits, and in all cases, it was impossible to break the weld joint . The
+failure was concluded to be random and within the reliability of the parts ; therefore,
+no corrective action was taken. Other problems and corrective actions taken were as
+follows .
+
+       1 . Mechanical installation - C racked mounting tabs were found on indicators
+after installation into a vehicle pane l. The problem was traced to improper installa­
+tion into the panel. Modifications to the vehicle panels and installation procedures
+corrected the problem .
+
+       2. Motor drive circuit - Numerous indicators were rejected during preinstal­
+lation t ests . An investigation indicated that transient voltages in both the panel fabri­
+cation shop and the test area were causing the destruction of motor drive circuits .
+Corrective action included proper grounding and the installation of isolation
+transformers.
+
+       3. Calibration - Indicator problems, such as oscillations, inability to read
+be low certain points on a tape , and erratic tape ope ration, we re traced to i mprope r
+calibration technique s . To ensure proper calibration, procedure changes, including
+mandatory inspection points, were added, and the acceptance test plan was reviewed .
+The test plan revisions provided a supercalibration which added many additional test
+points .
+
+      Actual flight experience with the range indicator has been successful . The only
+criticism regarding this indicator by a flight crew was that the indicator does not
+operate like the simulator . Steps have been taken to make the simulators more like
+the actual flight vehicle to correct this situation.
+
+
+                                    Numeric Displays
+
+      Helium pressure/temperature indicator. - The helium pressure/temperature in­
+dicator is a digital voltmeter that accepts a 0- to 5-volt de input and provides a four­
+decimal-digit electroluminescent read-out. An external switch selects the read-out
+parameter and also sets the proper scale factor ratio . In selecting temperature , the
+read-out displays three digits and a sign (plus or minus) . When pressure is selected,
+four digits are displayed ; however , the last digit is always zero.
+
+      The display is packaged within a hermetically sealed enclosure consisting of a
+housing with end cap and glass front face. Sealing is accomplished by a solder seal
+band attaching the end cap and by epoxy sealing the glass front face. C omponents
+(integrated circuits) are mounted to multilayer printed circuit boards by welding. The
+boards are mounted to an aluminum frame and encapsulated. The potting used for
+encapsulation provides both protection during shock and vibration, and proper heat
+transfer .
+
+      Development of the indicator was plagued by case sealing problems and the un­
+availability of e lectro luminescent lamps. In addition to problems associated with
+solder seal bands (corrected by applying improved procedures and techniques), seal­
+ing of the glass front face was a difficult proble m to resolve . The initial design
+
+
+                                                                                        17
+employed glass to obtain a glass-to-metal seal . Because of problems encountered by
+the glass manufacturer in obtaining these seals , a design change was made. An epoxy
+seal, similar to that used on m eters, was developed. This seal has worked well
+throughout the program .
+
+      The problems associated with electroluminescent lamps were more basic than
+the seal problem . At the time the lamps were required, electroluminescence was in
+the early stages of development . Other procurements including meters , thrust-to­
+weight indicators, p ropellant quantity indicators, range indicators, timers, flags, and
+electroluminescent lamp panels were experiencing similar difficulties. The problems
+were especially acute in other digital-type electroluminescent lamps . Basically,
+problems were associated with inability to seal the lamps , removal of moisture from
+the basic material used, and voltage breakdown.
+
+      After completion of development and qualification testing, relatively few prob­
+lems ensued . A series of failures occurring after fabrication of all indicators caused
+concern. The problem was associated with initiation of the thermal cycle part of ac­
+ceptance testing. During this testing, approximately eight indicators were found to
+have shorts to the cas e . These shorts were found between the cases and signal
+grounds . Analysis indicated that the problem was not detrimental to indicator opera­
+tion, but that the problem was undesirable . Failure analysis of the indicators deter­
+mined that the problems were related to integrated circuits, and were found to be
+caused as follows .
+
+      1 . C ement used to bond and electrically isolate the chip from the case was
+contaminated .
+
+      2. The chip was s et into the case at an angle so that clearance between the chips
+and case was less than minimum specifications.
+
+      3 . Conductive heat- sink epoxy under the body of the integrated circuit was under
+two leads.
+
+      Corrective action for all causes was similar ; closer quality control was conducted
+during fabrication. In addition, vendor acceptance tests were revised to include an in­
+sulation resistance check from all pins to ground.
+
+       Propellant quantity indicator. - The propellant quantity indicator is a dual digital
+display that accepts an eight-bit binary- coded decimal word and provides a two-decimal­
+digit electroluminescent read-out. The read-out simultaneously indicates the per­
+centage of fuel and oxidizer quantities . Input is an 8-4- 2 - 1 format with the least
+significant bit first . The display is packaged within a hermetically sealed enclosure,
+consisting of a housing with an end cap attached by a solder sealing band at one end
+and by epoxy -sealed glass at the other end. Components, generally integrated circuits,
+are mounted to multilayer printed circuit boards by welding . The boards are mounted
+to an aluminum frame and encapsulated. Potting used for encapsulation was selected
+both to protect during shock and to provide heat transfer .
+
+      The propellant quantity indicator was manufactured by the same vendor as the
+helium pressure and temperature indicator . Throughout the program development,
+
+
+
+18
+
+
+
+
+                                                           ;l
+testing, and use, the same problems associated with this indicator were exhibited by
+the propellant quantity indicator . These problems included the failures associated
+with electroluminescent lamps, sealing, and , later in the program, integrated circuits.
+
+       Mission timer. - The mission timer is a seven-digit electroluminescent display
+showing mission elapsed time from 0 hours 0 minutes 0 seconds to 999 hours 59 min­
+utes 59 seconds . The display counts real time from either an external 10-pps input
+or an internal time source. The internal time source is actuated automatically when
+the external source fails and is indicated by an illuminated tuning fork appearing on
+the display face. External controls to reset, stop, start, and slew are provided to
+facilitate timer operation.
+
+       The mission timer program is notable for numerous problems that eventually
+required complete redesign and repackaging by a different manufacturer. The basic
+design of the original mission timer was of modular cordwood construction . This type
+of construction has electrical components (resistors, capacitors , diodes , etc. ) sol­
+dered between two circuit boards. The void between the boards is filled with a potting
+compound (fig . 6) . Differential expansion between the potting compound and the circuit
+boards caused the solder joints to crack,
+thus breaking electrical contact. Initiation
+of thermal acceptance testing accelerated
+                                                        Circuit board
+the interaction, causing failures to occur .
+Corrective action, whereby the timers
+were disassembled and additional solder
+was added to the connections, was at-
+tempted . This work created many new
+                                                  Typical solder joints
+problems and did not solve the original           which crack under st
+problem. After many additional ground
+failures and a flight failure during the
+Apollo 11 mission (LM- 5) , a decision was
+reached to procure newly manufactured
+timers . The new timers were m echani­
+cally and electrically interchangeable with
+the old timers. The new timers , in addi­
+tion to correcting the solder problem, in­
+cluded design changes to correct other
+timer problems .
+
+        The basic design of the new timers
+1,1sed integrated cir cuits welded on printed
+cir cuit boards instead .of cordwood con­
+struction. Other timer problems and their Figure 6. - Typical m odular construction.
+resolution were as follows.
+
+        1. Ele c trom agne tic inte rference {E MI) susceptibility - The original timers
+were extremely susceptible to ele c tric al noise generated during spacecraft tes ting.
+The installation of filters, wire s hie lding, changing switches, et cete ra did not cor­
+rec t the proble ms . The following design and te s t changes for the new time rs com­
+ple tely e liminated all noise problems.
+
+          a. Input commands {stop, start, slew, e tc . ) use +28 volts de for ac tivation
+instead of the +3 volts used for the original timers .
+
+                                                                                            19
+          b. Logic circuitry in the new timers is isolated from the input command
+lines by a buffer stage. The activation signal must be present for a specific time
+period to initiate the logic circuitry . The old timers were activated by the leading
+edge of a pulse . Therefore, a high-voltage short-duration transient of the type nor­
+mally found on the spacecraft will not affect the logic of the new timer.
+
+          c.   Extensive E MI testing included transients of -50 and +1 00 volts.
+
+       2. Cracked glass - The glass display panels of the timers cracked after instal­
+lation into the spacecraft. The exact nature of the crack was not determined ; however,
+cracks were thought to result from excessive stress built into the glass during fabri- .
+cation. The new timer uses a glass seal in front of the display panel and an epoxy­
+sealed display panel, void of stresses .
+
+      Unfortunately, the new timer design was not problem-free. Because of the short
+procurement s chedule, these problems were especially critical . The use of a new
+electroluminescent display panel and an internal oscillator cir cuit, were troublesome .
+
+       The new manufacturer decided to use electroluminescent lamp panels fabricated
+in his own facility. A four-digit display was fabricated and passed extensive qualifica­
+tion testing. While fabricating the mission timers (seven-digit display) many problems
+were encountered , primarily the inability of the electroluminescent lamp to withstand
+high voltage . After many attempts to resolve the problem, a new supplier was sought .
+The lead time required by the new supplier resulted in the procurement of an inter­
+mediate supply of electroluminescent lamp panels . The intermediate panels were ob­
+tained by cannibalizing the old timers and extracting the electroluminescent lamp
+panel s . The initial qualification and use of the new timers included the old electro­
+luminescent lamp panel and the new electronics .
+
+       The new internal oscillator circuit
+used , as did all other circuits, an inte­
+grated circuit. During panel testing, a              5V                5V
+discovery was made that at certain narrow
+temperature bands, the oscillator would
+                                                                              To countdown circuit
+not start once it had been stopped. During
+continuous operation over the required
+temperature range , no difficulties were
+encountered . After extensive analysis of
+the circuit (fig. 7(a) ) , a determination was
+made that some combination of resistance,
+                                                 T        I
+                                                 �---+----..J      T
+inductance, capacitance, and temperature                  (a) Original concept.
+reduced the circuit gain. This reduction
+in gain would not allow the circuit to start          Figure 7. - Oscillator circuit.
+reliably . The final solution of this prob­
+lem was a design change using transistors
+(fig. 7{b)) instead of logic gates.
+
+
+
+
+20
+
+
+
+
+                                                               I
+ 5V
+                                                            Other problems, including the pro­
+                                                     curement of multilayer printed circuit
+                                                     boards, the availability of integrated cir­
+                                                     cuits , and an insulation resistance prob­
+                                                     lem with inductors , caused some concern.
+                                                     These difficulties were solved while reso­
+                                      To countdown
+                                                     lution of the maj or problems was underway.
+                                      circuit
+                                                            A few of the new timers have been
+                                                     installed in a spacecraft and tested . The
+                                                     problems experienced with the old timers,
+                                                     especially noise susceptibility, have not
+                                                     recurred . The only problems to date have
+                                                     been related to use of old electrolumines­
+                                                     cent lamp panels . Because these panels
+                                                     were used in both the event and the mission
+                                                     timers, an apparent brightness difference
+             (b) Final concept.                      was noticed . To correct this problem,
+                                                     dropping resistors were added to the
+            Figure 7. - Concluded .                  electroluminescent lamp input power lines
+                                                     of the brighter of the two timers ; thus ad­
+                                                     justing the brightness of the displays to
+                                                     the same apparent level.
+
+      Event timer . - The event timer is a four-digit electroluminescent display that
+counts from 0 minutes 0 seconds to 59 minutes 59 seconds . The display counts real
+time either up or down, starting or stopping from external control switches . An ex­
+ternal switch allows the presetting of any time value by slewing any digit . This pro­
+gram experienced the problems associated with the mission timer, and the solutions
+were the sam e . The only difference was that the new event timer did not have prob­
+lems with the oscillator circuit. The old timers included an external oscillator to
+provide the 10-pps counting input . The use of an internal o scillator in the new event
+timer provided required timing accuracy and eliminated a source of system problems .
+
+      To date, with limited use , no serious event timer problems have occurred . As
+indicated for the mission timer, the only difficulty has been light intensity, but with
+the new electroluminescent lamp panels, this problem no longer exists .
+
+
+                                       Status Display
+
+       Flag indicators. - Flag indicators are electromechanical devices used within the
+spacecraft to present to the astronaut an indication of system operating status, mainly
+value position indicators . The L M uses 32 of these two- or three-position indicators .
+Flags are packaged within hermetically sealed enclosures, each consisting of a housing
+and end cap. The end cap includes an epoxy- sealed glass window. Mechanical (fig. 8 )
+and e lectrical (fig. 9) designs for both the two- and three-position flags are essentially
+the sam e . The principal difference is the addition of another input and of discrete
+components to the three-position flag. Mechanically , the flags follow a basic leaf
+spring positioning concept . The center flag, appearing in the viewing aperture with
+no signal, is held in position by a cantilevered leaf spring acting against a rectangular
+
+
+                                                                                             21
+positioning block. A 22- to 32-volt de signal sends current through the electrical
+circuit and the torquer coil, moving the dial against a stop, thus exposing another flag.
+Removal of the signal will return the flag to the original position.
+
+
+
+                                                                 S ign        ai A_____,_1
+                                                             I �;...;::.....;. -.
+
+
+
+
+                                                             2   Signal ground
+
+
+
+
+                                                            [)115 V ac
+                                                                                                         [2'1          l
+                                                                                             flectroluminescent lamp
+             Indicator                                      m115 v ac ground                             0
+             action                                                                                                    T
+
+                                                                         { a) Two -position indicator .
+
+                                �agnet                                          Rl
+
+
+      �
+                                                                             .---v' /'---.
+
+5in  { �95in
+         7.                                                                    3.0 kO
+
+
+
+      in.
+     l.l25
+                         . (I
+                                �§'
+                                � "'            Polepiece
+                                                                 Signal A
+
+
+                                                                 Signal B
+
+
+                                                             2 Signal ground
+                 Figure 8 .     -   Flag indicator.
+
+                                                            8]115 V ac
+      The flag program , from initial de­                                            [ZJ         ::::L
+velopment to present usage, has had many [}] 115 V ac ground             Electroluminescent lamp
+
+problems . The most annoying problem has                                             0---'-      T
+been flag hangup , or hesitation. Although
+many corrective actions have been taken,             (b) Three-position indicator.
+this problem has never been solved . An
+analysis of acceptance and qualification                Figure 9. Flag indicator       -
+
+
+
+failures identified the following failure                    circuit diagram.
+modes .
+
+      1 . Bearing bridge resonance - The bearing bridge resonated under random
+vibration, causing the flag to hang up . Design changes were made to the bridge to
+increase the resonant frequency above the critical level.
+
+      2. Coil clearance - The clearance between the coil and the pole piece or magnet
+(or both) was not sufficient ; under random vibration, the coil would bind . Corrective
+action included increasing clearance and more accurate part alinement .
+
+      3 . Spring system - Many flag hangups were caused by improperly formed
+springs . Procedures were implemented for proper spring formation and for spring
+tension m easurement.
+
+22
+
+
+
+
+                                                                                  'll
+      4. Flex lead drag - The flex lead which carries current to the coil was binding
+on the shaft. Corrective action included wire layout revision.
+
+      5. Dial clearance - The dial stuck to the case and stops because of lack of
+clearance. This problem was corrected by providing proper tolerances and by adding
+a rubber bumper to the stop .
+
+      Solution of the previously mentioned undesirable flag characteristics did not
+eliminate the hangup proble m s . Additional analyses determined that flag hangup was
+also attributable to the following.
+
+      1.   Cement residue or paint on the stops
+
+      2.   Flex lead drag because of slight misalinement
+
+      3. Random peak of spring-block friction from rough spots on the spring or
+actuator block
+
+      4.   Nonuniform loading of spring leaves against the actuating block
+
+      5.   Particulate contamination
+
+      A review of these problems and earlier flag problems indicates that the best cor­
+rective action would be flag redesign . Rede s ign would provide enough dial restoring
+torque to overcome any slight increase in friction or sticking. Steps were taken to
+improve the yield without redesign . A quality control audit was conducted to elimi­
+nate contamination ; acceptance thermal cycling was added ; manufacturing procedures
+were refined ; and additional screening was added to acceptance testing. These actions,
+while reducing the number of field failures, have not eliminated them . Field failures
+that do occur are not hard hangups. The flags recover after a few seconds or require
+tapping to cause transfer. Because of low mission criticality of the flags, this solution
+to the problem was considered acceptable. Failures of this type (hesitation) have oc­
+curred on almost every flight of the LM.
+
+       Component caution indicator. - Component caution indicators are small incandes ­
+cent lamp assemblies used to indicate system malfunction (red and yellow lamps) and
+lunar touchdown (blue lamps) . The lamps are mounted in aluminum housings secured
+to the panel by a two-bolt flange (red and blue lamps) or integral screw threads (yellow
+lamps) . Clear silicone supports the lamps in the housing. The electrical terminals
+are epoxy sealed. The legend is provided by a filter with a white diffuser cemented to
+the housing.
+
+      Design, development testing, and use of these indicators for the LM have been
+successful . The only problem has been an occasional broken filament . The failures
+that did occur happened early in the indicator life and did not affect the program . One
+shortcoming of the lamps is that the panels cannot be removed and replaced easily .
+The assemblies are back mounted and hard wired into the panels, requiring panel re­
+moval for lamp change . The lamps also are molded into the assembly and cannot be
+removed without being destroyed. Redesign to make lamp replacement easier would
+be an advantage over the present design.
+
+
+
+
+                                                                                     23
+      Caution and warning display . - The caution and warning display is an incandescent
+lamp assembly used in conjunction with the caution and warning electronics to indicate
+and isolate system malfunctions . Each spacecraft has four display matrices, two red
+matrices located on panel 1 and two yellow matrices located on panel 2. The individual
+legends are illuminated when a 5-volt de signal is commanded from the caution and
+warning electronics.
+
+      Each display assembly consists of 10 identical lamp modules located in a flange­
+mounted aluminum housing. Filters, legends, and color diffusers form separate
+subassemblies that are completely interchangeable . Electrical connections among
+lamp modules and external power are provided in printed circuit boards. These boards
+also include blocking diodes and inrush current-limiting resistors. Each lamp module
+contains two subminiature bulbs potted into place. Five lamp modules and a circuit
+board assembly are mounted together and potted into a subassembly . Two of these
+subassemblies and 10 legend subassemblies are mounted to a bezel by eight screws to
+form a complete assembly.
+
+      The caution and warning display, which is similar to the component caution indi­
+cator, has a history of success. Similar to the caution indicator , the only problem
+to date has been an occasional broken filament . The impact of a broken filament could
+be minimized by redesigning the display to include removable bulbs . Another design
+improvement would be to include the ability to make legend changes without completely
+removing the assembly from the panel .
+
+
+                                   Interior Lig hting
+
+       Floodlights . - Floodlights, used to illuminate the display panels within the space­
+craft, consist of the following four types of incandescent lamp assemblies.
+
+       1. C eiling floodlight - The ceiling floodlight uses four miniature lamps elec­
+trically and mechanically affixed to a printed circuit board. Each lamp uses a clear
+polycarbonate lens for magnification and redirection of light for optimum lighting.
+The housing is made of an aluminum sheet metal cover fastened to tapered baffles
+arranged to produce sharp light cut -off. A hood is provided to direct the light within
+the spacecraft .
+
+       2 . Forward floodlight - The forward floodlight uses one miniature lamp me­
+chanically retained by a nylon insert . Electrical connection and mechanical support
+are p'rovided by a spring-loaded contact . The assembly contains a clear polycarbonate
+lens designed for magnification and direction of the direct and reflected light to the
+proper area.
+
+      3. Post floodlight - The post floodlight uses one miniature lamp with integral
+wire leads for electrical connection. The lamp is soldered directly into the unit lead
+wires and potted into a poly carbonate lens . The housing is made from an aluminum
+spinning and employs baffles to direct the light to the proper area.
+
+      4. Side-panel floodlight - The side-panel floodlight uses two miniature lamps
+with integral wire leads for electrical connection . The lamps are soldered to terminals
+
+
+
+24                                                                                  S-285
+
+
+
+
+                                                              .l
+within the housing and potted into place. The housing is made from molded diallyl
+phthalate . The light produced i s directed through a sandblasted nylon light filter
+secured to the housing with a lens retainer .
+
+       The history of floodlights throughout the L M program has been similar to that
+of other incandescent lamps . Failures have been few in number and have been limited
+to filament failure s . During early development, problems were encountered in meet­
+ing vibration requirements . These problems were resolved by simple modifications
+to floodlight assemblies and, in the case of ceiling lights, by providing a special
+vibration-isolation mounting in the spacecraft. The only other problem occurred dur­
+ing installation of the post floodlights into the spacecraft panels . Unless these lights
+were handled with extreme care, wires were broken. To correct this problem, the
+circuit boards were modified to lock into the housing. Here again, as with other
+incandescent light assemblies, floodlights should be made to permit easier replacement
+of defective lamps . As previously indicated, changing of lamps requires removal
+from the spacecraft and disassembly of the light .
+
+       Utility floodlight. - Utility floodlights are portable lights used for additional panel
+lighting, search of r emote locations in the spacecraft, and reading. Utility floodlights
+use two miniature incandescent lamps in a machined Teflon housing which acts as a
+thermal and electrical insulator. The light assembly includes an 8-foot flexible cable
+and a universal lamp at the bas e . This arrangement allows the light to be either hand­
+held or clamped to the spacecraft structure . The assembly has two separate lamp
+beams, provided by clear glass lenses designed for magnification and light direction.
+
+      The utility floodlight program was similar to all other incandescent light pro­
+grams . No significant problems occurred during development or qualification testing,
+and except for a few broken filaments, no acceptance testing or use problems were found.
+
+       Electroluminescent lamp panels . - Electroluminescent lamp panels are solid­
+state lamps of various shapes and sizes used to illuminate panel nomenclature. Light
+is emitted from a thin layer of phosphor when the layer is electrically excited. Lamp
+construction is similar to that of a capacitor , as shown in figure 10. A phosphor/
+dielectric is placed between two closely spaced electrodes and is hermetically sealed
+into a plastic envelope . The light produced i s dependent on voltage for intensity and
+on frequency for color .
+
+      The procurement of electroluminescent lamp panels has been relatively free of
+problems since the start of the program . Initially , electroluminescence was state of
+the art, which led to problems in manufacturing techniques . When these initial prob­
+lems were corrected, only two additional difficulties developed . The first concern
+was the development of dark spots in the electroluminescent lamps after extensive
+periods at high temperature. This problem was brought to the attention of the manu­
+facturer, and corrective action was taken. Because fabrication of electroluminescent
+lamps is proprietary information, corrective action details could not be obtained . The
+only other concern was high- resistance shorts that developed around the leads . This
+problem was caused by the phosphor bronze mesh lead floating to the top of the plastic
+covering during processing. Corrective action included process specification revision
+and changing of the mesh material . Testing has proved this and all other corrective
+actions acceptable.
+
+
+
+                                                                                          25
+            C oppe r
+                                             Phosph o r b ronze
+            w i re lead �
+                                             mesh lead                A l u m i n u m fo i l
+                                                                      cond u cto r
+
+     Pl a st i c --�   E=���§�-                                       P hospho r
+                                                                      die lect r i c
+                                                                      top con d u cto r
+
+
+                                                                         Ny lon
+
+                         Figure 10. - Electroluminescent panel .
+
+
+      Switch tips. - Switch tips are small self-illuminated plastic caps used as handles
+for all LM toggle switches. The illumination is required to indicate switch position
+in a darkened spacecraft. The following four types of switch tips were used.
+
+       1.   Maintain
+
+       2.   Momentary
+
+       3.   Lever lock
+
+       4 . Slew (four-way momentary)
+
+       The tips are fabricated from transparent plastic (Kel- Fj and illuminated by means
+of self-luminous paint deposited in holes . During fabrication, the self- luminous paint,
+activated with promethium - 14 7 in the form of microspheres, is s ealed into glass tubes .
+The tubes are placed in holes in the switch tip and are sealed by an epoxy plug. The
+exact number of tubes in each tip and their locations are determined by the switch
+function.
+
+       The problems associated with switch tips would have been insignificant if the tips
+did not contain promethium - 147. This material emits beta particles and has a half­
+life of 2. 6 years. Being radioactive, the material comes under control of the Atomic
+Energy Commission and must be handled according to their procedures . These pro­
+cedures include ( 1) a periodic smear test to check for leakage and (2) tight control in
+the event of leakage. Problems associated with this material were vividly demon­
+strated j ust before the flight of Apollo 1 1 (LM- 5) . Mechanical damage to several tips
+caused leakage of the radioactive material during panel rework and required extensive
+cleaning of the spacecraft and additional medical tests for the crew after completion
+of the flight . As a result of this Apollo 1 1 problem, tighter control was initiated by
+NASA to ensure that similar situations did not recur. In addition to these handling
+problem s , other significant problems appeared.
+
+
+
+
+26
+       As a result of flammability investigations, the original switch tip material was
+c hanged to Kel- F. As a part of this modification, the method of implanting the lumi­
+nous material was revised . The depositing of the luminous material into the plastic
+was causing a reaction and eventual radioactive leakage. To eliminate this difficulty,
+glass tubes were used . This m ethod provides both glass and plastic seals, thereby
+eliminating leakage. The glass tubes were used in all switch tips, except for a large
+dot in the center of the lever-lock tip. This tip was not originally changed because of
+the size of the dot. Later, this dot was changed to two glass tubes, required because
+of excessive leakage caused by material reaction around the dot.
+
+      Use of these switch tips under actual flight conditions does not appear necessary.
+Debriefing of flight crews has indicated that the crew did not use the switch tips and
+would not operate a switch unless they could see what they were doing. Based on
+these discussions and potential problems with radioactive devices, a hard look should
+be directed to the use of switch tips in future programs .
+
+
+                                   Exte rior Lighting
+
+       Self-luminous disks . - Self-luminous disks are small illuminated disks used to
+illuminate the docking target. The target is attached to the exterior LM structure as
+an aid in final docking maneuvers.    Additional disks are located on the spacecraft
+external surface to aid an astronaut during extravehicular activity. Each disk is made
+of a fused silica outer housing which contains a luminous compound. The luminous
+compound consists of promethium- 14 7 microspheres as a physical mixture with a
+suitable phosphor and inorganic binders. After curing at elevated temperatures, a
+ceramic plug is cast behind the disk to seal the luminous material in place .
+
+      Problems related to switch tips also appeared in these disks . The disks, being
+more rugged and mounted externally to the spacecraft, have presented fewer handling
+problems. The only problem associated with the disks occurred early in the program
+during temperature testing. The problem, cracking of the disks , was resolved by
+modifying the mounting used to clamp the disk to the target. Since then, no problems
+have occurred. An important consideration is the limited lifetime of the target because
+of radioactive half- life. To ensure correct brightness during flight, disk fabrication
+must take place as close to launch time as possible . To accomplish this, the target
+is shipped from the manufacturer to NASA Kennedy Space Center for installation as
+close to launch time as practical.
+
+      Docking light s . - Docking lights are running lights mounted on the LM exterior
+to provide visual orientation and to permit gross attitude determination during ren­
+dezvous and docking. The lights are visible and their color recognizable at a maxi­
+mum distance of 1000 feet. The colors of the lights and their locations are as follows .
+
+
+                  Color                                      Location
+
+                  Red                           Port light
+
+                  Green                         Starboard light
+
+
+
+                                                                                    27
+                     Color                                      Location
+
+                    White                          Mt light
+
+                     Yellow                        Forward light (negative Y-axis)
+
+                    White                          Forward light (positive Y-axis)
+
+
+       The lights are fabricated by using up to six miniature lamps, wired with two
+lamps in series to a terminal board. A silicone rubber color filter is placed over
+each lamp before it is mounted to the terminal board. The terminal board lamp
+assembly is mounted on an aluminum housing, wires are potted in place, and an
+aluminum cover is installed. A glass window is j oined to a support which is then
+secured to a stainless steel housing, forming a window subassembly. This assembly
+is fastened to the housing assembly and secured ; thus completing the light as shown
+in figure 1 1.
+
+                                                     This program has been quite success­
+                                              ful . Three failures that occurred during
+                                              qualification tests were attributed to an
+                                              easily corrected manufacturing defect.
+                                              There have been no failures on vehicles
+                                              during testing or in flight. The initial
+           0. 260- i n .
+                                              contract for docking lights was terminated
+           diameter --+-�I                    after many serious design problems oc­
+                                              curred. The history outlined relates only
+24-i n .                                      to the second contractor.
+                              dia meter
+                                                     Tracking light . - The tracking light
+                                              is a high-intensity light that permits, at
+      Figure 1 1 . - Exterior docking light.
+                                              distances of up to 400 nautical miles,
+                                              visual tracking of the LM vehicle by the
+command and service module. The light has a 60 ° beam spread and flashes at a rate
+of 50 flashes per minute. The light consists of two separate assemblies (electronics
+and flash head) j oined by a high-voltage cable. The electronics section consists of a
+filter network, an oscillator, a magnetic amplifier, high-voltage output bridges, a
+pulse-forming network (PFN) , and a trigger circuit. The flash head section consists
+of a special design reflector and a xenon flash tube. Successful operation of the light
+is dependent upon the design and assembly of the high-voltage section depicted in fig­
+ure 12.
+
+       Tracking light history has been marked by numerous failures that have occurred
+in testing, acceptance and qualification, and flight during the Apollo 9 and 12 missions.
+As a result of design problems, the contract with the original light manufacturer was
+terminated before any manned Apollo missions were flown, and a new manufacturer
+was obtained. The new manufacturer, along with the prime LM contractor, was re­
+sponsible for design and fabrication of the light used during all L M flights. Failures
+
+
+
+
+28
+
+
+
+
+                                                               -I
+                                                                                   :1
+                                                 :
+                                                 r - - - - - - - - - -
+
+                                                     ---
+                                                              -22 kV
+                                                 I
+                                                                              -,    :
+                            F ro m
+                          powe r
+                          s u pply                    ' Flash
+                                                     )  t ube
+
+
+                                     Ll 4
+
+
+
+
+                                     2 kV
+                                                                       S pa rk
+                                                                       ga p
+
+
+
+
+                      --
+   T ra n s i e nt
+                      j
+   s u pp re s s ion .l
+   capacito r        T                      Cl           C2
+                        1
+                      I
+
+
+
+
+          Figure 1 2 . - Pulse-forming network, trigger, and lamp circuits.
+
+
+that occurred were attributed to high-voltage section problems. These failures , and
+the corrective action listed as follows were encountered after the Apollo 9 failure.
+
+      1. Pulse-forming-network failure - Because of qualification failures, design
+changes were implemented on the P FN. Analysis indicated that the most probable
+cause of failure was a low-pressure void within the P FN, and this void allowed voltage
+breakdown. To ensure that a void could not occur and to correct other design prob­
+lems, the following changes were implemented:
+
+          a.   Terminals were changed to a more reliable type.
+
+          b.   Terminals were brazed into place .
+
+                                                                                        29
+            c.   Manufacturing procedures for cans were changed to heliarc welding.
+
+            d. A controlled-pressure nitrogen bubble was created within cans.
+
+            e. Inductors were potted.
+
+Mter these changes were completed, the P FN underwent extensive testing as a com­
+ponent and as part of an asse mbled light. No failures were attributed to the P FN dur­
+ing any of the testing.
+
+      2. Flash head arcing - Another possible cause of failure was arcing within the
+flash head. A r eview of the flash head design indicated changes could be made to in­
+crease reliability. These changes included the following:
+
+            a.   Development of new potting procedures
+
+            b.   Relocation of connections to reduce electric field
+
+          c . Procurement of a new high-voltage cable with higher breakdown voltage
+and better bonding capability
+
+            d. Use of a wavy-type spring washer to prevent cracking of the ceramic
+insulator
+
+            e.   Elimination o f th e void area at the connection of the high-voltage cable
+
+      3. High-voltage arcing - To eliminate the possibility of arcing within the
+electronic high-voltage section, various changes were made, including the following:
+
+        a.       Use of new potting procedures, including sandblasting of certain
+components
+
+            b. Addition of an arc- suppression capacitor to reduce transient voltages
+
+            c.   Relocation of connections to reduce electric field and provide longer
+path
+
+      These changes and improvements, along with an extensive thermal vacuum ac­
+ceptance s creening, were implemented in an attempt to preclude further light failures .
+However, these actions were not successful, as evidenced by the Apollo 1 2 failure.
+
+      As a result of the Apollo 12 failure, another thorough analysis of the light design
+and its operation was undertaken. The analysis did not pinpoint a design deficiency,
+but did indicate the probability of high-voltage failures. A determination was also
+made that voltage breakdown at the flash head could occur as a result of potting dete­
+rioration. The deterioration could be caused in flight when the light is directed at
+the sun. Because positive corrective action could not be taken, the following changes
+were made.
+
+      1. Reduction of the operating voltage of the light - A change in operating voltage
+increased the safety margin of all high-voltage components (power supply 2000 volts de
+as opposed to 4000 volts de; trigger pulse 1 6 kilovolts as opposed to 22 kilovolts ; power
+145 watts as opposed to 1 75 watts) .
+
+30
+      2.   Reduction of flash rate - The change in flash rate decreased the duty cycle .
+
+      3. Acceptance testing - The time the light is on during critical pressures of
+acceptance thermal vacuum testing was increased.
+
+      4. Daylight restriction - The use of the light was restricted to night operation
+only to preclude heating by the sun. Thermal reflection was added to the paint to
+dissipate he at if the light is turned on in sunlight .
+
+       These changes have been incorporated into tracking lights now being installed
+into the spacecraft . At the present time, no flight data exist to ascertain if the changes
+are adequate. Should the present design light fail during flight, only one corrective
+action remains . The latest analyses, including a review of other devices, indicate
+that the ultimate solution to high-voltage breakdown problems is pressurization.
+Therefore, despite the possibility of flying all remaining flights with the present con­
+figuration even if it fails, the light should be redesigned to include pressurization of
+all high-voltage areas. This solution to the problem would be expensive and time con­
+suming and, in addition to deletion of the light, should be considered if another flight
+failure occurs.
+
+
+                             M i scel l a n e o u s C o m p o n ents
+
+      Time delay. - The time delay is an electronic circuit and relay assembly used to
+delay supercritical helium flow to the descent engine fuel tanks . The delay eliminates
+the possibility of fuel freezing as a result of helium flow. The time delay is packaged
+within a hermetically sealed enclosure . Electronic components, including resistors,
+capacitors, transistors , diodes, and relays, are soldered to printed circuit boards
+mounted within the enclosure . The components are potted in place to ensure thermal
+transfer and provide vibration isolation.
+
+      A review of the history of this device indicates a suc cessful system. The initial
+design phases experienced some minor problems, e asily corrected before completion
+of qualification testing. Process control and acceptance testing has been a reliable
+screen. There have been no problems during vehicle testing or flight.
+
+       Control assembly . - The control assemblies consist of three black boxes used to
+provide signal processing and switching between the various LM subsystems . Two of
+the boxes are located in the cabin behind panel 3, and the third box is located in the
+descent stage. Components (resistors, diodes , relays, transistors , capacitors, etc . )
+are mounted on printed circuit cards secured within the boxes . Electrical connections
+are brought out of the boxes on pigtail connections sized to mate with vehicle connec ­
+tions . The three hermetic ally sealed boxes were standardized to facilitate design and
+minimize testing. The original LM design included a stabilization and control panel
+with a few electronic components mounted on the back. These components grew in
+number until it became necessary to find another location. Cont rol assemblies 1
+and 2 were developed first, while control assembly 3 was developed later.
+
+
+
+
+                                                                                      31
+      The circuitry within control assemblies 1 and 2 is generally associated with the
+following functions.
+
+         1.       Steering error signals
+
+         2.       Guidance control
+
+         3.   ·   Ascent and descent engine control circuitry including the following:
+
+                  a . Automatic engine ON/OFF
+
+                  b . Abort
+
+                  c . Abort stage
+
+                  d.   Time delays
+
+                  e.   Fire override
+
+                  f.   Ascent engine latching device logic
+
+        4.        Translation
+
+        5.        Despiking filters
+
+        6 . Dead-face simulator
+
+        7.        Caution and warning tone generator
+
+Control assembly 3 , located in the descent stage, includes functions associated with
+lunar surface contact lights and descent engine shutoff.
+
+       Problems associated with control assemblies have been mainly in the area of
+reliability rather than actual hardware failures. After the design and qualification of
+assemblies 1 and 2, a determination was made that many single- point failures could
+occur . To preclude these failures, design changes were necessary. Because as­
+sembly 3 was in the early stages of fabrication, redundant paths were included within
+the box . Control assemblies 1 and 2, being in later stages of fabrication, could not
+be changed easily. Analysis indicated that external wiring changes could be made
+to improve system reliability. These wiring changes were made, and the system has
+operated successfully throughout all missions. The only hardware problem to date
+has been with relays . Several relays failed to close after a temperature test at 20 ° F.
+Failure analysis indicated that the failure was caused by a polyethylene glycol con­
+taminant which had a freezing temperature in the 34 o F range. Because the disposi­
+tion and quantity of the polyethylene glycol in the can is critical, no foolproof corrective
+action was available. Thermal cycling of the control assemblies was thought to be an
+effective screen and was included as part of acceptance testing.
+
+        Other than the temperature problem, the control assemblies have been success­
+ful .   There have been no known flight failures or vehicle test failures. The use of
+
+
+
+32
+
+
+
+
+                                                                  Il l
+  these boxes should be considered for other programs ; however, consideration should
+  be given to make design changes more practicable .
+
+        Overlays. - Overlays are plastic {polycarbonate) panels of various shapes and
+  sizes used to provide identification of all vehicle displays and controls. The overlays
+  are placed over the electroluminescent panels, with the resulting assembly secured to
+  the panel structure. Overlay panels are processed to include clear areas, yellow and
+  black stripping, white indicia, and gray background. Markings (indicia) are produced
+  by a photographic etching process. Overlays of various shapes and sizes are required
+  to accommodate display panels .
+
+       The overlay program has been successful, with few failures. However, two
+ areas of concern should be reviewed. The first area is the potential fire hazard of the
+ plastic material. Design changes were initiated to install fire barriers along all over­
+ lay edges. These barriers of aluminum channel, along with the panel- mounted com­
+ ponents, act as heat sinks in case a fire is started. Tests have indicated that even in
+ an oxygen atmosphere , when a direct external flame is removed from a burning panel,
+ the overlay will not continue to burn. The other concern pertains to panel changes .
+ With the present overlay system, nomenclature changes are costly in time and money.
+ Simple changes can be made by overpainting; however, these changes will not be il­
+ luminated . A marking system should be developed that is more e asily changed .
+
+
+                                     CONCLU S I O N S
+
+
+        The lunar module display and control subsystem has successfully completed the
+ required mission. Num erous failures of all devices have occurred during all phases
+ of testing and during a few flight anomalies . The initiation of acceptance vibration
+ and thermal testing has been instrumental in reducing the number of vehicle test and
+ flight failures. Flight anomalies including tracking light failure on the Apollo 9 and
+ 12 missions and mission timer failure on the Apollo 1 1 flight have had positive cor­
+ rective action taken to preclude their recurrence . Components including ( 1) flag
+ indicators, {2) servometric meters, (3) toggle switches, and (4) tracking lights con­
+ tinue to cause concern because of their high failure rate. Corrective actions taken
+ to date, in addition to extensive acceptance testing, have minimized the probability
+ of a flight failure, but have not eliminated the possibility.
+
+       The most significant recommendation of this review concerns the spacecraft .
+ panels rather than the components mounted therein. Apollo design philosophy required
+ components to be designed so as to be rear mounted and hard wired into panels which
+ were then mounted into the spacecraft. This philosophy necessitated panel removal
+ and electrical and mechanical demating for replacement of components, as well as
+ correction of m inor problem s . In designing future spacecraft, consideration should
+ be given to providing more accessible and replaceable components. This action will
+ minimize vehicle downtime , improve reliability, and simplify retesting.
+
+
+ Manned Spacecraft C enter
+      National Aeronautics and Space Administration
+            Houston, Texas , May 1 9 , 1 971
+                 914-1 3 - 00 - 00-72
+
+NASA-Langley, 1972 - 3 1   S-285                                                      33
+
