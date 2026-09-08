@@ -75,6 +75,25 @@ struct LMCommanderStationAssemblyTests {
                                            loadControl: { try Entity.load(contentsOf: LMKitAssets.controlURL($0)) })
         }
     }
+    @Test func installsPanelSurroundsOnceAndRejectsMismatchedInterfaces() throws {
+        let assembly = try LMCommanderStationAssembly.load()
+        let panels = try LMCommanderStationAssembly.unique("CommanderPanels", in: assembly.cabin)
+        #expect(LMCommanderStationAssembly.near(panels.transformMatrix(relativeTo: assembly.cabin), matrix_identity_float4x4))
+        for name in ["DSKY", "FDAI"] {
+            let interface = try LMCommanderStationAssembly.unique(name + "_Interface", in: panels)
+            let reservation = try LMCommanderStationAssembly.unique("Mount_" + name, in: assembly.cabin)
+            #expect(LMCommanderStationAssembly.near(interface.transformMatrix(relativeTo: assembly.cabin), reservation.transformMatrix(relativeTo: assembly.cabin)))
+        }
+        let invalid = try Entity.load(contentsOf: LMKitAssets.commanderPanelsURL)
+        let interface = try LMCommanderStationAssembly.unique("FDAI_Interface", in: invalid)
+        interface.position.x += 0.01
+        #expect(throws: (any Error).self) {
+            try LMCommanderStationAssembly(asset: Entity.load(contentsOf: LMKitAssets.cabinSkeletonURL),
+                manifestData: Data(contentsOf: LMKitAssets.cabinMountsURL),
+                loadControl: { try Entity.load(contentsOf: LMKitAssets.controlURL($0)) },
+                loadPanels: { invalid })
+        }
+    }
     @Test func instrumentObserverHasPrecedence() {
         #expect(LMCommanderStationAssemblyObserver.selected(arguments: []) == nil)
         #expect(LMCommanderStationAssemblyObserver.selected(arguments: ["--assembly-validation-view=side"]) == .side)

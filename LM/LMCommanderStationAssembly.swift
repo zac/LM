@@ -31,7 +31,8 @@ final class LMCommanderStationAssembly {
     }
 
     init(asset: Entity, manifestData: Data,
-         loadControl: (LMKitAssets.ControlFamily) throws -> Entity) throws {
+         loadControl: (LMKitAssets.ControlFamily) throws -> Entity,
+         loadPanels: () throws -> Entity = { try Entity.load(contentsOf: LMKitAssets.commanderPanelsURL) }) throws {
         manifest = try JSONDecoder().decode(Manifest.self, from: manifestData)
         guard manifest.units == "meters", manifest.coordinate_space.contains("NOT parent-local") else {
             throw AssemblyError.invalidContract("Mount coordinate space")
@@ -86,6 +87,28 @@ final class LMCommanderStationAssembly {
         for name in ["Panel_1_Reservation", "Panel_4_Reservation", "CDR_Glareshield", "LMP_Glareshield"] {
             try Self.unique(name, in: cabin).isEnabled = false
         }
+        // The separate surrounds use Cabin coordinates; never reapply a panel pose.
+        // Load and validate while detached so any failure preserves the live fallback.
+        let panelAsset = try loadPanels()
+        let panelRoot = try Self.unique("CommanderPanels", in: panelAsset)
+        guard Self.near(panelRoot.transformMatrix(relativeTo: panelAsset.parent), matrix_identity_float4x4) else {
+            throw AssemblyError.invalidContract("Non-neutral commander panels")
+        }
+        for name in ["DSKY", "FDAI"] {
+            let interface = try Self.unique(name + "_Interface", in: panelRoot)
+            let reservation = try Self.unique("Mount_" + name, in: cabin)
+            guard interface.children.isEmpty,
+                  interface.components[ModelComponent.self] == nil,
+                  Self.near(interface.transformMatrix(relativeTo: panelRoot),
+                            reservation.transformMatrix(relativeTo: cabin)) else {
+                throw AssemblyError.invalidContract("Commander panel interface: \(name)")
+            }
+        }
+        guard !Self.descendants(panelRoot).contains(where: {
+            $0.name == "DSKY_Key_PRO" || $0.name == "FDAI_Ball_Pivot"
+        }) else { throw AssemblyError.invalidContract("Duplicate panel instruments") }
+        Self.removeInput(in: panelAsset)
+        cabin.addChild(panelAsset)
         // Two generic shape specimens on an otherwise unused reservation, well
         // away from the functional Panel 5 controls. No semantic assignment.
         let tier = try Self.unique("Mount_CDR_MiddleTier", in: cabin)
