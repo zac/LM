@@ -40,6 +40,11 @@ final class LMCommanderStationScene {
     let dskyFaceRoot = Entity()
 
     private let cabinFrame = Entity()
+    private var cachedShadowCasterCorners: [SIMD3<Float>]?
+    private(set) var cockpitShadowFit: LMCockpitShadowFit?
+    #if DEBUG
+    private var lastShadowEvidenceWrite: TimeInterval = 0
+    #endif
     private let fdaiMount = Entity()
     private let dskyDisplayMount = Entity()
     private let physicalDSKYAnnunciatorLegends = ModelEntity()
@@ -72,9 +77,10 @@ final class LMCommanderStationScene {
                 elevationDegrees: angles.elevationDegrees, altitudeMeters: 1_000)
             provisionalTerrain.findEntity(named: "MissionSun")?.removeFromParent()
             provisionalTerrain.addChild(sun)
-            // Global terrain retains its existing fixed initial shadow range.
-            terrainSun = nil
+            // The provisional light also participates in the local shadow fit.
+            terrainSun = sun
         }
+        updateCockpitShadow()
         recordLighting(stage: "before-first-publication")
     }
 
@@ -126,6 +132,7 @@ final class LMCommanderStationScene {
         lunarWorld.addChild(terrain.root)
         // Preserve an already-present vehicle view before the next publication.
         if let state = lastVehicleState { terrain.apply(state) }
+        updateCockpitShadow()
         recordLighting(stage: "after-global-terrain-swap")
     }
 
@@ -155,7 +162,6 @@ final class LMCommanderStationScene {
     private var terrainGenerationTasks = [LMTerrainTileID: Task<Void, Never>]()
     private var terrainGenerationTokens = [LMTerrainTileID: UUID]()
     private var lastTerrainPresentationBlendBucket: Int?
-    private var lastMissionShadowDistanceMeters: Float?
     private var artistCabin: Entity?
     private(set) var commanderAssembly: LMCommanderStationAssembly?
     private var exteriorLunarModule: Entity?
@@ -239,6 +245,7 @@ final class LMCommanderStationScene {
         cabinFrame.addChild(fdaiMount)
         buildPhysicalFDAI()
         installImportedFDAI()
+        updateCockpitShadow()
         #if DEBUG
         LMInstrumentValidation.frameObserver(root)
         LMCommanderStationAssemblyObserver.frame(root)
@@ -324,6 +331,8 @@ final class LMCommanderStationScene {
         registration.addChild(lander)
         root.addChild(registration)
         exteriorLunarModule = registration
+        cachedShadowCasterCorners = nil
+        updateCockpitShadow()
     }
 
     private func setDynamicShadowCasting(_ castsShadow: Bool, in entity: Entity) {
@@ -355,11 +364,11 @@ final class LMCommanderStationScene {
         lastVehicleState = state
         if let globalCockpitTerrain {
             globalCockpitTerrain.apply(state)
+            updateCockpitShadow()
             applyFDAIAttitude(state.attitude)
             return
         }
         applyFDAIAttitude(state.attitude)
-        updateMissionShadow(altitudeMeters: state.altitudeMeters)
         updateRockDetail(altitudeMeters: state.altitudeMeters)
         let terrainPosition = terrainPosition(for: state.positionMeters)
         let surfaceSample = progressiveSurfaceSample(
@@ -381,6 +390,7 @@ final class LMCommanderStationScene {
             attitude: state.attitude,
             surfaceElevationMeters: terrainDatumElevationMeters
         ))
+        updateCockpitShadow()
         requestProgressiveTerrain(
             around: terrainPosition,
             velocityNorthMetersPerSecond: state.velocityMetersPerSecond.x,
@@ -476,25 +486,104 @@ final class LMCommanderStationScene {
         recordLighting(stage: "before-apollo-terrain-swap")
         // Keep adaptive fallback ownership until all throwing preparation succeeds.
         terrainSun = assembly.sun
-        lastMissionShadowDistanceMeters = nil
         provisionalTerrain.removeFromParent()
         lunarWorld.addChild(terrain)
         apply(lastVehicleState)
+        updateCockpitShadow()
         recordLighting(stage: "after-apollo-terrain-swap")
     }
 
-    private func updateMissionShadow(altitudeMeters: Double) {
-        guard let terrainSun else { return }
-        let distance = LMTerrainWorld.missionShadowDistance(
-            altitudeMeters: altitudeMeters
-        )
-        guard lastMissionShadowDistanceMeters.map({ abs($0 - distance) >= 0.5 })
-                ?? true else { return }
-        lastMissionShadowDistanceMeters = distance
-        terrainSun.shadow = LMTerrainWorld.missionShadow(
-            altitudeMeters: altitudeMeters
-        )
+    private func updateCockpitShadow() {
+        guard let sun = globalCockpitTerrain?.sun ?? terrainSun else { return }
+        #if DEBUG
+        defer { writeShadowEvidence(sun) }
+        #endif
+        if cachedShadowCasterCorners == nil {
+            var casters: [Entity] = []
+            if let assembly = commanderAssembly,
+               let shell = try? LMCommanderStationAssembly.path("/Cabin/Shell", in: assembly.cabin) {
+                casters.append(shell)
+            } else if let shell = proceduralCabin.findEntity(named: LMCockpitAssetContract.Node.cabinShell.rawValue) {
+                casters.append(shell)
+            }
+            if let exteriorLunarModule { casters.append(exteriorLunarModule) }
+            // visualBounds(excludeInactive:) excludes an unanchored scene too,
+            // yielding infinite empty bounds before first publication. Traverse
+            // locally enabled meshes explicitly so startup and live fits agree.
+            cachedShadowCasterCorners = casters.flatMap { caster -> [SIMD3<Float>] in
+                var points: [SIMD3<Float>] = []
+                func collect(_ entity: Entity) {
+                    guard entity.isEnabled else { return }
+                    if let model = entity.components[ModelComponent.self] {
+                        let b = model.mesh.bounds
+                        for x in [b.min.x, b.max.x] { for y in [b.min.y, b.max.y] { for z in [b.min.z, b.max.z] {
+                            points.append(entity.convert(position: SIMD3(x, y, z), to: root))
+                        } } }
+                    }
+                    for child in entity.children { collect(child) }
+                }
+                collect(caster)
+                guard let first = points.first else { return [] }
+                let low = points.reduce(first, simd_min), high = points.reduce(first, simd_max)
+                return [low.x, high.x].flatMap { x in
+                    [low.y, high.y].flatMap { y in [low.z, high.z].map { SIMD3(x, y, $0) } }
+                }
+            }
+        }
+        var ground: LMCockpitShadowFit.GroundPlane?
+        if let state = lastVehicleState, state.altitudeMeters <= 45 {
+            if let global = globalCockpitTerrain {
+                let elevation = global.presentation.snapshot.sample(east: state.positionMeters.y,
+                    north: state.positionMeters.x)?.elevation ?? 0
+                let p = LMVector3D(x: state.positionMeters.x, y: state.positionMeters.y, z: Double(elevation) - 5)
+                let point = global.root.convert(position: global.anchorPosition(p), to: root)
+                let above = global.root.convert(position: global.anchorPosition(.init(x: p.x, y: p.y, z: p.z + 1)), to: root)
+                ground = .init(point: point, normal: above - point)
+            } else {
+                let position = terrainPosition(for: state.positionMeters)
+                let elevation = progressiveSurfaceSample(at: position, altitudeMeters: state.altitudeMeters)?.renderedElevationMeters
+                    ?? terrainHeightField?.relativeElevation(eastMeters: position.y, northMeters: position.x) ?? 0
+                // Five metres of receiver relief allowance; this is a shadow
+                // coverage envelope, never a collision or landing surface.
+                let local = SIMD3<Float>(Float(position.x), elevation - 5, Float(-position.y))
+                ground = .init(point: lunarWorld.convert(position: local, to: root),
+                    normal: lunarWorld.convert(direction: SIMD3(0, 1, 0), to: root))
+            }
+        }
+        cockpitShadowFit = LMCockpitShadowFit.fit(corners: cachedShadowCasterCorners ?? [],
+            orientation: sun.orientation(relativeTo: root), ground: ground)
+        guard let fit = cockpitShadowFit else {
+            sun.position = .zero
+            sun.shadow = LMTerrainWorld.missionShadow(altitudeMeters: lastVehicleState?.altitudeMeters)
+            return
+        }
+        sun.setPosition(fit.origin, relativeTo: root)
+        sun.shadow = .init(shadowProjection: .fixed(zNear: fit.near, zFar: fit.far,
+            orthographicScale: fit.span), depthBias: 1)
     }
+
+    #if DEBUG
+    private func writeShadowEvidence(_ sun: DirectionalLight) {
+        guard ProcessInfo.processInfo.arguments.contains(where: { $0.hasPrefix("--assembly-validation-view=") }) else { return }
+        let now = Date().timeIntervalSinceReferenceDate
+        guard now - lastShadowEvidenceWrite > 1 else { return }
+        lastShadowEvidenceWrite = now
+        let q = sun.orientation(relativeTo: root).vector
+        let p = sun.position(relativeTo: root)
+        let report: [String: Any] = ["time": now, "altitude_m": lastVehicleState?.altitudeMeters ?? -1,
+            "fitted": cockpitShadowFit != nil, "span": cockpitShadowFit?.span ?? -1,
+            "near": cockpitShadowFit?.near ?? -1, "far": cockpitShadowFit?.far ?? -1,
+            "sun_lux": sun.light.intensity, "sun_enabled": sun.isEnabled,
+            "sun_position": [p.x, p.y, p.z], "sun_quaternion": [q.x, q.y, q.z, q.w],
+            "projection": String(describing: sun.shadow?.shadowProjection),
+            "caster_corner_count": cachedShadowCasterCorners?.count ?? 0,
+            "coverage": "Local cockpit and lander footprint; distant terrain shadows outside this footprint are not represented"]
+        if let data = try? JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys]) {
+            try? data.write(to: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                .appendingPathComponent("shadow-validation.json"), options: .atomic)
+        }
+    }
+    #endif
 
     private func updateRockDetail(altitudeMeters: Double) {
         guard let terrainRockField else { return }
@@ -963,6 +1052,8 @@ final class LMCommanderStationScene {
             artistCabin?.removeFromParent()
             artistCabin = assembly.root
             commanderAssembly = assembly
+            cachedShadowCasterCorners = nil
+            updateCockpitShadow()
             setLandingPointMarkingOwner(.importedWindows)
             logger.notice("Enclosed commander foundation installed atomically; live instrument identities retained")
             return true
