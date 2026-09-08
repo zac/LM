@@ -1,0 +1,171 @@
+{
+  "non_lpd_prims_unchanged": 109,
+  "baseline_sha256": "91c03cc4b6826473cfdccdce195fece5f591b778b8afdb3a71505df8f528cc32",
+  "asset_sha256": "a9a8cc1fd43f5c95a3be729d44afbe8704f07ac551cea9e1518479b96e0c9c18",
+  "corresponding_artwork_vertices": 536,
+  "maximum_pair_ray_difference_deg": 0.0006234677603620129,
+  "elevation_tick_centers": [
+    {
+      "label": 0,
+      "elevation_deg": -0.006703814178566393,
+      "heading_deg": 0.008266964810790105
+    },
+    {
+      "label": 2,
+      "elevation_deg": 1.9935447109757516,
+      "heading_deg": 0.008439008888128012
+    },
+    {
+      "label": 4,
+      "elevation_deg": 3.9938356241594146,
+      "heading_deg": 0.008617185309225076
+    },
+    {
+      "label": 6,
+      "elevation_deg": 5.994148562152604,
+      "heading_deg": 0.008800248320034466
+    },
+    {
+      "label": 8,
+      "elevation_deg": 7.994486475270791,
+      "heading_deg": 0.008981538406071623
+    },
+    {
+      "label": 10,
+      "elevation_deg": 9.994856684069674,
+      "heading_deg": 0.009155436914288342
+    },
+    {
+      "label": 12,
+      "elevation_deg": 11.995259657830943,
+      "heading_deg": 0.009344349777302148
+    },
+    {
+      "label": 14,
+      "elevation_deg": 13.995674431819975,
+      "heading_deg": 0.00952481533990252
+    },
+    {
+      "label": 16,
+      "elevation_deg": 15.996114601679151,
+      "heading_deg": 0.009717838340709956
+    },
+    {
+      "label": 18,
+      "elevation_deg": 17.996577389048245,
+      "heading_deg": 0.009912746444846127
+    },
+    {
+      "label": 20,
+      "elevation_deg": 19.997049376782762,
+      "heading_deg": 0.010106805002268867
+    },
+    {
+      "label": 22,
+      "elevation_deg": 21.99754071992709,
+      "heading_deg": 0.010316655980177137
+    },
+    {
+      "label": 24,
+      "elevation_deg": 23.99803146636139,
+      "heading_deg": 0.010517848730373923
+    },
+    {
+      "label": 26,
+      "elevation_deg": 25.998540408267083,
+      "heading_deg": 0.010733867018317111
+    },
+    {
+      "label": 28,
+      "elevation_deg": 27.999062404511246,
+      "heading_deg": 0.010963648792113477
+    },
+    {
+      "label": 30,
+      "elevation_deg": 29.999579588057728,
+      "heading_deg": 0.011190410901872472
+    },
+    {
+      "label": 32,
+      "elevation_deg": 32.00010492028836,
+      "heading_deg": 0.011425650704535462
+    },
+    {
+      "label": 34,
+      "elevation_deg": 34.00063394303737,
+      "heading_deg": 0.011686430758026669
+    },
+    {
+      "label": 36,
+      "elevation_deg": 36.00115221664657,
+      "heading_deg": 0.0119521779600464
+    },
+    {
+      "label": 38,
+      "elevation_deg": 38.00167059442017,
+      "heading_deg": 0.012217754203395293
+    },
+    {
+      "label": 40,
+      "elevation_deg": 40.0021784059165,
+      "heading_deg": 0.012507890056352805
+    },
+    {
+      "label": 42,
+      "elevation_deg": 42.00266374164533,
+      "heading_deg": 0.012824950000609804
+    },
+    {
+      "label": 44,
+      "elevation_deg": 44.003151354417184,
+      "heading_deg": 0.01314937830931765
+    },
+    {
+      "label": 46,
+      "elevation_deg": 46.00361391188725,
+      "heading_deg": 0.013502851980487961
+    },
+    {
+      "label": 48,
+      "elevation_deg": 48.00406724270963,
+      "heading_deg": 0.013883906427258839
+    },
+    {
+      "label": 50,
+      "elevation_deg": 50.0044911175561,
+      "heading_deg": 0.014299755270722154
+    },
+    {
+      "label": 52,
+      "elevation_deg": 52.00490733211409,
+      "heading_deg": 0.014732313321605125
+    },
+    {
+      "label": 54,
+      "elevation_deg": 54.00529230516256,
+      "heading_deg": 0.015234036755901563
+    },
+    {
+      "label": 56,
+      "elevation_deg": 56.00564865599472,
+      "heading_deg": 0.015764969727485898
+    },
+    {
+      "label": 58,
+      "elevation_deg": 58.00598046994932,
+      "heading_deg": 0.01636690221213491
+    },
+    {
+      "label": 60,
+      "elevation_deg": 60.00628014991424,
+      "heading_deg": 0.017041999604286765
+    }
+  ],
+  "frozen_datum_spine_check": "PASS; mathematical consistency only, not surveyed flight optics",
+  "crossbar_azimuth_qualification": "visual spacing only; not angular targeting",
+  "limits": [
+    "No native/stereo/headset acceptance",
+    "Frozen original eye and panes remain provisional",
+    "Text physical size and ink remain approximate"
+  ]
+}
