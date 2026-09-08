@@ -1,0 +1,78 @@
+import Foundation
+import LMKit
+import RealityKit
+import Testing
+import simd
+@testable import LM
+
+@MainActor
+struct LMCommanderStationAssemblyTests {
+    @Test func reconcilesNestedMountsAndPreservesOpticalBasis() throws {
+        let assembly = try LMCommanderStationAssembly.load()
+        for (name, position) in [("Mount_DSKY", LMCommanderStationGeometry.dskyMountPositionMeters),
+                                  ("Mount_FDAI", LMCommanderStationGeometry.fdaiMountPositionMeters)] {
+            let entity = try LMCommanderStationAssembly.unique(name, in: assembly.cabin)
+            #expect(simd_distance(entity.position(relativeTo: assembly.cabin), position) < 0.00001)
+            #expect(entity.scale == SIMD3<Float>(repeating: 1))
+            #expect(entity.children.allSatisfy { !$0.isEnabled })
+        }
+        let lpd = LMLandingPointDesignator()
+        let inner = try LMCommanderStationAssembly.unique("CDR_Window_Inner", in: assembly.cabin)
+        let outer = try LMCommanderStationAssembly.unique("CDR_Window_Outer", in: assembly.cabin)
+        let normal = inner.orientation(relativeTo: assembly.cabin).act(SIMD3<Float>(0, 0, 1))
+        #expect(abs(simd_dot(inner.position(relativeTo: assembly.cabin) - outer.position(relativeTo: assembly.cabin), normal) - 0.020) < 0.00001)
+        #expect(simd_distance(inner.position(relativeTo: assembly.cabin), lpd.windowCorners(on: .inner)[0]) < 0.00001)
+        for name in ["VisualOnly_MaintainedToggle", "VisualOnly_RotarySelector"] {
+            let node = try LMCommanderStationAssembly.unique(name, in: assembly.cabin)
+            #expect(LMCommanderStationAssembly.descendants(node).allSatisfy { $0.components[InputTargetComponent.self] == nil && $0.components[CollisionComponent.self] == nil })
+        }
+    }
+
+    @Test func atomicFallbackAndInstallKeepLiveIdentities() throws {
+        let station = LMCommanderStationScene()
+        let keys = station.dskyKeyEntities
+        let transforms = keys.map { $0.transformMatrix(relativeTo: station.root) }
+        let nodes = LMCommanderStationAssembly.descendants(station.root)
+        let enabledBefore = nodes.map(\.isEnabled)
+        let grids = nodes.filter { $0.name == LMCockpitAssetContract.Node.landingPointDesignatorInner.rawValue || $0.name == LMCockpitAssetContract.Node.landingPointDesignatorOuter.rawValue }
+        #expect(grids.count == 2)
+        let gridTransforms = grids.map { $0.transformMatrix(relativeTo: station.root) }
+        #expect(!station.installCommanderAssembly { throw LMCommanderStationAssembly.AssemblyError.invalidContract("test failure") })
+        #expect(station.commanderAssembly == nil)
+        #expect(nodes.map(\.isEnabled) == enabledBefore)
+        #expect(station.installCommanderAssembly())
+        #expect(station.installCommanderAssembly { throw LMCommanderStationAssembly.AssemblyError.invalidContract("must not reload") })
+        for (i, key) in keys.enumerated() {
+            #expect(key === station.dskyKeyEntities[i])
+            #expect(station.dskyKeyCode(for: key) != nil)
+            #expect(LMCommanderStationAssembly.near(key.transformMatrix(relativeTo: station.root), transforms[i]))
+        }
+        for (i, grid) in grids.enumerated() {
+            #expect(grid.isEnabled)
+            #expect(LMCommanderStationAssembly.near(grid.transformMatrix(relativeTo: station.root), gridTransforms[i]))
+            #expect(grid.parent?.name == "App optical marks and functional control supports")
+        }
+        let active = LMCommanderStationAssembly.descendants(station.root).filter { entity in
+            var node: Entity? = entity
+            while let current = node { if !current.isEnabled { return false }; node = current.parent }
+            return true
+        }
+        #expect(active.filter { $0.name == "DSKY_Key_PRO" }.count == 1)
+        #expect(active.filter { $0.name == "FDAI_Ball_Pivot" }.count == 1)
+        #expect(!active.contains { $0.name == "Panel_1_Reservation" || $0.name == "Panel_4_Reservation" })
+    }
+
+    @Test func rejectsBadManifestWithoutPublishing() throws {
+        let data = try Data(contentsOf: LMKitAssets.cabinMountsURL)
+        let corrupted = Data(String(decoding: data, as: UTF8.self).replacingOccurrences(of: "NOT parent-local", with: "parent-local").utf8)
+        #expect(throws: (any Error).self) {
+            try LMCommanderStationAssembly(asset: Entity.load(contentsOf: LMKitAssets.cabinSkeletonURL), manifestData: corrupted,
+                                           loadControl: { try Entity.load(contentsOf: LMKitAssets.controlURL($0)) })
+        }
+    }
+    @Test func instrumentObserverHasPrecedence() {
+        #expect(LMCommanderStationAssemblyObserver.selected(arguments: []) == nil)
+        #expect(LMCommanderStationAssemblyObserver.selected(arguments: ["--assembly-validation-view=side"]) == .side)
+        #expect(LMCommanderStationAssemblyObserver.selected(arguments: ["--assembly-validation-view=front", "--instrument-validation"]) == nil)
+    }
+}
