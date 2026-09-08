@@ -1,3 +1,4 @@
+@testable import LunarMap
 import Testing
 @testable import LM
 

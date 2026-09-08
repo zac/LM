@@ -1,3 +1,4 @@
+@testable import LunarMap
 import CryptoKit
 import Foundation
 import Testing
@@ -7,8 +8,8 @@ import Testing
 struct LMLunarImageryTests {
     private func pyramid() throws -> LMLunarImageryPyramid {
         let reference = try #require(LMTerrainManifest.load().globe.imageryPyramid)
-        let url = try #require(Bundle.main.url(forResource: reference.file, withExtension: nil, subdirectory: "Terrain")
-            ?? Bundle.main.url(forResource: reference.file, withExtension: nil))
+        let url = try #require(LunarMap.resources.url(forResource: reference.file, withExtension: nil, subdirectory: "Terrain")
+            ?? LunarMap.resources.url(forResource: reference.file, withExtension: nil))
         let data = try Data(contentsOf: url)
         #expect(LMLunarImageryPyramid.digest(data) == reference.sha256)
         let result = try JSONDecoder().decode(LMLunarImageryPyramid.self, from: data)
@@ -25,8 +26,8 @@ struct LMLunarImageryTests {
             try LMLunarElevationStore.validate(source)
             #expect(source.bytes! <= 12 * 1024 * 1024)
         }
-        let url = try #require(Bundle.main.url(forResource: pyramid.base.file, withExtension: nil, subdirectory: "Terrain")
-            ?? Bundle.main.url(forResource: pyramid.base.file, withExtension: nil))
+        let url = try #require(LunarMap.resources.url(forResource: pyramid.base.file, withExtension: nil, subdirectory: "Terrain")
+            ?? LunarMap.resources.url(forResource: pyramid.base.file, withExtension: nil))
         let base = try Data(contentsOf: url)
         #expect(base.count == pyramid.base.bytes)
         #expect(LMLunarImageryPyramid.digest(base) == pyramid.base.sha256)

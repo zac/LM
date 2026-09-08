@@ -1,3 +1,4 @@
+@testable import LunarMapExplorer
 import Foundation
 import Testing
 import simd

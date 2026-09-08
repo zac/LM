@@ -1,0 +1,1798 @@
+import LunarMap
+import ARKit
+import LMCore
+import OSLog
+import RealityKit
+import SwiftUI
+import UIKit
+import simd
+
+/// Terrain-only RealityKit scene used to inspect the same assets, materials,
+/// geology, rocks, lighting, and progressive tiles as terminal descent.
+@MainActor
+final class LunarExplorerScene {
+    let root = Entity()
+    let interactionSurface = Entity()
+
+    private let windowRoot = Entity()
+    private let worldRoot = Entity()
+    private let portal = ModelEntity()
+    private let portalFrame = ModelEntity()
+    private var appliedPortalState: Bool?
+    private var portalAperture: [SIMD2<Float>] = []
+    private var appliedPortalEye: SIMD3<Float>?
+    private let presentationRoot = Entity()
+    private let terrainAnchorRoot = Entity()
+    private var sourceFrame: LMSelenographicLocalFrame?
+    private var elevationPreviewDescription: String?
+    private var globalTerrain: LMLunarTerrainPresentation?
+    private var floatingOrigin: LMLunarFloatingOrigin?
+    private var reanchorProbePending = false
+    private var globalReanchorProbeStarted = false
+    private let globePresentationRoot = Entity()
+    private let selectionMarker = Entity()
+    private let markerBillboard = Entity()
+    private var placePins = [String: ModelEntity]()
+    private var appliedMarkerScale: Float?
+    private let logger = Logger(
+        subsystem: LunarMapLog.subsystem,
+        category: "LunarExplorer"
+    )
+    private var terrainEnvironment: Entity?
+    private var measuredNearFieldEntity: ModelEntity?
+    private var measuredNearFieldGrid: LMTerrainMeshBuilder.VertexData?
+    private var measuredNearFieldMask = Set<LMTerrainTileID>()
+    private var ownershipPreparation: Task<Void, Never>?
+    private var ownershipPreparationToken: UUID?
+    private var ownershipPreparationIDs: Set<LMTerrainTileID>?
+    private var preparedOwnershipMesh: MeshResource?
+    private var globeEntity: ModelEntity?
+    private var globeImagery: LMLunarGlobeImagery?
+    private var appliedGlobeLinearRadianceMultiplier: Double?
+    private var globeTerminator: LMLunarGlobeResource.TerminatorResource?
+    private var globeTerminatorDate: Date?
+    private var terrainSun: DirectionalLight?
+    private var terrainEarthshine: DirectionalLight?
+    private var activeGrade: LMTerrainPresentationGrade?
+    private var terrainRockField: Entity?
+    private var heightField: Apollo11TerrainHeightField?
+    private var albedoField: LMMeasuredAlbedoField?
+    private var eagleTerrainPosition = LMVector3D.zero
+    private var terrainDatumElevationMeters = 0.0
+    /// The site the ephemeris evaluates mission lighting for.
+    private var siteCoordinate: LMSelenographicCoordinate?
+    private var progressiveEntities = [LMTerrainTileID: ModelEntity]()
+    private var progressivePlans = [LMTerrainTileID: LMTerrainTilePlan]()
+    private var progressiveOwnership = [LMTerrainTileID: Set<LMTerrainTileID>]()
+    private var pendingProgressiveEntities = [LMTerrainTileID: ModelEntity]()
+    private var pendingProgressivePlans = [LMTerrainTileID: LMTerrainTilePlan]()
+    private var pendingOwnership = [LMTerrainTileID: Set<LMTerrainTileID>]()
+    private var requestedPlans = [LMTerrainTileID: LMTerrainTilePlan]()
+    private var requestedOwnership = [LMTerrainTileID: Set<LMTerrainTileID>]()
+    private var generationTasks = [LMTerrainTileID: Task<Void, Never>]()
+    private var generationTokens = [LMTerrainTileID: UUID]()
+    private var detailPipelines = [
+        LMTerrainDetailMode: LMTerrainDetailPipeline
+    ]()
+    private var activeDetailMode: LMTerrainDetailMode?
+    private weak var session: LunarExplorerSession?
+    private var appliedLandingRequest = 0
+    private var landingTask: Task<Void, Never>?
+    private var landingEntity: Entity?
+    private var landingPose: (position: LMVector3D, attitude: LMQuaternion, frame: LMSelenographicLocalFrame)?
+    private var appliedNavigationRevision = 0
+    private var globeFrontCoordinate: LMSelenographicCoordinate?
+    private var isLoaded = false
+    private var loadTask: Task<Void, Never>?
+
+    private var updateSubscription: EventSubscription?
+    private var updateTask: Task<Void, Never>?
+    private var updateContinuation: AsyncStream<Void>.Continuation?
+    private var appliedSnapshot: LunarExplorerSession.SceneSnapshot?
+    private var sceneDirty = true
+    var pendingDiagnostics = LunarExplorerSession.Diagnostics()
+
+    func startStepping(session: LunarExplorerSession, content: RealityViewContent) {
+        stopStepping()
+        // A load can finish while detached. Keep its unpublished outputs
+        // when this same session's view returns.
+        if self.session !== session { pendingDiagnostics = session.diagnostics }
+        self.session = session
+        let (updates, continuation) = AsyncStream<Void>.makeStream(bufferingPolicy: .bufferingNewest(1))
+        updateContinuation = continuation
+        updateSubscription = content.subscribe(to: SceneEvents.Update.self) { _ in
+            continuation.yield(())
+        }
+        updateTask = Task { @MainActor [weak self, weak session] in
+            for await _ in updates {
+                guard !Task.isCancelled, let self, let session else { break }
+                self.step(session)
+            }
+        }
+    }
+
+    private func configureGlobeImagery(_ imagery: LMLunarGlobeImagery?) {
+        globeImagery = imagery
+        imagery?.realizationAllowed = { [weak self] in
+            guard let self else { return false }
+            return self.loadTask == nil
+        }
+    }
+
+    func stopStepping() {
+        globeImagery?.suspend()
+        updateSubscription?.cancel(); updateSubscription = nil
+        updateContinuation?.finish(); updateContinuation = nil
+        updateTask?.cancel(); updateTask = nil
+        appliedSnapshot = nil
+        sceneDirty = true
+    }
+
+    private func requestSceneUpdate() { sceneDirty = true }
+
+    private func step(_ session: LunarExplorerSession) {
+        let input = session.sceneSnapshot
+        // Skip redundant planner/entity work, independently of SwiftUI observation.
+        // Apply is synchronous on this actor: its derived camera reads cannot
+        // interleave with input changes. Async completions request another step.
+        let followsSilhouette = session.usesWindowContainer && !session.isImmersed
+            && Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale < 4
+        let eye = followsSilhouette ? portalEyePosition() : nil
+        let eyeMoved = eye.map { simd_distance($0, appliedPortalEye ?? $0) > 0.001 } ?? false
+        if sceneDirty || input != appliedSnapshot || globalTerrain?.isMorphing == true
+            || pendingDiagnostics != session.diagnostics || eyeMoved {
+            sceneDirty = false
+            apply(input, to: session)
+            appliedSnapshot = session.sceneSnapshot
+        }
+        publishPendingDiagnostics(to: session)
+    }
+
+    func publishPendingDiagnostics(to session: LunarExplorerSession) {
+        // This is the sole scene-to-UI publication boundary, once per changed
+        // value. Diagnostics are outputs, excluded from the scene snapshot.
+        if pendingDiagnostics != session.diagnostics {
+            session.publishDiagnostics(pendingDiagnostics)
+        }
+    }
+
+    init() {
+        root.name = "Lunar Explorer"
+        windowRoot.name = "Moon window placement"
+        worldRoot.name = "Moon portal world"
+        root.addChild(windowRoot)
+        windowRoot.addChild(worldRoot)
+        portal.name = "Moon window"
+        portal.model = ModelComponent(
+            mesh: .generatePlane(width: LunarExplorerPortalGeometry.width, height: LunarExplorerPortalGeometry.height,
+                                 cornerRadius: LunarExplorerPortalGeometry.cornerRadius),
+            materials: [PortalMaterial()])
+        portal.position = SIMD3(0, 1.45, -LunarExplorerSession.globeSurfaceDepthMeters)
+        // The existing foreground projection deliberately lies in front of
+        // this plane. Use the portal's screen mask, not a geometry clip plane.
+        portal.components.set(PortalComponent(target: worldRoot,
+            clippingMode: .disabled, crossingMode: .disabled))
+        windowRoot.addChild(portal)
+        portalFrame.model = ModelComponent(
+            mesh: try! Self.portalBorderMesh(),
+            materials: [UnlitMaterial(color: UIColor(white: 0.08, alpha: 1))])
+        portalFrame.position = portal.position + SIMD3(0, 0, -0.002)
+        windowRoot.addChild(portalFrame)
+        portal.isEnabled = false
+        portalFrame.isEnabled = false
+        presentationRoot.name = "Lunar Explorer presentation"
+        root.addChild(presentationRoot)
+        terrainAnchorRoot.name = "Floating lunar ENU"
+        presentationRoot.addChild(terrainAnchorRoot)
+        globePresentationRoot.name = "Lunar Explorer globe presentation"
+        root.addChild(globePresentationRoot)
+        selectionMarker.name = "Selected lunar place"
+        selectionMarker.position = SIMD3(0, 0, Float(LunarExplorerSession.lunarGlobeRadiusMeters) * 1.006)
+        selectionMarker.isEnabled = false
+        globePresentationRoot.addChild(selectionMarker)
+        markerBillboard.name = "Lunar place label"
+        markerBillboard.components.set(BillboardComponent())
+        markerBillboard.isEnabled = false
+        root.addChild(markerBillboard)
+
+        interactionSurface.name = "Lunar Explorer interaction surface"
+        interactionSurface.position = SIMD3(0, 0, -1.15)
+        interactionSurface.components.set(InputTargetComponent())
+        interactionSurface.components.set(HoverEffectComponent())
+        interactionSurface.components.set(CollisionComponent(shapes: [
+            .generateBox(size: SIMD3(3.8, 2.6, 0.02)),
+        ]))
+        root.addChild(interactionSurface)
+    }
+
+    func installPlaceMarker(_ marker: Entity, scale: Float) {
+        // Attachment layout only changes with its identity or text scale;
+        // avoid measuring and rewriting it on every observed scene update.
+        guard marker.parent !== markerBillboard || appliedMarkerScale != scale else { return }
+        appliedMarkerScale = scale
+        // Derive the foot from the rendered attachment bounds. A fixed 1 mm/pt
+        // conversion is incorrect for this RealityView and shifts the marker.
+        let bounds = marker.visualBounds(relativeTo: marker)
+        marker.position = SIMD3(
+            -bounds.min.x - bounds.extents.x * (24.0 / 260.0),
+            -bounds.max.y + bounds.extents.y * (76.0 / 80.0), 0)
+        guard marker.parent !== markerBillboard else { return }
+        markerBillboard.addChild(marker)
+        if ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile") {
+            let bounds = marker.visualBounds(relativeTo: marker)
+            logger.info("Moon label bounds min=\(String(describing: bounds.min), privacy: .public) max=\(String(describing: bounds.max), privacy: .public)")
+        }
+    }
+
+    func place(for entity: Entity, session: LunarExplorerSession) -> LMLunarPOICatalog.Place? {
+        guard entity.name.hasPrefix("moon-place:") else { return nil }
+        return session.catalogPlaces.first { "moon-place:" + $0.id == entity.name }
+    }
+
+    private func updatePlacePins(_ session: LunarExplorerSession) {
+        guard session.isExplorerExperience, session.isBrowsingGlobe else {
+            for pin in placePins.values { pin.isEnabled = false }
+            return
+        }
+        let anchor = globePresentationRoot.parent ?? root
+        let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale
+        for place in session.catalogPlaces {
+            let pin: ModelEntity
+            if let existing = placePins[place.id] { pin = existing }
+            else {
+                pin = ModelEntity(mesh: .generateSphere(radius: 0.007),
+                                  materials: [UnlitMaterial(color: place.category == "apollo" ? .white : .systemCyan)])
+                pin.name = "moon-place:" + place.id
+                pin.components.set(InputTargetComponent())
+                pin.components.set(HoverEffectComponent())
+                pin.components.set(CollisionComponent(shapes: [.generateSphere(radius: 0.02)]))
+                pin.isAccessibilityElement = true
+                pin.accessibilityLabelKey = "\(place.name)"
+                pin.accessibilityTraits = .button
+                placePins[place.id] = pin
+            }
+            if pin.parent !== anchor { anchor.addChild(pin) }
+            let direction = globePresentationRoot.orientation.act(LunarExplorerMapGeometry.direction(to: place.coordinate, centeredOn: session.browseCoordinate))
+            pin.position = globePresentationRoot.position + direction * radius * 1.006
+            pin.scale = SIMD3(repeating: place.id == session.selectedPlaceID ? 1.6 : 1)
+            pin.isEnabled = LunarExplorerMapGeometry.isVisible(direction: direction,
+                globePosition: globePresentationRoot.position(relativeTo: root), radius: radius)
+        }
+    }
+
+    func loadIfNeeded(session: LunarExplorerSession) {
+        self.session = session
+        guard !isLoaded, loadTask == nil else {
+            requestSceneUpdate()
+            return
+        }
+        if let coordinate = session.captureElevationCoordinate {
+            loadElevationPreview(coordinate: coordinate, session: session)
+            return
+        }
+        if let coordinate = session.destinationCoordinate {
+            let manifest = try? LMTerrainManifest.load()
+            session.usesBundledSite = manifest.flatMap { LMLunarTerrainRegion.bundledSitePosition(at: coordinate, manifest: $0) } != nil
+            if !session.usesBundledSite {
+                loadGlobalTerrain(coordinate: coordinate, session: session)
+                return
+            }
+        } else { session.usesBundledSite = true }
+        let detailMode = session.detailMode
+        let detailPipeline = pipeline(for: detailMode)
+        activeDetailMode = detailMode
+        // The base bands bake their materials during load, so the grade has to
+        // be in force before it starts rather than patched afterwards.
+        activeGrade = session.presentationGrade
+        LMTerrainWorld.presentationGrade = session.presentationGrade
+        loadTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                let manifest = try LMTerrainManifest.load()
+                do {
+                    if self.globeEntity == nil {
+                    let globe = try await LMLunarGlobeResource.makeEntity(
+                        manifest: manifest
+                    )
+                    try Task.checkCancellation()
+                    self.globePresentationRoot.children.removeAll()
+                    self.globePresentationRoot.addChild(self.selectionMarker)
+                    self.globeFrontCoordinate = manifest.landingOriginCoordinate
+                    if session.pendingArrival { session.flightCoordinate = nil }
+                    self.globePresentationRoot.addChild(globe.entity)
+                    self.globeEntity = globe.entity
+                    self.configureGlobeImagery(globe.imagery)
+                    self.appliedGlobeLinearRadianceMultiplier = nil
+                    self.pendingDiagnostics.globeTierState = "bundled "
+                        + "\(globe.textureTier.mapResolutionPixelsPerDegree) ppd"
+                        + (globe.usedFallback ? " fallback" : "")
+                    let terminatorDate = session.sunDate
+                    let terminator = try await LMLunarGlobeResource.makeTerminator(
+                        manifest: manifest,
+                        date: terminatorDate
+                    )
+                    try Task.checkCancellation()
+                    self.globePresentationRoot.addChild(terminator.entity)
+                    self.globeTerminator = terminator
+                    self.globeTerminatorDate = terminatorDate
+                    } else {
+                        self.pendingDiagnostics.globeTierState = "resident global atlas"
+                    }
+                    self.pendingDiagnostics.loadMessage = "Global WAC Moon ready"
+                    self.requestSceneUpdate()
+                } catch is CancellationError { return }
+                catch {
+                    self.logger.error(
+                        "Lunar globe load failed: \(error.localizedDescription, privacy: .public)"
+                    )
+                }
+                // Browsing needs only the globe. Load the landing stack after
+                // an explicit Explore action, preserving the capture path.
+                if session.isBrowsingGlobe { self.loadTask = nil; return }
+                let preparation = Task.detached(priority: .userInitiated) {
+                    try Task.checkCancellation()
+                    let height = try LMLunarTerrainTiming.measure("apollo-source-height") {
+                        try Apollo11TerrainResource.loadSourceBackedHeightField()
+                    }
+                    try Task.checkCancellation()
+                    let albedo = LMLunarTerrainTiming.measure("apollo-source-albedo") {
+                        try? LMMeasuredAlbedoField.load(tile: height.tile)
+                    }
+                    try Task.checkCancellation()
+                    return (height, albedo)
+                }
+                let (heightField, albedoField) = try await withTaskCancellationHandler(
+                    operation: { try await preparation.value },
+                    onCancel: { preparation.cancel() }
+                )
+                try Task.checkCancellation()
+                let assembly = try await LMTerrainWorld.load(
+                    detailPipeline: detailPipeline,
+                    prepareGesturePicking: session.usesAltitudeCamera
+                )
+                try Task.checkCancellation()
+                let alignment = try LMTerrainFrameAlignment(manifest: assembly.manifest)
+                let eagle = alignment.terrainReferenceTouchdown
+                let datum = Double(
+                    heightField.relativeElevation(
+                        eastMeters: eagle.y,
+                        northMeters: eagle.x
+                    ) ?? 0
+                )
+                let rocks = try LMLunarTerrainTiming.measure("apollo-rocks") {
+                    try LMLunarRockFieldResource.makeEntity(
+                        heightField: heightField,
+                        eagleTerrainPosition: eagle
+                    )
+                }
+                assembly.worldRoot.addChild(rocks)
+                terrainAnchorRoot.addChild(assembly.worldRoot)
+                let pack = try LunarExplorerSitePack(manifest: assembly.manifest, focusOrigin: eagle)
+                self.sourceFrame = pack.frame
+                self.floatingOrigin = LMLunarFloatingOrigin(frame: pack.frame)
+                session.residentPanBounds = pack.panBounds
+                pack.configureInspection(&session.camera)
+                self.reanchorProbePending = session.captureReanchorProbe
+                if session.captureReanchorProbe {
+                    // Hold a stationary view in an offset frame for 100 seconds.
+                    // Its 4.2 km focus drift then exercises the production trigger.
+                    let offset = assembly.manifest.landingLocalFrame.coordinate(for:
+                        LMSiteENUPosition(northMeters: eagle.x + 4_200,
+                                          eastMeters: eagle.y, upMeters: datum))
+                    self.floatingOrigin?.reanchor(at: offset)
+                    Task { @MainActor [weak self, weak session] in
+                        try? await Task.sleep(for: .seconds(100))
+                        guard let self, session != nil else { return }
+                        self.reanchorProbePending = false
+                        self.requestSceneUpdate()
+                    }
+                }
+
+                self.heightField = heightField
+                self.albedoField = albedoField
+                self.eagleTerrainPosition = eagle
+                if let destination = session.destinationCoordinate,
+                   let point = LMLunarTerrainRegion.bundledSitePosition(at: destination, manifest: assembly.manifest) {
+                    session.focusNorthOffsetMeters = point.northMeters - eagle.x
+                    session.focusEastOffsetMeters = point.eastMeters - eagle.y
+                }
+                self.terrainDatumElevationMeters = datum
+                self.siteCoordinate = assembly.manifest.landingOriginCoordinate
+                self.terrainEnvironment = assembly.worldRoot
+                self.measuredNearFieldEntity = assembly.nearFieldEntity
+                self.measuredNearFieldGrid = assembly.nearFieldGrid
+                self.gestureHeightFields = assembly.gestureHeightFields
+                LMLunarTerrainTiming.memory("pinch-height-fields-ready", resourceBytes:
+                    assembly.gestureHeightFields.reduce(0) { $0 + $1.additionalHeightBytes })
+                self.terrainSun = assembly.sun
+                self.terrainEarthshine = assembly.earthshine
+                self.terrainRockField = rocks
+                self.isLoaded = true
+                self.loadTask = nil
+                session.navigationMessage = ""
+                self.pendingDiagnostics.measuredFloorMeters = assembly.manifest
+                    .measuredFloorMeters(at: assembly.manifest.landingOriginCoordinate)
+                self.pendingDiagnostics.loadMessage = "Apollo 11 terrain ready"
+                session.beginArrival()
+                self.pendingDiagnostics.sourceDescription = self.sourceDescription(
+                    altitudeMeters: session.altitudeMeters
+                )
+                self.requestSceneUpdate()
+            } catch is CancellationError { return }
+            catch {
+                self.loadTask = nil
+                session.navigationPhase = .idle
+                self.pendingDiagnostics.loadMessage = "Terrain failed: \(error.localizedDescription)"
+                self.logger.error(
+                    "Lunar Explorer load failed: \(error.localizedDescription, privacy: .public)"
+                )
+            }
+        }
+    }
+
+    private func loadGlobalTerrain(coordinate: LMSelenographicCoordinate, session: LunarExplorerSession) {
+        session.residentPanBounds = .regional
+        session.camera.reference?.siteHeightMeters = 1.45
+        session.camera.reference?.fixedGlobeCoordinate = nil
+        activeDetailMode = session.detailMode
+        activeGrade = session.presentationGrade
+        LMTerrainWorld.presentationGrade = session.presentationGrade
+        loadTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                let manifest = try LMTerrainManifest.load()
+                // Keep the atlas resident across destinations. Only its frame changes;
+                // decoding another 64 ppd texture peaked at 881 MiB during fly-to.
+                if self.globeEntity == nil {
+                    let atlasInterval = LMLunarTerrainTiming.begin("global-atlas")
+                    let globe = try await LMLunarGlobeResource.makeEntity(manifest: manifest, frontCoordinate: coordinate)
+                    LMLunarTerrainTiming.end(atlasInterval)
+                    try Task.checkCancellation()
+                    self.globeFrontCoordinate = coordinate
+                    self.globePresentationRoot.addChild(globe.entity)
+                    self.globeEntity = globe.entity
+                    self.configureGlobeImagery(globe.imagery)
+                    self.appliedGlobeLinearRadianceMultiplier = nil
+                    let terminatorDate = session.sunDate
+                    let terminatorInterval = LMLunarTerrainTiming.begin("global-terminator")
+                    let terminator = try await LMLunarGlobeResource.makeTerminator(manifest: manifest, date: terminatorDate,
+                                                                             frontCoordinate: coordinate)
+                    LMLunarTerrainTiming.end(terminatorInterval)
+                    self.globePresentationRoot.addChild(terminator.entity)
+                    self.globeTerminator = terminator
+                    self.globeTerminatorDate = terminatorDate
+                    self.pendingDiagnostics.globeTierState = "bundled \(globe.textureTier.mapResolutionPixelsPerDegree) ppd"
+                } else {
+                    self.pendingDiagnostics.globeTierState = "resident global atlas"
+                }
+                self.requestSceneUpdate()
+                let directory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+                    .appendingPathComponent("LunarElevation-v1", isDirectory: true)
+                let store = try LMLunarElevationStore(directory: directory)
+                let offline = session.regionOffline
+                let region = try await Task.detached(priority: .userInitiated) {
+                    try await LMLunarTerrainRegion.load(at: coordinate, store: store, offline: offline)
+                }.value
+                try Task.checkCancellation()
+                let terrain = LMLunarTerrainPresentation(region: region, mode: session.detailMode)
+                let world = Entity()
+                world.addChild(terrain.root)
+                let sun = DirectionalLight()
+                world.addChild(sun)
+                let earthshine = DirectionalLight()
+                world.addChild(earthshine)
+                self.terrainAnchorRoot.addChild(world)
+                self.terrainEnvironment = world
+                self.globalTerrain = terrain
+                terrain.presentationChanged = { [weak self] in
+                    self?.requestSceneUpdate()
+                }
+                self.sourceFrame = region.frame
+                self.floatingOrigin = .init(frame: region.frame)
+                self.reanchorProbePending = session.captureReanchorProbe
+                if session.captureReanchorProbe {
+                    self.floatingOrigin?.reanchor(at: region.frame.coordinate(for:
+                        .init(northMeters: 4_200, eastMeters: 0, upMeters: 0)))
+                }
+                self.siteCoordinate = region.frame.anchor
+                self.terrainSun = sun
+                self.terrainEarthshine = earthshine
+                self.eagleTerrainPosition = .zero
+                self.terrainDatumElevationMeters = 0
+                self.isLoaded = true
+                self.loadTask = nil
+                session.navigationMessage = ""
+                self.pendingDiagnostics.measuredFloorMeters = region.measuredFloorMeters
+                self.pendingDiagnostics.sourceDescription = region.sourceIDs.joined(separator: ", ")
+                    + (region.albedo.lunarField?.slabs.isEmpty == true ? "; uniform modeled reflectance" : "; normalized WAC reflectance")
+                    + (region.unavailableSourceIDs.isEmpty ? "" : "; \(region.unavailableSourceIDs.count) sources unavailable")
+                self.logger.info("Global sources ready floor=\(region.measuredFloorMeters)m missing=\(region.unavailableSourceIDs.count)")
+                self.requestSceneUpdate()
+            } catch is CancellationError { return }
+            catch {
+                self.loadTask = nil
+                session.navigationPhase = .idle
+                self.pendingDiagnostics.loadMessage = "Global terrain failed: \(error.localizedDescription)"
+            }
+        }
+    }
+
+    private func beginLanding(session: LunarExplorerSession, terrain: LMLunarTerrainPresentation, focus: LMVector3D) {
+        terrain.cancel()
+        let surface = LMTerrainContactSurfaceBuilder.build(region: terrain.region, snapshot: terrain.snapshot)
+        var drop = LMLunarLandingRehearsal(surface: surface, north: focus.x, east: focus.y)
+        landingEntity?.removeFromParent()
+        let vehicle = Entity()
+        let body = ModelEntity(mesh: .generateBox(size: SIMD3(2, 1.5, 2)), materials: [UnlitMaterial(color: .gray)])
+        body.position.y = 2.2
+        vehicle.addChild(body)
+        var pads = [(LMLandingGearLeg, ModelEntity)]()
+        for leg in LMLandingGearLeg.allCases {
+            let pad = ModelEntity(mesh: .generateBox(size: SIMD3(0.5, 0.05, 0.5)), materials: [UnlitMaterial(color: .yellow)])
+            vehicle.addChild(pad); pads.append((leg, pad))
+        }
+        terrainAnchorRoot.addChild(vehicle)
+        landingEntity = vehicle
+        session.landingRunning = true
+        landingTask = Task { @MainActor [weak self, weak session] in
+            defer { session?.landingRunning = false }
+            while !drop.finished {
+                guard let self, let session, let anchor = self.floatingOrigin?.frame else { return }
+                drop.step()
+                let placement = LMLunarAnchoredPlacement.chunkTransform(
+                    origin: .init(northMeters: drop.position.x, eastMeters: drop.position.y, upMeters: drop.position.z),
+                    source: terrain.region.frame, anchor: anchor)
+                self.landingPose = (drop.position, drop.attitude, terrain.region.frame)
+                vehicle.transform = placement
+                vehicle.orientation = placement.rotation * LMWorldMapper.attitudeOrientation(from: drop.attitude)
+                for (leg, entity) in pads {
+                    let pad = LMLandingGearGeometry.footpadBody(leg, strokeMeters: drop.gear.snapshot(leg)?.strokeMeters ?? 0)
+                    entity.position = SIMD3(Float(pad.x), Float(pad.z) + 0.025, Float(-pad.y))
+                }
+                session.landingMessage = drop.message
+                do { try await Task.sleep(for: .milliseconds(16)) } catch { return }
+            }
+            session?.landingMessage = drop.message
+            self?.logger.info("Global contact rehearsal: \(drop.message, privacy: .public)")
+        }
+    }
+
+    private func loadElevationPreview(coordinate: LMSelenographicCoordinate, session: LunarExplorerSession) {
+        activeDetailMode = session.detailMode
+        activeGrade = session.presentationGrade
+        LMTerrainWorld.presentationGrade = session.presentationGrade
+        loadTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                let manifest = try LMTerrainManifest.load()
+                let assembly = try await LMLunarElevationPreview.load(
+                    coordinate: coordinate, offline: session.captureElevationOffline, manifest: manifest
+                )
+                self.terrainAnchorRoot.addChild(assembly.root)
+                self.terrainEnvironment = assembly.root
+                self.sourceFrame = assembly.frame
+                self.floatingOrigin = LMLunarFloatingOrigin(frame: assembly.frame)
+                self.siteCoordinate = assembly.frame.anchor
+                self.terrainSun = assembly.sun
+                self.elevationPreviewDescription = "Measured elevation diagnostic: " + assembly.sourceID
+                    + "; constant reflectance"
+                self.isLoaded = true
+                self.loadTask = nil
+                session.navigationMessage = ""
+                self.pendingDiagnostics.measuredFloorMeters = assembly.sourceSpacingMeters
+                self.pendingDiagnostics.loadMessage = "Measured elevation ready"
+                self.logger.info("Elevation preview source=\(assembly.sourceID, privacy: .public) floor=\(assembly.sourceSpacingMeters)m load=\(assembly.loadMilliseconds)ms fallback=\(assembly.fallbackReason ?? "none", privacy: .public)")
+                self.requestSceneUpdate()
+            } catch is CancellationError { return }
+            catch {
+                self.loadTask = nil
+                self.pendingDiagnostics.loadMessage = "Elevation failed: " + error.localizedDescription
+                self.logger.error("Elevation preview failed: \(String(describing: error), privacy: .public)")
+            }
+        }
+    }
+
+    private func apply(_ input: LunarExplorerSession.SceneSnapshot, to session: LunarExplorerSession) {
+        self.session = session
+        let landingRequest = input.landingRequest
+        let navigationPhase = input.navigationPhase
+        if appliedNavigationRevision != session.navigationRevision {
+            appliedNavigationRevision = session.navigationRevision
+            if resumeResidentGlobalTerrain(session) { return }
+            loadTask?.cancel(); loadTask = nil
+            globalTerrain?.cancel(); globalTerrain = nil
+            generationTasks.values.forEach { $0.cancel() }
+            generationTasks = [:]; generationTokens = [:]
+            progressiveEntities = [:]; progressivePlans = [:]; progressiveOwnership = [:]
+            pendingProgressiveEntities = [:]; pendingProgressivePlans = [:]; pendingOwnership = [:]
+            requestedPlans = [:]; requestedOwnership = [:]
+            landingTask?.cancel(); landingEntity?.removeFromParent(); landingEntity = nil; landingPose = nil
+            terrainAnchorRoot.children.removeAll()
+            heightField = nil; albedoField = nil; sourceFrame = nil; floatingOrigin = nil
+            cancelOwnershipPreparation()
+            terrainRockField = nil; measuredNearFieldEntity = nil; measuredNearFieldGrid = nil
+            gestureHeightFields = []
+            measuredNearFieldMask = []; terrainSun = nil; terrainEarthshine = nil
+            terrainEnvironment = nil; isLoaded = false; activeDetailMode = nil
+            self.pendingDiagnostics = .init()
+            loadIfNeeded(session: session)
+            updatePresentationTransform(session)
+            return
+        }
+        if let frame = sourceFrame {
+            let focus = terrainFocus(session)
+            let position = LMSiteENUPosition(northMeters: focus.x, eastMeters: focus.y, upMeters: 0)
+            let coordinate = frame.coordinate(for: position)
+            if session.currentCoordinate != coordinate { session.currentCoordinate = coordinate }
+        }
+        updatePresentationTransform(session)
+        updateGlobeTerminator(session)
+        if !isLoaded, loadTask == nil, !session.isBrowsingGlobe, navigationPhase == .idle {
+            loadIfNeeded(session: session)
+            return
+        }
+        guard isLoaded, !session.isBrowsingGlobe else { return }
+
+        if activeDetailMode != session.detailMode {
+            if let globalTerrain {
+                activeDetailMode = session.detailMode
+                globalTerrain.setMode(session.detailMode)
+            } else {
+                activateDetailMode(session.detailMode, session: session)
+            }
+        }
+
+        // The exposure floor is baked into each tile material, so a grade
+        // change has to discard and regenerate resident tiles rather than
+        // leaving a mix of two tonal treatments on screen.
+        if activeGrade != session.presentationGrade {
+            activeGrade = session.presentationGrade
+            LMTerrainWorld.presentationGrade = session.presentationGrade
+            applyExposureFloorToResidentMaterials()
+        }
+
+        updateRockDetail(altitudeMeters: session.altitudeMeters)
+        terrainSun?.shadow = session.missionShadowsEnabled
+            ? LMTerrainWorld.missionShadow(altitudeMeters: session.altitudeMeters)
+            : nil
+        updateMissionSun(session)
+
+        let focus = terrainFocus(session)
+        if navigationPhase == .departing || navigationPhase == .arriving { return }
+        if let globalTerrain {
+            if session.landingRunning { return }
+            if landingRequest != appliedLandingRequest,
+               self.pendingDiagnostics.loadMessage == "Lunar terrain ready",
+               self.pendingDiagnostics.finestSpacingMeters == 0.125 {
+                appliedLandingRequest = session.landingRequest
+                beginLanding(session: session, terrain: globalTerrain, focus: focus)
+                return
+            }
+            globalTerrain.update(east: focus.y, north: focus.x,
+                                 altitude: session.pendingArrival ? LunarExplorerSession.Preset.regional.altitudeMeters : session.altitudeMeters,
+                                 metersAcross: session.pendingArrival ? LunarExplorerSession.Preset.regional.metersAcross : session.metersAcross,
+                                 heading: session.terrainPlanningHeadingDegrees) { [weak self, weak session] message, requested, active, spacing, milliseconds in
+                guard let self, let session else { return }
+                self.pendingDiagnostics.loadMessage = message
+                if message.hasPrefix("Lunar terrain failed") {
+                    session.navigationPhase = .idle
+                    session.pendingArrival = false
+                    session.flightCoordinate = nil
+                    session.navigationMessage = "Destination terrain failed. Reload to retry."
+                }
+                self.pendingDiagnostics.requestedTileCount = requested
+                self.pendingDiagnostics.activeTileCount = active
+                self.pendingDiagnostics.finestSpacingMeters = spacing
+                self.pendingDiagnostics.latestGenerationMilliseconds = milliseconds
+                self.requestSceneUpdate()
+                if milliseconds != nil {
+                    if ProcessInfo.processInfo.arguments.contains("--lunar-explorer-ownership-probe") {
+                        let snapshot = globalTerrain.snapshot
+                        let focus = SIMD3(Float(focus.x), snapshot.sample(east: focus.y, north: focus.x)?.elevation ?? 0, Float(-focus.y))
+                        let inverse = self.presentationRoot.orientation.inverse
+                        let scale = self.presentationRoot.scale.x
+                        let origin = focus + inverse.act(SIMD3(0, 1.45, 0) - self.presentationRoot.position) / scale
+                        Task.detached {
+                            let logger = Logger(subsystem: LunarMapLog.subsystem, category: "TerrainOwnership")
+                            for v: Float in [-0.5, 0, 0.5] {
+                                for u: Float in [-0.9, 0, 0.9] {
+                                    if let hit = snapshot.raycast(origin: origin, direction: inverse.act(SIMD3(u, v, -1))) {
+                                        let owner = snapshot.sample(east: Double(-hit.position.z), north: Double(hit.position.x))
+                                        logger.info("Ownership ray u=\(u) v=\(v) east=\(-hit.position.z)m north=\(hit.position.x)m height=\(hit.position.y)m spacing=\(hit.plan.sampleSpacingMeters)m verticalOwner=\(owner?.spacing ?? 0)m distance=\(hit.distance)m")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if session.pendingArrival { session.flightCoordinate = nil }
+                    session.beginArrival()
+                }
+                if session.landingRequest != self.appliedLandingRequest, milliseconds != nil { self.requestSceneUpdate() }
+                if active > 0, milliseconds != nil, self.reanchorProbePending, !self.globalReanchorProbeStarted {
+                    self.globalReanchorProbeStarted = true
+                    Task { @MainActor [weak self, weak session] in
+                        try? await Task.sleep(for: .seconds(100))
+                        guard let self, session != nil else { return }
+                        self.reanchorProbePending = false
+                        self.requestSceneUpdate()
+                    }
+                }
+            }
+            return
+        }
+        requestProgressiveTerrain(
+            focusEastMeters: focus.y,
+            focusNorthMeters: focus.x,
+            altitudeMeters: session.altitudeMeters
+        )
+        updateProgressiveTerrainPresentation(
+            altitudeMeters: session.altitudeMeters
+        )
+        updateDiagnostics(session)
+    }
+
+    private func resumeResidentGlobalTerrain(_ session: LunarExplorerSession) -> Bool {
+        guard session.isExplorerExperience, !session.isBrowsingGlobe,
+              session.pendingArrival, !session.landingRunning, landingEntity == nil,
+              loadTask == nil, let terrain = globalTerrain,
+              let destination = session.destinationCoordinate,
+              terrain.region.unavailableSourceIDs.isEmpty,
+              destination.latitudeDegrees == terrain.region.frame.anchor.latitudeDegrees,
+              destination.longitudeDegrees == terrain.region.frame.anchor.longitudeDegrees,
+              activeGrade == session.presentationGrade, activeDetailMode == session.detailMode else { return false }
+        let plans = LMLunarTerrainPresentation.plans(
+            sourceSpacing: terrain.region.terrain.base.spacingMeters,
+            east: session.focusEastOffsetMeters, north: session.focusNorthOffsetMeters,
+            altitude: LunarExplorerSession.Preset.regional.altitudeMeters,
+            metersAcross: LunarExplorerSession.Preset.regional.metersAcross,
+            heading: session.terrainPlanningHeadingDegrees)
+        guard terrain.resumeIfReady(plans: plans) else { return false }
+        self.pendingDiagnostics.loadMessage = "Lunar terrain ready"
+        self.pendingDiagnostics.requestedTileCount = plans.count
+        self.pendingDiagnostics.activeTileCount = plans.count
+        self.pendingDiagnostics.finestSpacingMeters = plans.map(\.sampleSpacingMeters).min()
+        self.pendingDiagnostics.latestGenerationMilliseconds = 0
+        session.navigationMessage = ""
+        session.flightCoordinate = nil
+        session.beginArrival()
+        requestSceneUpdate()
+        return true
+    }
+
+    private func updateGlobeTerminator(_ session: LunarExplorerSession) {
+        guard let globeTerminator else { return }
+        let date = session.sunDate
+        guard globeTerminatorDate != date else { return }
+        do {
+            try LMLunarGlobeResource.updateTerminator(
+                globeTerminator,
+                date: date
+            )
+            globeTerminatorDate = date
+        } catch {
+            logger.error(
+                "Lunar globe terminator update failed: \(error.localizedDescription, privacy: .public)"
+            )
+        }
+    }
+
+    private let trackingSession = ARKitSession()
+    private var worldTracking: WorldTrackingProvider?
+
+    func startGestureTracking() async {
+        guard WorldTrackingProvider.isSupported else { return }
+        let provider = WorldTrackingProvider()
+        do {
+            try await trackingSession.run([provider])
+            worldTracking = provider
+        } catch {
+            logger.error("Pinch device tracking unavailable: \(error.localizedDescription, privacy: .public)")
+        }
+    }
+
+    func stopGestureTracking() {
+        trackingSession.stop()
+        worldTracking = nil
+        endPinch()
+    }
+
+    func gestureEyePosition() -> SIMD3<Float>? {
+        #if targetEnvironment(simulator)
+        // Simulator has no WorldTrackingProvider. Its capture camera is fixed;
+        // this is an explicit simulator calibration, not a device pose claim.
+        return LunarExplorerPortalGeometry.simulatorEyePosition
+        #else
+        guard let pose = worldTracking?.queryDeviceAnchor(atTimestamp: CACurrentMediaTime()),
+              pose.isTracked else { return nil }
+        let p = pose.originFromAnchorTransform.columns.3
+        return root.convert(position: SIMD3(p.x, p.y, p.z), from: nil)
+        #endif
+    }
+
+    private var gestureHeightFields: [LunarExplorerHeightFieldPicker] = []
+
+    private var pinchAnchor: PinchAnchor?
+    private var pinchOnTerrain = false
+    func endPinch() { pinchAnchor = nil }
+
+    /// Pick at gesture start and representation handoff. Terrain hits use
+    /// resident measured height posts; no mesh-buffer extraction occurs during a pick.
+    func magnify(_ session: LunarExplorerSession, magnification: Double, initialAltitude: Double,
+                 ray: LunarExplorerPinchGeometry.Ray) {
+        typealias Geometry = LunarExplorerPinchGeometry
+        updatePresentationTransform(session)
+        let onTerrain = presentationRoot.isEnabled && session.globeSiteBlend.siteOpacity >= 0.5
+        if pinchAnchor == nil || onTerrain != pinchOnTerrain {
+            let started = ContinuousClock.now
+            pinchAnchor = pickPinchAnchor(session, ray: ray)
+            pinchOnTerrain = onTerrain
+            logger.info("Pinch surface pick duration=\(String(describing: started.duration(to: .now)), privacy: .public)")
+        }
+        let previous = pinchAnchor
+        session.magnifyAltitude(by: magnification, from: initialAltitude, synchronize: false)
+        updatePresentationTransform(session)
+        switch previous {
+        case .globe(let localDirection):
+            guard let globeEntity, let front = globeFrontCoordinate else { break }
+            let center = globePresentationRoot.position(relativeTo: root)
+            let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale
+            guard let target = Geometry.sphereDirection(ray: ray, center: center, radius: radius,
+                                                       releaseAtLimb: true) else { break }
+            let orientation = globeEntity.orientation(relativeTo: root)
+            let rotation = simd_quatf(from: orientation.act(localDirection), to: target) * orientation
+            let radial = rotation.inverse.act(SIMD3<Float>(0, 0, 1))
+            let frame = LMSelenographicCoordinateSystem().localFrame(at: front)
+            let fixed = frame.moonFixedDirection(SIMD3(Double(radial.y), Double(radial.x), Double(radial.z)))
+            let coordinate = LMSelenographicCoordinateSystem().coordinate(for:
+                LMMoonCenteredPosition(fixed * LunarExplorerSession.lunarGlobeRadiusMeters))
+            let base = LMLunarNavigation.displayRotation(from: front, to: coordinate)
+            let roll = rotation * base.inverse
+            session.headingDegrees = Double(2 * atan2(roll.imag.z, roll.real)) * 180 / .pi
+            session.browseCoordinate = coordinate
+            if !session.isBrowsingGlobe, let sourceFrame {
+                let position = sourceFrame.position(for: coordinate)
+                session.pan(northMeters: position.northMeters - eagleTerrainPosition.x,
+                            eastMeters: position.eastMeters - eagleTerrainPosition.y)
+            }
+        case .terrain(let sourcePoint):
+            // Iterate the small focus-height correction as well as horizontal
+            // pan. The source point survives atomic publication and re-anchoring.
+            for _ in 0..<4 {
+                guard let transform = pinchSourceTransform(session) else { break }
+                let point = Geometry.point(sourcePoint, transformedBy: transform)
+                let north = Geometry.direction(SIMD3(1, 0, 0), transformedBy: transform)
+                let east = Geometry.direction(SIMD3(0, 0, -1), transformedBy: transform)
+                guard let delta = Geometry.panCorrection(point: point, north: north, east: east, ray: ray) else { break }
+                session.pan(northMeters: session.focusNorthOffsetMeters + delta.x,
+                            eastMeters: session.focusEastOffsetMeters + delta.y)
+                updatePresentationTransform(session)
+                if simd_length(delta) < 0.0001 { break }
+            }
+        case nil: break
+        }
+        session.synchronizeZoomDestination()
+        updatePresentationTransform(session)
+    }
+
+    /// Deterministic integration probe of the same anchored gesture handler.
+    /// Hardware recognition and head movement remain separate device gates.
+    /// Read-only state for the opt-in matched highland dive.
+    var regionalProbeState: (tiles: Int, spacing: Double?, morphing: Bool, globe: Float, site: Float) {
+        (globalTerrain?.snapshot.tiles.count ?? 0,
+         globalTerrain?.snapshot.tiles.map(\.plan.sampleSpacingMeters).min(),
+         globalTerrain?.isMorphing ?? false,
+         globePresentationRoot.isEnabled ? globePresentationRoot.components[OpacityComponent.self]?.opacity ?? 1 : 0,
+         presentationRoot.isEnabled ? presentationRoot.components[OpacityComponent.self]?.opacity ?? 1 : 0)
+    }
+
+    func probeAnchoredPinch(_ session: LunarExplorerSession) async throws {
+        updatePresentationTransform(session)
+        guard let transform = pinchSourceTransform(session) else { throw CocoaError(.validationMissingMandatoryProperty) }
+        let focus = terrainFocus(session)
+        let point = LunarExplorerPinchGeometry.point(
+            SIMD3(Float(focus.x + 20), Float(terrainDatumElevationMeters), Float(-focus.y - 40)),
+            transformedBy: transform)
+        guard let eye = gestureEyePosition() else { throw CocoaError(.validationMissingMandatoryProperty) }
+        let ray = LunarExplorerPinchGeometry.Ray(origin: eye, through: point)
+        let initial = session.altitudeMeters
+        session.beginHeadingGesture()
+        defer { endPinch(); session.endHeadingGesture() }
+        var maximumError: Float = 0
+        for step in 0...60 {
+            magnify(session, magnification: pow(2, Double(step) / 60), initialAltitude: initial, ray: ray)
+            guard case .terrain(let anchor) = pinchAnchor, let transform = pinchSourceTransform(session) else {
+                throw CocoaError(.validationMissingMandatoryProperty)
+            }
+            let projected = LunarExplorerPinchGeometry.point(anchor, transformedBy: transform)
+            maximumError = max(maximumError, simd_length(simd_cross(projected - ray.origin, ray.direction)))
+            try await Task.sleep(for: .milliseconds(16))
+        }
+        logger.info("Pinch integration maximumRayError=\(maximumError, privacy: .public)m")
+        // 0.5 mm in scene space: above the 1 cm measured-post quantization
+        // projected at the probe's final scale, while still submillimetre.
+        // This bounds anchor retention, not the omitted procedural detail.
+        let bound: Float = 0.0005
+        logger.info("Pinch integration bound=\(bound, privacy: .public)m sourceQuantumScene=\(session.presentationScale * 0.01, privacy: .public)m")
+        guard maximumError < bound else { throw CocoaError(.validationMissingMandatoryProperty) }
+    }
+
+    private enum PinchAnchor {
+        case globe(SIMD3<Float>)
+        case terrain(SIMD3<Float>)
+    }
+
+    private func pinchSourceTransform(_ session: LunarExplorerSession) -> simd_float4x4? {
+        guard let sourceFrame, let floatingOrigin else { return nil }
+        let source = LMLunarAnchoredPlacement.chunkTransform(
+            origin: .init(northMeters: 0, eastMeters: 0, upMeters: 0),
+            source: sourceFrame, anchor: floatingOrigin.frame)
+        return terrainAnchorRoot.transformMatrix(relativeTo: root) * source.matrix
+    }
+
+    private func pickPinchAnchor(_ session: LunarExplorerSession,
+                                 ray: LunarExplorerPinchGeometry.Ray) -> PinchAnchor? {
+        typealias Geometry = LunarExplorerPinchGeometry
+        if presentationRoot.isEnabled, session.globeSiteBlend.siteOpacity >= 0.5,
+           let transform = pinchSourceTransform(session) {
+            let inverse = transform.inverse
+            let origin = Geometry.point(ray.origin, transformedBy: inverse)
+            let direction = simd_normalize(Geometry.direction(ray.direction, transformedBy: inverse))
+            if let globalTerrain {
+                if let hit = globalTerrain.snapshot.raycast(origin: origin, direction: direction) {
+                    return .terrain(hit.position)
+                }
+            } else {
+                var nearest: SIMD3<Float>?
+                var nearestDistance = Float.infinity
+                for field in gestureHeightFields {
+                    if let hit = field.raycast(origin: origin, direction: direction) {
+                        let distance = simd_distance_squared(hit, origin)
+                        if distance < nearestDistance { nearest = hit; nearestDistance = distance }
+                    }
+                }
+                if let nearest { return .terrain(nearest) }
+            }
+        }
+        guard globePresentationRoot.isEnabled, let globeEntity,
+              let direction = Geometry.sphereDirection(ray: ray,
+                center: globePresentationRoot.position(relativeTo: root),
+                radius: Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale,
+                releaseAtLimb: false) else { return nil }
+        return .globe(globeEntity.orientation(relativeTo: root).inverse.act(direction))
+    }
+
+    private static func portalMesh(outline: [SIMD2<Float>]) throws -> MeshResource {
+        var descriptor = MeshDescriptor(name: "Moon silhouette aperture")
+        descriptor.positions = .init(outline.map { SIMD3($0.x, $0.y, 0) })
+        descriptor.primitives = .triangles((1..<(outline.count - 1)).flatMap { [0, UInt32($0), UInt32($0 + 1)] })
+        return try MeshResource.generate(from: [descriptor])
+    }
+
+    private static func portalBorderMesh() throws -> MeshResource {
+        let inner = LunarExplorerPortalGeometry.frameOutline
+        let outer = LunarExplorerPortalGeometry.rectangle(width: LunarExplorerPortalGeometry.width + 0.025,
+            height: LunarExplorerPortalGeometry.height + 0.025,
+            radius: LunarExplorerPortalGeometry.cornerRadius + 0.0125)
+        var descriptor = MeshDescriptor(name: "Moon window border ring")
+        descriptor.positions = .init((outer + inner).map { SIMD3($0.x, $0.y, 0) })
+        let n = UInt32(inner.count)
+        descriptor.primitives = .triangles((0..<n).flatMap { i in
+            let j = (i + 1) % n
+            return [i, j, i + n, j, j + n, i + n]
+        })
+        return try MeshResource.generate(from: [descriptor])
+    }
+
+    private func portalEyePosition() -> SIMD3<Float>? {
+        gestureEyePosition()
+    }
+
+    private func portalProjection(_ session: LunarExplorerSession,
+                                  eye: SIMD3<Float>) -> LunarExplorerPortalGeometry.Projection? {
+        let offset = session.globePosition - SIMD3<Float>(0, 0, -2)
+        let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale
+        return LunarExplorerPortalGeometry.project(
+            center: offset + SIMD3(0, 1.45, -(LunarExplorerSession.globeSurfaceDepthMeters + radius)),
+            radius: radius, eye: eye, planeCenter: offset + portal.position)
+    }
+
+    private func updatePresentationTransform(_ session: LunarExplorerSession) {
+        Self.applyPresentationOpacity(Double(session.transitionOpacity), to: root)
+        let eye = portalEyePosition() ?? LunarExplorerPortalGeometry.simulatorEyePosition
+        appliedPortalEye = eye
+        let projection = session.usesWindowContainer ? portalProjection(session, eye: eye) : nil
+        let enabled = session.usesWindowContainer && !session.isImmersed
+            && (projection?.frameOverflow ?? .infinity) >= 0
+        if appliedPortalState != enabled {
+            appliedPortalState = enabled
+            if enabled { worldRoot.components.set(WorldComponent()) }
+            else { worldRoot.components.remove(WorldComponent.self) }
+            portal.isEnabled = enabled
+            portalFrame.isEnabled = enabled
+        }
+        if enabled {
+            let outline = projection.map(LunarExplorerPortalGeometry.aperture) ?? LunarExplorerPortalGeometry.frameOutline
+            if outline != portalAperture, outline.count >= 3,
+               let mesh = try? Self.portalMesh(outline: outline) {
+                portal.model = .init(mesh: mesh, materials: [PortalMaterial()])
+                portalAperture = outline
+            }
+            let progress = min(1, max(0, (projection?.frameOverflow ?? 1) / (Double(LunarExplorerPortalGeometry.height) * 0.125)))
+            Self.applyPresentationOpacity(progress, to: portalFrame)
+        }
+        let parent = enabled ? worldRoot : root
+        for entity in [presentationRoot, globePresentationRoot, markerBillboard]
+            where entity.parent !== parent { parent.addChild(entity) }
+        let placement = session.usesWindowContainer ? session.globePosition - SIMD3<Float>(0, 0, -2) : .zero
+        let directOffset = enabled ? SIMD3<Float>.zero : placement
+        if session.usesWindowContainer {
+            windowRoot.position = placement
+            interactionSurface.position = portal.position + placement
+        }
+        updateGlobeRadiance(session)
+        let siteScale = session.presentationScale
+        let blend = session.globeSiteBlend
+        globePresentationRoot.scale = SIMD3(
+            repeating: session.globePresentationScale
+        )
+        // Keep the nearest surface at a stable viewing depth as the sphere
+        // grows. A fixed center put the camera inside the Moon once the 64 ppd
+        // map zoomed far enough to hand off to the regional tangent plane.
+        let displayedGlobeRadius = Float(
+            LunarExplorerSession.lunarGlobeRadiusMeters
+        ) * session.globePresentationScale
+        let globePosition = SIMD3<Float>(
+            0,
+            1.45,
+            -(LunarExplorerSession.globeSurfaceDepthMeters + displayedGlobeRadius)
+        )
+        // Every source uses the same interactive camera. Reference inspection
+        // poses are explicit calibration data, including the pinned Apollo pose.
+        let sitePosition = SIMD3<Float>(0, session.camera.siteHeightMeters, -2.35)
+        globePresentationRoot.position = globePosition + directOffset
+        let heading = simd_quatf(
+            angle: Float(session.headingDegrees * .pi / 180),
+            axis: SIMD3(0, 1, 0)
+        )
+        let tilt = simd_quatf(
+            angle: Float(session.tiltDegrees * .pi / 180),
+            axis: SIMD3(1, 0, 0)
+        )
+        // Camera heading rolls the cartographic globe around its selected
+        // radial, keeping that place registered at the fixed surface depth.
+        // Reference calibration may explicitly rotate the globe for inspection.
+        let globeOrientation = session.usesAltitudeCamera
+            ? simd_quatf(angle: Float(session.headingDegrees * .pi / 180), axis: SIMD3(0, 0, 1))
+            : tilt * heading
+        globePresentationRoot.orientation = globeOrientation
+
+        // The globe coordinate authority authors Apollo 11 at +z. Project its
+        // rotated surface point onto a foreground presentation plane along
+        // the same eye ray. This keeps the regional map centered on the real
+        // globe point without making a 262 km patch physically tiny at whole-
+        // Moon scale. It also puts the complete plane in front of the sphere,
+        // avoiding depth intersections while both representations crossfade.
+        let apolloSurfacePosition = globePosition + globeOrientation.act(
+            SIMD3(0, 0, displayedGlobeRadius)
+        )
+        var registeredPosition = Self.registeredSitePresentationPosition(
+            apolloSurfacePosition: apolloSurfacePosition,
+            eyePosition: SIMD3(0, globePosition.y, 0),
+            depthMeters: LunarExplorerSession.globeSurfaceDepthMeters - 0.01
+        )
+        // Site terrain is +x north, +y elevation, -z east. At the start of
+        // the overlap, rotate its up axis onto the globe's Apollo radial so
+        // the map is tangent and north/east stay registered. Once the globe
+        // is gone, tip toward the normal regional inspection view.
+        let siteToGlobeTangent = simd_quatf(
+            angle: .pi / 2,
+            axis: SIMD3(1, 0, 0)
+        )
+        let registeredOrientation = globeOrientation * siteToGlobeTangent
+        // A zoom that starts from the globe also eases into the Orbit viewing
+        // angle. Named site presets retain their own calibrated angles exactly
+        // (Approach through Surface are intentionally shallower than Orbit).
+        let siteTiltDegrees = !session.usesAltitudeCamera && session.selectedPreset == .globe
+            ? LunarExplorerSession.Preset.orbit.tiltDegrees
+            : session.tiltDegrees
+        let siteTilt = simd_quatf(
+            angle: Float(siteTiltDegrees * .pi / 180),
+            axis: SIMD3(1, 0, 0)
+        )
+        let siteOrientation = siteTilt * heading
+        // The blend starts only once the finite 262 km regional base covers
+        // the selected view, so both representations can use the same scale.
+        // This removes the visible translucent Moon-over-map double image.
+        var crossfadeScale = siteScale * Float(
+            LunarExplorerSession.globeHandoffOverscan
+        )
+        if let globalTerrain, !globalTerrain.snapshot.tiles.isEmpty {
+            let focus = terrainFocus(session)
+            let focusHeight = globalTerrain.snapshot.sample(east: focus.y, north: focus.x)?.elevation ?? 0
+            let offset = SIMD3(Float(focus.x), focusHeight, Float(-focus.y))
+            let safe = Self.foregroundProjection(
+                position: registeredPosition, orientation: registeredOrientation, scale: crossfadeScale,
+                minimum: globalTerrain.boundsMinimum - offset, maximum: globalTerrain.boundsMaximum - offset,
+                eye: SIMD3(0, globePosition.y, 0), maximumDepth: LunarExplorerSession.globeSurfaceDepthMeters - 0.01
+            )
+            registeredPosition = safe.position
+            crossfadeScale = safe.scale
+        }
+        let settledScale = siteScale * Float(
+            session.siteCoverageScaleMultiplier
+        )
+        let progress = Float(blend.morphProgress)
+        let logarithmicScale = exp(
+            log(crossfadeScale) * (1 - progress)
+                + log(settledScale) * progress
+        )
+        presentationRoot.scale = SIMD3(repeating: logarithmicScale)
+        presentationRoot.position = simd_mix(
+            registeredPosition,
+            sitePosition,
+            SIMD3(repeating: progress)
+        )
+        presentationRoot.orientation = simd_slerp(
+            registeredOrientation,
+            siteOrientation,
+            progress
+        )
+
+        presentationRoot.position += directOffset
+
+        let globeFocus = (session.isBrowsingGlobe ? session.browseCoordinate : nil) ?? session.flightCoordinate
+            ?? (isLoaded ? (session.camera.reference?.fixedGlobeCoordinate ?? session.currentCoordinate) : nil)
+        if let coordinate = globeFocus ?? globeFrontCoordinate {
+            globeImagery?.update(width: session.metersAcross, coordinate: coordinate, offline: session.regionOffline)
+        }
+        if let flight = globeFocus, let front = globeFrontCoordinate {
+            let rotation = front == flight ? simd_quatf() : LMLunarNavigation.displayRotation(from: front, to: flight)
+            globeEntity?.orientation = rotation
+            globeTerminator?.entity.orientation = rotation
+        } else {
+            globeEntity?.orientation = .init()
+            globeTerminator?.entity.orientation = .init()
+        }
+        if !session.usesWindowContainer { interactionSurface.position = SIMD3(0, 0, -1.15) }
+        updatePlacePins(session)
+        markerBillboard.isEnabled = session.isExplorerExperience && session.isBrowsingGlobe
+        if markerBillboard.isEnabled {
+            let coordinate = session.selectedMarkerPlace?.coordinate ?? session.browseCoordinate
+            let direction = globePresentationRoot.orientation.act(LunarExplorerMapGeometry.direction(to: coordinate, centeredOn: session.browseCoordinate))
+            let radius = Float(LunarExplorerSession.lunarGlobeRadiusMeters) * session.globePresentationScale
+            markerBillboard.position = globePresentationRoot.position + direction * radius * 1.006
+            markerBillboard.isEnabled = LunarExplorerMapGeometry.isVisible(direction: direction,
+                globePosition: globePresentationRoot.position(relativeTo: root), radius: radius)
+        }
+        let canPresentSite = !session.isBrowsingGlobe && session.flightCoordinate == nil && isLoaded && (globalTerrain == nil || globalTerrain?.snapshot.tiles.isEmpty == false)
+        let globeOpacity = canPresentSite ? blend.globeOpacity : 1
+        let siteOpacity = canPresentSite ? blend.siteOpacity : 0
+        globePresentationRoot.isEnabled = globeOpacity > 0.001
+        presentationRoot.isEnabled = siteOpacity > 0.001
+        Self.applyPresentationOpacity(globeOpacity, to: globePresentationRoot)
+        Self.applyPresentationOpacity(siteOpacity, to: presentationRoot)
+
+        updateFloatingAnchor(session)
+        if let pose = landingPose, let anchor = floatingOrigin?.frame {
+            let placement = LMLunarAnchoredPlacement.chunkTransform(
+                origin: .init(northMeters: pose.position.x, eastMeters: pose.position.y, upMeters: pose.position.z),
+                source: pose.frame, anchor: anchor)
+            landingEntity?.transform = placement
+            landingEntity?.orientation = placement.rotation * LMWorldMapper.attitudeOrientation(from: pose.attitude)
+        }
+    }
+
+    /// A homothety about the eye preserves every projected vertex. Bound the
+    /// entire generated region ahead of the globe's nearest surface rather
+    /// than assuming its kilometer-scale relief fits a 1 cm depth offset.
+    static func foregroundProjection(position: SIMD3<Float>, orientation: simd_quatf, scale: Float,
+                                     minimum: SIMD3<Float>, maximum: SIMD3<Float>, eye: SIMD3<Float>,
+                                     maximumDepth: Float) -> (position: SIMD3<Float>, scale: Float) {
+        var farthestDepth: Float = 0
+        for x in [minimum.x, maximum.x] {
+            for y in [minimum.y, maximum.y] {
+                for z in [minimum.z, maximum.z] {
+                    let point = position + orientation.act(SIMD3(x, y, z) * scale)
+                    farthestDepth = max(farthestDepth, eye.z - point.z)
+                }
+            }
+        }
+        let ratio = min(1, maximumDepth / max(maximumDepth, farthestDepth))
+        return (eye + (position - eye) * ratio, scale * ratio)
+    }
+
+    private func updateFloatingAnchor(_ session: LunarExplorerSession) {
+        guard let sourceFrame, var origin = floatingOrigin, let terrainEnvironment else { return }
+        let focus = terrainFocus(session)
+        let sourceFocus = LMSiteENUPosition(
+            northMeters: focus.x, eastMeters: focus.y,
+            upMeters: globalTerrain?.snapshot.sample(east: focus.y, north: focus.x)
+                .map { Double($0.elevation) } ?? terrainDatumElevationMeters
+        )
+        let moonFocus = sourceFrame.moonCenteredPosition(for: sourceFocus)
+        if !reanchorProbePending, origin.update(focus: moonFocus) {
+            logger.info("Reanchor generation=\(origin.generation) resident=\(self.globalTerrain?.snapshot.tiles.count ?? self.progressiveEntities.count) pending=\(self.generationTasks.count)")
+        }
+        floatingOrigin = origin
+        let placement = LMLunarAnchoredPlacement(
+            source: sourceFrame, anchor: origin.frame, focus: sourceFocus
+        )
+        // Both assignments happen synchronously on the main actor. Resident
+        // meshes, ownership, textures, lights, and pending builds stay attached.
+        if let globalTerrain {
+            terrainEnvironment.transform = .identity
+            globalTerrain.apply(anchor: origin.frame)
+        } else {
+            terrainEnvironment.transform = placement.sourceTransform
+        }
+        terrainAnchorRoot.transform = placement.viewTransform
+    }
+
+    /// RealityKit's unlit base-color tint is evaluated in linear space. An
+    /// extended-linear color preserves a multiplier above one without
+    /// changing the texture, its transfer function, or the terminator shell.
+    private func updateGlobeRadiance(_ session: LunarExplorerSession) {
+        // Cartographic globe against a bright room; immersive/capture radiance
+        // keeps the accepted handoff calibration exactly.
+        let multiplier = session.isBrowsingGlobe ? 3.0 : session.globeHandoffLinearRadianceMultiplier
+        guard appliedGlobeLinearRadianceMultiplier != multiplier,
+              let globeEntity,
+              var model = globeEntity.components[ModelComponent.self],
+              var material = model.materials.first as? UnlitMaterial,
+              let colorSpace = CGColorSpace(
+                  name: CGColorSpace.extendedLinearSRGB
+              ),
+              let tint = CGColor(
+                  colorSpace: colorSpace,
+                  components: [multiplier, multiplier, multiplier, 1]
+              )
+        else { return }
+        material.color.tint = UIColor(cgColor: tint)
+        model.materials[0] = material
+        globeEntity.components.set(model)
+        globeImagery?.setRadiance(multiplier)
+        appliedGlobeLinearRadianceMultiplier = multiplier
+    }
+
+    /// Projects the Apollo surface point onto a nearer plane without changing
+    /// its view ray. The screen-space registration residual is therefore zero
+    /// before rasterization; only the planar-versus-spherical scale model is
+    /// deliberately different during the presentation handoff.
+    static func registeredSitePresentationPosition(
+        apolloSurfacePosition: SIMD3<Float>,
+        eyePosition: SIMD3<Float>,
+        depthMeters: Float
+    ) -> SIMD3<Float> {
+        let ray = simd_normalize(apolloSurfacePosition - eyePosition)
+        return eyePosition + ray * depthMeters
+    }
+
+    /// Do not leave a no-op opacity component on either fully opaque endpoint.
+    /// Besides avoiding transparent-render sorting, this preserves the exact
+    /// RealityKit path used by the existing named site capture baselines.
+    static func applyPresentationOpacity(
+        _ opacity: Double,
+        to entity: Entity
+    ) {
+        if opacity >= 0.999 {
+            entity.components.remove(OpacityComponent.self)
+        } else {
+            entity.components.set(OpacityComponent(opacity: Float(opacity)))
+        }
+    }
+
+    private func terrainFocus(_ session: LunarExplorerSession) -> LMVector3D {
+        LMVector3D(
+            x: eagleTerrainPosition.x + session.focusNorthOffsetMeters,
+            y: eagleTerrainPosition.y + session.focusEastOffsetMeters,
+            z: 0
+        )
+    }
+
+    private func requestProgressiveTerrain(
+        focusEastMeters: Double,
+        focusNorthMeters: Double,
+        altitudeMeters: Double
+    ) {
+        guard let heightField,
+              terrainEnvironment != nil,
+              let activeDetailMode else { return }
+        let detailPipeline = pipeline(for: activeDetailMode)
+        let planner = LMProgressiveTerrainPlanner(
+            sourceSpacingMeters: heightField.spacingMeters
+        )
+        // Capture-only control for a same-camera, same-feature LOD A/B. It is
+        // more reliable than comparing different lunar pixels on opposite
+        // sides of a footprint boundary after residency geometry changes.
+        let terminalOnlyCapture = ProcessInfo.processInfo.arguments.contains(
+            "--lunar-explorer-capture-max-detail=terminal"
+        ) && ProcessInfo.processInfo.arguments.contains(
+            "--lunar-explorer-capture"
+        )
+        let requestedAltitude = terminalOnlyCapture
+            ? max(
+                altitudeMeters,
+                LMTerrainDetailPolicy().landingAltitudeMeters + 1
+            )
+            : altitudeMeters
+        let heading = session?.terrainPlanningHeadingDegrees ?? 0
+        let metersAcross = session?.metersAcross ?? 0
+        // The compact footprint owns contact around the selected point. The
+        // oblique Explorer camera also needs a bounded forward corridor so its
+        // frame never sees the rectangular outer morph into the parent level.
+        // Keep the expensive 0.125 m landing corridor asymmetric but complete:
+        // 48 m into the view and 32 m behind the focus. The rear coverage is
+        // load-bearing at Surface, where the nearest footprint perimeter is
+        // otherwise visible as a broad normal-frequency collar. This is 24
+        // Eagle tiles, still bounded below the former 31-tile blanket. The
+        // cheaper 0.5 m terminal corridor can follow wider inspection views.
+        let basePlans = planner.focusedPlans(
+            focusEastMeters: focusEastMeters,
+            focusNorthMeters: focusNorthMeters,
+            altitudeMeters: requestedAltitude
+        )
+        var corridorPlans = basePlans
+        if !terminalOnlyCapture,
+           altitudeMeters <= LMTerrainDetailPolicy().landingAltitudeMeters {
+            corridorPlans += planner.viewCorridorPlans(
+                focusEastMeters: focusEastMeters,
+                focusNorthMeters: focusNorthMeters,
+                headingDegrees: heading,
+                forwardDistanceMeters: 48,
+                altitudeMeters: altitudeMeters
+            )
+            corridorPlans += planner.viewCorridorPlans(
+                focusEastMeters: focusEastMeters,
+                focusNorthMeters: focusNorthMeters,
+                headingDegrees: heading + 180,
+                forwardDistanceMeters: 32,
+                altitudeMeters: altitudeMeters
+            )
+        }
+        let terminalDistance = min(384, max(48, metersAcross * 0.75))
+        if altitudeMeters <= LMTerrainDetailPolicy().terminalAltitudeMeters {
+            // Asking at 61 m selects only the terminal level when the landing
+            // level is also resident, avoiding a large hidden fine-tile set.
+            let terminalOnlyAltitude = max(
+                altitudeMeters,
+                LMTerrainDetailPolicy().landingAltitudeMeters + 1
+            )
+            corridorPlans += planner.viewCorridorPlans(
+                focusEastMeters: focusEastMeters,
+                focusNorthMeters: focusNorthMeters,
+                headingDegrees: heading,
+                forwardDistanceMeters: terminalDistance,
+                altitudeMeters: terminalOnlyAltitude
+            )
+        }
+        let plans = planner.mergedPlans(corridorPlans)
+        let nextPlans = Dictionary(uniqueKeysWithValues: plans.map { ($0.id, $0) })
+        let policy = LMTerrainDetailPolicy()
+        let replacementPlans = plans.filter {
+            policy.presentationBlend(
+                sampleSpacingMeters: $0.sampleSpacingMeters,
+                altitudeMeters: altitudeMeters
+            ) >= 0.999
+        }
+        let nextOwnership = Dictionary(uniqueKeysWithValues: plans.map { plan in
+            (plan.id, LMLunarTerrainPresentation.finerOwners(of: plan, in: replacementPlans))
+        })
+        guard nextPlans != requestedPlans
+                || nextOwnership != requestedOwnership else { return }
+        let previousRequestedPlans = requestedPlans
+        let previousRequestedOwnership = requestedOwnership
+        requestedPlans = nextPlans
+        requestedOwnership = nextOwnership
+
+        for id in Array(generationTasks.keys)
+            where nextPlans[id] != previousRequestedPlans[id]
+                || nextOwnership[id] != previousRequestedOwnership[id] {
+            generationTasks[id]?.cancel()
+            generationTasks.removeValue(forKey: id)
+            generationTokens.removeValue(forKey: id)
+        }
+        for id in Array(pendingProgressiveEntities.keys)
+            where nextPlans[id] != pendingProgressivePlans[id]
+                || nextOwnership[id] != pendingOwnership[id] {
+            pendingProgressiveEntities.removeValue(forKey: id)
+            pendingProgressivePlans.removeValue(forKey: id)
+            pendingOwnership.removeValue(forKey: id)
+        }
+        publishRequestedTerrainIfReady()
+
+        for plan in plans where (progressivePlans[plan.id] != plan
+            || progressiveOwnership[plan.id] != nextOwnership[plan.id])
+            && (pendingProgressivePlans[plan.id] != plan
+                || pendingOwnership[plan.id] != nextOwnership[plan.id])
+            && generationTasks[plan.id] == nil {
+            let ownership = nextOwnership[plan.id] ?? []
+            let token = UUID()
+            generationTokens[plan.id] = token
+            let started = ContinuousClock.now
+            generationTasks[plan.id] = Task { @MainActor [weak self] in
+                guard let self else { return }
+                do {
+                    let build = try await Apollo11TerrainResource
+                        .makeProgressiveTileEntityBuild(
+                        heightField: heightField,
+                        plan: plan,
+                        activePlans: plans,
+                        geometryReplacementPlans: replacementPlans,
+                        albedoField: self.albedoField,
+                        detailPipeline: detailPipeline
+                    )
+                    guard self.finishGeneration(id: plan.id, token: token),
+                          !Task.isCancelled,
+                          self.requestedPlans[plan.id] == plan,
+                          self.requestedOwnership[plan.id] == ownership,
+                          let build else { return }
+                    let entity = build.entity
+                    self.pendingProgressiveEntities[plan.id] = entity
+                    self.pendingProgressivePlans[plan.id] = plan
+                    self.pendingOwnership[plan.id] = ownership
+                    let elapsed = started.duration(to: .now)
+                    let milliseconds = Int(
+                        elapsed.components.seconds * 1_000
+                            + elapsed.components.attoseconds / 1_000_000_000_000_000
+                    )
+                    self.pendingDiagnostics.latestGenerationMilliseconds = milliseconds
+                    self.pendingDiagnostics.latestGenerationMetrics = build.metrics
+                    self.logger.info(
+                        "Terrain tile ready L\(plan.id.level, privacy: .public) E\(plan.id.eastIndex, privacy: .public) N\(plan.id.northIndex, privacy: .public) spacing=\(plan.sampleSpacingMeters, privacy: .public)m generation=\(milliseconds, privacy: .public)ms"
+                    )
+                    self.publishRequestedTerrainIfReady()
+                    if let session = self.session {
+                        self.updateDiagnostics(session)
+                    }
+                } catch is CancellationError {
+                    _ = self.finishGeneration(id: plan.id, token: token)
+                } catch {
+                    _ = self.finishGeneration(id: plan.id, token: token)
+                    self.logger.error(
+                        "Terrain tile failed L\(plan.id.level, privacy: .public) E\(plan.id.eastIndex, privacy: .public) N\(plan.id.northIndex, privacy: .public) spacing=\(plan.sampleSpacingMeters, privacy: .public)m: \(error.localizedDescription, privacy: .public)"
+                    )
+                    self.pendingDiagnostics.loadMessage =
+                        "Tile L\(plan.id.level) failed: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    /// Residency and presentation are deliberately separate. The landing
+    /// tiles become resident at 60 m so generation can finish ahead of the
+    /// vehicle, then their complete visual contribution fades in from 40 m to
+    /// 25 m. Applying the same policy to the whole entity prevents an entire
+    /// high-frequency footprint from appearing on the frame that crosses the
+    /// residency gate. The surface sampler uses this exact blend for the
+    /// cockpit/contact datum.
+    private func updateProgressiveTerrainPresentation(
+        altitudeMeters: Double
+    ) {
+        for (id, entity) in progressiveEntities {
+            guard let plan = progressivePlans[id] else { continue }
+            applyPresentationBlend(
+                to: entity,
+                plan: plan,
+                altitudeMeters: altitudeMeters
+            )
+        }
+    }
+
+    private func applyPresentationBlend(
+        to entity: ModelEntity,
+        plan: LMTerrainTilePlan,
+        altitudeMeters: Double
+    ) {
+        let opacity = LMTerrainDetailPolicy().presentationBlend(
+            sampleSpacingMeters: plan.sampleSpacingMeters,
+            altitudeMeters: altitudeMeters
+        )
+        // A no-op OpacityComponent still routes the mesh through RealityKit's
+        // transparent pass. Once the measured/parent quads have handed their
+        // footprint to this tile, that path can sort behind the resulting
+        // geometric hole and expose the immersive black background. Use the
+        // same opaque-endpoint contract as the globe/site presentation blend.
+        Self.applyPresentationOpacity(opacity, to: entity)
+    }
+
+    @discardableResult
+    private func finishGeneration(id: LMTerrainTileID, token: UUID) -> Bool {
+        guard generationTokens[id] == token else { return false }
+        generationTokens.removeValue(forKey: id)
+        generationTasks.removeValue(forKey: id)
+        return true
+    }
+
+    /// Publish a complete residency generation as one main-actor transaction.
+    /// Parent meshes are allowed to contain child holes only when every child
+    /// in the same generation is ready, so the viewer never sees the immersive
+    /// background while asynchronous tiles arrive.
+    private func publishRequestedTerrainIfReady() {
+        guard let terrainEnvironment else { return }
+        prepareMeasuredNearFieldOwnership()
+        let nextMask = Set(requestedPlans.keys)
+        guard measuredNearFieldEntity == nil || nextMask == measuredNearFieldMask
+            || (ownershipPreparationIDs == nextMask && preparedOwnershipMesh != nil) else { return }
+        guard requestedPlans.allSatisfy({ id, plan in
+            (progressivePlans[id] == plan
+                && progressiveOwnership[id] == requestedOwnership[id])
+                || (pendingProgressivePlans[id] == plan
+                    && pendingOwnership[id] == requestedOwnership[id])
+        }) else { return }
+
+        let publication = LMLunarTerrainTiming.begin("apollo-publication")
+        defer { LMLunarTerrainTiming.end(publication) }
+        let altitude = session?.altitudeMeters ?? .greatestFiniteMagnitude
+        for (id, plan) in requestedPlans {
+            guard pendingProgressivePlans[id] == plan,
+                  pendingOwnership[id] == requestedOwnership[id],
+                  let entity = pendingProgressiveEntities.removeValue(forKey: id) else {
+                continue
+            }
+            pendingProgressivePlans.removeValue(forKey: id)
+            pendingOwnership.removeValue(forKey: id)
+            applyPresentationBlend(to: entity, plan: plan, altitudeMeters: altitude)
+            terrainEnvironment.addChild(entity)
+            progressiveEntities[id]?.removeFromParent()
+            progressiveEntities[id] = entity
+            progressivePlans[id] = plan
+            progressiveOwnership[id] = requestedOwnership[id] ?? []
+        }
+
+        let activeIDs = Set(progressiveEntities.keys)
+        let requestedIDs = Set(requestedPlans.keys)
+        for id in activeIDs.subtracting(requestedIDs) {
+            progressiveEntities.removeValue(forKey: id)?.removeFromParent()
+            progressivePlans.removeValue(forKey: id)
+            progressiveOwnership.removeValue(forKey: id)
+        }
+        if nextMask != measuredNearFieldMask,
+           let entity = measuredNearFieldEntity,
+           let mesh = preparedOwnershipMesh,
+           var model = entity.model {
+            model.mesh = mesh
+            entity.model = model
+            measuredNearFieldMask = nextMask
+        }
+        preparedOwnershipMesh = nil
+    }
+
+
+    /// The measured near field and fine clipmap are alternate owners of the
+    /// same physical surface. Mask the measured triangles only after the full
+    /// requested replacement is resident, so asynchronous generation cannot
+    /// expose a hole. The fine mesh already converges to the measured parent
+    /// at this exact grid-aligned perimeter.
+    private func prepareMeasuredNearFieldOwnership() {
+        guard let grid = measuredNearFieldGrid else { return }
+        let ids = Set(requestedPlans.keys)
+        guard ids != measuredNearFieldMask else {
+            cancelOwnershipPreparation()
+            return
+        }
+        guard ownershipPreparationIDs != ids else { return }
+        cancelOwnershipPreparation()
+        ownershipPreparationIDs = ids
+        let token = UUID()
+        ownershipPreparationToken = token
+        let plans = Array(requestedPlans.values)
+        ownershipPreparation = Task { [weak self] in
+            do {
+                let worker = Task.detached(priority: .userInitiated) {
+                    try Task.checkCancellation()
+                    let owned = try LMLunarTerrainTiming.measure("ownership-grid") {
+                        try LMTerrainMeshBuilder.excludingProgressiveFootprints(from: grid, plans: plans)
+                    }
+                    try Task.checkCancellation()
+                    return owned
+                }
+                let grid = try await withTaskCancellationHandler(
+                    operation: { try await worker.value }, onCancel: { worker.cancel() }
+                )
+                let interval = LMLunarTerrainTiming.begin("ownership-mesh-async")
+                let mesh = try await LMTerrainMeshBuilder.meshAsync(from: grid)
+                LMLunarTerrainTiming.end(interval)
+                try Task.checkCancellation()
+                guard let self, self.ownershipPreparationToken == token else { return }
+                self.preparedOwnershipMesh = mesh
+                self.ownershipPreparation = nil
+                self.publishRequestedTerrainIfReady()
+            } catch is CancellationError {
+                // A newer footprint or scene owns publication.
+            } catch {
+                guard let self, self.ownershipPreparationToken == token else { return }
+                self.ownershipPreparation = nil
+                self.logger.error("Measured terrain ownership preparation failed: \(error.localizedDescription, privacy: .public)")
+            }
+        }
+    }
+
+    private func cancelOwnershipPreparation() {
+        ownershipPreparation?.cancel()
+        ownershipPreparation = nil
+        ownershipPreparationToken = nil
+        ownershipPreparationIDs = nil
+        preparedOwnershipMesh = nil
+    }
+
+    /// Retain the existing synchronous reset for explicit appearance-mode
+    /// changes. Ordinary residency publication prepares its mesh beforehand.
+    private func refreshMeasuredNearFieldOwnership() {
+        guard let entity = measuredNearFieldEntity,
+              let grid = measuredNearFieldGrid else { return }
+        let plans = Array(progressivePlans.values)
+        let ids = Set(plans.map(\.id))
+        guard ids != measuredNearFieldMask else { return }
+        do {
+            let ownedGrid = try LMTerrainMeshBuilder.excludingProgressiveFootprints(
+                from: grid, plans: plans)
+            let mesh = try LMTerrainMeshBuilder.mesh(from: ownedGrid)
+            guard var model = entity.model else { return }
+            model.mesh = mesh
+            entity.model = model
+            measuredNearFieldMask = ids
+        } catch {
+            logger.error("Measured terrain ownership reset failed: \(error.localizedDescription, privacy: .public)")
+        }
+    }
+
+    /// Points the mission sun where it actually was at the session's instant.
+    ///
+    /// The manifest pins a single touchdown direction; the ephemeris supplies
+    /// the same two angles for any date, so scrubbing time sweeps the real
+    /// terminator across the site instead of interpolating an invented one.
+    private func updateMissionSun(_ session: LunarExplorerSession) {
+        guard let siteCoordinate, let terrainSun else { return }
+        let date = session.sunDate
+        let grade = session.presentationGrade
+        let sun = LMLunarEphemeris.sunAngles(at: date, site: siteCoordinate)
+        terrainSun.orientation = LMFullDescentMapper.sunLightOrientation(from: sun)
+        if globalTerrain != nil, let sourceFrame, let floatingOrigin {
+            let rotation = LMLunarFrameTransform(from: sourceFrame, to: floatingOrigin.frame).renderRotation
+            terrainSun.orientation = simd_quatf(vector: SIMD4<Float>(simd_quatd(rotation).vector)) * terrainSun.orientation
+        }
+        // Re-expose for the new solar elevation. Without this the surface
+        // clips to white within a few days of the landing, because flat ground
+        // takes the beam scaled by sin(elevation).
+        let sunIlluminance = LMTerrainWorld.missionSunIlluminance(
+            elevationDegrees: sun.elevationDegrees,
+            grade: grade
+        )
+        terrainSun.light.intensity = sunIlluminance
+
+        let earth = LMLunarEphemeris.earthAngles(at: date, site: siteCoordinate)
+        let illuminatedFraction = LMLunarEphemeris
+            .earthIlluminatedFractionFromMoon(at: date)
+        terrainEarthshine?.orientation = LMFullDescentMapper
+            .sunLightOrientation(from: earth)
+        if globalTerrain != nil, let sourceFrame, let floatingOrigin, let terrainEarthshine {
+            let rotation = LMLunarFrameTransform(from: sourceFrame, to: floatingOrigin.frame).renderRotation
+            terrainEarthshine.orientation = simd_quatf(vector: SIMD4<Float>(simd_quatd(rotation).vector)) * terrainEarthshine.orientation
+        }
+        terrainEarthshine?.light.intensity = LMTerrainWorld.earthshineIlluminance(
+            sunIlluminanceLux: sunIlluminance,
+            illuminatedFraction: illuminatedFraction,
+            grade: grade
+        )
+        pendingDiagnostics.sunAzimuthDegrees = sun.azimuthDegreesClockwiseFromNorth
+        pendingDiagnostics.sunElevationDegrees = sun.elevationDegrees
+        pendingDiagnostics.earthIlluminatedFraction = illuminatedFraction
+    }
+
+    private func updateRockDetail(altitudeMeters: Double) {
+        guard let terrainRockField else { return }
+        for rock in terrainRockField.children {
+            rock.isEnabled = LMLunarRockDetailPolicy.isVisible(
+                maximumDimensionMeters: max(rock.scale.x, rock.scale.z),
+                altitudeMeters: altitudeMeters
+            )
+        }
+    }
+
+    private func pipeline(
+        for mode: LMTerrainDetailMode
+    ) -> LMTerrainDetailPipeline {
+        if let pipeline = detailPipelines[mode] {
+            return pipeline
+        }
+        let pipeline = mode.makePipeline()
+        detailPipelines[mode] = pipeline
+        return pipeline
+    }
+
+    /// Retunes every resident terrain material to the current grade in place.
+    ///
+    /// The exposure floor is the only grade-dependent material property, so
+    /// patching it costs nothing next to discarding and re-baking tiles — and
+    /// unlike a progressive-tile rebuild it also reaches the measured base
+    /// bands, which are built once at load and would otherwise keep the old
+    /// tone under the new one.
+    private func applyExposureFloorToResidentMaterials() {
+        guard let terrainEnvironment else { return }
+        applyExposureFloor(LMTerrainWorld.exposureFloor, to: terrainEnvironment)
+    }
+
+    private func applyExposureFloor(_ floor: Float, to entity: Entity) {
+        if var model = entity.components[ModelComponent.self] {
+            var didChange = false
+            model.materials = model.materials.map { material in
+                guard var physical = material as? PhysicallyBasedMaterial else {
+                    return material
+                }
+                physical.emissiveIntensity = floor
+                didChange = true
+                return physical
+            }
+            if didChange {
+                entity.components.set(model)
+            }
+        }
+        for child in entity.children {
+            applyExposureFloor(floor, to: child)
+        }
+    }
+
+    private func activateDetailMode(
+        _ mode: LMTerrainDetailMode,
+        session: LunarExplorerSession
+    ) {
+        activeDetailMode = mode
+        for task in generationTasks.values {
+            task.cancel()
+        }
+        generationTasks.removeAll(keepingCapacity: false)
+        generationTokens.removeAll(keepingCapacity: false)
+        requestedPlans.removeAll(keepingCapacity: false)
+        requestedOwnership.removeAll(keepingCapacity: false)
+        progressivePlans.removeAll(keepingCapacity: false)
+        progressiveOwnership.removeAll(keepingCapacity: false)
+        pendingProgressivePlans.removeAll(keepingCapacity: false)
+        pendingOwnership.removeAll(keepingCapacity: false)
+        pendingProgressiveEntities.removeAll(keepingCapacity: false)
+        cancelOwnershipPreparation()
+        for entity in progressiveEntities.values {
+            entity.removeFromParent()
+        }
+        progressiveEntities.removeAll(keepingCapacity: false)
+        refreshMeasuredNearFieldOwnership()
+        self.pendingDiagnostics.latestGenerationMilliseconds = nil
+        self.pendingDiagnostics.latestGenerationMetrics = nil
+        let detailPipeline = pipeline(for: mode)
+        Task {
+            await detailPipeline.prepare()
+        }
+    }
+
+    private func updateDiagnostics(_ session: LunarExplorerSession) {
+        var diagnostics = self.pendingDiagnostics
+        diagnostics.requestedTileCount = requestedPlans.count
+        diagnostics.activeTileCount = progressiveEntities.count
+        diagnostics.finestSpacingMeters = requestedPlans.values
+            .map(\.sampleSpacingMeters)
+            .min()
+        diagnostics.sourceDescription = sourceDescription(
+            altitudeMeters: session.altitudeMeters
+        )
+        pendingDiagnostics = diagnostics
+    }
+
+    private func sourceDescription(altitudeMeters: Double) -> String {
+        if let elevationPreviewDescription { return elevationPreviewDescription }
+        if let session, session.presentsGlobe, session.presentsSite {
+            return "Pinned WAC globe + Apollo 11 site crossfade"
+        }
+        if session?.presentsGlobe == true {
+            return "Pinned WAC_GLOBAL 64 ppd morphologic map"
+        }
+        return switch altitudeMeters {
+        case ...60:
+            "2 m LROC plus 0.5 m and 0.125 m procedural geometry"
+        case ...250:
+            "2 m LROC plus 0.5 m procedural geometry"
+        case ...2_500:
+            "2 m LROC measured near field"
+        default:
+            "SLDEM regional geometry with WAC reflectance"
+        }
+    }
+}

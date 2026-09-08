@@ -1,3 +1,5 @@
+@testable import LunarMapExplorer
+@testable import LunarMap
 import CryptoKit
 import Foundation
 import ImageIO
@@ -54,11 +56,11 @@ struct LMLunarGlobeTests {
         let name = (map.file as NSString).deletingPathExtension
         let ext = (map.file as NSString).pathExtension
         let url = try #require(
-            Bundle.main.url(
+            LunarMap.resources.url(
                 forResource: name,
                 withExtension: ext,
                 subdirectory: "Terrain"
-            ) ?? Bundle.main.url(forResource: name, withExtension: ext)
+            ) ?? LunarMap.resources.url(forResource: name, withExtension: ext)
         )
         let source = try #require(CGImageSourceCreateWithURL(url as CFURL, nil))
         let properties = try #require(
@@ -71,7 +73,7 @@ struct LMLunarGlobeTests {
         let height = 180
         let normals = try LMLunarGlobeResource.globeNormalSamples(
             manifest: manifest,
-            bundle: .main,
+            bundle: LunarMap.resources,
             width: width,
             height: height
         )
@@ -90,11 +92,11 @@ struct LMLunarGlobeTests {
             let name = (tier.file as NSString).deletingPathExtension
             let ext = (tier.file as NSString).pathExtension
             let url = try #require(
-                Bundle.main.url(
+                LunarMap.resources.url(
                     forResource: name,
                     withExtension: ext,
                     subdirectory: "Terrain"
-                ) ?? Bundle.main.url(forResource: name, withExtension: ext)
+                ) ?? LunarMap.resources.url(forResource: name, withExtension: ext)
             )
             let source = try #require(CGImageSourceCreateWithURL(url as CFURL, nil))
             let properties = try #require(

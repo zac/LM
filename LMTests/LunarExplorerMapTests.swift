@@ -1,3 +1,5 @@
+@testable import LunarMapExplorer
+@testable import LunarMap
 import Testing
 import Observation
 import Synchronization

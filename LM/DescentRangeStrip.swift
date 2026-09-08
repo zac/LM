@@ -1,3 +1,4 @@
+import LunarMap
 import UIKit
 import RealityKit
 import LMCore

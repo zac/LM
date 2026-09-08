@@ -1,3 +1,4 @@
+@testable import LunarMap
 import Foundation
 import CoreGraphics
 import Metal

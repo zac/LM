@@ -16,14 +16,14 @@ one test suite, two thin app shells.
 
 | Step | State | Notes |
 |---|---|---|
-| 1 Package skeleton and file moves | Not started | §4 |
+| 1 Package skeleton and file moves | Blocked, candidate `lunar-map/step-1` | Release builds; 315/317 tests pass. Both failures reproduce on post-B control. Captures and performance not run. |
 | 2 Decouple the six seams | Not started | §4 |
 | 3 Moon app target | Not started | §4 |
 | 4 Tests and tools move into the package | Not started | §4 |
 | 5 Optional: `LunarMapCore` split for macOS-hosted tests | Not started | §4 |
 | 6 Later: sibling repository split | Not started | §7 |
 
-## 1. What exists today (verified 2026-09-07)
+## 1. What exists today (refreshed 2026-09-08 after B)
 
 - One Xcode project, `LM.xcodeproj`, two native targets: `LM` (app,
   `io.positron.LM`, visionOS 2.2, Swift language mode 5) and `LMTests`
@@ -39,14 +39,28 @@ one test suite, two thin app shells.
   `LMLandingSurfaceModel`). `LMCore` depends on `AGC`.
 - Local package `Packages/RealityKitContent` is used only by cockpit and
   vehicle code, never by map code.
-- Map resources live in `LM/Terrain` (169 MB including the 76 MB 64 ppd JPEG
+- Map resources live in `LM/Terrain` (177,473,236 bytes, 169.25 MiB; including the 76 MB 64 ppd JPEG
   XL and the pinned LDEM_16 base), plus `LM/LunarTerrainSR.mlpackage` and
   `LM/LunarTerrainMorph.metal`. `Tools/TerrainGenerator` writes to
   `LM/Terrain` by default.
-- Map code reads `Bundle.main` in 20 places (all as `bundle: Bundle = .main`
-  defaults), reads launch arguments in 12 files, and hard-codes the log
-  subsystem `"io.positron.LM"` in 14 places. Capture scripts in `Tools/`
-  hard-code `io.positron.LM` and the LM app path.
+- The `LM/` Swift inventory has 13 files reading `ProcessInfo`, including
+  `LunarGlobe/LMLunarGlobeResource.swift`; the separate repo-root cockpit
+  file has one additional read and remains in LM. Eight of those `LM/`
+  files belong to the package inventory. There are 15 `"io.positron.LM"`
+  literals across `LM/` and the root cockpit file, 12 in package-bound code.
+  `LM/` has 21 `bundle: Bundle = .main` defaults, 16 in package-bound code;
+  the package morph renderer also loads the default Metal library from `.main`.
+- `LMTests/` contains **25 Swift files**, verified against the post-B tree,
+  rather than the anticipated 24. `LunarExplorerPortalTests.swift` and
+  `LunarExplorerHeightFieldPickerTests.swift` are present; the removed triangle
+  tests do not have a standalone file. The exact list is retained in
+  `/tmp/LM-LunarMap-2026-09-08/inventory-raw.json`.
+- Capture tools hard-code the LM identifier and default app path. In addition
+  to capture scripts, `MeasureMoonExplorerRuns.py`,
+  `RunMoonExplorerComparison.sh`, `CaptureMoonExplorerColdHighland.sh` and
+  `TestMoonExplorerMeasurements.py` must support `LUNAR_BUNDLE_ID` with
+  `io.positron.LM` as the default. This preserves LM invocations while allowing
+  the Moon app's container and log subsystem.
 - `LMLunarTerrainTiming` (phase timing used by `PoweredDescentSession`) lives
   inside `LunarExplorerPerformanceProbe.swift`.
 
@@ -70,14 +84,16 @@ The cockpit depends on the map through `LMCommanderStationScene`
 `MainMenuViewModel` (`LunarExplorerSession`, `LMLunarNavigation.parse`).
 
 The Explorer UI depends on the LM app in two files: `LunarExplorerView.swift`
-(the `LunarExplorerControlsWindow` wrapper reads `MainMenuViewModel`, opens
-the cockpit space and stops the descent session) and `LunarExplorerButton`.
+(both its root view and its `LunarExplorerControlsWindow` wrapper read
+`MainMenuViewModel`; the wrapper also opens the cockpit space and stops the
+descent session) and `LunarExplorerButton`. The root view only obtains the
+existing Explorer session from that environment value.
 
 ## 2. Package design
 
 One package, in-repo, at `Packages/LunarMap`, next to `RealityKitContent`.
 `swift-tools-version: 6.0`, `swiftLanguageModes: [.v5]` to match the app's
-language mode, `platforms: [.visionOS("2.2")]`. Dependency on `../../AGC`
+language mode, `platforms: [.visionOS("2.2")]`. Dependency on `../../../AGC`
 for `LMCore` only.
 
 | Target | Kind | Contents | Depends on |
@@ -90,6 +106,13 @@ Access levels: use the `package` access modifier for everything shared
 between `LunarMap` and `LunarMapExplorer`, and `public` only for what the two
 apps and `LMLunarCockpitTerrain` consume (the list in §1). Do not blanket
 `public` the engine; the compiler tells you the exact surface.
+
+The first package compilation confirms two ownership corrections: the
+height-field picker is consumed by `LMTerrainWorld` and belongs in the
+engine. The unchanged `finerOwners` helper moves from `LunarExplorerScene`
+to `LMLunarTerrainPresentation`, retaining MainActor isolation, because
+both the engine and Explorer call it. This removes a circular dependency
+without changing either calculation.
 
 ### File inventory
 
@@ -104,7 +127,8 @@ apps and `LMLunarCockpitTerrain` consume (the list in §1). Do not blanket
   `LMTerrainHeightMap`, `LMProgressiveTerrain`, `LMTerrainMeshBuilder`,
   `Apollo11TerrainResource`, `LMLunarTerrainMeshSnapshot`,
   `LMLunarTerrainMorph`, `LMLunarTerrainMorphRenderer`,
-  `LMLunarTerrainPresentation`, `LMTerrainSimulationGate` (repo root).
+  `LMLunarTerrainPresentation`, `LunarExplorerHeightFieldPicker`,
+  `LMTerrainSimulationGate` (repo root).
 - Appearance: `LMTerrainWorld`, `LMWorldMapper`, `LMTerrainDetailTexture`,
   `LMTerrainDetailStreaming`, `LMCoreMLTerrainDetailGenerator`,
   `LMLunarRockField`.
@@ -123,7 +147,7 @@ apps and `LMLunarCockpitTerrain` consume (the list in §1). Do not blanket
 `LunarExplorerView` (without `LunarExplorerControlsWindow`),
 `LunarExplorerBrowser`, `LunarExplorerCamera`, `LunarExplorerPinchGeometry`,
 `LunarExplorerSceneSnapshot`, `LunarExplorerSitePack`,
-`LunarExplorerTriangleIndex` (unless candidate C has removed it),
+`LunarExplorerPortalGeometry` (landed with B),
 `LunarExplorerMapGeometry`, `LunarExplorerPlaceMarker`,
 `LunarExplorerPlaceDetails`, `LunarExplorerPlacementPanel`,
 `LunarExplorerExperienceProbe`.
@@ -137,8 +161,12 @@ descent, DSKY, FDAI, vehicle and AGC file, `ImmersiveView`, `MoonScene`,
 Tests moving to `LunarMapTests`: every `LMTests` file except
 `LMCockpitImmersionPolicyTests`, `LMLunarCockpitMissionTests`,
 `LMLunarCockpitRestartTests`, `LMLunarCockpitStreamingTests` and `LMTests`.
-`LMTerrainSimulationGateTests` moves with the gate. If a moved test turns out
-to exercise `LMLunarCockpitTerrain`, split that case back into `LMTests`.
+`LMTerrainSimulationGateTests` moves with the gate. `LMTests.swift` also
+contains map cases and suites, including frame statistics, source-backed
+terrain, progressive terrain and detail textures. Split those cases into
+package test files with `git mv` history for the moved content; retain cockpit
+and descent-session cases in LM. If a moved test exercises
+`LMLunarCockpitTerrain`, split that case back into `LMTests`.
 
 ## 3. The six seams to cut
 
@@ -160,7 +188,7 @@ to exercise `LMLunarCockpitTerrain`, split that case back into `LMTests`.
 3. **Log subsystem.** `public enum LunarMapLog { public static var subsystem }`
    defaults to `"io.positron.LM"` so existing `log stream` predicates and
    `Tools/Summarize*.py` keep matching; each app sets it at launch to its own
-   bundle identifier. All 14 literals route through it.
+   bundle identifier. All 12 package-bound literals route through it; the three cockpit literals remain host-owned.
 4. **Global mutable state.** `LMTerrainWorld.presentationGrade` and the
    static texture caches stay static (both apps are single-scene) but become
    `package`-scoped with a comment naming them as process-wide state.
@@ -182,24 +210,34 @@ restore soak and the highland warm dive, all captured with the existing
 scripts, plus the executable's Release performance tables. Every step below
 is judged against these with the noise-aware rule in
 `MoonExplorerOneZoom.md` (three control runs establish the spread; a step
-passes if its median is within the spread or better).
+uses only the named peak/hitch/callback gates, including the callback
+ten-percent margin; settled mean/p99/max are ≤16.70 ms with zero misses).
 
 1. **Package skeleton and file moves.** Create `Packages/LunarMap` with the
    manifest above. `git mv` the inventory in §2 (history must survive; use
-   moves, never copy-and-delete). Remove the two repo-root file references
-   from `project.pbxproj`. Add the package to the LM target's dependencies and
+   moves, never copy-and-delete). Remove the moved `LMTerrainSimulationGate.swift` repo-root reference
+   from `project.pbxproj`; retain `LMLunarCockpitTerrain.swift`, which stays
+   in the app at the repo root. Add the package to the LM target's dependencies and
    `import LunarMap` / `import LunarMapExplorer` where the compiler asks.
    Apply `package`/`public` from compiler errors only. Do not change
-   behavior; seams 1 and 3 are the only permitted code edits in this step
-   because the build does not work without them.
-   *Gate:* LM app builds Release; all 23 test files pass in their current
+   behavior. Apply resource/log seams 1 and 3. The compiler-confirmed
+   dependency corrections above also require moving the unchanged overlap
+   helper and keeping the picker in the engine. Bring the mechanical host
+   wrapper split into this step: keep the wrapper and its callbacks in LM,
+   and pass the same existing session into `LunarExplorerView`. This corrects
+   the original step ordering; it does not change launch behavior or introduce
+   HostActions or launch options early. Compiler-required type annotations
+   may disambiguate the existing capture-probe expression without changing
+   its arithmetic or evaluation order; record that diagnostic and verify
+   the same capture behavior.
+   *Gate:* LM app builds Release; all 25 test files pass in their current
    home (`LMTests` may `@testable import LunarMap` temporarily); eleven
    Apollo PNGs byte-identical; journey, soak and highland dive match the
    baseline visually and within the noise floor. Confirm the Metal kernels
    load from the package bundle and the Core ML model compiles from the
    package (`LunarTerrainSR.mlmodelc` present in the package bundle).
-2. **Decouple the remaining seams** (2, 4, 5, 6). Move
-   `LunarExplorerControlsWindow` into the LM app in its own file. Introduce
+2. **Decouple the remaining seams** (2, 4, 5, 6). The mechanical
+   `LunarExplorerControlsWindow` split is already required by step 1. Introduce
    `LunarMapLaunchOptions` and `LunarExplorerHostActions`. Retire every
    `ProcessInfo` read in the package.
    *Gate:* as step 1, plus `grep ProcessInfo Packages/LunarMap/Sources`
@@ -231,7 +269,7 @@ passes if its median is within the spread or better).
    `Tools/TerrainGenerator` and `pin_lola_strips.py` at
    `Packages/LunarMap/Sources/LunarMap/Resources/Terrain`. Update
    `Docs/LunarTerrainPipeline.md` paths.
-   *Gate:* same test count passes (currently 23 files, 65+ tests in the
+   *Gate:* same test count passes (currently 25 files, 65+ tests in the
    focused suites plus the rest); no test remains that imports `LM` for map
    behavior; generator dry run writes to the new path.
 5. **Optional: `LunarMapCore`.** Split the RealityKit-free files

@@ -1,3 +1,5 @@
+@testable import LunarMapExplorer
+@testable import LunarMap
 import Foundation
 import CryptoKit
 import CoreGraphics
@@ -1205,7 +1207,7 @@ struct SourceBackedTerrainTileTests {
         let terrainDirectory = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
             .deletingLastPathComponent()
-            .appendingPathComponent("LM/Terrain", isDirectory: true)
+            .appendingPathComponent("Packages/LunarMap/Sources/LunarMap/Resources/Terrain", isDirectory: true)
 
         for (file, expectedDigest) in expectedSHA256 {
             let data = try Data(
@@ -1415,8 +1417,8 @@ struct SourceBackedTerrainTileTests {
         let name = (tile.heightFile as NSString).deletingPathExtension
         let ext = (tile.heightFile as NSString).pathExtension
         let url = try #require(
-            Bundle.main.url(forResource: name, withExtension: ext, subdirectory: "Terrain")
-                ?? Bundle.main.url(forResource: name, withExtension: ext)
+            LunarMap.resources.url(forResource: name, withExtension: ext, subdirectory: "Terrain")
+                ?? LunarMap.resources.url(forResource: name, withExtension: ext)
         )
         return try LMTerrainHeightMap.load(contentsOf: url)
     }
@@ -1435,8 +1437,8 @@ struct SourceBackedTerrainTileTests {
         let name = (tile.albedoFile as NSString).deletingPathExtension
         let ext = (tile.albedoFile as NSString).pathExtension
         let url = try #require(
-            Bundle.main.url(forResource: name, withExtension: ext, subdirectory: "Terrain")
-                ?? Bundle.main.url(forResource: name, withExtension: ext)
+            LunarMap.resources.url(forResource: name, withExtension: ext, subdirectory: "Terrain")
+                ?? LunarMap.resources.url(forResource: name, withExtension: ext)
         )
         let source = try #require(CGImageSourceCreateWithURL(url as CFURL, nil))
         let image = try #require(CGImageSourceCreateImageAtIndex(source, 0, nil))

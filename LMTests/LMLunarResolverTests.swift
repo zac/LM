@@ -1,3 +1,4 @@
+@testable import LunarMap
 import Foundation
 import Testing
 import simd
@@ -7,7 +8,7 @@ import simd
 struct LMLunarResolverTests {
     private func base() throws -> LMLunarElevationGrid {
         let source = try #require(LMTerrainManifest.load().sources.first { $0.productId == "LDEM_16" })
-        let url = try #require(Bundle.main.url(forResource: source.bundledFile, withExtension: nil))
+        let url = try #require(LunarMap.resources.url(forResource: source.bundledFile, withExtension: nil, subdirectory: "Terrain"))
         return try .init(data: Data(contentsOf: url, options: .mappedIfSafe), source: source)
     }
 

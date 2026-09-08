@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1198E016304C921B00B88593 /* LMTerrainSimulationGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1198E015304C921B00B88593 /* LMTerrainSimulationGate.swift */; };
+		0FC6C52E151E8CD97AA4D124 /* LunarMapExplorer in Frameworks */ = {isa = PBXBuildFile; productRef = D0ADE5292D7FBA8CE751FD6A /* LunarMapExplorer */; };
 		1198E01A304C949700B88593 /* LMLunarCockpitTerrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1198E019304C949700B88593 /* LMLunarCockpitTerrain.swift */; };
 		11F3D7792D4569A800205449 /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 11F3D7782D4569A800205449 /* RealityKitContent */; };
 		153481058BB7D6ABE3016B26 /* AGC in Frameworks */ = {isa = PBXBuildFile; productRef = 7F923C8DED5D27B4856DF91E /* AGC */; };
 		8B235D3F452923FA7A4072FF /* LMCore in Frameworks */ = {isa = PBXBuildFile; productRef = A9EB3C526EF0E03AA143B6C9 /* LMCore */; };
+		AD038F2CF7897D832DB8E5AE /* LunarMap in Frameworks */ = {isa = PBXBuildFile; productRef = E0160C33A71CDD4B67B2F4A5 /* LunarMap */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,7 +26,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1198E015304C921B00B88593 /* LMTerrainSimulationGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMTerrainSimulationGate.swift; sourceTree = "<group>"; };
 		1198E019304C949700B88593 /* LMLunarCockpitTerrain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMLunarCockpitTerrain.swift; sourceTree = "<group>"; };
 		11F3D7732D4569A800205449 /* LM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		11F3D7772D4569A800205449 /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
@@ -66,6 +66,8 @@
 				11F3D7792D4569A800205449 /* RealityKitContent in Frameworks */,
 				153481058BB7D6ABE3016B26 /* AGC in Frameworks */,
 				8B235D3F452923FA7A4072FF /* LMCore in Frameworks */,
+				AD038F2CF7897D832DB8E5AE /* LunarMap in Frameworks */,
+				0FC6C52E151E8CD97AA4D124 /* LunarMapExplorer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,7 +88,6 @@
 				11F3D7762D4569A800205449 /* Packages */,
 				11F3D7952D4569A900205449 /* LMTests */,
 				11F3D7742D4569A800205449 /* Products */,
-				1198E015304C921B00B88593 /* LMTerrainSimulationGate.swift */,
 				1198E019304C949700B88593 /* LMLunarCockpitTerrain.swift */,
 			);
 			sourceTree = "<group>";
@@ -131,6 +132,8 @@
 				11F3D7782D4569A800205449 /* RealityKitContent */,
 				7F923C8DED5D27B4856DF91E /* AGC */,
 				A9EB3C526EF0E03AA143B6C9 /* LMCore */,
+				E0160C33A71CDD4B67B2F4A5 /* LunarMap */,
+				D0ADE5292D7FBA8CE751FD6A /* LunarMapExplorer */,
 			);
 			productName = LM;
 			productReference = 11F3D7732D4569A800205449 /* LM.app */;
@@ -187,6 +190,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */,
+				1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 11F3D7742D4569A800205449 /* Products */;
@@ -222,7 +226,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1198E01A304C949700B88593 /* LMLunarCockpitTerrain.swift in Sources */,
-				1198E016304C921B00B88593 /* LMTerrainSimulationGate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,6 +491,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
+		1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/LunarMap;
+		};
 		3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../AGC;
@@ -508,6 +515,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */;
 			productName = LMCore;
+		};
+		D0ADE5292D7FBA8CE751FD6A /* LunarMapExplorer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */;
+			productName = LunarMapExplorer;
+		};
+		E0160C33A71CDD4B67B2F4A5 /* LunarMap */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */;
+			productName = LunarMap;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

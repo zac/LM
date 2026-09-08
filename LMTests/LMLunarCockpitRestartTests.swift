@@ -1,3 +1,5 @@
+@testable import LunarMap
+@testable import LunarMapExplorer
 import Foundation
 import LMCore
 import Testing

@@ -1,3 +1,4 @@
+@testable import LunarMap
 import Foundation
 import Testing
 import simd
@@ -8,7 +9,7 @@ import LMCore
 struct LMLunarContactTests {
     func region(at coordinate: LMSelenographicCoordinate) throws -> LMLunarTerrainRegion {
         let source = try #require(LMTerrainManifest.load().sources.first { $0.productId == "LDEM_16" })
-        let url = try #require(Bundle.main.url(forResource: source.bundledFile, withExtension: nil))
+        let url = try #require(LunarMap.resources.url(forResource: source.bundledFile, withExtension: nil, subdirectory: "Terrain"))
         let base = try LMLunarElevationGrid(data: Data(contentsOf: url, options: .mappedIfSafe), source: source)
         let terrain = LMLunarResolvedTerrain(base: base, refinements: [])
         let elevation = try #require(base.elevation(at: coordinate))

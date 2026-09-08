@@ -1,3 +1,4 @@
+import LunarMapExplorer
 import SwiftUI
 
 @main
@@ -53,7 +54,7 @@ struct LMApp: App {
         .immersionStyle(selection: .constant(.full), in: .full)
 
         ImmersiveSpace(id: viewModel.lunarExplorerSpaceID) {
-            LunarExplorerView()
+            LunarExplorerView(session: viewModel.lunarExplorerSession)
                 .environment(viewModel)
                 .onAppear {
                     viewModel.lunarExplorerSpaceState = .open

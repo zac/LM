@@ -1,3 +1,5 @@
+@testable import LunarMapExplorer
+@testable import LunarMap
 import Foundation
 import Testing
 import simd
@@ -6,7 +8,7 @@ import simd
 @Suite("Pinned lunar elevation")
 struct LMLunarElevationTests {
     private func sourceJSON(id: String) throws -> [String: Any] {
-        let url = try #require(Bundle.main.url(forResource: "TerrainManifest", withExtension: "json"))
+        let url = try #require(LunarMap.resources.url(forResource: "TerrainManifest", withExtension: "json", subdirectory: "Terrain"))
         let root = try #require(JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any])
         let sources = try #require(root["sources"] as? [[String: Any]])
         return try #require(sources.first { $0["id"] as? String == id })
@@ -43,8 +45,8 @@ struct LMLunarElevationTests {
     @Test func bundledBaseAndLabelMatchPinnedBytesAndMeasuredPosts() throws {
         let manifest = try LMTerrainManifest.load()
         let source = try #require(manifest.sources.first { $0.id == "lola-ldem-16ppd-global" })
-        let image = try #require(Bundle.main.url(forResource: source.bundledFile, withExtension: nil))
-        let label = try #require(Bundle.main.url(forResource: source.bundledLabelFile, withExtension: nil))
+        let image = try #require(LunarMap.resources.url(forResource: source.bundledFile, withExtension: nil, subdirectory: "Terrain"))
+        let label = try #require(LunarMap.resources.url(forResource: source.bundledLabelFile, withExtension: nil, subdirectory: "Terrain"))
         let data = try Data(contentsOf: image)
         let labelData = try Data(contentsOf: label)
         #expect(data.count + labelData.count < 32 * 1_024 * 1_024)
@@ -97,7 +99,7 @@ struct LMLunarElevationTests {
 
     @Test func coarseGeometryKeepsCurvatureAndIsDeterministic() throws {
         let source = try #require(LMTerrainManifest.load().sources.first { $0.id == "lola-ldem-16ppd-global" })
-        let url = try #require(Bundle.main.url(forResource: source.bundledFile, withExtension: nil))
+        let url = try #require(LunarMap.resources.url(forResource: source.bundledFile, withExtension: nil, subdirectory: "Terrain"))
         let grid = try LMLunarElevationGrid(data: Data(contentsOf: url), source: source)
         let coordinate = LMSelenographicCoordinate(latitudeDegrees: -42, longitudeDegrees: 179.99)
         let a = try LMLunarElevationPreview.makeMesh(grid: grid, coordinate: coordinate)

@@ -1,3 +1,4 @@
+import LunarMap
 import RealityKit
 import SwiftUI
 import OSLog
