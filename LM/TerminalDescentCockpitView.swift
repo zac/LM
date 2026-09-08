@@ -18,8 +18,11 @@ struct TerminalDescentCockpitView: View {
     @State private var rodGestureOrigin: SIMD3<Float>?
     @State private var showsFallbackControls = false
     @State private var showsValidationChecklist = false
-    @State private var showsEyeAlignmentGuide = true
-    @State private var trainingOverlayEnabled = true
+    #if DEBUG
+    @State private var presentation = LMCockpitPresentationPolicy.validation(arguments: ProcessInfo.processInfo.arguments)
+    #else
+    @State private var presentation = LMCockpitPresentationPolicy()
+    #endif
     @State private var audioEnabled = true
     @State private var experienceDirector = LMCockpitExperienceDirector()
     @State private var activeCue: LMCockpitCue?
@@ -73,26 +76,25 @@ struct TerminalDescentCockpitView: View {
                     }
 
                     Button {
-                        trainingOverlayEnabled.toggle()
-                        if !trainingOverlayEnabled {
-                            showsEyeAlignmentGuide = false
-                        }
+                        presentation.toggleTraining()
                     } label: {
                         Label(
-                            trainingOverlayEnabled ? "Training on" : "Training off",
-                            systemImage: trainingOverlayEnabled ? "scope" : "scope"
+                            presentation.trainingEnabled ? "Training aids on" : "Training aids off",
+                            systemImage: "scope"
                         )
                     }
+                    .accessibilityIdentifier("cockpit-training-toggle")
 
                     Button {
-                        showsEyeAlignmentGuide.toggle()
+                        presentation.toggleEyeAlignment()
                     } label: {
                         Label(
-                            showsEyeAlignmentGuide ? "Hide eye guide" : "Eye alignment",
+                            presentation.showsEyeAlignment ? "Hide diagnostic guide" : "Eye diagnostic",
                             systemImage: "viewfinder"
                         )
                     }
-                    .disabled(!trainingOverlayEnabled)
+                    .disabled(!presentation.trainingEnabled)
+                    .accessibilityIdentifier("cockpit-eye-diagnostic")
 
                     Button {
                         showsValidationChecklist.toggle()
@@ -155,30 +157,28 @@ struct TerminalDescentCockpitView: View {
             .glassBackgroundEffect()
         }
         .ornament(attachmentAnchor: .scene(.top)) {
-            if let activeCue {
+            if presentation.showsCueOverlay, let activeCue {
                 VStack(spacing: 4) {
-                    Text(activeCue.title)
+                    Text("TRAINING · " + activeCue.title)
                         .font(.title3.weight(.bold).monospaced())
                         .foregroundStyle(cueColor(activeCue))
-                    if trainingOverlayEnabled {
-                        Text(activeCue.detail)
-                            .font(.caption)
-                            .multilineTextAlignment(.center)
-                            .foregroundStyle(.secondary)
-                    }
+                    Text(activeCue.detail)
+                        .font(.caption)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: 420)
                 .padding(.horizontal, 18)
                 .padding(.vertical, 12)
                 .glassBackgroundEffect()
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel(activeCue.title)
-                .accessibilityValue(trainingOverlayEnabled ? activeCue.detail : "")
-            } else if trainingOverlayEnabled && showsEyeAlignmentGuide {
+                .accessibilityLabel("Training · " + activeCue.title)
+                .accessibilityValue(activeCue.detail)
+            } else if presentation.showsEyeAlignment {
                 VStack(spacing: 4) {
-                    Text("COMMANDER DESIGN EYE")
+                    Text("TRAINING · EYE DIAGNOSTIC")
                         .font(.title3.weight(.bold).monospaced())
-                    Text("Settle into position, then fine-adjust until the magenta and green LPD scales overlap.")
+                    Text("Diagnostic pane colors show overlap in the provisional LPD model. This is not verified optical calibration.")
                         .font(.caption)
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.secondary)
@@ -188,9 +188,9 @@ struct TerminalDescentCockpitView: View {
                 .padding(.vertical, 12)
                 .glassBackgroundEffect()
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("Commander design eye alignment")
+                .accessibilityLabel("Training eye alignment diagnostic")
                 .accessibilityValue(
-                    "Fine-adjust until the magenta and green Landing Point Designator scales overlap"
+                    "Diagnostic colored Landing Point Designator scales; provisional geometry"
                 )
             }
         }
@@ -394,9 +394,10 @@ struct TerminalDescentCockpitView: View {
         #endif
         station.setRODVisual(appModel.session.rodSwitchPosition)
         station.setAttitudeHoldVisual(appModel.session.attitudeMode == .attitudeHold)
+        station.setLandingPointDiagnosticColors(presentation.usesDiagnosticPaneColors)
         station.setLandingPointCalledAngle(
             appModel.session.landingPointLookAngleDegrees.map(Double.init),
-            trainingOverlayVisible: trainingOverlayEnabled
+            trainingOverlayVisible: presentation.showsCalledAngle
                 && appModel.session.isLandingPointDisplayActive
         )
         station.updateDust(
@@ -490,7 +491,6 @@ struct TerminalDescentCockpitView: View {
         releaseSpatialControls()
         station.recenterAtCurrentHeadPose()
         recenterGeneration &+= 1
-        showsEyeAlignmentGuide = true
         logger.notice("Recentered cockpit at the current commander head pose")
     }
 
@@ -517,15 +517,11 @@ struct TerminalDescentCockpitView: View {
 
     private var crewControlHint: String {
         if appModel.session.isLandingPointDisplayActive {
-            let angle = appModel.session.landingPointLookAngleDegrees.map { "LPD \($0)°" }
-                ?? "N64 LPD"
-            if appModel.session.landingPointRedesignationTimeRemainingSeconds == 0 {
-                return "\(angle) · redesignation window closed"
-            }
-            if appModel.session.isLandingPointRedesignationEnabled {
-                return "\(angle) · ACA redesignation enabled"
-            }
-            return "\(angle) · press PRO to enable ACA redesignation"
+            return presentation.landingPointHint(
+                angleDegrees: appModel.session.landingPointLookAngleDegrees,
+                windowClosed: appModel.session.landingPointRedesignationTimeRemainingSeconds == 0,
+                redesignationEnabled: appModel.session.isLandingPointRedesignationEnabled
+            )
         }
         return "Grip ACA · drag ROD · tap MODE CONTROL"
     }

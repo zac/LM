@@ -27,6 +27,10 @@ final class LMCommanderStationScene {
     let attitudeModeSwitch = ModelEntity()
     let missionControlButton = ModelEntity()
     let landingPointCalledAngleMarker = ModelEntity()
+    enum LandingPointMarkingOwner { case appGenerated, importedWindows }
+    private(set) var landingPointMarkingOwner: LandingPointMarkingOwner = .appGenerated
+    private var landingPointMarkEntities: [(entity: ModelEntity, pane: LMLPDPane)] = []
+    private var landingPointDiagnosticColors = false
     let dskyFaceRoot = Entity()
 
     private let cabinFrame = Entity()
@@ -767,7 +771,7 @@ final class LMCommanderStationScene {
         _ angleDegrees: Double?,
         trainingOverlayVisible: Bool
     ) {
-        guard trainingOverlayVisible, let angleDegrees else {
+        guard landingPointMarkingOwner == .appGenerated, trainingOverlayVisible, let angleDegrees else {
             landingPointCalledAngleMarker.isEnabled = false
             return
         }
@@ -1241,19 +1245,51 @@ final class LMCommanderStationScene {
     private func buildLandingPointDesignator() {
         for pane in LMLPDPane.allCases {
             guard let mesh = try? makeLandingPointDesignatorMesh(pane: pane) else { continue }
-            let color: UIColor = pane == .inner
-                ? UIColor(red: 0.95, green: 0.26, blue: 0.55, alpha: 0.82)
-                : UIColor(red: 0.34, green: 0.94, blue: 0.82, alpha: 0.72)
             let entity = ModelEntity(
                 mesh: mesh,
-                materials: [UnlitMaterial(color: color)]
+                materials: [landingPointMarkMaterial(pane: pane)]
             )
+            landingPointMarkEntities.append((entity, pane))
             entity.name = pane == .inner
                 ? LMCockpitAssetContract.Node.landingPointDesignatorInner.rawValue
                 : LMCockpitAssetContract.Node.landingPointDesignatorOuter.rawValue
             proceduralCabin.addChild(entity)
-            addLandingPointDesignatorLabels(pane: pane, color: color)
+            addLandingPointDesignatorLabels(pane: pane)
         }
+    }
+
+    /// Call only after imported window assets have successfully installed their marks.
+    /// Retains app entities for fallback while preventing double grids and labels.
+    func setLandingPointMarkingOwner(_ owner: LandingPointMarkingOwner) {
+        landingPointMarkingOwner = owner
+        if owner == .importedWindows { landingPointCalledAngleMarker.isEnabled = false }
+        for mark in landingPointMarkEntities {
+            mark.entity.isEnabled = owner == .appGenerated
+        }
+    }
+
+    func setLandingPointDiagnosticColors(_ enabled: Bool) {
+        guard landingPointDiagnosticColors != enabled else { return }
+        landingPointDiagnosticColors = enabled
+        for mark in landingPointMarkEntities {
+            mark.entity.model?.materials = [landingPointMarkMaterial(pane: mark.pane)]
+        }
+    }
+
+    private func landingPointMarkMaterial(pane: LMLPDPane) -> any RealityKit.Material {
+        if landingPointDiagnosticColors {
+            // Deliberately synthetic pane distinction; never historical ink colors.
+            let tint = pane == .inner
+                ? UIColor(red: 0.95, green: 0.26, blue: 0.55, alpha: 0.82)
+                : UIColor(red: 0.34, green: 0.94, blue: 0.82, alpha: 0.72)
+            return UnlitMaterial(color: tint)
+        }
+        // Approximate warm scribed appearance: NASA Eppler landing report, slide 38.
+        // RGB is an artistic choice, not a measured pigment. Geometry remains provisional.
+        return SimpleMaterial(
+            color: UIColor(red: 0.72, green: 0.65, blue: 0.43, alpha: 1),
+            roughness: 1, isMetallic: false
+        )
     }
 
     private func buildLandingPointCalledAngleMarker() {
@@ -1331,7 +1367,7 @@ final class LMCommanderStationScene {
         return try MeshResource.generate(from: [descriptor])
     }
 
-    private func addLandingPointDesignatorLabels(pane: LMLPDPane, color: UIColor) {
+    private func addLandingPointDesignatorLabels(pane: LMLPDPane) {
         let basis = landingPointDesignator.paneBasis(pane)
         let orientation = landingPointDesignator.paneOrientation(pane)
         for elevation in stride(from: 0, through: 60, by: 10) {
@@ -1343,7 +1379,8 @@ final class LMCommanderStationScene {
                 alignment: .left,
                 lineBreakMode: .byClipping
             )
-            let label = ModelEntity(mesh: mesh, materials: [UnlitMaterial(color: color)])
+            let label = ModelEntity(mesh: mesh, materials: [landingPointMarkMaterial(pane: pane)])
+            landingPointMarkEntities.append((label, pane))
             label.name = "LPD \(pane) \(elevation) degree label"
             label.position = landingPointDesignator.point(
                 elevationDegrees: Double(elevation),
@@ -1363,7 +1400,8 @@ final class LMCommanderStationScene {
                     alignment: .center,
                     lineBreakMode: .byClipping
                 )
-                let label = ModelEntity(mesh: mesh, materials: [UnlitMaterial(color: color)])
+                let label = ModelEntity(mesh: mesh, materials: [landingPointMarkMaterial(pane: pane)])
+                landingPointMarkEntities.append((label, pane))
                 label.name = "LPD \(pane) E\(elevation) A\(azimuth) label"
                 label.position = landingPointDesignator.point(
                     elevationDegrees: Double(elevation),
