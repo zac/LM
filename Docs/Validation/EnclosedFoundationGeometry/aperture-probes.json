@@ -1,0 +1,67 @@
+[
+  {
+    "label": "cdr",
+    "hits": [
+      {
+        "object": "CDR_Glazing_Inner",
+        "distance_m": 0.8801673090280883,
+        "hidden": true
+      },
+      {
+        "object": "CDR_Glazing_Inner",
+        "distance_m": 0.8840360881988113,
+        "hidden": true
+      },
+      {
+        "object": "CDR_Glazing_Outer",
+        "distance_m": 0.9059592458663431,
+        "hidden": true
+      },
+      {
+        "object": "CDR_Glazing_Outer",
+        "distance_m": 0.9098280110723324,
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "label": "lmp",
+    "hits": [
+      {
+        "object": "LMP_Glazing_Inner",
+        "distance_m": 0.8801676003739756,
+        "hidden": true
+      },
+      {
+        "object": "LMP_Glazing_Inner",
+        "distance_m": 0.8840363510194075,
+        "hidden": true
+      },
+      {
+        "object": "LMP_Glazing_Outer",
+        "distance_m": 0.9059598631300931,
+        "hidden": true
+      },
+      {
+        "object": "LMP_Glazing_Outer",
+        "distance_m": 0.909828613775525,
+        "hidden": true
+      }
+    ]
+  },
+  {
+    "label": "docking",
+    "hits": [
+      {
+        "object": "Docking_Glazing_Inner",
+        "distance_m": 0.39044364460999825,
+        "hidden": true
+      },
+      {
+        "object": "Docking_Glazing_Outer",
+        "distance_m": 0.4160581189372449,
+        "hidden": true
+      }
+    ]
+  }
+]

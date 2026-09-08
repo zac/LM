@@ -23,7 +23,8 @@
     "reported_worker_checks": {
       "Cabin": 3556,
       "PanelInventory": 1315
-    }
+    },
+    "focused_validator_checks": 19
   },
   "integration_requirements": [
     "WindowsLPD and PanelInventory install at shared Cabin identity once",
@@ -31,7 +32,8 @@
     "Explicitly disable PlanningLabels during RealityKit installation; authored USD visibility does not set isEnabled",
     "Check replacement_allowed before loading occupants; blocked Panel5__Timer remains empty",
     "Suppress procedural panes/frames/grids/projected marker only after successful imported assembly validation",
-    "Preserve independently owned live instrument/control entities"
+    "Preserve independently owned live instrument/control entities",
+    "Hide eight CommanderPanels Panel_1/4_Backing_* meshes when inventory blanks are installed; retain surrounding frames to avoid coplanar striping"
   ],
   "limits": [
     "Unverified historical dimensions and pane spacing",
@@ -78,5 +80,7 @@
       "sha256": "f315bdcbd8a6e597231b33420652fb6297241bf3af7c585708f472583522ec49"
     }
   },
-  "additional_references": "References/Interior/User-2026-09-08/PANORAMA-OBSERVATIONS.md"
+  "additional_references": "References/Interior/User-2026-09-08/PANORAMA-OBSERVATIONS.md",
+  "validator_followup": "c98f5e0cb411e84e893fd7bb79c5dea4a14bbd53",
+  "combined_geometry_review": "Docs/Validation/EnclosedFoundationGeometry/REVIEW.md"
 }
