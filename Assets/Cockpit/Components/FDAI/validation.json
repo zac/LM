@@ -1,0 +1,4100 @@
+{
+  "checks": [
+    {
+      "name": "root identity",
+      "passed": true
+    },
+    {
+      "name": "meters",
+      "passed": true
+    },
+    {
+      "name": "no linked libraries",
+      "passed": true
+    },
+    {
+      "name": "packed portable texture",
+      "passed": true
+    },
+    {
+      "name": "no animation or drivers",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Ball scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Ball material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Ball nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_BallSurround scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_BallSurround material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_BallSurround nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_BlankIdentificationPlate scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_BlankIdentificationPlate material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_BlankIdentificationPlate nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_CaseSeam_-1_-0.038 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_CaseSeam_-1_-0.038 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_CaseSeam_-1_-0.038 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_CaseSeam_-1_-0.19 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_CaseSeam_-1_-0.19 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_CaseSeam_-1_-0.19 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_CaseSeam_1_-0.038 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_CaseSeam_1_-0.038 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_CaseSeam_1_-0.038 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_CaseSeam_1_-0.19 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_CaseSeam_1_-0.19 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_CaseSeam_1_-0.19 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Pitch_Hub scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Pitch_Hub material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Pitch_Hub nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Pitch_Needle scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Pitch_Needle material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Pitch_Needle nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Roll_Hub scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Roll_Hub material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Roll_Hub nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Roll_Needle scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Roll_Needle material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Roll_Needle nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Yaw_Hub scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Yaw_Hub material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Yaw_Hub nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Yaw_Needle scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Yaw_Needle material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Yaw_Needle nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_FaceBezel scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_FaceBezel material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_FaceBezel nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_FaceGasket scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_FaceGasket material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_FaceGasket nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Flange scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Flange material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Flange nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Glass scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Glass material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Glass nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerOctagonalMask scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerOctagonalMask material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerOctagonalMask nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerScrew_-1_-1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerScrew_-1_-1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerScrew_-1_-1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerScrew_-1_1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerScrew_-1_1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerScrew_-1_1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerScrew_1_-1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerScrew_1_-1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerScrew_1_-1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerScrew_1_1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerScrew_1_1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerScrew_1_1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerSlot_-1_-1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerSlot_-1_-1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerSlot_-1_-1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerSlot_-1_1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerSlot_-1_1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerSlot_-1_1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerSlot_1_-1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerSlot_1_-1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerSlot_1_-1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerSlot_1_1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerSlot_1_1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_InnerSlot_1_1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountingPlate scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountingPlate material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountingPlate nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountScrew_-1_-1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountScrew_-1_-1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountScrew_-1_-1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountScrew_-1_1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountScrew_-1_1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountScrew_-1_1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountScrew_1_-1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountScrew_1_-1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountScrew_1_-1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountScrew_1_1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountScrew_1_1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountScrew_1_1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountSlot_-1_-1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountSlot_-1_-1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountSlot_-1_-1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountSlot_-1_1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountSlot_-1_1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountSlot_-1_1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountSlot_1_-1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountSlot_1_-1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountSlot_1_-1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountSlot_1_1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountSlot_1_1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_MountSlot_1_1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_OpticalSeal scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_OpticalSeal material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_OpticalSeal nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_ErrorIndex_0 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_ErrorIndex_0 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_ErrorIndex_0 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_ErrorIndex_1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_ErrorIndex_1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_ErrorIndex_1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_ErrorIndex_2 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_ErrorIndex_2 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_ErrorIndex_2 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_ErrorIndex_3 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_ErrorIndex_3 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_ErrorIndex_3 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_ErrorIndex_4 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_ErrorIndex_4 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_ErrorIndex_4 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateIvoryStrip scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateIvoryStrip material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateIvoryStrip nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateLabel scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateLabel material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateLabel nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_00 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_00 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_00 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_01 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_01 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_01 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_02 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_02 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_02 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_03 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_03 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_03 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_04 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_04 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_04 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_05 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_05 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_05 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_06 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_06 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_06 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_07 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_07 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_07 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_08 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_08 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_08 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_09 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_09 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_09 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_10 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_10 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_10 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_11 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_11 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_11 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_12 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_12 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_12 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_13 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_13 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_13 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_14 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_14 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_14 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_15 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_15 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_15 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_16 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_16 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_16 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_17 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_17 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_17 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_18 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_18 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_18 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_19 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_19 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_19 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_20 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_20 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateTick_20 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateWell scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateWell material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateWell nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateZero scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateZero material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Pitch_RateZero nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Pitch_Needle scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Pitch_Needle material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Pitch_Needle nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Roll_Needle scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Roll_Needle material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Roll_Needle nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Yaw_Needle scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Yaw_Needle material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Yaw_Needle nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RearConnectorInsert scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RearConnectorInsert material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RearConnectorInsert nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RearConnectorShell scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RearConnectorShell material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RearConnectorShell nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RearHousing scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RearHousing material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RearHousing nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RedSideBand_-1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RedSideBand_-1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RedSideBand_-1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RedSideBand_1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RedSideBand_1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RedSideBand_1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Reticle_Horizontal scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Reticle_Horizontal material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Reticle_Horizontal nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Reticle_Horizontal_Outline scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Reticle_Horizontal_Outline material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Reticle_Horizontal_Outline nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Reticle_Vertical scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Reticle_Vertical material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Reticle_Vertical nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Reticle_Vertical_Outline scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Reticle_Vertical_Outline material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Reticle_Vertical_Outline nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_ErrorIndex_0 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_ErrorIndex_0 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_ErrorIndex_0 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_ErrorIndex_1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_ErrorIndex_1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_ErrorIndex_1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_ErrorIndex_2 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_ErrorIndex_2 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_ErrorIndex_2 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_ErrorIndex_3 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_ErrorIndex_3 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_ErrorIndex_3 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_ErrorIndex_4 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_ErrorIndex_4 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_ErrorIndex_4 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateIvoryStrip scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateIvoryStrip material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateIvoryStrip nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateLabel scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateLabel material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateLabel nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_00 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_00 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_00 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_01 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_01 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_01 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_02 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_02 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_02 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_03 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_03 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_03 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_04 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_04 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_04 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_05 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_05 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_05 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_06 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_06 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_06 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_07 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_07 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_07 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_08 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_08 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_08 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_09 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_09 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_09 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_10 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_10 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_10 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_11 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_11 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_11 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_12 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_12 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_12 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_13 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_13 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_13 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_14 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_14 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_14 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_15 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_15 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_15 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_16 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_16 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_16 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_17 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_17 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_17 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_18 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_18 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_18 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_19 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_19 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_19 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_20 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_20 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateTick_20 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateWell scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateWell material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateWell nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateZero scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateZero material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Roll_RateZero nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollBug scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollBug material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollBug nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_00 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_00 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_00 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_06 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_06 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_06 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_12 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_12 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_12 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_18 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_18 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_18 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_24 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_24 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_24 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_30 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_30 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_30 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_36 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_36 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_36 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_42 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_42 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_42 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_48 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_48 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_48 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_54 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_54 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_54 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_60 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_60 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_60 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_66 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_66 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollLegend_66 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_00 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_00 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_00 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_01 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_01 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_01 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_02 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_02 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_02 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_03 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_03 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_03 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_04 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_04 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_04 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_05 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_05 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_05 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_06 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_06 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_06 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_07 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_07 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_07 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_08 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_08 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_08 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_09 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_09 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_09 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_10 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_10 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_10 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_11 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_11 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_11 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_12 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_12 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_12 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_13 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_13 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_13 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_14 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_14 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_14 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_15 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_15 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_15 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_16 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_16 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_16 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_17 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_17 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_17 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_18 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_18 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_18 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_19 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_19 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_19 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_20 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_20 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_20 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_21 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_21 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_21 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_22 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_22 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_22 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_23 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_23 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_23 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_24 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_24 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_24 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_25 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_25 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_25 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_26 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_26 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_26 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_27 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_27 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_27 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_28 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_28 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_28 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_29 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_29 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_29 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_30 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_30 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_30 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_31 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_31 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_31 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_32 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_32 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_32 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_33 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_33 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_33 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_34 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_34 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_34 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_35 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_35 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_35 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_36 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_36 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_36 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_37 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_37 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_37 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_38 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_38 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_38 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_39 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_39 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_39 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_40 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_40 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_40 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_41 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_41 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_41 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_42 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_42 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_42 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_43 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_43 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_43 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_44 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_44 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_44 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_45 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_45 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_45 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_46 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_46 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_46 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_47 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_47 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_47 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_48 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_48 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_48 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_49 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_49 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_49 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_50 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_50 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_50 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_51 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_51 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_51 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_52 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_52 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_52 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_53 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_53 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_53 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_54 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_54 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_54 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_55 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_55 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_55 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_56 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_56 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_56 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_57 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_57 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_57 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_58 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_58 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_58 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_59 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_59 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_59 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_60 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_60 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_60 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_61 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_61 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_61 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_62 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_62 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_62 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_63 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_63 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_63 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_64 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_64 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_64 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_65 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_65 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_65 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_66 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_66 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_66 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_67 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_67 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_67 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_68 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_68 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_68 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_69 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_69 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_69 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_70 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_70 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_70 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_71 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_71 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollTick_71 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_ErrorIndex_0 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_ErrorIndex_0 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_ErrorIndex_0 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_ErrorIndex_1 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_ErrorIndex_1 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_ErrorIndex_1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_ErrorIndex_2 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_ErrorIndex_2 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_ErrorIndex_2 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_ErrorIndex_3 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_ErrorIndex_3 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_ErrorIndex_3 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_ErrorIndex_4 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_ErrorIndex_4 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_ErrorIndex_4 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateIvoryStrip scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateIvoryStrip material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateIvoryStrip nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateLabel scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateLabel material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateLabel nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_00 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_00 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_00 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_01 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_01 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_01 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_02 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_02 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_02 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_03 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_03 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_03 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_04 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_04 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_04 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_05 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_05 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_05 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_06 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_06 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_06 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_07 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_07 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_07 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_08 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_08 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_08 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_09 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_09 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_09 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_10 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_10 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_10 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_11 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_11 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_11 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_12 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_12 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_12 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_13 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_13 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_13 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_14 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_14 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_14 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_15 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_15 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_15 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_16 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_16 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_16 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_17 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_17 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_17 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_18 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_18 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_18 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_19 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_19 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_19 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_20 scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_20 material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateTick_20 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateWell scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateWell material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateWell nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateZero scale",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateZero material",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Yaw_RateZero nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "provisional envelope within 150x150x280 mm",
+      "passed": true
+    },
+    {
+      "name": "ball radius 50mm",
+      "passed": true
+    },
+    {
+      "name": "ball UV complete",
+      "passed": true
+    },
+    {
+      "name": "contract origin FDAI_Ball_Pivot",
+      "passed": true
+    },
+    {
+      "name": "contract neutral rotation FDAI_Ball_Pivot",
+      "passed": true
+    },
+    {
+      "name": "contract origin FDAI_RollBug_Pivot",
+      "passed": true
+    },
+    {
+      "name": "contract neutral rotation FDAI_RollBug_Pivot",
+      "passed": true
+    },
+    {
+      "name": "contract origin FDAI_Rate_Roll_Pivot",
+      "passed": true
+    },
+    {
+      "name": "contract neutral rotation FDAI_Rate_Roll_Pivot",
+      "passed": true
+    },
+    {
+      "name": "contract origin FDAI_Rate_Pitch_Pivot",
+      "passed": true
+    },
+    {
+      "name": "contract neutral rotation FDAI_Rate_Pitch_Pivot",
+      "passed": true
+    },
+    {
+      "name": "contract origin FDAI_Rate_Yaw_Pivot",
+      "passed": true
+    },
+    {
+      "name": "contract neutral rotation FDAI_Rate_Yaw_Pivot",
+      "passed": true
+    },
+    {
+      "name": "contract origin FDAI_Error_Roll_Pivot",
+      "passed": true
+    },
+    {
+      "name": "contract neutral rotation FDAI_Error_Roll_Pivot",
+      "passed": true
+    },
+    {
+      "name": "contract origin FDAI_Error_Pitch_Pivot",
+      "passed": true
+    },
+    {
+      "name": "contract neutral rotation FDAI_Error_Pitch_Pivot",
+      "passed": true
+    },
+    {
+      "name": "contract origin FDAI_Error_Yaw_Pivot",
+      "passed": true
+    },
+    {
+      "name": "contract neutral rotation FDAI_Error_Yaw_Pivot",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Ball_Pivot direct parent",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Ball_Pivot independent -1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Ball_Pivot geometry moves -1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Ball_Pivot independent 1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Ball_Pivot geometry moves 1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollBug_Pivot direct parent",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollBug_Pivot independent -1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollBug_Pivot geometry moves -1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollBug_Pivot independent 1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_RollBug_Pivot geometry moves 1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Roll_Pivot direct parent",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Roll_Pivot independent -1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Roll_Pivot geometry moves -1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Roll_Pivot independent 1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Roll_Pivot geometry moves 1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Pitch_Pivot direct parent",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Pitch_Pivot independent -1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Pitch_Pivot geometry moves -1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Pitch_Pivot independent 1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Pitch_Pivot geometry moves 1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Yaw_Pivot direct parent",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Yaw_Pivot independent -1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Yaw_Pivot geometry moves -1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Yaw_Pivot independent 1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Rate_Yaw_Pivot geometry moves 1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Roll_Pivot direct parent",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Roll_Pivot independent -1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Roll_Pivot geometry moves -1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Roll_Pivot independent 1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Roll_Pivot geometry moves 1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Pitch_Pivot direct parent",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Pitch_Pivot independent -1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Pitch_Pivot geometry moves -1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Pitch_Pivot independent 1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Pitch_Pivot geometry moves 1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Yaw_Pivot direct parent",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Yaw_Pivot independent -1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Yaw_Pivot geometry moves -1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Yaw_Pivot independent 1",
+      "passed": true
+    },
+    {
+      "name": "FDAI_Error_Yaw_Pivot geometry moves 1",
+      "passed": true
+    },
+    {
+      "name": "ball pivot invariant axis 0 deg -90",
+      "passed": true
+    },
+    {
+      "name": "ball rigid radius axis 0 deg -90",
+      "passed": true
+    },
+    {
+      "name": "ball pivot invariant axis 0 deg -30",
+      "passed": true
+    },
+    {
+      "name": "ball rigid radius axis 0 deg -30",
+      "passed": true
+    },
+    {
+      "name": "ball pivot invariant axis 0 deg 30",
+      "passed": true
+    },
+    {
+      "name": "ball rigid radius axis 0 deg 30",
+      "passed": true
+    },
+    {
+      "name": "ball pivot invariant axis 0 deg 90",
+      "passed": true
+    },
+    {
+      "name": "ball rigid radius axis 0 deg 90",
+      "passed": true
+    },
+    {
+      "name": "ball pivot invariant axis 0 deg 180",
+      "passed": true
+    },
+    {
+      "name": "ball rigid radius axis 0 deg 180",
+      "passed": true
+    },
+    {
+      "name": "ball pivot invariant axis 1 deg -90",
+      "passed": true
+    },
+    {
+      "name": "ball rigid radius axis 1 deg -90",
+      "passed": true
+    },
+    {
+      "name": "ball pivot invariant axis 1 deg -30",
+      "passed": true
+    },
+    {
+      "name": "ball rigid radius axis 1 deg -30",
+      "passed": true
+    },
+    {
+      "name": "ball pivot invariant axis 1 deg 30",
+      "passed": true
+    },
+    {
+      "name": "ball rigid radius axis 1 deg 30",
+      "passed": true
+    },
+    {
+      "name": "ball pivot invariant axis 1 deg 90",
+      "passed": true
+    },
+    {
+      "name": "ball rigid radius axis 1 deg 90",
+      "passed": true
+    },
+    {
+      "name": "ball pivot invariant axis 1 deg 180",
+      "passed": true
+    },
+    {
+      "name": "ball rigid radius axis 1 deg 180",
+      "passed": true
+    },
+    {
+      "name": "ball pivot invariant axis 2 deg -90",
+      "passed": true
+    },
+    {
+      "name": "ball rigid radius axis 2 deg -90",
+      "passed": true
+    },
+    {
+      "name": "ball pivot invariant axis 2 deg -30",
+      "passed": true
+    },
+    {
+      "name": "ball rigid radius axis 2 deg -30",
+      "passed": true
+    },
+    {
+      "name": "ball pivot invariant axis 2 deg 30",
+      "passed": true
+    },
+    {
+      "name": "ball rigid radius axis 2 deg 30",
+      "passed": true
+    },
+    {
+      "name": "ball pivot invariant axis 2 deg 90",
+      "passed": true
+    },
+    {
+      "name": "ball rigid radius axis 2 deg 90",
+      "passed": true
+    },
+    {
+      "name": "ball pivot invariant axis 2 deg 180",
+      "passed": true
+    },
+    {
+      "name": "ball rigid radius axis 2 deg 180",
+      "passed": true
+    },
+    {
+      "name": "USD opens",
+      "passed": true
+    },
+    {
+      "name": "USD Y up",
+      "passed": true
+    },
+    {
+      "name": "USD meters",
+      "passed": true
+    },
+    {
+      "name": "USD root identity",
+      "passed": true
+    },
+    {
+      "name": "USD FDAI_Ball_Pivot",
+      "passed": true
+    },
+    {
+      "name": "USD FDAI_RollBug_Pivot",
+      "passed": true
+    },
+    {
+      "name": "USD FDAI_Rate_Roll_Pivot",
+      "passed": true
+    },
+    {
+      "name": "USD FDAI_Rate_Pitch_Pivot",
+      "passed": true
+    },
+    {
+      "name": "USD FDAI_Rate_Yaw_Pivot",
+      "passed": true
+    },
+    {
+      "name": "USD FDAI_Error_Roll_Pivot",
+      "passed": true
+    },
+    {
+      "name": "USD FDAI_Error_Pitch_Pivot",
+      "passed": true
+    },
+    {
+      "name": "USD FDAI_Error_Yaw_Pivot",
+      "passed": true
+    },
+    {
+      "name": "USD no animation",
+      "passed": true
+    },
+    {
+      "name": "USD no camera/light",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Error_Roll_Pivot/FDAI_Error_Roll_Hub/Cylinder_010",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Error_Roll_Pivot/FDAI_Error_Roll_Needle/Cube_175",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_InnerSlot__1__1/Cube_003",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_03/Cube_018",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_MountScrew_1_1/Cylinder_006",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_09/Cube_140",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_15/Cube_146",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_16/Cube_147",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_19/Cube_150",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_04/Cube_135",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_01/Cube_132",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateWell/Cube_129",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateLabel/Text_015",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_10/Cube_141",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_07/Cube_138",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_20/Cube_151",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_05/Cube_136",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateZero/Text_014",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_02/Cube_133",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_14/Cube_145",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateIvoryStrip/Cube_130",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_11/Cube_142",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_17/Cube_148",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_08/Cube_139",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_06/Cube_137",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_18/Cube_149",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_03/Cube_134",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_00/Cube_131",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_12/Cube_143",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_RateScale/FDAI_Pitch_RateTick_13/Cube_144",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_InnerSlot__1_1/Cube_005",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_26/Cube_041",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_OpticalSeal/FDAI_OpticalSeal",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_04/Cube_019",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_37/Cube_052",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_MountSlot__1_1/Cube_004",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_05/Cube_020",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_MountSlot_1__1/Cube_006",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_ErrorIndex_4/Cube_101",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_15/Cube_030",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_InnerScrew__1_1/Cylinder_003",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_ErrorIndex_4/Cube_096",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_11/Cube_026",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_InnerScrew__1__1/Cylinder_001",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_50/Cube_065",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_68/Cube_083",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_ErrorIndex_4/Cube_091",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_29/Cube_044",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_64/Cube_079",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_02/Cube_017",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollLegend_06/Text_001",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_60/Cube_075",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_MountScrew_1__1/Cylinder_004",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_51/Cube_066",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_07/Cube_022",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_MountSlot_1_1/Cube_008",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_ErrorIndex_1/Cube_088",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Glass/FDAI_Glass",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_53/Cube_068",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_MountingPlate/Cube_001",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_38/Cube_053",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_31/Cube_046",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_09/Cube_024",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_30/Cube_045",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Reticle_Horizontal_Outline/Cube_102",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_16/Cube_031",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_InnerSlot_1__1/Cube_007",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_25/Cube_040",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_ErrorIndex_0/Cube_097",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_12/Cube_027",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_10/Cube_025",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_ErrorIndex_0/Cube_092",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_33/Cube_048",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_65/Cube_080",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_ErrorIndex_0/Cube_087",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_55/Cube_070",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollLegend_60/Text_010",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_69/Cube_084",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_34/Cube_049",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_13/Cube_028",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_CaseSeam_1__0_19/Cube_013",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_56/Cube_071",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_InnerScrew_1_1/Cylinder_007",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RedSideBand__1/FDAI_RedSideBand__1",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_48/Cube_063",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_ErrorIndex_1/Cube_093",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollLegend_24/Text_004",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_57/Cube_072",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_MountScrew__1_1/Cylinder_002",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_FaceGasket/FDAI_FaceGasket",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_39/Cube_054",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_ErrorIndex_2/Cube_094",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_35/Cube_050",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_58/Cube_073",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_03/Cube_111",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_20/Cube_128",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_00/Cube_108",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_12/Cube_120",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_09/Cube_117",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_15/Cube_123",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_04/Cube_112",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_17/Cube_125",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_01/Cube_109",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_13/Cube_121",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateWell/Cube_106",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_19/Cube_127",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_10/Cube_118",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateLabel/Text_013",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_14/Cube_122",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_07/Cube_115",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_05/Cube_113",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_02/Cube_110",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateZero/Text_012",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateIvoryStrip/Cube_107",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_16/Cube_124",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_11/Cube_119",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_08/Cube_116",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_18/Cube_126",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_RateScale/FDAI_Roll_RateTick_06/Cube_114",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_21/Cube_036",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollLegend_30/Text_005",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Reticle_Horizontal/Cube_103",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_CaseSeam__1__0_038/Cube_010",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_ErrorIndex_3/Cube_100",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_14/Cube_029",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateWell/Cube_152",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_17/Cube_171",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_10/Cube_164",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_07/Cube_161",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_19/Cube_173",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_16/Cube_170",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_05/Cube_159",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_02/Cube_156",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateZero/Text_016",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateIvoryStrip/Cube_153",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_11/Cube_165",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_08/Cube_162",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_06/Cube_160",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_14/Cube_168",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_03/Cube_157",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_18/Cube_172",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_00/Cube_154",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateLabel/Text_017",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_12/Cube_166",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_20/Cube_174",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_09/Cube_163",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_15/Cube_169",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_04/Cube_158",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_01/Cube_155",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_RateScale/FDAI_Yaw_RateTick_13/Cube_167",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_08/Cube_023",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_CaseSeam_1__0_038/Cube_011",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Flange/FDAI_Flange",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollLegend_12/Text_002",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_61/Cube_076",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_70/Cube_085",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_00/Cube_015",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_CaseSeam__1__0_19/Cube_012",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RearConnectorShell/Cylinder_008",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_FaceBezel/FDAI_FaceBezel",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_InnerSlot_1_1/Cube_009",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollLegend_48/Text_008",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_ErrorIndex_1/Cube_098",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_InnerScrew_1__1/Cylinder_005",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_MountScrew__1__1/Cylinder",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_17/Cube_032",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_40/Cube_055",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RearHousing/Cube",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RedSideBand_1/FDAI_RedSideBand_1",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_36/Cube_051",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_18/Cube_033",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Reticle_Vertical_Outline/Cube_104",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RearConnectorInsert/Cylinder_009",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_27/Cube_042",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Yaw_ErrorIndex_2/Cube_099",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_InnerOctagonalMask/FDAI_InnerOctagonalMask",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_42/Cube_057",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollLegend_66/Text_011",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_ErrorIndex_2/Cube_089",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_19/Cube_034",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_62/Cube_077",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_71/Cube_086",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollLegend_00/Text",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollLegend_42/Text_007",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_20/Cube_035",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_54/Cube_069",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_49/Cube_064",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_43/Cube_058",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_MountSlot__1__1/Cube_002",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_45/Cube_060",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_66/Cube_081",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_BallSurround/FDAI_BallSurround",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_41/Cube_056",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_44/Cube_059",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollLegend_36/Text_006",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_22/Cube_037",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_32/Cube_047",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Reticle_Vertical/Cube_105",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollLegend_18/Text_003",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_28/Cube_043",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_23/Cube_038",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Pitch_ErrorIndex_3/Cube_095",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_46/Cube_061",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_67/Cube_082",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_Roll_ErrorIndex_3/Cube_090",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_06/Cube_021",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_24/Cube_039",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_63/Cube_078",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_01/Cube_016",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_47/Cube_062",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_59/Cube_074",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollTick_52/Cube_067",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_BlankIdentificationPlate/Cube_014",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Fixed/FDAI_RollLegend_54/Text_009",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Rate_Pitch_Pivot/FDAI_Rate_Pitch_Needle/FDAI_Rate_Pitch_Needle",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Error_Yaw_Pivot/FDAI_Error_Yaw_Needle/Cube_177",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Error_Yaw_Pivot/FDAI_Error_Yaw_Hub/Cylinder_012",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_RollBug_Pivot/FDAI_RollBug/FDAI_RollBug",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Ball_Pivot/FDAI_Ball/FDAI_Ball",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Rate_Roll_Pivot/FDAI_Rate_Roll_Needle/FDAI_Rate_Roll_Needle",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Rate_Yaw_Pivot/FDAI_Rate_Yaw_Needle/FDAI_Rate_Yaw_Needle",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Error_Pitch_Pivot/FDAI_Error_Pitch_Needle/Cube_176",
+      "passed": true
+    },
+    {
+      "name": "USD bound /FDAI_Mount/FDAI_Error_Pitch_Pivot/FDAI_Error_Pitch_Hub/Cylinder_011",
+      "passed": true
+    },
+    {
+      "name": "USD compliance",
+      "passed": true
+    },
+    {
+      "name": "USD packed texture",
+      "passed": true
+    },
+    {
+      "name": "reimport FDAI_Ball_Pivot",
+      "passed": true
+    },
+    {
+      "name": "reimport FDAI_RollBug_Pivot",
+      "passed": true
+    },
+    {
+      "name": "reimport FDAI_Rate_Roll_Pivot",
+      "passed": true
+    },
+    {
+      "name": "reimport FDAI_Rate_Pitch_Pivot",
+      "passed": true
+    },
+    {
+      "name": "reimport FDAI_Rate_Yaw_Pivot",
+      "passed": true
+    },
+    {
+      "name": "reimport FDAI_Error_Roll_Pivot",
+      "passed": true
+    },
+    {
+      "name": "reimport FDAI_Error_Pitch_Pivot",
+      "passed": true
+    },
+    {
+      "name": "reimport FDAI_Error_Yaw_Pivot",
+      "passed": true
+    },
+    {
+      "name": "reimport glass opacity represented",
+      "passed": true
+    },
+    {
+      "name": "reimport texture",
+      "passed": true
+    }
+  ],
+  "measurements": {
+    "reopen_seconds": 0.012913292273879051,
+    "triangles": 39118,
+    "mesh_objects": 223,
+    "used_materials": 9,
+    "bounds_min_m": [
+      -0.074024997651577,
+      -0.074024997651577,
+      -0.2329999953508377
+    ],
+    "bounds_max_m": [
+      0.074024997651577,
+      0.074024997651577,
+      0.04650000110268593
+    ],
+    "dimensions_m": [
+      0.148049995303154,
+      0.148049995303154,
+      0.27949999645352364
+    ],
+    "usdz_reimport_seconds": 0.04262379230931401,
+    "reimport_glass": {
+      "alpha": 1.0,
+      "transmission": 0.9449999928474426
+    }
+  },
+  "limitations": [
+    "No RealityKit renderer, RCP or Vision Pro hardware test",
+    "No controlled LM-5 dimensional drawing",
+    "No flight-state bindings tested"
+  ],
+  "usd_compliance": {
+    "errors": [],
+    "failed_checks": [],
+    "warnings": []
+  },
+  "usd_members": [
+    "FDAI.usdc",
+    "textures/fdai_8ball_albedo.png"
+  ],
+  "hashes": {
+    "FDAI.blend": "923e9eae1b3c524ba4e338e8fd575834371f6068abd83767b54658b29bf629e3",
+    "FDAI.usdc": "aee0a426a43358bd2f2ead151d161c1497d41307d879e6e2472b72f3e4e1e635",
+    "FDAI.usdz": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d",
+    "textures/fdai_8ball_albedo.png": "43e98518b27f3360423dab1a552abefd4af4e2cfcd2c54300760086b753c7bad"
+  },
+  "passed": true,
+  "check_count": 1012
+}

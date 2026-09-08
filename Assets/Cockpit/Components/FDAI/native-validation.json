@@ -1,0 +1,11 @@
+{
+  "direct_moving_groups" : 8,
+  "fixed_transform_under_motion" : "PASS",
+  "live_bindings" : "NOT TESTED",
+  "load_and_checks_seconds" : 0.40320491790771484,
+  "native_load" : "PASS",
+  "platform" : "macOS RealityKit",
+  "renderer_appearance" : "NOT TESTED",
+  "sha256" : "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d",
+  "Vision_Pro" : "NOT TESTED"
+}

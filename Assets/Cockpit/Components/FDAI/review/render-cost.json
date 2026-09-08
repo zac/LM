@@ -1,0 +1,11 @@
+{
+  "export_seconds": 0.4212160827592015,
+  "renders": {
+    "geometry.png": 0.16906649991869926,
+    "front.png": 0.5548875420354307,
+    "oblique.png": 0.5216672499664128,
+    "static-motion-demo.png": 0.4373242501169443
+  },
+  "heavy_renders": 0,
+  "bakes": 0
+}
