@@ -1,4 +1,5 @@
 import Foundation
+import CryptoKit
 import RealityKit
 import Testing
 @testable import LMKit
@@ -47,10 +48,19 @@ private func near(_ lhs: simd_float4x4, _ rhs: simd_float4x4) -> Bool {
     let source = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
         .deletingLastPathComponent().deletingLastPathComponent()
         .appendingPathComponent("Assets/Cockpit/Components/PanelInventory")
-    for (url, name) in [(LMKitAssets.panelInventoryURL, "PanelInventory.usdz"),
-                        (LMKitAssets.panelInventoryManifestURL, "inventory.json")] {
+    for (url, name) in [(LMKitAssets.panelInventoryManifestURL, "inventory.json")] {
         #expect(try Data(contentsOf: url) == Data(contentsOf: source.appendingPathComponent(name)))
     }
+    let receipt = try #require(JSONSerialization.jsonObject(with: Data(contentsOf:
+        LMKitAssets.panelInventoryURL.deletingLastPathComponent().appendingPathComponent("packaging.json"))) as? [String: Any])
+    func hash(_ url: URL) throws -> String {
+        SHA256.hash(data: try Data(contentsOf: url)).map { String(format: "%02x", $0) }.joined()
+    }
+    #expect(receipt["source_sha256"] as? String == (try hash(source.appendingPathComponent("PanelInventory.usdz"))))
+    #expect(receipt["runtime_sha256"] as? String == (try hash(LMKitAssets.panelInventoryURL)))
+    #expect(receipt["changed_property"] as? String == "/PanelInventory/PlanningLabels.visibility")
+    #expect(receipt["runtime_value"] as? String == "inherited")
+    #expect(receipt["other_layer_text_unchanged"] as? Bool == true)
     let manifest = try JSONDecoder().decode(Inventory.self, from: Data(contentsOf: LMKitAssets.panelInventoryManifestURL))
     #expect(manifest.schema == "lmkit.panel-inventory.v1" && manifest.units == "meters")
     let scene = try Entity.load(contentsOf: LMKitAssets.panelInventoryURL)
@@ -73,6 +83,8 @@ private func near(_ lhs: simd_float4x4, _ rhs: simd_float4x4) -> Bool {
             let mount = try path(slot.node, root: root)
             let placeholder = try path(slot.default_placeholder_node, root: root)
             let label = try path(slot.label_node, root: root)
+            func descendants(_ node: Entity) -> [Entity] { [node] + node.children.flatMap(descendants) }
+            #expect(descendants(label).contains { $0.components[ModelComponent.self] != nil })
             #expect(slot.pose.space == "parent-local")
             #expect(near(mount.transformMatrix(relativeTo: entity), try slot.pose.transform().matrix))
             #expect(placeholder.parent === mount)

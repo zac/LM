@@ -12,7 +12,7 @@
     "failures": 0,
     "scope": [
       "actual RealityKit resource loading",
-      "byte-identical accepted USDZ payloads",
+      "accepted authoring USDZ payloads; PanelInventory differs only by recorded planning-visibility property",
       "full Cabin mount rotations and optical bases",
       "all 66 panel/slot poses and full paths",
       "independent placeholder and planning label layers",
@@ -72,15 +72,22 @@
       "sha256": "50616739fb2febc210d3724b8008133b90b1c5f3c71a25e91609b249aa614d71"
     },
     "Sources/LMKit/Resources/PanelInventory/PanelInventory.usdz": {
-      "bytes": 2214951,
-      "sha256": "4b95b051b27831c97a47e9ccfb36b2f62e23469d3be50a09225e57685dc56b24"
+      "bytes": 2216179,
+      "sha256": "026a908793a01c3f1c6fa6a024500f70fda8edc75287ac4749003719fb7eaf30"
     },
     "Sources/LMKit/Resources/PanelInventory/inventory.json": {
       "bytes": 190532,
       "sha256": "f315bdcbd8a6e597231b33420652fb6297241bf3af7c585708f472583522ec49"
+    },
+    "Sources/LMKit/Resources/PanelInventory/packaging.json": {
+      "bytes": 678,
+      "sha256": "29f827593affd2f14fb01709abf9a3389e3b23945c31631d6c4d085f0b5de869"
     }
   },
   "additional_references": "References/Interior/User-2026-09-08/PANORAMA-OBSERVATIONS.md",
   "validator_followup": "c98f5e0cb411e84e893fd7bb79c5dea4a14bbd53",
-  "combined_geometry_review": "Docs/Validation/EnclosedFoundationGeometry/REVIEW.md"
+  "combined_geometry_review": "Docs/Validation/EnclosedFoundationGeometry/REVIEW.md",
+  "runtime_derivations": {
+    "PanelInventory": "Only PlanningLabels.visibility changes invisible to inherited; app must set group disabled initially. See packaged packaging.json. Native package checks pass; actual simulator confirmation pending."
+  }
 }

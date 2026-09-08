@@ -1,0 +1,11 @@
+{
+  "source_sha256": "4b95b051b27831c97a47e9ccfb36b2f62e23469d3be50a09225e57685dc56b24",
+  "runtime_sha256": "026a908793a01c3f1c6fa6a024500f70fda8edc75287ac4749003719fb7eaf30",
+  "changed_property": "/PanelInventory/PlanningLabels.visibility",
+  "source_value": "invisible",
+  "runtime_value": "inherited",
+  "canonical_source_layer_sha256": "2cb7a4e91168997d997e134d8530f8069338e63c6c6a9dfb74b006bfb54e116f",
+  "canonical_runtime_layer_sha256": "e9ed42c5e185e8db602dcfeb0e5559be0a702e96448204478ab34502bd920a66",
+  "other_layer_text_unchanged": true,
+  "consumer_requirement": "Set PlanningLabels.isEnabled=false before installation; explicitly toggle it for planning mode."
+}
