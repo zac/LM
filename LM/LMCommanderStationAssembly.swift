@@ -87,6 +87,10 @@ final class LMCommanderStationAssembly {
     private var slots: [String: Inventory.Slot] = [:]
     private var installedSlots = Set<String>()
     private var installedPartialComponents = Set<String>()
+    private(set) var slotOccupancy: [String: LMCockpitSlotOccupancy] = [:]
+    private var planningLabelSources: [String: Entity] = [:]
+    private var planningLabelBounds: [String: BoundingBox] = [:]
+    private(set) var planningStatusLabels: [String: Entity] = [:]
 
     static func load() throws -> LMCommanderStationAssembly {
         try LMCommanderStationAssembly(asset: Entity.load(contentsOf: LMKitAssets.cabinURL),
@@ -201,6 +205,8 @@ final class LMCommanderStationAssembly {
                 let node = try Self.path(slot.node, in: panelInventory)
                 let placeholder = try Self.path(slot.default_placeholder_node, in: panelInventory)
                 let label = try Self.path(slot.label_node, in: panelInventory)
+                planningLabelSources[slot.id] = label
+                planningLabelBounds[slot.id] = label.visualBounds(relativeTo: label)
                 guard node.parent === panelNode, placeholder.parent === node,
                       Self.isDescendant(label, of: planningLabels),
                       Self.near(node.transformMatrix(relativeTo: panelNode), try slot.pose.transform().matrix),
@@ -218,6 +224,9 @@ final class LMCommanderStationAssembly {
         for index in [1, 4] {
             try Self.path("/CommanderPanels/Panel_\(index)/Panel_\(index)_RemovableBacking", in: panels).isEnabled = false
         }
+        LMCockpitMaterialPolicy.apply(.paintedStructure, to: cabin)
+        LMCockpitMaterialPolicy.apply(.paintedStructure, to: panels)
+        LMCockpitMaterialPolicy.apply(.paintedStructure, to: try Self.path("/PanelInventory/Panels", in: panelInventory))
         planningLabels.isEnabled = false
         Self.removeInput(in: root)
         Self.noShadows(in: root)
@@ -233,10 +242,11 @@ final class LMCommanderStationAssembly {
         }
         try Self.path(slot.default_placeholder_node, in: panelInventory).isEnabled = false
         installedSlots.insert(slotID)
+        recordOccupancy(slotID: slotID, occupancy: .init(coverage: .occupiedRegion, componentIDs: [occupantName], note: nil))
     }
 
     /// Future component installation is transactional per slot, including load/validation failures.
-    func installOccupant(slotID: String, loadAndValidate: @MainActor () throws -> Entity) throws {
+    func installOccupant(slotID: String, componentID: String = "Equipment", loadAndValidate: @MainActor () throws -> Entity) throws {
         guard let slot = slots[slotID], slot.replacement_allowed, slot.external_occupant == nil,
               !installedSlots.contains(slotID) else {
             throw AssemblyError.invalidContract("Unavailable or blocked slot: \(slotID)")
@@ -251,6 +261,7 @@ final class LMCommanderStationAssembly {
         mount.addChild(occupant)
         placeholder.isEnabled = false
         installedSlots.insert(slotID)
+        recordOccupancy(slotID: slotID, occupancy: .init(coverage: .occupiedRegion, componentIDs: [componentID], note: nil))
     }
 
     /// Validate every mapped datum before publishing a multi-slot overlay or hiding blanks.
@@ -283,6 +294,10 @@ final class LMCommanderStationAssembly {
         root.addChild(overlay.root)
         for placeholder in placeholders { placeholder.isEnabled = false }
         installedSlots.formUnion(overlay.slots.map(\.id))
+        for mapped in overlay.slots {
+            recordOccupancy(slotID: mapped.id, occupancy: .init(coverage: .occupiedRegion,
+                componentIDs: [overlay.root.name], note: "Visual hardware only"))
+        }
     }
 
     /// Partial equipment leaves the original neutral region backing in place.
@@ -317,6 +332,40 @@ final class LMCommanderStationAssembly {
         }
         installedPartialComponents.insert(componentID)
         installedSlots.insert(slotID)
+        recordOccupancy(slotID: slotID, occupancy: .init(coverage: .partialRegion, componentIDs: [componentID], note: nil))
+    }
+
+    /// Called only after the corresponding installer has completed validation.
+    /// Complementary installers can publish all registered component IDs here;
+    /// this metadata method deliberately does not grant installation permission.
+    func recordOccupancy(slotID: String, occupancy: LMCockpitSlotOccupancy) {
+        slotOccupancy[slotID] = occupancy
+        guard let source = planningLabelSources[slotID], let parent = source.parent,
+              let sourceBounds = planningLabelBounds[slotID] else { return }
+        let mesh = MeshResource.generateText(occupancy.planningText, extrusionDepth: 0,
+            font: .monospacedSystemFont(ofSize: 0.008, weight: .medium),
+            containerFrame: .zero, alignment: .center, lineBreakMode: .byWordWrapping)
+        let materials = Self.descendants(source).compactMap { $0.components[ModelComponent.self] }.first?.materials ?? []
+        let text = ModelEntity(mesh: mesh, materials: materials)
+        let bounds = text.visualBounds(relativeTo: text)
+        let scale = min(1, min(max(sourceBounds.extents.x, 0.025) / max(bounds.extents.x, 0.001),
+                               max(sourceBounds.extents.y, 0.020) / max(bounds.extents.y, 0.001)))
+        text.scale = SIMD3(repeating: scale)
+        text.position = sourceBounds.center - bounds.center * scale
+        // Planning-only annotation clears raised instrument faces; hardware and
+        // the original authored label datum remain unchanged.
+        text.position.z += 0.10
+        let replacement = Entity()
+        replacement.name = "PlanningStatus__" + slotID
+        replacement.transform = source.transform
+        replacement.addChild(text)
+        LMCockpitComponentSupport.readableMarkings(replacement)
+        Self.removeInput(in: replacement)
+        Self.noShadows(in: replacement)
+        planningStatusLabels[slotID]?.removeFromParent()
+        parent.addChild(replacement)
+        source.isEnabled = false
+        planningStatusLabels[slotID] = replacement
     }
 
     private static func validateInterfaces(cabin: Entity, windows: Entity, cabinData: Data, windowData: Data) throws {

@@ -190,7 +190,14 @@ struct LMInstrumentIntegrationTests {
 
     @Test @MainActor func importedFDAINativeHierarchyKeepsFixedStructureStill() throws {
         let binding = try LMImportedFDAI(asset: Entity.load(contentsOf: LMKitAssets.fdaiURL))
-        #expect(binding.readabilitySurfaceCount == 3)
+        #expect(binding.readabilitySurfaceCount > 3)
+        let face = try #require(LMCommanderStationAssembly.descendants(binding.ball).first {
+            $0.name == "FDAI_Ball" && $0.components[ModelComponent.self] != nil
+        })
+        let material = try #require(face.components[ModelComponent.self]?.materials.first as? PhysicallyBasedMaterial)
+        #expect(material.baseColor.texture != nil)
+        #expect(material.emissiveColor.texture != nil)
+        #expect(material.emissiveIntensity == 0.20)
         let fixed = binding.fixed.transform
         let ballPosition = binding.ball.position
         binding.apply(.fromAxisAngle(axis: LMVector3D(x: 1), radians: 0.5))

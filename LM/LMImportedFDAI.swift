@@ -50,6 +50,13 @@ final class LMImportedFDAI {
             }
         }
         visit(fixed)
+        readabilitySurfaceCount += LMCockpitMaterialPolicy.apply(.printedFace, in: ball) { $0 == "FDAI_Ball" }
+        readabilitySurfaceCount += LMCockpitMaterialPolicy.apply(.fixedMarking, in: fixed) { name in
+            name.hasPrefix("FDAI_RollTick_") || name.hasPrefix("FDAI_RollLegend_") ||
+            (name.hasPrefix("FDAI_Reticle_") && !name.hasSuffix("_Outline")) ||
+            name.contains("_RateTick_") || name.hasSuffix("_RateLabel") || name.hasSuffix("_RateZero") ||
+            name.hasSuffix("_RateIvoryStrip") || name.contains("_ErrorIndex_")
+        }
         for name in Self.unboundNames {
             let node = try LMImportedDSKY.unique(name, in: root)
             guard node.parent === root else { throw LMImportedDSKY.ContractError.invalidParent(name) }
