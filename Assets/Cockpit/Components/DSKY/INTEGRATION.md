@@ -49,3 +49,14 @@ Each status/caution indicator now contains the existing `_Lens` background (the 
 `review/backlight-preview.png` uses dimmer external light plus a **Blender-only compositor halo** to demonstrate the intended soft optical appearance. The USDZ carries the emissive background and translucent diffuser, but not this compositor effect, point lights, or automatic AGC connections. Reproduce/tune the halo in the native renderer if desired; do not claim it comes from the exported mesh or that emission automatically lights adjacent surfaces. Test transparency sorting, readability of dark legends and brightness on Vision Pro before accepting the material treatment.
 
 Exporter note: Blender 5.2 wrote the DITHERED material's constant alpha as opacity 1. `usd_pipeline.py` explicitly authors the diffuser's USD Preview Surface opacity as 0.12 (no alpha clip) before packaging. Validation checks that exported value and the number of independently amber-lit cells in every preview. This is necessary to keep the cover from hiding the underlying emitter in USD readers.
+
+## Final delivery verification
+
+The immutable backlight asset revision is `d5827948e6e288154e588b8608bda5fc4c6707ce`; subsequent handoff commits change documentation only. `validation.json` records 276 passed checks, including all four USDZs, exact key hierarchy/positions, emitter states, diffuser opacity, OpenUSD compliance and clean Blender reimport. `native-validation.json` records the neutral file loading in macOS RealityKit. RCP GUI, native shader appearance and Vision Pro input/hover remain untested.
+
+- `DSKY.usdz` SHA-256: `e20a69864d4c7e0ff068172e0e672d9fbcc510c1dc4e97e4db0246fde08fbdfd`
+- `DSKY-LightingPreview.usdz` SHA-256: `aef3d4115c206e8c7f3a7443f58b83d91617cdb45d55f50a4fe83a08eb9cfcdd`
+- `DSKY-DisplayPreview.usdz` SHA-256: `c83926228af7e35d631724301c283e47ca12d2451600a04f70201d1bce8d8742`
+- `DSKY-BacklightPreview.usdz` SHA-256: `8f266812ed719f48f63be2e3a0364fa2f08a5d07119b77224eeb617ec378888d`
+
+Slot fit remains unqualified: 7.700 inches is mounting-thread pitch, not housing width. The current rear enclosure is provisional; `/DSKY_Mount` is the app face midpoint, not the historical seating shoulder. See `fit-interface.json` and `evidence/mount-fit-research.md` before defining a panel cutout. Geometry, source scripts and provenance stay in this component directory; extraction into a separate library is coordinator-owned.

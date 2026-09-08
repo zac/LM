@@ -81,7 +81,7 @@ Coordinator fills after review:
 - Acceptance evidence: asset/native-loader checks above; runtime acceptance pending.
 - Follow-up work: import in RCP, apply accepted cabin placement, bind collision/input/hover per key and live snapshot display, preserve PRO release/cancel, eliminate duplicate procedural controls, validate on Vision Pro. Reconcile historical key staggering only through a coordinated geometry-contract change.
 
-No push or merge was performed. All delivered changes are confined to this component directory.
+Publication is now authorized by the coordinator under Zac's component handoff request. Only `cockpit/dsky` and its required LFS objects will be pushed to `origin` (`https://github.com/zac/LM.git`). No merge, application changes, extraction, migration or history rewrite is part of this delivery. All changes are confined to this component directory. The exact published branch SHA is returned in the delivery message; asset bytes are pinned by the component commit and hashes above.
 
 ## Display refinement
 
