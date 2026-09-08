@@ -632,8 +632,23 @@ final class LMCommanderStationScene {
     func loadArtistCabinIfAvailable() async throws -> Bool {
         guard commanderAssembly == nil else { return true }
         // The skeleton is explicitly opt-in until mechanical/headset review.
-        guard ProcessInfo.processInfo.arguments.contains("--commander-station-assembly") else { return false }
-        return installCommanderAssembly()
+        if ProcessInfo.processInfo.arguments.contains("--commander-station-assembly") {
+            return installCommanderAssembly()
+        }
+        // Preserve the existing optional artist-cabin path when not reviewing
+        // the LMKit skeleton.
+        guard let cabin = try await LMCockpitAssetContract.loadIfAvailable() else { return false }
+        let issues = LMCockpitAssetContract.validate(cabin)
+        guard issues.isEmpty else { throw AssetError.invalidArtistCabin(issues) }
+        for name in ["DSKY_Mount", "FDAI_Mount"] {
+            cabin.findEntity(named: name)?.isEnabled = false
+        }
+        artistCabin?.removeFromParent()
+        cabin.name = LMCockpitAssetContract.Node.cabinRoot.rawValue
+        cabinFrame.addChild(cabin)
+        artistCabin = cabin
+        proceduralCabin.isEnabled = false
+        return true
     }
 
     @discardableResult
