@@ -1,0 +1,5495 @@
+{
+  "schema": "lmkit.panel-inventory.v1",
+  "units": "meters",
+  "axes": "+X right +Y up -Z forward; panel local +Z face toward crew",
+  "root": "/PanelInventory",
+  "root_pose": {
+    "space": "Cabin-relative",
+    "translation_m": [
+      0,
+      0,
+      0
+    ],
+    "quaternion_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "scale": [
+      1,
+      1,
+      1
+    ]
+  },
+  "windows_datum_revision": "80c9b2d",
+  "datum_revision": "2fafa5bda020b83cb7e6dff7af1a45cf6f9b35fe",
+  "baseline_revision": "09364460e8be570338f3d39a07067fe2bee0b044",
+  "planning_label_layer": "/PanelInventory/PlanningLabels",
+  "planning_labels_default_visible": false,
+  "mission": "Descent-ready, Apollo 11 led, later/general references explicitly tagged",
+  "panels": [
+    {
+      "id": "Panel1",
+      "name": "Panel 1 \u2014 commander flight",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/Panel1",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.24500000476837158,
+          1.6044106483459473,
+          -0.8849859237670898
+        ],
+        "quaternion_xyzw": [
+          -0.08715573698282242,
+          0.0,
+          0.0,
+          0.9961947202682495
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.48,
+        0.5,
+        0.0508
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "C1",
+        "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+        "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+        "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+        "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+        "confidence": "high panel identity; medium region arrangement; low dimensions"
+      },
+      "shell_external": true,
+      "slots": [
+        {
+          "id": "Panel1__FDAI",
+          "name": "FDAI",
+          "purpose": "FDAI",
+          "parent": "Panel1",
+          "node": "/PanelInventory/Panels/Panel1/Panel1__FDAI",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              -0.055,
+              -0.015,
+              0.016
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.148,
+            0.148,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel1/Panel1__FDAI/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__FDAI_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": "external",
+            "bound": "external-owner",
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": "FDAI_CDR",
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel1__Warning",
+          "name": "warning array",
+          "purpose": "warning array",
+          "parent": "Panel1",
+          "node": "/PanelInventory/Panels/Panel1/Panel1__Warning",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.08,
+              0.213,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.24,
+            0.045,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel1/Panel1__Warning/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Warning_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel1__Timers",
+          "name": "mission / event timers",
+          "purpose": "mission / event timers",
+          "parent": "Panel1",
+          "node": "/PanelInventory/Panels/Panel1/Panel1__Timers",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              -0.06,
+              0.158,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.23,
+            0.034,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel1/Panel1__Timers/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Timers_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel1__CrossPointer",
+          "name": "cross-pointer",
+          "purpose": "cross-pointer",
+          "parent": "Panel1",
+          "node": "/PanelInventory/Panels/Panel1/Panel1__CrossPointer",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              -0.07,
+              0.1,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.14,
+            0.065,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel1/Panel1__CrossPointer/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__CrossPointer_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel1__Propulsion",
+          "name": "propulsion quantities",
+          "purpose": "propulsion quantities",
+          "parent": "Panel1",
+          "node": "/PanelInventory/Panels/Panel1/Panel1__Propulsion",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.177,
+              0.105,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.09,
+            0.14,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel1/Panel1__Propulsion/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Propulsion_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel1__RangeThrust",
+          "name": "altitude / range / thrust",
+          "purpose": "altitude / range / thrust",
+          "parent": "Panel1",
+          "node": "/PanelInventory/Panels/Panel1/Panel1__RangeThrust",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.145,
+              -0.045,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.16,
+            0.09,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel1/Panel1__RangeThrust/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__RangeThrust_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel1__Guidance",
+          "name": "guidance / engine / abort",
+          "purpose": "guidance / engine / abort",
+          "parent": "Panel1",
+          "node": "/PanelInventory/Panels/Panel1/Panel1__Guidance",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.035,
+              -0.178,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.35,
+            0.115,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel1/Panel1__Guidance/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Guidance_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/Panel1_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": null
+    },
+    {
+      "id": "Panel2",
+      "name": "Panel 2 \u2014 pilot flight",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/Panel2",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.24500000476837158,
+          1.6044106483459473,
+          -0.8849859237670898
+        ],
+        "quaternion_xyzw": [
+          -0.08715573698282242,
+          0.0,
+          0.0,
+          0.9961947202682495
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.48,
+        0.5,
+        0.0508
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "C1",
+        "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+        "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+        "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+        "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+        "confidence": "high panel identity; medium region arrangement; low dimensions"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "Panel2__FDAI",
+          "name": "pilot FDAI",
+          "purpose": "pilot FDAI",
+          "parent": "Panel2",
+          "node": "/PanelInventory/Panels/Panel2/Panel2__FDAI",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.06,
+              -0.115,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.15,
+            0.15,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel2/Panel2__FDAI/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__FDAI_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel2__Caution",
+          "name": "caution array",
+          "purpose": "caution array",
+          "parent": "Panel2",
+          "node": "/PanelInventory/Panels/Panel2/Panel2__Caution",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              -0.015,
+              0.193,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.3,
+            0.06,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel2/Panel2__Caution/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Caution_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel2__RCSECS",
+          "name": "RCS / ECS monitoring",
+          "purpose": "RCS / ECS monitoring",
+          "parent": "Panel2",
+          "node": "/PanelInventory/Panels/Panel2/Panel2__RCSECS",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              -0.04,
+              0.1,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.34,
+            0.1,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel2/Panel2__RCSECS/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__RCSECS_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel2__CrossPointer",
+          "name": "pilot cross-pointer",
+          "purpose": "pilot cross-pointer",
+          "parent": "Panel2",
+          "node": "/PanelInventory/Panels/Panel2/Panel2__CrossPointer",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.08,
+              0.005,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.075,
+            0.065,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel2/Panel2__CrossPointer/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__CrossPointer_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel2__Systems",
+          "name": "RCS valves / ECS switches",
+          "purpose": "RCS valves / ECS switches",
+          "parent": "Panel2",
+          "node": "/PanelInventory/Panels/Panel2/Panel2__Systems",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              -0.13,
+              -0.075,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.17,
+            0.235,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel2/Panel2__Systems/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Systems_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel2__Lower",
+          "name": "ECS / suit fans",
+          "purpose": "ECS / suit fans",
+          "parent": "Panel2",
+          "node": "/PanelInventory/Panels/Panel2/Panel2__Lower",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              -0.04,
+              -0.222,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.34,
+            0.032,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel2/Panel2__Lower/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Lower_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "authored_frame_envelope_m": [
+        0.395,
+        0.5,
+        0.022
+      ],
+      "authored_frame_center_local_m": [
+        -0.0425,
+        0,
+        -0.011
+      ],
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/Panel2_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/Panel2/Frame"
+    },
+    {
+      "id": "Panel3",
+      "name": "Panel 3 \u2014 center systems",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/Panel3",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.0,
+          1.2781422138214111,
+          -0.8058578372001648
+        ],
+        "quaternion_xyzw": [
+          -0.3826834559440613,
+          0.0,
+          0.0,
+          0.9238795042037964
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.97,
+        0.18,
+        0.04
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "C1",
+        "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+        "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+        "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+        "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+        "confidence": "high panel identity; medium region arrangement; low dimensions"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "Panel3__EngineRadar",
+          "name": "engine / radar",
+          "purpose": "engine / radar",
+          "parent": "Panel3",
+          "node": "/PanelInventory/Panels/Panel3/Panel3__EngineRadar",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              -0.36,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.225,
+            0.145,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel3/Panel3__EngineRadar/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__EngineRadar_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel3__Stability",
+          "name": "stabilization",
+          "purpose": "stabilization",
+          "parent": "Panel3",
+          "node": "/PanelInventory/Panels/Panel3/Panel3__Stability",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              -0.12,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.225,
+            0.145,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel3/Panel3__Stability/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__Stability_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel3__TimerHeaters",
+          "name": "timer / heaters",
+          "purpose": "timer / heaters",
+          "parent": "Panel3",
+          "node": "/PanelInventory/Panels/Panel3/Panel3__TimerHeaters",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.12,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.225,
+            0.145,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel3/Panel3__TimerHeaters/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__TimerHeaters_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel3__Lighting",
+          "name": "lighting / contact",
+          "purpose": "lighting / contact",
+          "parent": "Panel3",
+          "node": "/PanelInventory/Panels/Panel3/Panel3__Lighting",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.36,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.225,
+            0.145,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel3/Panel3__Lighting/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__Lighting_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/Panel3_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/Panel3/Frame"
+    },
+    {
+      "id": "Panel4",
+      "name": "Panel 4 \u2014 primary guidance",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/Panel4",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.0,
+          1.070142149925232,
+          -0.5978578329086304
+        ],
+        "quaternion_xyzw": [
+          -0.3826834559440613,
+          0.0,
+          0.0,
+          0.9238795042037964
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.4,
+        0.34,
+        0.04
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "C1",
+        "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+        "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+        "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+        "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+        "confidence": "high panel identity; medium region arrangement; low dimensions"
+      },
+      "shell_external": true,
+      "slots": [
+        {
+          "id": "Panel4__DSKY",
+          "name": "DSKY",
+          "purpose": "DSKY",
+          "parent": "Panel4",
+          "node": "/PanelInventory/Panels/Panel4/Panel4__DSKY",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.015,
+              0.009
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.2063496,
+            0.2032,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel4/Panel4__DSKY/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__DSKY_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": "external",
+            "bound": "external-owner",
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": "DSKY",
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel4__EnableLeft",
+          "name": "ACA / TTCA enable",
+          "purpose": "ACA / TTCA enable",
+          "parent": "Panel4",
+          "node": "/PanelInventory/Panels/Panel4/Panel4__EnableLeft",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              -0.155,
+              0.005,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.065,
+            0.19,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel4/Panel4__EnableLeft/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__EnableLeft_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel4__EnableRight",
+          "name": "ACA enable",
+          "purpose": "ACA enable",
+          "parent": "Panel4",
+          "node": "/PanelInventory/Panels/Panel4/Panel4__EnableRight",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.155,
+              0.005,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.065,
+            0.19,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel4/Panel4__EnableRight/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__EnableRight_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel4__Lower",
+          "name": "guidance surround",
+          "purpose": "guidance surround",
+          "parent": "Panel4",
+          "node": "/PanelInventory/Panels/Panel4/Panel4__Lower",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              -0.137,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.36,
+            0.043,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel4/Panel4__Lower/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__Lower_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/Panel4_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": null
+    },
+    {
+      "id": "Panel5",
+      "name": "Panel 5 \u2014 commander waist",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/Panel5",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.5587999820709229,
+          0.8983525633811951,
+          -0.2950824499130249
+        ],
+        "quaternion_xyzw": [
+          -0.6087614297866821,
+          0.0,
+          0.0,
+          0.7933533191680908
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.34,
+        0.31,
+        0.038
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "C1",
+        "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+        "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+        "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+        "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+        "confidence": "high panel identity; medium region arrangement; low dimensions"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "Panel5__Engine",
+          "name": "engine start / stop",
+          "purpose": "engine start / stop",
+          "parent": "Panel5",
+          "node": "/PanelInventory/Panels/Panel5/Panel5__Engine",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              -0.08,
+              0.07,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.125,
+            0.11,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel5/Panel5__Engine/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Engine_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel5__Timer",
+          "name": "mission timer",
+          "purpose": "mission timer",
+          "parent": "Panel5",
+          "node": "/PanelInventory/Panels/Panel5/Panel5__Timer",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.08,
+              0.07,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.125,
+            0.11,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel5/Panel5__Timer/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Timer_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "DO NOT FILL: open reservation blocked by ACA housing; reconcile layout and validate clearance before any future component installation",
+          "external_occupant": null,
+          "physical_blank_omitted": true,
+          "replacement_allowed": false,
+          "installation_status": "blocked-by-ACA-clearance",
+          "omission_reason": "ACA housing crossing; logical timer slot retained, physical placement unresolved; empty placeholder Xform intentional"
+        },
+        {
+          "id": "Panel5__Translation",
+          "name": "descent rate / +X",
+          "purpose": "descent rate / +X",
+          "parent": "Panel5",
+          "node": "/PanelInventory/Panels/Panel5/Panel5__Translation",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              -0.08,
+              -0.068,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.125,
+            0.11,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel5/Panel5__Translation/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Translation_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel5__Lighting",
+          "name": "lighting",
+          "purpose": "lighting",
+          "parent": "Panel5",
+          "node": "/PanelInventory/Panels/Panel5/Panel5__Lighting",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.08,
+              -0.068,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.125,
+            0.11,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel5/Panel5__Lighting/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Lighting_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/Panel5_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/Panel5/Frame"
+    },
+    {
+      "id": "Panel6",
+      "name": "Panel 6 \u2014 abort guidance",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/Panel6",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.5587999820709229,
+          0.8983525633811951,
+          -0.2950824499130249
+        ],
+        "quaternion_xyzw": [
+          -0.6087614297866821,
+          0.0,
+          0.0,
+          0.7933533191680908
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.34,
+        0.31,
+        0.038
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "C1",
+        "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+        "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+        "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+        "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+        "confidence": "high panel identity; medium region arrangement; low dimensions"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "Panel6__DEDA",
+          "name": "DEDA",
+          "purpose": "DEDA",
+          "parent": "Panel6",
+          "node": "/PanelInventory/Panels/Panel6/Panel6__DEDA",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.042,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.2,
+            0.25,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel6/Panel6__DEDA/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel6_Labels/Panel6__DEDA_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel6__AGS",
+          "name": "AGS status / engine stop",
+          "purpose": "AGS status / engine stop",
+          "parent": "Panel6",
+          "node": "/PanelInventory/Panels/Panel6/Panel6__AGS",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              -0.112,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.072,
+            0.25,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel6/Panel6__AGS/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel6_Labels/Panel6__AGS_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/Panel6_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/Panel6/Frame"
+    },
+    {
+      "id": "Panel8",
+      "name": "Panel 8 \u2014 commander side",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/Panel8",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.91,
+          0.89,
+          -0.19
+        ],
+        "quaternion_xyzw": [
+          -0.43045932054519653,
+          0.5609855651855469,
+          0.4304593503475189,
+          0.5609855055809021
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.7,
+        0.3,
+        0.03
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "C1",
+        "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+        "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+        "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+        "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+        "confidence": "high panel identity; medium region arrangement; low dimensions"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "Panel8__Region1",
+          "name": "explosive devices",
+          "purpose": "explosive devices",
+          "parent": "Panel8",
+          "node": "/PanelInventory/Panels/Panel8/Panel8__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              -0.22666666666666666,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.21866666666666665,
+            0.27499999999999997,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel8/Panel8__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region1_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel8__Region2",
+          "name": "audio",
+          "purpose": "audio",
+          "parent": "Panel8",
+          "node": "/PanelInventory/Panels/Panel8/Panel8__Region2",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.0,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.21866666666666665,
+            0.27499999999999997,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel8/Panel8__Region2/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region2_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel8__Region3",
+          "name": "heaters / vents",
+          "purpose": "heaters / vents",
+          "parent": "Panel8",
+          "node": "/PanelInventory/Panels/Panel8/Panel8__Region3",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.22666666666666666,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.21866666666666665,
+            0.27499999999999997,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel8/Panel8__Region3/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region3_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/Panel8_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/Panel8/Frame"
+    },
+    {
+      "id": "Panel11",
+      "name": "Panel 11 \u2014 commander breakers",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/Panel11",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.94,
+          1.5,
+          -0.1
+        ],
+        "quaternion_xyzw": [
+          -0.12278779596090317,
+          0.6963642835617065,
+          0.12278780341148376,
+          0.6963642239570618
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.77,
+        0.36,
+        0.03
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "C1",
+        "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+        "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+        "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+        "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+        "confidence": "high panel identity; medium region arrangement; low dimensions"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "Panel11__Region1",
+          "name": "breaker strip 1",
+          "purpose": "breaker strip 1",
+          "parent": "Panel11",
+          "node": "/PanelInventory/Panels/Panel11/Panel11__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.13599999999999998,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.745,
+            0.05999999999999999,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel11/Panel11__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region1_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel11__Region2",
+          "name": "breaker strip 2",
+          "purpose": "breaker strip 2",
+          "parent": "Panel11",
+          "node": "/PanelInventory/Panels/Panel11/Panel11__Region2",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.06799999999999999,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.745,
+            0.05999999999999999,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel11/Panel11__Region2/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region2_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel11__Region3",
+          "name": "breaker strip 3",
+          "purpose": "breaker strip 3",
+          "parent": "Panel11",
+          "node": "/PanelInventory/Panels/Panel11/Panel11__Region3",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.745,
+            0.05999999999999999,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel11/Panel11__Region3/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region3_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel11__Region4",
+          "name": "breaker strip 4",
+          "purpose": "breaker strip 4",
+          "parent": "Panel11",
+          "node": "/PanelInventory/Panels/Panel11/Panel11__Region4",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              -0.06799999999999998,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.745,
+            0.05999999999999999,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel11/Panel11__Region4/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region4_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel11__Region5",
+          "name": "breaker strip 5",
+          "purpose": "breaker strip 5",
+          "parent": "Panel11",
+          "node": "/PanelInventory/Panels/Panel11/Panel11__Region5",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              -0.13599999999999998,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.745,
+            0.05999999999999999,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel11/Panel11__Region5/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region5_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/Panel11_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/Panel11/Frame"
+    },
+    {
+      "id": "Panel12",
+      "name": "Panel 12 \u2014 pilot communications",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/Panel12",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.91,
+          0.89,
+          -0.19
+        ],
+        "quaternion_xyzw": [
+          -0.43045932054519653,
+          -0.5609855651855469,
+          -0.4304593503475189,
+          0.5609855055809021
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.7,
+        0.3,
+        0.03
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "C1",
+        "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+        "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+        "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+        "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+        "confidence": "high panel identity; medium region arrangement; low dimensions"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "Panel12__Region1",
+          "name": "audio",
+          "purpose": "audio",
+          "parent": "Panel12",
+          "node": "/PanelInventory/Panels/Panel12/Panel12__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              -0.22666666666666666,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.21866666666666665,
+            0.27499999999999997,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel12/Panel12__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region1_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel12__Region2",
+          "name": "communications",
+          "purpose": "communications",
+          "parent": "Panel12",
+          "node": "/PanelInventory/Panels/Panel12/Panel12__Region2",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.0,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.21866666666666665,
+            0.27499999999999997,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel12/Panel12__Region2/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region2_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel12__Region3",
+          "name": "antenna aiming",
+          "purpose": "antenna aiming",
+          "parent": "Panel12",
+          "node": "/PanelInventory/Panels/Panel12/Panel12__Region3",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.22666666666666666,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.21866666666666665,
+            0.27499999999999997,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel12/Panel12__Region3/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region3_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/Panel12_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/Panel12/Frame"
+    },
+    {
+      "id": "Panel14",
+      "name": "Panel 14 \u2014 electrical power",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/Panel14",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.99,
+          1.18,
+          -0.15
+        ],
+        "quaternion_xyzw": [
+          -0.3182676434516907,
+          -0.6314314603805542,
+          -0.31826767325401306,
+          0.6314314603805542
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.7,
+        0.22,
+        0.03
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "C1",
+        "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+        "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+        "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+        "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+        "confidence": "high panel identity; medium region arrangement; low dimensions"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "Panel14__Region1",
+          "name": "power monitoring",
+          "purpose": "power monitoring",
+          "parent": "Panel14",
+          "node": "/PanelInventory/Panels/Panel14/Panel14__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              -0.16999999999999998,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.33199999999999996,
+            0.195,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel14/Panel14__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel14_Labels/Panel14__Region1_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel14__Region2",
+          "name": "battery distribution",
+          "purpose": "battery distribution",
+          "parent": "Panel14",
+          "node": "/PanelInventory/Panels/Panel14/Panel14__Region2",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.16999999999999998,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.33199999999999996,
+            0.195,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel14/Panel14__Region2/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel14_Labels/Panel14__Region2_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/Panel14_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/Panel14/Frame"
+    },
+    {
+      "id": "Panel16",
+      "name": "Panel 16 \u2014 pilot breakers",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/Panel16",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.94,
+          1.52,
+          -0.1
+        ],
+        "quaternion_xyzw": [
+          -0.12278779596090317,
+          -0.6963642835617065,
+          -0.12278780341148376,
+          0.6963642239570618
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.77,
+        0.3,
+        0.03
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "C1",
+        "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+        "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+        "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+        "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+        "confidence": "high panel identity; medium region arrangement; low dimensions"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "Panel16__Region1",
+          "name": "breaker strip 1",
+          "purpose": "breaker strip 1",
+          "parent": "Panel16",
+          "node": "/PanelInventory/Panels/Panel16/Panel16__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.10499999999999998,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.745,
+            0.06199999999999999,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel16/Panel16__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region1_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel16__Region2",
+          "name": "breaker strip 2",
+          "purpose": "breaker strip 2",
+          "parent": "Panel16",
+          "node": "/PanelInventory/Panels/Panel16/Panel16__Region2",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.03499999999999999,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.745,
+            0.06199999999999999,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel16/Panel16__Region2/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region2_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel16__Region3",
+          "name": "breaker strip 3",
+          "purpose": "breaker strip 3",
+          "parent": "Panel16",
+          "node": "/PanelInventory/Panels/Panel16/Panel16__Region3",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              -0.035,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.745,
+            0.06199999999999999,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel16/Panel16__Region3/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region3_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "Panel16__Region4",
+          "name": "breaker strip 4",
+          "purpose": "breaker strip 4",
+          "parent": "Panel16",
+          "node": "/PanelInventory/Panels/Panel16/Panel16__Region4",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              -0.10499999999999998,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.745,
+            0.06199999999999999,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/Panel16/Panel16__Region4/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region4_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/Panel16_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/Panel16/Frame"
+    },
+    {
+      "id": "ORDEAL",
+      "name": "ORDEAL",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/ORDEAL",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.96,
+          1.1,
+          0.47
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.7071067690849304,
+          0.0,
+          0.7071067690849304
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.25,
+        0.14,
+        0.03
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "C1",
+        "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+        "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+        "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+        "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+        "confidence": "high panel identity; medium region arrangement; low dimensions"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "ORDEAL__Region1",
+          "name": "orbital reference controls",
+          "purpose": "orbital reference controls",
+          "parent": "ORDEAL",
+          "node": "/PanelInventory/Panels/ORDEAL/ORDEAL__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0.0,
+              0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.222,
+            0.11500000000000002,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/ORDEAL/ORDEAL__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/ORDEAL_Labels/ORDEAL__Region1_Label",
+          "source": {
+            "source_id": "C1",
+            "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+            "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+            "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+            "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+            "confidence": "high panel identity; medium region arrangement; low dimensions"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/ORDEAL_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/ORDEAL/Frame"
+    },
+    {
+      "id": "OpticalAOT",
+      "name": "Optical \u2014 AOT",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/OpticalAOT",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0,
+          1.96,
+          -0.65
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.18,
+        0.18,
+        0.03
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "ad016",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad016.gif",
+        "locator": "complete labeled drawing; evidence/ad016.gif",
+        "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+        "confidence": "high named region; medium side relationship; low pose/envelope"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "OpticalAOT__Region1",
+          "name": "alignment optical telescope",
+          "purpose": "alignment optical telescope",
+          "parent": "OpticalAOT",
+          "node": "/PanelInventory/Panels/OpticalAOT/OpticalAOT__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.156,
+            0.153,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/OpticalAOT/OpticalAOT__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/OpticalAOT_Labels/OpticalAOT__Region1_Label",
+          "source": {
+            "source_id": "ad016",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad016.gif",
+            "locator": "complete labeled drawing; evidence/ad016.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/OpticalAOT_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/OpticalAOT/Frame"
+    },
+    {
+      "id": "UtilityLights",
+      "name": "Overhead \u2014 utility lights",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/UtilityLights",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.18,
+          2.06,
+          -0.59
+        ],
+        "quaternion_xyzw": [
+          -0.2164396196603775,
+          0.0,
+          0.0,
+          0.9762960076332092
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.2,
+        0.07,
+        0.03
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "ad013",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad013.gif",
+        "locator": "complete labeled drawing; evidence/ad013.gif",
+        "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+        "confidence": "high named region; medium side relationship; low pose/envelope"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "UtilityLights__Region1",
+          "name": "utility light switches",
+          "purpose": "utility light switches",
+          "parent": "UtilityLights",
+          "node": "/PanelInventory/Panels/UtilityLights/UtilityLights__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.17600000000000002,
+            0.043000000000000003,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/UtilityLights/UtilityLights__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/UtilityLights_Labels/UtilityLights__Region1_Label",
+          "source": {
+            "source_id": "ad013",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad013.gif",
+            "locator": "complete labeled drawing; evidence/ad013.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/UtilityLights_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/UtilityLights/Frame"
+    },
+    {
+      "id": "OpticalCOAS",
+      "name": "Optical \u2014 COAS",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/OpticalCOAS",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.61,
+          1.94,
+          -0.37
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.1736481785774231,
+          0.0,
+          0.9848077297210693
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.12,
+        0.16,
+        0.03
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "ad016",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad016.gif",
+        "locator": "complete labeled drawing; evidence/ad016.gif",
+        "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+        "confidence": "high named region; medium side relationship; low pose/envelope"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "OpticalCOAS__Region1",
+          "name": "crew optical alignment sight",
+          "purpose": "crew optical alignment sight",
+          "parent": "OpticalCOAS",
+          "node": "/PanelInventory/Panels/OpticalCOAS/OpticalCOAS__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.096,
+            0.133,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/OpticalCOAS/OpticalCOAS__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/OpticalCOAS_Labels/OpticalCOAS__Region1_Label",
+          "source": {
+            "source_id": "ad016",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad016.gif",
+            "locator": "complete labeled drawing; evidence/ad016.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/OpticalCOAS_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/OpticalCOAS/Frame"
+    },
+    {
+      "id": "SequenceCamera",
+      "name": "Optical \u2014 camera",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/SequenceCamera",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.69,
+          1.97,
+          -0.33
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          -0.1736481785774231,
+          0.0,
+          0.9848077297210693
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.14,
+        0.14,
+        0.03
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "ad016",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad016.gif",
+        "locator": "complete labeled drawing; evidence/ad016.gif",
+        "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+        "confidence": "high named region; medium side relationship; low pose/envelope"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "SequenceCamera__Region1",
+          "name": "sequence camera",
+          "purpose": "sequence camera",
+          "parent": "SequenceCamera",
+          "node": "/PanelInventory/Panels/SequenceCamera/SequenceCamera__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.11600000000000002,
+            0.113,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/SequenceCamera/SequenceCamera__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/SequenceCamera_Labels/SequenceCamera__Region1_Label",
+          "source": {
+            "source_id": "ad016",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad016.gif",
+            "locator": "complete labeled drawing; evidence/ad016.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/SequenceCamera_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/SequenceCamera/Frame"
+    },
+    {
+      "id": "ECSOxygen",
+      "name": "ECS \u2014 oxygen",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/ECSOxygen",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.72,
+          1.26,
+          0.87
+        ],
+        "quaternion_xyzw": [
+          -0.0,
+          1.0,
+          -0.0,
+          -4.371138828673793e-08
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.37,
+        0.34,
+        0.04
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "ad017",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+        "locator": "complete labeled drawing; evidence/ad017.gif",
+        "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+        "confidence": "high named region; medium side relationship; low pose/envelope"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "ECSOxygen__Region1",
+          "name": "oxygen control module",
+          "purpose": "oxygen control module",
+          "parent": "ECSOxygen",
+          "node": "/PanelInventory/Panels/ECSOxygen/ECSOxygen__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.08,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.346,
+            0.153,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/ECSOxygen/ECSOxygen__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/ECSOxygen_Labels/ECSOxygen__Region1_Label",
+          "source": {
+            "source_id": "ad017",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+            "locator": "complete labeled drawing; evidence/ad017.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "ECSOxygen__Region2",
+          "name": "oxygen hoses",
+          "purpose": "oxygen hoses",
+          "parent": "ECSOxygen",
+          "node": "/PanelInventory/Panels/ECSOxygen/ECSOxygen__Region2",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              -0.08,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.346,
+            0.153,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/ECSOxygen/ECSOxygen__Region2/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/ECSOxygen_Labels/ECSOxygen__Region2_Label",
+          "source": {
+            "source_id": "ad017",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+            "locator": "complete labeled drawing; evidence/ad017.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/ECSOxygen_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/ECSOxygen/Frame"
+    },
+    {
+      "id": "ECSWater",
+      "name": "ECS \u2014 water",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/ECSWater",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.7,
+          0.62,
+          0.88
+        ],
+        "quaternion_xyzw": [
+          -0.0,
+          1.0,
+          -0.0,
+          -4.371138828673793e-08
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.4,
+        0.3,
+        0.04
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "ad017",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+        "locator": "complete labeled drawing; evidence/ad017.gif",
+        "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+        "confidence": "high named region; medium side relationship; low pose/envelope"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "ECSWater__Region1",
+          "name": "water control module",
+          "purpose": "water control module",
+          "parent": "ECSWater",
+          "node": "/PanelInventory/Panels/ECSWater/ECSWater__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.06999999999999999,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.376,
+            0.13299999999999998,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/ECSWater/ECSWater__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/ECSWater_Labels/ECSWater__Region1_Label",
+          "source": {
+            "source_id": "ad017",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+            "locator": "complete labeled drawing; evidence/ad017.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "ECSWater__Region2",
+          "name": "water dispenser",
+          "purpose": "water dispenser",
+          "parent": "ECSWater",
+          "node": "/PanelInventory/Panels/ECSWater/ECSWater__Region2",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              -0.06999999999999999,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.376,
+            0.13299999999999998,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/ECSWater/ECSWater__Region2/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/ECSWater_Labels/ECSWater__Region2_Label",
+          "source": {
+            "source_id": "ad017",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+            "locator": "complete labeled drawing; evidence/ad017.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/ECSWater_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/ECSWater/Frame"
+    },
+    {
+      "id": "ECSRecirculation",
+      "name": "ECS \u2014 recirculation",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/ECSRecirculation",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.45,
+          0.34,
+          0.89
+        ],
+        "quaternion_xyzw": [
+          -0.0,
+          1.0,
+          -0.0,
+          -4.371138828673793e-08
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.3,
+        0.2,
+        0.04
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "ad017",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+        "locator": "complete labeled drawing; evidence/ad017.gif",
+        "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+        "confidence": "high named region; medium side relationship; low pose/envelope"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "ECSRecirculation__Region1",
+          "name": "LiOH cartridge",
+          "purpose": "LiOH cartridge",
+          "parent": "ECSRecirculation",
+          "node": "/PanelInventory/Panels/ECSRecirculation/ECSRecirculation__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.045000000000000005,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.27599999999999997,
+            0.083,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/ECSRecirculation/ECSRecirculation__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/ECSRecirculation_Labels/ECSRecirculation__Region1_Label",
+          "source": {
+            "source_id": "ad017",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+            "locator": "complete labeled drawing; evidence/ad017.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "ECSRecirculation__Region2",
+          "name": "recirculation assembly",
+          "purpose": "recirculation assembly",
+          "parent": "ECSRecirculation",
+          "node": "/PanelInventory/Panels/ECSRecirculation/ECSRecirculation__Region2",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              -0.045000000000000005,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.27599999999999997,
+            0.083,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/ECSRecirculation/ECSRecirculation__Region2/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/ECSRecirculation_Labels/ECSRecirculation__Region2_Label",
+          "source": {
+            "source_id": "ad017",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+            "locator": "complete labeled drawing; evidence/ad017.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/ECSRecirculation_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/ECSRecirculation/Frame"
+    },
+    {
+      "id": "ECSCartridgeStowage",
+      "name": "ECS \u2014 cartridge stowage",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/ECSCartridgeStowage",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.85,
+          0.94,
+          0.86
+        ],
+        "quaternion_xyzw": [
+          -0.0,
+          1.0,
+          -0.0,
+          -4.371138828673793e-08
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.22,
+        0.22,
+        0.04
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "ad017",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+        "locator": "complete labeled drawing; evidence/ad017.gif",
+        "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+        "confidence": "high named region; medium side relationship; low pose/envelope"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "ECSCartridgeStowage__Region1",
+          "name": "LiOH stowage",
+          "purpose": "LiOH stowage",
+          "parent": "ECSCartridgeStowage",
+          "node": "/PanelInventory/Panels/ECSCartridgeStowage/ECSCartridgeStowage__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.196,
+            0.193,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/ECSCartridgeStowage/ECSCartridgeStowage__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/ECSCartridgeStowage_Labels/ECSCartridgeStowage__Region1_Label",
+          "source": {
+            "source_id": "ad017",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+            "locator": "complete labeled drawing; evidence/ad017.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/ECSCartridgeStowage_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/ECSCartridgeStowage/Frame"
+    },
+    {
+      "id": "AftGuidance",
+      "name": "Aft \u2014 guidance electronics",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/AftGuidance",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.66,
+          1.36,
+          0.92
+        ],
+        "quaternion_xyzw": [
+          -0.0,
+          1.0,
+          -0.0,
+          -4.371138828673793e-08
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.36,
+        0.3,
+        0.04
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "ad017",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+        "locator": "complete labeled drawing; evidence/ad017.gif",
+        "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+        "confidence": "high named region; medium side relationship; low pose/envelope"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "AftGuidance__Region1",
+          "name": "LGC",
+          "purpose": "LGC",
+          "parent": "AftGuidance",
+          "node": "/PanelInventory/Panels/AftGuidance/AftGuidance__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.06999999999999999,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.33599999999999997,
+            0.13299999999999998,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/AftGuidance/AftGuidance__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/AftGuidance_Labels/AftGuidance__Region1_Label",
+          "source": {
+            "source_id": "ad017",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+            "locator": "complete labeled drawing; evidence/ad017.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "AftGuidance__Region2",
+          "name": "DSEA",
+          "purpose": "DSEA",
+          "parent": "AftGuidance",
+          "node": "/PanelInventory/Panels/AftGuidance/AftGuidance__Region2",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              -0.06999999999999999,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.33599999999999997,
+            0.13299999999999998,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/AftGuidance/AftGuidance__Region2/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/AftGuidance_Labels/AftGuidance__Region2_Label",
+          "source": {
+            "source_id": "ad017",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+            "locator": "complete labeled drawing; evidence/ad017.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/AftGuidance_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/AftGuidance/Frame"
+    },
+    {
+      "id": "AftCDU",
+      "name": "Aft \u2014 coupling data",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/AftCDU",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.65,
+          0.49,
+          0.92
+        ],
+        "quaternion_xyzw": [
+          -0.0,
+          1.0,
+          -0.0,
+          -4.371138828673793e-08
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.35,
+        0.24,
+        0.04
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "ad017",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+        "locator": "complete labeled drawing; evidence/ad017.gif",
+        "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+        "confidence": "high named region; medium side relationship; low pose/envelope"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "AftCDU__Region1",
+          "name": "coupling data unit",
+          "purpose": "coupling data unit",
+          "parent": "AftCDU",
+          "node": "/PanelInventory/Panels/AftCDU/AftCDU__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.32599999999999996,
+            0.213,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/AftCDU/AftCDU__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/AftCDU_Labels/AftCDU__Region1_Label",
+          "source": {
+            "source_id": "ad017",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+            "locator": "complete labeled drawing; evidence/ad017.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/AftCDU_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/AftCDU/Frame"
+    },
+    {
+      "id": "AftStowage",
+      "name": "Aft \u2014 equipment stowage",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/AftStowage",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.63,
+          0.94,
+          0.95
+        ],
+        "quaternion_xyzw": [
+          -0.0,
+          1.0,
+          -0.0,
+          -4.371138828673793e-08
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.38,
+        0.39,
+        0.04
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "ad017",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+        "locator": "complete labeled drawing; evidence/ad017.gif",
+        "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+        "confidence": "high named region; medium side relationship; low pose/envelope"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "AftStowage__Region1",
+          "name": "PLSS stowage",
+          "purpose": "PLSS stowage",
+          "parent": "AftStowage",
+          "node": "/PanelInventory/Panels/AftStowage/AftStowage__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.0925,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.356,
+            0.178,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/AftStowage/AftStowage__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/AftStowage_Labels/AftStowage__Region1_Label",
+          "source": {
+            "source_id": "ad017",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+            "locator": "complete labeled drawing; evidence/ad017.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        },
+        {
+          "id": "AftStowage__Region2",
+          "name": "oxygen hose / PLSS",
+          "purpose": "oxygen hose / PLSS",
+          "parent": "AftStowage",
+          "node": "/PanelInventory/Panels/AftStowage/AftStowage__Region2",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              -0.0925,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.356,
+            0.178,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/AftStowage/AftStowage__Region2/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/AftStowage_Labels/AftStowage__Region2_Label",
+          "source": {
+            "source_id": "ad017",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+            "locator": "complete labeled drawing; evidence/ad017.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/AftStowage_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/AftStowage/Frame"
+    },
+    {
+      "id": "AftWaste",
+      "name": "Aft \u2014 waste management",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/AftWaste",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.84,
+          0.26,
+          0.87
+        ],
+        "quaternion_xyzw": [
+          -0.0,
+          1.0,
+          -0.0,
+          -4.371138828673793e-08
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.23,
+        0.14,
+        0.03
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "ad017",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+        "locator": "complete labeled drawing; evidence/ad017.gif",
+        "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+        "confidence": "high named region; medium side relationship; low pose/envelope"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "AftWaste__Region1",
+          "name": "waste management",
+          "purpose": "waste management",
+          "parent": "AftWaste",
+          "node": "/PanelInventory/Panels/AftWaste/AftWaste__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.20600000000000002,
+            0.113,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/AftWaste/AftWaste__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/AftWaste_Labels/AftWaste__Region1_Label",
+          "source": {
+            "source_id": "ad017",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+            "locator": "complete labeled drawing; evidence/ad017.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/AftWaste_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/AftWaste/Frame"
+    },
+    {
+      "id": "OverheadRelief",
+      "name": "Overhead \u2014 hatch equipment",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/OverheadRelief",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.34,
+          2.04,
+          0.55
+        ],
+        "quaternion_xyzw": [
+          0.7071067690849304,
+          0.0,
+          0.0,
+          0.7071067690849304
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.18,
+        0.18,
+        0.03
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "ad017",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+        "locator": "complete labeled drawing; evidence/ad017.gif",
+        "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+        "confidence": "high named region; medium side relationship; low pose/envelope"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "OverheadRelief__Region1",
+          "name": "cabin relief / dump valve",
+          "purpose": "cabin relief / dump valve",
+          "parent": "OverheadRelief",
+          "node": "/PanelInventory/Panels/OverheadRelief/OverheadRelief__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.156,
+            0.153,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/OverheadRelief/OverheadRelief__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/OverheadRelief_Labels/OverheadRelief__Region1_Label",
+          "source": {
+            "source_id": "ad017",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad017.gif",
+            "locator": "complete labeled drawing; evidence/ad017.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/OverheadRelief_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/OverheadRelief/Frame"
+    },
+    {
+      "id": "ForwardRelief",
+      "name": "Forward \u2014 hatch equipment",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/ForwardRelief",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.3,
+          0.55,
+          -0.88
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.15,
+        0.16,
+        0.03
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "ad016",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad016.gif",
+        "locator": "complete labeled drawing; evidence/ad016.gif",
+        "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+        "confidence": "high named region; medium side relationship; low pose/envelope"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "ForwardRelief__Region1",
+          "name": "cabin relief / dump valve",
+          "purpose": "cabin relief / dump valve",
+          "parent": "ForwardRelief",
+          "node": "/PanelInventory/Panels/ForwardRelief/ForwardRelief__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.126,
+            0.133,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/ForwardRelief/ForwardRelief__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/ForwardRelief_Labels/ForwardRelief__Region1_Label",
+          "source": {
+            "source_id": "ad016",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad016.gif",
+            "locator": "complete labeled drawing; evidence/ad016.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/ForwardRelief_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/ForwardRelief/Frame"
+    },
+    {
+      "id": "ForwardStowageCDR",
+      "name": "Forward \u2014 commander stowage",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/ForwardStowageCDR",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.95,
+          0.43,
+          -0.18
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.7071067690849304,
+          0.0,
+          0.7071067690849304
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.32,
+        0.29,
+        0.03
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "ad016",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad016.gif",
+        "locator": "complete labeled drawing; evidence/ad016.gif",
+        "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+        "confidence": "high named region; medium side relationship; low pose/envelope"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "ForwardStowageCDR__Region1",
+          "name": "helmet / filter stowage",
+          "purpose": "helmet / filter stowage",
+          "parent": "ForwardStowageCDR",
+          "node": "/PanelInventory/Panels/ForwardStowageCDR/ForwardStowageCDR__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.296,
+            0.26299999999999996,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/ForwardStowageCDR/ForwardStowageCDR__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/ForwardStowageCDR_Labels/ForwardStowageCDR__Region1_Label",
+          "source": {
+            "source_id": "ad016",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad016.gif",
+            "locator": "complete labeled drawing; evidence/ad016.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/ForwardStowageCDR_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/ForwardStowageCDR/Frame"
+    },
+    {
+      "id": "ForwardStowageLMP",
+      "name": "Forward \u2014 pilot stowage",
+      "parent": "/PanelInventory/Panels",
+      "node": "/PanelInventory/Panels/ForwardStowageLMP",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.95,
+          0.43,
+          -0.18
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          -0.7071067690849304,
+          0.0,
+          0.7071067690849304
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.32,
+        0.29,
+        0.03
+      ],
+      "envelope_center_local_m": [
+        0,
+        0,
+        -0.015
+      ],
+      "dimension_status": "provisional visual estimate",
+      "source": {
+        "source_id": "ad016",
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad016.gif",
+        "locator": "complete labeled drawing; evidence/ad016.gif",
+        "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+        "confidence": "high named region; medium side relationship; low pose/envelope"
+      },
+      "shell_external": false,
+      "slots": [
+        {
+          "id": "ForwardStowageLMP__Region1",
+          "name": "helmet stowage",
+          "purpose": "helmet stowage",
+          "parent": "ForwardStowageLMP",
+          "node": "/PanelInventory/Panels/ForwardStowageLMP/ForwardStowageLMP__Region1",
+          "pose": {
+            "space": "parent-local",
+            "translation_m": [
+              0,
+              0.0,
+              0
+            ],
+            "quaternion_xyzw": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "envelope_m": [
+            0.296,
+            0.26299999999999996,
+            0.003
+          ],
+          "envelope_center_local_m": [
+            0,
+            0,
+            -0.0015
+          ],
+          "default_placeholder_node": "/PanelInventory/Panels/ForwardStowageLMP/ForwardStowageLMP__Region1/Placeholder",
+          "label_node": "/PanelInventory/PlanningLabels/ForwardStowageLMP_Labels/ForwardStowageLMP__Region1_Label",
+          "source": {
+            "source_id": "ad016",
+            "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad016.gif",
+            "locator": "complete labeled drawing; evidence/ad016.gif",
+            "applicability": "1972 Apollo Program Press Information Notebook; not LM5-specific",
+            "confidence": "high named region; medium side relationship; low pose/envelope"
+          },
+          "dimension_status": "provisional; not fabrication",
+          "status": {
+            "modeled": false,
+            "bound": false,
+            "validated": false
+          },
+          "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+          "external_occupant": null,
+          "physical_blank_omitted": false,
+          "replacement_allowed": true,
+          "installation_status": "provisional-layout"
+        }
+      ],
+      "status": {
+        "modeled": "blank reservation",
+        "bound": false,
+        "validated": "pending native hierarchy check"
+      },
+      "default_placeholder_node": null,
+      "label_node": "/PanelInventory/PlanningLabels/ForwardStowageLMP_Labels",
+      "placeholder_policy": "composite panel: replace child slots only",
+      "frame_node": "/PanelInventory/Panels/ForwardStowageLMP/Frame"
+    }
+  ],
+  "external_occupants": [
+    {
+      "id": "FDAI_CDR",
+      "slot": "Panel1__FDAI",
+      "embed": false,
+      "installation": "preserve existing pose and runtime identity; coordinator owns load/binding"
+    },
+    {
+      "id": "DSKY",
+      "slot": "Panel4__DSKY",
+      "embed": false,
+      "installation": "preserve existing pose and runtime identity; coordinator owns load/binding"
+    },
+    {
+      "id": "CommanderPanels",
+      "embed": false,
+      "slots": [
+        "Panel1",
+        "Panel4"
+      ],
+      "asset": "CommanderPanels/CommanderPanels.usdz",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "role": "external shell and aperture surrounds; do not hide on instrument substitution"
+    },
+    {
+      "id": "ACA_CDR",
+      "embed": false,
+      "asset": "HandControllers/ACA.usdz",
+      "pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.49,
+          0.9075,
+          -0.37
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "runtime_identity": "acaHandle",
+      "source": "LM11f7335 Docs/ACAIntegrationHandoff.md",
+      "status": {
+        "modeled": true,
+        "bound": "existing LM runtime",
+        "validated": "owner-native; integrated clearance pending"
+      },
+      "swept_aabb_cabin_m": [
+        [
+          -0.558526,
+          0.9075,
+          -0.45495
+        ],
+        [
+          -0.421474,
+          1.170037,
+          -0.28505
+        ]
+      ],
+      "placeholder": null,
+      "reason": "existing functional controller and fallback owned by LM; do not duplicate"
+    },
+    {
+      "id": "ACA_LMP",
+      "embed": false,
+      "asset": "HandControllers/ACA.usdz",
+      "pose": null,
+      "status": {
+        "modeled": true,
+        "bound": false,
+        "validated": false
+      },
+      "reason": "station pose unresolved; no invented installation"
+    },
+    {
+      "id": "TTCA_CDR_LMP",
+      "embed": false,
+      "asset": "HandControllers/TTCA.usdz",
+      "pose": null,
+      "status": {
+        "modeled": true,
+        "bound": false,
+        "validated": false
+      },
+      "reason": "existing component; station registration and simulation binding unresolved"
+    },
+    {
+      "id": "CabinStructure",
+      "embed": false,
+      "regions": [
+        "ascent engine cover",
+        "overhead hatch and drogue clearance",
+        "forward hatch",
+        "restraints / armrests"
+      ],
+      "reason": "structural/context geometry owner Cabin; descriptive equipment placeholders above do not replace hatch leaves"
+    },
+    {
+      "id": "WindowsLPD",
+      "embed": false,
+      "regions": [
+        "forward windows / shades",
+        "docking window / shade",
+        "LPD marks"
+      ],
+      "reason": "optical worker owns representation and pose revisions"
+    }
+  ],
+  "unresolved": [
+    "All dimensions provisional; no surveyed panel outlines",
+    "Final enclosure and window clearance awaits integrated review",
+    "Later diagram equipment/stowage not certified LM-5 descent configuration",
+    "Individual switches, breakers, hoses and hidden avionics not transcribed"
+  ],
+  "source_contract_sha256": {
+    "Cabin-interface-v1.json": "3cc3cfdab491d9e70172eccd17b44dc44e3609360168b94e70bb98290aacbb24",
+    "WindowsLPD-interface-v1.json": "28bb74258353bbc8365b7a54011782332ff69927c0683154a46b80b8ad24f22f",
+    "CommanderPanels-mounting.json": "eb1efb3ab4ef0d43fc6036ec676431bf8b861cc69e83d26bc15cf2ed0182dde8"
+  },
+  "panel5_opening": {
+    "local_top_rail_omission_x_m": [
+      0.013,
+      0.125
+    ],
+    "fixed_housing_projection_x_m": [
+      0.018,
+      0.1196
+    ],
+    "allowance_per_side_m": 0.005,
+    "allowance_status": "provisional visual clearance, not mechanical seating or hand allowance",
+    "timer_slot_status": "blocked; no physical surface and no automatic replacement",
+    "datum_unchanged": true
+  }
+}

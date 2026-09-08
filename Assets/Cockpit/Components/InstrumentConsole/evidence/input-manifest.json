@@ -1,0 +1,23 @@
+{
+  "base_LMKit": "70c091471bbc1af6f82ba277f6c9cccc7caf01b3",
+  "LM_checkout_head_at_final_audit": "471b4739153750377520bf5d0af776c0ec10933d",
+  "files": {
+    "Assets/Cockpit/Components/InstrumentConsole/evidence/SI-99-15229h.jpg": {
+      "bytes": 2634088,
+      "sha256": "663ed06e149f3aeb991c5589835bfb1afda5c908b23c668a1853d7546572dd6d"
+    },
+    "/Users/zac/.codex/worktrees/591e/LM/LM/LMCommanderStationAssembly.swift": {
+      "bytes": 30976,
+      "sha256": "2da7dcb7e5295b5c4911a2cfa7b07f864d066e8b1503f2727c3f4a3e27da256e"
+    },
+    "/Users/zac/.codex/worktrees/591e/LM/LM/LMCommanderStationScene.swift": {
+      "bytes": 111844,
+      "sha256": "821f2f8dea423c9bf3240b29e1be1333234eda3cba06950f1bc0ab0f1d04a0ef"
+    },
+    "/Users/zac/.codex/worktrees/591e/LM/LM/LMImportedSystemsHardware.swift": {
+      "bytes": 8114,
+      "sha256": "c42a208fee672cf9d812b59454f563cfab6c52ba722756c0fe00439b8cf2f01d"
+    }
+  },
+  "photo": "user-supplied Smithsonian LM-2 image, inspected for broad shape; no dimensional calibration"
+}

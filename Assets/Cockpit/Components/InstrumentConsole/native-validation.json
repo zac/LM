@@ -1,0 +1,9 @@
+{
+  "assertions" : 87,
+  "input_geometry" : "absent; structural overlay only",
+  "model_entities" : 39,
+  "native_load" : "PASS",
+  "platform" : "macOS RealityKit",
+  "root_identity" : "PASS",
+  "visionOS" : "NOT RUN"
+}
