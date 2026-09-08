@@ -1,0 +1,39 @@
+{
+  "retrieved": "2026-09-08",
+  "archive_pdf": "https://archive.org/download/AgcApertureCardsBatchKeithley/AgcApertureCardsBatchKeithley.pdf",
+  "outline_page_one_based": 73,
+  "assembly_G_page_one_based": 4,
+  "drawing_links": "research.md",
+  "files": [
+    {
+      "file": "scratch/drawings.pdf",
+      "bytes": 38459439,
+      "sha256": "fb177b5b0a47e78f70f8c9e60aed7c8f4eba231be1bb5db0cf397e40c1d4d187"
+    },
+    {
+      "file": "evidence/2003956-B.png",
+      "bytes": 508941,
+      "sha256": "b42b39b21a0117ce274d9ea5cb5287336744a87af276df5140f636b8b4fbf85d"
+    },
+    {
+      "file": "evidence/2003994-G.png",
+      "bytes": 882613,
+      "sha256": "e691ab93c1f59081ee2ce4676883c4b95d1fe9d139a6e0a2abaa48d88625a595"
+    },
+    {
+      "file": "evidence/research-1005025-sheet2.jpg",
+      "bytes": 4404842,
+      "sha256": "0cf14516eb72e32ff0101f2783472d3fbb7bd2df48e61f1f9d78602835cb56eb"
+    },
+    {
+      "file": "evidence/research-1005025-sheet3.jpg",
+      "bytes": 4028696,
+      "sha256": "b6c9c192d4052c74b61cac9947c1bc3be5c5ed4903491e489e7f6f8124424e80"
+    },
+    {
+      "file": "evidence/research-1005025.jpg",
+      "bytes": 3641564,
+      "sha256": "8a68785bd259889c86edde06e3e07bc1c4fbf6f86f228809caa4540ca8340327"
+    }
+  ]
+}

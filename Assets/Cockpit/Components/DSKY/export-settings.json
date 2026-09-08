@@ -1,0 +1,20 @@
+{
+  "selected_objects_only": true,
+  "export_animation": false,
+  "export_materials": true,
+  "generate_preview_surface": true,
+  "generate_materialx_network": false,
+  "convert_orientation": true,
+  "export_global_forward_selection": "NEGATIVE_Z",
+  "export_global_up_selection": "Y",
+  "root_prim_path": "",
+  "merge_parent_xform": false,
+  "convert_scene_units": "METERS",
+  "meters_per_unit": 1,
+  "export_lights": false,
+  "export_cameras": false,
+  "convert_world_material": false,
+  "relative_paths": true,
+  "triangulate_meshes": true,
+  "export_custom_properties": true
+}

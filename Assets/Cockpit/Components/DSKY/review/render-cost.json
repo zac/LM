@@ -1,0 +1,29 @@
+{
+  "engine": "Workbench; lighting preview Eevee",
+  "resolution": {
+    "front": [
+      900,
+      900
+    ],
+    "oblique": [
+      900,
+      900
+    ],
+    "key-detail": [
+      900,
+      900
+    ],
+    "lighting-preview": [
+      720,
+      720
+    ]
+  },
+  "seconds": {
+    "front": 0.21504024975001812,
+    "oblique": 0.09364975010976195,
+    "key-detail": 0.09055529208853841,
+    "lighting-preview": 0.4006945420987904
+  },
+  "peak_memory": "not measured",
+  "machine": "zacbookpro.local"
+}
