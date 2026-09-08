@@ -13,7 +13,7 @@ struct LMCommanderStationAssemblyTests {
                                   ("Mount_FDAI", LMCommanderStationGeometry.fdaiMountPositionMeters)] {
             let entity = try LMCommanderStationAssembly.unique(name, in: assembly.cabin)
             #expect(simd_distance(entity.position(relativeTo: assembly.cabin), position) < 0.00001)
-            #expect(entity.scale == SIMD3<Float>(repeating: 1))
+            #expect(simd_length(entity.scale - SIMD3<Float>(repeating: 1)) < 0.00001)
             #expect(entity.children.allSatisfy { !$0.isEnabled })
         }
         let lpd = LMLandingPointDesignator()
