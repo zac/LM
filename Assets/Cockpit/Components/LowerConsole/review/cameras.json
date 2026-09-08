@@ -1,0 +1,48 @@
+{
+  "basis": "Cabin Y-up meters",
+  "views": [
+    {
+      "name": "crew-entry",
+      "eye": [
+        -0.5588,
+        1.78,
+        0.17
+      ],
+      "target": [
+        -0.18,
+        1.08,
+        -0.61
+      ],
+      "lens_mm": 34
+    },
+    {
+      "name": "dsky-oblique",
+      "eye": [
+        -0.38,
+        1.48,
+        -0.12
+      ],
+      "target": [
+        0,
+        1.06,
+        -0.64
+      ],
+      "lens_mm": 44
+    },
+    {
+      "name": "controller-oblique",
+      "eye": [
+        -0.17,
+        1.33,
+        0.035
+      ],
+      "target": [
+        -0.49,
+        0.94,
+        -0.35
+      ],
+      "lens_mm": 39
+    }
+  ],
+  "note": "Actual current70c0914 package geometry; peers under concurrent enclosure work not substituted here. Workbench ignores emissive/transparency optics and is geometry inspection only."
+}

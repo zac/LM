@@ -1,0 +1,176 @@
+{
+  "LMKit_revision": "70c091471bbc1af6f82ba277f6c9cccc7caf01b3",
+  "LM_runtime_revision": "471b4739153750377520bf5d0af776c0ec10933d",
+  "runtime_sources": [
+    {
+      "file": "LM/LMCommanderStationGeometry.swift",
+      "preserved": "evidence/runtime/LMCommanderStationGeometry.swift",
+      "sha256": "447ce35526b475ad71b889083c3cf28f0d673ca0b22076e37a6c00336d371659"
+    },
+    {
+      "file": "LM/LMImportedACA.swift",
+      "preserved": "evidence/runtime/LMImportedACA.swift",
+      "sha256": "1ee14d530a399b45c669ef8ff217f2ff58c8f78f2e8b96c14f09fe3c46c63741"
+    },
+    {
+      "file": "LM/LMCommanderStationAssembly.swift",
+      "preserved": "evidence/runtime/LMCommanderStationAssembly.swift",
+      "sha256": "2da7dcb7e5295b5c4911a2cfa7b07f864d066e8b1503f2727c3f4a3e27da256e"
+    }
+  ],
+  "packaged_assets": [
+    {
+      "path": "AltitudeRate/AltitudeRate.usdz",
+      "sha256": "047bd435c51ecb1920aedc8f8b1cefbc9ea9056ac1139503a81abe29b42254c1",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "BreakerBanks/BreakerBanks.usdz",
+      "sha256": "fce4e4248806f4ff963775bc8013e17e6dee370671e656390bb8d05fcddfc217",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "Cabin/Cabin.usdz",
+      "sha256": "9b30f113235bea7832dd0d9f245d3f6ad98bd8a64af2d217943a5489e498c21b",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "CautionWarning/CautionWarning.usdz",
+      "sha256": "580b16119a484c1a6138731e81e6960aab12324524dd267c0b227628e23b743b",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "CommanderPanels/CommanderPanels.usdz",
+      "sha256": "52e4c13cf302e080edbd163fb3f6d26ce53785c28bc49dcefd3a75c876f9d604",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "ControlLibrary/CircuitBreaker.usdz",
+      "sha256": "8f6b6125b943a051e18ac193aedcd3509ba6b1bc82525d420985e3ef1a2649dc",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "ControlLibrary/GuardedSwitch.usdz",
+      "sha256": "38b3f9fa5fc2db6113fafabe4466dbc1ad666d2af0e80268e9e3efc2e5d692ae",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "ControlLibrary/MaintainedToggle.usdz",
+      "sha256": "6071600aa300b4ee00ed12537c5b719497f078012a391c35390ab34135f79b5f",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "ControlLibrary/MomentaryToggle.usdz",
+      "sha256": "615cadfaa1190a2340bd23e518849147a342c0cd927d4101081e6b553ee1f8d9",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "ControlLibrary/RotarySelector.usdz",
+      "sha256": "facc28e727c765d9cc9379509c2e036b90a9331e5976186bb8f0d2b294ec1f3f",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "ControlLibrary/Talkback.usdz",
+      "sha256": "a9c4cb0d8e0a6fbccc06f5cd2c45bf58154b73b7070f2222dc0c763986bba065",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "CrossPointer/CrossPointer.usdz",
+      "sha256": "8095cdf3c12c4b77025e415ad21ea24a5bf51615674fd076f7458b9369ae1eae",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "DSKY/DSKY.usdz",
+      "sha256": "e20a69864d4c7e0ff068172e0e672d9fbcc510c1dc4e97e4db0246fde08fbdfd",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "DescentControls/AttitudeMode.usdz",
+      "sha256": "4e7b811a7ed251bd9065a852a2ed652ca16a5fd06b48beea98702a492dc63f86",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "DescentControls/DescentRate.usdz",
+      "sha256": "ffa295038be35261353a8a0c8fe35316647d4e0b910b7ca108e97f55375cf078",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "EngineControls/EngineButtons.usdz",
+      "sha256": "eedf4dcadf8e075bc3d6084c273ea5a335506d3680966aa528298dcae7bec369",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "EngineControls/LunarContact.usdz",
+      "sha256": "6f97cc39c398f9f19555d7ea283e8d1c711deedd9b762cc529b53725d5f31346",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "FDAI/FDAI.usdz",
+      "sha256": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "HandControllers/ACA.usdz",
+      "sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "HandControllers/TTCA.usdz",
+      "sha256": "c8d165c723aa253868483d959ead394d32c07c766c2af08b731317d1aa371eb6",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "InteriorDetails/InteriorDetails.usdz",
+      "sha256": "069cdfb9923a6953f1ce4ffc5053a948e0c4f76840866553435d778dfd84b201",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "Legacy/lunar_module.usdz",
+      "sha256": "e2588937370ed21d2c84be88c47c35bd3b588f5c9fb0bc9410b3ec89bcf6bb91",
+      "authoring_asset_matches": false,
+      "note": "Legacy exterior is outside cockpit component directory and not Cabin-relative."
+    },
+    {
+      "path": "PanelInventory/PanelInventory.usdz",
+      "sha256": "026a908793a01c3f1c6fa6a024500f70fda8edc75287ac4749003719fb7eaf30",
+      "authoring_asset_matches": false,
+      "note": "Packaged change is planning-label visibility only; source layer otherwise unchanged, per Sources/LMKit/Resources/PanelInventory/packaging.json. Final clearance checks use packaged USDZ with planning labels omitted, matching normal runtime presentation."
+    },
+    {
+      "path": "PropulsionInstruments/PropulsionInstruments.usdz",
+      "sha256": "9eedc3e28ebc5be2b5da07c5c5ff99176c17df66df974879d0348d8061d8d1e8",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "Timers/EventTimer.usdz",
+      "sha256": "d22f9ec7b70c28a12725414f9150f2edb3f641c97c91c67cd0b7409326d8b540",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "Timers/EventTimerControls.usdz",
+      "sha256": "3cf2edba9154f991e386337acda721a3cd163c5cef22c5164f889ec28cce3cbb",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "Timers/MissionTimer.usdz",
+      "sha256": "ef6eb8d8d54de5dc39b31f0f9f38a3151343dc8c73ede7762615c41613570bea",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "Timers/MissionTimerControls.usdz",
+      "sha256": "f887e0508328d50b8c2e40bcb0bfaa4daa2379ea902a82e6ceb9a03258f121d5",
+      "authoring_asset_matches": true
+    },
+    {
+      "path": "WindowsLPD/WindowsLPD.usdz",
+      "sha256": "91c03cc4b6826473cfdccdce195fece5f591b778b8afdb3a71505df8f528cc32",
+      "authoring_asset_matches": true
+    }
+  ],
+  "reference": {
+    "source": "User supplied /Users/zac/Downloads/SI 99-15229h.jpg",
+    "preserved": "evidence/SI-99-15229h.jpg",
+    "sha256": "663ed06e149f3aeb991c5589835bfb1afda5c908b23c668a1853d7546572dd6d",
+    "applicability": "Museum cockpit photo; qualitative lower console massing and enclosing sheet surfaces only. This image shows a vacant DSKY position; actual installed DSKY pose is inherited from the app. No mission or survey accuracy claimed."
+  }
+}
