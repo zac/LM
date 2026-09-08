@@ -66,9 +66,24 @@ final class PoweredDescentSession {
     var rhcPitch = 0
     var rhcYaw = 0
     var rhcRoll = 0
+    /// A direct gesture holds this generation until release. Late samples from
+    /// a stopped/deactivated/released interaction can never reacquire control.
+    func beginACAInteraction() -> UUID? {
+        guard isRunning, !isPaused, isSceneActive else { return nil }
+        return acaInteractionGeneration
+    }
+
+    @discardableResult
+    func updateACAInteraction(_ input: LMACANormalizedInput, generation: UUID) -> Bool {
+        guard generation == acaInteractionGeneration, isRunning, !isPaused, isSceneActive else { return false }
+        setACA(pitch: input.pitch, yaw: input.yaw, roll: input.roll)
+        return true
+    }
+
     /// Continuous analog ACA axes (-1…1). Buttons add discrete ±42-count
     /// commands on top; the combined deflection clamps at ±57 counts.
     var aca = LMACANormalizedInput.neutral
+    private var acaInteractionGeneration = UUID()
     private(set) var rodSwitchPosition = RODSwitchPosition.neutral
 
     let terrainSimulationGate = LMTerrainSimulationGate()
@@ -571,19 +586,20 @@ final class PoweredDescentSession {
     /// Continuous analog ACA axes, clamped to -1…1 per axis.
     func setACA(pitch: Double? = nil, yaw: Double? = nil, roll: Double? = nil) {
         if let pitch {
-            aca.pitch = min(max(pitch, -1), 1)
+            aca.pitch = LMACANormalizedInput.clamp(pitch)
         }
         if let yaw {
-            aca.yaw = min(max(yaw, -1), 1)
+            aca.yaw = LMACANormalizedInput.clamp(yaw)
         }
         if let roll {
-            aca.roll = min(max(roll, -1), 1)
+            aca.roll = LMACANormalizedInput.clamp(roll)
         }
     }
 
     /// Handle released or hand tracking lost: every axis returns to neutral
     /// before the next simulation frame is built.
     func releaseACA() {
+        acaInteractionGeneration = UUID()
         aca = .neutral
     }
 
