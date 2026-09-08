@@ -116,6 +116,7 @@ final class LMCommanderStationScene {
     private var lastTerrainPresentationBlendBucket: Int?
     private var lastMissionShadowDistanceMeters: Float?
     private var artistCabin: Entity?
+    private(set) var commanderAssembly: LMCommanderStationAssembly?
     private var exteriorLunarModule: Entity?
     private var fdaiBall: Entity?
     private var importedFDAI: LMImportedFDAI?
@@ -186,6 +187,7 @@ final class LMCommanderStationScene {
         installImportedFDAI()
         #if DEBUG
         LMInstrumentValidation.frameObserver(root)
+        LMCommanderStationAssemblyObserver.frame(root)
         #endif
     }
 
@@ -628,13 +630,16 @@ final class LMCommanderStationScene {
 
     @discardableResult
     func loadArtistCabinIfAvailable() async throws -> Bool {
-        guard let cabin = try await LMCockpitAssetContract.loadIfAvailable() else {
-            return false
+        guard commanderAssembly == nil else { return true }
+        // The skeleton is explicitly opt-in until mechanical/headset review.
+        if ProcessInfo.processInfo.arguments.contains("--commander-station-assembly") {
+            return installCommanderAssembly()
         }
+        // Preserve the existing optional artist-cabin path when not reviewing
+        // the LMKit skeleton.
+        guard let cabin = try await LMCockpitAssetContract.loadIfAvailable() else { return false }
         let issues = LMCockpitAssetContract.validate(cabin)
-        guard issues.isEmpty else {
-            throw AssetError.invalidArtistCabin(issues)
-        }
+        guard issues.isEmpty else { throw AssetError.invalidArtistCabin(issues) }
         for name in ["DSKY_Mount", "FDAI_Mount"] {
             cabin.findEntity(named: name)?.isEnabled = false
         }
@@ -644,6 +649,51 @@ final class LMCommanderStationScene {
         artistCabin = cabin
         proceduralCabin.isEnabled = false
         return true
+    }
+
+    @discardableResult
+    func installCommanderAssembly(
+        load: @MainActor () throws -> LMCommanderStationAssembly = { try LMCommanderStationAssembly.load() }
+    ) -> Bool {
+        guard commanderAssembly == nil else { return true }
+        do {
+            // All IO and validation precede any mutation of the active scene.
+            let assembly = try load()
+            guard importedDSKY != nil, importedFDAI != nil else {
+                logger.error("Cabin assembly requires both live imported instruments; fallback retained")
+                return false
+            }
+            let dskyReservation = try LMCommanderStationAssembly.unique("Mount_DSKY", in: assembly.cabin)
+            let fdaiReservation = try LMCommanderStationAssembly.unique("Mount_FDAI", in: assembly.cabin)
+            // Commit the reviewed optional registration by moving the existing
+            // mounts, never recreating instruments or their live key dictionaries.
+            dskyFaceRoot.position = dskyReservation.position(relativeTo: assembly.cabin)
+            dskyFaceRoot.orientation = dskyReservation.orientation(relativeTo: assembly.cabin)
+            fdaiMount.position = fdaiReservation.position(relativeTo: assembly.cabin)
+            fdaiMount.orientation = fdaiReservation.orientation(relativeTo: assembly.cabin)
+            let retained = Entity()
+            retained.name = "App optical marks and functional control supports"
+            // These meshes are already expressed in cabin coordinates. Preserve
+            // the exact objects/transforms, including both independent LPD grids.
+            let retainedNames: Set<String> = ["ACA pedestal", "Panel 5 DES RATE switch plate",
+                LMCockpitAssetContract.Node.landingPointDesignatorInner.rawValue,
+                LMCockpitAssetContract.Node.landingPointDesignatorOuter.rawValue]
+            for entity in Array(proceduralCabin.children)
+                where retainedNames.contains(entity.name) || entity.name.hasPrefix("LPD ") {
+                retained.addChild(entity)
+            }
+            assembly.root.addChild(retained)
+            cabinFrame.addChild(assembly.root)
+            proceduralCabin.isEnabled = false
+            artistCabin?.removeFromParent()
+            artistCabin = assembly.root
+            commanderAssembly = assembly
+            logger.notice("Commander skeleton installed atomically; live instruments and optical basis retained")
+            return true
+        } catch {
+            logger.error("Commander skeleton unavailable; procedural fallback retained: \(String(describing: error), privacy: .public)")
+            return false
+        }
     }
 
     func setACAVisual(_ input: LMACANormalizedInput) {
