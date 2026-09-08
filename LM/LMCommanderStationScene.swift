@@ -62,6 +62,32 @@ final class LMCommanderStationScene {
         return String(format: "Measured floor: %.0f m · finer relief modeled", terrain.presentation.region.measuredFloorMeters)
     }
 
+    /// Resolve global-site lighting before publishing the first RealityView frame.
+    /// Apollo metadata is already configured by buildProvisionalSurface().
+    func prepareProvisionalLighting(at coordinate: LMSelenographicCoordinate?, date: Date) {
+        guard provisionalTerrain.parent != nil else { return }
+        if let coordinate {
+            let angles = LMLunarEphemeris.sunAngles(at: date, site: coordinate)
+            let sun = LMTerrainWorld.makeMissionSun(orientation: LMFullDescentMapper.sunLightOrientation(from: angles),
+                elevationDegrees: angles.elevationDegrees, altitudeMeters: 1_000)
+            provisionalTerrain.findEntity(named: "MissionSun")?.removeFromParent()
+            provisionalTerrain.addChild(sun)
+            // Global terrain retains its existing fixed initial shadow range.
+            terrainSun = nil
+        }
+        recordLighting(stage: "before-first-publication")
+    }
+
+    func recordLighting(stage: String) {
+        guard ProcessInfo.processInfo.arguments.contains("--cockpit-startup-timing") else { return }
+        let suns = LMCommanderStationAssembly.descendants(root).filter { $0.name == "MissionSun" }
+        let summary = suns.map { node in
+            let light = node.components[DirectionalLightComponent.self]
+            return "lux=\(light?.intensity ?? 0) rotation=\(node.orientation(relativeTo: root).vector) shadow=\((node as? DirectionalLight)?.shadow != nil)"
+        }.joined(separator: "; ")
+        logger.notice("Cockpit lighting stage=\(stage, privacy: .public) uptime=\(ProcessInfo.processInfo.systemUptime, privacy: .public) imported=\(self.commanderAssembly != nil) suns=\(suns.count) \(summary, privacy: .public)")
+    }
+
     func loadGlobalTerrain(at coordinate: LMSelenographicCoordinate, session: PoweredDescentSession, date: Date) async throws {
         try Task.checkCancellation()
         let directory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
@@ -89,6 +115,8 @@ final class LMCommanderStationScene {
 
     func installGlobalTerrain(_ terrain: LMLunarCockpitTerrain) {
         globalCockpitTerrain = terrain
+        terrainSun = nil
+        recordLighting(stage: "before-global-terrain-swap")
         provisionalTerrain.removeFromParent()
         // The global controller owns the inverse vehicle pose and floating
         // frame. Clear any Apollo pose applied while sources were loading.
@@ -96,6 +124,9 @@ final class LMCommanderStationScene {
         dustCloud.removeFromParent()
         terrain.root.addChild(dustCloud)
         lunarWorld.addChild(terrain.root)
+        // Preserve an already-present vehicle view before the next publication.
+        if let state = lastVehicleState { terrain.apply(state) }
+        recordLighting(stage: "after-global-terrain-swap")
     }
 
     private var terrainHeightField: Apollo11TerrainHeightField?
@@ -151,7 +182,7 @@ final class LMCommanderStationScene {
     private let attitudeModeAutomaticPosition =
         LMCommanderStationGeometry.attitudeHoldPivotPositionMeters
 
-    init(loadACA: Bool = true) {
+    init(loadACA: Bool = true, lightingManifest: LMTerrainManifest? = try? LMTerrainManifest.load()) {
         commanderEntryAnchor.name = "Commander entry head anchor"
         commanderEntryAnchor.anchoring.trackingMode = .once
         root.name = "LM Commander Station"
@@ -197,7 +228,7 @@ final class LMCommanderStationScene {
         ) {
             setDynamicShadowCasting(true, in: shell)
         }
-        buildProvisionalSurface()
+        buildProvisionalSurface(lightingManifest: lightingManifest)
         buildDustCloud()
 
         root.addChild(lunarWorld)
@@ -420,7 +451,6 @@ final class LMCommanderStationScene {
             )
         }
         terrainEnvironment = terrain
-        terrainSun = assembly.sun
         terrainAlbedoField = try? LMMeasuredAlbedoField.load(tile: heightField.tile)
         if terrainAlbedoField == nil {
             logger.error("Measured albedo unavailable; tiles bake procedural contrast only")
@@ -439,9 +469,14 @@ final class LMCommanderStationScene {
         logger.info(
             "Terrain rock field ready count=\(rockField.children.count, privacy: .public) model=\(LMLunarRockFieldModel.modelID, privacy: .public)"
         )
+        recordLighting(stage: "before-apollo-terrain-swap")
+        // Keep adaptive fallback ownership until all throwing preparation succeeds.
+        terrainSun = assembly.sun
+        lastMissionShadowDistanceMeters = nil
         provisionalTerrain.removeFromParent()
         lunarWorld.addChild(terrain)
         apply(lastVehicleState)
+        recordLighting(stage: "after-apollo-terrain-swap")
     }
 
     private func updateMissionShadow(altitudeMeters: Double) {
@@ -2135,7 +2170,7 @@ final class LMCommanderStationScene {
         lunarWorld.addChild(dustCloud)
     }
 
-    private func buildProvisionalSurface() {
+    private func buildProvisionalSurface(lightingManifest: LMTerrainManifest?) {
         let surfaceMaterial = SimpleMaterial(
             color: UIColor(red: 0.37, green: 0.36, blue: 0.33, alpha: 1),
             roughness: 1,
@@ -2169,11 +2204,17 @@ final class LMCommanderStationScene {
         // Keep fallback lighting inside the fallback subtree. Loading the
         // source-backed terrain removes `provisionalTerrain`, which must also
         // remove this light before the mission-calibrated sun is installed.
-        let sun = Entity()
-        sun.name = "Provisional terrain sun"
-        sun.components.set(DirectionalLightComponent(color: .white, intensity: 42_000))
-        sun.orientation = simd_quatf(angle: -.pi / 3, axis: SIMD3(1, 0.25, 0))
+        let sun: DirectionalLight
+        if let manifest = lightingManifest {
+            sun = LMTerrainWorld.makeMissionSun(orientation: LMFullDescentMapper.sunLightOrientation(from: manifest),
+                elevationDegrees: manifest.sun.elevationDegrees)
+        } else {
+            logger.error("Mission light metadata unavailable; retaining a shadowed reference-exposure fallback")
+            sun = LMTerrainWorld.makeMissionSun(orientation: simd_quatf(angle: 0, axis: SIMD3(0, 1, 0)),
+                elevationDegrees: LMTerrainWorld.referenceSunElevationDegrees)
+        }
         provisionalTerrain.addChild(sun)
+        terrainSun = sun
     }
 
     private func addBox(

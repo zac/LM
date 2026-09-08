@@ -42,6 +42,7 @@ struct TerminalDescentCockpitView: View {
 
     var body: some View {
         RealityView { content in
+            station.prepareProvisionalLighting(at: appModel.cockpitCoordinate, date: appModel.lunarExplorerSession.sunDate)
             content.add(station.commanderEntryAnchor)
             applySceneState()
         } update: { content in
@@ -248,6 +249,7 @@ struct TerminalDescentCockpitView: View {
                 let artistCabinLoaded = try await station.loadArtistCabinIfAvailable()
                 // A paused session may never emit another snapshot after installation.
                 applySceneState()
+                station.recordLighting(stage: "after-foundation-install")
                 if let coordinate = appModel.cockpitCoordinate {
                     terrainStatus = "Loading selected lunar site…"
                     try await station.loadGlobalTerrain(at: coordinate, session: appModel.session,

@@ -1,5 +1,7 @@
 import Foundation
 import LMCore
+import RealityKit
+import simd
 import Testing
 @testable import LM
 
@@ -36,10 +38,21 @@ struct LMLunarCockpitMissionTests {
         let region = try await LMLunarTerrainRegion.load(at: coordinate, store: store, offline: true)
         let terrain = try LMLunarCockpitTerrain(region: region, gate: .init(), date: LunarExplorerSession.apollo11TouchdownUTC)
         let station = LMCommanderStationScene()
+        station.prepareProvisionalLighting(at: coordinate, date: LunarExplorerSession.apollo11TouchdownUTC)
+        let provisionalSun = try #require(station.root.findEntity(named: "MissionSun") as? DirectionalLight)
+        #expect(provisionalSun.light.intensity == terrain.sun.light.intensity)
+        #expect(provisionalSun.shadow != nil && terrain.sun.shadow != nil)
+        #expect(abs(simd_dot(provisionalSun.orientation.vector, terrain.sun.orientation.vector)) > 0.99999)
+        let rotatedState = LMVehicleStateSnapshot(positionMeters: .init(z: 300),
+            attitude: .init(w: cos(0.3), z: sin(0.3)), landingSite: terrain.site)
+        station.apply(rotatedState)
+        let worldSunBefore = provisionalSun.orientation(relativeTo: station.root)
         station.lunarWorld.position = SIMD3(100, 200, 300)
         station.installGlobalTerrain(terrain)
+        #expect(abs(simd_dot(worldSunBefore.vector, terrain.sun.orientation(relativeTo: station.root).vector)) > 0.99999)
         #expect(station.lunarWorld.position == .zero)
         #expect(terrain.root.parent === station.lunarWorld)
+        #expect(LMCommanderStationAssembly.descendants(station.root).filter { $0.name == "MissionSun" }.count == 1)
         let state = LMVehicleStateSnapshot(positionMeters: .init(x: 40_000, y: -80_000, z: 300), landingSite: terrain.site)
         let expected = region.frame.moonCenteredPosition(for: .init(northMeters: 40_000, eastMeters: -80_000, upMeters: 300))
         let actual = LMAGCNavState.moonCenteredPositionMeters(from: state)

@@ -46,7 +46,7 @@ struct LMCommanderLandingInstrumentTests {
         let autoLabel = try LMCommanderStationAssembly.unique("AttitudeMode__AUTO", in: mode.root)
         let labelModels = LMCommanderStationAssembly.descendants(autoLabel).compactMap { $0.components[ModelComponent.self] }
         #expect(!labelModels.isEmpty && labelModels.flatMap(\.materials).allSatisfy { $0 is UnlitMaterial })
-        #expect(!mode.backingMaterials.isEmpty)
+        #expect(!mode.backingMaterials.isEmpty && mode.backingMaterials.allSatisfy { $0 is UnlitMaterial })
         #expect(mode.apply(runtimeValue: "attitudeHold"))
         #expect(abs(mode.actuator.orientation.real) > 0.99999)
         let before = mode.actuator.transform

@@ -83,6 +83,9 @@ final class LMImportedDescentControl {
         // Both are partial-region components. Keep inventory backing and remove
         // only the supplied duplicate neutral backing, never its upright/support.
         let backing = try LMCommanderStationAssembly.unique(definition.neutral_backing, in: root)
+        // Direct cockpit light can wash a pale PBR region to white. Preserve the
+        // authored mode face color independently so its white legends stay legible.
+        if kind == .attitudeMode { LMCockpitComponentSupport.readableMarkings(backing) }
         backingMaterials = LMCommanderStationAssembly.descendants(backing).compactMap { $0.components[ModelComponent.self] }.flatMap(\.materials)
         guard !backingMaterials.isEmpty else { throw LMCommanderStationAssembly.AssemblyError.invalidContract("Missing control backing material") }
         backing.isEnabled = false

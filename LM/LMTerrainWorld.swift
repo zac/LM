@@ -302,13 +302,8 @@ enum LMTerrainWorld {
             }
         }
 
-        let sun = DirectionalLight()
-        sun.name = "MissionSun"
-        sun.light.intensity = missionSunIlluminance(
-            elevationDegrees: manifest.sun.elevationDegrees
-        )
-        sun.shadow = missionShadow(altitudeMeters: nil)
-        sun.orientation = LMFullDescentMapper.sunLightOrientation(from: manifest)
+        let sun = makeMissionSun(orientation: LMFullDescentMapper.sunLightOrientation(from: manifest),
+                                 elevationDegrees: manifest.sun.elevationDegrees)
         worldRoot.addChild(sun)
 
         // Earthshine casts no shadows of its own: it is an area source two
@@ -560,6 +555,18 @@ enum LMTerrainWorld {
             ),
             depthBias: 1
         )
+    }
+
+    /// Shared by the immediately visible fallback and fully prepared terrain.
+    /// Resource loading must not change the canonical sun's illumination policy.
+    static func makeMissionSun(orientation: simd_quatf, elevationDegrees: Double,
+                               altitudeMeters: Double? = nil) -> DirectionalLight {
+        let sun = DirectionalLight()
+        sun.name = "MissionSun"
+        sun.light.intensity = missionSunIlluminance(elevationDegrees: elevationDegrees)
+        sun.orientation = orientation
+        sun.shadow = missionShadow(altitudeMeters: altitudeMeters)
+        return sun
     }
 
     static func worldTransform(for state: LMVehicleStateSnapshot?) -> Transform {
