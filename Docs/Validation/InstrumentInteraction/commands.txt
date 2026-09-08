@@ -1,0 +1,37 @@
+All commands ran in the isolated worker LM checkout. No shared dependency checkout was switched.
+
+Initial validation:
+  git rev-parse HEAD
+  git branch --show-current
+  git status --short
+  git lfs version
+  git lfs ls-files
+  git archive <exact dependency SHA> | tar -x -C <isolated dependency snapshot>
+  SHA-256 verify all hydrated LM LFS blobs against pointer OIDs.
+
+Baseline build (passed):
+  bun <xcode skill>/scripts/xcodebuild_runner.ts build --project LM.xcodeproj --scheme LM --configuration Debug --destination 'generic/platform=visionOS Simulator' --derived-data-path /tmp/lm-interaction-build --cloned-source-packages-dir-path /tmp/lm-interaction-packages
+  Tools/CaptureInstrumentValidation.sh 31D2A5CF-B052-42BC-86B3-590CABDDDA49 /tmp/lm-interaction-build/Build/Products/Debug-xrsimulator/LM.app Docs/Validation/InstrumentInteraction/before
+
+Final test (passed 12/12):
+  xcodebuild test -project LM.xcodeproj -scheme LM -destination 'platform=visionOS Simulator,id=31D2A5CF-B052-42BC-86B3-590CABDDDA49' -derivedDataPath /tmp/lm-interaction-build -clonedSourcePackagesDirPath /tmp/lm-interaction-packages -skipPackagePluginValidation -parallel-testing-enabled NO -only-testing:LMTests/LMInstrumentIntegrationTests -only-testing:LMTests/LMInstrumentInteractionTests -resultBundlePath /tmp/lm-interaction-serial-tests.xcresult
+
+Invoked through temporary skill runner /tmp/lm-interaction-xcodebuild.ts. Temporary copy fixes the original runner's -only-testing colon syntax and adds -parallel-testing-enabled NO; no skill file was modified. First run /tmp/lm-interaction-tests.xcresult failed 11/12 with missingOrDuplicate("FDAI_BallSurround"); preserved in tests-first.json. Final serial summary:
+  xcrun xcresulttool get test-results summary --path /tmp/lm-interaction-serial-tests.xcresult
+
+Final captures (completed):
+  LM_VALIDATION_LMKIT_REV=75bdea77b57e0ae4971bb4ffbee21c4643e3b4cf LM_VALIDATION_AGC_REV=b3f15533db335ee882dc07401790c93010809e8f Tools/CaptureInstrumentValidation.sh 31D2A5CF-B052-42BC-86B3-590CABDDDA49 /tmp/lm-interaction-build/Build/Products/Debug-xrsimulator/LM.app Docs/Validation/InstrumentInteraction/after
+  LM_VALIDATION_LMKIT_REV=75bdea77b57e0ae4971bb4ffbee21c4643e3b4cf LM_VALIDATION_AGC_REV=b3f15533db335ee882dc07401790c93010809e8f Tools/CaptureInstrumentValidation.sh 31D2A5CF-B052-42BC-86B3-590CABDDDA49 /tmp/lm-interaction-build/Build/Products/Debug-xrsimulator/LM.app Docs/Validation/InstrumentInteraction/native observe
+
+Native automation:
+  axe describe-ui --udid 31D2A5CF-B052-42BC-86B3-590CABDDDA49
+  Failed: No translation object returned for simulator.
+  Computer-use sky.click on native Simulator with interaction radio selected; attempted VERB coordinate selection with pointer capture off/on. Zero completed callbacks; not accepted.
+  xcrun simctl io 31D2A5CF-B052-42BC-86B3-590CABDDDA49 screenshot <native evidence PNG>
+  xcrun simctl spawn 31D2A5CF-B052-42BC-86B3-590CABDDDA49 log show --last 2m --style compact --predicate 'subsystem == "io.positron.LM" AND (category == "InstrumentValidation" OR eventMessage CONTAINS "DSKY")'
+  xcrun simctl shutdown 31D2A5CF-B052-42BC-86B3-590CABDDDA49
+
+Source verification after runtime slot release:
+  bash -n Tools/CaptureInstrumentValidation.sh
+  git diff --check
+No full LM suite, Release build, hardware or frame-time qualification is claimed.

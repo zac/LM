@@ -1,0 +1,49 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "31D2A5CF-B052-42BC-86B3-590CABDDDA49",
+        "deviceName" : "LM Interaction 3d13",
+        "modelName" : "Apple Vision Pro",
+        "osBuildNumber" : "23O470",
+        "osVersion" : "26.5",
+        "platform" : "visionOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 11,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "LM · Built with macOS 26.5.1",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1788897889.056,
+  "passedTests" : 11,
+  "result" : "Failed",
+  "skippedTests" : 0,
+  "startTime" : 1788897542.801,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "Caught error: .missingOrDuplicate(\"FDAI_BallSurround\")",
+      "targetName" : "LMTests",
+      "testIdentifier" : 12,
+      "testIdentifierString" : "LMInstrumentIntegrationTests/importedFDAINativeHierarchyKeepsFixedStructureStill()",
+      "testIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMInstrumentIntegrationTests/importedFDAINativeHierarchyKeepsFixedStructureStill()",
+      "testName" : "importedFDAINativeHierarchyKeepsFixedStructureStill()"
+    }
+  ],
+  "title" : "Test - LM",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 12
+}

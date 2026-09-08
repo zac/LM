@@ -1,0 +1,24 @@
+Timestamp               Ty Process[PID:TID]
+2026-09-08 12:57:43.408 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 12:57:45.418 Df LM[91618:6a3e986] [io.positron.LM:InstrumentValidation] DEBUG observer aimed at DSKY; instrument mounts unchanged
+2026-09-08 12:57:47.039 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V06 N64
+2026-09-08 12:57:56.348 Df LM[91618:6a3e986] [io.positron.LM:InstrumentValidation] programmatic V16N36E via session queue
+2026-09-08 12:57:56.429 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V-- N64
+2026-09-08 12:57:56.628 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V1 N64
+2026-09-08 12:57:56.851 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V16 N64
+2026-09-08 12:57:56.978 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V16 N--
+2026-09-08 12:57:57.217 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V16 N3
+2026-09-08 12:57:57.324 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V16 N36
+2026-09-08 12:58:06.639 Df LM[91618:6a3e986] [io.positron.LM:InstrumentValidation] programmatic PRO via session queue
+2026-09-08 12:58:06.901 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V06 N36
+2026-09-08 12:58:06.952 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V06 N64
+2026-09-08 12:58:16.897 Df LM[91618:6a3e986] [io.positron.LM:InstrumentValidation] programmatic V35E via session queue
+2026-09-08 12:58:17.015 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V-- N64
+2026-09-08 12:58:17.139 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V3 N64
+2026-09-08 12:58:17.372 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V35 N64
+2026-09-08 12:58:17.663 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V88 N64
+2026-09-08 12:58:17.713 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V88 N88
+2026-09-08 12:58:18.079 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P88 V88 N88
+2026-09-08 12:58:20.603 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P88 V06 N64
+2026-09-08 12:58:20.748 Df LM[91618:6a3e986] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V06 N64
+2026-09-08 12:58:32.260 Df LM[91618:6a3e986] [io.positron.LM:InstrumentValidation] programmatic RSET via session queue

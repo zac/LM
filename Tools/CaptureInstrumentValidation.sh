@@ -1,5 +1,5 @@
 #!/bin/bash
-# Debug-only real AGC validation. Inputs are programmatic, not pinch events.
+# Debug-only real AGC validation. Scripted mode is not pinch evidence.
 set -euo pipefail
 if [[ $# -lt 3 || $# -gt 4 ]]; then
     echo 'usage: CaptureInstrumentValidation.sh <simulator-udid> <LM.app> <output-directory> [scripted|observe]' >&2
@@ -26,7 +26,7 @@ manifest=dict(simulatorUDID=sys.argv[1],captureMode=sys.argv[2],
  lmkitRevision=os.environ.get('LM_VALIDATION_LMKIT_REV','unspecified'),
  agcRevision=os.environ.get('LM_VALIDATION_AGC_REV','unspecified'),
  inputMethod='programmatic-session-input' if sys.argv[2]=='scripted' else 'native Simulator interaction; completion must be proven by trace',
- camera='reset simulator camera; inverse DEBUG observer recorded in state',
+ camera='inverse DEBUG observer recorded in state; native camera pose not measured',
  xcode=run('xcodebuild','-version'))
 json.dump(manifest,open(sys.argv[3]+'/capture-manifest.json','w'),indent=2)
 PYCODE
@@ -37,7 +37,7 @@ if [[ -f "$app/LM.debug.dylib" ]]; then
 fi
 xcrun simctl install "$udid" "$app"
 xcrun simctl launch --terminate-running-process "$udid" io.positron.LM \
-    --terminal-descent-cockpit --instrument-validation "${input_args[@]}" > "$out/launch.txt"
+    --terminal-descent-cockpit --instrument-validation ${input_args[@]+"${input_args[@]}"} > "$out/launch.txt"
 pid=$(sed 's/.*: //' "$out/launch.txt")
 container=$(xcrun simctl get_app_container "$udid" io.positron.LM data)
 trace="$container/Documents/InstrumentValidation.jsonl"

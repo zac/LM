@@ -1,0 +1,9 @@
+{
+  "sourceCommit": "acff0aeac62fc3c009831f0234d56205d36011e4",
+  "lmkitRevision": "75bdea77b57e0ae4971bb4ffbee21c4643e3b4cf",
+  "agcRevision": "b3f15533db335ee882dc07401790c93010809e8f",
+  "simulatorUDID": "31D2A5CF-B052-42BC-86B3-590CABDDDA49",
+  "inputMethod": "programmatic session FIFO",
+  "camera": "default simulator camera and original inverse DEBUG observer",
+  "note": "Before capture used original script which hashed LM launcher only; new script also hashes LM.debug.dylib."
+}
