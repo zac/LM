@@ -1,0 +1,68 @@
+[
+  {
+    "file": "controls-and-panels.md",
+    "source_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Research/LunarModuleInterior/controls-and-panels.md",
+    "sha256": "8dcef0e36e81fffa1b6fbfc52b3d1646b42f45f51ae7b1dbee90ef946909fea2",
+    "bytes": 23802
+  },
+  {
+    "file": "photo-reference-catalog.md",
+    "source_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Research/LunarModuleInterior/photo-reference-catalog.md",
+    "sha256": "47e7706eec5e0ba6257cd7d841f6590d4e40e7f6eb9ea40ab2d751283ea7e49c",
+    "bytes": 14090
+  },
+  {
+    "file": "ad013.gif",
+    "source_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Research/LunarModuleInterior/references/images/ad013.gif",
+    "sha256": "1521551fbdbc6ba99c20bcfa9920f4328cdf6a32e4d4849622f59f7cc0eb3762",
+    "bytes": 366842
+  },
+  {
+    "file": "ad016.gif",
+    "source_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Research/LunarModuleInterior/references/images/ad016.gif",
+    "sha256": "f28021bb2450a54458001bf40e6ab7645fe1f5cba53a6b596ca3c950cb2dd446",
+    "bytes": 134701
+  },
+  {
+    "file": "ad017.gif",
+    "source_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Research/LunarModuleInterior/references/images/ad017.gif",
+    "sha256": "7701abf819a6abd503e78d53359093d626a036c1edd284fe6e9d90036c41b78f",
+    "bytes": 185462
+  },
+  {
+    "file": "AS11-36-5389HR.jpg",
+    "source_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Research/LunarModuleInterior/references/images/AS11-36-5389HR.jpg",
+    "sha256": "9a87df320e1fcd6c624ebb14ac2980bc72e4d3173a323e6197dd44c4469be5a1",
+    "bytes": 876209
+  },
+  {
+    "file": "LM11-co42.jpg",
+    "source_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Research/LunarModuleInterior/references/images/LM11-co42.jpg",
+    "sha256": "cda83061e39a8819647aaec967c0e8eca7ab46eb5e664870a850f02a5c3a2f67",
+    "bytes": 1933953
+  },
+  {
+    "file": "LM11-co43.jpg",
+    "source_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Research/LunarModuleInterior/references/images/LM11-co43.jpg",
+    "sha256": "4d47654cd5163179d73b3e101e2836c260cbfa23cc1d24aefdf9f28dc4162dea",
+    "bytes": 1885570
+  },
+  {
+    "file": "manifest.json",
+    "source_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Research/LunarModuleInterior/references/images/manifest.json",
+    "sha256": "0a793e8ab4413d34e63e3b18983f1661543124bc535447af1c80da0527c11ef8",
+    "bytes": 7383
+  },
+  {
+    "file": "lm10-aoh-vol1-controls-excerpts.pdf",
+    "source_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Research/LunarModuleInterior/references/documents/lm10-aoh-vol1-controls-excerpts.pdf",
+    "sha256": "6194242b2dd076a469474d5bcdb5f4a6bddf9929aedf543d8911fd5f9ca63e2c",
+    "bytes": 6974978
+  },
+  {
+    "file": "lm10-aoh-vol1-controls-excerpts.manifest.json",
+    "source_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Research/LunarModuleInterior/references/documents/lm10-aoh-vol1-controls-excerpts.manifest.json",
+    "sha256": "102c0570c83f17d1d03ac19408210862f5a4686ff864b78ac745f9a9710650d8",
+    "bytes": 4117
+  }
+]

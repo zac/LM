@@ -1,0 +1,41 @@
+[
+  {
+    "file": "panel4-dsky-reference.png",
+    "source": "ad013.gif",
+    "crop_xyxy_pixels": [
+      1340,
+      1190,
+      1640,
+      1510
+    ],
+    "source_sha256": "1521551fbdbc6ba99c20bcfa9920f4328cdf6a32e4d4849622f59f7cc0eb3762",
+    "sha256": "4e3c08ef211c219c29257c048e473f3ff483ebc1e917d7042ee7838974b233fd",
+    "operation": "lossless pixel crop to PNG; no scale or retouch"
+  },
+  {
+    "file": "aft-equipment-reference.png",
+    "source": "ad017.gif",
+    "crop_xyxy_pixels": [
+      310,
+      280,
+      960,
+      785
+    ],
+    "source_sha256": "7701abf819a6abd503e78d53359093d626a036c1edd284fe6e9d90036c41b78f",
+    "sha256": "9086a476780a1936caecd1452dc1d27f3720bf918f3c5e85ae4cf563398c5fba",
+    "operation": "lossless pixel crop to PNG; no scale or retouch"
+  },
+  {
+    "file": "later-forward-stowage-reference.png",
+    "source": "LM11-co42.jpg",
+    "crop_xyxy_pixels": [
+      0,
+      750,
+      2813,
+      2370
+    ],
+    "source_sha256": "cda83061e39a8819647aaec967c0e8eca7ab46eb5e664870a850f02a5c3a2f67",
+    "sha256": "236d50fd6e8523c3403df6915e484d8da401845bbee8a2168c6268d409e30d3a",
+    "operation": "lossless pixel crop to PNG; no scale or retouch"
+  }
+]
