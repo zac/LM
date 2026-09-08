@@ -1,0 +1,145 @@
+{
+  "schema": "lmkit.breaker-banks.artifacts.v1",
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 14,
+      "sha256": "2c5dd8d8e87382cc3a646d8d4d84f3256b317161bfa0601bc7b36db37ca1b17f"
+    },
+    {
+      "path": "BreakerBanks.blend",
+      "bytes": 899693,
+      "sha256": "b0f22c9423314153f9816676eb60da51977af3c90a56a2a3aada01d0bde390e7"
+    },
+    {
+      "path": "BreakerBanks.usda",
+      "bytes": 5361242,
+      "sha256": "5ee5e3145aab3aeac31eb978abe074a986bebfb47deeb14a8639414088d02e28"
+    },
+    {
+      "path": "BreakerBanks.usdc",
+      "bytes": 748759,
+      "sha256": "c2b82b2e632f0e7def9d22f9165eed04c71e21c9451eba1aacf089c48977d66a"
+    },
+    {
+      "path": "BreakerBanks.usdz",
+      "bytes": 748925,
+      "sha256": "fce4e4248806f4ff963775bc8013e17e6dee370671e656390bb8d05fcddfc217"
+    },
+    {
+      "path": "HANDOFF.md",
+      "bytes": 7419,
+      "sha256": "9083947185ec524e3664bbc8f49e0516c7cbfa48f2fc6c2d7c69850958328298"
+    },
+    {
+      "path": "build.py",
+      "bytes": 11459,
+      "sha256": "5c639ab49e7c4471536969ef08e26288bc746f1926ceaab8c7c3004bb2cdfe9f"
+    },
+    {
+      "path": "evidence/CircuitBreaker.usdz",
+      "bytes": 11221,
+      "sha256": "8f6b6125b943a051e18ac193aedcd3509ba6b1bc82525d420985e3ef1a2649dc"
+    },
+    {
+      "path": "evidence/PANORAMA-OBSERVATIONS.md",
+      "bytes": 2831,
+      "sha256": "f5df01c7ec1dd0678caa2fa603bdaee22af366f18c49a4ada1f522e82db94395"
+    },
+    {
+      "path": "evidence/control-parameters.json",
+      "bytes": 3253,
+      "sha256": "939ce17356f3269739d6e0cc4c14b6907e090e112e67b27a05e997b26b5cb9eb"
+    },
+    {
+      "path": "evidence/handbook-page1.png",
+      "bytes": 233975,
+      "sha256": "5e7bddebc73a3253f52bee5685aa9a67ebca8b10a1958101a42005e15410158f"
+    },
+    {
+      "path": "evidence/inventory.json",
+      "bytes": 190532,
+      "sha256": "f315bdcbd8a6e597231b33420652fb6297241bf3af7c585708f472583522ec49"
+    },
+    {
+      "path": "evidence/panel11-source.png",
+      "bytes": 979064,
+      "sha256": "d54199853bc608cb580b4005534123a865ee9d3f4b5d8fcd8baf78718489c64a"
+    },
+    {
+      "path": "evidence/panel11-top-source.png",
+      "bytes": 164439,
+      "sha256": "ab28c07037b4cfd9cad339ea1abcefb88482f993a584058e2735a917b0f39a4f"
+    },
+    {
+      "path": "evidence/panel16-source.png",
+      "bytes": 412010,
+      "sha256": "c1a29908ce83522fbad0fbebd20bd9f7ffea3a6a5f29a65ab89dbd1be4fb33aa"
+    },
+    {
+      "path": "evidence/provenance.json",
+      "bytes": 3870,
+      "sha256": "fd9c986a272801e957307c86c5fdcdd8bd964747c2f73b96df41ec6fa6fed42f"
+    },
+    {
+      "path": "interface.json",
+      "bytes": 13298,
+      "sha256": "f3cbb8d96c45473c2f2dc1ceb8ca91ce2924de74fc151b954af5cdb5ed30ffea"
+    },
+    {
+      "path": "labels.json",
+      "bytes": 4276,
+      "sha256": "bd9928a3d45fb8d0de824afe5dc431438c7a68fb2f19e743bd83548b987f1849"
+    },
+    {
+      "path": "review/README.md",
+      "bytes": 1000,
+      "sha256": "82e0bee4a687b013f7e6a6d551f931a06435f1ecce1f910c871b7b72632187f8"
+    },
+    {
+      "path": "review/commander.png",
+      "bytes": 1262030,
+      "sha256": "53bd20c81274b0f149417ab6a301e3e82d636d0b7c3110d141748a28ff17742f"
+    },
+    {
+      "path": "review/legend-detail.png",
+      "bytes": 1484316,
+      "sha256": "5d0df72d57677e05fddca47997fcf825aaadf60d0cc0aa8effba6c7cc4c1db5b"
+    },
+    {
+      "path": "review/pilot.png",
+      "bytes": 1176352,
+      "sha256": "37e3dbb63bc2ab6f315b6980ad90b776fba44cbca2084c14f6edfe9ac99c5c8f"
+    },
+    {
+      "path": "review/profile.png",
+      "bytes": 1211985,
+      "sha256": "6bd8f0f65de2c04daef6d562aed24f52d8fde61b5e18c238a3526602a338acde"
+    },
+    {
+      "path": "review.py",
+      "bytes": 912,
+      "sha256": "013e9ce0d6e36194d80b0e6d7c7633add80af0daae6bb6fc5ddf82a14886ce83"
+    },
+    {
+      "path": "validate.py",
+      "bytes": 7800,
+      "sha256": "3c5491011649137ef901bc6f7015bb425f000c9746b4879d82330a775b7f1ca8"
+    },
+    {
+      "path": "validate_native.swift",
+      "bytes": 2303,
+      "sha256": "41b79971a3c6e264b62fce6fb00d7ce946944cb5a6ea2ab84c04d5bfcb383899"
+    },
+    {
+      "path": "validation-native.json",
+      "bytes": 264,
+      "sha256": "8e6bf601ee5d1f44ffe9234bed5893037325c12f864e3541bb5e50829108cd81"
+    },
+    {
+      "path": "validation.json",
+      "bytes": 375161,
+      "sha256": "7b904070dfba37a78008f2015c28f53442e89621e01f5d867c10a4219ded0947"
+    }
+  ]
+}

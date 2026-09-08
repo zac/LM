@@ -1,0 +1,104 @@
+{
+  "baseline": "ee3a19f21e31d77645e7b6451db800d2b3d60f5e",
+  "control_geometry_commit": "01e0900f994a7b2f68ac0aa288be196a24e30659",
+  "panel_inventory_geometry_commit": "f2d47ed49d8d895602b70249864b567d0335966f",
+  "authoring": "Blender5.2.1 LTS9e2066aef7ef; bundled Bfont; direct USD exporter; Y-up scene",
+  "sources": [
+    {
+      "id": "user-controls-pdf",
+      "name": "Lunar Module Controls and Displays.pdf",
+      "original_local_path": "/Users/zac/Downloads/Lunar Module Controls and Displays.pdf",
+      "bytes": 10883155,
+      "sha256": "8b5b96fece2fd5fcdbb5b5ceb22f8492033569c52aff8db36a4e82009703828b",
+      "page": 1,
+      "format": "single grayscale raster image; no scale or mission revision established",
+      "use": "Visually transcribed Panel11/16 breaker labels. Enlarged render crops preserved. No dimensions measured.",
+      "crops_at_300dpi_px": {
+        "panel11-top-source.png": [
+          0,
+          0,
+          1500,
+          300
+        ],
+        "panel11-source.png": [
+          0,
+          100,
+          1900,
+          1350
+        ],
+        "panel16-source.png": [
+          4100,
+          0,
+          1370,
+          1100
+        ]
+      }
+    },
+    {
+      "id": "LM10-AOH",
+      "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+      "locator": "printed1-8;originalPDF21;retainedPanelInventoryexcerptpage1",
+      "use": "five/four angled breaker surfaces;15degrees to sightline; later mission, not LM5survey",
+      "retained_review": "handbook-page1.png",
+      "full_excerpt_repo_path": "Assets/Cockpit/Components/PanelInventory/evidence/lm10-aoh-vol1-controls-excerpts.pdf"
+    },
+    {
+      "id": "LM2-panorama",
+      "url": "https://airandspace.si.edu/multimedia-gallery/panorama/lm-interiorjpg",
+      "use": "Coordinator recorded qualitative stepped-terrace observation; restored museum LM2, not measured LM5. No panorama pixels copied.",
+      "retained_review": "PANORAMA-OBSERVATIONS.md"
+    },
+    {
+      "id": "ControlLibrary",
+      "use": "Unchanged mesh coordinates, neutral pose and materials fromCircuitBreaker.usdz; parametersdimensions provisional",
+      "commit": "01e0900f994a7b2f68ac0aa288be196a24e30659"
+    },
+    {
+      "id": "PanelInventory",
+      "use": "exact parent Cabin-relative and slot parent-local pose mappings; dimensions remainprovisional",
+      "commit": "f2d47ed49d8d895602b70249864b567d0335966f"
+    }
+  ],
+  "retained_files": [
+    {
+      "path": "evidence/CircuitBreaker.usdz",
+      "bytes": 11221,
+      "sha256": "8f6b6125b943a051e18ac193aedcd3509ba6b1bc82525d420985e3ef1a2649dc"
+    },
+    {
+      "path": "evidence/PANORAMA-OBSERVATIONS.md",
+      "bytes": 2831,
+      "sha256": "f5df01c7ec1dd0678caa2fa603bdaee22af366f18c49a4ada1f522e82db94395"
+    },
+    {
+      "path": "evidence/control-parameters.json",
+      "bytes": 3253,
+      "sha256": "939ce17356f3269739d6e0cc4c14b6907e090e112e67b27a05e997b26b5cb9eb"
+    },
+    {
+      "path": "evidence/handbook-page1.png",
+      "bytes": 233975,
+      "sha256": "5e7bddebc73a3253f52bee5685aa9a67ebca8b10a1958101a42005e15410158f"
+    },
+    {
+      "path": "evidence/inventory.json",
+      "bytes": 190532,
+      "sha256": "f315bdcbd8a6e597231b33420652fb6297241bf3af7c585708f472583522ec49"
+    },
+    {
+      "path": "evidence/panel11-source.png",
+      "bytes": 979064,
+      "sha256": "d54199853bc608cb580b4005534123a865ee9d3f4b5d8fcd8baf78718489c64a"
+    },
+    {
+      "path": "evidence/panel11-top-source.png",
+      "bytes": 164439,
+      "sha256": "ab28c07037b4cfd9cad339ea1abcefb88482f993a584058e2735a917b0f39a4f"
+    },
+    {
+      "path": "evidence/panel16-source.png",
+      "bytes": 412010,
+      "sha256": "c1a29908ce83522fbad0fbebd20bd9f7ffea3a6a5f29a65ab89dbd1be4fb33aa"
+    }
+  ]
+}
