@@ -1,0 +1,23 @@
+{
+  "components" : [
+    {
+      "backingToggleIndependent" : "PASS",
+      "id" : "AttitudeMode",
+      "independentActuator" : "PASS",
+      "inputPoseDirections" : "PASS",
+      "nativeLoad" : "PASS",
+      "neutralRestored" : "PASS"
+    },
+    {
+      "backingToggleIndependent" : "PASS",
+      "id" : "DescentRate",
+      "independentActuator" : "PASS",
+      "inputPoseDirections" : "PASS",
+      "nativeLoad" : "PASS",
+      "neutralRestored" : "PASS"
+    }
+  ],
+  "platform" : "macOS RealityKit",
+  "simulationBinding" : "NOT TESTED: coordinator responsibility",
+  "VisionPro" : "NOT TESTED"
+}

@@ -1,0 +1,94 @@
+{
+  "files": [
+    {
+      "file": "AttitudeMode.usdc",
+      "bytes": 135594,
+      "sha256": "df30618789d4b4869513633cdafdf49e1234fa11da04636bfaabb22ed4864ba4"
+    },
+    {
+      "file": "AttitudeMode.usdz",
+      "bytes": 135760,
+      "sha256": "4e7b811a7ed251bd9065a852a2ed652ca16a5fd06b48beea98702a492dc63f86"
+    },
+    {
+      "file": "DescentControls.blend",
+      "bytes": 220491,
+      "sha256": "fdd9295ca839b5dba18db177275e962e51e37d948eefebdd07d73169dbbc3906"
+    },
+    {
+      "file": "DescentRate.usdc",
+      "bytes": 14828,
+      "sha256": "a848cdfcf0909a9507b28a25799daa9f2bcee8027675fb7feef0a66aac653b53"
+    },
+    {
+      "file": "DescentRate.usdz",
+      "bytes": 14994,
+      "sha256": "ffa295038be35261353a8a0c8fe35316647d4e0b910b7ca108e97f55375cf078"
+    },
+    {
+      "file": "HANDOFF.md",
+      "bytes": 6501,
+      "sha256": "04f62f3b9b140fe5db9fe439367d6921a0194251875b647395e426d922a263fa"
+    },
+    {
+      "file": "build.py",
+      "bytes": 9303,
+      "sha256": "fca225cc25092de535def053001723136f110994cdb394201bf56c35c518bdab"
+    },
+    {
+      "file": "evidence/mode-and-des-rate-aoh.pdf",
+      "bytes": 7216817,
+      "sha256": "02b96b45e9d9d4530b2545186c45d35c20a00c1785f640c28d9fae15ed5ff605"
+    },
+    {
+      "file": "evidence/panel3-mode-reference.png",
+      "bytes": 10781,
+      "sha256": "5a251dac64f00aa6dd353852703b5efc41106a0520cc007c1d452bcd8cd883e1"
+    },
+    {
+      "file": "evidence/panel5-des-rate-reference.png",
+      "bytes": 5419,
+      "sha256": "bf662d7ef881cb6df4bae37ed1b18bca7d4357427c6a0b22d24f821e0d0cd16a"
+    },
+    {
+      "file": "evidence/source-manifest.json",
+      "bytes": 1622,
+      "sha256": "77cfba14e2fa9c5328a1f770625d3a0cde6a1830104c98f38baad3fbf82e9d48"
+    },
+    {
+      "file": "interface.json",
+      "bytes": 4899,
+      "sha256": "ef4c52489594c036d4719c0bf1d3740ca4e1c0de69bb24d118453f1fb88ab5cb"
+    },
+    {
+      "file": "native-validation.json",
+      "bytes": 601,
+      "sha256": "30a06c8b2bb167b02eb510a494c3ae9b65d42100bd0bc65953adfab6de70dc10"
+    },
+    {
+      "file": "review/AttitudeMode-neutral.png",
+      "bytes": 1216837,
+      "sha256": "fa7088160cebcd1275ad74d0b2ab5bdb4380e7d06fb3816ca88495c1cc3a0bc6"
+    },
+    {
+      "file": "review/DescentRate-neutral.png",
+      "bytes": 1081526,
+      "sha256": "e67488de77af83c9a31d3d54c24901dfbcfb79dc28433e6851fab644dafdf663"
+    },
+    {
+      "file": "validate.py",
+      "bytes": 5644,
+      "sha256": "bc29f8f6f73ee56cba50819040f9005d69a553d77f7d3ece72d797f90704723a"
+    },
+    {
+      "file": "validate_native.swift",
+      "bytes": 2123,
+      "sha256": "c8080d5a904d277dc172adefa4b8e5c0e23b286dfa218e877207fecd3db4f4ba"
+    },
+    {
+      "file": "validation.json",
+      "bytes": 3959,
+      "sha256": "74684ba2d8222ff701024ddda3659998fcdc30134eb7417898f0035b946b538e"
+    }
+  ]
+}

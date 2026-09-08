@@ -1,0 +1,150 @@
+{
+  "schema": "lmkit.descent-controls.v1",
+  "status": "asset geometry, USD packaging, macOS RealityKit validated; LM integration and physical Vision Pro pending",
+  "units": "meters",
+  "axes": "+X right +Y up +Z toward crew; plane XY",
+  "components": [
+    {
+      "id": "AttitudeMode",
+      "asset": "AttitudeMode.usdz",
+      "mount": "AttitudeMode_Mount",
+      "slot": "Panel3__Stability",
+      "mount_transform": "identity under slot",
+      "actuator": "AttitudeMode__Actuator",
+      "actuator_neutral_position_m": [
+        -0.072,
+        -0.037,
+        0.009
+      ],
+      "rotation_axis": [
+        1,
+        0,
+        0
+      ],
+      "rotation_is_absolute_local": true,
+      "states": [
+        {
+          "placard": "AUTO",
+          "angle_degrees": -17,
+          "runtime_value": "automatic",
+          "supported": true
+        },
+        {
+          "placard": "ATT HOLD",
+          "angle_degrees": 0,
+          "runtime_value": "attitudeHold",
+          "supported": true
+        },
+        {
+          "placard": "OFF",
+          "angle_degrees": 17,
+          "runtime_value": null,
+          "supported": false
+        }
+      ],
+      "neutral_state": "AUTO",
+      "unsupported_policy": "Reject OFF actuation and leave actual session attitudeMode reflected. Do not map OFF to either supported state. Host may explain unsupported state in training UI.",
+      "backing_m": [
+        0.225,
+        0.145,
+        0.003
+      ],
+      "dimensions": "provisional library geometry and photo-relative sublocation; not flight measurement",
+      "neutral_backing": "AttitudeMode__NeutralBacking",
+      "apply_rotation": "Replace actuator local orientation with Rx(stateAngle); preserve local position/scale.",
+      "rotation_reference_quaternion_xyzw": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "exported_neutral_quaternion_xyzw": [
+        -0.14780941112961063,
+        0,
+        0,
+        0.9890158633619168
+      ]
+    },
+    {
+      "id": "DescentRate",
+      "asset": "DescentRate.usdz",
+      "mount": "DescentRate_Mount",
+      "slot": "Panel5__Engine",
+      "mount_transform": "identity under slot",
+      "actuator": "DescentRate__Actuator",
+      "actuator_neutral_position_m": [
+        -0.034,
+        0.018,
+        0.027
+      ],
+      "rotation_axis_local": [
+        1,
+        0,
+        0
+      ],
+      "apply_rotation": "Set orientation to baselineRy(-90deg) * Rx(delta). Do not replace baseline with Rx alone. Preserve position/scale.",
+      "states": [
+        {
+          "id": "plus",
+          "angle_degrees": -17,
+          "runtime_intent": "descendPlus",
+          "meaning": "increase thrust / reduce descent rate; one 1ft/s command per documented discrete actuation",
+          "supported": true
+        },
+        {
+          "id": "center",
+          "angle_degrees": 0,
+          "runtime_intent": null,
+          "supported": true
+        },
+        {
+          "id": "minus",
+          "angle_degrees": 17,
+          "runtime_intent": "descendMinus",
+          "meaning": "decrease thrust / increase descent rate; one 1ft/s command per documented discrete actuation",
+          "supported": true
+        }
+      ],
+      "neutral_state": "center",
+      "placards": [],
+      "unplacarded_evidence": "NASA ad013 NOT PLACARDED arrow; explanatory +1 FPS center -1 FPS callout must not be baked as spacecraft ink.",
+      "return": "Host resets delta to 0 on release, cancellation, pause, scene exit and binding teardown. No invented auto-repeat.",
+      "neutral_backing": "DescentRate__NeutralBacking",
+      "backing_m": [
+        0.125,
+        0.11,
+        0.003
+      ],
+      "support_nodes": [
+        "DescentRate__ProvisionalUpright",
+        "DescentRate__ProvisionalFoot"
+      ],
+      "support_status": "minimal provisional side bracket, not reconstructed engine button guard",
+      "attachment_surface_slot_local_m": [
+        -0.025,
+        0.018,
+        0.027
+      ],
+      "attachment_normal_slot_local": [
+        -1,
+        0,
+        0
+      ],
+      "dimensions": "provisional hardware and bracket; source-relative placement, not flight measurement",
+      "rotation_reference_quaternion_xyzw": [
+        0,
+        -0.7071067811865475,
+        0,
+        0.7071067811865476
+      ],
+      "exported_neutral_quaternion_xyzw": [
+        0,
+        -0.7071067811865476,
+        0,
+        0.7071067811865476
+      ]
+    }
+  ],
+  "backing_policy": "Each neutral backing is independently addressable. If host retains original placeholder disable only this named backing to avoid coplanar faces. Never hide support, panel frame or other slot.",
+  "collision_policy": "Host creates targeted input proxies only around switch sweep, never entire partial-region root/backing. Recommend separate gestures for PGNS AUTO/ATT HOLD and DES RATE signed momentary motion; no engine/+X/AGS input."
+}

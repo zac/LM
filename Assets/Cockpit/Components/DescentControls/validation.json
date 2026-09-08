@@ -1,0 +1,212 @@
+{
+  "checks": [
+    {
+      "name": "AttitudeMode root",
+      "pass": true
+    },
+    {
+      "name": "units",
+      "pass": true
+    },
+    {
+      "name": "up",
+      "pass": true
+    },
+    {
+      "name": "identity root",
+      "pass": true
+    },
+    {
+      "name": "direct actuator",
+      "pass": true
+    },
+    {
+      "name": "pivot expected",
+      "pass": true
+    },
+    {
+      "name": "independent backing",
+      "pass": true
+    },
+    {
+      "name": "no external dependencies",
+      "pass": true
+    },
+    {
+      "name": "ARKit compliance",
+      "pass": true
+    },
+    {
+      "name": "within slot width",
+      "pass": true
+    },
+    {
+      "name": "within slot height",
+      "pass": true
+    },
+    {
+      "name": "fixed unaffected AUTO",
+      "pass": true
+    },
+    {
+      "name": "upper/lower direction -17",
+      "pass": true
+    },
+    {
+      "name": "fixed unaffected ATT HOLD",
+      "pass": true
+    },
+    {
+      "name": "upper/lower direction 0",
+      "pass": true
+    },
+    {
+      "name": "fixed unaffected OFF",
+      "pass": true
+    },
+    {
+      "name": "upper/lower direction 17",
+      "pass": true
+    },
+    {
+      "name": "DescentRate root",
+      "pass": true
+    },
+    {
+      "name": "units",
+      "pass": true
+    },
+    {
+      "name": "up",
+      "pass": true
+    },
+    {
+      "name": "identity root",
+      "pass": true
+    },
+    {
+      "name": "direct actuator",
+      "pass": true
+    },
+    {
+      "name": "pivot expected",
+      "pass": true
+    },
+    {
+      "name": "independent backing",
+      "pass": true
+    },
+    {
+      "name": "no external dependencies",
+      "pass": true
+    },
+    {
+      "name": "ARKit compliance",
+      "pass": true
+    },
+    {
+      "name": "within slot width",
+      "pass": true
+    },
+    {
+      "name": "within slot height",
+      "pass": true
+    },
+    {
+      "name": "fixed unaffected plus",
+      "pass": true
+    },
+    {
+      "name": "upper/lower direction -17",
+      "pass": true
+    },
+    {
+      "name": "fixed unaffected center",
+      "pass": true
+    },
+    {
+      "name": "upper/lower direction 0",
+      "pass": true
+    },
+    {
+      "name": "fixed unaffected minus",
+      "pass": true
+    },
+    {
+      "name": "upper/lower direction 17",
+      "pass": true
+    },
+    {
+      "name": "ACA three pivots",
+      "pass": true
+    },
+    {
+      "name": "sampled ACA no crossing",
+      "pass": true
+    }
+  ],
+  "failed": 0,
+  "assets": [
+    {
+      "id": "AttitudeMode",
+      "bounds_m": [
+        [
+          -0.11249999701976776,
+          -0.07249999791383743,
+          -0.024000000208616257
+        ],
+        [
+          0.11249999701976776,
+          0.07249999791383743,
+          0.031853243708610535
+        ]
+      ],
+      "actuator_translation_m": [
+        -0.07199999690055847,
+        -0.03700000047683716,
+        0.008999999612569809
+      ],
+      "actuator_quaternion_xyzw": [
+        -0.14780940259209394,
+        0.0,
+        0.0,
+        0.9890158716091156
+      ],
+      "meshes": 12,
+      "triangles": 6164
+    },
+    {
+      "id": "DescentRate",
+      "bounds_m": [
+        [
+          -0.0625,
+          -0.054999999701976776,
+          -0.003000000026077032
+        ],
+        [
+          0.0625,
+          0.054999999701976776,
+          0.05000000074505806
+        ]
+      ],
+      "actuator_translation_m": [
+        -0.03400000184774399,
+        0.017999999225139618,
+        0.027000000700354576
+      ],
+      "actuator_quaternion_xyzw": [
+        0.0,
+        -0.7071067544940101,
+        0.0,
+        0.707106807879086
+      ],
+      "meshes": 9,
+      "triangles": 932
+    }
+  ],
+  "ACA_surface_crossings": [],
+  "method": "actual USD meshes, 27 ACA poses +/-11deg. Neutral DES RATE. Not containment/hand/continuous clearance.",
+  "ACA_sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5",
+  "native": "separate report",
+  "VisionPro": "not tested"
+}
