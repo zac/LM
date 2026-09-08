@@ -33,3 +33,7 @@ The original seven groups retain identical mesh/topology/attribute fingerprints;
 - `ForwardHatchFittings` and `TransferHatchFittings`: simple fixed handgrips, mounting bosses and discrete fasteners relieve the otherwise blank closed hatch faces. Neither the exact handle design nor fastener count is established by these references. They are explicitly provisional and do not model a latch, pressure seal, lock or qualified hinge. They stay within the existing closed-leaf outlines. Disable/reparent these groups if a future host opens or removes a leaf; this overlay itself has no hatch state or animation.
 
 These additions preserve all existing openings and underlying boundaries. No source image is used as a texture. Fine mesh, handle proportions, fastener spacing and colors remain explicit approximations awaiting closer source drawings or suitably licensed detailed photographs.
+
+### Added cover material
+
+`LinerCream` uses an uncalibrated diffuse RGB of (0.67, 0.66, 0.56), with roughness 0.64 and no metalness. The warmer/light cover color is a visual interpretation of the pale museum liner sections in `images.jpeg` and the panorama notes. It deliberately differs from the retained gray Cabin shell; the shell material is not changed. `LinerMesh` uses provisional RGB (0.39, 0.40, 0.34) and metalness 0.15. Neither value is measured Apollo paint, reflectance, lighting or aging evidence. Workbench shading is not the final native material appearance; evaluate those materials with the coordinator's runtime readability/lighting changes before visual acceptance.
