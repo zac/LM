@@ -497,21 +497,16 @@ final class PoweredDescentSession {
         guard let runtime else { return }
         dskyTask?.cancel()
         dskyTask = nil
-        dskyKeyTask?.cancel()
+        let previousKeyTask = dskyKeyTask
+        previousKeyTask?.cancel()
         dskyKeyTask = Task { @MainActor [weak self] in
             guard let self else { return }
-            if key == .pro {
-                // PROCEED is a spring-loaded channel-032 discrete. Luminary's
-                // P64 flash handler consumes the press and then requires the
-                // release edge before later PRO operations can be recognized.
-                await runtime.sendPRO(pressed: true)
-                try? await Task.sleep(for: .milliseconds(120))
-                // Cancellation by a subsequent DSKY key must not strand the
-                // spring-loaded switch in its pressed state.
-                await runtime.sendPRO(pressed: false)
-            } else {
-                await runtime.sendDSKYKey(key)
-            }
+            await previousKeyTask?.value
+            await LMDSKYInputPulse.run(
+                key: key,
+                sendKey: { await runtime.sendDSKYKey($0) },
+                sendPRO: { await runtime.sendPRO(pressed: $0) }
+            )
             guard !Task.isCancelled else { return }
             if !self.isRunning {
                 let snap = await runtime.snapshot()

@@ -120,7 +120,8 @@ final class LMCommanderStationScene {
     private var fdaiBall: Entity?
     private var retiredCommanderEntryAnchors = [AnchorEntity]()
     private var lastVehicleState: LMVehicleStateSnapshot?
-    private var dskyKeyEntitiesByRawValue = [Int: ModelEntity]()
+    private var dskyKeyEntitiesByRawValue = [Int: Entity]()
+    private var importedDSKY: LMImportedDSKY?
     private var dskyKeyRestPositions = [Int: SIMD3<Float>]()
     private var dskyKeyResetTasks = [Int: Task<Void, Never>]()
     private var lastPhysicalDSKYSignature: String?
@@ -162,6 +163,7 @@ final class LMCommanderStationScene {
         buildCabin()
         buildLandingPointCalledAngleMarker()
         buildPhysicalDSKY()
+        installImportedDSKY()
         buildPhysicalControls()
         // RealityKit models cast dynamic-light shadows by default, even when
         // they have no DynamicLightShadowComponent. Explicitly opt every
@@ -226,6 +228,7 @@ final class LMCommanderStationScene {
     /// so the live SwiftUI face remains the preferred presentation while both
     /// renderers consume the same immutable AGC snapshot.
     func applyDSKY(_ snapshot: DSKYSnapshot?) {
+        importedDSKY?.apply(snapshot)
         let presentation = LMPhysicalDSKYPresentation(snapshot: snapshot)
         guard presentation.signature != lastPhysicalDSKYSignature else { return }
         lastPhysicalDSKYSignature = presentation.signature
@@ -650,6 +653,9 @@ final class LMCommanderStationScene {
         let issues = LMCockpitAssetContract.validate(cabin)
         guard issues.isEmpty else {
             throw AssetError.invalidArtistCabin(issues)
+        }
+        for name in ["DSKY_Mount", "FDAI_Mount"] {
+            cabin.findEntity(named: name)?.isEnabled = false
         }
         artistCabin?.removeFromParent()
         cabin.name = LMCockpitAssetContract.Node.cabinRoot.rawValue
@@ -1335,6 +1341,22 @@ final class LMCommanderStationScene {
         }
     }
 
+    private func installImportedDSKY() {
+        do {
+            let asset = try Entity.load(contentsOf: LMKitAssets.dskyURL)
+            let binding = try LMImportedDSKY(asset: asset)
+            // Commit replacement only after the complete contract validates.
+            for child in Array(dskyFaceRoot.children) { child.removeFromParent() }
+            dskyFaceRoot.addChild(binding.root)
+            dskyKeyEntitiesByRawValue = binding.keys
+            dskyKeyRestPositions = binding.keys.mapValues(\.position)
+            importedDSKY = binding
+            binding.apply(nil)
+        } catch {
+            logger.error("Imported DSKY unavailable; procedural fallback retained: \(String(describing: error), privacy: .public)")
+        }
+    }
+
     private func buildPhysicalDSKY() {
         let faceMaterial = SimpleMaterial(
             color: UIColor(red: 0.20, green: 0.205, blue: 0.18, alpha: 1),
@@ -1600,7 +1622,7 @@ final class LMCommanderStationScene {
         key.addChild(label)
     }
 
-    var dskyKeyEntities: [ModelEntity] {
+    var dskyKeyEntities: [Entity] {
         LMDSKYGeometry.keyPlacements.compactMap {
             dskyKeyEntitiesByRawValue[$0.code.rawValue]
         }
@@ -1639,7 +1661,7 @@ final class LMCommanderStationScene {
         pressedPosition.z -= 0.003
         key.move(
             to: Transform(translation: pressedPosition),
-            relativeTo: dskyFaceRoot,
+            relativeTo: key.parent,
             duration: 0.035,
             timingFunction: .easeInOut
         )
@@ -1648,7 +1670,7 @@ final class LMCommanderStationScene {
             guard !Task.isCancelled, let self, let key else { return }
             key.move(
                 to: Transform(translation: restPosition),
-                relativeTo: self.dskyFaceRoot,
+                relativeTo: key.parent,
                 duration: 0.065,
                 timingFunction: .easeInOut
             )
