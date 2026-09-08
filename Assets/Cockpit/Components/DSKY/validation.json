@@ -43,6 +43,7 @@
     "Required fixed/display direct parents",
     "Six independent readout regions",
     "Twelve independent status/caution lamp regions",
+    "Each indicator has its own diffuser above the emitter",
     "Separate computer activity lamp",
     "Two separate blank spare cells",
     "PRO cap press follows pivot while fixed face stays still",
@@ -99,6 +100,8 @@
     "DSKY.usdz all meshes material bound",
     "DSKY.usdz triangulated",
     "DSKY.usdz emissive Preview Surface shaders",
+    "DSKY.usdz translucent diffuser opacity exported",
+    "DSKY.usdz independently selected amber lamp states",
     "DSKY.usdz OpenUSD compliance",
     "DSKY-LightingPreview.usdz default root",
     "DSKY-LightingPreview.usdz Y up and meters",
@@ -147,6 +150,8 @@
     "DSKY-LightingPreview.usdz all meshes material bound",
     "DSKY-LightingPreview.usdz triangulated",
     "DSKY-LightingPreview.usdz emissive Preview Surface shaders",
+    "DSKY-LightingPreview.usdz translucent diffuser opacity exported",
+    "DSKY-LightingPreview.usdz independently selected amber lamp states",
     "DSKY-LightingPreview.usdz OpenUSD compliance",
     "DSKY-DisplayPreview.usdz default root",
     "DSKY-DisplayPreview.usdz Y up and meters",
@@ -195,7 +200,59 @@
     "DSKY-DisplayPreview.usdz all meshes material bound",
     "DSKY-DisplayPreview.usdz triangulated",
     "DSKY-DisplayPreview.usdz emissive Preview Surface shaders",
+    "DSKY-DisplayPreview.usdz translucent diffuser opacity exported",
+    "DSKY-DisplayPreview.usdz independently selected amber lamp states",
     "DSKY-DisplayPreview.usdz OpenUSD compliance",
+    "DSKY-BacklightPreview.usdz default root",
+    "DSKY-BacklightPreview.usdz Y up and meters",
+    "DSKY-BacklightPreview.usdz identity root transform",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_VERB",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_VERB",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_NOUN",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_NOUN",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_PLUS",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_PLUS",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_7",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_7",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_8",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_8",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_9",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_9",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_CLR",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_CLR",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_MINUS",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_MINUS",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_4",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_4",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_5",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_5",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_6",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_6",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_PRO",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_PRO",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_0",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_0",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_1",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_1",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_2",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_2",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_3",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_3",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_KEY_REL",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_KEY_REL",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_ENTR",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_ENTR",
+    "DSKY-BacklightPreview.usdz path DSKY_Key_RSET",
+    "DSKY-BacklightPreview.usdz local axes DSKY_Key_RSET",
+    "DSKY-BacklightPreview.usdz display above origin",
+    "DSKY-BacklightPreview.usdz face envelope",
+    "DSKY-BacklightPreview.usdz depth within budget",
+    "DSKY-BacklightPreview.usdz all meshes material bound",
+    "DSKY-BacklightPreview.usdz triangulated",
+    "DSKY-BacklightPreview.usdz emissive Preview Surface shaders",
+    "DSKY-BacklightPreview.usdz translucent diffuser opacity exported",
+    "DSKY-BacklightPreview.usdz independently selected amber lamp states",
+    "DSKY-BacklightPreview.usdz OpenUSD compliance",
     "Clean USDZ reimport",
     "Reimport position DSKY_Key_VERB",
     "Reimport position DSKY_Key_NOUN",
@@ -225,9 +282,9 @@
     "RealityKit input and Vision Pro not tested"
   ],
   "source": {
-    "meshes": 378,
-    "triangles": 44415,
-    "materials_used": 10,
+    "meshes": 390,
+    "triangles": 46671,
+    "materials_used": 11,
     "textures": 0,
     "bounds_blender": [
       [
@@ -244,7 +301,7 @@
   },
   "exports": {
     "DSKY.usdz": {
-      "sha256": "25e8df75b940f86b35a4e9ac722d7626e37eec1ebdb677a2033d23e803feeb91",
+      "sha256": "e20a69864d4c7e0ff068172e0e672d9fbcc510c1dc4e97e4db0246fde08fbdfd",
       "bounds_usd_m": [
         [
           -0.10317479819059372,
@@ -257,13 +314,13 @@
           0.015200000256299962
         ]
       ],
-      "mesh_count": 378,
+      "mesh_count": 390,
       "compliance_errors": [],
       "compliance_failed": [],
       "compliance_warnings": []
     },
     "DSKY-LightingPreview.usdz": {
-      "sha256": "7fc672d98c356755140c0e2012f2611bc0b4badc76b80ed8e563d4df2550eb11",
+      "sha256": "aef3d4115c206e8c7f3a7443f58b83d91617cdb45d55f50a4fe83a08eb9cfcdd",
       "bounds_usd_m": [
         [
           -0.10317479819059372,
@@ -276,13 +333,13 @@
           0.015200000256299962
         ]
       ],
-      "mesh_count": 378,
+      "mesh_count": 390,
       "compliance_errors": [],
       "compliance_failed": [],
       "compliance_warnings": []
     },
     "DSKY-DisplayPreview.usdz": {
-      "sha256": "ab605dfe8f095925391d2adbc08298c9d51883905482e1ca9eb413b8d1af2f3c",
+      "sha256": "c83926228af7e35d631724301c283e47ca12d2451600a04f70201d1bce8d8742",
       "bounds_usd_m": [
         [
           -0.10317479819059372,
@@ -295,7 +352,26 @@
           0.015200000256299962
         ]
       ],
-      "mesh_count": 378,
+      "mesh_count": 390,
+      "compliance_errors": [],
+      "compliance_failed": [],
+      "compliance_warnings": []
+    },
+    "DSKY-BacklightPreview.usdz": {
+      "sha256": "8f266812ed719f48f63be2e3a0364fa2f08a5d07119b77224eeb617ec378888d",
+      "bounds_usd_m": [
+        [
+          -0.10317479819059372,
+          -0.10159999877214432,
+          -0.1602140029426664
+        ],
+        [
+          0.10317479819059372,
+          0.10159999877214432,
+          0.015200000256299962
+        ]
+      ],
+      "mesh_count": 390,
       "compliance_errors": [],
       "compliance_failed": [],
       "compliance_warnings": []

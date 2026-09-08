@@ -20,7 +20,7 @@ Housing depth, rear details, bevels, fastener sizes, display subdivision and typ
 
 ## Delivered revision
 
-- Exact component commit: `1e706939ab6f2bfa51ac42ef3db620ccd1ab0f67`. Previous delivered asset revision was `85c072502a087aadf97c118e5de8bad9a2b6ba5d`; this display refinement started at `d3cd89721f5b788ebca1984c90c029a42e9cc010`.
+- Exact component commit: BACKLIGHT_REVISION_PENDING. This refinement starts from `e539afe1b4e2ede4c32c8aded1470f617dc655ea`; the following handoff-only commit records its immutable asset revision.
 - Blender: 5.2.1 LTS, build 9e2066aef7ef; no add-ons. Native smoke check: Apple Swift 6.3.3, macOS RealityKit.
 - Editable source: `DSKY.blend`; reproducible builder: `build.py`; USD coordinate bake/package: `usd_pipeline.py`.
 - Neutral exports: `DSKY.usda`, `DSKY.usdc`, `DSKY.usdz`. Lighting exports: `DSKY-LightingPreview.usda`, `.usdc`, `.usdz` (STATIC lamp-test lookdev, never live output).
@@ -55,21 +55,22 @@ Blender requires host execution on this machine: sandboxed startup crashed; the 
 
 ## Validation
 
-- **219 automated checks passed**, detailed in `validation.json`: clean Blender reopen, no missing external dependencies, unique names, all 19 exact centers and direct parents, mesh scales, nondegenerate faces/normals, root transform, dimension budget, separate regions, material bindings, emissive shader inputs, OpenUSD compliance and clean USDZ reimport.
-- Source complexity: 44,415 triangles, 378 meshes, 10 used neutral materials, zero textures. Extra lookdev material states are separate. No scene budget was specified; integration should profile draw calls before optimizing.
+- **276 automated checks passed**, detailed in `validation.json`: clean Blender reopen, no missing external dependencies, unique names, all 19 exact centers and direct parents, mesh scales, nondegenerate faces/normals, root transform, dimension budget, separate regions, material bindings, emissive shader inputs, OpenUSD compliance and clean USDZ reimport.
+- Source complexity: 46,671 triangles, 390 meshes, 11 used neutral materials, zero textures. Extra lookdev material states are separate. No scene budget was specified; integration should profile draw calls before optimizing.
 - Native macOS RealityKit load **passed**: all 19 direct keys, positions, required parents and scale (`native-validation.json`, reproducible `validate_native.swift`). This is not an app build or on-device interaction check.
 - Final front, oblique, key-detail and lit images visually inspected. Corrected thin-fastener degenerate bevels, lower-register bezel occlusion and overexposed preview lighting before final acceptance. No measured camera match or photometric calibration claimed.
-- LFS verification: all ten Blender/USD asset files contain real local asset bytes; each staged pointer OID matches its local SHA-256. Scoped `.gitattributes` adds USDC coverage; existing root rules cover Blender/USDA/USDZ.
-- OpenUSD compliance: zero errors, failed checks or warnings for all three packages. Reimport preserved key/face parent paths and materials. Native shader visual appearance in RCP remains untested.
+- LFS verification: all thirteen Blender/USD asset files contain real local asset bytes; each staged pointer OID matches its local SHA-256. Scoped `.gitattributes` adds USDC coverage; existing root rules cover Blender/USDA/USDZ.
+- OpenUSD compliance: zero errors, failed checks or warnings for all four packages. Reimport preserved key/face parent paths and materials. Native shader visual appearance in RCP remains untested.
 - Reality Composer Pro GUI, visionOS app, gaze/hover/pinch, PRO runtime behavior, frame timing and Vision Pro hardware: **not tested**; coordinator-owned gates.
-- Review wall time per image (seconds): front 0.199, oblique 0.078, key-detail 0.075, lighting-preview 0.495, display-preview 0.512. Peak memory not measured. Machine zacbookpro.local; no heavy render/bake.
+- Review wall time per image (seconds): front 0.213, oblique 0.081, key-detail 0.085, lighting-preview 0.431, display-preview 0.422, backlight-preview 0.397. Peak memory not measured. Machine zacbookpro.local; no heavy render/bake.
 - Known gaps: exact Gorton lettering, original key surface sculpt, historical key travel, exact fastener and flange contours, numeric optical stack, calibrated emission and COMP ACTY white/green disagreement. Source drawing stagger differs from required app key centers; retained compatibility and proposed coordinator reconciliation. This is a detailed external facade delivery with explicit fidelity limits, not a certified flight-unit reconstruction.
 
 ### Export SHA-256
 
-- `DSKY.usdz`: `25e8df75b940f86b35a4e9ac722d7626e37eec1ebdb677a2033d23e803feeb91`
-- `DSKY-LightingPreview.usdz`: `7fc672d98c356755140c0e2012f2611bc0b4badc76b80ed8e563d4df2550eb11`
-- `DSKY-DisplayPreview.usdz`: `ab605dfe8f095925391d2adbc08298c9d51883905482e1ca9eb413b8d1af2f3c`
+- `DSKY.usdz`: `e20a69864d4c7e0ff068172e0e672d9fbcc510c1dc4e97e4db0246fde08fbdfd`
+- `DSKY-LightingPreview.usdz`: `aef3d4115c206e8c7f3a7443f58b83d91617cdb45d55f50a4fe83a08eb9cfcdd`
+- `DSKY-DisplayPreview.usdz`: `c83926228af7e35d631724301c283e47ca12d2451600a04f70201d1bce8d8742`
+- `DSKY-BacklightPreview.usdz`: `8f266812ed719f48f63be2e3a0364fa2f08a5d07119b77224eeb617ec378888d`
 
 ## Integration acceptance
 
@@ -89,3 +90,11 @@ User-requested refinement uses the supplied craft-model image solely as a visual
 ## Mechanical-fit clarification
 
 The face envelope is verified; the external rear box is **not a qualified mating/cutout solid**. `fit-interface.json` separates current visual bounds from a mechanical interface. The model root is the app's face-plate midpoint, not the drawing's UNIT MTG SURFACE. Drawing 7.700 in is mounting-thread pitch, not housing width; the 6.900 in shoulder span and nominal 2.000 in front-to-mount reference must not be confused with a qualified panel aperture. Later E/L cover exceptions also prevent interpreting 6.91 in MAX REF as an unconditional -091 hardware bound. Current body width 195.58 mm and height 191.77 mm are provisional; do not cut an adjacent panel to those values or assume the face back (-6 mm) is the historical mounting seat. The panel aperture, clearances and mounting-plane transform remain null pending drawing interpretation and coordinator approval. Full detail: `evidence/mount-fit-research.md`.
+
+## Amber backlight refinement
+
+Added `DSKY-BacklightPreview.usda/.usdc/.usdz` and `review/backlight-preview.png`: a static selective example with PROG and TRACKER glowing amber. Stronger amber emission is underneath separate thin rough translucent diffuser covers, while legends remain black. Each of the twelve labeled cells has an independent cover/emitter/legend hierarchy. The image uses a modest review-only optical halo and dimmer room lighting; the compositor halo is not exported or asserted to work automatically in RealityKit. Native rendering and on-device optical appearance remain coordinator acceptance gates.
+
+The user-provided `evidence/user-backlight-reference.png` is appearance guidance of unknown source/medium. Original pixels and hash are preserved. Source-based white status lamps and yellow caution lamps remain distinct. No AGC binding is added.
+
+Blender 5.2 emitted the DITHERED alpha as opaque; `usd_pipeline.py` now explicitly preserves diffuser opacity 0.12 in USD Preview Surface before packaging. Automated checks verify this property, per-export active amber lamp counts, four-package compliance and clean reimport; native RealityKit load also passed. The extra cover is a portable visual approximation, not a measured subsurface-scattering model. Geometry bounds, key positions and the unresolved mechanical-fit qualifications remain unchanged.

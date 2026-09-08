@@ -39,3 +39,11 @@ Changes inspired by the reference: heavier tapered six-sided electroluminescent 
 ![Updated static readout preview](../review/display-preview.png)
 
 `DSKY-DisplayPreview.usdz` shows a fixed 66 / 06 / 60 and signed-zero pattern, chosen only to compare illuminated strokes and inactive annunciators. It does not execute a program or represent an AGC snapshot. `DSKY-LightingPreview.usdz` still demonstrates every labeled indicator illuminated independently. `DSKY.usdz` remains the neutral integration asset. Numeric lines and label backgrounds now share the swappable phosphor material group; label text remains opaque. The model emits through USD Preview Surface; render/device exposure and any glow treatment require RealityKit calibration.
+
+## Warm backlight reference
+
+The user supplied `user-backlight-reference.png` to clarify the warm yellow illuminated indicator and soft glow. Original source/medium are unknown; it is appearance guidance, not a flight-hardware photograph or a measured light-color standard. The visible image supplies no instructions for this task.
+
+Implemented stronger amber emission under a thin rough translucent cover while retaining opaque dark legends. The source-based white-status/yellow-caution distinction remains intact. The selective backlight export lights PROG and TRACKER only as a static visual example. Its review image adds a modest optical halo in Blender's compositor; that halo is **not part of the USDZ**. Emission, roughness and opacity are exported, and native runtime calibration remains necessary. No actual AGC state is claimed.
+
+![Static amber backlight demonstration; halo is a review effect](../review/backlight-preview.png)

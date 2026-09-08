@@ -121,7 +121,10 @@ def build():
  phosphor=material('Segments_unpowered',(.018,.029,.009),0,.48,.005)
  lit=material('EL_green_on',(.30,.95,.035),0,.38,1.8)
  white_on=material('Status_white_on',(.75,.86,.71),0,.4,.35)
- amber_on=material('Caution_amber_on',(.95,.58,.10),0,.4,.35)
+ amber_on=material('Caution_amber_on',(1.0,.58,.015),0,.5,2.4)
+ diffuser=material('Lamp_diffuser',(.70,.72,.67),0,.72)
+ diffuser.node_tree.nodes['Principled BSDF'].inputs['Alpha'].default_value=.12
+ diffuser.diffuse_color=(.70,.72,.67,.12)
  for m in [lit,white_on,amber_on]: m.use_fake_user=True
  root=empty('DSKY_Mount'); root['source_baseline']='97f877b52bf569656c6798cff5790b7207c42af0'
  root['evidence']='Apollo11-led; outline2003956B; dimensions and uncertainties in HANDOFF.md'
@@ -152,6 +155,7 @@ def build():
   x=-.066 if col==0 else -.029; y=.045-row*.015113
   node=empty('DSKY_Lamp_'+name,display,(x,y,.0012)); node['snapshot_indicator_id']=code
   box('DSKY_Lamp_'+name+'_Lens',(0,0,0),(.02794,.013462,.0008),lampmat,node,.0006)
+  box('DSKY_Lamp_'+name+'_Diffuser',(0,0,.00046),(.02794,.013462,.00004),diffuser,node,.000008)
   text('DSKY_Lamp_'+name+'_Legend',name.replace('_','\n'),(0,0,.0006),.0035,ink,node,.025)
   lamp_specs.append({'name':node.name,'indicator_id':code,'path':'/DSKY_Mount/DSKY_Display_Mount/'+node.name})
  comp=empty('DSKY_Lamp_COMP_ACTY',display,(.016,.041,.0012))
@@ -285,6 +289,25 @@ def build():
  normalize_and_package(OUT/'DSKY-DisplayPreview.usda')
  scene.render.filepath=str(OUT/'review'/'display-preview.png');start=time.monotonic()
  bpy.ops.render.render(write_still=True);times['display-preview']=time.monotonic()-start
- (OUT/'review'/'render-cost.json').write_text(json.dumps({'engine':'Workbench; lighting preview Eevee','resolution':{'front':[900,900],'oblique':[900,900],'key-detail':[900,900],'lighting-preview':[720,720],'display-preview':[720,720]},
+ # Selective amber backlighting: separate from neutral and lamp-test states.
+ for name in ['PROG','TRACKER']:
+  bpy.data.objects['DSKY_Lamp_'+name+'_Lens'].data.materials[0]=amber_on
+ root['binding_status']='STATIC_BACKLIGHT_PREVIEW_NOT_AGC'
+ bpy.ops.object.select_all(action='DESELECT')
+ for o in [root]+list(root.children_recursive): o.select_set(True)
+ bpy.ops.wm.usd_export(filepath=str(OUT/'DSKY-BacklightPreview.usda'),**settings)
+ normalize_and_package(OUT/'DSKY-BacklightPreview.usda')
+ # This optical halo is a REVIEW compositor effect, not exported USD geometry.
+ tree=bpy.data.node_groups.new('Review_only_optical_glow','CompositorNodeTree')
+ tree.interface.new_socket(name='Image',in_out='OUTPUT',socket_type='NodeSocketColor')
+ render=tree.nodes.new('CompositorNodeRLayers'); glow=tree.nodes.new('CompositorNodeGlare')
+ glow.inputs['Type'].default_value='Fog Glow';glow.inputs['Threshold'].default_value=.6
+ glow.inputs['Size'].default_value=.18;glow.inputs['Strength'].default_value=1.0
+ output=tree.nodes.new('NodeGroupOutput');tree.links.new(render.outputs['Image'],glow.inputs['Image'])
+ tree.links.new(glow.outputs['Image'],output.inputs['Image']);scene.compositing_node_group=tree
+ for name in ['ReviewLight_Key','ReviewLight_Fill']: bpy.data.objects[name].data.energy*=.24
+ scene.render.filepath=str(OUT/'review'/'backlight-preview.png');start=time.monotonic()
+ bpy.ops.render.render(write_still=True);times['backlight-preview']=time.monotonic()-start
+ (OUT/'review'/'render-cost.json').write_text(json.dumps({'engine':'Workbench; lighting preview Eevee','resolution':{'front':[900,900],'oblique':[900,900],'key-detail':[900,900],'lighting-preview':[720,720],'display-preview':[720,720],'backlight-preview':[720,720]},
  'seconds':times,'peak_memory':'not measured','machine':'zacbookpro.local'},indent=2)+'\n')
 if __name__=='__main__': build()

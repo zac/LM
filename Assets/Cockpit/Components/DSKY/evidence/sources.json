@@ -41,5 +41,11 @@
     "provenance": "User supplied craft-model image; maker and URL unknown; styling reference only",
     "bytes": 1316063,
     "sha256": "d9166aad12b4c5c8f0342fafedfa27b646c65b22e6920a00a83b666924a40f73"
+  },
+  "user_backlight_reference": {
+    "file": "evidence/user-backlight-reference.png",
+    "provenance": "User supplied dsky.png; source and medium unknown; appearance reference only",
+    "bytes": 4139176,
+    "sha256": "9257e95efc767dc89c43837b6eb14fcfb163d6982d4d04e01f4fd3541a7c99b9"
   }
 }

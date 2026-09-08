@@ -20,14 +20,19 @@
     "display-preview": [
       720,
       720
+    ],
+    "backlight-preview": [
+      720,
+      720
     ]
   },
   "seconds": {
-    "front": 0.19912812486290932,
-    "oblique": 0.07837691623717546,
-    "key-detail": 0.07547200005501509,
-    "lighting-preview": 0.4949990422464907,
-    "display-preview": 0.5124194589443505
+    "front": 0.2129950001835823,
+    "oblique": 0.08125204127281904,
+    "key-detail": 0.08488074969500303,
+    "lighting-preview": 0.4312928752042353,
+    "display-preview": 0.42233583284541965,
+    "backlight-preview": 0.39695066725835204
   },
   "peak_memory": "not measured",
   "machine": "zacbookpro.local"
