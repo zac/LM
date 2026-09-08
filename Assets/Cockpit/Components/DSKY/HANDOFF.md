@@ -20,7 +20,7 @@ Housing depth, rear details, bevels, fastener sizes, display subdivision and typ
 
 ## Delivered revision
 
-- Exact component commit: BACKLIGHT_REVISION_PENDING. This refinement starts from `e539afe1b4e2ede4c32c8aded1470f617dc655ea`; the following handoff-only commit records its immutable asset revision.
+- Exact component commit: `d5827948e6e288154e588b8608bda5fc4c6707ce`. This refinement starts from `e539afe1b4e2ede4c32c8aded1470f617dc655ea`; the following handoff-only commit records its immutable asset revision.
 - Blender: 5.2.1 LTS, build 9e2066aef7ef; no add-ons. Native smoke check: Apple Swift 6.3.3, macOS RealityKit.
 - Editable source: `DSKY.blend`; reproducible builder: `build.py`; USD coordinate bake/package: `usd_pipeline.py`.
 - Neutral exports: `DSKY.usda`, `DSKY.usdc`, `DSKY.usdz`. Lighting exports: `DSKY-LightingPreview.usda`, `.usdc`, `.usdz` (STATIC lamp-test lookdev, never live output).

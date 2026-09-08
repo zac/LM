@@ -1,7 +1,7 @@
 {
   "status": "visual_envelope_verified__mechanical_slot_fit_not_qualified",
   "units": "meters",
-  "asset_revision": "1e706939ab6f2bfa51ac42ef3db620ccd1ab0f67",
+  "asset_revision": "d5827948e6e288154e588b8608bda5fc4c6707ce",
   "root": "/DSKY_Mount",
   "root_transform": "identity",
   "axes": "+X right +Y overhead +Z toward crew",
