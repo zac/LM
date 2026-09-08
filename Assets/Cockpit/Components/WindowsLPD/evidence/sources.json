@@ -1,0 +1,111 @@
+{
+  "records": [
+    {
+      "file": "19730023038-spacecraft-windows.pdf",
+      "bytes": 1370212,
+      "sha256": "341effa41329abc44590e17d89110699f25fb74a9c6dc1919e460e66244193d8",
+      "review_date": "2026-09-08",
+      "source_url": "https://ntrs.nasa.gov/api/citations/19730023038/downloads/19730023038.pdf",
+      "locator": "printed8-10 / PDF13-15",
+      "mission_applicability": "Apollo program retrospective",
+      "confidence": "high construction; nominal dimensions"
+    },
+    {
+      "file": "69-H-134.jpg",
+      "bytes": 165479,
+      "sha256": "b851a1d0e20ea309beec4a33454d8b70e9923e2c3553d9da2d9275368665abb9",
+      "review_date": "2026-09-08",
+      "source_url": "https://apollojournals.org/alsj/a11/ap11-69-H-134.jpg",
+      "locator": "full photo",
+      "mission_applicability": "Apollo11 preflight",
+      "confidence": "moderate material appearance"
+    },
+    {
+      "file": "AS11-36-5389HR.jpg",
+      "bytes": 876209,
+      "sha256": "9a87df320e1fcd6c624ebb14ac2980bc72e4d3173a323e6197dd44c4469be5a1",
+      "review_date": "2026-09-08",
+      "source_url": "https://apollojournals.org/alsj/a11/AS11-36-5389HR.jpg",
+      "locator": "full photo",
+      "mission_applicability": "Apollo11 LM5 in-flight",
+      "confidence": "high installed rounded LMP frame shape"
+    },
+    {
+      "file": "BASELINE-CommanderWindowCalibration.md",
+      "bytes": 5890,
+      "sha256": "cd39139a66075d2a18d0eacfb109d3f8c0e3e3c15885638867bcbc79b936a215",
+      "review_date": "2026-09-08",
+      "source_origin": "existing code/document comparison only",
+      "source_commit": "09364460e8be570338f3d39a07067fe2bee0b044 for Cabin document; LM source current head cc42b92e45aabc25513b05a6cac42f0d04a8c147",
+      "historical_authority": false
+    },
+    {
+      "file": "BASELINE-LMLandingPointDesignator.swift",
+      "bytes": 10481,
+      "sha256": "b60b4980c312cc79d4909c152bcc5b007e0eb1902764d8c34b6575fc46508229",
+      "review_date": "2026-09-08",
+      "source_origin": "existing code/document comparison only",
+      "source_commit": "09364460e8be570338f3d39a07067fe2bee0b044 for Cabin document; LM source current head cc42b92e45aabc25513b05a6cac42f0d04a8c147",
+      "historical_authority": false
+    },
+    {
+      "file": "eppler-landing-report.pdf",
+      "bytes": 11146811,
+      "sha256": "969e58c8e47d791ab69bb1d53d46f7112edf10088752af4b77ba5c4eb9ddfd72",
+      "review_date": "2026-09-08",
+      "source_url": "https://www.nasa.gov/wp-content/uploads/2023/06/eppler-slides-apollo-lunar-landing-experience-report-20070-r4.pdf",
+      "locator": "slide38",
+      "mission_applicability": "photo vehicle unspecified",
+      "confidence": "moderate appearance; no measured color"
+    },
+    {
+      "file": "eppler-photo-crop.png",
+      "bytes": 237556,
+      "sha256": "bfe647cc2c6a7b5ac644b3a2afdb1a9cafd8833efdfbacc494f24d6a26704448",
+      "review_date": "2026-09-08",
+      "source_url": "https://www.nasa.gov/wp-content/uploads/2023/06/eppler-slides-apollo-lunar-landing-experience-report-20070-r4.pdf",
+      "derived_from": "eppler-landing-report.pdf",
+      "page_1based": 38,
+      "derivation": "pdftoppm -scale-to1800, no retouching",
+      "mission_applicability": "photo vehicle unspecified",
+      "crop_pixels_after_scale": [
+        1230,
+        715,
+        345,
+        570
+      ]
+    },
+    {
+      "file": "eppler-slide38.png",
+      "bytes": 649175,
+      "sha256": "53e32cdfae7ceb8bccfa33633722c57f23c2a504d3ea4ed11301b8659aee351d",
+      "review_date": "2026-09-08",
+      "source_url": "https://www.nasa.gov/wp-content/uploads/2023/06/eppler-slides-apollo-lunar-landing-experience-report-20070-r4.pdf",
+      "derived_from": "eppler-landing-report.pdf",
+      "page_1based": 38,
+      "derivation": "pdftoppm -scale-to1800, no retouching",
+      "mission_applicability": "photo vehicle unspecified"
+    },
+    {
+      "file": "grumman-flight-design-eye.jpg",
+      "bytes": 386525,
+      "sha256": "c0b646d01e050899a41f1e27f1cdbae2dbae6b2e847bd994dce15bf473cd43c8",
+      "review_date": "2026-09-08",
+      "source_url": "https://www.ibiblio.org/apollo/Documents/lm_structures_study_guide.pdf",
+      "locator": "original PDF43 / printed35 / T30915-39",
+      "mission_applicability": "1967 LM2-era training",
+      "confidence": "high printed station values; low digitized ray precision"
+    },
+    {
+      "file": "grumman-lpd-window.jpg",
+      "bytes": 345336,
+      "sha256": "926a8a710aa783f732cc33371863b71bc76ee0f9a05f00ac2695dbd719735bcf",
+      "review_date": "2026-09-08",
+      "source_url": "https://www.ibiblio.org/apollo/Documents/lm_structures_study_guide.pdf",
+      "locator": "original PDF44 / printed36 / T30915-38",
+      "mission_applicability": "1967 LM2-era training",
+      "confidence": "high drawing content, limited LM5 applicability"
+    }
+  ],
+  "original_grumman_full_pdf_sha256": "0efc74091c24db547bcbc634124a21f8e2b3fa0c0e14e59d0339a6b868768108"
+}
