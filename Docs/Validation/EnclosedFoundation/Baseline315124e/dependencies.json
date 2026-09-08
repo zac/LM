@@ -1,0 +1,12 @@
+{
+  "LMKit": {
+    "commit": "d1b0bb54a16adf69dd7b709420a91f639027dfc7",
+    "fileCount": 404,
+    "hydratedManifestSHA256": "7110e6ba2178562849b7419846d09f924106ff9a4f7c2aa26217874b8d550352"
+  },
+  "AGC": {
+    "commit": "b3f15533db335ee882dc07401790c93010809e8f",
+    "fileCount": 88,
+    "hydratedManifestSHA256": "0412398ac7cc046c0f6f99bdbdf17d7d85484ccf00d36b5af2b50174e313551c"
+  }
+}
