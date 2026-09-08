@@ -1,30 +1,26 @@
-# Cabin datum and measurement freeze v1
+# Enclosed Cabin datum v2
 
-This is a forward-compartment structural blockout, not a full pressure vessel or certified LM-5 replica. Freeze this skeleton for interface review before panel detail. All coordinates below are meters in +X right/LMP, +Y overhead, -Z forward. Origin matches the existing procedural cabin, not a physical body-station zero. Blender uses (x,-z,y); USD physically maps back to (x,z,-y). Root is identity.
+Descent-ready visual interior. This replaces the OPEN skeleton. Metric +X right/LMP, +Y up, -Z forward; `/Cabin` root is identity. Native Blender is Z-up; `build.py` physically converts points, normals and local transforms. This is approximate visual enclosure, not certified pressure-vessel or hatch engineering.
 
-| Quantity | Value | Evidence / qualification |
-|---|---:|---|
-| Forward compartment nominal diameter | 2.3368 | Apollo 11 press kit p96, 92 in; not clear usable width |
-| Nominal barrel depth | 1.0668 | Same, 42 in; oblique forward closure protrudes beyond barrel; aft midsection omitted |
-| Station spacing | 1.1176 | Grumman 1967 p17; not LM-5 survey |
-| Deck W × D | 1.397 × .9144 | Grumman p27 approximate 55 × 36 in; width/depth assignment provisional |
-| Deck center / thickness | (0,.10,-.07) / .045 | Legacy scene compatibility, not historical station |
-| Shell crown center / radius | (0,1.10) / 1.1684 | Nominal radius; vertical registration provisional |
-| Shell barrel fore/aft Z | -.48 / .5868 | Proposed optical-compatible registration, not body stations |
-| Shell visual thickness | .025 | Provisional, not pressure structure sizing |
-| Hatch clear nominal opening | .8128 square | Apollo 11 press kit p96; rounded production corners unmeasured |
-| Hatch center | (0,.55,-.95) | Proposed; threshold .1436; no door, hinge, latch or swing certification |
-| Main panel cant | -10° about +X | Grumman p27: top forward; installed sign checked against photos |
-| Lower center panels | -45° about +X | Grumman p27: bottom aft |
-| Side lower / middle tiers | -75° / -53.5° about +X | 15° / 36.5° above horizontal, early design basis |
-| CDR_Eye | (-.5588,1.78,-.38) | Preserved app contract; source body stations (279.25,22,54) in |
-| Source body to scene | (-Y,X,-Z) × .0254 + (0,-5.31295,.9916) | Distinguishes absolute station from scene eye height |
-| Inner triangle top / inboard / outboard | .7112 / .6096 / .635 | NASA TN D-7439 p9 nominal 28/24/25 in |
-| Inner corner offsets from eye | (-.4415295,0,-.1183075); (.1097963,.0494183,-.5648532); (.0175769,-.4308411,-.2009045) | Preserved ray reconstruction, not surveyed corners |
-| Outer plane normal offset | .020 | PROVISIONAL cavity; optical compatibility only |
-| LMP panes | Mirror CDR around X=0 | Proposed symmetry, no LMP optical calibration claim |
-| Frame rail width / pane thickness | .024 / .003 | Visual estimates; triangle dimensions are datum faces |
+The original freeze is superseded. `evidence/baseline-0936446/` preserves the original datum, mount manifest, builder, handoff and USDA. Historical LPD calibration claims there are comparison evidence only.
 
-All panel sizes, centers, shield profiles and mount offsets in `mounts.json` are proposed, replaceable reservations. Surface face +Z points toward crew. Panel mount origins are face centers; instrument reservation origins use the old app offsets from panel center and are NOT measured mating surfaces. DSKY has NO cutout or rear slot: the delivered component explicitly disqualifies its rear box for fitting.
+| Quantity | Current construction | Qualification |
+|---|---|---|
+| Barrel | nominal R 1.1684, center Y 1.10, Z -.48 to +.5868 | 92in diameter / 42in depth from Apollo 11 press kit printed p96; registration approximate |
+| Aft visual closure | Z +1.15 | New approximate midsection extension, not a revision of the 42in forward compartment dimension |
+| Standing deck | original 1.397 x .9144 inset, top Y .1225 | Early Grumman approximate 55x36in; original axis assignment remains provisional |
+| Floor additions | full connected side/forward/aft floor | Visual liner beneath future equipment; usable clear area will shrink with installation |
+| Crown | faceted circle except central flat roof X +/-.43, Y 2.1863971 | Visual liner; flat hatch surround not surveyed |
+| CDR/LMP eye | (+/-.5588,1.78,-.38) | Original reference preserved, not calibrated gaze/reach acceptance |
+| Forward triangles | exact baseline sharp construction corners | WindowsLPD supplies rounded visible apertures, panes, seals and markings; no optical certification |
+| Docking opening | .137 x .3402 tangent opening at (-.5588,2.1261097,-.2) | Nominal viewing dimensions and curved pane supported by TN D-7439 p9; placement approximate |
+| Forward hatch | .8128 square, center (0,.55,-1.02) | Nominal 32in from press kit; moved -.07 Z from old mount; closed leaf and shallow relief approximate |
+| Transfer hatch | .8128 diameter, center (0,roof,.65) | Coarse upper transfer closure; pose/outline needs later source refinement, no hinge/egress claim |
+| Engine cover | X +/-.315, Y .1225 to .4425, Z .60 to 1.15 | Qualitative raised cover from Grumman plan/section, dimensions invented and explicitly replaceable |
+| Panel/instrument mounts | exact old world positions, rotations, names and paths | Reservations only; no measured mating planes and no new instrument placement |
 
-Legacy comparison: panels 1/2 Z moved from -.535 to -.91 to meet oblique window inboard upper region; panel 3 from (0,1.245,-.540) to (0,1.264,-.82); panel 4 from (0,1.015,-.435) to (0,1.056,-.612). Sizes retained as provisional envelopes. Glareshields rebuilt as tall outboard stack-edge fins from 69-H-134 and AS11-36-5389; old shallow plates were inconsistent with visible installation. App source and calibration are unchanged. These proposals require coordinator reconciliation before use.
+`interface-v2.json` is the controlling interface, with the agreed WindowsLPD reference/hash. Right/up/inward-normal must form a proper rotation; docking local up is +Z aft. The first window proposal used a reflected basis; this was corrected with the window worker without moving the symmetric opening.
+
+Grumman training drawings (1967, LM-2 design basis) establish the continuous floor, forward barrel plus aft equipment region, central raised engine cover and upper transfer opening relationships. They do not survey an LM-5 interior. The Apollo 16 floor photo is used only for qualitative low threshold and deck strip appearance, not stowage installation; the cabin is descent-ready, not surface-stay clutter. Apollo 11 closeout/flight photos guide forward cheek and roof relationships. Exact file hashes and page locators are in `evidence/foundation/provenance.json`.
+
+No PanelInventory blank faces, CommanderPanels surrounds, window frames/panes, controls or finished instruments are copied into this shell. `Mounts` and `Optical` are non-rendering metadata; retained `LPD_Inner/Outer` nodes have no artwork. Use the independent WindowsLPD asset for new optics. `migration.json` enumerates every removed original visual node and the cutaway groups.

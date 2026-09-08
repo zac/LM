@@ -1,0 +1,15 @@
+{
+  "windows_commit": "5699e64",
+  "windows_usdz_sha256": "91c03cc4b6826473cfdccdce195fece5f591b778b8afdb3a71505df8f528cc32",
+  "cabin_usdz_sha256": "9b30f113235bea7832dd0d9f245d3f6ad98bd8a64af2d217943a5489e498c21b",
+  "method": "Blender USD import at identity, lightweight Workbench, glazing hidden because Workbench is opaque",
+  "hidden_glazing": [
+    "CDR_Glazing_Inner",
+    "CDR_Glazing_Outer",
+    "Docking_Glazing_Inner",
+    "Docking_Glazing_Outer",
+    "LMP_Glazing_Inner",
+    "LMP_Glazing_Outer"
+  ],
+  "qualification": "visual frame-miter and shell-edge inspection; no production assembly modifications or optical acceptance"
+}

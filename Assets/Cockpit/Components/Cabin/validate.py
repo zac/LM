@@ -5,7 +5,7 @@ from mathutils import Vector
 from pxr import Usd,UsdGeom,UsdShade,UsdUtils,Gf
 OUT=Path(__file__).resolve().parent
 sys.path.insert(0,str(OUT)); from build import C
-report={'checks':[],'limitations':['No Vision Pro or RCP GUI acceptance','No mechanical fit certification','Forward skeleton is intentionally not pressure closed','No door or actuated controls in this component']}
+report={'checks':[],'limitations':['No Vision Pro or RCP GUI acceptance','No mechanical fit certification','Visual liner only, not pressure vessel certification','Closed static hatches; no hinge or egress qualification']}
 def check(ok,s):
  if not ok:raise AssertionError(s)
  report['checks'].append(s)
@@ -28,10 +28,49 @@ for o in meshes:
  vol=sum(o.data.vertices[t.vertices[0]].co.dot(o.data.vertices[t.vertices[1]].co.cross(o.data.vertices[t.vertices[2]].co))/6 for t in o.data.loop_triangles)
  check(vol>0,'Outward winding '+o.name)
 # Independently movable groups: reservation child moves with mount, deck stays fixed.
-p=bpy.data.objects['Mount_DSKY']; child=p.children[0]; before=child.matrix_world.translation.copy(); fixed=bpy.data.objects['Cabin_Deck'].matrix_world.copy(); old=p.location.copy()
+p=bpy.data.objects['Forward_Hatch_Closed']; child=p.children[0]; before=child.matrix_world.translation.copy(); fixed=bpy.data.objects['Cabin_Deck'].matrix_world.copy(); old=p.location.copy()
 p.location.x+=.01;bpy.context.view_layer.update()
 check(abs((child.matrix_world.translation-before).length-.01)<1e-5 and bpy.data.objects['Cabin_Deck'].matrix_world==fixed,'Mount independence')
 p.location=old;bpy.context.view_layer.update()
+# Sample all directions from crew and aft positions; the only allowed escapes
+# are the two open triangular apertures and agreed docking opening.
+from mathutils.geometry import intersect_ray_tri
+win=json.loads((OUT/'evidence/foundation/windows-interface-80c9b2d.json').read_text())
+def permitted(origin,direction):
+ for row in win['forward'].values():
+  pts=[Vector(p) for p in row['corners']]
+  if intersect_ray_tri(*pts,direction,origin,True) is not None:return True
+ dock=win['docking'];n=Vector(dock['normal_toward_cabin']);den=direction.dot(n)
+ if abs(den)>1e-8:
+  t=(Vector(dock['center'])-origin).dot(n)/den
+  if t>0:
+   d=origin+direction*t-Vector(dock['center']);w,h=dock['shell_hole_size_m']
+   # Tangent aperture through a faceted curved liner allows small edge tolerance.
+   if abs(d.dot(Vector(dock['right'])))<w/2+.008 and abs(d.dot(Vector(dock['up'])))<h/2+.002:return True
+ return False
+check(abs(Vector(win['docking']['right']).cross(Vector(win['docking']['up'])).dot(Vector(win['docking']['normal_toward_cabin']))-1)<1e-6,'Docking contract proper rotation')
+aperture_samples=0;deps=bpy.context.evaluated_depsgraph_get()
+for side in ['CDR','LMP']:
+ origin=Vector(win['eyes'][side]);pts=[Vector(p) for p in win['forward'][side+'_Window_Inner']['corners']]
+ for i in range(1,19):
+  for j in range(1,20-i):
+   target=pts[0]*(1-(i+j)/20)+pts[1]*i/20+pts[2]*j/20;d=(target-origin).normalized()
+   hit=bpy.context.scene.ray_cast(deps,C.to_3x3()@origin,C.to_3x3()@d,distance=4)
+   if hit[0]:print('BLOCKED',side,i,j,hit[4].name,list(C.inverted().to_3x3()@hit[1]))
+   check(not hit[0],'Unblocked '+side+' aperture sample '+str(aperture_samples));aperture_samples+=1
+report['open_aperture_samples']=aperture_samples
+misses=[];escaped=0;N=4096;deps=bpy.context.evaluated_depsgraph_get()
+for origin in [Vector((-.5588,1.78,-.38)),Vector((.5588,1.78,-.38)),Vector((0,1.3,.6)),Vector((0,.3,-.25))]:
+ for i in range(N):
+  y=1-2*(i+.5)/N;a=i*math.pi*(3-math.sqrt(5));r=math.sqrt(1-y*y);d=Vector((r*math.cos(a),y,r*math.sin(a)))
+  hit=bpy.context.scene.ray_cast(deps,C.to_3x3()@origin,C.to_3x3()@d,distance=10)[0]
+  if not hit:
+   escaped+=1
+   if not permitted(origin,d):misses.append({'origin':list(origin),'direction':list(d)})
+report['enclosure_rays']={'sample_count':N*4,'permitted_window_escapes':escaped-len(misses),'unexpected_escapes':misses}
+(OUT/'enclosure-rays.json').write_text(json.dumps(report['enclosure_rays'],indent=2)+'\n')
+check(not misses,'Sampled visual closure except agreed window apertures')
+check(not [o for o in meshes if any(t in o.name for t in ['Reservation','Glareshield','Pane_','Frame_','Reserve_'])],'No duplicated panels, surrounds, frames or panes')
 manifest=json.loads((OUT/'mounts.json').read_text()); original={o.name:C.inverted()@o.matrix_world@C for o in objects}
 report['mesh_count']=len(meshes);report['triangles']=sum(len(o.data.loop_triangles) for o in meshes)
 for ext in ['usda','usdc','usdz']:

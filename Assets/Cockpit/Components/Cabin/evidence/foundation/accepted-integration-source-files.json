@@ -1,0 +1,4070 @@
+{
+  "LM": {
+    "revision": "7c1b4a751570cd8cdec35acac5c6fe976d53dfdf",
+    "verified_file_count": 460,
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 172,
+        "sha256": "a14f8ae98fc3a431a0cf3d9af4ef1d958381985a56f6c525daff839fc4341cde"
+      },
+      {
+        "path": ".gitignore",
+        "bytes": 568,
+        "sha256": "b1607f0e44536f25d38eb516dc25a38326908be4cf32601dbdf4fd405e4d08a7"
+      },
+      {
+        "path": ".vscode/settings.json",
+        "bytes": 2,
+        "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      },
+      {
+        "path": "Assets/Cockpit/AGENTS.md",
+        "bytes": 1466,
+        "sha256": "830e4b5a1351a2c6544599e07ed5528d68f78b1938d4d90b08218428100dbd5f"
+      },
+      {
+        "path": "Assets/Cockpit/Assembly/.gitkeep",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Assets/Cockpit/CONTRACT.md",
+        "bytes": 3310,
+        "sha256": "3eec0e55506fec1456dad6aa822bbc04b15d9e3eade9cd33ecdc44020519ff61"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/.gitkeep",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/.gitkeep",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/.gitkeep",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/.gitkeep",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/.gitkeep",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Panels/.gitkeep",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Docs/ACAIntegrationHandoff.md",
+        "bytes": 7507,
+        "sha256": "f6a54c8279232771d1f4c0120b17f55b14fd2d2e25298f7e004d185e2dd0d8d0"
+      },
+      {
+        "path": "Docs/ArtemisFlybyRealism.md",
+        "bytes": 7345,
+        "sha256": "d0ee3fea935031340865713a9e2389ab0445c79d47095d719e632c152382c097"
+      },
+      {
+        "path": "Docs/CockpitComponentHandoff.md",
+        "bytes": 1767,
+        "sha256": "dcf40e0a78cd351d129d35cc14f76093deca930bb0afc4790b60d7dda130f18d"
+      },
+      {
+        "path": "Docs/CockpitCoordination.md",
+        "bytes": 6974,
+        "sha256": "f42d4537b0fb1c97cabc19dfc1a9f4a27929396f05f00af0d8a02c4c64eac968"
+      },
+      {
+        "path": "Docs/CockpitCoordinationLedger.md",
+        "bytes": 9408,
+        "sha256": "28bf85fe48582e08b84f65ea7ce9e6f124f7aea8ef066d665c66943f1220d40c"
+      },
+      {
+        "path": "Docs/CockpitNextAcceptance.md",
+        "bytes": 3769,
+        "sha256": "db831d8124646fec381842951d076c56009cd51f130433f7fda0aeff8dfe14be"
+      },
+      {
+        "path": "Docs/CommanderStationAssemblyHandoff.md",
+        "bytes": 12269,
+        "sha256": "f8cefb81f201a8abd513fa10c71a307169f3c9ffa0900fe451c90787be3429a6"
+      },
+      {
+        "path": "Docs/CommanderWindowCalibration.md",
+        "bytes": 5890,
+        "sha256": "cd39139a66075d2a18d0eacfb109d3f8c0e3e3c15885638867bcbc79b936a215"
+      },
+      {
+        "path": "Docs/DSKYModelingAssignment.md",
+        "bytes": 5018,
+        "sha256": "34013b1f50be8aaf37147d70353a1a263ca43e5b695cfaec9c62bd357b1b6437"
+      },
+      {
+        "path": "Docs/ImmersiveFidelityFoundation.md",
+        "bytes": 5465,
+        "sha256": "5b7dfae1ec8b8193e2de2873cb4563fcf806327404412a315ba5d82e931ae298"
+      },
+      {
+        "path": "Docs/InstrumentIntegrationHandoff.md",
+        "bytes": 12009,
+        "sha256": "2e27bbce607632a07e317beccd4d86a9e617316e7a0f9f3216a278fb2e1e9dbe"
+      },
+      {
+        "path": "Docs/InstrumentInteractionReadabilityHandoff.md",
+        "bytes": 5947,
+        "sha256": "7dc57be50590d4c474c1432260bace2d32daf454d65faf99a9d67ce8e7263b92"
+      },
+      {
+        "path": "Docs/LMKitIntegration.md",
+        "bytes": 2132,
+        "sha256": "f5618df92f9e8ec07cd704dba533e2d91b8966a6aaf8c0736b5c179c9c5799a1"
+      },
+      {
+        "path": "Docs/LandAnywhereMoonPlan.md",
+        "bytes": 57381,
+        "sha256": "71860ee6933d40d3062caf98a83541c5f206c8a645447a16e434550bfa5082ed"
+      },
+      {
+        "path": "Docs/LunarMapPackagePlan.md",
+        "bytes": 17702,
+        "sha256": "920a60b490d1215aa642f86339f216514a753bcacd8c0c1e876416bd3a9b23de"
+      },
+      {
+        "path": "Docs/LunarTerrainPipeline.md",
+        "bytes": 41430,
+        "sha256": "c0a0260b15a7906333ad6b3c1339197f5be44fcf63a942548c01a5ed272b3d05"
+      },
+      {
+        "path": "Docs/MoonExplorerEntryAndImport.md",
+        "bytes": 16869,
+        "sha256": "04f598dd473528e1e5fed862c85b41582689d716ca9f507b2a052a01b54d4e87"
+      },
+      {
+        "path": "Docs/MoonExplorerExperience.md",
+        "bytes": 13837,
+        "sha256": "1ac6a6989da7d17027b9e555e8dc49cd7dce7692258e9d3df3294c9ec41e7866"
+      },
+      {
+        "path": "Docs/MoonExplorerHIGReview.md",
+        "bytes": 7867,
+        "sha256": "c02e0f1ec20745b2ba3bcad9be807f1ef19be52ad158bc2e470a5376acd2b671"
+      },
+      {
+        "path": "Docs/MoonExplorerOneZoom.md",
+        "bytes": 116936,
+        "sha256": "669ad64a094ff049061ebce9590f4b3f23e3b8cd61d08780f9f45fd5514873d3"
+      },
+      {
+        "path": "Docs/MoonExplorerOneZoomPlan.md",
+        "bytes": 20020,
+        "sha256": "8cd128fac90108f24e85b9d0f077208c0ed545c009e85288bee484438dd956b7"
+      },
+      {
+        "path": "Docs/MoonExplorerOverhaul.md",
+        "bytes": 11888,
+        "sha256": "d3b534237f1e57d839544233a86864c9a02d0393a5730a2aa1fdabcefd5ae8f2"
+      },
+      {
+        "path": "Docs/MoonExplorerPerformance.md",
+        "bytes": 10934,
+        "sha256": "24ae36da6a7c1a8bc394c50cf8bec0696afe7d1a2baa97047e42990dbf06671d"
+      },
+      {
+        "path": "Docs/MoonExplorerPlan.md",
+        "bytes": 22633,
+        "sha256": "89318ced0546a54e6ec8cee49be46c0a3dbfeb83540246f72856585bb34c37c6"
+      },
+      {
+        "path": "Docs/MoonExplorerSourceLoadingAndReuse.md",
+        "bytes": 9178,
+        "sha256": "6ca1c046c1ad3d4c148c610ab4154472c2c404791daa64900f2415384b482e12"
+      },
+      {
+        "path": "Docs/MoonExplorerTextureAndPublication.md",
+        "bytes": 9429,
+        "sha256": "360a1b812df0f94059f3116844a870665d651e0e66dd8dd08bf7d6a4c6c54d05"
+      },
+      {
+        "path": "Docs/MoonExplorerVisualPolish.md",
+        "bytes": 7193,
+        "sha256": "422e5facafeeb26ca9e692f9c2290e0bc4a008aa265796677499697db3d08385"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/README.md",
+        "bytes": 9212,
+        "sha256": "e0c9f918564c807604e887d068aac2c68eb400214a2c102834aff8f5c25710f3"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/additional-reference-assessment.md",
+        "bytes": 2499,
+        "sha256": "7c1d5721ed155130581927e4aa2171e64c38570f1fd589fead4952d20a91bdc2"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/blender-usdz-visionos.md",
+        "bytes": 17395,
+        "sha256": "e2dd61a7b61fb172b17b3d365fe7513901242413e3317b49fff5c9ea0d566233"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/controls-and-panels.md",
+        "bytes": 23802,
+        "sha256": "8dcef0e36e81fffa1b6fbfc52b3d1646b42f45f51ae7b1dbee90ef946909fea2"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/geometry-materials-and-evidence.md",
+        "bytes": 12857,
+        "sha256": "b5845e1c869b3240a8652861733a202e5c7a490d37b24e5492cbf47981194b13"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/measurements.csv",
+        "bytes": 3253,
+        "sha256": "34a4fd0512f9ac860d6634709a371c49a04823da383a62ea3c549730b05953a8"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/photo-reference-catalog.md",
+        "bytes": 14090,
+        "sha256": "47e7706eec5e0ba6257cd7d841f6590d4e40e7f6eb9ea40ab2d751283ea7e49c"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/documents/19730017160-crew-station-lighting.pdf",
+        "bytes": 12910704,
+        "sha256": "8c1aadb6ee52e0b2453b03909f284b1a74311cc41ff27ac1d459ffe8f4080398"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/documents/19730023038-spacecraft-windows.pdf",
+        "bytes": 1370212,
+        "sha256": "341effa41329abc44590e17d89110699f25fb74a9c6dc1919e460e66244193d8"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/documents/19750012347-crew-station-displays-controls.pdf",
+        "bytes": 19749161,
+        "sha256": "2f1352ae80c0baea40dc7e04eca52d1dd2cb2ae15c4ab529f9033d4bbebec550"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/documents/grumman-1967-crew-station-excerpt.pdf",
+        "bytes": 11937843,
+        "sha256": "bbba844ab4598fe659f1e7dbb915abb329f8e6cc91531c9d0b46aa1492926295"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/documents/lm10-aoh-vol1-controls-excerpts.manifest.json",
+        "bytes": 4117,
+        "sha256": "102c0570c83f17d1d03ac19408210862f5a4686ff864b78ac745f9a9710650d8"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/documents/lm10-aoh-vol1-controls-excerpts.pdf",
+        "bytes": 6974978,
+        "sha256": "6194242b2dd076a469474d5bcdb5f4a6bddf9929aedf543d8911fd5f9ca63e2c"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/documents/user-lunar-module-controls-and-displays.pdf",
+        "bytes": 10883155,
+        "sha256": "8b5b96fece2fd5fcdbb5b5ceb22f8492033569c52aff8db36a4e82009703828b"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/figures/crew-station-arrangement.jpg",
+        "bytes": 270123,
+        "sha256": "fe7b71c5f58f8aa3d75f21d184624e62256a74bc5b6bcd09b09e8ad087ebbe77"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/figures/grumman-cdr-side.jpg",
+        "bytes": 427206,
+        "sha256": "8fc975ee40b3ade2827c9d999747112b8f85e6bf0bad3fb8c97feba087cc1c46"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/figures/grumman-flight-design-eye.jpg",
+        "bytes": 386525,
+        "sha256": "c0b646d01e050899a41f1e27f1cdbae2dbae6b2e847bd994dce15bf473cd43c8"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/figures/grumman-lpd-window.jpg",
+        "bytes": 345336,
+        "sha256": "926a8a710aa783f732cc33371863b71bc76ee0f9a05f00ac2695dbd719735bcf"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/figures/lm-main-panels.jpg",
+        "bytes": 519697,
+        "sha256": "def9c50baed0692faff8b1d985ac42c56a5f7eb3ce84be88090eb7075ee89897"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/images/69-H-134.jpg",
+        "bytes": 165479,
+        "sha256": "b851a1d0e20ea309beec4a33454d8b70e9923e2c3553d9da2d9275368665abb9"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/images/69-H-135.jpg",
+        "bytes": 120425,
+        "sha256": "36775bb4927728ce926ecc2a4f9bf0bdfe8b7cada36f7101f519917fdb3ddacc"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/images/69-H-136.jpg",
+        "bytes": 175702,
+        "sha256": "876f65469a32d5f3bd7655acbc8183933e246f0143769c92d67704947013354e"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/images/AS11-36-5389HR.jpg",
+        "bytes": 876209,
+        "sha256": "9a87df320e1fcd6c624ebb14ac2980bc72e4d3173a323e6197dd44c4469be5a1"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/images/AS11-36-5390.jpg",
+        "bytes": 152668,
+        "sha256": "aea796e5e5686c34ecb92ee0f4aeda3e0027d37e83b2d58f5e6191f95b26b77c"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/images/LM11-co42.jpg",
+        "bytes": 1933953,
+        "sha256": "cda83061e39a8819647aaec967c0e8eca7ab46eb5e664870a850f02a5c3a2f67"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/images/LM11-co43.jpg",
+        "bytes": 1885570,
+        "sha256": "4d47654cd5163179d73b3e101e2836c260cbfa23cc1d24aefdf9f28dc4162dea"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/images/LM12-co29.jpg",
+        "bytes": 1820513,
+        "sha256": "3d3d83a6282dfd83bfe045cd5ee0b5fc93c1e333594d2598b0040485bbc73420"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/images/ad013.gif",
+        "bytes": 366842,
+        "sha256": "1521551fbdbc6ba99c20bcfa9920f4328cdf6a32e4d4849622f59f7cc0eb3762"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/images/ad016.gif",
+        "bytes": 134701,
+        "sha256": "f28021bb2450a54458001bf40e6ab7645fe1f5cba53a6b596ca3c950cb2dd446"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/images/ad017.gif",
+        "bytes": 185462,
+        "sha256": "7701abf819a6abd503e78d53359093d626a036c1edd284fe6e9d90036c41b78f"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/images/chamber8_lta8.jpg",
+        "bytes": 43143,
+        "sha256": "3eee442c6b79c8d575a2bdee6a8c5ba3a3066c20d0342adabd900c8fafd9a98f"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/images/manifest.json",
+        "bytes": 7383,
+        "sha256": "0a793e8ab4413d34e63e3b18983f1661543124bc535447af1c80da0527c11ef8"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/references/manifest.json",
+        "bytes": 8308,
+        "sha256": "954d318823f256f5ef2ef0d2cadcd48a6e4d6a3e591cf5ad6803b32db1bfc086"
+      },
+      {
+        "path": "Docs/Research/LunarModuleInterior/research-backlog.md",
+        "bytes": 6349,
+        "sha256": "bf3b8580b3835e81d05be37439e7a5b5aad69ce111f5c33e5a2fadf2bdcd0b3d"
+      },
+      {
+        "path": "Docs/Stage2CockpitIntegration.md",
+        "bytes": 10465,
+        "sha256": "4f4b5c4e2deb93c4a39c739c5fa05d1322407398cb60bb33d006cd0f09894a0c"
+      },
+      {
+        "path": "Docs/Stage2CockpitStreaming.md",
+        "bytes": 13540,
+        "sha256": "2ddf8ed041338d75333c917126ce609e134e5ccf99fc7f51562961291d19a311"
+      },
+      {
+        "path": "Docs/Stage2GlobalTerrainValidation.md",
+        "bytes": 64625,
+        "sha256": "7f4855ccc628bc5312b1208118c299c6459a887e99f1e83027c5e7b9c837e586"
+      },
+      {
+        "path": "Docs/Stage2TerrainBanding.md",
+        "bytes": 11957,
+        "sha256": "b439f45683c21b090d2a684ed9260fb403a1550b6daaa041d74823dcf98c997d"
+      },
+      {
+        "path": "Docs/Stage2TerrainDiagnostics.md",
+        "bytes": 11605,
+        "sha256": "5e60926e69195304d2899b6b4ef4e14ecfe0b5a8ca64ac2a495c0cd03e9a7d41"
+      },
+      {
+        "path": "Docs/TerrainRealismPlan.md",
+        "bytes": 23695,
+        "sha256": "773bc8d585f10587d3e6024a570cc8eb585511ab99c733f3cb4a5e2ee6a0ae19"
+      },
+      {
+        "path": "Docs/Validation/ACA/README.md",
+        "bytes": 5383,
+        "sha256": "10b9e61860bf7e3ac799d44fb55b6d0ea327c643a3814bc1b917b306f072c823"
+      },
+      {
+        "path": "Docs/Validation/ACA/app-binary-sha256.txt",
+        "bytes": 266,
+        "sha256": "8fe74fe15c6037be1688c6668d924b7037fd8d4377d1f41094161a0a691ccf05"
+      },
+      {
+        "path": "Docs/Validation/ACA/capture.sh",
+        "bytes": 812,
+        "sha256": "df287992aa4a7439214b1beeee9701f1609d6c63d8296631f39e34c728cfc521"
+      },
+      {
+        "path": "Docs/Validation/ACA/discovery.json",
+        "bytes": 19549,
+        "sha256": "69bd38df8c6a536a800643fe1cfa6909ce0c58f9755d79fd81e24fcfe06d7618"
+      },
+      {
+        "path": "Docs/Validation/ACA/envelope.json",
+        "bytes": 878,
+        "sha256": "79fd46412af63c31391c1c3e36d173398c94ee7902907226033a3189f0eaff5f"
+      },
+      {
+        "path": "Docs/Validation/ACA/first-tests.json",
+        "bytes": 1677,
+        "sha256": "466da7de5b32d9549581d3fe55a6fdf5e6a46b168780619e24169b4112471b24"
+      },
+      {
+        "path": "Docs/Validation/ACA/manifest.json",
+        "bytes": 1777,
+        "sha256": "59824752763efbdf1ed9051f8a205d5f17d8b463a1db16d312abf6f8c474cd88"
+      },
+      {
+        "path": "Docs/Validation/ACA/measure-envelope.swift",
+        "bytes": 2058,
+        "sha256": "078bf023f424d3e82f87d5a0d0742b8af439ae246873865622308209dca78fbb"
+      },
+      {
+        "path": "Docs/Validation/ACA/negative-launch.txt",
+        "bytes": 22,
+        "sha256": "b5bd033310a4ef9e12d784266eb594ddfb1f666e28613b18c09624500fb59802"
+      },
+      {
+        "path": "Docs/Validation/ACA/negative-time.txt",
+        "bytes": 21,
+        "sha256": "e4b4f8a17daa7ce20837689d0fc3518f72187df193718c5905664e0a0d080246"
+      },
+      {
+        "path": "Docs/Validation/ACA/negative.png",
+        "bytes": 786657,
+        "sha256": "306da77fc13d5591a7e0cff2c7d5fa89a32a116c856fb36c051d73f0338eee19"
+      },
+      {
+        "path": "Docs/Validation/ACA/neutral-launch.txt",
+        "bytes": 22,
+        "sha256": "3d82796a39f443e4c8f053945d9a6aa45d0464f2758d9ca140e894ce589a3e8d"
+      },
+      {
+        "path": "Docs/Validation/ACA/neutral-time.txt",
+        "bytes": 21,
+        "sha256": "9b3b820acfd5512efa627a25a1ba95b83bd37c4c4c9729380ecdefad324cdf1d"
+      },
+      {
+        "path": "Docs/Validation/ACA/neutral.png",
+        "bytes": 760900,
+        "sha256": "43065dfab0261cf4c745277bf2bf0741c5d4fa5d40b280556dd89dbb86bf99cb"
+      },
+      {
+        "path": "Docs/Validation/ACA/positive-launch.txt",
+        "bytes": 22,
+        "sha256": "79e31c4bf0536e74381a56a2e350d87d0b8b15356fb997822579d1e46fff1c9f"
+      },
+      {
+        "path": "Docs/Validation/ACA/positive-time.txt",
+        "bytes": 21,
+        "sha256": "07d3401ae1cfeb20e0fc88b774e9dd07da190ab7585fc1473d1082dbc4cd12b4"
+      },
+      {
+        "path": "Docs/Validation/ACA/positive.png",
+        "bytes": 778060,
+        "sha256": "431b67d961b715ccb4f67a433a0aaa0a9d01db750b308ef8f8b1261c1960e2f5"
+      },
+      {
+        "path": "Docs/Validation/ACA/pre-correction-tests.json",
+        "bytes": 1676,
+        "sha256": "c79f5f8a44f805a6a7034aaaf4f96d9a6a7b861734f7196c405d72d3ab52b9e3"
+      },
+      {
+        "path": "Docs/Validation/ACA/runtime.log",
+        "bytes": 1888,
+        "sha256": "5e537f3df1708ac7b2b1109ad4132db9496ccc21cda165a21e9810ae3a98fb16"
+      },
+      {
+        "path": "Docs/Validation/ACA/tests.json",
+        "bytes": 1162,
+        "sha256": "f817792d2628bf2983aad103179bdcef2881c2cad50dadb5a02f5956417e3752"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/README.md",
+        "bytes": 6394,
+        "sha256": "936ddae4631eb823a34788c2f51f86d3b38af133beb2068f30beafec3c2121ab"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/app-binary-sha256.txt",
+        "bytes": 276,
+        "sha256": "47a5a9bfe2be50314f5a8c7ae88e2381ce1f69b9fe6182cb34f022effacf9602"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/baseline-registration/app-binary-sha256.txt",
+        "bytes": 276,
+        "sha256": "d48a89cf5c14870810a3a073cbc70b3d22c034a90b201c1a95cc8fd3e8b5c1f1"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/baseline-registration/crew-eye-launch.txt",
+        "bytes": 21,
+        "sha256": "5c82faa826766b8a2a9170470b8a740082b65ede13214b1e37bdf84a16271b2e"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/baseline-registration/crew-eye-time.txt",
+        "bytes": 21,
+        "sha256": "00ede8ad0c4960657e395328370b869b8bee56c5d3498b71654fe226c58eb8c6"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/baseline-registration/crew-eye.png",
+        "bytes": 1109889,
+        "sha256": "be00b5b93b3ce36de14b91981471e08612d825ac51ab5edc1c986b8f50ea6ff0"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/baseline-registration/front-launch.txt",
+        "bytes": 21,
+        "sha256": "78c911ac36db03bd048b2d19a0438f3db71c090fba05f466c88f14b8eb0d8913"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/baseline-registration/front-time.txt",
+        "bytes": 21,
+        "sha256": "01ac09af7030b8535e8bed27cce88455bcdec13afa4d6f6fffad1aaebea60f22"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/baseline-registration/front.png",
+        "bytes": 645898,
+        "sha256": "5ec710d8efb442685ed472fb5959e7842e9d0db2b3a432becf47ab2b72db894f"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/baseline-registration/instrument-observer-launch.txt",
+        "bytes": 21,
+        "sha256": "1c6c24ab8f0d8a73ce44ca01bca033e0088f2b5d1112a9b350fa0566d164e968"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/baseline-registration/instrument-observer.png",
+        "bytes": 1024848,
+        "sha256": "66c64c245ecf834f3e9cf02bc30d14d6d06b15961e84e20f721c5a75c8f713d8"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/baseline-registration/observation.jsonl",
+        "bytes": 5981,
+        "sha256": "9f49eb5c8094a86c2a6dc4f84d57520e4d96a7d45bcc2f17b975f1a6802cd086"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/baseline-registration/observers.json",
+        "bytes": 974,
+        "sha256": "da6a95cdf8195a9c69a44cb82bd83ad2c2101c955c05e7fa743628d4c3387bb7"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/baseline-registration/runtime.log",
+        "bytes": 2922,
+        "sha256": "e0b7d52d8bae3e828638a8bded34710ffff064fe0564bbe8fc2ab430f7466072"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/baseline-registration/side-launch.txt",
+        "bytes": 21,
+        "sha256": "32c338b74bd7cbdec67ff49fd4f33d7de98ebce32f72d006a30e8f35598b15b1"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/baseline-registration/side-time.txt",
+        "bytes": 21,
+        "sha256": "04b663caffa261056e3641fb9ff82c7b956bb90addf0576fe85ebd3eba1fb45a"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/baseline-registration/side.png",
+        "bytes": 787283,
+        "sha256": "e47efb792052f945e241c763f5c588e6418f167cd6d8fe57aa81c1f8b1fb29fd"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/baseline-registration/tests.json",
+        "bytes": 981,
+        "sha256": "da292c3197697616de320ca05c9231454b1633d982ec130db0ffe0833f35f3c7"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/capture.sh",
+        "bytes": 1484,
+        "sha256": "2e0a4abc6dff43ce2ff74a5ebb8b2b93ab257a322201261782bc528220026b49"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/crew-eye-launch.txt",
+        "bytes": 21,
+        "sha256": "9a1fe69f9dde64c0f20ea4e2aedef426d7289fcecd545deca4dab45f8dad156f"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/crew-eye-time.txt",
+        "bytes": 21,
+        "sha256": "c4a9ebe6b05ff0cfb57d3eb1f339b554c46be4b35574e16b89344793512fa7e9"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/crew-eye.png",
+        "bytes": 1354981,
+        "sha256": "3dba4b16115a2bc3dc6f213cadd4b89e006d534ae4eee5eef5d5d66519138793"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/dependencies.json",
+        "bytes": 1604,
+        "sha256": "5abf189fc66d45ff4b45ac72b930c9f766e5ab52ad4456cc08bac0ed9e0c4a1b"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/front-launch.txt",
+        "bytes": 21,
+        "sha256": "be9014a14353242b66f74134b6a227f2919e486923a006d7906b7948ab3b1fbc"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/front-time.txt",
+        "bytes": 21,
+        "sha256": "ed0fdd4093847c7c097cd96eb0f002042a35affad38834bc5b71b1b27b77ec83"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/front.png",
+        "bytes": 621275,
+        "sha256": "62660e6a8e17c814e2f7cc427189ebc8715e2c6aecf081478bfc081c2d19f446"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/initial-tests.json",
+        "bytes": 1545,
+        "sha256": "bdd9e7fe9b46c5e3e1a280d6286dcca3e0c5810dcd5182871bb685983c6763ee"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/instrument-observer-launch.txt",
+        "bytes": 21,
+        "sha256": "ff1c28bce70403a367f149b03e3187b2a061f8170221d5524c3392f04c2861d2"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/instrument-observer.png",
+        "bytes": 994169,
+        "sha256": "3af4568e4033a44aac501a6c4c9492790d2e491ffac02a51fa37615c52c8f8ff"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/native-mount-contract.json",
+        "bytes": 1607,
+        "sha256": "05fc36f519aaec0bb93087c48b95661c578f527868c594fb31f5eaf3c169f281"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/observation.jsonl",
+        "bytes": 6434,
+        "sha256": "6b2b626948d9bb0849d73d663becad2510792243972d4c49c5b96a7b5dabeaad"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/observers.json",
+        "bytes": 798,
+        "sha256": "5408b8ceea68b5c7311a421b4132eb05e35197548828be44c83286a4368e3813"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/runtime.log",
+        "bytes": 3500,
+        "sha256": "4cc942323ca4246f8a9fa92d81b5729f9404bfe407755b74c6566b5cb1250e3d"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/side-launch.txt",
+        "bytes": 21,
+        "sha256": "f0166a649b183913ec7a1c43ebf526651c2033079b62fc842c40a0c26a222f58"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/side-time.txt",
+        "bytes": 21,
+        "sha256": "e4fdee8969ef9e1970bd74d37dbcdfd04d9a86b0b7fbc4cfb930e1ed32402759"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/side.png",
+        "bytes": 786262,
+        "sha256": "f8dfb24776bfde01dacb0f1b68b184bd2b2cbb3147102c188a93770430e65afe"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/tests.json",
+        "bytes": 981,
+        "sha256": "59b603987eaccfdea5dbae8ec4e100c848be865b3dc0ef10c511f95a47b2142b"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationAssembly/validate-native.swift",
+        "bytes": 2011,
+        "sha256": "11c9ce246dfee5367c3fc79c9cb90d9216cb3f6c4e00d2b3d133e1650cb9a96d"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationCombined/README.md",
+        "bytes": 1191,
+        "sha256": "1cbca5430cc7f4c8f69b35d180adfb3ffc19c1c0ae3ac20d9f7def94c5cbb8e5"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationCombined/discovery.json",
+        "bytes": 10840,
+        "sha256": "588c9bbf2f26311690b8f20e86b4ab893198a591a5ae053bb9097fea9ba1b3bd"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationCombined/manifest.json",
+        "bytes": 1985,
+        "sha256": "7017ed67e49a5e55ec11a963c65d22039e3b261d92fd839b9f7fefd2b36036d4"
+      },
+      {
+        "path": "Docs/Validation/CommanderStationCombined/tests.json",
+        "bytes": 981,
+        "sha256": "e966e217379d485d935837a29e352db17d2b915a69e891edcdf307fdcaf72a33"
+      },
+      {
+        "path": "Docs/Validation/InstrumentIntegration-tests.json",
+        "bytes": 968,
+        "sha256": "aa3a4df81a020da9380df55e428e4096eea14fc0d031cf7134f29365d0c82af0"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/HeadsetChecklist.md",
+        "bytes": 2215,
+        "sha256": "b985dd9940166f8f94b180fbebdf6a35eed6cb77e66260e5834d589d573a6e95"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/README.md",
+        "bytes": 6690,
+        "sha256": "034b9ef53a3b547b5664ed1167fcca0962d6158150a4eb88f6b8332ed4c4b024"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/03-baseline-state.json",
+        "bytes": 929,
+        "sha256": "c991b4ce562352a63ec89033c0ec380fc573d81b8644de0ffb1c8527d50a5407"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/03-baseline-time.txt",
+        "bytes": 21,
+        "sha256": "a186f5fa0f3c4982846f63e7817933917708b1bd63caa8307b335f9c8529409b"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/03-baseline.png",
+        "bytes": 686403,
+        "sha256": "95509596541eda3882d8b1630aa950f0a907ff9c655b1cf38ff4aff96af07145"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/04-v16-input-state.json",
+        "bytes": 931,
+        "sha256": "9aa75e247f3227301870ba56ebc9e6551c18340624256e8be509ce6a3aed6d75"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/04-v16-input-time.txt",
+        "bytes": 21,
+        "sha256": "5a8cbbddd08b2342212e7174bec1133104de0fd4abe136faffd3239d40cf71dd"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/04-v16-input.png",
+        "bytes": 687206,
+        "sha256": "0f81e9bd99dbbf381ca28524c2f2fb5117b7c6cbe646f017324e1574b9a7c442"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/05-pro-input-state.json",
+        "bytes": 927,
+        "sha256": "1a8ddea8d129d49bc54a92db0690df38bfbc748c247c6a6ba5daa7214073d07c"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/05-pro-input-time.txt",
+        "bytes": 21,
+        "sha256": "781f2402ceca8aa60056adf79840c6edacb929c1a0136f6b29fba8bd2ad87841"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/05-pro-input.png",
+        "bytes": 686988,
+        "sha256": "d4cab32be8b04dfa25e2d0cc3eb4343231be77b6cea23884dedcb0142785e5a3"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/06-v35-input-state.json",
+        "bytes": 952,
+        "sha256": "aa2b557cac7f4facc586dfd0f68fad1e2c0962fc1b9eb3dec13f81feda5dadac"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/06-v35-input-time.txt",
+        "bytes": 21,
+        "sha256": "d00f9b0b72b22a85c40f6f5849a9e400e85132dd4bd9eda5daffb96c52c95310"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/06-v35-input.png",
+        "bytes": 696483,
+        "sha256": "aed4570838cfc93473e18d1df372c6a193c6977266660708db3c916a9523ea25"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/07-reset-input-state.json",
+        "bytes": 922,
+        "sha256": "1b993dff8bb65095f80df33f3d967bcf0f9b2d77a89ef4c715143b1bd348af81"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/07-reset-input-time.txt",
+        "bytes": 21,
+        "sha256": "d268afed94f941d7abe86f05e0f70615f938fba8dcbd1f7edf6b9a5eabf0a44a"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/07-reset-input.png",
+        "bytes": 697256,
+        "sha256": "224ecea30c3238400dda40030e7f0397915a75cf6a83a3816ee3214ef6fc01fe"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/app-binary-sha256.txt",
+        "bytes": 282,
+        "sha256": "c2a496fa226eb5e32e7d5da018cc1e772c1bd10a94dd98b84d74aebc454bb7b3"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/capture-manifest.json",
+        "bytes": 548,
+        "sha256": "ed9fe71b77fea69d8a352f1288ced19d3adb2fe10a08ac735dd8083feff604c5"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/launch.txt",
+        "bytes": 20,
+        "sha256": "e281cf376a633ccafec88ed85c685c084bae2ac7b4070e56fbd8b41652a39412"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/programmatic-inputs.jsonl",
+        "bytes": 154049,
+        "sha256": "1e00e65a56376ad3bceaf6eb2f9a05b70f0ab58c63068012c7bbf3a91e904def"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/runtime.log",
+        "bytes": 4202,
+        "sha256": "aededc6930cb5b526381b5e28eb1ac8f27062652e8b2823e31893fd579430b55"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/after/simulator-devices.json",
+        "bytes": 17575,
+        "sha256": "d72a4b47442e2c30b13555fff9a1ab677fc7c43c83f69313ed1465661ac75aec"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/03-baseline-state.json",
+        "bytes": 473,
+        "sha256": "54ede20cc6655543e6e2c9feb2b6d8adae0c5b536033031ce7d19c9500edaf82"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/03-baseline-time.txt",
+        "bytes": 21,
+        "sha256": "4870402acd471bc20ad9d762f08694311a4df28ca47989624bbb7050d864fec5"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/03-baseline.png",
+        "bytes": 703704,
+        "sha256": "404e5b8dd8449c34d7038c744396c1d8fbe89ab9567b8f736638c94d55d878d3"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/04-v16-input-state.json",
+        "bytes": 472,
+        "sha256": "2967f9cdaa9633d1b105d82d3a449e5f0bdd5982aaadac6c74d876331255e82f"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/04-v16-input-time.txt",
+        "bytes": 21,
+        "sha256": "2967e1f8087bcd8e0cafca1dcc067a5fa9d0dfdb9b03b9e2152ca03e0d0a723d"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/04-v16-input.png",
+        "bytes": 707008,
+        "sha256": "f20388259caf668bc937e419229f99d9c2f22939b58e0bb8591fc9ce25e5db93"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/05-pro-input-state.json",
+        "bytes": 469,
+        "sha256": "6f774389d07934b0232fdf925bfb1cab7412c0114821a90deb9d15d9c2575450"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/05-pro-input-time.txt",
+        "bytes": 21,
+        "sha256": "a4395110ed976636db6571bd891079e97b4ef02c71ffb7ca1b7f82351be6e237"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/05-pro-input.png",
+        "bytes": 707575,
+        "sha256": "27339088fc3e330ea330021aadf3c1263d5b4c05980005610db7f3d6959ba9dd"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/06-v35-input-state.json",
+        "bytes": 499,
+        "sha256": "29b26f8b136e2792c20eb92c76c9d2582bcadbb182f4c7c07f5ac683bcba5e90"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/06-v35-input-time.txt",
+        "bytes": 21,
+        "sha256": "f1e29168ac466293b0f9fa052cd9561b8b9870f27daadcd426c6a4fc7ff43ed1"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/06-v35-input.png",
+        "bytes": 716498,
+        "sha256": "17918c85ae1dd05fc76c7b3b6a27f2498be782427060b6b26e303c5bb22e1855"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/07-reset-input-state.json",
+        "bytes": 462,
+        "sha256": "0d756af9a24e5b6f653973e41e5eab609dc85d13ac72e9c4cda759d7e5240e7a"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/07-reset-input-time.txt",
+        "bytes": 21,
+        "sha256": "fd1f92f7b6fc2af46bee7ca89cf0e71998f311026f7f0755f17c25a9b97a4174"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/07-reset-input.png",
+        "bytes": 699585,
+        "sha256": "466e542721a390d7c379131dbfdbdec6503941089c5b26c958c41131f717cc0d"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/app-binary-sha256.txt",
+        "bytes": 135,
+        "sha256": "587a34b28fc0b637e8d6f7e8629951d6e3c60d2b2abbe25d820ce7fd2ab39948"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/capture-manifest.json",
+        "bytes": 488,
+        "sha256": "3b0ff010a3dbea5beceb15e6d84ad72780f850d96d8d72cf42bdd717f427b901"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/launch.txt",
+        "bytes": 22,
+        "sha256": "54217ce69b8ed62aeadc333e90786ebaa2fd7f7e8de275822873271c778712db"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/programmatic-inputs.jsonl",
+        "bytes": 81908,
+        "sha256": "f340649808980c016be888c099d83e3b53bdd87d87af3890aa38cb61caa988bc"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/before/runtime.log",
+        "bytes": 2734,
+        "sha256": "18d0090d4167c59781089242de3b98b0ee664b1c82006f45a3aec6d263065997"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/commands.txt",
+        "bytes": 3346,
+        "sha256": "dec6fa1cdb24643ccb353adfa753336fedcee47bfcfae954809ccf5795737900"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/dependencies.json",
+        "bytes": 912,
+        "sha256": "64a29f73b638da9f2e0444f01dd2f15ceec09b0fbaf8c1d4d97179e8df2c587c"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/native/03-baseline-state.json",
+        "bytes": 923,
+        "sha256": "49404a747d674139776f3a81e4f5f170bfea4f3a455be042456dea0afa3cf4a6"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/native/03-baseline-time.txt",
+        "bytes": 21,
+        "sha256": "632a9ea188e5bb822f893478cd7daee8cea2d6d74066a16c6fd7340d60458db3"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/native/03-baseline.png",
+        "bytes": 689037,
+        "sha256": "5acc0e5c21ac3870ec5ee73a75aef8de5cb25091c214937e6ecf8fd807cf897d"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/native/04-native-attempt-state.json",
+        "bytes": 919,
+        "sha256": "e844b19557a9b387cb5f68f10254212451f9c13839abb07600dc9fc6d0b1afba"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/native/04-native-attempt-time.txt",
+        "bytes": 21,
+        "sha256": "9706d1df6f0d7cd591653cb40e5665bb0d48dcf550b7c747377737e1244936df"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/native/04-native-attempt.png",
+        "bytes": 697108,
+        "sha256": "c512fd854a35d68b488c41866a4967a15e9e44e1ce22051af4dad77253deae15"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/native/app-binary-sha256.txt",
+        "bytes": 282,
+        "sha256": "c2a496fa226eb5e32e7d5da018cc1e772c1bd10a94dd98b84d74aebc454bb7b3"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/native/axe-describe-ui.txt",
+        "bytes": 240,
+        "sha256": "280579bea592d75e4899caee772f36880e26cdd15a273ad8b3052df7d15e3b5b"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/native/capture-manifest.json",
+        "bytes": 585,
+        "sha256": "e414489fe903bb56e859e966d3fa276d83279bcd5552ae2e095c9829d719bca2"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/native/launch.txt",
+        "bytes": 21,
+        "sha256": "64156794d23d5223694170483e5f078ed1d03803ffea860ae1cd74d65329c14b"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/native/observation.jsonl",
+        "bytes": 150499,
+        "sha256": "d59624b368fc0b2459d086a308726420e7515b37b8e6a83104747ff7ba497902"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/native/pointer-capture-attempt.jpg",
+        "bytes": 80838,
+        "sha256": "64146c82376230a9dae9c58aa7ac70ff91840b3f96a68324e18add449fdeaf21"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/native/runtime.log",
+        "bytes": 1895,
+        "sha256": "a6c9b734914ee7f0ed1dfce318cacd1a1eb9443e65510e62a047f034f1459499"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/native/simulator-devices.json",
+        "bytes": 17575,
+        "sha256": "6760b22263f8ffbc7460d82ae87998476c60e110730db3110fbcb78ff9c5b4de"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/tests-first.json",
+        "bytes": 1468,
+        "sha256": "ebb9977ea902cbb110f8f75446670c510f4ca2eac2810ddba7db12665ada3aea"
+      },
+      {
+        "path": "Docs/Validation/InstrumentInteraction/tests.json",
+        "bytes": 974,
+        "sha256": "f3ef041958aaa8386237f7e3798927529433fcd33d88cd6fd4b3d7899b2b9124"
+      },
+      {
+        "path": "Docs/Validation/InstrumentQueue-fixed.json",
+        "bytes": 980,
+        "sha256": "e1ed227e2266a511e627ce2f3b347d947425859ec64b4840bd4eb780847e530a"
+      },
+      {
+        "path": "Docs/Validation/InstrumentQueue-reproduction.json",
+        "bytes": 1602,
+        "sha256": "36c504d2fce220ca7b2930b9c557a64b5482d429e27168b738405a112ebd8097"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/01-live-p64.png",
+        "bytes": 703271,
+        "sha256": "7f716a4d8063c404dc2024d10edafe5b70d12756914e1c72968a66b1f1e19816"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/02-pointer-at-verb.png",
+        "bytes": 693894,
+        "sha256": "0e0676798220f75f99a690a17451b8a656babedb51232c98410e5ffb089b15cb"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/03-baseline-state.json",
+        "bytes": 474,
+        "sha256": "7c15f925af42271d9c75b7e718be4c9fa91a74737b058dbb5e5e6300a1474a9e"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/03-baseline-time.txt",
+        "bytes": 21,
+        "sha256": "28a435e45ca90709dfb285447dbe328f22bbd27cbaa4cc13526945f98deccbd7"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/03-baseline.png",
+        "bytes": 696491,
+        "sha256": "fc020d1dcd775d2f8230e3de635108cdd31b03ebebd26f77272d1107d8bb0df3"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/04-v16-input-state.json",
+        "bytes": 474,
+        "sha256": "c386e403fe73cfed9de6ed81785fd5b3fb9437e703de8c84597060e5510cf43f"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/04-v16-input-time.txt",
+        "bytes": 21,
+        "sha256": "2325d133ddb47f4cf6c7a0f5c0622623e1caeba83b18bd578e5a1335ec3df2e6"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/04-v16-input.png",
+        "bytes": 702670,
+        "sha256": "a1d004c01f9015347a4c66a3e0df17911d3983face5eb7af4f79faea4d5829cb"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/05-pro-input-state.json",
+        "bytes": 468,
+        "sha256": "f92b814f21606d2db70e8f2293dc307991d7832e4b555167a112b38fd2e4550a"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/05-pro-input-time.txt",
+        "bytes": 21,
+        "sha256": "1babffda8ffd7ef9d071f022a79d47b90c7f11dbd3c93adfecd257f125f3f831"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/05-pro-input.png",
+        "bytes": 701040,
+        "sha256": "4c7405baa7252d48afb46ed9ceb247249933f792f090d647c16f8b186cd122aa"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/06-v35-input-state.json",
+        "bytes": 497,
+        "sha256": "d1fe2b10839bed8f287cd8c0a2b047f557016cdf01d73efe271d93e4812287d8"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/06-v35-input-time.txt",
+        "bytes": 21,
+        "sha256": "dd837b922bd26495f9891d353b9659ef4fcfe20299a0e6515c15551ac47c2962"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/06-v35-input.png",
+        "bytes": 709106,
+        "sha256": "777607a668379f51c6529213ed8de7dcb398c73037e48e3f68cb0fd5107d8431"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/07-reset-input-state.json",
+        "bytes": 464,
+        "sha256": "ce8e6116eafc2cc1b3f9efde5763c4246cf19fbed09d0d8c260b3c4ca4e6d16f"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/07-reset-input-time.txt",
+        "bytes": 21,
+        "sha256": "33980940775e12d714f15afa04ac5127f941c41dc2c6ba07eaf976424bafafeb"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/07-reset-input.png",
+        "bytes": 697915,
+        "sha256": "21bfb2f4e182bebe7ef4326cba398ad26995aecc7ef6d51bbe10077b52abb8ec"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/README.md",
+        "bytes": 5349,
+        "sha256": "e40ca95f9f4e5732fb4f1b963766942dd2eceda5b7ec83b03d50b484e0e26db4"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/app-binary-sha256.txt",
+        "bytes": 134,
+        "sha256": "6d5a0a108bf311d433eb68d92a2240572f333fbbea10db3a86b5e9714fa69372"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/launch.txt",
+        "bytes": 22,
+        "sha256": "a19afadba74f3f64e161e00f319e64edf703df9cba1829acb91f3c743565529c"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/observation.jsonl",
+        "bytes": 105775,
+        "sha256": "4c1b390b3d3e6d157b2316a7090d5023ede80a6223979e0aee45774b3fe3a443"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/programmatic-inputs.jsonl",
+        "bytes": 78052,
+        "sha256": "4d599d825ccb57c956a5ba17bd3555d367139c21c1c8bc73a1ee2c65edb495fa"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/runtime.log",
+        "bytes": 3776,
+        "sha256": "89b30a8a73874e523e3144b8b7acf0451d251935e43df68b515aba4aa57cceeb"
+      },
+      {
+        "path": "Docs/Validation/InstrumentVisual/tests.json",
+        "bytes": 980,
+        "sha256": "958c09fad171b65411b3227e0533daf24b0b2b090d6168117d97724f4169b46d"
+      },
+      {
+        "path": "LM.xcodeproj/project.pbxproj",
+        "bytes": 18967,
+        "sha256": "32b4443a593d8b09fecc1f1c106bfb263b2409faa8715b2f7463222a041e3dd3"
+      },
+      {
+        "path": "LM.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+        "bytes": 135,
+        "sha256": "7f3b00b5c3fdb45242d7b87e1e5c4e25d1fa8129a16c94295ecc4e8ea2235c5f"
+      },
+      {
+        "path": "LM.xcodeproj/xcuserdata/zac.xcuserdatad/xcschemes/xcschememanagement.plist",
+        "bytes": 337,
+        "sha256": "2ca20a0e06f2415422a8b3c2af41b527a4cac1a6d85b4893b207da404a7d0fd7"
+      },
+      {
+        "path": "LM/Apollo11TerrainResource.swift",
+        "bytes": 34364,
+        "sha256": "5e9ba5dca45caa06012d2f135a6c1bfc1b18f1ab84b91dee50bdd026b75d023d"
+      },
+      {
+        "path": "LM/Assets.xcassets/AccentColor.colorset/Contents.json",
+        "bytes": 123,
+        "sha256": "9af65086fa30b49252fae1a1225731691de794f7775af74d71befeb507d12b7c"
+      },
+      {
+        "path": "LM/Assets.xcassets/AppIcon.solidimagestack/Back.solidimagestacklayer/Content.imageset/Contents.json",
+        "bytes": 142,
+        "sha256": "01823ecdf9796dce7cec68f1299cb5741cb2f418ae29a9929fc3910649d5db49"
+      },
+      {
+        "path": "LM/Assets.xcassets/AppIcon.solidimagestack/Back.solidimagestacklayer/Contents.json",
+        "bytes": 63,
+        "sha256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b"
+      },
+      {
+        "path": "LM/Assets.xcassets/AppIcon.solidimagestack/Contents.json",
+        "bytes": 265,
+        "sha256": "60aae858c779266495b7722d6a3c29ee2a981159e55f9139b12994d29db089c0"
+      },
+      {
+        "path": "LM/Assets.xcassets/AppIcon.solidimagestack/Front.solidimagestacklayer/Content.imageset/Contents.json",
+        "bytes": 142,
+        "sha256": "01823ecdf9796dce7cec68f1299cb5741cb2f418ae29a9929fc3910649d5db49"
+      },
+      {
+        "path": "LM/Assets.xcassets/AppIcon.solidimagestack/Front.solidimagestacklayer/Contents.json",
+        "bytes": 63,
+        "sha256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b"
+      },
+      {
+        "path": "LM/Assets.xcassets/AppIcon.solidimagestack/Middle.solidimagestacklayer/Content.imageset/Contents.json",
+        "bytes": 142,
+        "sha256": "01823ecdf9796dce7cec68f1299cb5741cb2f418ae29a9929fc3910649d5db49"
+      },
+      {
+        "path": "LM/Assets.xcassets/AppIcon.solidimagestack/Middle.solidimagestacklayer/Contents.json",
+        "bytes": 63,
+        "sha256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b"
+      },
+      {
+        "path": "LM/Assets.xcassets/Contents.json",
+        "bytes": 63,
+        "sha256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b"
+      },
+      {
+        "path": "LM/CrewControlPanel.swift",
+        "bytes": 3224,
+        "sha256": "382d81420cb95cff039dc28632ab4285ee8c4053a2f51b42e45174a2a52c237c"
+      },
+      {
+        "path": "LM/DSKYPanel.swift",
+        "bytes": 7966,
+        "sha256": "f4809761a0e928ce058720d0828b9a8c6fa4f6487e5da25ef8932af941ebb16b"
+      },
+      {
+        "path": "LM/DescentRangeStrip.swift",
+        "bytes": 2271,
+        "sha256": "021d251a660cfba498e48d0e625c3d012874798566d7d0f549d97b24ee10d15b"
+      },
+      {
+        "path": "LM/FDAIPanel.swift",
+        "bytes": 7413,
+        "sha256": "7608bec8306dd8c5dfb19a55626deb027ad893f20cd67ca0acfc70c668284a91"
+      },
+      {
+        "path": "LM/FDAITexturePreviewView.swift",
+        "bytes": 1572,
+        "sha256": "010319fefdcd12ece5cf54367fcc683d79409690cfe9205851db70fbc40fb47b"
+      },
+      {
+        "path": "LM/ImmersiveView.swift",
+        "bytes": 484,
+        "sha256": "c9c30429594b4fffe327e19ebd7d5e33a036398b5fb7559e330055e05815c98b"
+      },
+      {
+        "path": "LM/Info.plist",
+        "bytes": 462,
+        "sha256": "3fbe8586e1a449935e5921c44f49b9bfe33382bffc7d394df2ea99bdd821650b"
+      },
+      {
+        "path": "LM/LMACAInput.swift",
+        "bytes": 1842,
+        "sha256": "32137f352b7e5deea29fea952a5728633c85c380f594132c7db9bf1d7af2c509"
+      },
+      {
+        "path": "LM/LMACAValidation.swift",
+        "bytes": 1303,
+        "sha256": "3efcfb65f2428f070aabfb6715b63f3c2d42d65b6fd87305d4b881d4e700307e"
+      },
+      {
+        "path": "LM/LMApp.swift",
+        "bytes": 3457,
+        "sha256": "a901c1a0122a6048bf8e478e0efa39262e3c1da2b03ceefcf3ca5dbb8d58eed8"
+      },
+      {
+        "path": "LM/LMCockpitAssetContract.swift",
+        "bytes": 7842,
+        "sha256": "cb5094a027c9a291cd40434b1997da52d99424298bad0c962669a81356d2573e"
+      },
+      {
+        "path": "LM/LMCockpitAudioController.swift",
+        "bytes": 6639,
+        "sha256": "1fea2e04caf4a6025de551f43cbfa7f648cd67b889964eab1b6a12d86ab195d1"
+      },
+      {
+        "path": "LM/LMCockpitExperienceDirector.swift",
+        "bytes": 10554,
+        "sha256": "095bef15b9eb4d5dabce67ac7e350d23b576f879d436b2a96e60e263904c3a67"
+      },
+      {
+        "path": "LM/LMCockpitImmersionPolicy.swift",
+        "bytes": 821,
+        "sha256": "a0571c5e1be2183dc63a291331b3caab108267e90fab174381e4fa0615fb4ad2"
+      },
+      {
+        "path": "LM/LMCockpitValidationRecorder.swift",
+        "bytes": 5081,
+        "sha256": "523815e27ced2d82f89ce89669b51c8f46cb042a10d89e384d0b0a510b100363"
+      },
+      {
+        "path": "LM/LMCockpitWorldMapper.swift",
+        "bytes": 1645,
+        "sha256": "7fda18874675c1f0d598d4f6f24a14a80671f10b423b6dfd2e1f21c4c3a1feac"
+      },
+      {
+        "path": "LM/LMCommanderStationAssembly.swift",
+        "bytes": 9011,
+        "sha256": "d581b5b12bcf38d8bf4ef69d20f93c433578f5c5e4f15d92d04a5b24d89e9147"
+      },
+      {
+        "path": "LM/LMCommanderStationAssemblyObserver.swift",
+        "bytes": 1602,
+        "sha256": "87c5e0ca73690f6aec019d188c6c7cb2f8b3f7f119013dd137bcfec85da31449"
+      },
+      {
+        "path": "LM/LMCommanderStationGeometry.swift",
+        "bytes": 12172,
+        "sha256": "447ce35526b475ad71b889083c3cf28f0d673ca0b22076e37a6c00336d371659"
+      },
+      {
+        "path": "LM/LMCommanderStationScene.swift",
+        "bytes": 87627,
+        "sha256": "a51035d7d9373c7f82caa6e89be98a88148ffea00af6ff311b95797e7414379e"
+      },
+      {
+        "path": "LM/LMCoreMLTerrainDetailGenerator.swift",
+        "bytes": 17879,
+        "sha256": "29632c329591be1a4f85327f8f66c53af77dc3fed0e08e524746519ac3a34c8e"
+      },
+      {
+        "path": "LM/LMDSKYGeometry.swift",
+        "bytes": 5562,
+        "sha256": "48897464b0444959a4bb114ed5718aeb7e1e3bee672a6959d1c4ade31103cd73"
+      },
+      {
+        "path": "LM/LMDSKYInputQueue.swift",
+        "bytes": 2059,
+        "sha256": "950d1740a98f8b45f11a97987d8dac83a9d7ff8c2e79c3cf75828981cd1c562e"
+      },
+      {
+        "path": "LM/LMImportedACA.swift",
+        "bytes": 4485,
+        "sha256": "1ee14d530a399b45c669ef8ff217f2ff58c8f78f2e8b96c14f09fe3c46c63741"
+      },
+      {
+        "path": "LM/LMImportedDSKY.swift",
+        "bytes": 7694,
+        "sha256": "28d7f2a12fbdd2657bcbe4b338848b82e55dca9d0a4b4a0db6573cf900790694"
+      },
+      {
+        "path": "LM/LMImportedFDAI.swift",
+        "bytes": 3532,
+        "sha256": "83b91e9d7eea6ac8327eff736b48df5d111bd1bd280fa24c793ffb6bd26ff92f"
+      },
+      {
+        "path": "LM/LMInstrumentInteraction.swift",
+        "bytes": 645,
+        "sha256": "17e3bf8aa2a25c91b5cce162d1ae74911257a224d64eaacb3ef65f7b89f3bd8d"
+      },
+      {
+        "path": "LM/LMInstrumentValidation.swift",
+        "bytes": 5137,
+        "sha256": "b99c1c6ab74ceb6579d01a4d6288b203ca04ee1cc5a2683ba40457793f21edeb"
+      },
+      {
+        "path": "LM/LMLandingPointDesignator.swift",
+        "bytes": 10481,
+        "sha256": "b60b4980c312cc79d4909c152bcc5b007e0eb1902764d8c34b6575fc46508229"
+      },
+      {
+        "path": "LM/LMLunarAnchoredPlacement.swift",
+        "bytes": 1752,
+        "sha256": "af62b1140857da6b88c1058fe58cfe1038ff3ff903c3fef754b6419607eff924"
+      },
+      {
+        "path": "LM/LMLunarCraterCatalog.swift",
+        "bytes": 12685,
+        "sha256": "8a58d76a0a118dad8bf50c97e4ae8f0c0dc19ee2d12454f1860fc55b9f2182ad"
+      },
+      {
+        "path": "LM/LMLunarElevationCatalog.swift",
+        "bytes": 4350,
+        "sha256": "3ddf558637b1061d30fc4ce27c3c05fd3697610010894a06a4f2b546c30c86dc"
+      },
+      {
+        "path": "LM/LMLunarElevationGrid.swift",
+        "bytes": 9142,
+        "sha256": "948525922c8d3e65a4b8a76f95d2efc3946ed5065343ebdcf9f03f96741127e7"
+      },
+      {
+        "path": "LM/LMLunarElevationPreview.swift",
+        "bytes": 7688,
+        "sha256": "d853ebdf511568d38bbfd06ead5007fafe4f69ab89596021aba888e7f7349c68"
+      },
+      {
+        "path": "LM/LMLunarElevationStore.swift",
+        "bytes": 11394,
+        "sha256": "5cf0e513280c2b9e57762614b257f75aa8fdfa1bd2c90aa235e41925393b7e6d"
+      },
+      {
+        "path": "LM/LMLunarEphemeris.swift",
+        "bytes": 21628,
+        "sha256": "24e3297265a6c9bfd9bf4442afa274eab3650bb97ee32c7c09fa2b27d114b364"
+      },
+      {
+        "path": "LM/LMLunarFloatingOrigin.swift",
+        "bytes": 3100,
+        "sha256": "20c4d4263a1b3a40b498e25c124b2f39a745c9fa5f235cdd3044137cb1966ea0"
+      },
+      {
+        "path": "LM/LMLunarLandingRehearsal.swift",
+        "bytes": 2528,
+        "sha256": "6da19d2a2ec6ec415823a0934489ef62624ccbcb41799eba05973b6234150a64"
+      },
+      {
+        "path": "LM/LMLunarNavigation.swift",
+        "bytes": 4483,
+        "sha256": "5d8fb757e4395c10e8920ceef8555b092ecc0a7602e049b5a930ecc796c27d14"
+      },
+      {
+        "path": "LM/LMLunarRockField.swift",
+        "bytes": 13453,
+        "sha256": "1bdca42bfe0d7e1deeac81de42c1c0565190b44da02d43d2ad3e316419629545"
+      },
+      {
+        "path": "LM/LMLunarTerrainMeshSnapshot.swift",
+        "bytes": 5457,
+        "sha256": "6fbac7aadc4c17eec021828b79fff002828923baf7c612a1b7d6ff03895875bd"
+      },
+      {
+        "path": "LM/LMLunarTerrainMorph.swift",
+        "bytes": 5447,
+        "sha256": "4564540b4df5ed3ce8218fc3bc6722765975ecda0ffd53fb9d06384ab0518c69"
+      },
+      {
+        "path": "LM/LMLunarTerrainMorphRenderer.swift",
+        "bytes": 21500,
+        "sha256": "502e24209cf49c810888cde4f587ccf4384558bc462c739efe6f570d1799e320"
+      },
+      {
+        "path": "LM/LMLunarTerrainPresentation.swift",
+        "bytes": 29046,
+        "sha256": "8e6268472a9c8ad4c3c3f39679d36fa8b976c8483e2f6a7f50ee6d95b00ca10b"
+      },
+      {
+        "path": "LM/LMLunarTerrainRegion.swift",
+        "bytes": 8693,
+        "sha256": "fbc3376e7e3e5ce9403d64f99721b2aefe7ec5cc90739d80e0798d453868c698"
+      },
+      {
+        "path": "LM/LMLunarTerrainResolver.swift",
+        "bytes": 17642,
+        "sha256": "25aa9450b1a78628bc51e96cf091adc9ec349cecaea4364603a5c3bdc4006369"
+      },
+      {
+        "path": "LM/LMPhysicalDSKYPresentation.swift",
+        "bytes": 2664,
+        "sha256": "dbc2baac44ab61b554d87153a2f73de69d75e014fd912178822c6d2a2d06a851"
+      },
+      {
+        "path": "LM/LMProgressiveTerrain.swift",
+        "bytes": 55585,
+        "sha256": "5d8cceb2925b2a2013aef8785ef8d6a77620e35141f1f8de84f3e9ae003288a6"
+      },
+      {
+        "path": "LM/LMRCSJetMapping.swift",
+        "bytes": 1131,
+        "sha256": "a6e257b90e68e1ac9802a812f698c253e1002d531bdbf81fa0c777a1f571d191"
+      },
+      {
+        "path": "LM/LMSpatialControlMapper.swift",
+        "bytes": 1927,
+        "sha256": "c6599b53e8c3310f3147ab81329f87a1d5c5cf649f51f850d9de49c7099a9411"
+      },
+      {
+        "path": "LM/LMTerrainDetailStreaming.swift",
+        "bytes": 7309,
+        "sha256": "f3ed357b1febe8c944a29dd4e1588473810b73fe7aa06d2b5768b5577e838f37"
+      },
+      {
+        "path": "LM/LMTerrainDetailTexture.swift",
+        "bytes": 47052,
+        "sha256": "f587b26701184e446c8545f915d32afd158f9569b7dc5af2c4f54e835f39d936"
+      },
+      {
+        "path": "LM/LMTerrainHeightField.swift",
+        "bytes": 1644,
+        "sha256": "9b7f199f52ddf76bf24a89e7222715699e0c6ea31a10911d2bc6d6ecc1834d4f"
+      },
+      {
+        "path": "LM/LMTerrainHeightMap.swift",
+        "bytes": 2823,
+        "sha256": "5ffbf25338d156c315020927fe1c9be39c3f4d19b2d1bb432555b8a30caf90f3"
+      },
+      {
+        "path": "LM/LMTerrainLandingSurface.swift",
+        "bytes": 9562,
+        "sha256": "087241b68b1ee19a9debbc2435283702910ccc4d7adee5f1ce2b20f72c03877f"
+      },
+      {
+        "path": "LM/LMTerrainManifest.swift",
+        "bytes": 13674,
+        "sha256": "814ef43d68b7828ddc7d36a2a5e6fb2859c05a1bc2a3e87ab140703ee2c9c7a2"
+      },
+      {
+        "path": "LM/LMTerrainMeshBuilder.swift",
+        "bytes": 12498,
+        "sha256": "ab9046e8e2cfc84c6d4a2e6fb89594776020b444247d5cb23c80beced3d6d93c"
+      },
+      {
+        "path": "LM/LMTerrainWorld.swift",
+        "bytes": 28802,
+        "sha256": "fa35a22102a62b006a4d8144f18748f4a8264a490f0415d73096e5e95a6a694d"
+      },
+      {
+        "path": "LM/LMWorldMapper.swift",
+        "bytes": 5415,
+        "sha256": "8f30137e0b552df649e4f84c3c0a0a3181d22d4b1a170d4d7d874ce28b5b922a"
+      },
+      {
+        "path": "LM/Luminary099.bin",
+        "bytes": 73728,
+        "sha256": "1f5326e038de5b741b2f27b01ec949dbd688cf1906994e997402587c8628f40e"
+      },
+      {
+        "path": "LM/LunarExplorerBrowser.swift",
+        "bytes": 27100,
+        "sha256": "6034569bb6c10aa915d840cc7b50585df46a3241392bd753362997823e6dca75"
+      },
+      {
+        "path": "LM/LunarExplorerButton.swift",
+        "bytes": 1826,
+        "sha256": "07ef5e5564ed958f222be98ed60cd080aa53cc701954c522acba5666bb2ab990"
+      },
+      {
+        "path": "LM/LunarExplorerCamera.swift",
+        "bytes": 4705,
+        "sha256": "863818277244e5fdc3ffc3cdbefda2d5a2648ef8b9de7a48ebe7de7408989fd6"
+      },
+      {
+        "path": "LM/LunarExplorerExperienceProbe.swift",
+        "bytes": 17598,
+        "sha256": "3027227d10c8100f0c2eabb739ada413c3cb4d9c24a9c03f37e140c8492b25b1"
+      },
+      {
+        "path": "LM/LunarExplorerHeightFieldPicker.swift",
+        "bytes": 6737,
+        "sha256": "87a2d62317315701ab98639d1893ef595a3e2aa1489975c702c05a49298541b0"
+      },
+      {
+        "path": "LM/LunarExplorerLibrary.swift",
+        "bytes": 10494,
+        "sha256": "307e91e906c86f6891e536fa09199f1bdbe365138506d47dfe5ae9397228a26e"
+      },
+      {
+        "path": "LM/LunarExplorerMapGeometry.swift",
+        "bytes": 991,
+        "sha256": "6cfd94f761d1ecfb0991249ab3f5760efe6d7696baa4e5bebfb9f0858714a386"
+      },
+      {
+        "path": "LM/LunarExplorerPerformanceProbe.swift",
+        "bytes": 9104,
+        "sha256": "17c309d0629e0c4daca9fa74fa6cb19801bbac1985e4400857ded742592c4afe"
+      },
+      {
+        "path": "LM/LunarExplorerPinchGeometry.swift",
+        "bytes": 3871,
+        "sha256": "608b1f0f4b35829957eb0e71da26c352e0cd019ad2b1befd4bd1267600e0436d"
+      },
+      {
+        "path": "LM/LunarExplorerPlaceDetails.swift",
+        "bytes": 4671,
+        "sha256": "da07e5b15d9cbe765cfed83239ed9e6ce751ff14b0237dc9509d12e5c25f35e7"
+      },
+      {
+        "path": "LM/LunarExplorerPlaceMarker.swift",
+        "bytes": 4820,
+        "sha256": "67979190ec2787b639831759d8d80194bb9367f9a07705bf10b0c33b8791504b"
+      },
+      {
+        "path": "LM/LunarExplorerPlacementPanel.swift",
+        "bytes": 1678,
+        "sha256": "3863d5d59cd00c62374cf8435c0cf8eff9796e42bc5974d29b7c81bfdf92c8b6"
+      },
+      {
+        "path": "LM/LunarExplorerPortalGeometry.swift",
+        "bytes": 4720,
+        "sha256": "ebe1dbbd4e597ee66132c7061c2c7f199e669b2a64c6fee9217ae89803044367"
+      },
+      {
+        "path": "LM/LunarExplorerScene.swift",
+        "bytes": 95543,
+        "sha256": "7ceb6aba7b19988baad3dc672e8da1b98fe4fe06299c41512231a16cf276a3a6"
+      },
+      {
+        "path": "LM/LunarExplorerSceneSnapshot.swift",
+        "bytes": 3016,
+        "sha256": "e72266f4139dc8d0f1e426d9f75bf6f67e373371066afdf8e70efddc336ec39d"
+      },
+      {
+        "path": "LM/LunarExplorerSession.swift",
+        "bytes": 42228,
+        "sha256": "61ccf3df8fb08ce24ea34f9aaa1982c3c69619d3542819802dce44328acdf166"
+      },
+      {
+        "path": "LM/LunarExplorerSitePack.swift",
+        "bytes": 1796,
+        "sha256": "da9ef44d77f6513c64aec90b0d262f4138560607159083b3d3d7ddf1d599d70b"
+      },
+      {
+        "path": "LM/LunarExplorerView.swift",
+        "bytes": 28709,
+        "sha256": "125cb7707f809f5799cd3912dd4b111bc091b23fff383747e3725359f4d0b48b"
+      },
+      {
+        "path": "LM/LunarGlobe/LMLunarGlobeImagery.swift",
+        "bytes": 15329,
+        "sha256": "ecdf7e5d9c21783a5f9ef7743dd33a35a98d614c0b2d893f26614e851f410cd0"
+      },
+      {
+        "path": "LM/LunarGlobe/LMLunarGlobeResource.swift",
+        "bytes": 27148,
+        "sha256": "936f6bf1f8d49bd10439a87443e91fb242fed7a754ad80c601c7a5b21b82e0f0"
+      },
+      {
+        "path": "LM/LunarGlobe/LMLunarImageryPyramid.swift",
+        "bytes": 5431,
+        "sha256": "ba27584241d9169d760dfa89712348bab219abf222d32ef7c44847c31eb92801"
+      },
+      {
+        "path": "LM/LunarGlobe/LMLunarImageryTileStore.swift",
+        "bytes": 5344,
+        "sha256": "bce7ae4896c7133169cb9b5ab958d266d807dd695a623d30d032ba982c7c8c60"
+      },
+      {
+        "path": "LM/LunarLanderSimulationView.swift",
+        "bytes": 12242,
+        "sha256": "e8d765bb70908a4b79f0c52a4426ea06d25d7666296596f9c3de45f1fc638d7f"
+      },
+      {
+        "path": "LM/LunarModuleModel.swift",
+        "bytes": 21324,
+        "sha256": "03a7bdd9d1c5f71d14c5bd92df595e0cb0b7b614b717f8555d5d6348ec3a91a9"
+      },
+      {
+        "path": "LM/LunarPadEntity.swift",
+        "bytes": 1198,
+        "sha256": "9bf45f17089ed08e58c73be4e6b897e7d39b96918ce199901a06fbe581b2ad4e"
+      },
+      {
+        "path": "LM/LunarTerrainMorph.metal",
+        "bytes": 3159,
+        "sha256": "e9572d78360e0ea7421bc9d78782feb82d367af50df13bdf5081813da93c2806"
+      },
+      {
+        "path": "LM/LunarTerrainSR.mlpackage/Data/com.apple.CoreML/model.mlmodel",
+        "bytes": 21248,
+        "sha256": "3350b5650223f122fc6f541deadeb6804996d9d7ba47c902d327f60a5c72855c"
+      },
+      {
+        "path": "LM/LunarTerrainSR.mlpackage/Data/com.apple.CoreML/weights/weight.bin",
+        "bytes": 179824,
+        "sha256": "6f43d86fdc7621fdaaad93c65a9df246f52f27550f979872bfce26c22e483416"
+      },
+      {
+        "path": "LM/LunarTerrainSR.mlpackage/Manifest.json",
+        "bytes": 617,
+        "sha256": "824ddd4c57bf3bd6dc94b2ab62e3091b3508b565f1a73c29cdfeaf15a58d042c"
+      },
+      {
+        "path": "LM/MainMenuView.swift",
+        "bytes": 1711,
+        "sha256": "1b673445e9cc1c7ee3a888d107b2fb53ed9fbcda77c5638f88a3196132c9524d"
+      },
+      {
+        "path": "LM/MainMenuViewModel.swift",
+        "bytes": 1682,
+        "sha256": "c44d3bbe4672ac23509703a9822b38128e83d8091b163a832da1b40de5669ff4"
+      },
+      {
+        "path": "LM/MoonCoordinateConverter.swift",
+        "bytes": 10602,
+        "sha256": "a0264e54727b591b7df257d6a43f9ce33491059b5ec7710dac620dd567c3dae8"
+      },
+      {
+        "path": "LM/MoonScene.swift",
+        "bytes": 1498,
+        "sha256": "552d5eb9053f58fab4f7da8991b2ecc09cc9762673867d809ef94bbd77597787"
+      },
+      {
+        "path": "LM/NewGameButton.swift",
+        "bytes": 2309,
+        "sha256": "d9bac473f26916b5f874338b382f2db086234839898f4d7bad638669a3cf5f67"
+      },
+      {
+        "path": "LM/P64ApproachCheckpoint.bplist",
+        "bytes": 25507,
+        "sha256": "f219f91a9f330944fcf0599b12b4c015a1fd757529b118df2ed67acda1f9784d"
+      },
+      {
+        "path": "LM/P65AutomaticTerminalDescent.json",
+        "bytes": 856511,
+        "sha256": "6c3e4ff5fcc5751e118f2b2cb0b438169d0e0ee8a67830f6959c143a9eefdbe9"
+      },
+      {
+        "path": "LM/P65TerminalDescentCheckpoint.bplist",
+        "bytes": 25476,
+        "sha256": "bc1b95de329a5e17e1b50c2111df1c9a537f91e1a6d02aec01790ad7f1fb0c1b"
+      },
+      {
+        "path": "LM/P66TerminalDescent.json",
+        "bytes": 1380991,
+        "sha256": "4b1bb68e6a7ffa87c2e07bbd2f2b9bdc26836ac7569549148ac40c4af4c3d9b2"
+      },
+      {
+        "path": "LM/PoweredDescentImmersiveView.swift",
+        "bytes": 3042,
+        "sha256": "30b3aee8ab8d6538090055483826ecc53b1afd4523de307c3fe7ceb5aa8188b6"
+      },
+      {
+        "path": "LM/PoweredDescentSession.swift",
+        "bytes": 33155,
+        "sha256": "01856843742b821f4b571ba2da9269357bc0c881fbafef7a14b211ecfdb76281"
+      },
+      {
+        "path": "LM/PoweredDescentSpaceButton.swift",
+        "bytes": 1403,
+        "sha256": "84e4eb57bd6dfeebc17d16c99da62ff14345e35b69c2175bf17085b4d494b709"
+      },
+      {
+        "path": "LM/PoweredDescentView.swift",
+        "bytes": 13634,
+        "sha256": "f7479b93bde95189a3ca7e9838ff5c3568078712dc8445009708ca25e66b88fc"
+      },
+      {
+        "path": "LM/Preview Content/Preview Assets.xcassets/Contents.json",
+        "bytes": 63,
+        "sha256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b"
+      },
+      {
+        "path": "LM/TerminalDescentCockpitView.swift",
+        "bytes": 30327,
+        "sha256": "0170fd0cf18519b1ecbb5be6e2c1a3086195df1b06d9ddb2fa58d3d6623dea9d"
+      },
+      {
+        "path": "LM/Terrain/LDEM_128.LBL",
+        "bytes": 5133,
+        "sha256": "85b1901def6901ee8a50415384f17a71e773af2d979beb7245fd6ac4d5e1671b"
+      },
+      {
+        "path": "LM/Terrain/LDEM_16.IMG",
+        "bytes": 33177600,
+        "sha256": "a511e40d7a3ea3275945b4da2a1df377133264fab0be94b7434b1cf8907254cb"
+      },
+      {
+        "path": "LM/Terrain/LDEM_16.LBL",
+        "bytes": 5121,
+        "sha256": "9aef29463ccc6ed3a3fbe0df3ecd830a99c69e16b564f455507dee2697096579"
+      },
+      {
+        "path": "LM/Terrain/LOLALDEM16MENormal.png",
+        "bytes": 29657953,
+        "sha256": "bd70494eb4194aca023e4f4f724cc7a6d11a4b23148f4519192715694dd34696"
+      },
+      {
+        "path": "LM/Terrain/LunarElevationStrips.json",
+        "bytes": 49080,
+        "sha256": "3cb3fa9507cfe174ae0c0698a684f4c3704b507b6213b0d78a2c6ac6ab303181"
+      },
+      {
+        "path": "LM/Terrain/LunarImageryPyramid.json",
+        "bytes": 406784,
+        "sha256": "142a5dc06d20f405283460ace716c651f6856abe26c10112216f14910ccb6667"
+      },
+      {
+        "path": "LM/Terrain/MoonPOI.json",
+        "bytes": 7690,
+        "sha256": "74eaf8e8b5ddd5271a18edc7bd36bb36023b834bea354e3e99e46f29e9fc44d6"
+      },
+      {
+        "path": "LM/Terrain/TerrainManifest.json",
+        "bytes": 26652,
+        "sha256": "29e6aecee968246a14e6672b9ec2bcb15cf2b724d2b2fd67a9205521a7c129d8"
+      },
+      {
+        "path": "LM/Terrain/WACGlobal16PPD.json",
+        "bytes": 2506,
+        "sha256": "f21df3938d752cd7aedc9597b32bb5129fa6b93d28fc27334303fdcab1732e2d"
+      },
+      {
+        "path": "LM/Terrain/WACGlobal16PPD.png",
+        "bytes": 17306853,
+        "sha256": "b799eab2d43f7a27799972d4ec4bc25cff06776ba14774e03e322cb7a7ea460e"
+      },
+      {
+        "path": "LM/Terrain/WACGlobal64GPUBase-P3.pngdata",
+        "bytes": 16125401,
+        "sha256": "840379f0f6cc9311e3674086579bce2a6cc8bd30d822cb1e63e3200e2bc2303e"
+      },
+      {
+        "path": "LM/Terrain/WACGlobal64PPD-q95.jxl",
+        "bytes": 76112646,
+        "sha256": "819ca84afedca9a5fe864a0a3a036bc6384a105f21135614c90808c184355841"
+      },
+      {
+        "path": "LM/Terrain/apollo11-nac-craters-v1.json",
+        "bytes": 221609,
+        "sha256": "b2bdfada9d6df68623dcfd8c99a5b7b7d1bc2c6000b997d04afd80a79a6e630f"
+      },
+      {
+        "path": "LM/Terrain/far-field-albedo.png",
+        "bytes": 137676,
+        "sha256": "9e48c12b48f80fa61ac6184172a9254351ea248b95b6a7b07ce2a7d00d7065c0"
+      },
+      {
+        "path": "LM/Terrain/far-field-height.png",
+        "bytes": 374938,
+        "sha256": "9e1c571eeb02b4b50b980ecdf60cd5bcd3cdcd0511ea9fcfa53bba1c0f903802"
+      },
+      {
+        "path": "LM/Terrain/medium-field-albedo.png",
+        "bytes": 60529,
+        "sha256": "2631b675920293aecc7cb37f7a4b93b67079f0bdba53174dbb672a3b7637311e"
+      },
+      {
+        "path": "LM/Terrain/medium-field-height.png",
+        "bytes": 378835,
+        "sha256": "7baf81ee1c182159c9e308ff922d6f543dc23606819a82d0e79e97babef8c06d"
+      },
+      {
+        "path": "LM/Terrain/near-field-albedo.png",
+        "bytes": 2638266,
+        "sha256": "5cc754af24b02b2bd3fae183cccf3adc0e5bbb4c386a2357debd13d2fe6d3fff"
+      },
+      {
+        "path": "LM/Terrain/near-field-height.png",
+        "bytes": 777964,
+        "sha256": "8d35110db46f21e3fb62a8de8dced3700cf8bcf79c449493583bf53f23e56027"
+      },
+      {
+        "path": "LMLunarCockpitTerrain.swift",
+        "bytes": 15922,
+        "sha256": "d2a0195b8dc337c8e24b2f3591a434f3645114b5004a36f19196a0ccc11b135e"
+      },
+      {
+        "path": "LMTerrainSimulationGate.swift",
+        "bytes": 730,
+        "sha256": "b4b973accbdea1b266e2da5695c6b57cfd536a1130167661768c3f06c9454585"
+      },
+      {
+        "path": "LMTests/LMCockpitImmersionPolicyTests.swift",
+        "bytes": 711,
+        "sha256": "f7b75c58e84f8c87c3df1d31dc249d67fd246cd204bcc76c8e8714e1c6618bd5"
+      },
+      {
+        "path": "LMTests/LMCommanderStationAssemblyTests.swift",
+        "bytes": 6782,
+        "sha256": "910764912a152e4ff90c67f565bbab615cfdda70452a453993088cf9b5e70238"
+      },
+      {
+        "path": "LMTests/LMImportedACATests.swift",
+        "bytes": 5354,
+        "sha256": "700a2feea903360796975a1d6403323a58e6f36e31940943c90db02b83b8e73a"
+      },
+      {
+        "path": "LMTests/LMInstrumentIntegrationTests.swift",
+        "bytes": 10940,
+        "sha256": "2ed57e4e4d4bb8c1733bf2b4a8f914bd9accae5a0ed5064b1c28cecfdf8dad81"
+      },
+      {
+        "path": "LMTests/LMInstrumentInteractionTests.swift",
+        "bytes": 3353,
+        "sha256": "9ac6fe98e07a53e653751104880701514aa2f6809fa7ddb0046174f7343c2a0f"
+      },
+      {
+        "path": "LMTests/LMLunarCockpitMissionTests.swift",
+        "bytes": 2804,
+        "sha256": "5715fa9e6d6d40331bf6c0149859d5c90a6e240e0a8d30bbc4a3504b2a1e955c"
+      },
+      {
+        "path": "LMTests/LMLunarCockpitRestartTests.swift",
+        "bytes": 2233,
+        "sha256": "c61ac9b89d8e2b9003c4d762a638748974f3a090e09c2e52ab7a39258e0d84b5"
+      },
+      {
+        "path": "LMTests/LMLunarCockpitStreamingTests.swift",
+        "bytes": 10625,
+        "sha256": "d73b6d4cf5872ab6b8a6fbc9e18690df00e863a02591ced3171c651dd5192285"
+      },
+      {
+        "path": "LMTests/LMLunarContactTests.swift",
+        "bytes": 3677,
+        "sha256": "3d32b5d1d2a1006fb0cf4b48fea341a268a3e7d56b4677f6ac441157c717af62"
+      },
+      {
+        "path": "LMTests/LMLunarCraterCatalogTests.swift",
+        "bytes": 9405,
+        "sha256": "a3c306c9bcd58d46fc0a0c07726d6a072f5d7ca9be881f88be10eae89ff109a6"
+      },
+      {
+        "path": "LMTests/LMLunarElevationTests.swift",
+        "bytes": 18594,
+        "sha256": "64f34fb107d278bc92779c6ef9c1cf07bf473f06464857b2bd49b970d1550857"
+      },
+      {
+        "path": "LMTests/LMLunarEphemerisTests.swift",
+        "bytes": 16325,
+        "sha256": "aed4882a12305e9f5229e1a9c4f09b51b5b29ca2fca79a119ff03a3378e225ec"
+      },
+      {
+        "path": "LMTests/LMLunarFloatingOriginTests.swift",
+        "bytes": 12139,
+        "sha256": "5cd52103cbfee22bb81a411caaff1aafc29604a750ca02b5ce180eabb40db88e"
+      },
+      {
+        "path": "LMTests/LMLunarGlobeTests.swift",
+        "bytes": 15483,
+        "sha256": "ce62c558c88357a2fab147728f7d16086784f3d5924b3dae0419d4b136ac5890"
+      },
+      {
+        "path": "LMTests/LMLunarImageryTests.swift",
+        "bytes": 10161,
+        "sha256": "16c475a199ae0de22725aa3d55965fa7eb619c2c6bec3280face6c6378447528"
+      },
+      {
+        "path": "LMTests/LMLunarNavigationTests.swift",
+        "bytes": 4567,
+        "sha256": "9a0bc39d895692f25783c82755b19e8a15990f5df714b0e4c3bf3cef85b39daf"
+      },
+      {
+        "path": "LMTests/LMLunarResolverTests.swift",
+        "bytes": 16326,
+        "sha256": "aac0fb4256164947cb8d62f6bacea52f920125dc10670f8e64418dd37a89a6ed"
+      },
+      {
+        "path": "LMTests/LMLunarRockFieldTests.swift",
+        "bytes": 6421,
+        "sha256": "86433aacce71b984c13737c6e5a8d8866cb95db0d6b0e5d785bb42785dc67b86"
+      },
+      {
+        "path": "LMTests/LMLunarTerrainArrivalTests.swift",
+        "bytes": 21141,
+        "sha256": "9d7e33bc6957fde251e732bf5bd4861b4cdd5e18a35648c2b810476f0821629a"
+      },
+      {
+        "path": "LMTests/LMLunarTerrainTransitionTests.swift",
+        "bytes": 12449,
+        "sha256": "05768a913e51b90f7d960d8a5fbda3b1234fa594b8b1b938808a3f48abb6bfd8"
+      },
+      {
+        "path": "LMTests/LMSelenographicCoordinateTests.swift",
+        "bytes": 5837,
+        "sha256": "558726f4cb8a6c5392cccf5a5e7d2fe8b61a768545caaa20111b3dcab0f6bd09"
+      },
+      {
+        "path": "LMTests/LMTerrainDetailStreamingTests.swift",
+        "bytes": 12348,
+        "sha256": "bbcba3b3c3149dc047c0c2ceee8a94d71c82442c3b78cf7a2d82d4d236ecadc0"
+      },
+      {
+        "path": "LMTests/LMTerrainSimulationGateTests.swift",
+        "bytes": 1724,
+        "sha256": "a6ea4c3f143f592926baeb13d8971261a5ce666e91d4e26e98404b71e95126bb"
+      },
+      {
+        "path": "LMTests/LMTests.swift",
+        "bytes": 188820,
+        "sha256": "6cc2321bfce3ba44f4e79fc41b8d3f3b991ec71dd0c97ac721d57c88203db702"
+      },
+      {
+        "path": "LMTests/LunarExplorerExperienceTests.swift",
+        "bytes": 19726,
+        "sha256": "9c35c920a614b75d0b7c79b8183b272d8217eb0c736696f9d4a19e401e6d4887"
+      },
+      {
+        "path": "LMTests/LunarExplorerHeightFieldPickerTests.swift",
+        "bytes": 3327,
+        "sha256": "1daf345e78c71cc93667447cdb1edad7b01da3e79f589509d5bfc34214bfc480"
+      },
+      {
+        "path": "LMTests/LunarExplorerMapTests.swift",
+        "bytes": 5293,
+        "sha256": "b2145b7d4fb50f06ac8dd3e062d2fff2e2b0ee5812109a74c31e5f31c91a0470"
+      },
+      {
+        "path": "LMTests/LunarExplorerPortalTests.swift",
+        "bytes": 3127,
+        "sha256": "1bc8619e359c4c81444891456dfe59044970b4a85f951743f4ca2e1dd57a6a64"
+      },
+      {
+        "path": "LMTests/LunarExplorerTests.swift",
+        "bytes": 13255,
+        "sha256": "ecf703779fbd562c5b3f3a9496dd5bf1bdbbe0e6d83e9f038f521cb05b158cb6"
+      },
+      {
+        "path": "Packages/RealityKitContent/.swiftpm/xcode/xcuserdata/zac.xcuserdatad/xcschemes/xcschememanagement.plist",
+        "bytes": 352,
+        "sha256": "9d48ae1c197ed1178e117d91be1f4e659cf4b79c4e0287d5b737cfe17a1abd48"
+      },
+      {
+        "path": "Packages/RealityKitContent/Package.realitycomposerpro/ProjectData/main.json",
+        "bytes": 981,
+        "sha256": "663725faffdf7809658d926c4ca27260db7a9c85b1e6bf922ef39f13d803bc98"
+      },
+      {
+        "path": "Packages/RealityKitContent/Package.realitycomposerpro/WorkspaceData/SceneMetadataList.json",
+        "bytes": 4573,
+        "sha256": "9a9e6c83e65be88b7cde9cf6c15a7db877a4ad9d9f7fa8de409b16c5360506a7"
+      },
+      {
+        "path": "Packages/RealityKitContent/Package.realitycomposerpro/WorkspaceData/Settings.rcprojectdata",
+        "bytes": 256,
+        "sha256": "cb2299be0b7e586902587d1bc8f25ecc1dd238fd98078e84e592017de5017b9d"
+      },
+      {
+        "path": "Packages/RealityKitContent/Package.realitycomposerpro/WorkspaceData/zac.rcuserdata",
+        "bytes": 14235,
+        "sha256": "d60aee1298038839166106274dcbd078721ec4c7299c78b9e2de1eb876421428"
+      },
+      {
+        "path": "Packages/RealityKitContent/Package.swift",
+        "bytes": 1037,
+        "sha256": "f51f2eb2af107f02711c4a61f2430301810dc36cb33321f79cc26ae15b8f7a33"
+      },
+      {
+        "path": "Packages/RealityKitContent/README.md",
+        "bytes": 51,
+        "sha256": "d5c18e1c2ca54ab46896a0e09742a181ace50173da44ef15b9c1772e25398cfe"
+      },
+      {
+        "path": "Packages/RealityKitContent/Sources/RealityKitContent/RealityKitContent.rkassets/8ball.png",
+        "bytes": 2377,
+        "sha256": "6118a803ef96f8b6de3122a59556da0411200cd4b3e6e090ae91b1d2eb9c384f"
+      },
+      {
+        "path": "Packages/RealityKitContent/Sources/RealityKitContent/RealityKitContent.rkassets/FDAI.usda",
+        "bytes": 2302,
+        "sha256": "e1d0001649bb2dbd3d752359d56015273d1e0370b47d8e5fb219d2922a6b68c9"
+      },
+      {
+        "path": "Packages/RealityKitContent/Sources/RealityKitContent/RealityKitContent.rkassets/Ground/DefaultAttenuationMap.exr",
+        "bytes": 179530,
+        "sha256": "4d6fa014d631f3740e9dd636582b5408178f8a4498570c6ebf60546644399e7d"
+      },
+      {
+        "path": "Packages/RealityKitContent/Sources/RealityKitContent/RealityKitContent.rkassets/Ground/Ground.usda",
+        "bytes": 206631,
+        "sha256": "f18c0f72656a6c632893ad4dbc762bd5135ccf9e64634098f0dbeb288a80ca2b"
+      },
+      {
+        "path": "Packages/RealityKitContent/Sources/RealityKitContent/RealityKitContent.rkassets/Immersive.usda",
+        "bytes": 4420,
+        "sha256": "a5d58ce940ce98ce865803b35ad905ea6d2f3ea8f8269438633c20aa771eec42"
+      },
+      {
+        "path": "Packages/RealityKitContent/Sources/RealityKitContent/RealityKitContent.rkassets/SkySphere.usdz",
+        "bytes": 4066687,
+        "sha256": "2429d1b7057d95d271ed25914ec9b5d7b7cd082d6dca85665a5afd59220e9ce1"
+      },
+      {
+        "path": "Packages/RealityKitContent/Sources/RealityKitContent/RealityKitContent.rkassets/Untitled Scene.usda",
+        "bytes": 202,
+        "sha256": "fcc97358167f3235dcd461ff127f6cedbccdcf26f379b29eeac90d3d7465ad10"
+      },
+      {
+        "path": "Packages/RealityKitContent/Sources/RealityKitContent/RealityKitContent.rkassets/fdai_8ball_albedo.png",
+        "bytes": 301037,
+        "sha256": "43e98518b27f3360423dab1a552abefd4af4e2cfcd2c54300760086b753c7bad"
+      },
+      {
+        "path": "Packages/RealityKitContent/Sources/RealityKitContent/RealityKitContent.rkassets/moon.usdz",
+        "bytes": 57614389,
+        "sha256": "fbcf623b35aa0cc0892d475227fa608c436879c761f7f1084267dacb64fadfa3"
+      },
+      {
+        "path": "Packages/RealityKitContent/Sources/RealityKitContent/RealityKitContent.rkassets/starmap_2020_8k.exr",
+        "bytes": 130530278,
+        "sha256": "dc6c4f413e85707a29a25a9451148154554ecca2c996f84fa8f47b65ef9ff7c4"
+      },
+      {
+        "path": "Packages/RealityKitContent/Sources/RealityKitContent/RealityKitContent.swift",
+        "bytes": 115,
+        "sha256": "1e09556faceade53bb46c7eb5dc9fc9755423058c8182bd52288735b09e59ffb"
+      },
+      {
+        "path": "Tools/CaptureInstrumentValidation.sh",
+        "bytes": 3868,
+        "sha256": "75800103b1207a53c502ae7d44169de4af58bc1b3313ddd9dee9f238cbdd68eb"
+      },
+      {
+        "path": "Tools/CaptureLunarCockpitMission.sh",
+        "bytes": 3699,
+        "sha256": "cc445424151811d65fe0eac5df1f3f96720ac37418a9d503a008fc34b625d83d"
+      },
+      {
+        "path": "Tools/CaptureLunarElevation.sh",
+        "bytes": 4067,
+        "sha256": "9df0763872f99909ef64183c682cc454a9f517f2cf56a4cfe4c66c13850eb5b7"
+      },
+      {
+        "path": "Tools/CaptureLunarExplorerAB.sh",
+        "bytes": 4543,
+        "sha256": "f2c261186426e00eeeac6fe2a57493c0d435d0dd8897fd9cc699f67b5d238afa"
+      },
+      {
+        "path": "Tools/CaptureLunarExplorerReanchor.sh",
+        "bytes": 2425,
+        "sha256": "eadc744ef579b2d1dd53747dd05d53d6395117cfb08f6253b46a11fc3bb98d9a"
+      },
+      {
+        "path": "Tools/CaptureLunarExplorerZoomLadder.sh",
+        "bytes": 7720,
+        "sha256": "48d4bc1ba719e088d41c7f772ca783cf829a69ee4b7c9d9387760280785d1504"
+      },
+      {
+        "path": "Tools/CaptureLunarGlobalTerrain.sh",
+        "bytes": 4148,
+        "sha256": "f7a52095bc8c52c6aeae5e17209db4ec47710ec4df0bc10b9e6a716fbd4e48bd"
+      },
+      {
+        "path": "Tools/CaptureLunarNavigation.sh",
+        "bytes": 2377,
+        "sha256": "e01b77967fc424458000501d690639a81c58e9373391e9dc3ba70065ec41e9bf"
+      },
+      {
+        "path": "Tools/CaptureLunarTerrainTransitions.sh",
+        "bytes": 3294,
+        "sha256": "0a367d293de48bfc973b46493d6495a30cb5ae19edc2a33f8bc495dc15089370"
+      },
+      {
+        "path": "Tools/CaptureMoonExplorerBrowser.sh",
+        "bytes": 2052,
+        "sha256": "89abd149dac0ad7a92ceaea4f2da5b619a6e4580bc993c30cb6ea82715b6c216"
+      },
+      {
+        "path": "Tools/CaptureMoonExplorerColdHighland.sh",
+        "bytes": 1502,
+        "sha256": "1240f48818dab40fff1b7d8aa954d3498b5f28b6cc6df74d50cd8490f31d3f96"
+      },
+      {
+        "path": "Tools/CaptureMoonExplorerJourney.sh",
+        "bytes": 4330,
+        "sha256": "9c6ec647477461301afe7b9e2c983f57ff90ea92818a5aa3502e32efd6940f8c"
+      },
+      {
+        "path": "Tools/FDAITextureGenerator/main.swift",
+        "bytes": 15789,
+        "sha256": "e484ca5212e3d22b2b1c7b6bb4bf5ba9bbb4ec6e04aacf94261a0934e2247a6c"
+      },
+      {
+        "path": "Tools/GenerateLunarImageryPyramid.swift",
+        "bytes": 4149,
+        "sha256": "7a1b4d54458a79b73971ac42161c9b9460dc27955a1a07fba437ad262c442759"
+      },
+      {
+        "path": "Tools/MeasureLunarTerrainArrival.py",
+        "bytes": 3642,
+        "sha256": "013607cb6496a9a706b891d8d43eb8958a84c17295d1dcb17f56541e9878a7b3"
+      },
+      {
+        "path": "Tools/MeasureMoonExplorerRuns.py",
+        "bytes": 7967,
+        "sha256": "8aa3ac459bfcea156aadd1257a5e47e790f92465f7b458cb454f7ffea049c0f7"
+      },
+      {
+        "path": "Tools/NeuralTerrain/README.md",
+        "bytes": 2624,
+        "sha256": "83442434007cab00e0b746b36c452bf5a7769477e5da5d90c195cc4bf7a12803"
+      },
+      {
+        "path": "Tools/NeuralTerrain/accepted-metrics.json",
+        "bytes": 829,
+        "sha256": "d2ef5864ddb5de3c3f9d1a2ef97e5e195d3a2311367fa3f66a246b1404917823"
+      },
+      {
+        "path": "Tools/NeuralTerrain/requirements.txt",
+        "bytes": 62,
+        "sha256": "378f8937a87e5e204732fa743a5d5902caefb95d52cb9df3d5567531f0446f1d"
+      },
+      {
+        "path": "Tools/NeuralTerrain/train.py",
+        "bytes": 17139,
+        "sha256": "4ac89cee4dc6832d83dbe1b5884d55a19a921bcb2e10989a80e1b69639097f23"
+      },
+      {
+        "path": "Tools/NeuralTerrain/validate.py",
+        "bytes": 2091,
+        "sha256": "e1aea3817dfd6c150962955e7ed467f84f6cff0dd28a890f2e1bd2157cb091e2"
+      },
+      {
+        "path": "Tools/RunMoonExplorerComparison.sh",
+        "bytes": 1974,
+        "sha256": "c1fb1af2b50c58cec7ecf01fcabb9c1293a8f2510119787bbc0e93f2dbd4c743"
+      },
+      {
+        "path": "Tools/SummarizeLunarCockpitStreaming.py",
+        "bytes": 3804,
+        "sha256": "3630be930de0f1a71467bacb0dc5d6a342f372cde7f3bee6076d0efc31db64c6"
+      },
+      {
+        "path": "Tools/SummarizeLunarTerrainTiming.py",
+        "bytes": 3829,
+        "sha256": "ceb90bafa1e41962a92798afdd7e320478ae9c46c00946d50edc0f16211d6db6"
+      },
+      {
+        "path": "Tools/SummarizeMoonExplorerProfile.py",
+        "bytes": 3479,
+        "sha256": "3eef6dbbc1f55c72c43b1260393e98354f1e863ef409a8031397086eadfc7f8d"
+      },
+      {
+        "path": "Tools/TerrainGenerator/Package.swift",
+        "bytes": 1385,
+        "sha256": "2c2e7fb88aaed7b5a7a48f62a8a904629aa0e8da9a6ace92af15b3c64afe0b54"
+      },
+      {
+        "path": "Tools/TerrainGenerator/README.md",
+        "bytes": 11435,
+        "sha256": "df365b3bc6289ea70d4bb2cf89c0988697c625fa8168f611ea0e7ee6d249d246"
+      },
+      {
+        "path": "Tools/TerrainGenerator/Sources/Apollo11TerrainGenerator/NAC_DTM_APOLLO11.LBL",
+        "bytes": 3491,
+        "sha256": "d5feaec4c8f27d28678631dccc240d1ad2553c98d552995a0a46c6e1e3c918e1"
+      },
+      {
+        "path": "Tools/TerrainGenerator/Sources/Apollo11TerrainGenerator/NAC_DTM_APOLLO11_M150361817_50CM.xml",
+        "bytes": 12523,
+        "sha256": "c71cebe94c42e58d1666baa251f8ab3df90be9820b6324eac9280dd2e3e1623d"
+      },
+      {
+        "path": "Tools/TerrainGenerator/Sources/Apollo11TerrainGenerator/NAC_DTM_APOLLO11_M150368601_50CM.xml",
+        "bytes": 12523,
+        "sha256": "7bd41644078a82d3208a9e41d17a92c7e461a21e22efd325f822bb91b1d80ae8"
+      },
+      {
+        "path": "Tools/TerrainGenerator/Sources/Apollo11TerrainGenerator/SLDEM2015_128_60S_60N_000_360_FLOAT.LBL",
+        "bytes": 4478,
+        "sha256": "9179e81f8f436bbdb219f4806fa3e4ac921f25971eaa160de34404ec3be46b36"
+      },
+      {
+        "path": "Tools/TerrainGenerator/Sources/Apollo11TerrainGenerator/SLDEM2015_512_00N_30N_000_045_FLOAT.LBL",
+        "bytes": 4580,
+        "sha256": "c94bda063e4c486f36754f466fc6480def0fa9886751c2b50689a707f4cefbd2"
+      },
+      {
+        "path": "Tools/TerrainGenerator/Sources/Apollo11TerrainGenerator/WAC_EMP_643NM_E300N0450_064P.xml",
+        "bytes": 14141,
+        "sha256": "e70801cc7b45f21c5c11aea390b1c48f9998839356896c436ffdb96cb9e4007f"
+      },
+      {
+        "path": "Tools/TerrainGenerator/Sources/Apollo11TerrainGenerator/WAC_EMP_643NM_E300N0450_304P.xml",
+        "bytes": 14162,
+        "sha256": "f637d91d23b40c64f612274c08b7663741fd72fe864371d0df6c9ab85fced398"
+      },
+      {
+        "path": "Tools/TerrainGenerator/Sources/Apollo11TerrainGenerator/WAC_EMP_643NM_E300S0450_064P.xml",
+        "bytes": 14143,
+        "sha256": "d586ad84cdf992caeef26e95e050dd23e3ad4d273f801e28e9754605b7083fa1"
+      },
+      {
+        "path": "Tools/TerrainGenerator/Sources/Apollo11TerrainGenerator/main.swift",
+        "bytes": 96906,
+        "sha256": "67cbe66e0d8e529a846c8c356ca270e07887fb231ba7fb728b52ec1e6a10a63d"
+      },
+      {
+        "path": "Tools/TerrainGenerator/Sources/GlobalLunarMosaicGenerator/main.swift",
+        "bytes": 27300,
+        "sha256": "1dcd7091ec5dcb370ece0196f02510d33aab48510a44f4ca7571a2b898567711"
+      },
+      {
+        "path": "Tools/TerrainGenerator/crater-requirements.txt",
+        "bytes": 42,
+        "sha256": "94fe27d779d355bdc56269e80dc0bfd36429ab856c568a0036c13422b9f14963"
+      },
+      {
+        "path": "Tools/TerrainGenerator/detect_craters.py",
+        "bytes": 12051,
+        "sha256": "d01e3ed540e29a54bde5afc283688bd38b0f0013b0317d1b395608e34a839558"
+      },
+      {
+        "path": "Tools/TerrainGenerator/measure_radiance.py",
+        "bytes": 8065,
+        "sha256": "8242c74d411836490f8c6cbe887b1484e3391004d51932109f4104dacdb1dacf"
+      },
+      {
+        "path": "Tools/TerrainGenerator/pin_lola_strips.py",
+        "bytes": 2736,
+        "sha256": "29587ca0aa5a632f135d2ab37e66e617f57269813890910654cb7f2123f84e26"
+      },
+      {
+        "path": "Tools/TerrainGenerator/test_detect_craters.py",
+        "bytes": 2311,
+        "sha256": "900f2af02e695a8bf096a7d0a3e54e07403f708f5a0585647be477fa67958eab"
+      },
+      {
+        "path": "Tools/TerrainGenerator/test_measure_radiance.py",
+        "bytes": 3077,
+        "sha256": "e6fd73335183baa90d70faa5c4fe515c85a90eab881146bf361ceb14d6462a3e"
+      },
+      {
+        "path": "Tools/TestMoonExplorerMeasurements.py",
+        "bytes": 4485,
+        "sha256": "3bf7b95865b00675136ca62fce94304ad512f66f6e6220feee6a99073971ae45"
+      },
+      {
+        "path": "Tools/test_summarize_moon_explorer_profile.py",
+        "bytes": 2926,
+        "sha256": "212f088c8f4377507aa53dd2705ec544c3387b831755d214eb9c30c26924fe9a"
+      },
+      {
+        "path": "buildServer.json",
+        "bytes": 429,
+        "sha256": "9c06ebf5eef0145e134a9d58a243afad67915ba3420486250608c5b2cbe61539"
+      }
+    ]
+  },
+  "LMKit": {
+    "revision": "86aa71b4b9ed203f11e8b572e23da2b0285a0ad8",
+    "verified_file_count": 262,
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 173,
+        "sha256": "1117c2f252d1d6b33c2f7631020a023da94d98885b4d1becd39727eee7f101e2"
+      },
+      {
+        "path": ".gitignore",
+        "bytes": 66,
+        "sha256": "378c0df818f950f77ddf0ad1b2f29a871eb0a224e569f4d7cc4649ab64aa1046"
+      },
+      {
+        "path": "AGENTS.md",
+        "bytes": 656,
+        "sha256": "b1378a3ede9788e5768468ba9f24a8b19a5f38f512c8ab6b094f0de0ebd940eb"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/.gitignore",
+        "bytes": 22,
+        "sha256": "3bb521c0465e956b098b4c68a48be6dee74a7c0a697b8bdf534a658168e0db6e"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/Cabin.blend",
+        "bytes": 127567,
+        "sha256": "9850ecc59cdedbe1987a5861c46cce3b409d5e5d40bd70ef4877b93071406edc"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/Cabin.usda",
+        "bytes": 122575,
+        "sha256": "e94041a61036604b1b858b1a4cf495c37e22d7e9cc903dba58f8d58020ca5bac"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/Cabin.usdc",
+        "bytes": 23301,
+        "sha256": "08bc5ee7d12378bcbe43b8b17dc4684f1a3acfdb957897f77f3eab454384337c"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/Cabin.usdz",
+        "bytes": 23467,
+        "sha256": "777ce88968820a6e46995d436e807abf9f4b4a5cb7115d0eb03eafb4c89c995e"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/DATUM.md",
+        "bytes": 3491,
+        "sha256": "016fdedc75a16a7f96b0fa3f18f400c77907b6b3bb5cdb2202a3784d3183462c"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/HANDOFF.md",
+        "bytes": 6568,
+        "sha256": "481189a6d18230e639738107bb47bd97119ad4bf67763bfc53ec418091a8e2c9"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/build.py",
+        "bytes": 11570,
+        "sha256": "075f8a0081279bc80538c54e19b957a297f49af3855d4fd6d75382c7ba8d8d11"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/capture_evidence.py",
+        "bytes": 1234,
+        "sha256": "eba19a2394f4f7483f7dbbce69c7f6828e4346c3bc57e13fc0d7bbf98d243f72"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/evidence/Docs/CommanderWindowCalibration.md",
+        "bytes": 5890,
+        "sha256": "cd39139a66075d2a18d0eacfb109d3f8c0e3e3c15885638867bcbc79b936a215"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/evidence/Docs/Research/LunarModuleInterior/controls-and-panels.md",
+        "bytes": 23802,
+        "sha256": "8dcef0e36e81fffa1b6fbfc52b3d1646b42f45f51ae7b1dbee90ef946909fea2"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/evidence/Docs/Research/LunarModuleInterior/geometry-materials-and-evidence.md",
+        "bytes": 12857,
+        "sha256": "b5845e1c869b3240a8652861733a202e5c7a490d37b24e5492cbf47981194b13"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/evidence/Docs/Research/LunarModuleInterior/measurements.csv",
+        "bytes": 3253,
+        "sha256": "34a4fd0512f9ac860d6634709a371c49a04823da383a62ea3c549730b05953a8"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/evidence/Docs/Research/LunarModuleInterior/photo-reference-catalog.md",
+        "bytes": 14090,
+        "sha256": "47e7706eec5e0ba6257cd7d841f6590d4e40e7f6eb9ea40ab2d751283ea7e49c"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/evidence/Docs/Research/LunarModuleInterior/references/documents/19730023038-spacecraft-windows.pdf",
+        "bytes": 1370212,
+        "sha256": "341effa41329abc44590e17d89110699f25fb74a9c6dc1919e460e66244193d8"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/evidence/Docs/Research/LunarModuleInterior/references/documents/grumman-1967-crew-station-excerpt.pdf",
+        "bytes": 11937843,
+        "sha256": "bbba844ab4598fe659f1e7dbb915abb329f8e6cc91531c9d0b46aa1492926295"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/evidence/Docs/Research/LunarModuleInterior/references/images/69-H-134.jpg",
+        "bytes": 165479,
+        "sha256": "b851a1d0e20ea309beec4a33454d8b70e9923e2c3553d9da2d9275368665abb9"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/evidence/Docs/Research/LunarModuleInterior/references/images/AS11-36-5389HR.jpg",
+        "bytes": 876209,
+        "sha256": "9a87df320e1fcd6c624ebb14ac2980bc72e4d3173a323e6197dd44c4469be5a1"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/evidence/Docs/Research/LunarModuleInterior/references/images/LM11-co42.jpg",
+        "bytes": 1933953,
+        "sha256": "cda83061e39a8819647aaec967c0e8eca7ab46eb5e664870a850f02a5c3a2f67"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/evidence/Docs/Research/LunarModuleInterior/references/images/manifest.json",
+        "bytes": 7383,
+        "sha256": "0a793e8ab4413d34e63e3b18983f1661543124bc535447af1c80da0527c11ef8"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/evidence/Docs/Research/LunarModuleInterior/references/manifest.json",
+        "bytes": 8308,
+        "sha256": "954d318823f256f5ef2ef0d2cadcd48a6e4d6a3e591cf5ad6803b32db1bfc086"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/evidence/LM/LMCommanderStationGeometry.swift",
+        "bytes": 12172,
+        "sha256": "447ce35526b475ad71b889083c3cf28f0d673ca0b22076e37a6c00336d371659"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/evidence/LM/LMLandingPointDesignator.swift",
+        "bytes": 10481,
+        "sha256": "b60b4980c312cc79d4909c152bcc5b007e0eb1902764d8c34b6575fc46508229"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/evidence/sources.json",
+        "bytes": 2852,
+        "sha256": "a65e04161bb90cc1e25e37112cb8803debad68eb00165a1ac262d062ffd4748b"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/mounts.json",
+        "bytes": 5922,
+        "sha256": "652565f404e2596d697681c8e1de9b4f8bb5279997cd124b408e285bb76f4b93"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/reviews/REVIEW.md",
+        "bytes": 4132,
+        "sha256": "c6d74a2184bb733e3e4d821b6258f057b41ad2ecc1e72eb2c91d713da403a212"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/reviews/crew-eye.png",
+        "bytes": 784137,
+        "sha256": "1c376357a84e4a9f7e7a462df0deb6668eae849ffddb0babc16801236b5efc62"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/reviews/front.png",
+        "bytes": 747480,
+        "sha256": "b31319ce1bbb25417c92615b60352811e707e75dbb1a9f4e145824c056057bd7"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/reviews/side.png",
+        "bytes": 758966,
+        "sha256": "17f77aa050578fcaf60212c0f37bfc7b52b1dfb065b3c8447201257d6016c5c9"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/validate.py",
+        "bytes": 6508,
+        "sha256": "07c107b20ba61e59ce770f6e8dda01897da0015d6c2b3c6d8c6361eace3ddadb"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/validate_native.swift",
+        "bytes": 2009,
+        "sha256": "04914c03d838071f6e37f4f150b1566fbbf416da855db5c79e1f081701f52bbc"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/validation-native.json",
+        "bytes": 407,
+        "sha256": "bf2f0fc19675f34df2ebba8bdcef506e9860b8119ac75937f14d7677283d0f3a"
+      },
+      {
+        "path": "Assets/Cockpit/Components/Cabin/validation.json",
+        "bytes": 45009,
+        "sha256": "1ac7be11d38d3b01b9090de39b98077213d956c9d82558140854a23db4b2fb1c"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/.gitignore",
+        "bytes": 22,
+        "sha256": "e9377f7afe22fe574eb065f57e80617538d092aeee369d91c702fbb5e779d238"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/CommanderPanels.blend",
+        "bytes": 111945,
+        "sha256": "04b648f05be809ddb783883fec2a4514a5a822c96f25d0d0023b3c0e3a040fc9"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/CommanderPanels.usda",
+        "bytes": 90987,
+        "sha256": "d8f7b13a1f3f12ca606c9b4e20dc7f4688e21a2a96e0e4d5ad4cc2ac19586d2c"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/CommanderPanels.usdc",
+        "bytes": 15503,
+        "sha256": "5b07447d8cb7713aebdb356618c2bd6951fa73da8a0166970e31725b739d18b6"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/CommanderPanels.usdz",
+        "bytes": 15669,
+        "sha256": "52e4c13cf302e080edbd163fb3f6d26ce53785c28bc49dcefd3a75c876f9d604"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/DATUM.md",
+        "bytes": 2704,
+        "sha256": "6c710176488e143601a48aa442cdb4dea517f2f02ad79b171f27a8ba7e86b3d1"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/HANDOFF.md",
+        "bytes": 7848,
+        "sha256": "b919a432fdf37c9918332ea351807a49a7506119282cb3d5558024930db47311"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/build.py",
+        "bytes": 6277,
+        "sha256": "4159a9711749d6a7249d81fe0ca4cace06962b32f1c3835e859626728bf0aea3"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/capture_evidence.py",
+        "bytes": 2196,
+        "sha256": "af9dfd83643a2230af102db15705b03a19aed340d9a4c97685732171036f16ef"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/clearance.json",
+        "bytes": 1977,
+        "sha256": "af6a4c10ac748550c7f2975a02ccdd062360500fb32dee91247f713a9d16f4a0"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/evidence/69-H-134.jpg",
+        "bytes": 165479,
+        "sha256": "b851a1d0e20ea309beec4a33454d8b70e9923e2c3553d9da2d9275368665abb9"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/evidence/AS11-36-5389HR.jpg",
+        "bytes": 876209,
+        "sha256": "9a87df320e1fcd6c624ebb14ac2980bc72e4d3173a323e6197dd44c4469be5a1"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/evidence/Cabin-image-manifest.json",
+        "bytes": 7383,
+        "sha256": "0a793e8ab4413d34e63e3b18983f1661543124bc535447af1c80da0527c11ef8"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/evidence/DECISIONS.md",
+        "bytes": 3361,
+        "sha256": "8c24d2039977b50643544e6f8f993ef4768f4662a11097d49ae7fbe5e60ec8b1"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/evidence/DSKY/2003956-B.png",
+        "bytes": 508941,
+        "sha256": "b42b39b21a0117ce274d9ea5cb5287336744a87af276df5140f636b8b4fbf85d"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/evidence/DSKY/mount-fit-research.md",
+        "bytes": 4461,
+        "sha256": "db26641236c258d3d3380950ab703cd9d872d4e379e72f2b70dd41584ad6c313"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/evidence/DSKY/sources.json",
+        "bytes": 1838,
+        "sha256": "cde3538d9070ec2b1f2d7b5ed1a1b356d4398de873a87e6f05eb344d3cc51cd3"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/evidence/FDAI/research.md",
+        "bytes": 6537,
+        "sha256": "6a2a08ca3d5e739a46a6b7a0d91bedb68cc0bd2d8ba472b7c8359cbe1bfc2fd7"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/evidence/FDAI/sources.json",
+        "bytes": 1788,
+        "sha256": "80f2a5a5cc50883edb30b29c82d7754872d5835ad1f50f8812528606c473c0be"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/evidence/assembly/CommanderStationAssemblyHandoff.md",
+        "bytes": 12269,
+        "sha256": "f8cefb81f201a8abd513fa10c71a307169f3c9ffa0900fe451c90787be3429a6"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/evidence/assembly/LMCommanderStationAssembly.swift",
+        "bytes": 7532,
+        "sha256": "b2fac93e32323bbd7cd03f0c091a95bc230d0943bb2be19c430305b636caf29b"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/evidence/assembly/README.md",
+        "bytes": 6394,
+        "sha256": "936ddae4631eb823a34788c2f51f86d3b38af133beb2068f30beafec3c2121ab"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/evidence/assembly/observers.json",
+        "bytes": 798,
+        "sha256": "5408b8ceea68b5c7311a421b4132eb05e35197548828be44c83286a4368e3813"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/evidence/full-reservation-collision.json",
+        "bytes": 6308,
+        "sha256": "58df3467228c21b3e5f80aaac648946f3d7c5d614b01339950d1fa3b3c61a63d"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/evidence/photo-reference-catalog.md",
+        "bytes": 14090,
+        "sha256": "47e7706eec5e0ba6257cd7d841f6590d4e40e7f6eb9ea40ab2d751283ea7e49c"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/evidence/provenance.json",
+        "bytes": 5304,
+        "sha256": "35be3fd2de04691d42495942be59eb5f375872cd681efd0748878bc94358c00a"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/geometry.py",
+        "bytes": 4215,
+        "sha256": "2f0b108989e4c524f93860c3eea67bffec7422976dae0d41608b633e4489a1a8"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/mounting.json",
+        "bytes": 5451,
+        "sha256": "eb1efb3ab4ef0d43fc6036ec676431bf8b861cc69e83d26bc15cf2ed0182dde8"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/native-validation.json",
+        "bytes": 277,
+        "sha256": "9286c629b149572c53514201a63f42217a32152aec0d70480c38659a00af2ecb"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/review.py",
+        "bytes": 5363,
+        "sha256": "5f59db1b720125860a25f0c0f9dcfe64a00bd038e72c326f1b6941cabb65c94a"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/reviews/DSKY-aperture.png",
+        "bytes": 1338623,
+        "sha256": "f93c51ac593ae438bf8eafbf036ab2342a4bad306b3bcee57e95578fe234cb30"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/reviews/DSKY-clearance.png",
+        "bytes": 1348102,
+        "sha256": "62015312882f87e4e13f3ca9ffdfdb37b1d3c070720f3b2a8e6b73f75099e630"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/reviews/DSKY-section.png",
+        "bytes": 1263205,
+        "sha256": "76357e48ba0b1c3f6ea951a55a0fb7329c7d09fe60a6637472f12ec9056d883f"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/reviews/FDAI-aperture.png",
+        "bytes": 1312979,
+        "sha256": "43b7ea2260fcf8b02eceab072a7393246d56e04f696f15825b2978a6b4bdeabb"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/reviews/FDAI-clearance.png",
+        "bytes": 1286505,
+        "sha256": "4a82022f38923c906379fa86bd0f4c3cfc99b36701d093c97062e3710d52bd99"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/reviews/FDAI-section.png",
+        "bytes": 1276482,
+        "sha256": "38a616d22c35d94fe8cf7439626fd306fc5e80e13bac2c3a9e72171dfcf94c3d"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/reviews/README.md",
+        "bytes": 2153,
+        "sha256": "84a1f3ecf24354a4a99c165c4c17d684d73805c24833c746a2f901cc7d136ce3"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/reviews/cameras.json",
+        "bytes": 3446,
+        "sha256": "67af637525dd7d068fc088db8dcb1a4cf8dde5a74bc6f39281994d895fa5ec98"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/reviews/crew-eye.png",
+        "bytes": 1375300,
+        "sha256": "4e76b97026abe70ef6e7ef12a3794f8a317e3dc0b51a071cb47c6cf8ef3746bf"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/reviews/front.png",
+        "bytes": 1349673,
+        "sha256": "f6d2f0a3b3d898ff0351d5e7a6228f89de8528047a7b0a49418e8fbb1aeec4db"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/reviews/render-times.json",
+        "bytes": 340,
+        "sha256": "b0dc0f47c48169a89424446d4dc1b313d56df70697114536e8df2f237b88e88b"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/reviews/side.png",
+        "bytes": 1318210,
+        "sha256": "5fd4bea7ccf17a2b19f25fe88546f159bbd4623cf31a3d15e152c6f3afa432ab"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/validate.py",
+        "bytes": 6977,
+        "sha256": "f5ce05cd9d606fee2489d1b98d9dde7a1d46e47107c79ec311304a4198a4b667"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/validate_native.swift",
+        "bytes": 2072,
+        "sha256": "428f07c439c89ccce5792d1d8a4ed0d23a7b1cb145e7260dab98bee67809f3b4"
+      },
+      {
+        "path": "Assets/Cockpit/Components/CommanderPanels/validation.json",
+        "bytes": 31589,
+        "sha256": "cfbd0ad763f4db23062d8d097f6e9d725e88fc357a6a7660d7fa69522297f9c5"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/CircuitBreaker.usdc",
+        "bytes": 11055,
+        "sha256": "e955158740313cf3bf1314c93411eb69d4874b42363483d9fc2aae606150e76f"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/CircuitBreaker.usdz",
+        "bytes": 11221,
+        "sha256": "8f6b6125b943a051e18ac193aedcd3509ba6b1bc82525d420985e3ef1a2649dc"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/ControlLibrary.blend",
+        "bytes": 662139,
+        "sha256": "4e9e0322b446c6a0532c12523a9ba2e9a4395dc214e27ff47da5cb2ec152b5a2"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/GuardedSwitch.usdc",
+        "bytes": 20141,
+        "sha256": "f0a42c2ac37b76cf8a44811fdf9c2ad7e4a9d738ddeec8777ceac60ae59ba429"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/GuardedSwitch.usdz",
+        "bytes": 20307,
+        "sha256": "38b3f9fa5fc2db6113fafabe4466dbc1ad666d2af0e80268e9e3efc2e5d692ae"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/HANDOFF.md",
+        "bytes": 6353,
+        "sha256": "e5c9903b11f710417e2ab0ccd2ba65e8baae32e3372207fdbf639befc3cde174"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/MaintainedToggle.usdc",
+        "bytes": 11071,
+        "sha256": "ce5ba7c6cdf2b3330165508befbeaf52e6b4f81ae284bfa820aae1cc48890ee2"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/MaintainedToggle.usdz",
+        "bytes": 11237,
+        "sha256": "6071600aa300b4ee00ed12537c5b719497f078012a391c35390ab34135f79b5f"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/MomentaryToggle.usdc",
+        "bytes": 11080,
+        "sha256": "4c0b037ee2a8a524b670f38f5b1281b8128fa769d4ab6f5da2ccf404ac3831b6"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/MomentaryToggle.usdz",
+        "bytes": 11246,
+        "sha256": "615cadfaa1190a2340bd23e518849147a342c0cd927d4101081e6b553ee1f8d9"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/README.md",
+        "bytes": 2400,
+        "sha256": "3ecb2f34b22c2a16c70f2cc25e73690c86576787978e5c38efbe44648c18053f"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/RotarySelector.usdc",
+        "bytes": 8684,
+        "sha256": "d1fb82c871e2c98a43f81483776312cc701adaa1e9694fc14d91c0cccc7cb794"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/RotarySelector.usdz",
+        "bytes": 8850,
+        "sha256": "facc28e727c765d9cc9379509c2e036b90a9331e5976186bb8f0d2b294ec1f3f"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/Talkback.usdc",
+        "bytes": 10238,
+        "sha256": "e90ed4e016472df10abf5606f4e49d0a57d89c9db4fc62da55e93936e6eeacda"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/Talkback.usdz",
+        "bytes": 10404,
+        "sha256": "a9c4cb0d8e0a6fbccc06f5cd2c45bf58154b73b7070f2222dc0c763986bba065"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/build.py",
+        "bytes": 12492,
+        "sha256": "69e29843371680ed7456907cf96d545349d6ac04ae71b52553239f71bc0f048b"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/components.json",
+        "bytes": 4434,
+        "sha256": "becce552cc9a3e31dbf89a1440cdefcc550d09a2e6a7e1fc43ee31ae76e81072"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/evidence/ASSESSMENT.md",
+        "bytes": 3740,
+        "sha256": "dbe6e9647031f1d9c4a2f00135f7c6ecbf3ea77deeb5d2c506085d366241b6ef"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/evidence/controls-and-panels.md",
+        "bytes": 23802,
+        "sha256": "8dcef0e36e81fffa1b6fbfc52b3d1646b42f45f51ae7b1dbee90ef946909fea2"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/evidence/geometry-materials-and-evidence.md",
+        "bytes": 12857,
+        "sha256": "b5845e1c869b3240a8652861733a202e5c7a490d37b24e5492cbf47981194b13"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/evidence/nasa-d7919-p10-toggle.png",
+        "bytes": 630086,
+        "sha256": "0a1ad7694ce7a08051aea5b66f7d3aa3b7e8d952344778df3a4fc7c9f992cdf1"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/evidence/nasa-d7919-p12-rotary.png",
+        "bytes": 961042,
+        "sha256": "274bd8bbcf74653ef343d4ca85a55e384409c27d99be931799a4aac8f23b461b"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/evidence/primary-controls-excerpt.txt",
+        "bytes": 10784,
+        "sha256": "94c4c66a301db2b4cda5c49875d3f331a4cfc22ea37ae13fcedc8bd44b7cfe85"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/evidence/source-manifest.json",
+        "bytes": 2978,
+        "sha256": "9d38326771cfae0a308c3a72c457587b73c2e0c6ec56e4a59f4db3ad2c9b6cad"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/native-validation.json",
+        "bytes": 2421,
+        "sha256": "0ae1c9e0cdba307c6a918f6d3d851fe760111f39bcc6da4583721d778d6ee6bb"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/parameters.json",
+        "bytes": 3253,
+        "sha256": "939ce17356f3269739d6e0cc4c14b6907e090e112e67b27a05e997b26b5cb9eb"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/review/inspection.png",
+        "bytes": 1040032,
+        "sha256": "5e1ad66d850f8f7c4e2527faaeac255a6a250f80253d36a8875565ff167638d7"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/review/motion-examples.png",
+        "bytes": 1040983,
+        "sha256": "f48a42bb1c28c82c8c9efdb7bb3d1a58642ef7c7751394cf99fd5153a654cfa9"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/validate.py",
+        "bytes": 4760,
+        "sha256": "c20bb229a99062328ec60ca37d28e129984b5248cfea2a29735c43d67d09f87d"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/validate_native.swift",
+        "bytes": 1812,
+        "sha256": "0faa1492a464e64cee678a37ec03a99f90d8332715f2bd9cf7358f83db334674"
+      },
+      {
+        "path": "Assets/Cockpit/Components/ControlLibrary/validation.json",
+        "bytes": 25070,
+        "sha256": "129ba81db77cf40b70238b4932345bf73353a5fef6fb75867beae720674bfc2a"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/.gitattributes",
+        "bytes": 43,
+        "sha256": "cc1efbd21350f2a2aa55768efc1263b89dd137ad3a84e0cf938081833f1887f7"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/.gitignore",
+        "bytes": 13,
+        "sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/.gitkeep",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/DSKY-BacklightPreview.usda",
+        "bytes": 8740460,
+        "sha256": "1a7362118b104b9e8f5960820a0c863bcf9c376d6ff230cc23ac592f53497dcf"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/DSKY-BacklightPreview.usdc",
+        "bytes": 526443,
+        "sha256": "4219c6fd3800cc950084a7a1356f5719e6452f08655e4669002d9fe1aed8826e"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/DSKY-BacklightPreview.usdz",
+        "bytes": 526609,
+        "sha256": "8f266812ed719f48f63be2e3a0364fa2f08a5d07119b77224eeb617ec378888d"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/DSKY-DisplayPreview.usda",
+        "bytes": 8739540,
+        "sha256": "ddafc888c59e9b109fe3fbfe67fac625d8c508857753affe9973c636d09c319c"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/DSKY-DisplayPreview.usdc",
+        "bytes": 526272,
+        "sha256": "7f105490c0f748bb7b28d8811d3bad5d512a3a1076c2bdac72034d6c19fae89e"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/DSKY-DisplayPreview.usdz",
+        "bytes": 526438,
+        "sha256": "c83926228af7e35d631724301c283e47ca12d2451600a04f70201d1bce8d8742"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/DSKY-LightingPreview.usda",
+        "bytes": 8740283,
+        "sha256": "d305b5562a00e6a2c9b5ee30ca02b65b318152a722f30efa584085c63a3c65c1"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/DSKY-LightingPreview.usdc",
+        "bytes": 526446,
+        "sha256": "8c9deb9878083825430b15f27ce8d7d849d97b092beb2f2ac7c2bef7e4a296b7"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/DSKY-LightingPreview.usdz",
+        "bytes": 526612,
+        "sha256": "aef3d4115c206e8c7f3a7443f58b83d91617cdb45d55f50a4fe83a08eb9cfcdd"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/DSKY.blend",
+        "bytes": 367716,
+        "sha256": "0916fd1e5210c23c2404dbae65ea5d643472fe4730d56dd3f96c0774d3821048"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/DSKY.usda",
+        "bytes": 8739572,
+        "sha256": "1998ae2bd50825fe98bc2132f54f1d938156a9be95f448b7f70c5fb95a932084"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/DSKY.usdc",
+        "bytes": 526097,
+        "sha256": "f40d0c6737854638816778706c05a0d7b81ffbc81661a9d698ac1108fd072773"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/DSKY.usdz",
+        "bytes": 526263,
+        "sha256": "e20a69864d4c7e0ff068172e0e672d9fbcc510c1dc4e97e4db0246fde08fbdfd"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/HANDOFF.md",
+        "bytes": 14504,
+        "sha256": "aff924c6887ab59256f2eb8a2c1690c96712b965e6ee066c8ca927ea8feb34c3"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/INTEGRATION.md",
+        "bytes": 10260,
+        "sha256": "8e12b66d60af3ce5847c29316f80d815967b3d10671517b41bea92dbd3c0e69c"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/bindings.json",
+        "bytes": 12387,
+        "sha256": "b052bc19b6167210cfb608c4908618f078fbe57ba387033e5870b786e0e9151d"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/build.py",
+        "bytes": 20925,
+        "sha256": "70949018c22adec1ef9d8ed4f71e255395a13a2c4464beefa81f451e7a15b61f"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/evidence/2003956-B.png",
+        "bytes": 508941,
+        "sha256": "b42b39b21a0117ce274d9ea5cb5287336744a87af276df5140f636b8b4fbf85d"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/evidence/2003994-G.png",
+        "bytes": 882613,
+        "sha256": "e691ab93c1f59081ee2ce4676883c4b95d1fe9d139a6e0a2abaa48d88625a595"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/evidence/comparison.md",
+        "bytes": 6659,
+        "sha256": "c1904055ec3f89a3f6a1e1c7f01e934b26460baaf8fdfbdeb49b8e23d50f32e9"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/evidence/mount-fit-research.md",
+        "bytes": 4461,
+        "sha256": "db26641236c258d3d3380950ab703cd9d872d4e379e72f2b70dd41584ad6c313"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/evidence/research-1005025-sheet2.jpg",
+        "bytes": 4404842,
+        "sha256": "0cf14516eb72e32ff0101f2783472d3fbb7bd2df48e61f1f9d78602835cb56eb"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/evidence/research-1005025-sheet3.jpg",
+        "bytes": 4028696,
+        "sha256": "b6c9c192d4052c74b61cac9947c1bc3be5c5ed4903491e489e7f6f8124424e80"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/evidence/research-1005025.jpg",
+        "bytes": 3641564,
+        "sha256": "8a68785bd259889c86edde06e3e07bc1c4fbf6f86f228809caa4540ca8340327"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/evidence/research.md",
+        "bytes": 5961,
+        "sha256": "5d8ae2b4f46233ccaed33cb0c53731046159253aa057382879f341e8d6bceb46"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/evidence/sources.json",
+        "bytes": 1838,
+        "sha256": "cde3538d9070ec2b1f2d7b5ed1a1b356d4398de873a87e6f05eb344d3cc51cd3"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/evidence/user-backlight-reference.png",
+        "bytes": 4139176,
+        "sha256": "9257e95efc767dc89c43837b6eb14fcfb163d6982d4d04e01f4fd3541a7c99b9"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/evidence/user-display-style-reference.png",
+        "bytes": 1316063,
+        "sha256": "d9166aad12b4c5c8f0342fafedfa27b646c65b22e6920a00a83b666924a40f73"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/export-settings.json",
+        "bytes": 581,
+        "sha256": "ad278c4d784191a787d50958e8a7e9b90181f408cfdc0856ef1099c82fbd6d69"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/fit-interface.json",
+        "bytes": 2304,
+        "sha256": "053447ad401fac2b53451a46809417e5164adfe02693805c62c2c12de7122b61"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/native-validation.json",
+        "bytes": 204,
+        "sha256": "d4aba7b78eb03463f3d997e99c392589b03dce9ba5ee5f05ab97bcd122797288"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/review/backlight-preview.png",
+        "bytes": 526786,
+        "sha256": "9a4977bb3059cd8d21f5188e8fe88ec071223e20d4f0ee6ca483ef52d99a1cc8"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/review/display-preview.png",
+        "bytes": 565801,
+        "sha256": "c4ede0db5f5b258d830e5a6625df8ff5c85891eec4da348a468fbdb143780678"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/review/front.png",
+        "bytes": 819048,
+        "sha256": "9082c4024f19d58bb4e2397ac1b1130549c1276c2312e28409d861095741e60a"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/review/key-detail.png",
+        "bytes": 938501,
+        "sha256": "dcc72d68777b69a80c134d7885421e61c944066f6464275521de41e9a33102c3"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/review/lighting-preview.png",
+        "bytes": 556271,
+        "sha256": "09db1c16d7bae220f7f929bf3e6c0c3f0521245a6d883fec6e5c5f87b15f8773"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/review/oblique.png",
+        "bytes": 761852,
+        "sha256": "66a3e3c00fae4b7b2e0bc4d3dc99f1191fe58ec223dccea0b31ffbf1c96c4b4b"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/review/render-cost.json",
+        "bytes": 699,
+        "sha256": "669647ddbaec62a1675f913fcb3c71f1f1bd6fe58d2c2dc2c8c85c1265de5a90"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/usd_pipeline.py",
+        "bytes": 1766,
+        "sha256": "9951047d477778fc29ed60a47c3161556df74910e4251b30439ef95245904b67"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/validate.py",
+        "bytes": 8128,
+        "sha256": "ea7ec64f8622c839647c54895238aead0a43fd4dcccd39d1eb2eb0875ca42b0c"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/validate_native.swift",
+        "bytes": 2162,
+        "sha256": "3b78e6aa9e422d897d2aef93cf872de2e604ad0edc3fb1748ede34ee0a523609"
+      },
+      {
+        "path": "Assets/Cockpit/Components/DSKY/validation.json",
+        "bytes": 15472,
+        "sha256": "02e2e584366851753f30634e471121a49b44fb4a3efc0933f335abe9ad66e2c2"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/FDAI.blend",
+        "bytes": 769311,
+        "sha256": "923e9eae1b3c524ba4e338e8fd575834371f6068abd83767b54658b29bf629e3"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/FDAI.usdc",
+        "bytes": 1749846,
+        "sha256": "aee0a426a43358bd2f2ead151d161c1497d41307d879e6e2472b72f3e4e1e635"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/FDAI.usdz",
+        "bytes": 2051277,
+        "sha256": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/HANDOFF.md",
+        "bytes": 10726,
+        "sha256": "0bc1d8e191bac99ac6fc49429ed44c2c0d383f8fa9b8101c4ae98ec980d47f02"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/build.py",
+        "bytes": 14233,
+        "sha256": "b89081366c4f52dfc7bea024dccd0c2e6d355f9d2bac0ec52335b5e7e8504046"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/dimensions.json",
+        "bytes": 526,
+        "sha256": "4d02cd18ea911581a58c402d3bd46bb7ee303748ee0cffa2941085570a158710"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/evidence/AS11-36-5389HR.jpg",
+        "bytes": 876209,
+        "sha256": "9a87df320e1fcd6c624ebb14ac2980bc72e4d3173a323e6197dd44c4469be5a1"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/evidence/CSM012-page185.png",
+        "bytes": 122575,
+        "sha256": "73ecb655fe8e8027fd397ac6fd90ea6c0d3f54b47e6811a2e562efdbd5978bb5"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/evidence/CSM012-page186.png",
+        "bytes": 182569,
+        "sha256": "c5f3f0c8cf161fd18c3dbc0ed227325d981031a8b8e45ecf7332e54b78483772"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/evidence/LM-FDAI.usda",
+        "bytes": 2302,
+        "sha256": "e1d0001649bb2dbd3d752359d56015273d1e0370b47d8e5fb219d2922a6b68c9"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/evidence/LM-FDAIPanel.swift",
+        "bytes": 7413,
+        "sha256": "7608bec8306dd8c5dfb19a55626deb027ad893f20cd67ca0acfc70c668284a91"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/evidence/LM-texture-generator.swift",
+        "bytes": 15789,
+        "sha256": "e484ca5212e3d22b2b1c7b6bb4bf5ba9bbb4ec6e04aacf94261a0934e2247a6c"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/evidence/LM5-FDAI-drawing-10-4-3.png",
+        "bytes": 807751,
+        "sha256": "8b92dac9d38d5182b5093fc902419b6b8f2bae190110ce74bcf7921646fb3d88"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/evidence/LM5-LM9-systems-excerpt.pdf",
+        "bytes": 7911792,
+        "sha256": "e5e4d20b69b67ffd001b7fc906d89516fe7cfa9b758a12ae18ec4433f0faf23e"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/evidence/apollo14-fdai.jpg",
+        "bytes": 63250,
+        "sha256": "dd679cd0472e49c08f5ca19379301d3b69fe256cdde4e2e21da1fc46ec8811ec"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/evidence/csm-fdai-comparison.jpg",
+        "bytes": 55052,
+        "sha256": "95d73e67f918be4a040d17b17685d15e17fe92d7216778e65dd29f1d8875d4c5"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/evidence/provenance.json",
+        "bytes": 2387,
+        "sha256": "bc20dba337feb027974ece91d49ca3d048c53ef4be9d11eea7c3bfccc520cf5e"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/evidence/research.md",
+        "bytes": 6537,
+        "sha256": "6a2a08ca3d5e739a46a6b7a0d91bedb68cc0bd2d8ba472b7c8359cbe1bfc2fd7"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/evidence/sources.json",
+        "bytes": 1788,
+        "sha256": "80f2a5a5cc50883edb30b29c82d7754872d5835ad1f50f8812528606c473c0be"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/interface.json",
+        "bytes": 3215,
+        "sha256": "ec67e1eccd4020e49dd47bf4a6c5ed74e9206eb72745068389befea16144f354"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/lfs-validation.json",
+        "bytes": 786,
+        "sha256": "19c504801f0ef914553fbcf31dc479a9003f887e39fd08c1a0a56367632610dc"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/native-validation.json",
+        "bytes": 374,
+        "sha256": "af9bf61b7bf93c89de31960494cb1b2a810f8557422984be830ca1113fa1570f"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/review/front.png",
+        "bytes": 757742,
+        "sha256": "9e9605c3e50d3f69884ae082c7e6c8f8bcf7a7b291d41d984cc79060c9105d71"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/review/geometry.png",
+        "bytes": 727276,
+        "sha256": "4bea9b072d4647dcd98f6847d621ea4ef5e4ef4255cfdd4456522bb5eeeaf921"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/review/oblique.png",
+        "bytes": 634296,
+        "sha256": "65aa8e0cb269da6be5a900070a1ca1e353386a70a39b67acf5384a0d0ac6c741"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/review/orientation-cost.json",
+        "bytes": 145,
+        "sha256": "d33822e9bd7600fd0234626336b11c0e72cb06a2db27871bb336be6a188362f6"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/review/pitch-30.png",
+        "bytes": 446561,
+        "sha256": "a249e945ddf857c587993bba8337e07420e5a2918cf4e9962ba696be28f01277"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/review/render-cost.json",
+        "bytes": 265,
+        "sha256": "b8ef6c44e001997c769b7eb2fdfc6f2179b2431004086c46cf795fe4870e3ae1"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/review/roll-30.png",
+        "bytes": 446733,
+        "sha256": "219732d0ce8f4b6842c419ba102ef388c6bd3b0b1f6796eaa174d6c109107a8c"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/review/static-motion-demo.png",
+        "bytes": 788339,
+        "sha256": "c317e3a273a7e8b74a26ed545b960e7de499da77ef53c3433392704d888416cb"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/review/yaw-minus-90.png",
+        "bytes": 447611,
+        "sha256": "1c2b92ed9ee0e46b1a1060d6bc9555cf03992a6fa02ec6ff45f44fe86f84bade"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/review/yaw-plus-90.png",
+        "bytes": 449484,
+        "sha256": "f3ceb76aa33b7995705bff01a64fbfa8741b82f0b459b768e06091e1e77bd56a"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/review_orientations.py",
+        "bytes": 1038,
+        "sha256": "2ea13fff8a4eebae035f84e3b1e681ec1dca9673938cbcd9c3da10755de0054c"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/textures/fdai_8ball_albedo.png",
+        "bytes": 301037,
+        "sha256": "43e98518b27f3360423dab1a552abefd4af4e2cfcd2c54300760086b753c7bad"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/validate.py",
+        "bytes": 6683,
+        "sha256": "a6bbfaad4193a895681b3449d6ad32ccce712b71b80136256e5304330719eba4"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/validate_native.swift",
+        "bytes": 1679,
+        "sha256": "68cccdb54d3be6673a623e46008a46f45fdb593b5db75b19958b978779c661b6"
+      },
+      {
+        "path": "Assets/Cockpit/Components/FDAI/validation.json",
+        "bytes": 92270,
+        "sha256": "1ebb0738bff144966e10761bcfa65533622f843c941382b8e909f0ed0fadf38a"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/.gitignore",
+        "bytes": 9,
+        "sha256": "b6c19e2969a38fe7b15f489f774b32dfa7dde3be8eaf2bbfadf9b0f075458367"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/ACA.usdc",
+        "bytes": 95902,
+        "sha256": "b01f043e9ce9260d5680304f9cad338011ff1bfafe6839ebb68c0f02409ad7ff"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/ACA.usdz",
+        "bytes": 96068,
+        "sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/HANDOFF.md",
+        "bytes": 6403,
+        "sha256": "68ba780d484fb62ab571a75670ede2be02e9554a9cc7d8cf7bbd038c87463dc5"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/HandControllers.blend",
+        "bytes": 140070,
+        "sha256": "3d8f6b2ee416d7d2cb132750a630d0c6e66577eb676b47da4fe08a0f950216c0"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/TTCA.usdc",
+        "bytes": 133298,
+        "sha256": "fb5c9a440a2a79530820abc0e127e1300bf4e917d6685bf33e836371ab768902"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/TTCA.usdz",
+        "bytes": 133464,
+        "sha256": "c8d165c723aa253868483d959ead394d32c07c766c2af08b731317d1aa371eb6"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/build.py",
+        "bytes": 9231,
+        "sha256": "8279256ca21f59870e224b757b0557692be5b16095b9c57183529be5f5811b96"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/evidence/AS11-36-5390.jpg",
+        "bytes": 152668,
+        "sha256": "aea796e5e5686c34ecb92ee0f4aeda3e0027d37e83b2d58f5e6191f95b26b77c"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/evidence/ASSESSMENT.md",
+        "bytes": 4942,
+        "sha256": "3a0dfab85b4bcb3ccce6cd51a86b0c60ad5cb21cb16cc550fe536cce4d19cdf3"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/evidence/aca-figure7.png",
+        "bytes": 132130,
+        "sha256": "f897bd12cb9fe4778fdb27e2abb6a4f59309f0f5ef42b67e6a0802b10afc1801"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/evidence/handbook-ttca.png",
+        "bytes": 125415,
+        "sha256": "cd8a3103d8f623a1e6d6826475596d742a01c4518756a0bffc0a9b806a828558"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/evidence/lm10-aoh-vol1-controls-excerpts.manifest.json",
+        "bytes": 4117,
+        "sha256": "102c0570c83f17d1d03ac19408210862f5a4686ff864b78ac745f9a9710650d8"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/evidence/lm10-aoh-vol1-controls-excerpts.pdf",
+        "bytes": 6974978,
+        "sha256": "6194242b2dd076a469474d5bcdb5f4a6bddf9929aedf543d8911fd5f9ca63e2c"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/evidence/source-manifest.json",
+        "bytes": 1688,
+        "sha256": "41389e7cf24d27f8d2911491326e222dd25f53cc514cc8a9be1f545fb4b41a56"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/evidence/tnD7884.pdf",
+        "bytes": 2602553,
+        "sha256": "1b8ca1a1db1d235193fb3181d631ba5e7051675720f50a78a3cda147e1f9590e"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/evidence/ttca-figure11.png",
+        "bytes": 133201,
+        "sha256": "7f54a84372db85000a096ebb1a9ad12b59318995851453e64197c400492ee22d"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/interface.json",
+        "bytes": 4647,
+        "sha256": "6a08a37335981e7b76c312a491d38dc07d39ef474fb52e49ae132453fcea5142"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/native-validation.json",
+        "bytes": 846,
+        "sha256": "0e572fa0d4fdf3e5e1c6279efcaa884de385ab7b71700150f2871b5a922d9a95"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/review/ACA-front.png",
+        "bytes": 289274,
+        "sha256": "baa61f7cd0d267f0a9889ecf841e1bc0bcf3f08bf8510f4f262ed889394ddaf1"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/review/ACA-motion.png",
+        "bytes": 317112,
+        "sha256": "ce9a897dd957937a4d11f0f85bca9c045f95a1ecb7535d9f31aad3ad05daca92"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/review/ACA-oblique.png",
+        "bytes": 319003,
+        "sha256": "02ddf4e81d1ff4ea0585a5be89f33fd14f4b89f300d02b873100e44542719953"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/review/ACA-side.png",
+        "bytes": 315975,
+        "sha256": "ab1ba0d54c456fd0c8d9da6e7c7146f4d44d5876babcb21b23ef421989e684d9"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/review/TTCA-front.png",
+        "bytes": 281630,
+        "sha256": "69dab2baa8051456070c5e212de9d0f9eb25b87528b4e26136571e21f2c213b3"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/review/TTCA-motion.png",
+        "bytes": 309154,
+        "sha256": "5a6ce42cf2893758c4d39a482db494eba8af1434d5d78d1dacebc57d261a92b3"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/review/TTCA-oblique.png",
+        "bytes": 313241,
+        "sha256": "a8d68cb073e0fdf28d77718c9b0d046207bff9fc51a8719c64d51228ffe9d570"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/review/TTCA-side.png",
+        "bytes": 294024,
+        "sha256": "2d6d5cde49a14dddc7490aa0b0f3025137b86dcb9bf4af8bf8e427cdba4355a3"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/review/render-cost.json",
+        "bytes": 449,
+        "sha256": "249b79e806ffa4398c5d037fbcd7e53fab1432a4bb62607c1c683c03d8be71a4"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/validate.py",
+        "bytes": 5166,
+        "sha256": "a65ecbdb4b89f07b0fd3b8f4596385de0d4dbaa8aca914cfa4a589db169fa46f"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/validate_native.swift",
+        "bytes": 1827,
+        "sha256": "e8c65c9602e879a79a91fd7517e410d4388e7ff0fd6d0092cdab28fa290fdb85"
+      },
+      {
+        "path": "Assets/Cockpit/Components/HandControllers/validation.json",
+        "bytes": 26320,
+        "sha256": "b46588c5481657e29b443981be02309d03ab697de82dcb383a6a3cd7cf5f9091"
+      },
+      {
+        "path": "Package.swift",
+        "bytes": 559,
+        "sha256": "86ffc8e0216cf11250734c8230333640591d43f61571d3ef247795baea48b4f2"
+      },
+      {
+        "path": "Provenance/cabin-acceptance.json",
+        "bytes": 664,
+        "sha256": "a91c43878d5ce6aac3c446e3528afaa495abc1dae40404fbb806b8b10124e28b"
+      },
+      {
+        "path": "Provenance/commander-panels-acceptance.json",
+        "bytes": 1786,
+        "sha256": "a8997b0c3e6014dfd1a7e7062992a3f1450b81965582c7cf90ec9105f104cebc"
+      },
+      {
+        "path": "Provenance/control-library-acceptance.json",
+        "bytes": 1611,
+        "sha256": "749e7e07a6f38e258db19c288814c60037d03dbd775629ce06d13243f87b4f52"
+      },
+      {
+        "path": "Provenance/fdai-acceptance.json",
+        "bytes": 456,
+        "sha256": "75a6d20722bdb27d2a29aa59426f4f012f663b48f3de22a66c096cf64f938dfe"
+      },
+      {
+        "path": "Provenance/hand-controllers-acceptance.json",
+        "bytes": 998,
+        "sha256": "97d0378bb01ccf78615f47036109f856cd38509d0ceeafdbe0eb81aae62e3d0e"
+      },
+      {
+        "path": "Provenance/imports.json",
+        "bytes": 11232,
+        "sha256": "dc4057a7573e0deff43bff5990495d78cdfb5eafc3b3e643e78f122befdd8a46"
+      },
+      {
+        "path": "README.md",
+        "bytes": 6195,
+        "sha256": "12d151c931ab4fc1788540caec3c68df73f8eddef1c8afa9124683cd7fc808c9"
+      },
+      {
+        "path": "Sources/LMKit/LMKitAssets.swift",
+        "bytes": 3337,
+        "sha256": "e85b02e9b753b8f192c171c60c52f58864f75a12faa5b8604e5d4c4d8c83993c"
+      },
+      {
+        "path": "Sources/LMKit/Resources/Cabin/Cabin.usdz",
+        "bytes": 23467,
+        "sha256": "777ce88968820a6e46995d436e807abf9f4b4a5cb7115d0eb03eafb4c89c995e"
+      },
+      {
+        "path": "Sources/LMKit/Resources/Cabin/mounts.json",
+        "bytes": 6137,
+        "sha256": "9b16e4f30fdc7f37a0d93f54154b8a8d4523dce5fb09d339a28442df9a25ebf5"
+      },
+      {
+        "path": "Sources/LMKit/Resources/CommanderPanels/CommanderPanels.usdz",
+        "bytes": 15669,
+        "sha256": "52e4c13cf302e080edbd163fb3f6d26ce53785c28bc49dcefd3a75c876f9d604"
+      },
+      {
+        "path": "Sources/LMKit/Resources/CommanderPanels/mounting.json",
+        "bytes": 5451,
+        "sha256": "eb1efb3ab4ef0d43fc6036ec676431bf8b861cc69e83d26bc15cf2ed0182dde8"
+      },
+      {
+        "path": "Sources/LMKit/Resources/ControlLibrary/CircuitBreaker.usdz",
+        "bytes": 11221,
+        "sha256": "8f6b6125b943a051e18ac193aedcd3509ba6b1bc82525d420985e3ef1a2649dc"
+      },
+      {
+        "path": "Sources/LMKit/Resources/ControlLibrary/GuardedSwitch.usdz",
+        "bytes": 20307,
+        "sha256": "38b3f9fa5fc2db6113fafabe4466dbc1ad666d2af0e80268e9e3efc2e5d692ae"
+      },
+      {
+        "path": "Sources/LMKit/Resources/ControlLibrary/MaintainedToggle.usdz",
+        "bytes": 11237,
+        "sha256": "6071600aa300b4ee00ed12537c5b719497f078012a391c35390ab34135f79b5f"
+      },
+      {
+        "path": "Sources/LMKit/Resources/ControlLibrary/MomentaryToggle.usdz",
+        "bytes": 11246,
+        "sha256": "615cadfaa1190a2340bd23e518849147a342c0cd927d4101081e6b553ee1f8d9"
+      },
+      {
+        "path": "Sources/LMKit/Resources/ControlLibrary/RotarySelector.usdz",
+        "bytes": 8850,
+        "sha256": "facc28e727c765d9cc9379509c2e036b90a9331e5976186bb8f0d2b294ec1f3f"
+      },
+      {
+        "path": "Sources/LMKit/Resources/ControlLibrary/Talkback.usdz",
+        "bytes": 10404,
+        "sha256": "a9c4cb0d8e0a6fbccc06f5cd2c45bf58154b73b7070f2222dc0c763986bba065"
+      },
+      {
+        "path": "Sources/LMKit/Resources/ControlLibrary/components.json",
+        "bytes": 4434,
+        "sha256": "becce552cc9a3e31dbf89a1440cdefcc550d09a2e6a7e1fc43ee31ae76e81072"
+      },
+      {
+        "path": "Sources/LMKit/Resources/DSKY/DSKY.usdz",
+        "bytes": 526263,
+        "sha256": "e20a69864d4c7e0ff068172e0e672d9fbcc510c1dc4e97e4db0246fde08fbdfd"
+      },
+      {
+        "path": "Sources/LMKit/Resources/FDAI/FDAI.usdz",
+        "bytes": 2051277,
+        "sha256": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d"
+      },
+      {
+        "path": "Sources/LMKit/Resources/HandControllers/ACA.usdz",
+        "bytes": 96068,
+        "sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5"
+      },
+      {
+        "path": "Sources/LMKit/Resources/HandControllers/TTCA.usdz",
+        "bytes": 133464,
+        "sha256": "c8d165c723aa253868483d959ead394d32c07c766c2af08b731317d1aa371eb6"
+      },
+      {
+        "path": "Sources/LMKit/Resources/HandControllers/interface.json",
+        "bytes": 4647,
+        "sha256": "6a08a37335981e7b76c312a491d38dc07d39ef474fb52e49ae132453fcea5142"
+      },
+      {
+        "path": "Sources/LMKit/Resources/Legacy/lm.usda",
+        "bytes": 4596,
+        "sha256": "bce47c60d93e192688b83a77cd54675e3db9db5981998a94f786c0656050cd5c"
+      },
+      {
+        "path": "Sources/LMKit/Resources/Legacy/lunar_module.usdz",
+        "bytes": 2012449,
+        "sha256": "e2588937370ed21d2c84be88c47c35bd3b588f5c9fb0bc9410b3ec89bcf6bb91"
+      },
+      {
+        "path": "Tests/LMKitTests/AssetTests.swift",
+        "bytes": 2919,
+        "sha256": "9166a98a08839c26e17f9fdff780d8ce59d8652181228fcd83358a7b19605094"
+      },
+      {
+        "path": "Tests/LMKitTests/CommanderPanelResourceTests.swift",
+        "bytes": 3814,
+        "sha256": "5c5e2671760efc34d0226568102ae24367d242efd8a8af7f3f66a1522dadd077"
+      },
+      {
+        "path": "Tests/LMKitTests/HandControllerResourceTests.swift",
+        "bytes": 3148,
+        "sha256": "40651d900eeefcf758288d9f3f750a5d672ba79c1779db1890c257bf5f4d05b1"
+      },
+      {
+        "path": "Tests/LMKitTests/StructuralResourceTests.swift",
+        "bytes": 4960,
+        "sha256": "da44fe10f6060ebe5edf5659ae1fc6feba2e283c36b86ed4a608062366c7f816"
+      },
+      {
+        "path": "Tools/sync_cabin.py",
+        "bytes": 831,
+        "sha256": "e45601e1a78472f7a42ce6258c6b000a7e3602f6ba8a7d827b6580c3e7d7f8f6"
+      },
+      {
+        "path": "Tools/sync_commander_panels.py",
+        "bytes": 789,
+        "sha256": "93165456b051848fa850c3d67d36abf9780adfd8fc6379f3a61c29c40d34028d"
+      },
+      {
+        "path": "Tools/sync_control_library.py",
+        "bytes": 676,
+        "sha256": "18ee4420c2634f125e35a8eca9d64b1faa411abe7090b03fc8b6f91ff165e69d"
+      },
+      {
+        "path": "Tools/sync_dsky.py",
+        "bytes": 423,
+        "sha256": "40cacd1d04de45c4c26a0f8e8c3b8a2894d119b7ddf6b7ae7fddfbe59e661fd7"
+      },
+      {
+        "path": "Tools/sync_fdai.py",
+        "bytes": 422,
+        "sha256": "c19fbc4b23e59a675bb237b407ebe537642af6388bf1f9d413dd65671b7c89c6"
+      },
+      {
+        "path": "Tools/sync_hand_controllers.py",
+        "bytes": 557,
+        "sha256": "d666f40ca1a8efb1c483ff5d7112d4cc56148131fc399843c5485099c69f442f"
+      }
+    ]
+  },
+  "AGC": {
+    "revision": "b3f15533db335ee882dc07401790c93010809e8f",
+    "verified_file_count": 88,
+    "files": [
+      {
+        "path": ".github/workflows/release.yml",
+        "bytes": 1021,
+        "sha256": "b41701bd88d2b627dd50c82e5688a18ef9813a93f7bfb16192bbd96e74929800"
+      },
+      {
+        "path": ".github/workflows/tests.yml",
+        "bytes": 333,
+        "sha256": "dd70a0c71da4a7709c13e6ace67d56fe09fec3aef6ba56ce1c31d14b8e0ac1eb"
+      },
+      {
+        "path": ".gitignore",
+        "bytes": 222,
+        "sha256": "a01f3966ae31572c6aecb20c2fde42439307aa3ef18d208bfebf4341bc8f1702"
+      },
+      {
+        "path": "Docs/FlightRecordingExport.md",
+        "bytes": 1530,
+        "sha256": "b5af893aa6fa04ec184e0a50d1cc14afc100d736f2f5a6261fdd73dffa8cadc5"
+      },
+      {
+        "path": "Docs/LandingContactDiagnostics.md",
+        "bytes": 1448,
+        "sha256": "1539bee310422992089ffb56a1c850caeb12224253adeb6a0c862b641e465beb"
+      },
+      {
+        "path": "Docs/LunarLandingSite.md",
+        "bytes": 4130,
+        "sha256": "2768fa1425d3653fbdb497e8ace3ae112265ec3864dc9d774fe5c9414a7a2782"
+      },
+      {
+        "path": "Docs/SimulatorTests.md",
+        "bytes": 2318,
+        "sha256": "c8b0dde5b86ab95c56d87e710d1cdcd52aa68df119e484a1636957e8f585f654"
+      },
+      {
+        "path": "MissionControl/MissionControl.xcodeproj/project.pbxproj",
+        "bytes": 14408,
+        "sha256": "4381f424569c3dc0661b3abbb3fad2dfe38bf7b2204209226c0d694e60116994"
+      },
+      {
+        "path": "MissionControl/MissionControl.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+        "bytes": 135,
+        "sha256": "7f3b00b5c3fdb45242d7b87e1e5c4e25d1fa8129a16c94295ecc4e8ea2235c5f"
+      },
+      {
+        "path": "MissionControl/MissionControl/Assets.xcassets/AccentColor.colorset/Contents.json",
+        "bytes": 123,
+        "sha256": "9af65086fa30b49252fae1a1225731691de794f7775af74d71befeb507d12b7c"
+      },
+      {
+        "path": "MissionControl/MissionControl/Assets.xcassets/AppIcon.appiconset/Contents.json",
+        "bytes": 904,
+        "sha256": "a93d059297d6108109bbdf46e8424cb53bb45d141a98de62122c9ab8ec8709b7"
+      },
+      {
+        "path": "MissionControl/MissionControl/Assets.xcassets/Contents.json",
+        "bytes": 63,
+        "sha256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b"
+      },
+      {
+        "path": "MissionControl/MissionControl/ContentView.swift",
+        "bytes": 8926,
+        "sha256": "b5dfe05a35376a6169fffb5599b9e5bc3a33fa2b55a56c4b70e75f43c4efa8df"
+      },
+      {
+        "path": "MissionControl/MissionControl/Info.plist",
+        "bytes": 1001,
+        "sha256": "a8d8a31b400dc5e5ff13a8efec03354ad61ad79aa94d390cd58ffb4579e991b6"
+      },
+      {
+        "path": "MissionControl/MissionControl/MissionControlApp.swift",
+        "bytes": 3420,
+        "sha256": "f6663b9e8c515f9ef24c494a60530c18c2fc7dc01b780513f88650aaef65ebcf"
+      },
+      {
+        "path": "MissionControl/MissionControl/MissionControlChrome.swift",
+        "bytes": 3194,
+        "sha256": "4df289a2473718a3d1667cdc794b5e616863d22ea0a44755edf4478551e675f8"
+      },
+      {
+        "path": "MissionControl/MissionControl/MissionControlDSKYConsole.swift",
+        "bytes": 9740,
+        "sha256": "1552b31c893d80ce00928b6c0d5cf068df91030523e4928985396ad07ed7a68c"
+      },
+      {
+        "path": "MissionControl/MissionControl/MissionControlDSKYView.swift",
+        "bytes": 1579,
+        "sha256": "534ffe1d3e53a7430d2b54dcdb8a462cfa7a43318748498b29256b103549cb04"
+      },
+      {
+        "path": "MissionControl/MissionControl/MissionControlDashboard.swift",
+        "bytes": 25647,
+        "sha256": "43b1ce786e100103456965b7dff3127936ad54516569381d2bf72121bfdd2aa7"
+      },
+      {
+        "path": "MissionControl/MissionControl/MissionControlDebuggerView.swift",
+        "bytes": 4635,
+        "sha256": "81c1f16541c048b7a3556f2b82c134ab4f3024d5bb1f045d2ad515e59b037442"
+      },
+      {
+        "path": "MissionControl/MissionControl/MissionControlViewModel.swift",
+        "bytes": 24107,
+        "sha256": "2a9a7f9cec8835a6466890d2d3f8c274d9541997523769e27727b2ff0443aad5"
+      },
+      {
+        "path": "Package.swift",
+        "bytes": 1216,
+        "sha256": "b77dcb1b4ae34d3441aefbedf98b7f0dd6815003bb6d2cd0e965f2cc0fd08478"
+      },
+      {
+        "path": "README.md",
+        "bytes": 6888,
+        "sha256": "6e8542e05ec8b9402fee8e76a28dad7e1bc6205ed6ca04769ed75e45ed633865"
+      },
+      {
+        "path": "Sources/AGC/AGC.swift",
+        "bytes": 25042,
+        "sha256": "af9f6a6d55aa6d39e7dc9a179e920eb906f90e9efdeebf70c73e5098a2e26803"
+      },
+      {
+        "path": "Sources/AGC/AGCChannelTrace.swift",
+        "bytes": 3443,
+        "sha256": "e1fe041b56c8c3a8694932a92ede1e5ceee60bfd084877757797bf6989a91c81"
+      },
+      {
+        "path": "Sources/AGC/AGCDebugger.swift",
+        "bytes": 6381,
+        "sha256": "ccac7c3fe016322e776a4db51781ffc71fdf67e9f09bed3ce020d1c8630f0aa2"
+      },
+      {
+        "path": "Sources/AGC/AGCEngine.swift",
+        "bytes": 7102,
+        "sha256": "b11000e2e9d6a0fb85b837498b3f002d6fe428c222daa5834b2eed5ce1522b20"
+      },
+      {
+        "path": "Sources/AGC/AGCEngineChannels.swift",
+        "bytes": 2806,
+        "sha256": "4debaee16e2f90f2bb43cde722d1b030bb1578e32c7688f5dd1f396a4321b11f"
+      },
+      {
+        "path": "Sources/AGC/AGCEngineCounters.swift",
+        "bytes": 4348,
+        "sha256": "7f7cf785129ae016eb6fe7e8d01dd67879586ac8f132d76ccb678f3e028817f4"
+      },
+      {
+        "path": "Sources/AGC/AGCEngineExecution.swift",
+        "bytes": 31717,
+        "sha256": "97821e287b8a1b37cb2f484cfe7471efa875faaffd1e499d114ff056ff495010"
+      },
+      {
+        "path": "Sources/AGC/AGCEngineInstructions.swift",
+        "bytes": 25988,
+        "sha256": "a1df8d69fdfa4f5aa7d4e4a01d6539978ed371f9146edf736a6381649ffdea28"
+      },
+      {
+        "path": "Sources/AGC/AGCEngineInterrupts.swift",
+        "bytes": 798,
+        "sha256": "cc9ce83044d6127839be002a6f9b6436522ce78bc9b1c67ca4bf1d0a2c63aeda"
+      },
+      {
+        "path": "Sources/AGC/AGCEngineMemory.swift",
+        "bytes": 5600,
+        "sha256": "eccf795f46f95fbda5539c7aefe73c4476bbe040314b9b5b6ca02d089a4fec91"
+      },
+      {
+        "path": "Sources/AGC/AGCEngineNumerics.swift",
+        "bytes": 9165,
+        "sha256": "8e8e437c5c3b624937b4c96764eb1a45792a8d7ae3519ba97048d01d9ecee153"
+      },
+      {
+        "path": "Sources/AGC/AGCEnginePeripheralTypes.swift",
+        "bytes": 6051,
+        "sha256": "dcebc9fe6e6fc3883b904609b22ddf1e185fb90c0cc96b842bb0daccfc80ed55"
+      },
+      {
+        "path": "Sources/AGC/AGCEnginePeripherals.swift",
+        "bytes": 7539,
+        "sha256": "b3e614ca598f5b55774ad1c850105fa8f138ea768ce86e102e093111027294c2"
+      },
+      {
+        "path": "Sources/AGC/AGCEngineRuntimeIO.swift",
+        "bytes": 4462,
+        "sha256": "a1da879554e1bcdf5cb9abfa9b266ab9436119be09a7117332d1973e8e56d654"
+      },
+      {
+        "path": "Sources/AGC/AGCErasable.swift",
+        "bytes": 3347,
+        "sha256": "997379b1aa8a8e893d499777359cdd5fa28e32f6ea5182d9003e640982c79686"
+      },
+      {
+        "path": "Sources/AGC/AGCGoldenTrace.swift",
+        "bytes": 7337,
+        "sha256": "6aa0bd6c63c530db4682fb3657613faf29abe789a2c8946a749d00b016cefe8f"
+      },
+      {
+        "path": "Sources/AGC/AGCIO.swift",
+        "bytes": 1404,
+        "sha256": "8cc9216085cdff909d0e441974aa0022b8c782000e9e5706717a18d2d254c19f"
+      },
+      {
+        "path": "Sources/AGC/AGCPacket.swift",
+        "bytes": 2332,
+        "sha256": "eb61057c1ebd59277153442c9b4cce6dab734d4625c54964e756337708283710"
+      },
+      {
+        "path": "Sources/AGC/AGCRuntimeCheckpoint.swift",
+        "bytes": 10351,
+        "sha256": "f8929114cdddf8152846c806514464a7c5363063b21fa5e88de37df069de73f8"
+      },
+      {
+        "path": "Sources/AGC/AGCSHA256.swift",
+        "bytes": 4152,
+        "sha256": "30f07ee11878f32e0dee0b2d11d304b0f47664446000ed327154d40b197e1c7f"
+      },
+      {
+        "path": "Sources/AGC/AGCScenarioRunner.swift",
+        "bytes": 1573,
+        "sha256": "1a91a801cc858b9e28fd41bb9fa831420ce020198059be2e504c014e887d1f8d"
+      },
+      {
+        "path": "Sources/AGC/AGCState.swift",
+        "bytes": 5534,
+        "sha256": "a86d9d77faea281e1892d046d4f75a484a16fdfe867c9e222b22be9df7c2b341"
+      },
+      {
+        "path": "Sources/AGC/DSKY.swift",
+        "bytes": 18047,
+        "sha256": "9d48fcf13bf1e6d7b2c2684f4556a09df887dc31166514b8bfca0018d16ef434"
+      },
+      {
+        "path": "Sources/AGC/DSKYSnapshot.swift",
+        "bytes": 5388,
+        "sha256": "fb0fd002fd107beffbe181ae4de0cca78d609bc116c6f9ed34cb3a6e3d9ae2f5"
+      },
+      {
+        "path": "Sources/LMCore/LMAGCNavState.swift",
+        "bytes": 33568,
+        "sha256": "3b02ead7cedcc8b378cc212adad30b85690ad800a2c47015f15fb4696e84c777"
+      },
+      {
+        "path": "Sources/LMCore/LMAGCPadLoad.swift",
+        "bytes": 19381,
+        "sha256": "9b2bf4c4bb5ac0a4e1b866587bfd28eb8877f5cf6dafd8578506be66495e9c59"
+      },
+      {
+        "path": "Sources/LMCore/LMAutomaticFlightRecorder.swift",
+        "bytes": 2246,
+        "sha256": "d5ea758218e2f0766fe87aa4edfa9f0fec05623c5371e544d4c59545f2bd28b6"
+      },
+      {
+        "path": "Sources/LMCore/LMFlightRecording.swift",
+        "bytes": 10603,
+        "sha256": "ee138c974cfb563476b5b6ed351a8c77f6fe912877c5145dc38036ab5bbdd313"
+      },
+      {
+        "path": "Sources/LMCore/LMFrameInput.swift",
+        "bytes": 9354,
+        "sha256": "d3387210bd18ab0f311eea3795db416bd6a09c6d85936e039c3085dbb6daa61d"
+      },
+      {
+        "path": "Sources/LMCore/LMLandingGear.swift",
+        "bytes": 30164,
+        "sha256": "0cadb0313aae9b54f69bcfe7901c90103285592ced7b503aa045536823a690ed"
+      },
+      {
+        "path": "Sources/LMCore/LMLunarLandingSite.swift",
+        "bytes": 2843,
+        "sha256": "74502480e12af37057c80e15ec0e52e38f348ecadf4d0686f2f3ddd1187515d2"
+      },
+      {
+        "path": "Sources/LMCore/LMP66FlightRecorder.swift",
+        "bytes": 5401,
+        "sha256": "5e4efb009694c788d18ba28899699375f75ab27d8130596c233c4a858b675c4c"
+      },
+      {
+        "path": "Sources/LMCore/LMP66Pilot.swift",
+        "bytes": 5949,
+        "sha256": "a427a87408c14f17af921a217426762e569f726984e3dad37d77b4f926995216"
+      },
+      {
+        "path": "Sources/LMCore/LMSensorFeedback.swift",
+        "bytes": 21064,
+        "sha256": "bd777d0cef2479293560b70978e6d065b991cc1cd7e10ce3834dcf51844eaf98"
+      },
+      {
+        "path": "Sources/LMCore/LMSimulation.swift",
+        "bytes": 82579,
+        "sha256": "75c27b1e0bc3630372f6f093c1becbed8c1f1b96759dbff5101674990f694ab6"
+      },
+      {
+        "path": "Sources/LMCore/LMSimulationCheckpoint.swift",
+        "bytes": 5219,
+        "sha256": "bfb129c64845de66bcecf23b14203ffd81cd7fc719594b06562213ff3ba98cac"
+      },
+      {
+        "path": "Sources/LMCore/LMSimulationPace.swift",
+        "bytes": 1491,
+        "sha256": "33fb247e61415a8a2c327ac4692beb7648c4bea211d5c296c2e4da2e592db718"
+      },
+      {
+        "path": "Sources/LMCore/LMTraceValidation.swift",
+        "bytes": 7552,
+        "sha256": "f5d910f2fa4723616e56616d8fd6c610bd14988a3c13e346f794c6be8db7526e"
+      },
+      {
+        "path": "Sources/LMCore/LMVehicleActuation.swift",
+        "bytes": 16540,
+        "sha256": "92398a4264de23241e4b840cc78e0ee88bcd2dbe8f11988775fc24c0a3612e90"
+      },
+      {
+        "path": "Sources/LMCore/LMVehicleCommands.swift",
+        "bytes": 17705,
+        "sha256": "cc5c5174584849240edfe36d1e811f760a8446d6764aec24735dfa58d266300e"
+      },
+      {
+        "path": "Sources/LMCore/LuminaryMoonOrientation.swift",
+        "bytes": 6529,
+        "sha256": "8754738bb531911427f5a48b3e1e5a444843d654eb76e9b1f0457d4e65cea10a"
+      },
+      {
+        "path": "Sources/LMFlightRecorder/LMFlightRecorderCommand.swift",
+        "bytes": 3768,
+        "sha256": "29def1c88a09e5c5b425605cf28858fc3fffcb8df7ab505ee17e87b89f0a0be3"
+      },
+      {
+        "path": "Tests/AGCTests/AGCCheckpointTests.swift",
+        "bytes": 5042,
+        "sha256": "8452d194e0899549e3daaa5d79501a01de97798af42da6b11ac0154762425d86"
+      },
+      {
+        "path": "Tests/AGCTests/AGCErasableTests.swift",
+        "bytes": 1724,
+        "sha256": "a393789c94266ea06481060b9cf44d32988b2eba961ed811650da424b888ac93"
+      },
+      {
+        "path": "Tests/AGCTests/AGCPacketTests.swift",
+        "bytes": 2621,
+        "sha256": "f11caacbc34f227f9871da66479d4530362f97a348c038e2e7eaa7255033a3cb"
+      },
+      {
+        "path": "Tests/AGCTests/AGCTests.swift",
+        "bytes": 58800,
+        "sha256": "e7b4fc7c984ccc760aee0832208ffc3817c7e574abe0a02e7776244dfe263707"
+      },
+      {
+        "path": "Tests/AGCTests/DSKYTests.swift",
+        "bytes": 4035,
+        "sha256": "7a25c917df63bafa2eb8c7c62d08659348733f6e4d7ffbfb1d059f38a50ed275"
+      },
+      {
+        "path": "Tests/AGCTests/Fixtures/luminary099-boot.jsonl",
+        "bytes": 83874,
+        "sha256": "f15b52b4a0a95736fa96a3ad10642e2f23877d37fa0bd085a913de8bc2964ed7"
+      },
+      {
+        "path": "Tests/AGCTests/Fixtures/luminary099-v35e.jsonl",
+        "bytes": 89298,
+        "sha256": "066da32b8b952c4768b5d2135101387ea10194c29585f9e723b1037f37919c93"
+      },
+      {
+        "path": "Tests/AGCTests/Fixtures/luminary099-v37e63e.jsonl",
+        "bytes": 93356,
+        "sha256": "a48ec6dc7a0b9d259f880b79db56ecceb57892e08e93bb8e944ce5e5da353e06"
+      },
+      {
+        "path": "Tests/AGCTests/Luminary099.bin",
+        "bytes": 73728,
+        "sha256": "1f5326e038de5b741b2f27b01ec949dbd688cf1906994e997402587c8628f40e"
+      },
+      {
+        "path": "Tests/AGCTests/YaAGCGoldenTraceTests.swift",
+        "bytes": 6436,
+        "sha256": "a21aec67806e3adab80ea816b4390b0fb2e80cc36bb08fad30711ef5e9edf4cf"
+      },
+      {
+        "path": "Tests/LMCoreTests/LMCoreTests.swift",
+        "bytes": 173059,
+        "sha256": "2f685a54e81bf0b45e88f41388a848b524ae3a09d7493c8b00c4e5518efbb70e"
+      },
+      {
+        "path": "Tests/LMCoreTests/LMFlightReplaySiteTests.swift",
+        "bytes": 5592,
+        "sha256": "ee607eb408415e906fe2244f9666ce1d067e6f3476a03d29b8cbdb444fc811d0"
+      },
+      {
+        "path": "Tests/LMCoreTests/LMLandingGearTests.swift",
+        "bytes": 13959,
+        "sha256": "2de6a89e3e1805799ba43e132e5b74cecdd84ce83580b36ad9e8c3d1f9a82a86"
+      },
+      {
+        "path": "Tests/LMCoreTests/LMLunarLandingSiteTests.swift",
+        "bytes": 6680,
+        "sha256": "3b4df74df2319ed25f5ba7536dbc0172a1d22588da6e4a7e435a439f6924aa46"
+      },
+      {
+        "path": "Tests/LMCoreTests/LMSimulationCheckpointTests.swift",
+        "bytes": 10712,
+        "sha256": "441812c9f251833859ce22c81339169a8c8cfb3275ef9d500d207413144d8dda"
+      },
+      {
+        "path": "Tests/LMCoreTests/LMSiteIMUDiagnosticTests.swift",
+        "bytes": 3101,
+        "sha256": "66f778460cb98fcf1f27d5f24619a9b54bed2006fd51598a284171e1cfe79855"
+      },
+      {
+        "path": "Tests/LMCoreTests/LMTerrainDatumContactTests.swift",
+        "bytes": 834,
+        "sha256": "389bc60bc48405829cf73718e74203c3bf1e5e10850377b0ad575556507cf9fe"
+      },
+      {
+        "path": "Tests/LMCoreTests/LandingRadarGeometryTests.swift",
+        "bytes": 4567,
+        "sha256": "55ee917ddb80a6062da871cc68469c0aa5267e94750a9f82417c6e27da60346a"
+      },
+      {
+        "path": "Tests/LMCoreTests/P66RealtimeProbeTests.swift",
+        "bytes": 3026,
+        "sha256": "7c1c9485d4bcebbf11a81ad30a69c900635213539faf7a6529d6b3c86ddbc7ec"
+      },
+      {
+        "path": "Tools/yaagc-trace/build.sh",
+        "bytes": 743,
+        "sha256": "e3b5976a15dd39e83024d30f3d62eb7f8e975c93ddb7912daa627bb128ce1518"
+      },
+      {
+        "path": "Tools/yaagc-trace/generate-fixture.sh",
+        "bytes": 897,
+        "sha256": "6869339b263d7b1220e674c1cb844716b70056c06bc9a6e376e27e747a6957d8"
+      },
+      {
+        "path": "Tools/yaagc-trace/main.c",
+        "bytes": 5066,
+        "sha256": "be71920fa8ab38a4b832cead0e82fe6963a1a87b54c34fb05ac808a3a67bdae8"
+      },
+      {
+        "path": "Tools/yaagc-trace/stubs.c",
+        "bytes": 1714,
+        "sha256": "e7e78208323db2c4c02c51dddde96c278dcfb9a858d33b1d396cbd6f0547001c"
+      }
+    ]
+  }
+}
