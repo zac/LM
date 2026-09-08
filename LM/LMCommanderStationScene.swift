@@ -3,6 +3,7 @@ import LMCore
 import OSLog
 import RealityKit
 import RealityKitContent
+import LMKit
 import SwiftUI
 import UIKit
 import simd
@@ -258,7 +259,7 @@ final class LMCommanderStationScene {
     /// terrain remains a sibling so vehicle/world mapping is unaffected.
     func loadExteriorLunarModule() throws {
         guard exteriorLunarModule == nil else { return }
-        let scene = try Entity.load(named: "lm", in: realityKitContentBundle)
+        let scene = try Entity.load(contentsOf: LMKitAssets.legacySceneURL)
         guard let authoredLander = scene.findEntity(named: "lunarlander") else { return }
 
         let lander = authoredLander.clone(recursive: true)

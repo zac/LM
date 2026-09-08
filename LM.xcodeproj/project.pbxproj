@@ -11,6 +11,7 @@
 		1198E01A304C949700B88593 /* LMLunarCockpitTerrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1198E019304C949700B88593 /* LMLunarCockpitTerrain.swift */; };
 		11F3D7792D4569A800205449 /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 11F3D7782D4569A800205449 /* RealityKitContent */; };
 		153481058BB7D6ABE3016B26 /* AGC in Frameworks */ = {isa = PBXBuildFile; productRef = 7F923C8DED5D27B4856DF91E /* AGC */; };
+		3DA4C16A6A000BEC5689C34B /* LMKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2398810C971619A4048B5E63 /* LMKit */; };
 		8B235D3F452923FA7A4072FF /* LMCore in Frameworks */ = {isa = PBXBuildFile; productRef = A9EB3C526EF0E03AA143B6C9 /* LMCore */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +54,8 @@
 		};
 		11F3D7952D4569A900205449 /* LMTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = LMTests;
 			sourceTree = "<group>";
 		};
@@ -66,6 +69,7 @@
 				11F3D7792D4569A800205449 /* RealityKitContent in Frameworks */,
 				153481058BB7D6ABE3016B26 /* AGC in Frameworks */,
 				8B235D3F452923FA7A4072FF /* LMCore in Frameworks */,
+				3DA4C16A6A000BEC5689C34B /* LMKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +135,7 @@
 				11F3D7782D4569A800205449 /* RealityKitContent */,
 				7F923C8DED5D27B4856DF91E /* AGC */,
 				A9EB3C526EF0E03AA143B6C9 /* LMCore */,
+				2398810C971619A4048B5E63 /* LMKit */,
 			);
 			productName = LM;
 			productReference = 11F3D7732D4569A800205449 /* LM.app */;
@@ -186,7 +191,8 @@
 			mainGroup = 11F3D76A2D4569A800205449;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */,
+				3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "AGC" */,
+				31B7ED4EE34C871892A763A6 /* XCLocalSwiftPackageReference "LMKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 11F3D7742D4569A800205449 /* Products */;
@@ -488,7 +494,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */ = {
+		31B7ED4EE34C871892A763A6 /* XCLocalSwiftPackageReference "LMKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../LMKit;
+		};
+		3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "AGC" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../AGC;
 		};
@@ -499,14 +509,19 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = RealityKitContent;
 		};
+		2398810C971619A4048B5E63 /* LMKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 31B7ED4EE34C871892A763A6 /* XCLocalSwiftPackageReference "LMKit" */;
+			productName = LMKit;
+		};
 		7F923C8DED5D27B4856DF91E /* AGC */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */;
+			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "AGC" */;
 			productName = AGC;
 		};
 		A9EB3C526EF0E03AA143B6C9 /* LMCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */;
+			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "AGC" */;
 			productName = LMCore;
 		};
 /* End XCSwiftPackageProductDependency section */

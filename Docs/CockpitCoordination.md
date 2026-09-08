@@ -1,5 +1,7 @@
 # Cockpit coordination
 
+**2026-09-08 update:** Model ownership now lives in the separate LMKit package. See [LMKit integration](LMKitIntegration.md). This LM worktree remains the application integration coordinator; the original in-repository component layout below records the initial worker assignments. New model workers should target LMKit.
+
 This worktree is the coordination and integration checkout for the interactive lunar module interior. Its persistent branch is `cockpit/integration`. Initial app baseline: `89ecb0fe641292640a56e37ddf72587c342a4066`. The research was prepared on that baseline; this is not a claim that the in-progress LunarMap extraction or AGC merge is integrated here.
 
 ## Architecture and scope

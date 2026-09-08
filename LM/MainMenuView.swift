@@ -8,13 +8,14 @@
 import SwiftUI
 import RealityKit
 import RealityKitContent
+import LMKit
 
 struct MainMenuView: View {
     var body: some View {
         NavigationView {
             VStack {
                 HStack {
-                    Model3D(named: "lunar-module", bundle: realityKitContentBundle) { model in
+                    Model3D(url: LMKitAssets.lunarModuleURL) { model in
                         // Customize the model if needed
                         model
                             .resizable()
