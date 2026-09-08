@@ -1,0 +1,19 @@
+id,original_value,original_unit,converted_value,converted_unit,source_url,printed_page_or_figure,original_pdf_page_1based,applicability,qualification
+forward_cabin_diameter,92,in,2.3368,m,https://www.nasa.gov/wp-content/uploads/static/apollo50th/pdf/A11_PressKit.pdf,96,100,Apollo 11 press kit,nominal; not clear interior width
+forward_cabin_depth,42,in,1.0668,m,https://www.nasa.gov/wp-content/uploads/static/apollo50th/pdf/A11_PressKit.pdf,96,100,Apollo 11 press kit,forward compartment only
+flight_station_spacing,44,in,1.1176,m,https://www.ibiblio.org/apollo/Documents/lm_structures_study_guide.pdf,17,25,1967 training design,reconcile LM-5 configuration
+deck_side_a,36,in,0.9144,m,https://www.ibiblio.org/apollo/Documents/lm_structures_study_guide.pdf,27,35,1967 training design,approximate; verify orientation in plan
+deck_side_b,55,in,1.397,m,https://www.ibiblio.org/apollo/Documents/lm_structures_study_guide.pdf,27,35,1967 training design,approximate; verify orientation in plan
+main_panel_forward_cant,10,deg,10,deg,https://www.ibiblio.org/apollo/Documents/lm_structures_study_guide.pdf,27,35,1967 training design,sign/datum must be interpreted
+lower_center_panel_slope,45,deg,45,deg,https://www.ibiblio.org/apollo/Documents/lm_structures_study_guide.pdf,27,35,1967 training design,down and aft toward horizontal
+lower_side_tier_slope,15,deg,15,deg,https://www.ibiblio.org/apollo/Documents/lm_structures_study_guide.pdf,27,35,1967 training design,above horizontal
+middle_side_tier_slope,36.5,deg,36.5,deg,https://www.ibiblio.org/apollo/Documents/lm_structures_study_guide.pdf,27,35,1967 training design,above horizontal
+forward_hatch_side,32,in,0.8128,m,https://www.nasa.gov/wp-content/uploads/static/apollo50th/pdf/A11_PressKit.pdf,96,100,Apollo 11 press kit,nominal square opening
+forward_pane_side_a,25,in,0.635,m,https://ntrs.nasa.gov/api/citations/19730023038/downloads/19730023038.pdf,9,14,program experience report,side ordering not a pane transform
+forward_pane_side_b,28,in,0.7112,m,https://ntrs.nasa.gov/api/citations/19730023038/downloads/19730023038.pdf,9,14,program experience report,side ordering not a pane transform
+forward_pane_side_c,24,in,0.6096,m,https://ntrs.nasa.gov/api/citations/19730023038/downloads/19730023038.pdf,9,14,program experience report,side ordering not a pane transform
+docking_window_viewing_side_a,5,in,0.127,m,https://ntrs.nasa.gov/api/citations/19730023038/downloads/19730023038.pdf,9,14,program experience report,approximate viewing area dimension
+docking_window_viewing_side_b,13,in,0.3302,m,https://ntrs.nasa.gov/api/citations/19730023038/downloads/19730023038.pdf,9,14,program experience report,approximate viewing area dimension
+cdr_design_eye_body_x,279.25,in,7.09295,m,https://www.ibiblio.org/apollo/Documents/lm_structures_study_guide.pdf,35; T30915-39,43,January 1967 drawing,absolute body station; not height above deck
+cdr_design_eye_body_y,22,in,0.5588,m,https://www.ibiblio.org/apollo/Documents/lm_structures_study_guide.pdf,35; T30915-39,43,January 1967 drawing,absolute body station; transform needed
+cdr_design_eye_body_z,54,in,1.3716,m,https://www.ibiblio.org/apollo/Documents/lm_structures_study_guide.pdf,35; T30915-39,43,January 1967 drawing,absolute body station; transform needed
