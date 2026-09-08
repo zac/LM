@@ -1,0 +1,473 @@
+{
+  "schema": "lmkit.breaker-banks.interface.v1",
+  "root": "/BreakerBanks",
+  "units": "meters",
+  "axes": "+X right +Y up -Z forward",
+  "root_pose": "identity Cabin-relative; do not apply panel transforms again",
+  "base_revision": "ee3a19f21e31d77645e7b6451db800d2b3d60f5e",
+  "panel_inventory_sha256": "f315bdcbd8a6e597231b33420652fb6297241bf3af7c585708f472583522ec49",
+  "runtime": "Static appearance only. No circuits, breaker state or collision/input targets.",
+  "slots": [
+    {
+      "id": "Panel11__Region1",
+      "overlay_path": "/BreakerBanks/Panel11/Panel11__Region1",
+      "panel_pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.94,
+          1.5,
+          -0.1
+        ],
+        "quaternion_xyzw": [
+          -0.12278779596090317,
+          0.6963642835617065,
+          0.12278780341148376,
+          0.6963642239570618
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "slot_pose": {
+        "space": "parent-local",
+        "translation_m": [
+          0,
+          0.13599999999999998,
+          0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "default_placeholder_node": "/PanelInventory/Panels/Panel11/Panel11__Region1/Placeholder",
+      "replacement_allowed": true,
+      "suppression": "Coordinator may hide only this exact placeholder after successful whole-overlay load and interface validation; failure retains blank. Do not hide frame, label or parent.",
+      "terrace_offset_m": 0.035,
+      "relative_cant_degrees": -15,
+      "breaker_count": 19,
+      "dimension_status": "provisional; slot UV footprint retained, allowed forward depth explicitly expanded for hardware."
+    },
+    {
+      "id": "Panel11__Region2",
+      "overlay_path": "/BreakerBanks/Panel11/Panel11__Region2",
+      "panel_pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.94,
+          1.5,
+          -0.1
+        ],
+        "quaternion_xyzw": [
+          -0.12278779596090317,
+          0.6963642835617065,
+          0.12278780341148376,
+          0.6963642239570618
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "slot_pose": {
+        "space": "parent-local",
+        "translation_m": [
+          0,
+          0.06799999999999999,
+          0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "default_placeholder_node": "/PanelInventory/Panels/Panel11/Panel11__Region2/Placeholder",
+      "replacement_allowed": true,
+      "suppression": "Coordinator may hide only this exact placeholder after successful whole-overlay load and interface validation; failure retains blank. Do not hide frame, label or parent.",
+      "terrace_offset_m": 0.043000000000000003,
+      "relative_cant_degrees": -15,
+      "breaker_count": 19,
+      "dimension_status": "provisional; slot UV footprint retained, allowed forward depth explicitly expanded for hardware."
+    },
+    {
+      "id": "Panel11__Region3",
+      "overlay_path": "/BreakerBanks/Panel11/Panel11__Region3",
+      "panel_pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.94,
+          1.5,
+          -0.1
+        ],
+        "quaternion_xyzw": [
+          -0.12278779596090317,
+          0.6963642835617065,
+          0.12278780341148376,
+          0.6963642239570618
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "slot_pose": {
+        "space": "parent-local",
+        "translation_m": [
+          0,
+          0.0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "default_placeholder_node": "/PanelInventory/Panels/Panel11/Panel11__Region3/Placeholder",
+      "replacement_allowed": true,
+      "suppression": "Coordinator may hide only this exact placeholder after successful whole-overlay load and interface validation; failure retains blank. Do not hide frame, label or parent.",
+      "terrace_offset_m": 0.051000000000000004,
+      "relative_cant_degrees": -15,
+      "breaker_count": 19,
+      "dimension_status": "provisional; slot UV footprint retained, allowed forward depth explicitly expanded for hardware."
+    },
+    {
+      "id": "Panel11__Region4",
+      "overlay_path": "/BreakerBanks/Panel11/Panel11__Region4",
+      "panel_pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.94,
+          1.5,
+          -0.1
+        ],
+        "quaternion_xyzw": [
+          -0.12278779596090317,
+          0.6963642835617065,
+          0.12278780341148376,
+          0.6963642239570618
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "slot_pose": {
+        "space": "parent-local",
+        "translation_m": [
+          0,
+          -0.06799999999999998,
+          0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "default_placeholder_node": "/PanelInventory/Panels/Panel11/Panel11__Region4/Placeholder",
+      "replacement_allowed": true,
+      "suppression": "Coordinator may hide only this exact placeholder after successful whole-overlay load and interface validation; failure retains blank. Do not hide frame, label or parent.",
+      "terrace_offset_m": 0.059000000000000004,
+      "relative_cant_degrees": -15,
+      "breaker_count": 21,
+      "dimension_status": "provisional; slot UV footprint retained, allowed forward depth explicitly expanded for hardware."
+    },
+    {
+      "id": "Panel11__Region5",
+      "overlay_path": "/BreakerBanks/Panel11/Panel11__Region5",
+      "panel_pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.94,
+          1.5,
+          -0.1
+        ],
+        "quaternion_xyzw": [
+          -0.12278779596090317,
+          0.6963642835617065,
+          0.12278780341148376,
+          0.6963642239570618
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "slot_pose": {
+        "space": "parent-local",
+        "translation_m": [
+          0,
+          -0.13599999999999998,
+          0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "default_placeholder_node": "/PanelInventory/Panels/Panel11/Panel11__Region5/Placeholder",
+      "replacement_allowed": true,
+      "suppression": "Coordinator may hide only this exact placeholder after successful whole-overlay load and interface validation; failure retains blank. Do not hide frame, label or parent.",
+      "terrace_offset_m": 0.067,
+      "relative_cant_degrees": -15,
+      "breaker_count": 11,
+      "dimension_status": "provisional; slot UV footprint retained, allowed forward depth explicitly expanded for hardware."
+    },
+    {
+      "id": "Panel16__Region1",
+      "overlay_path": "/BreakerBanks/Panel16/Panel16__Region1",
+      "panel_pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.94,
+          1.52,
+          -0.1
+        ],
+        "quaternion_xyzw": [
+          -0.12278779596090317,
+          -0.6963642835617065,
+          -0.12278780341148376,
+          0.6963642239570618
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "slot_pose": {
+        "space": "parent-local",
+        "translation_m": [
+          0,
+          0.10499999999999998,
+          0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "default_placeholder_node": "/PanelInventory/Panels/Panel16/Panel16__Region1/Placeholder",
+      "replacement_allowed": true,
+      "suppression": "Coordinator may hide only this exact placeholder after successful whole-overlay load and interface validation; failure retains blank. Do not hide frame, label or parent.",
+      "terrace_offset_m": 0.035,
+      "relative_cant_degrees": -15,
+      "breaker_count": 16,
+      "dimension_status": "provisional; slot UV footprint retained, allowed forward depth explicitly expanded for hardware."
+    },
+    {
+      "id": "Panel16__Region2",
+      "overlay_path": "/BreakerBanks/Panel16/Panel16__Region2",
+      "panel_pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.94,
+          1.52,
+          -0.1
+        ],
+        "quaternion_xyzw": [
+          -0.12278779596090317,
+          -0.6963642835617065,
+          -0.12278780341148376,
+          0.6963642239570618
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "slot_pose": {
+        "space": "parent-local",
+        "translation_m": [
+          0,
+          0.03499999999999999,
+          0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "default_placeholder_node": "/PanelInventory/Panels/Panel16/Panel16__Region2/Placeholder",
+      "replacement_allowed": true,
+      "suppression": "Coordinator may hide only this exact placeholder after successful whole-overlay load and interface validation; failure retains blank. Do not hide frame, label or parent.",
+      "terrace_offset_m": 0.043000000000000003,
+      "relative_cant_degrees": -15,
+      "breaker_count": 18,
+      "dimension_status": "provisional; slot UV footprint retained, allowed forward depth explicitly expanded for hardware."
+    },
+    {
+      "id": "Panel16__Region3",
+      "overlay_path": "/BreakerBanks/Panel16/Panel16__Region3",
+      "panel_pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.94,
+          1.52,
+          -0.1
+        ],
+        "quaternion_xyzw": [
+          -0.12278779596090317,
+          -0.6963642835617065,
+          -0.12278780341148376,
+          0.6963642239570618
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "slot_pose": {
+        "space": "parent-local",
+        "translation_m": [
+          0,
+          -0.035,
+          0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "default_placeholder_node": "/PanelInventory/Panels/Panel16/Panel16__Region3/Placeholder",
+      "replacement_allowed": true,
+      "suppression": "Coordinator may hide only this exact placeholder after successful whole-overlay load and interface validation; failure retains blank. Do not hide frame, label or parent.",
+      "terrace_offset_m": 0.051000000000000004,
+      "relative_cant_degrees": -15,
+      "breaker_count": 18,
+      "dimension_status": "provisional; slot UV footprint retained, allowed forward depth explicitly expanded for hardware."
+    },
+    {
+      "id": "Panel16__Region4",
+      "overlay_path": "/BreakerBanks/Panel16/Panel16__Region4",
+      "panel_pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.94,
+          1.52,
+          -0.1
+        ],
+        "quaternion_xyzw": [
+          -0.12278779596090317,
+          -0.6963642835617065,
+          -0.12278780341148376,
+          0.6963642239570618
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "slot_pose": {
+        "space": "parent-local",
+        "translation_m": [
+          0,
+          -0.10499999999999998,
+          0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "default_placeholder_node": "/PanelInventory/Panels/Panel16/Panel16__Region4/Placeholder",
+      "replacement_allowed": true,
+      "suppression": "Coordinator may hide only this exact placeholder after successful whole-overlay load and interface validation; failure retains blank. Do not hide frame, label or parent.",
+      "terrace_offset_m": 0.059000000000000004,
+      "relative_cant_degrees": -15,
+      "breaker_count": 19,
+      "dimension_status": "provisional; slot UV footprint retained, allowed forward depth explicitly expanded for hardware."
+    }
+  ],
+  "qualification": "Provisional envelope, knob spacing and terrace/cant.15 degree relative cant is source-inspired, not surveyed line-of-sight reconstruction.",
+  "breaker_count": 160,
+  "bounds_m": {
+    "min": [
+      -0.9950653314590454,
+      1.3487094640731812,
+      -0.4675000309944153
+    ],
+    "max": [
+      0.9844626784324646,
+      1.6632612943649292,
+      0.26750001311302185
+    ]
+  },
+  "budget": {
+    "mesh_count": 383,
+    "triangles": 144485,
+    "materials": 5,
+    "textures": 0
+  }
+}

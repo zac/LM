@@ -1,0 +1,10 @@
+{
+  "exact_slot_full_transform_checks" : 9,
+  "live_bindings" : false,
+  "model_count" : 383,
+  "no_collision_or_input_components" : true,
+  "optional_rows_independent" : true,
+  "platform" : "macOS RealityKit",
+  "status" : "PASS",
+  "VisionPro" : "NOT TESTED"
+}
