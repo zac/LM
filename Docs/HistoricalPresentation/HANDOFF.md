@@ -25,3 +25,8 @@ The coordinator must call the ownership API only after successful imported asset
 ## Verification
 
 Focused simulator results and capture hashes accompany this handoff in `evidence.json`. Captures use the pinned baseline assembly, not the forthcoming enclosed assembly. The source-backed appearance is approximate. Physical headset stereo, gaze/pinch, reach, photometry, and performance remain untested here.
+
+
+Final tested and captured **app source** is `2a7148d88930d555e532213f570656dc31427388`; `849e250` is only the WindowsLPD photo-reference commit. The follow-up evidence commit changes no app code. Final serial run: **43 passed, 0 failed, 0 skipped, 8 suites** on visionOS Simulator 26.5. `test-summary.json` and `test-discovery.json` are exported from `lm-presentation-final.xcresult`; earlier test bundles are development history, not the final result. No further broad testing was needed.
+
+`historical-recenter.png` and `training-recenter.png` are unedited native simulator screenshots from the same final binary. Launch flags select historical versus explicit training/eye diagnostic; both invoke the app's recenter request automatically. The warm normal marks and absent pointer versus the colored diagnostic marks and yellow pointer are visible. These are not OS gaze/pinch interactions. App ornaments are outside the captured view/not exposed to AXe (`No translation object returned`), so the event/hint gating and preserved controls have source/state evidence, not a completed accessibility interaction test. Full enclosed-assembly composition, ornament accessibility and physical-headset validation remain coordinator integration gates.
