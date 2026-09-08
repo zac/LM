@@ -1,0 +1,1158 @@
+{
+  "checks": [
+    {
+      "check": "identity source root",
+      "pass": true
+    },
+    {
+      "check": "metric source",
+      "pass": true
+    },
+    {
+      "check": "no external dependencies",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Backing_Bottom closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Backing_Bottom nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Backing_Bottom no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Backing_Left closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Backing_Left nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Backing_Left no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Backing_Right closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Backing_Right nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Backing_Right no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Backing_Top closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Backing_Top nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Backing_Top no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_CaptiveHead_01 closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_CaptiveHead_01 nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_CaptiveHead_01 no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_CaptiveHead_02 closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_CaptiveHead_02 nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_CaptiveHead_02 no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_CaptiveHead_03 closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_CaptiveHead_03 nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_CaptiveHead_03 no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_CaptiveHead_04 closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_CaptiveHead_04 nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_CaptiveHead_04 no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Collar_Bottom closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Collar_Bottom nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Collar_Bottom no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Collar_Left closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Collar_Left nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Collar_Left no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Collar_Right closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Collar_Right nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Collar_Right no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Collar_Top closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Collar_Top nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Collar_Top no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_RearFlange_Bottom closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_RearFlange_Bottom nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_RearFlange_Bottom no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_RearFlange_Left closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_RearFlange_Left nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_RearFlange_Left no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_RearFlange_Right closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_RearFlange_Right nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_RearFlange_Right no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_RearFlange_Top closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_RearFlange_Top nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_RearFlange_Top no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Return_Bottom closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Return_Bottom nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Return_Bottom no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Return_Left closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Return_Left nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Return_Left no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Return_Right closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Return_Right nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Return_Right no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Return_Top closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Return_Top nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_1_Return_Top no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Backing_Bottom closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Backing_Bottom nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Backing_Bottom no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Backing_Left closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Backing_Left nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Backing_Left no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Backing_Right closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Backing_Right nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Backing_Right no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Backing_Top closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Backing_Top nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Backing_Top no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_CaptiveHead_01 closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_CaptiveHead_01 nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_CaptiveHead_01 no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_CaptiveHead_02 closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_CaptiveHead_02 nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_CaptiveHead_02 no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_CaptiveHead_03 closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_CaptiveHead_03 nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_CaptiveHead_03 no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_CaptiveHead_04 closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_CaptiveHead_04 nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_CaptiveHead_04 no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Collar_Bottom closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Collar_Bottom nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Collar_Bottom no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Collar_Left closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Collar_Left nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Collar_Left no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Collar_Right closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Collar_Right nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Collar_Right no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Collar_Top closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Collar_Top nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Collar_Top no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_RearFlange_Bottom closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_RearFlange_Bottom nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_RearFlange_Bottom no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_RearFlange_Left closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_RearFlange_Left nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_RearFlange_Left no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_RearFlange_Right closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_RearFlange_Right nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_RearFlange_Right no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_RearFlange_Top closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_RearFlange_Top nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_RearFlange_Top no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Return_Bottom closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Return_Bottom nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Return_Bottom no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Return_Left closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Return_Left nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Return_Left no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Return_Right closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Return_Right nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Return_Right no animation",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Return_Top closed outward solid",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Return_Top nonzero faces",
+      "pass": true
+    },
+    {
+      "check": "Panel_4_Return_Top no animation",
+      "pass": true
+    },
+    {
+      "check": "meters and Y up",
+      "pass": true
+    },
+    {
+      "check": "default root",
+      "pass": true
+    },
+    {
+      "check": "no instruments cameras lights",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/DSKY_Interface exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/DSKY_Interface physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/FDAI_Interface exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/FDAI_Interface physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1 exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1 physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Bottom exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Bottom physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Bottom physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Left exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Left physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Left physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Right exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Right physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Right physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Top exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Top physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Top physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Fasteners/Panel_1_CaptiveHead_01 exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Fasteners/Panel_1_CaptiveHead_01 physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Fasteners/Panel_1_CaptiveHead_01 physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Fasteners/Panel_1_CaptiveHead_02 exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Fasteners/Panel_1_CaptiveHead_02 physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Fasteners/Panel_1_CaptiveHead_02 physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Fasteners/Panel_1_CaptiveHead_03 exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Fasteners/Panel_1_CaptiveHead_03 physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Fasteners/Panel_1_CaptiveHead_03 physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Fasteners/Panel_1_CaptiveHead_04 exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Fasteners/Panel_1_CaptiveHead_04 physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Fasteners/Panel_1_CaptiveHead_04 physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar/Panel_1_Collar_Bottom exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar/Panel_1_Collar_Bottom physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar/Panel_1_Collar_Bottom physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar/Panel_1_Collar_Left exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar/Panel_1_Collar_Left physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar/Panel_1_Collar_Left physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar/Panel_1_Collar_Right exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar/Panel_1_Collar_Right physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar/Panel_1_Collar_Right physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar/Panel_1_Collar_Top exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar/Panel_1_Collar_Top physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar/Panel_1_Collar_Top physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Fasteners exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Fasteners physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Bottom exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Bottom physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Bottom physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Left exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Left physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Left physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Right exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Right physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Right physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Top exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Top physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Top physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Bottom exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Bottom physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Bottom physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Left exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Left physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Left physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Right exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Right physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Right physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Top exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Top physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Top physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Shell physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Trim exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_1/Panel_1_Trim physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4 exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4 physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Trim/Panel_4_ApertureCollar exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Trim/Panel_4_ApertureCollar physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Bottom exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Bottom physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Bottom physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Left exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Left physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Left physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Right exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Right physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Right physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Top exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Top physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Top physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Fasteners/Panel_4_CaptiveHead_01 exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Fasteners/Panel_4_CaptiveHead_01 physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Fasteners/Panel_4_CaptiveHead_01 physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Fasteners/Panel_4_CaptiveHead_02 exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Fasteners/Panel_4_CaptiveHead_02 physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Fasteners/Panel_4_CaptiveHead_02 physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Fasteners/Panel_4_CaptiveHead_03 exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Fasteners/Panel_4_CaptiveHead_03 physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Fasteners/Panel_4_CaptiveHead_03 physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Fasteners/Panel_4_CaptiveHead_04 exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Fasteners/Panel_4_CaptiveHead_04 physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Fasteners/Panel_4_CaptiveHead_04 physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Trim/Panel_4_ApertureCollar/Panel_4_Collar_Bottom exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Trim/Panel_4_ApertureCollar/Panel_4_Collar_Bottom physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Trim/Panel_4_ApertureCollar/Panel_4_Collar_Bottom physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Trim/Panel_4_ApertureCollar/Panel_4_Collar_Left exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Trim/Panel_4_ApertureCollar/Panel_4_Collar_Left physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Trim/Panel_4_ApertureCollar/Panel_4_Collar_Left physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Trim/Panel_4_ApertureCollar/Panel_4_Collar_Right exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Trim/Panel_4_ApertureCollar/Panel_4_Collar_Right physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Trim/Panel_4_ApertureCollar/Panel_4_Collar_Right physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Trim/Panel_4_ApertureCollar/Panel_4_Collar_Top exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Trim/Panel_4_ApertureCollar/Panel_4_Collar_Top physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Trim/Panel_4_ApertureCollar/Panel_4_Collar_Top physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Fasteners exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Fasteners physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_RearFlange_Bottom exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_RearFlange_Bottom physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_RearFlange_Bottom physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_RearFlange_Left exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_RearFlange_Left physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_RearFlange_Left physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_RearFlange_Right exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_RearFlange_Right physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_RearFlange_Right physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_RearFlange_Top exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_RearFlange_Top physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_RearFlange_Top physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_Return_Bottom exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_Return_Bottom physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_Return_Bottom physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_Return_Left exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_Return_Left physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_Return_Left physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_Return_Right exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_Return_Right physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_Return_Right physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_Return_Top exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_Return_Top physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell/Panel_4_Return_Top physical vertices",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Shell physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Trim exported",
+      "pass": true
+    },
+    {
+      "check": "/CommanderPanels/Panel_4/Panel_4_Trim physical transform",
+      "pass": true
+    },
+    {
+      "check": "USDZ compliance",
+      "pass": true
+    },
+    {
+      "check": "FDAI accepted Cabin position",
+      "pass": true
+    },
+    {
+      "check": "FDAI aperture conservatively clears full reference envelope",
+      "pass": true
+    },
+    {
+      "check": "FDAI all support solids outside complete reference AABB",
+      "pass": true
+    },
+    {
+      "check": "DSKY accepted Cabin position",
+      "pass": true
+    },
+    {
+      "check": "DSKY aperture conservatively clears full reference envelope",
+      "pass": true
+    },
+    {
+      "check": "DSKY all support solids outside complete reference AABB",
+      "pass": true
+    },
+    {
+      "check": "no support surfaces intersect accepted Cabin geometry",
+      "pass": true
+    },
+    {
+      "check": "USDZ roundtrip mesh count",
+      "pass": true
+    },
+    {
+      "check": "USDZ roundtrip neutral root",
+      "pass": true
+    }
+  ],
+  "passed": 286,
+  "mesh_count": 40,
+  "compliance_warnings": [],
+  "sha256": {
+    "CommanderPanels.blend": "04b648f05be809ddb783883fec2a4514a5a822c96f25d0d0023b3c0e3a040fc9",
+    "CommanderPanels.usdz": "52e4c13cf302e080edbd163fb3f6d26ce53785c28bc49dcefd3a75c876f9d604",
+    "CommanderPanels.usdc": "5b07447d8cb7713aebdb356618c2bd6951fa73da8a0166970e31725b739d18b6",
+    "CommanderPanels.usda": "d8f7b13a1f3f12ca606c9b4e20dc7f4688e21a2a96e0e4d5ad4cc2ac19586d2c"
+  },
+  "triangles": 864
+}

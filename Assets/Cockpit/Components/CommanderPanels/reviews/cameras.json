@@ -1,0 +1,137 @@
+{
+  "front": {
+    "eye_cabin_m": [
+      -0.15,
+      1.6,
+      0.48
+    ],
+    "target_cabin_m": [
+      -0.15,
+      1.3,
+      -0.55
+    ],
+    "orthographic_scale_m": null,
+    "lens_mm": 20.0,
+    "references": "Blue = actual reference geometry, neutral pose; no texture or runtime state. Gray Cabin = context only."
+  },
+  "side": {
+    "eye_cabin_m": [
+      -0.78,
+      1.57,
+      0.3
+    ],
+    "target_cabin_m": [
+      -0.15,
+      1.3,
+      -0.55
+    ],
+    "orthographic_scale_m": null,
+    "lens_mm": 20.0,
+    "references": "Blue = actual reference geometry, neutral pose; no texture or runtime state. Gray Cabin = context only."
+  },
+  "crew-eye": {
+    "eye_cabin_m": [
+      -0.5588,
+      1.78,
+      -0.38
+    ],
+    "target_cabin_m": [
+      -0.15,
+      1.43,
+      -0.65
+    ],
+    "orthographic_scale_m": null,
+    "lens_mm": 20.0,
+    "references": "Blue = actual reference geometry, neutral pose; no texture or runtime state. Gray Cabin = context only."
+  },
+  "FDAI-aperture": {
+    "eye_cabin_m": [
+      -0.30000001192092896,
+      1.7313354015350342,
+      -0.07877808809280396
+    ],
+    "target_cabin_m": [
+      -0.30000001192092896,
+      1.5924168825149536,
+      -0.8666242957115173
+    ],
+    "orthographic_scale_m": 0.56,
+    "lens_mm": 20.0,
+    "references": "Blue = actual reference geometry, neutral pose; no texture or runtime state. Gray Cabin = context only."
+  },
+  "FDAI-clearance": {
+    "eye_cabin_m": [
+      0.17999997735023499,
+      1.7395191192626953,
+      -0.608242928981781
+    ],
+    "target_cabin_m": [
+      -0.30000001192092896,
+      1.5924168825149536,
+      -0.8666242957115173
+    ],
+    "orthographic_scale_m": 0.58,
+    "lens_mm": 20.0,
+    "references": "Blue = actual reference geometry, neutral pose; no texture or runtime state. Gray Cabin = context only."
+  },
+  "FDAI-section": {
+    "eye_cabin_m": [
+      0.5,
+      1.5924168825149536,
+      -0.8666242957115173
+    ],
+    "target_cabin_m": [
+      -0.30000001192092896,
+      1.5924168825149536,
+      -0.8666242957115173
+    ],
+    "orthographic_scale_m": 0.58,
+    "lens_mm": 20.0,
+    "references": "Blue = actual reference geometry, neutral pose; no texture or runtime state. Gray Cabin = context only."
+  },
+  "DSKY-aperture": {
+    "eye_cabin_m": [
+      0.0,
+      1.6527981758117676,
+      -0.03641510009765625
+    ],
+    "target_cabin_m": [
+      0.0,
+      1.0871126651763916,
+      -0.6021004915237427
+    ],
+    "orthographic_scale_m": 0.56,
+    "lens_mm": 20.0,
+    "references": "Blue = actual reference geometry, neutral pose; no texture or runtime state. Gray Cabin = context only."
+  },
+  "DSKY-clearance": {
+    "eye_cabin_m": [
+      0.47999998927116394,
+      1.3558132648468018,
+      -0.4748212993144989
+    ],
+    "target_cabin_m": [
+      0.0,
+      1.0871126651763916,
+      -0.6021004915237427
+    ],
+    "orthographic_scale_m": 0.58,
+    "lens_mm": 20.0,
+    "references": "Blue = actual reference geometry, neutral pose; no texture or runtime state. Gray Cabin = context only."
+  },
+  "DSKY-section": {
+    "eye_cabin_m": [
+      0.800000011920929,
+      1.0871126651763916,
+      -0.6021004915237427
+    ],
+    "target_cabin_m": [
+      0.0,
+      1.0871126651763916,
+      -0.6021004915237427
+    ],
+    "orthographic_scale_m": 0.58,
+    "lens_mm": 20.0,
+    "references": "Blue = actual reference geometry, neutral pose; no texture or runtime state. Gray Cabin = context only."
+  }
+}

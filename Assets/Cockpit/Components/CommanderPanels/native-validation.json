@@ -1,0 +1,10 @@
+{
+  "empty_instrument_interfaces" : "PASS",
+  "identity_root" : "PASS",
+  "independent_backing" : "PASS",
+  "instrument_Cabin_transforms" : "PASS",
+  "mechanical_fit" : "NOT QUALIFIED",
+  "native_load" : "PASS",
+  "platform" : "macOS RealityKit",
+  "visionOS" : "NOT TESTED"
+}

@@ -1,0 +1,172 @@
+{
+  "FDAI": {
+    "actual_reference_bounds_local_m": [
+      [
+        -0.074024997651577,
+        -0.074024997651577,
+        -0.2329999953508377
+      ],
+      [
+        0.074024997651577,
+        0.074024997651577,
+        0.04650000110268593
+      ]
+    ],
+    "aperture_edge_gaps_left_right_bottom_top_m": [
+      0.0030000023484230004,
+      0.0030000023484230004,
+      0.0030000023484230004,
+      0.0030000023484230004
+    ],
+    "min_conservative_support_distance_m": 0.0029998421669006348,
+    "nearest_support": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Top",
+    "rear_housing_clearance": "open rear; no closed compartment or connector service envelope qualified"
+  },
+  "DSKY": {
+    "actual_reference_bounds_local_m": [
+      [
+        -0.10317479819059372,
+        -0.10159999877214432,
+        -0.16021400690078735
+      ],
+      [
+        0.10317479819059372,
+        0.10159999877214432,
+        0.015200000256299973
+      ]
+    ],
+    "aperture_edge_gaps_left_right_bottom_top_m": [
+      0.0030000018094062803,
+      0.0030000018094062803,
+      0.003000001227855681,
+      0.003000001227855681
+    ],
+    "min_conservative_support_distance_m": 0.0029999837279319763,
+    "nearest_support": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Top",
+    "rear_housing_clearance": "open rear; no closed compartment or connector service envelope qualified"
+  },
+  "Cabin_surface_intersections": [
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_Fasteners/Panel_1_CaptiveHead_03",
+      "cabin": "/Cabin/Optical/CDR_Window_Inner/CDR_Frame_Inner_0",
+      "triangle_pairs": 16
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_Fasteners/Panel_1_CaptiveHead_03",
+      "cabin": "/Cabin/Shell/CDR_Window_Upper_Support",
+      "triangle_pairs": 16
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Left",
+      "cabin": "/Cabin/Optical/CDR_Window_Inner/CDR_Frame_Inner_0",
+      "triangle_pairs": 20
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Left",
+      "cabin": "/Cabin/Optical/CDR_Window_Inner/CDR_Frame_Inner_1",
+      "triangle_pairs": 18
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Left",
+      "cabin": "/Cabin/Optical/CDR_Window_Inner/CDR_Pane_Inner",
+      "triangle_pairs": 12
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Left",
+      "cabin": "/Cabin/Optical/CDR_Window_Outer/CDR_Frame_Outer_0",
+      "triangle_pairs": 6
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Left",
+      "cabin": "/Cabin/Optical/CDR_Window_Outer/CDR_Frame_Outer_1",
+      "triangle_pairs": 20
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Left",
+      "cabin": "/Cabin/Optical/CDR_Window_Outer/CDR_Pane_Outer",
+      "triangle_pairs": 16
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Left",
+      "cabin": "/Cabin/Shell/CDR_Window_Upper_Support",
+      "triangle_pairs": 14
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Left",
+      "cabin": "/Cabin/Optical/CDR_Window_Outer/CDR_Frame_Outer_0",
+      "triangle_pairs": 20
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Left",
+      "cabin": "/Cabin/Optical/CDR_Window_Outer/CDR_Pane_Outer",
+      "triangle_pairs": 4
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Left",
+      "cabin": "/Cabin/Shell/CDR_Window_Upper_Support",
+      "triangle_pairs": 3
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Top",
+      "cabin": "/Cabin/Optical/CDR_Window_Inner/CDR_Frame_Inner_0",
+      "triangle_pairs": 9
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Top",
+      "cabin": "/Cabin/Optical/CDR_Window_Outer/CDR_Frame_Outer_0",
+      "triangle_pairs": 16
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Top",
+      "cabin": "/Cabin/Optical/CDR_Window_Outer/CDR_Frame_Outer_1",
+      "triangle_pairs": 8
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Top",
+      "cabin": "/Cabin/Shell/CDR_Window_Upper_Support",
+      "triangle_pairs": 19
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Left",
+      "cabin": "/Cabin/Optical/CDR_Window_Inner/CDR_Frame_Inner_0",
+      "triangle_pairs": 16
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Left",
+      "cabin": "/Cabin/Optical/CDR_Window_Outer/CDR_Frame_Outer_0",
+      "triangle_pairs": 24
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Left",
+      "cabin": "/Cabin/Optical/CDR_Window_Outer/CDR_Pane_Outer",
+      "triangle_pairs": 12
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Left",
+      "cabin": "/Cabin/Shell/CDR_Window_Upper_Support",
+      "triangle_pairs": 5
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Top",
+      "cabin": "/Cabin/Optical/CDR_Window_Inner/CDR_Frame_Inner_0",
+      "triangle_pairs": 9
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Top",
+      "cabin": "/Cabin/Optical/CDR_Window_Outer/CDR_Frame_Outer_0",
+      "triangle_pairs": 13
+    },
+    {
+      "support": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Top",
+      "cabin": "/Cabin/Shell/CDR_Window_Upper_Support",
+      "triangle_pairs": 19
+    }
+  ],
+  "Cabin_test_limit": "Triangle surface intersections only; containment, cabling, omitted hull, live controls, ACA sweep and egress not qualified.",
+  "DSKY_thread_conflict": {
+    "drawing_thread_half_pitch_m": 0.09779,
+    "current_visual_housing_half_width_m": 0.09779,
+    "radial_room_at_thread_center_m": 0,
+    "consequence": "No credible inserted fastener along drawing thread axes through current box. Instrument attachment hardware withheld; coordinator must qualify housing and mounting surface first."
+  }
+}
