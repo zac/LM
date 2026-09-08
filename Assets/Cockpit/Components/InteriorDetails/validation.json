@@ -1,0 +1,37 @@
+{
+  "usd_compliance": {
+    "errors": [],
+    "failed_checks": [],
+    "warnings": []
+  },
+  "nonpositive_or_nonmanifold_meshes": [],
+  "surface_crossings": [],
+  "aabb_candidate_pairs": 186,
+  "slot_envelope_aabb_candidates": [],
+  "inputs": {
+    "Cabin": {
+      "path": "/private/tmp/lmkit-interior-details/Assets/Cockpit/Components/Cabin/Cabin.usdz",
+      "sha256": "9b30f113235bea7832dd0d9f245d3f6ad98bd8a64af2d217943a5489e498c21b"
+    },
+    "WindowsLPD": {
+      "path": "/private/tmp/lmkit-interior-details/Assets/Cockpit/Components/WindowsLPD/WindowsLPD.usdz",
+      "sha256": "91c03cc4b6826473cfdccdce195fece5f591b778b8afdb3a71505df8f528cc32"
+    },
+    "PanelInventory": {
+      "path": "/private/tmp/lmkit-interior-details/Assets/Cockpit/Components/PanelInventory/PanelInventory.usdz",
+      "sha256": "4b95b051b27831c97a47e9ccfb36b2f62e23469d3be50a09225e57685dc56b24"
+    },
+    "CommanderPanels": {
+      "path": "/private/tmp/lmkit-interior-details/Assets/Cockpit/Components/CommanderPanels/CommanderPanels.usdz",
+      "sha256": "52e4c13cf302e080edbd163fb3f6d26ce53785c28bc49dcefd3a75c876f9d604"
+    },
+    "ACA": {
+      "path": "/private/tmp/lmkit-interior-details/Assets/Cockpit/Components/HandControllers/ACA.usdz",
+      "sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5"
+    }
+  },
+  "detail_meshes": 278,
+  "triangle_count": 7024,
+  "limitations": "Neutral geometry; triangle surface crossing and conservative slot envelope tests; no swept human/hand clearance, optics, fabrication or application acceptance.",
+  "pass": true
+}
