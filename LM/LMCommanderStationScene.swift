@@ -709,7 +709,7 @@ final class LMCommanderStationScene {
             acaHandle.components.remove(InputTargetComponent.self)
             acaHandle.components.remove(HoverEffectComponent.self)
             acaHandle.components.remove(LMACAInteractionTarget.self)
-            acaHandle.orientation = simd_quatf()
+            acaHandle.orientation = simd_quatf(angle: 0, axis: [0, 1, 0])
             imported.root.position = LMImportedACA.registration
             acaHandle.addChild(imported.root)
             importedACA = imported
