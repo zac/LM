@@ -1,0 +1,86 @@
+{
+  "pageConvention": "one-based; entire pages preserved, local crops explicitly derived",
+  "sources": [
+    {
+      "id": "ad013",
+      "url": "https://www.nasa.gov/wp-content/uploads/static/history/diagrams/ad013.gif",
+      "note": "Original shared PanelInventory/evidence/ad013.gif; URL inherited from retained source manifest. Crops resized for inspection; not calibrated dimensional imagery.",
+      "derived": [
+        "engine-source.png",
+        "contact-source.png"
+      ],
+      "original_sha256": "1521551fbdbc6ba99c20bcfa9920f4328cdf6a32e4d4849622f59f7cc0eb3762",
+      "crop_rectangles_px": {
+        "engine-source.png": [
+          440,
+          1200,
+          640,
+          1390
+        ],
+        "contact-source.png": [
+          995,
+          290,
+          1060,
+          365
+        ]
+      }
+    },
+    {
+      "id": "AOH_LM10",
+      "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+      "excerpt": "lm10-aoh-engine-contact-excerpt.pdf",
+      "pages": [
+        {
+          "excerpt": 1,
+          "originalPDF": 666,
+          "printed": "3-72"
+        },
+        {
+          "excerpt": 2,
+          "originalPDF": 675,
+          "printed": "3-81"
+        },
+        {
+          "excerpt": 3,
+          "originalPDF": 681,
+          "printed": "3-87"
+        }
+      ],
+      "original_sha256": "58f51eb2a1c0fe8debc66013af4ae89d9e7a6ca665c74dfb19b43d49281bed95",
+      "excerpt_sha256": "0192b7aa79408cff92ab0343ce4a4d4b5c6a4e25bcebd37f1c1407fe6dc7efda"
+    },
+    {
+      "id": "TN_D6722",
+      "url": "https://www.apollojournals.org/alsj/tnD6722LMDisplayControl.pdf",
+      "excerpt": "tnD6722-engine-excerpt.pdf",
+      "pages": [
+        {
+          "excerpt": 1,
+          "originalPDF": 12,
+          "printed": "8"
+        },
+        {
+          "excerpt": 2,
+          "originalPDF": 14,
+          "printed": "10"
+        }
+      ],
+      "original_sha256": "9b79e66083a17824b41622c1d7f361c218128a9b9dbbe86b10b1bed4277ef054",
+      "excerpt_sha256": "99004cb25b3688142a1901500143c7e9e22590c03f5d0eaf426c9e0afc27a13f"
+    },
+    {
+      "id": "TN_D7919",
+      "url": "https://www.apollojournals.org/alsj/tnD7919DsplysCntrls.pdf",
+      "excerpt": "tnD7919-original-page-25.pdf",
+      "pages": [
+        {
+          "excerpt": 1,
+          "originalPDF": 25,
+          "printed": "17"
+        }
+      ],
+      "original_sha256": "6765610acbac899fb9fc2a9f85cb8ac4a6dac2ad954aaede5128c598da7a2265",
+      "excerpt_sha256": "b85e0bab7eb1c3431fa4fe39488632556b2ba9bd149f8511168bee48d3506b07"
+    }
+  ]
+}
