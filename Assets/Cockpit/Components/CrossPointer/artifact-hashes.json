@@ -1,0 +1,98 @@
+{
+  "CrossPointer.blend": {
+    "sha256": "15ba6718b18e1951239511245fab5bff15537504cea51684d33916b3044aae7f",
+    "bytes": 163266
+  },
+  "CrossPointer.usda": {
+    "sha256": "431161176ec079d248055b892dc08ddb9e9ee7957ba2a0f62460f7112205e33b",
+    "bytes": 327292
+  },
+  "CrossPointer.usdc": {
+    "sha256": "da252fd19623b082f7eec604f7d7b920385612e6a109483a722f80008307000a",
+    "bytes": 47328
+  },
+  "CrossPointer.usdz": {
+    "sha256": "8095cdf3c12c4b77025e415ad21ea24a5bf51615674fd076f7458b9369ae1eae",
+    "bytes": 47494
+  },
+  "HANDOFF.md": {
+    "sha256": "9c01fba7de8e12cf44e25f2b027a142a77478360221d019b8bcc084e4844999f",
+    "bytes": 5279
+  },
+  "build.py": {
+    "sha256": "ebf578ac050a0782f2ac4f97e438d246ff134e3b475927171d4b6643c5e3d343",
+    "bytes": 8662
+  },
+  "evidence/LM-Panel1.jpg": {
+    "sha256": "03f420589d23e14b8196aca4a6c088f0aa481e54bce54f02799641cd4fb14699",
+    "bytes": 178628
+  },
+  "evidence/LUM165_text.pdf": {
+    "sha256": "2560bc8cb545ec245296467da4eb1e153e9a10b4a3978c1cba80ac5d86437ed1",
+    "bytes": 201040
+  },
+  "evidence/LUM171-DE_text.pdf": {
+    "sha256": "58c4d3ec9c229370053133ea23e0a072d38c0736ac81b72e7fe5c8be16b7ca40",
+    "bytes": 112839
+  },
+  "evidence/RESEARCH.md": {
+    "sha256": "114f2fa91a521da5cfbb2d83e9708e3d1757f47f2e3da71fd9e6fd9fd5a710bb",
+    "bytes": 5133
+  },
+  "evidence/alsj-cross-pointer.html": {
+    "sha256": "eb2815293dcaf03ef861062f1b93cdf9425b9c375e07472e652514e62dd67721",
+    "bytes": 2419
+  },
+  "evidence/lm10-aoh-vol1-controls-excerpts.manifest.json": {
+    "sha256": "102c0570c83f17d1d03ac19408210862f5a4686ff864b78ac745f9a9710650d8",
+    "bytes": 4117
+  },
+  "evidence/lm10-aoh-vol1-controls-excerpts.pdf": {
+    "sha256": "6194242b2dd076a469474d5bcdb5f4a6bddf9929aedf543d8911fd5f9ca63e2c",
+    "bytes": 6974978
+  },
+  "evidence/slot-snapshot.json": {
+    "sha256": "033baadc3e3acb6dc5789826243ed498ba15cf9e88b927a2c2a58edb06bdb81f",
+    "bytes": 3508
+  },
+  "evidence/xpoint-aoh.jpg": {
+    "sha256": "5cc43b7288dc91e9881e7e408e2698d0f1e824a2c501f61f8b7a811a2dbe1998",
+    "bytes": 198249
+  },
+  "hash_artifacts.py": {
+    "sha256": "b90f0eb21d78a13fb0a526861b294e594b752af8c129bc8dbf736b8b898eb59b",
+    "bytes": 547
+  },
+  "interface.json": {
+    "sha256": "571837a3f27954b617417edde0c9d3250c8f82503a7ab01b893306836b62ccf0",
+    "bytes": 5555
+  },
+  "native-validation.json": {
+    "sha256": "345de5f336f4aeeb8797f9f4192d5522ba87317573dc83e665aa927a42e831b8",
+    "bytes": 315
+  },
+  "review/example-right-forward.png": {
+    "sha256": "eb62e8e66c9adf3c00151c3a12a7240dec4e77a7c43816b4bbe3db7b18672411",
+    "bytes": 1050044
+  },
+  "review/negative-full-scale.png": {
+    "sha256": "06aa52c3438c6a67833801b18207360181aa430e91a97e0d30d89bc89e549690",
+    "bytes": 1049768
+  },
+  "review/neutral.png": {
+    "sha256": "33f2c73e8a95fe3ac10bb194f7ce66eb8facffbd6b3a6f7e964fda41392e9893",
+    "bytes": 1049106
+  },
+  "validate.py": {
+    "sha256": "9e8ff89a4f615f55cf7721c3115877e9b3063b6e184d95ba87c0582b67bd5c90",
+    "bytes": 4739
+  },
+  "validate_native.swift": {
+    "sha256": "39fc45845c6fc39e092ce33afaed483115e652eb63708e10406f42a89453c036",
+    "bytes": 1753
+  },
+  "validation.json": {
+    "sha256": "a8bad4309de64fa90eea0f469a38d100b8c4d41f122923294d8b6a0d97120c9b",
+    "bytes": 61388
+  }
+}

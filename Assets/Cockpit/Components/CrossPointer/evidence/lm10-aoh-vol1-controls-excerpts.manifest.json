@@ -1,0 +1,175 @@
+{
+  "title": "Selected complete pages from LM 10 and Subsequent Apollo Operations Handbook Volume I",
+  "source_url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+  "retrieved": "2026-09-08",
+  "source_sha256": "58f51eb2a1c0fe8debc66013af4ae89d9e7a6ca665c74dfb19b43d49281bed95",
+  "excerpt_sha256": "6194242b2dd076a469474d5bcdb5f4a6bddf9929aedf543d8911fd5f9ca63e2c",
+  "excerpt_bytes": 6974978,
+  "pages": [
+    {
+      "excerpt_page_1based": 1,
+      "original_pdf_page_1based": 21
+    },
+    {
+      "excerpt_page_1based": 2,
+      "original_pdf_page_1based": 51
+    },
+    {
+      "excerpt_page_1based": 3,
+      "original_pdf_page_1based": 52
+    },
+    {
+      "excerpt_page_1based": 4,
+      "original_pdf_page_1based": 55
+    },
+    {
+      "excerpt_page_1based": 5,
+      "original_pdf_page_1based": 56
+    },
+    {
+      "excerpt_page_1based": 6,
+      "original_pdf_page_1based": 58
+    },
+    {
+      "excerpt_page_1based": 7,
+      "original_pdf_page_1based": 121
+    },
+    {
+      "excerpt_page_1based": 8,
+      "original_pdf_page_1based": 599
+    },
+    {
+      "excerpt_page_1based": 9,
+      "original_pdf_page_1based": 614
+    },
+    {
+      "excerpt_page_1based": 10,
+      "original_pdf_page_1based": 615
+    },
+    {
+      "excerpt_page_1based": 11,
+      "original_pdf_page_1based": 616
+    },
+    {
+      "excerpt_page_1based": 12,
+      "original_pdf_page_1based": 617
+    },
+    {
+      "excerpt_page_1based": 13,
+      "original_pdf_page_1based": 618
+    },
+    {
+      "excerpt_page_1based": 14,
+      "original_pdf_page_1based": 619
+    },
+    {
+      "excerpt_page_1based": 15,
+      "original_pdf_page_1based": 620
+    },
+    {
+      "excerpt_page_1based": 16,
+      "original_pdf_page_1based": 621
+    },
+    {
+      "excerpt_page_1based": 17,
+      "original_pdf_page_1based": 622
+    },
+    {
+      "excerpt_page_1based": 18,
+      "original_pdf_page_1based": 623
+    },
+    {
+      "excerpt_page_1based": 19,
+      "original_pdf_page_1based": 624
+    },
+    {
+      "excerpt_page_1based": 20,
+      "original_pdf_page_1based": 625
+    },
+    {
+      "excerpt_page_1based": 21,
+      "original_pdf_page_1based": 655
+    },
+    {
+      "excerpt_page_1based": 22,
+      "original_pdf_page_1based": 658
+    },
+    {
+      "excerpt_page_1based": 23,
+      "original_pdf_page_1based": 660
+    },
+    {
+      "excerpt_page_1based": 24,
+      "original_pdf_page_1based": 661
+    },
+    {
+      "excerpt_page_1based": 25,
+      "original_pdf_page_1based": 666
+    },
+    {
+      "excerpt_page_1based": 26,
+      "original_pdf_page_1based": 667
+    },
+    {
+      "excerpt_page_1based": 27,
+      "original_pdf_page_1based": 669
+    },
+    {
+      "excerpt_page_1based": 28,
+      "original_pdf_page_1based": 670
+    },
+    {
+      "excerpt_page_1based": 29,
+      "original_pdf_page_1based": 671
+    },
+    {
+      "excerpt_page_1based": 30,
+      "original_pdf_page_1based": 672
+    },
+    {
+      "excerpt_page_1based": 31,
+      "original_pdf_page_1based": 673
+    },
+    {
+      "excerpt_page_1based": 32,
+      "original_pdf_page_1based": 675
+    },
+    {
+      "excerpt_page_1based": 33,
+      "original_pdf_page_1based": 676
+    },
+    {
+      "excerpt_page_1based": 34,
+      "original_pdf_page_1based": 677
+    },
+    {
+      "excerpt_page_1based": 35,
+      "original_pdf_page_1based": 678
+    },
+    {
+      "excerpt_page_1based": 36,
+      "original_pdf_page_1based": 679
+    },
+    {
+      "excerpt_page_1based": 37,
+      "original_pdf_page_1based": 681
+    },
+    {
+      "excerpt_page_1based": 38,
+      "original_pdf_page_1based": 682
+    },
+    {
+      "excerpt_page_1based": 39,
+      "original_pdf_page_1based": 748
+    },
+    {
+      "excerpt_page_1based": 40,
+      "original_pdf_page_1based": 749
+    },
+    {
+      "excerpt_page_1based": 41,
+      "original_pdf_page_1based": 794
+    }
+  ],
+  "caution": "Mixed revision scan. Final selected foldout Figure 3-2 explicitly applies to LM 8 and LM 9. Excerpts are not an Apollo 11 configuration certification."
+}

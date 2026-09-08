@@ -1,0 +1,114 @@
+{
+  "baseline": "ee3a19f21e31d77645e7b6451db800d2b3d60f5e",
+  "panel": {
+    "id": "Panel1",
+    "name": "Panel 1 \u2014 commander flight",
+    "parent": "/PanelInventory/Panels",
+    "node": "/PanelInventory/Panels/Panel1",
+    "pose": {
+      "space": "Cabin-relative",
+      "translation_m": [
+        -0.24500000476837158,
+        1.6044106483459473,
+        -0.8849859237670898
+      ],
+      "quaternion_xyzw": [
+        -0.08715573698282242,
+        0.0,
+        0.0,
+        0.9961947202682495
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "envelope_m": [
+      0.48,
+      0.5,
+      0.0508
+    ],
+    "envelope_center_local_m": [
+      0,
+      0,
+      -0.015
+    ],
+    "dimension_status": "provisional visual estimate",
+    "source": {
+      "source_id": "C1",
+      "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+      "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+      "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+      "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+      "confidence": "high panel identity; medium region arrangement; low dimensions"
+    },
+    "shell_external": true,
+    "status": {
+      "modeled": "blank reservation",
+      "bound": false,
+      "validated": "pending native hierarchy check"
+    },
+    "default_placeholder_node": null,
+    "label_node": "/PanelInventory/PlanningLabels/Panel1_Labels",
+    "placeholder_policy": "composite panel: replace child slots only",
+    "frame_node": null
+  },
+  "slot": {
+    "id": "Panel1__CrossPointer",
+    "name": "cross-pointer",
+    "purpose": "cross-pointer",
+    "parent": "Panel1",
+    "node": "/PanelInventory/Panels/Panel1/Panel1__CrossPointer",
+    "pose": {
+      "space": "parent-local",
+      "translation_m": [
+        -0.07,
+        0.1,
+        0
+      ],
+      "quaternion_xyzw": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "envelope_m": [
+      0.14,
+      0.065,
+      0.003
+    ],
+    "envelope_center_local_m": [
+      0,
+      0,
+      -0.0015
+    ],
+    "default_placeholder_node": "/PanelInventory/Panels/Panel1/Panel1__CrossPointer/Placeholder",
+    "label_node": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__CrossPointer_Label",
+    "source": {
+      "source_id": "C1",
+      "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+      "locator": "printed 1-8 / original PDF 21; ad013 panel drawing",
+      "supporting_photo": "AS11-36-5389HR.jpg (forward context only)",
+      "applicability": "LM10+ handbook; generic News Reference drawing; LM5 numbering/layout requires mission cross-check",
+      "confidence": "high panel identity; medium region arrangement; low dimensions"
+    },
+    "dimension_status": "provisional; not fabrication",
+    "status": {
+      "modeled": false,
+      "bound": false,
+      "validated": false
+    },
+    "replacement_policy": "successful load hides only default_placeholder_node; failure retains it; never remove panel/frame/label or peer equipment",
+    "external_occupant": null,
+    "physical_blank_omitted": false,
+    "replacement_allowed": true,
+    "installation_status": "provisional-layout"
+  }
+}
