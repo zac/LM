@@ -31,6 +31,12 @@ final class LMCommanderStationScene {
     private(set) var landingPointMarkingOwner: LandingPointMarkingOwner = .appGenerated
     private var landingPointMarkEntities: [(entity: ModelEntity, pane: LMLPDPane)] = []
     private var landingPointDiagnosticColors = false
+    private(set) var planningLabelsVisible = ProcessInfo.processInfo.arguments.contains("--cockpit-planning-labels")
+
+    func setPlanningLabelsVisible(_ visible: Bool) {
+        planningLabelsVisible = visible
+        commanderAssembly?.setPlanningLabelsVisible(visible)
+    }
     let dskyFaceRoot = Entity()
 
     private let cabinFrame = Entity()
@@ -636,26 +642,9 @@ final class LMCommanderStationScene {
     }
 
     @discardableResult
-    func loadArtistCabinIfAvailable() async throws -> Bool {
-        guard commanderAssembly == nil else { return true }
-        // The skeleton is explicitly opt-in until mechanical/headset review.
-        if ProcessInfo.processInfo.arguments.contains("--commander-station-assembly") {
-            return installCommanderAssembly()
-        }
-        // Preserve the existing optional artist-cabin path when not reviewing
-        // the LMKit skeleton.
-        guard let cabin = try await LMCockpitAssetContract.loadIfAvailable() else { return false }
-        let issues = LMCockpitAssetContract.validate(cabin)
-        guard issues.isEmpty else { throw AssetError.invalidArtistCabin(issues) }
-        for name in ["DSKY_Mount", "FDAI_Mount"] {
-            cabin.findEntity(named: name)?.isEnabled = false
-        }
-        artistCabin?.removeFromParent()
-        cabin.name = LMCockpitAssetContract.Node.cabinRoot.rawValue
-        cabinFrame.addChild(cabin)
-        artistCabin = cabin
-        proceduralCabin.isEnabled = false
-        return true
+    func loadArtistCabinIfAvailable(arguments: [String] = ProcessInfo.processInfo.arguments) async throws -> Bool {
+        guard !arguments.contains("--procedural-cockpit") else { return false }
+        return installCommanderAssembly()
     }
 
     @discardableResult
@@ -672,21 +661,22 @@ final class LMCommanderStationScene {
             }
             let dskyReservation = try LMCommanderStationAssembly.unique("Mount_DSKY", in: assembly.cabin)
             let fdaiReservation = try LMCommanderStationAssembly.unique("Mount_FDAI", in: assembly.cabin)
-            // Commit the reviewed optional registration by moving the existing
-            // mounts, never recreating instruments or their live key dictionaries.
+            // Resolve external reservations before committing any active scene changes.
+            try assembly.confirmExternalOccupant(slotID: "Panel4__DSKY", occupantName: "DSKY")
+            try assembly.confirmExternalOccupant(slotID: "Panel1__FDAI", occupantName: "FDAI_CDR")
+            assembly.setPlanningLabelsVisible(planningLabelsVisible)
+            // Move existing mounts, preserving instruments and their live key dictionaries.
             dskyFaceRoot.position = dskyReservation.position(relativeTo: assembly.cabin)
             dskyFaceRoot.orientation = dskyReservation.orientation(relativeTo: assembly.cabin)
             fdaiMount.position = fdaiReservation.position(relativeTo: assembly.cabin)
             fdaiMount.orientation = fdaiReservation.orientation(relativeTo: assembly.cabin)
             let retained = Entity()
-            retained.name = "App optical marks and functional control supports"
-            // These meshes are already expressed in cabin coordinates. Preserve
-            // the exact objects/transforms, including both independent LPD grids.
-            let retainedNames: Set<String> = ["ACA pedestal", "Panel 5 DES RATE switch plate",
-                LMCockpitAssetContract.Node.landingPointDesignatorInner.rawValue,
-                LMCockpitAssetContract.Node.landingPointDesignatorOuter.rawValue]
+            retained.name = "App functional control supports"
+            // Retain live control backing only. WindowsLPD owns all optical geometry.
+            var retainedNames: Set<String> = ["Panel 5 DES RATE switch plate"]
+            if importedACA == nil { retainedNames.insert("ACA pedestal") }
             for entity in Array(proceduralCabin.children)
-                where retainedNames.contains(entity.name) || entity.name.hasPrefix("LPD ") {
+                where retainedNames.contains(entity.name) {
                 retained.addChild(entity)
             }
             assembly.root.addChild(retained)
@@ -695,10 +685,11 @@ final class LMCommanderStationScene {
             artistCabin?.removeFromParent()
             artistCabin = assembly.root
             commanderAssembly = assembly
-            logger.notice("Commander skeleton installed atomically; live instruments and optical basis retained")
+            setLandingPointMarkingOwner(.importedWindows)
+            logger.notice("Enclosed commander foundation installed atomically; live instrument identities retained")
             return true
         } catch {
-            logger.error("Commander skeleton unavailable; procedural fallback retained: \(String(describing: error), privacy: .public)")
+            logger.error("Enclosed commander foundation unavailable; procedural fallback retained: \(String(describing: error), privacy: .public)")
             return false
         }
     }

@@ -8,6 +8,7 @@ struct TerminalDescentCockpitView: View {
     @Environment(\.openWindow) private var openWindow
     @Environment(\.dismissWindow) private var dismissWindow
     @Environment(\.scenePhase) private var scenePhase
+    @State private var planningLabelsVisible = ProcessInfo.processInfo.arguments.contains("--cockpit-planning-labels")
     @State private var station = LMCommanderStationScene()
     @State private var didStart = false
     @State private var terrainStatus = "Loading Apollo 11 terrain…"
@@ -95,6 +96,15 @@ struct TerminalDescentCockpitView: View {
                     }
                     .disabled(!presentation.trainingEnabled)
                     .accessibilityIdentifier("cockpit-eye-diagnostic")
+
+                    Button {
+                        planningLabelsVisible.toggle()
+                        station.setPlanningLabelsVisible(planningLabelsVisible)
+                    } label: {
+                        Label(planningLabelsVisible ? "Hide planning labels" : "Planning labels",
+                              systemImage: "tag")
+                    }
+                    .accessibilityIdentifier("cockpit-planning-labels")
 
                     Button {
                         showsValidationChecklist.toggle()
