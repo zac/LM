@@ -1,5 +1,47 @@
 # Cockpit coordination ledger
 
+Updated: 2026-09-08. This current section supersedes the historical setup below.
+
+## Current integration
+
+- Coordinator: LM `cockpit/integration`, isolated worktree; canonical LM terrain/LunarMap work is independent and untouched.
+- LMKit `main`: `3ad1a999ff17aea859eaea5750f1c65e66fad673`, published. Owns assets, authoring sources and resource APIs. Eight native package tests pass.
+- AGC/LMCore validation baseline: `b3f15533db335ee882dc07401790c93010809e8f`, hydrated isolated snapshot. Simulation behavior remains outside LMKit.
+- Live DSKY/FDAI and FIFO accepted at merge `73079d2`; visual evidence at `acff0ae`.
+- Readability/completion-adapter delivery `d2668baa1c7d59bbfb3003e095814da2b3ed71a9` merged and published at `db0234f001225496bc5c1ad34fa475b550849160`. Twelve targeted simulator tests pass. Native pointer attempts did not establish physical gesture completion.
+- Optional commander assembly delivery `ec6a05c6015eb38410697d69b3772453227939f5` merged at `08b4f980462c9c73a6a72d81de04b7d25efcfed4`; merged tree `01a3d6779056cf68017a12ecae2c025b68966d63`. Its exact captured source `7a4247c` passed fourteen tests. Combined regression passed all sixteen discovered tests, zero failures/skips, against current LMKit main; see `Docs/Validation/CommanderStationCombined/`.
+
+## Accepted model components
+
+| Component | Original delivery | LMKit package acceptance | Remaining limits |
+|---|---|---|---|
+| DSKY | LM `c655fe5` | `d8e35fa` | Rear housing and receiving cutout unverified |
+| FDAI | `c4c565f` | `c75d379` | Provisional dimensions/pivots; unsupported runtime needles hidden |
+| ControlLibrary | `3963737` | `75bdea7` | Generic family geometry, provisional mounting; guard not verified flight hardware |
+| Cabin | `8956702` | `75bdea7` | Open skeleton, provisional panel envelopes/clearances and pane separation |
+| HandControllers | `750caea` | `3ad1a99` | ACA maximum envelope only; TTCA dimensions and installation provisional; no runtime bindings yet |
+
+Original history and source evidence remain in LMKit. Cabin manifest positions/rotations are Cabin-root-relative, including nested instrument reservations.
+
+## Assembly and runtime gates
+
+`--commander-station-assembly` opts into the skeleton. Normal startup retains existing registration. Optional installation preserves actual live instrument entities, key dictionaries, internal transforms, functional controls and independent LPD grids. It relocates instrument parents to the forward reservations after the initial crew-eye capture exposed occlusion. Panels 1/4 backing and glare shields remain omitted pending fit. Two generic control specimens are explicitly visual-only with no input components.
+
+Final front/side/calibrated-eye captures show both complete faces, but DSKY viewing/reach remains oblique and cockpit materials dark. Photometry, mechanical fit, pressure closure, headset stereo, gaze/pinch and performance remain unqualified. Synthetic adapter/FIFO tests and real Luminary responses do not establish OS gesture recognition.
+
+Evidence: `Docs/CommanderStationAssemblyHandoff.md`, `Docs/Validation/CommanderStationAssembly/`, `Docs/InstrumentInteractionReadabilityHandoff.md`, `Docs/Validation/InstrumentInteraction/`.
+
+## Active coordination and next work
+
+- All workers run locally; ewsbuild is no longer used.
+- Assembly task `01a08296-4048-7503-b057-03345be7d15b` completed the combined regression and released the simulator slot. Serialize simulator test/capture jobs; concurrent clones previously interfered with both workers.
+- Interaction task `01a08296-4c42-7dd0-b073-dfd4b3712bbf` delivered and released its simulator.
+- No heavy render/bake is active. Continue limiting heavy jobs to one per machine; independent light headless authoring can run concurrently.
+- Publish the accepted assembly merge with its verification record, then scope hand-controller runtime installation in LM against accepted mounting and existing simulation input APIs. That runtime task has not been created.
+- Do not infer switch/controller semantics from geometry names or invent unavailable dynamics. Component workers keep assigned asset-directory ownership; coordinator handles shared APIs and master assembly.
+
+## Historical setup and extraction record
+
 Updated: 2026-09-08.
 
 ## LMKit extraction — 2026-09-08

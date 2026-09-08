@@ -1,0 +1,62 @@
+{
+  "mergeCommit": "08b4f980462c9c73a6a72d81de04b7d25efcfed4",
+  "tree": "01a3d6779056cf68017a12ecae2c025b68966d63",
+  "parents": [
+    "db0234f001225496bc5c1ad34fa475b550849160",
+    "ec6a05c6015eb38410697d69b3772453227939f5"
+  ],
+  "LMKit": "3ad1a999ff17aea859eaea5750f1c65e66fad673",
+  "AGC_LMCore": "b3f15533db335ee882dc07401790c93010809e8f",
+  "simulator": "94C9CF9E-5495-4431-88AF-F3C211FD04C6",
+  "resources": [
+    {
+      "path": "Cabin/Cabin.usdz",
+      "bytes": 23467,
+      "sha256": "777ce88968820a6e46995d436e807abf9f4b4a5cb7115d0eb03eafb4c89c995e",
+      "unchangedFromAssemblyPin": true,
+      "hydrated": true
+    },
+    {
+      "path": "Cabin/mounts.json",
+      "bytes": 6137,
+      "sha256": "9b16e4f30fdc7f37a0d93f54154b8a8d4523dce5fb09d339a28442df9a25ebf5",
+      "unchangedFromAssemblyPin": true,
+      "hydrated": true
+    },
+    {
+      "path": "DSKY/DSKY.usdz",
+      "bytes": 526263,
+      "sha256": "e20a69864d4c7e0ff068172e0e672d9fbcc510c1dc4e97e4db0246fde08fbdfd",
+      "unchangedFromAssemblyPin": true,
+      "hydrated": true
+    },
+    {
+      "path": "FDAI/FDAI.usdz",
+      "bytes": 2051277,
+      "sha256": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d",
+      "unchangedFromAssemblyPin": true,
+      "hydrated": true
+    },
+    {
+      "path": "ControlLibrary/MaintainedToggle.usdz",
+      "bytes": 11237,
+      "sha256": "6071600aa300b4ee00ed12537c5b719497f078012a391c35390ab34135f79b5f",
+      "unchangedFromAssemblyPin": true,
+      "hydrated": true
+    },
+    {
+      "path": "ControlLibrary/RotarySelector.usdz",
+      "bytes": 8850,
+      "sha256": "facc28e727c765d9cc9379509c2e036b90a9331e5976186bb8f0d2b294ec1f3f",
+      "unchangedFromAssemblyPin": true,
+      "hydrated": true
+    },
+    {
+      "path": "ControlLibrary/components.json",
+      "bytes": 4434,
+      "sha256": "becce552cc9a3e31dbf89a1440cdefcc550d09a2e6a7e1fc43ee31ae76e81072",
+      "unchangedFromAssemblyPin": true,
+      "hydrated": true
+    }
+  ]
+}
