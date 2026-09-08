@@ -1,6 +1,26 @@
 # Cockpit coordination ledger
 
-Updated: 2026-09-08. This current section supersedes historical entries below.
+Updated 2026-09-08. This section supersedes the historical records below.
+
+## Current accepted phase
+
+LM `cockpit/integration` source `5ec10b8404130b1b0cefdbdc28d93aa3d221ec4a` integrates the commander instruments and interior details. LMKit runtime package `1285040dbaa1e4c3c4002975764a58fc49018012` is published; component histories and LFS authoring assets are preserved. AGC/LMCore remains `b3f15533db335ee882dc07401790c93010809e8f`. Canonical LM terrain/LunarMap work is untouched.
+
+The final visionOS simulator run passes 64 tests in 13 suites, zero failures/skips. Native startup capture confirms the 42,000-to-25,000-lux lighting jump is removed: the same mission light settings now apply before and after terrain loading. Eight final views cover normal, inspection, optional details, planning, training and procedural fallback. [Evidence and gallery](Validation/CommanderInstruments/README.md).
+
+| Added component | Accepted source | Runtime state |
+|---|---|---|
+| AltitudeRate | 7670439 | Geometric altitude and radial rate drive independent tapes/shutters; provisional taller envelope |
+| DescentControls | 9e598a7 | AUTO/ATT HOLD and spring-return DES RATE use existing inputs; OFF unsupported |
+| CrossPointer | daf7f32 | Independent velocity needles; documented later fly-to inference, fixed LO scale |
+| BreakerBanks | 975f1db | 160 static breakers across nine commander/pilot regions; no circuit simulation |
+| InteriorDetails | 9eca80d | Seven removable cable/clamp/trim groups; no interactions |
+
+Four partial functional regions and nine breaker regions are occupied at runtime; failed loads preserve blanks. DSKY/FDAI/ACA remain live. Partial regions retain backing for equipment still to build. Planning labels retain generic authoring-region text, including “not modeled” on partially populated regions; normal presentation hides them. This is a planning-label refinement, not simulation state.
+
+All five dispatched modeling lanes and app integration are complete for this phase. Final simulator shutdown is verified and its slot is released. Priority governs work order; the user manages time. There are no deadline-based omissions or time estimates. Remaining work includes physical Vision Pro acceptance; overall interior lighting/material refinement; engine START/STOP and contact indications; propulsion instruments; timers with a defined time origin; warning/AGS/ECS/radar systems; TTCA; overhead/aft equipment and shades. Panel5 timer clearance and LPD optical calibration remain unresolved. Historical dimensions and mechanical seating remain provisional.
+
+## Historical enclosed-foundation acceptance
 
 ## Current integration
 

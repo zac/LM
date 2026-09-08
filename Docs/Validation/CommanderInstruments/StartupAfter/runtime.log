@@ -1,0 +1,45 @@
+getpwuid_r did not find a match for uid 501
+Timestamp               Ty Process[PID:TID]
+2026-09-08 15:15:54.599 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:15:55.856 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:15:56.570 E  LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Mission light metadata unavailable; retaining a shadowed reference-exposure fallback
+2026-09-08 15:15:57.088 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:16:01.987 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:16:04.110 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Enclosed commander foundation installed atomically; live instrument identities retained
+2026-09-08 15:16:04.116 E  LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Descent control unavailable; functional fallback retained: invalidContract("injected")
+2026-09-08 15:16:05.375 E  LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Optional detail unavailable: Missing: noImporter("file:///missing")
+2026-09-08 15:16:05.528 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:16:07.616 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Enclosed commander foundation installed atomically; live instrument identities retained
+2026-09-08 15:16:09.935 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:16:11.945 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Enclosed commander foundation installed atomically; live instrument identities retained
+2026-09-08 15:16:14.445 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:16:16.527 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Enclosed commander foundation installed atomically; live instrument identities retained
+2026-09-08 15:16:18.854 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:16:20.041 E  LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Enclosed commander foundation unavailable; procedural fallback retained: invalidContract("test failure")
+2026-09-08 15:16:20.893 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Enclosed commander foundation installed atomically; live instrument identities retained
+2026-09-08 15:16:25.916 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:16:27.043 E  LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Articulated ACA unavailable; functional fallback retained: invalidParent("injected")
+2026-09-08 15:16:27.979 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Enclosed commander foundation installed atomically; live instrument identities retained
+2026-09-08 15:16:28.240 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:16:30.190 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:16:32.290 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:16:33.836 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:16:37.399 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:16:54.828 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:16:56.132 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:16:57.406 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:16:58.669 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:16:59.932 Df LM[60062:6ae0fd5] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:17:15.491 Df LM[60297:6ae1f27] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:17:18.102 Df LM[60297:6ae1f27] [io.positron.LM:ProgressiveTerrain] Enclosed commander foundation installed atomically; live instrument identities retained
+2026-09-08 15:17:20.373 Df LM[60297:6ae1f27] [io.positron.LM:ProgressiveTerrain] Cockpit lighting stage=after-foundation-install uptime=2833328.799486 imported=true suns=1 lux=24999.998 rotation=SIMD4<Float>(0.7377281, -0.073012464, 0.07967912, 0.66639155) shadow=true
+2026-09-08 15:17:20.528 Df LM[60297:6ae1f27] [io.positron.LM:ProgressiveTerrain] Cockpit lighting stage=before-first-publication uptime=2833328.953949 imported=true suns=1 lux=24999.998 rotation=SIMD4<Float>(0.7377281, -0.073012464, 0.07967912, 0.66639155) shadow=true
+2026-09-08 15:17:21.848 Df LM[60297:6ae1f27] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V06 N64
+2026-09-08 15:17:21.849 Df LM[60297:6ae1f27] [io.positron.LM:TerminalDescentCockpit] Validation gate: p64LPD
+2026-09-08 15:17:21.849 Df LM[60297:6ae1f27] [io.positron.LM:TerminalDescentCockpit] Cockpit event: p64
+2026-09-08 15:17:22.758 I  LM[60297:6ae1f27] [io.positron.LM:ProgressiveTerrain] Terrain aligned to Eagle at north 19.619208m east -4.335939m
+2026-09-08 15:17:22.782 I  LM[60297:6ae1f27] [io.positron.LM:ProgressiveTerrain] Terrain rock field ready count=62 model=apollo11-source-constrained-rock-field-v1
+2026-09-08 15:17:22.785 Df LM[60297:6ae1f27] [io.positron.LM:ProgressiveTerrain] Cockpit lighting stage=before-apollo-terrain-swap uptime=2833331.211105 imported=true suns=1 lux=24999.998 rotation=SIMD4<Float>(0.923437, -0.09547579, 0.052220013, 0.36799675) shadow=true
+2026-09-08 15:17:22.794 Df LM[60297:6ae1f27] [io.positron.LM:ProgressiveTerrain] Cockpit lighting stage=after-apollo-terrain-swap uptime=2833331.219875 imported=true suns=1 lux=24999.998 rotation=SIMD4<Float>(0.923437, -0.09547579, 0.052220013, 0.36799675) shadow=true
+2026-09-08 15:17:22.795 Df LM[60297:6ae1f27] [io.positron.LM:TerminalDescentCockpit] Validation gate: terrainLoaded
+2026-09-08 15:17:22.795 I  LM[60297:6ae1f27] [io.positron.LM:TerminalDescentCockpit] Cockpit terrain loaded: LROC/SLDEM terrain · 0.5 m NAC + normalized WAC reflectance; artist cabin: true

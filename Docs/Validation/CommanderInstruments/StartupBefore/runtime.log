@@ -1,0 +1,20 @@
+getpwuid_r did not find a match for uid 501
+Timestamp               Ty Process[PID:TID]
+2026-09-08 15:00:16.583 Df LM[57006:6ad791d] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:00:19.101 Df LM[57006:6ad791d] [io.positron.LM:ProgressiveTerrain] Enclosed commander foundation installed atomically; live instrument identities retained
+2026-09-08 15:00:22.717 Df LM[57006:6ad791d] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V06 N64
+2026-09-08 15:00:22.718 Df LM[57006:6ad791d] [io.positron.LM:TerminalDescentCockpit] Validation gate: p64LPD
+2026-09-08 15:00:22.718 Df LM[57006:6ad791d] [io.positron.LM:TerminalDescentCockpit] Cockpit event: p64
+2026-09-08 15:00:23.614 I  LM[57006:6ad791d] [io.positron.LM:ProgressiveTerrain] Terrain aligned to Eagle at north 19.619208m east -4.335939m
+2026-09-08 15:00:23.635 I  LM[57006:6ad791d] [io.positron.LM:ProgressiveTerrain] Terrain rock field ready count=62 model=apollo11-source-constrained-rock-field-v1
+2026-09-08 15:00:23.643 Df LM[57006:6ad791d] [io.positron.LM:TerminalDescentCockpit] Validation gate: terrainLoaded
+2026-09-08 15:00:23.643 I  LM[57006:6ad791d] [io.positron.LM:TerminalDescentCockpit] Cockpit terrain loaded: LROC/SLDEM terrain · 0.5 m NAC + normalized WAC reflectance; artist cabin: true
+2026-09-08 15:01:31.473 Df LM[57158:6ad8466] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 15:01:34.001 Df LM[57158:6ad8466] [io.positron.LM:ProgressiveTerrain] Enclosed commander foundation installed atomically; live instrument identities retained
+2026-09-08 15:01:37.605 Df LM[57158:6ad8466] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V06 N64
+2026-09-08 15:01:37.607 Df LM[57158:6ad8466] [io.positron.LM:TerminalDescentCockpit] Validation gate: p64LPD
+2026-09-08 15:01:37.607 Df LM[57158:6ad8466] [io.positron.LM:TerminalDescentCockpit] Cockpit event: p64
+2026-09-08 15:01:38.528 I  LM[57158:6ad8466] [io.positron.LM:ProgressiveTerrain] Terrain aligned to Eagle at north 19.619208m east -4.335939m
+2026-09-08 15:01:38.553 I  LM[57158:6ad8466] [io.positron.LM:ProgressiveTerrain] Terrain rock field ready count=62 model=apollo11-source-constrained-rock-field-v1
+2026-09-08 15:01:38.560 Df LM[57158:6ad8466] [io.positron.LM:TerminalDescentCockpit] Validation gate: terrainLoaded
+2026-09-08 15:01:38.560 I  LM[57158:6ad8466] [io.positron.LM:TerminalDescentCockpit] Cockpit terrain loaded: LROC/SLDEM terrain · 0.5 m NAC + normalized WAC reflectance; artist cabin: true

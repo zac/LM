@@ -1,0 +1,141 @@
+Command: xcodebuild test -parallel-testing-enabled NO -project /private/tmp/lm-commander-instruments-validation/LM/LM.xcodeproj -scheme LM -destination 'platform=visionOS Simulator,id=DE0FAD53-2A01-4B96-95D3-3505E6900DA3' -derivedDataPath /private/tmp/lm-commander-instruments-validation/build -clonedSourcePackagesDirPath /private/tmp/lm-commander-instruments-validation/packages -skipPackagePluginValidation -only-testing:LMTests/LMCockpitPresentationPolicyTests -only-testing:LMTests/LandingPointDesignatorTests -only-testing:LMTests/LMCommanderStationAssemblyTests -only-testing:LMTests/LMInstrumentInteractionTests -only-testing:LMTests/LMInstrumentIntegrationTests -only-testing:LMTests/LMImportedACATests -only-testing:LMTests/LMLunarCockpitRestartTests -only-testing:LMTests/SpatialCockpitControlTests -only-testing:LMTests/LMCommanderLandingInstrumentTests -only-testing:LMTests/LMDescentControlLifecycleTests -only-testing:LMTests/LMLandingInstrumentReadingsTests -only-testing:LMTests/LMCockpitStartupLightingTests -only-testing:LMTests/LMLunarCockpitMissionTests -resultBundlePath /private/tmp/lm-commander-instruments-validation/evidence/coordinator-final.xcresult
+Success
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+Resolving Package Graph
+Resolved source packages
+note: Building targets in dependency order
+note: Target dependency graph (12 targets)
+[LMKit_LMKit] Processing empty-LMKit_LMKit.plist
+[RealityKitContent_RealityKitContent] Processing empty-RealityKitContent_RealityKitContent.plist
+[LM] Processing Info.plist
+[!]  /tmp/lm-commander-instruments-validation/LM/LM/LunarGlobe/LMLunarImageryTileStore.swift:13:79: converting non-Sendable function value to '@Sendable (LMTerrainManifest.Source) async throws -> Data' may introduce data races
+         fetch: @escaping LMLunarElevationStore.Fetch = LMLunarElevationStore.fetchPDS) throws {
+                                                                              ^
+[!]  /tmp/lm-commander-instruments-validation/LM/LM/LMLunarElevationStore.swift:26:57: converting non-Sendable function value to '@Sendable (LMTerrainManifest.Source) async throws -> Data' may introduce data races
+         fetch: @escaping Fetch = LMLunarElevationStore.fetchPDS) throws {
+                                                        ^
+[LM] Compiling LMCommanderStationScene.swift
+[!]  /tmp/lm-commander-instruments-validation/LM/LM/LMLunarElevationStore.swift:26:57: converting non-Sendable function value to '@Sendable (LMTerrainManifest.Source) async throws -> Data' may introduce data races
+         fetch: @escaping Fetch = LMLunarElevationStore.fetchPDS) throws {
+                                                        ^
+[LM] Copy arm64-apple-xros-simulator.swiftsourceinfo -> LM.swiftsourceinfo
+[LM] Copy arm64-apple-xros-simulator.abi.json -> LM.abi.json
+[LM] Linking LM.debug.dylib
+[LMTests] Compiling LMCockpitStartupLightingTests.swift
+note: Using stub executor library with Swift entry point. (in target 'LM' from project 'LM')
+[LM] Linking LM
+[LM] Extract App Intents Metadata
+[LMTests] Processing empty-LMTests.plist
+[LMTests] Copy arm64-apple-xros-simulator.swiftsourceinfo -> LMTests.swiftsourceinfo
+[LMTests] Copy arm64-apple-xros-simulator.abi.json -> LMTests.abi.json
+[LMTests] Linking LMTests
+[LMTests] Extract App Intents Metadata
+Signing LMTests.xctest (in target 'LMTests' from project 'LM')
+Signing LM.debug.dylib (in target 'LM' from project 'LM')
+Signing __preview.dylib (in target 'LM' from project 'LM')
+Signing LM.app (in target 'LM' from project 'LM')
+[LM] Validate LM.app
+Test Suite 'Selected tests' started at 2026-09-08 15:15:54.401.
+Test Suite 'LMTests.xctest' started at 2026-09-08 15:15:54.401.
+Test Suite 'LMTests.xctest' passed at 2026-09-08 15:15:54.402.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test run started.
+Suite LMCockpitPresentationPolicyTests started
+    ✔ historicalDefaultHidesAllSyntheticOverlays() (0.001 seconds)
+    ✔ eyeDiagnosticRequiresSeparateOptInAndTrainingOffClearsIt() (0.001 seconds)
+    ✔ sceneRecenterPreservesHiddenMarkerAndImportedOwnership() (1.362 seconds)
+    ✔ validationFlagsNeverImplicitlyEnableTraining() (0.001 seconds)
+Suite LMCockpitPresentationPolicyTests passed after 1.363 seconds
+Suite LMCockpitStartupLightingTests started
+    ✔ missingLightingMetadataKeepsUsableShadowedFallback() (1.230 seconds)
+    ✔ provisionalAndPreparedApolloUseSameMissionSun() (3.588 seconds)
+Suite LMCockpitStartupLightingTests passed after 4.820 seconds
+Suite LMCommanderLandingInstrumentTests started
+    ✔ altitudeRowsAndShuttersMoveAndNeverExposeStaleInvalidValues() (0.968 seconds)
+    ✔ crossPointerMovesIndependentNeedlesAndHidesInvalidSource() (0.211 seconds)
+    ✔ controlsPreserveReferenceRotationsAndRejectUnsupportedOff() (0.138 seconds)
+    ✔ partialInstallationKeepsAllBlanksAndFailureRetainsFallbackControl() (3.527 seconds)
+    ✔ optionalDetailsAreSeparateNoninteractiveAndFailureContained() (7.801 seconds)
+Suite LMCommanderLandingInstrumentTests passed after 12.648 seconds
+Suite LMCommanderStationAssemblyTests started
+    ✔ assemblesEnclosureAtIdentityAndKeepsEveryDatum() (1.110 seconds)
+    ✔ normalStartupInstallsFoundationAndExplicitFallbackKeepsProcedural() (4.299 seconds)
+    ✔ atomicFallbackAndInstallKeepLiveIdentitiesAndTransferOpticalOwnership() (2.250 seconds)
+    ✔ slotReplacementIsLocalTransactionalAndHonorsBlockedTimer() (0.897 seconds)
+    ✔ planningLayerRetainsTextMeshesAndTogglePreservesAllBlankStates() (0.884 seconds)
+    ✔ rejectsMisregisteredWindowsAndPanelInterfacesBeforeInstall() (1.754 seconds)
+    ✔ rejectsBadManifestWithoutPublishing() (0.327 seconds)
+    ✔ outerWindowAndLegacyReferenceSharePlaneDespiteDifferentTangentOrigins() (0.887 seconds)
+    ✔ instrumentObserverHasPrecedence() (0.006 seconds)
+Suite LMCommanderStationAssemblyTests passed after 12.419 seconds
+Suite LMDescentControlLifecycleTests started
+    ✔ rodRejectsStaleSamplesAfterReleasePauseAndSceneChanges() (0.055 seconds)
+    ✔ physicalModeSelectionIsGuardedAndReleaseRetainsMaintainedState() (0.051 seconds)
+Suite LMDescentControlLifecycleTests passed after 0.107 seconds
+Suite LMImportedACATests started
+    ✔ realResourcePreservesPivotsHousingAndLimits() (0.077 seconds)
+    ✔ installationIsAtomicAndHasOneTargetIncludingChildren() (2.139 seconds)
+    ✔ badInterfaceRejectsLoadAndNonfiniteInputNeutralizes() (0.131 seconds)
+    ✔ releasedStoppedAndDeactivatedGenerationsCannotReapply() (1.301 seconds)
+Suite LMImportedACATests passed after 3.650 seconds
+Suite LMInstrumentIntegrationTests started
+    ✔ preservesBlankDigitsSignsAndRuntimeFlash() (0.001 seconds)
+    ✔ lampsAreIndependentAndSparesStayUnbound() (0.001 seconds)
+    ✔ nativeNeutralAssetBindsEveryKeyAndRejectsImpostors() (1.951 seconds)
+    ✔ proCancellationAlwaysReleasesAndRegularKeysDispatchOnce() (0.052 seconds)
+    ✔ sessionQueuePreservesCompletedTapsBehindDelayedPRO() (0.377 seconds)
+    ✔ sessionQueueTeardownDropsPendingButWaitsForPRORelease() (0.001 seconds)
+    ✔ sessionQueueTeardownBeforeDispatchSendsNothing() (0.001 seconds)
+    ✔ importedFDAIKnownAxesAndCapApproaches() (0.001 seconds)
+    ✔ importedFDAICompositionAndReference() (0.001 seconds)
+    ✔ importedFDAINativeHierarchyKeepsFixedStructureStill() (0.411 seconds)
+Suite LMInstrumentIntegrationTests passed after 2.796 seconds
+Suite LMInstrumentInteractionTests started
+    ✔ completedEntitySelectionsReachFIFOInOrder() (1.524 seconds)
+    ✔ completedAdapterSequenceProducesLiveLuminaryResponse() (3.284 seconds)
+Suite LMInstrumentInteractionTests passed after 4.808 seconds
+Suite LMLandingInstrumentReadingsTests started
+    ✔ altitudeAndRadialRateUseFeetAndPreserveUpPositive() (0.001 seconds)
+    ✔ invalidValuesDoNotBecomePlausibleZeroOrClampedLimits() (0.001 seconds)
+    ✔ tapeInterpolationUsesKnotsAndNeverExtrapolates() (0.001 seconds)
+    ✔ crossPointerUsesLaterFlyToSignsAndDropsRadialVelocity() (0.001 seconds)
+    ✔ crossPointerRejectsUnknownHeadingAndSourceAndSaturatesFiniteSpeed() (0.001 seconds)
+Suite LMLandingInstrumentReadingsTests passed after 0.001 seconds
+Suite "Lunar cockpit mission context" started
+    ✔ customSiteCannotStartFromAnApolloCheckpoint() (0.152 seconds)
+    ✔ launchCoordinateUsesTheExistingValidatedParser() (0.106 seconds)
+    ✔ regionDatumMatchesAGCMoonCenteredOrigin() (1.324 seconds)
+Suite "Lunar cockpit mission context" passed after 1.583 seconds
+Suite "Custom cockpit restart" started
+    ✔ ignitionRestartRestoresFreshSiteState() (16.091 seconds)
+    ✔ cancelledTerrainLoadCannotSelectASite() (1.337 seconds)
+Suite "Custom cockpit restart" passed after 17.429 seconds
+Suite "Landing Point Designator" started
+    ✔ grummanDesignEyeMapsIntoTheSceneDatum() (0.001 seconds)
+    ✔ reconstructedWindowMatchesPhysicalSidesAndDesignEyeEnvelope() (0.001 seconds)
+    ✔ paneIsObliqueAndOuterMarksRemainOnTheSameSightRays() (0.001 seconds)
+    ✔ everyFlightScaleMarkStaysInsideBothPanes() (0.001 seconds)
+    ✔ dualPaneMarksCollimateAtTheCommanderEye() (0.001 seconds)
+    ✔ completeTickGeometryCollimatesAcrossBothPanes() (0.001 seconds)
+    ✔ aDisplacedHeadProducesVisibleParallax() (0.002 seconds)
+    ✔ lookAngleIsMeasuredDownFromTheForwardBodyAxis() (0.001 seconds)
+    ✔ apollo11ScaleAndRedesignationIncrementsStayMissionSpecific() (0.001 seconds)
+    ✔ trainingCueSelectsTheLiveN64MarkWithoutMovingTheGrid() (1.260 seconds)
+    ✔ commanderEntryPlacementStartsAtDesignEyeHeightAndSlightlyAft() (1.268 seconds)
+    ✔ cockpitRecenterReplacesTheOneShotHeadAnchorWithoutRebuildingTheScene() (1.250 seconds)
+Suite "Landing Point Designator" passed after 3.783 seconds
+Suite "Spatial cockpit controls" started
+    ✔ threeDimensionalGripMapsOntoAllACAAxesAndClamps() (0.001 seconds)
+    ✔ rodUsesSpringLoadedDetentsAroundNeutral() (0.001 seconds)
+    ✔ rodGestureProjectsOntoThePhysicalPanelFiveAxis() (0.001 seconds)
+    ✔ proceduralControlsPivotAtTheirFlightDatums() (1.214 seconds)
+Suite "Spatial cockpit controls" passed after 1.214 seconds
+Test session results: /tmp/lm-commander-instruments-validation/evidence/coordinator-final.xcresult
+Test Succeeded
+Testing started
+
