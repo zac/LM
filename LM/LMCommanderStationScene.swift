@@ -689,6 +689,9 @@ final class LMCommanderStationScene {
 
     @discardableResult
     func loadArtistCabinIfAvailable(arguments: [String] = ProcessInfo.processInfo.arguments) async throws -> Bool {
+        #if DEBUG
+        defer { writeSystemsInstallationEvidence(arguments: arguments) }
+        #endif
         guard !arguments.contains("--procedural-cockpit") else { return false }
         let installed = installCommanderAssembly()
         if installed {
@@ -713,6 +716,39 @@ final class LMCommanderStationScene {
         }
         return installed
     }
+
+    #if DEBUG
+    private func writeSystemsInstallationEvidence(arguments: [String]) {
+        guard arguments.contains(where: { $0.hasPrefix("--assembly-validation-view=") }) else { return }
+        let detailRoot = staticOverlays["InteriorDetails"]
+        let report: [String: Any] = [
+            "captured_at": ISO8601DateFormatter().string(from: Date()),
+            "arguments": arguments,
+            "foundation": commanderAssembly != nil,
+            "commander_fdai": importedFDAI != nil,
+            "pilot_fdai": importedPilotFDAI != nil,
+            "timer_readouts": importedTimers?.readouts.children.map(\.name) ?? [],
+            "event_timer_controls": importedTimers?.controls.parent != nil,
+            "mission_timer_controls_installed": LMCommanderStationAssembly.descendants(root).contains { $0.name == "MissionTimerControls" },
+            "mission_time_available": importedTimers?.missionTimeAvailable ?? false,
+            "engine_buttons": systemsHardware["EngineButtons"] != nil,
+            "descent_rate": importedDescentRate != nil,
+            "lunar_contact_instances": lunarContacts.keys.sorted(),
+            "propulsion": systemsHardware["PropulsionInstruments"] != nil,
+            "caution_warning": staticOverlays["CautionWarning"] != nil,
+            "interior_detail_groups": detailRoot?.children.map(\.name).sorted() ?? [],
+            "breaker_banks": staticOverlays["BreakerBanks"] != nil,
+            "occupied_slots": commanderAssembly?.slotOccupancy.mapValues {
+                ["coverage": $0.coverage.rawValue, "components": $0.componentIDs] as [String: Any]
+            } ?? [:]
+        ]
+        do {
+            let target = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                .appendingPathComponent("systems-installation.json")
+            try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys]).write(to: target, options: .atomic)
+        } catch { logger.error("Cannot record installation evidence: \(String(describing: error), privacy: .public)") }
+    }
+    #endif
 
     /// The pilot uses the same supported attitude source as the commander.
     /// Source selection, rate/error needles and mechanical seating remain unqualified.
