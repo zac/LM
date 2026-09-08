@@ -1,0 +1,18 @@
+{
+  "bounds_max" : [
+    1.0747650861740112,
+    2.1842436790466309,
+    -0.0098999738693237305
+  ],
+  "bounds_min" : [
+    -1.0747650861740112,
+    1.2595090866088867,
+    -1.0144659280776978
+  ],
+  "headset_optics" : "NOT TESTED",
+  "native_load" : "PASS",
+  "native_transparency_reflection_render" : "NOT TESTED",
+  "pane_transforms" : "PASS",
+  "platform" : "macOS RealityKit",
+  "separate_lpd_layers" : "PASS"
+}
