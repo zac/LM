@@ -1,0 +1,1320 @@
+{
+  "checks": [
+    {
+      "name": "meters",
+      "passed": true
+    },
+    {
+      "name": "portable materials",
+      "passed": true
+    },
+    {
+      "name": "neutral unanimated",
+      "passed": true
+    },
+    {
+      "name": "ACA_Roll parent",
+      "passed": true
+    },
+    {
+      "name": "ACA_Roll neutral",
+      "passed": true
+    },
+    {
+      "name": "ACA_Roll independent -1",
+      "passed": true
+    },
+    {
+      "name": "ACA_Roll moves -1",
+      "passed": true
+    },
+    {
+      "name": "ACA_Roll independent 1",
+      "passed": true
+    },
+    {
+      "name": "ACA_Roll moves 1",
+      "passed": true
+    },
+    {
+      "name": "ACA_Yaw parent",
+      "passed": true
+    },
+    {
+      "name": "ACA_Yaw neutral",
+      "passed": true
+    },
+    {
+      "name": "ACA_Yaw independent -1",
+      "passed": true
+    },
+    {
+      "name": "ACA_Yaw moves -1",
+      "passed": true
+    },
+    {
+      "name": "ACA_Yaw independent 1",
+      "passed": true
+    },
+    {
+      "name": "ACA_Yaw moves 1",
+      "passed": true
+    },
+    {
+      "name": "ACA_Pitch parent",
+      "passed": true
+    },
+    {
+      "name": "ACA_Pitch neutral",
+      "passed": true
+    },
+    {
+      "name": "ACA_Pitch independent -1",
+      "passed": true
+    },
+    {
+      "name": "ACA_Pitch moves -1",
+      "passed": true
+    },
+    {
+      "name": "ACA_Pitch independent 1",
+      "passed": true
+    },
+    {
+      "name": "ACA_Pitch moves 1",
+      "passed": true
+    },
+    {
+      "name": "ACA_PTT_Trigger parent",
+      "passed": true
+    },
+    {
+      "name": "ACA_PTT_Trigger neutral",
+      "passed": true
+    },
+    {
+      "name": "ACA_PTT_Trigger independent -1",
+      "passed": true
+    },
+    {
+      "name": "ACA_PTT_Trigger moves -1",
+      "passed": true
+    },
+    {
+      "name": "ACA_PTT_Trigger independent 1",
+      "passed": true
+    },
+    {
+      "name": "ACA_PTT_Trigger moves 1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_VerticalShared parent",
+      "passed": true
+    },
+    {
+      "name": "TTCA_VerticalShared neutral",
+      "passed": true
+    },
+    {
+      "name": "TTCA_VerticalShared independent -1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_VerticalShared moves -1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_VerticalShared independent 1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_VerticalShared moves 1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Lateral parent",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Lateral neutral",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Lateral independent -1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Lateral moves -1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Lateral independent 1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Lateral moves 1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Axial parent",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Axial neutral",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Axial independent -1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Axial moves -1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Axial independent 1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Axial moves 1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_ModeSelector parent",
+      "passed": true
+    },
+    {
+      "name": "TTCA_ModeSelector neutral",
+      "passed": true
+    },
+    {
+      "name": "TTCA_ModeSelector independent -1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_ModeSelector moves -1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_ModeSelector independent 1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_ModeSelector moves 1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Friction parent",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Friction neutral",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Friction independent -1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Friction moves -1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Friction independent 1",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Friction moves 1",
+      "passed": true
+    },
+    {
+      "name": "ACA identity",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_0 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_0 positive volume",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_0 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_0 unit scale",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_1 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_1 positive volume",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_1 unit scale",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_2 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_2 positive volume",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_2 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_2 unit scale",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_3 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_3 positive volume",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_3 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_3 unit scale",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_4 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_4 positive volume",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_4 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "ACA_BootFold_4 unit scale",
+      "passed": true
+    },
+    {
+      "name": "ACA_Fastener closed manifold",
+      "passed": true
+    },
+    {
+      "name": "ACA_Fastener positive volume",
+      "passed": true
+    },
+    {
+      "name": "ACA_Fastener nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "ACA_Fastener unit scale",
+      "passed": true
+    },
+    {
+      "name": "ACA_Fastener.001 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "ACA_Fastener.001 positive volume",
+      "passed": true
+    },
+    {
+      "name": "ACA_Fastener.001 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "ACA_Fastener.001 unit scale",
+      "passed": true
+    },
+    {
+      "name": "ACA_Fastener.002 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "ACA_Fastener.002 positive volume",
+      "passed": true
+    },
+    {
+      "name": "ACA_Fastener.002 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "ACA_Fastener.002 unit scale",
+      "passed": true
+    },
+    {
+      "name": "ACA_Fastener.003 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "ACA_Fastener.003 positive volume",
+      "passed": true
+    },
+    {
+      "name": "ACA_Fastener.003 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "ACA_Fastener.003 unit scale",
+      "passed": true
+    },
+    {
+      "name": "ACA_Housing closed manifold",
+      "passed": true
+    },
+    {
+      "name": "ACA_Housing positive volume",
+      "passed": true
+    },
+    {
+      "name": "ACA_Housing nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "ACA_Housing unit scale",
+      "passed": true
+    },
+    {
+      "name": "ACA_TopPlate closed manifold",
+      "passed": true
+    },
+    {
+      "name": "ACA_TopPlate positive volume",
+      "passed": true
+    },
+    {
+      "name": "ACA_TopPlate nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "ACA_TopPlate unit scale",
+      "passed": true
+    },
+    {
+      "name": "ACA_Grip closed manifold",
+      "passed": true
+    },
+    {
+      "name": "ACA_Grip positive volume",
+      "passed": true
+    },
+    {
+      "name": "ACA_Grip nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "ACA_Grip unit scale",
+      "passed": true
+    },
+    {
+      "name": "ACA_PTT_Paddle closed manifold",
+      "passed": true
+    },
+    {
+      "name": "ACA_PTT_Paddle positive volume",
+      "passed": true
+    },
+    {
+      "name": "ACA_PTT_Paddle nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "ACA_PTT_Paddle unit scale",
+      "passed": true
+    },
+    {
+      "name": "ACA USD opens",
+      "passed": true
+    },
+    {
+      "name": "ACA Y up",
+      "passed": true
+    },
+    {
+      "name": "ACA meters",
+      "passed": true
+    },
+    {
+      "name": "ACA USD root identity",
+      "passed": true
+    },
+    {
+      "name": "ACA no time samples",
+      "passed": true
+    },
+    {
+      "name": "ACA mesh count",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_003 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_008 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_004 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cube_001 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_007 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_006 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_001 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_002 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cube basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_005 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "ACA_Grip basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cube_002 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "ACA_Roll USD hierarchy",
+      "passed": true
+    },
+    {
+      "name": "ACA_Yaw USD hierarchy",
+      "passed": true
+    },
+    {
+      "name": "ACA_Pitch USD hierarchy",
+      "passed": true
+    },
+    {
+      "name": "ACA_PTT_Trigger USD hierarchy",
+      "passed": true
+    },
+    {
+      "name": "ACA USD compliance",
+      "passed": true
+    },
+    {
+      "name": "TTCA identity",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Fastener closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Fastener positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Fastener nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Fastener unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Fastener.001 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Fastener.001 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Fastener.001 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Fastener.001 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Fastener.002 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Fastener.002 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Fastener.002 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Fastener.002 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Fastener.003 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Fastener.003 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Fastener.003 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Fastener.003 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrontPlate closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrontPlate positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrontPlate nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrontPlate unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Housing closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Housing positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Housing nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Housing unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_0 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_0 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_0 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_0 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_1 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_1 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_1 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_10 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_10 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_10 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_10 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_11 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_11 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_11 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_11 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_2 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_2 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_2 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_2 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_3 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_3 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_3 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_3 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_4 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_4 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_4 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_4 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_5 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_5 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_5 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_5 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_6 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_6 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_6 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_6 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_7 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_7 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_7 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_7 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_8 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_8 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_8 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_8 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_9 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_9 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_9 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionFlute_9 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionKnob closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionKnob positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionKnob nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_FrictionKnob unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_SelectorStem closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_SelectorStem positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_SelectorStem nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_SelectorStem unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_SelectorTab closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_SelectorTab positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_SelectorTab nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_SelectorTab unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_GripEnd_-1 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_GripEnd_-1 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_GripEnd_-1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_GripEnd_-1 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_GripEnd_1 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_GripEnd_1 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_GripEnd_1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_GripEnd_1 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Stem closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Stem positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Stem nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Stem unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_TGrip closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_TGrip positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_TGrip nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_TGrip unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_0 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_0 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_0 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_0 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_1 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_1 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_1 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_1 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_2 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_2 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_2 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_2 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_3 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_3 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_3 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_3 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_4 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_4 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_4 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_4 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_5 closed manifold",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_5 positive volume",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_5 nonzero faces",
+      "passed": true
+    },
+    {
+      "name": "TTCA_BootFold_5 unit scale",
+      "passed": true
+    },
+    {
+      "name": "TTCA USD opens",
+      "passed": true
+    },
+    {
+      "name": "TTCA Y up",
+      "passed": true
+    },
+    {
+      "name": "TTCA meters",
+      "passed": true
+    },
+    {
+      "name": "TTCA USD root identity",
+      "passed": true
+    },
+    {
+      "name": "TTCA no time samples",
+      "passed": true
+    },
+    {
+      "name": "TTCA mesh count",
+      "passed": true
+    },
+    {
+      "name": "Cube_004 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_012 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_009 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_011 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_010 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cube_003 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cube_009 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cube_008 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_014 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_017 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_015 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_016 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_013 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cube_007 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cube_006 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cube_005 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_019 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_018 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_026 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_029 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_023 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_030 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_020 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_031 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_025 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_022 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_027 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_032 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_024 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_028 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "Cylinder_021 basis vertices",
+      "passed": true
+    },
+    {
+      "name": "TTCA_VerticalShared USD hierarchy",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Lateral USD hierarchy",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Axial USD hierarchy",
+      "passed": true
+    },
+    {
+      "name": "TTCA_ModeSelector USD hierarchy",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Friction USD hierarchy",
+      "passed": true
+    },
+    {
+      "name": "TTCA USD compliance",
+      "passed": true
+    },
+    {
+      "name": "ACA reimport root",
+      "passed": true
+    },
+    {
+      "name": "ACA reimport meshes",
+      "passed": true
+    },
+    {
+      "name": "ACA_Roll reimport hierarchy",
+      "passed": true
+    },
+    {
+      "name": "ACA_Yaw reimport hierarchy",
+      "passed": true
+    },
+    {
+      "name": "ACA_Pitch reimport hierarchy",
+      "passed": true
+    },
+    {
+      "name": "ACA_PTT_Trigger reimport hierarchy",
+      "passed": true
+    },
+    {
+      "name": "TTCA reimport root",
+      "passed": true
+    },
+    {
+      "name": "TTCA reimport meshes",
+      "passed": true
+    },
+    {
+      "name": "TTCA_VerticalShared reimport hierarchy",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Lateral reimport hierarchy",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Axial reimport hierarchy",
+      "passed": true
+    },
+    {
+      "name": "TTCA_ModeSelector reimport hierarchy",
+      "passed": true
+    },
+    {
+      "name": "TTCA_Friction reimport hierarchy",
+      "passed": true
+    }
+  ],
+  "assets": {
+    "ACA": {
+      "meshes": 13,
+      "triangles": 2124,
+      "bounds_min_m": [
+        -0.05079999938607216,
+        0.0,
+        -0.08495000004768372
+      ],
+      "bounds_max_m": [
+        0.05079999938607216,
+        0.2554999887943268,
+        0.08495000004768372
+      ],
+      "dimensions_m": [
+        0.10159999877214432,
+        0.2554999887943268,
+        0.16990000009536743
+      ],
+      "USD_errors": [],
+      "USD_failed_checks": [],
+      "USD_warnings": [],
+      "usdz_bytes": 96068
+    },
+    "TTCA": {
+      "meshes": 31,
+      "triangles": 4292,
+      "bounds_min_m": [
+        -0.05849999934434891,
+        0.0,
+        -0.10250000655651093
+      ],
+      "bounds_max_m": [
+        0.07249999791383743,
+        0.1249999925494194,
+        0.1574999988079071
+      ],
+      "dimensions_m": [
+        0.13099999725818634,
+        0.1249999925494194,
+        0.26000000536441803
+      ],
+      "USD_errors": [],
+      "USD_failed_checks": [],
+      "USD_warnings": [],
+      "usdz_bytes": 133464
+    }
+  },
+  "reopen_seconds": 0.008116042241454124,
+  "sha256": {
+    "HandControllers.blend": "3d8f6b2ee416d7d2cb132750a630d0c6e66577eb676b47da4fe08a0f950216c0",
+    "ACA.usdz": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5",
+    "TTCA.usdz": "c8d165c723aa253868483d959ead394d32c07c766c2af08b731317d1aa371eb6"
+  },
+  "passed": true,
+  "check_count": 315
+}

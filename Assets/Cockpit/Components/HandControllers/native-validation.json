@@ -1,0 +1,37 @@
+{
+  "assets" : [
+    {
+      "bounds_max_m" : [
+        0.050799999386072159,
+        0.25549998879432678,
+        0.084950000047683716
+      ],
+      "bounds_min_m" : [
+        -0.050799999386072159,
+        0,
+        -0.084950000047683716
+      ],
+      "hierarchy_and_fixed_isolation" : "PASS",
+      "id" : "ACA",
+      "load_and_check_seconds" : 0.2587740421295166
+    },
+    {
+      "bounds_max_m" : [
+        0.072499997913837433,
+        0.1249999925494194,
+        0.1574999988079071
+      ],
+      "bounds_min_m" : [
+        -0.058499999344348907,
+        0,
+        -0.10250000655651093
+      ],
+      "hierarchy_and_fixed_isolation" : "PASS",
+      "id" : "TTCA",
+      "load_and_check_seconds" : 0.074890017509460449
+    }
+  ],
+  "live_bindings" : "NOT IMPLEMENTED",
+  "platform" : "macOS RealityKit",
+  "VisionPro" : "NOT TESTED"
+}

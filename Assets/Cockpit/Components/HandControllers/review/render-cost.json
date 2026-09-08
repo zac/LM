@@ -1,0 +1,19 @@
+{
+  "engine": "BLENDER_WORKBENCH",
+  "resolution": [
+    640,
+    640
+  ],
+  "heavy_renders": 0,
+  "bakes": 0,
+  "renders": {
+    "ACA-front": 0.16572712501510978,
+    "ACA-side": 0.025434667244553566,
+    "ACA-oblique": 0.026527750305831432,
+    "ACA-motion": 0.02627454185858369,
+    "TTCA-front": 0.030093666166067123,
+    "TTCA-side": 0.026227958034723997,
+    "TTCA-oblique": 0.024259291123598814,
+    "TTCA-motion": 0.025437416974455118
+  }
+}
