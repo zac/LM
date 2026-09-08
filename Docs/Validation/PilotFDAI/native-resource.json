@@ -1,0 +1,19 @@
+{
+  "app_tests" : "not run here; coordinator owns simulator",
+  "fits_150mm_xy_reservation" : true,
+  "fixed_housing_unchanged" : true,
+  "pilot_motion_leaves_commander_unchanged" : true,
+  "platform" : "macOS RealityKit",
+  "rendered_camera_acceptance" : "pending",
+  "two_independent_loads" : true,
+  "visual_bounds_max_m" : [
+    0.074024997651576996,
+    0.074024997651576996,
+    0.046500001102685928
+  ],
+  "visual_bounds_min_m" : [
+    -0.074024997651576996,
+    -0.074024997651576996,
+    -0.23299999535083771
+  ]
+}
