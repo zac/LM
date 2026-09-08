@@ -956,3 +956,104 @@ The seven-stage journey was recaptured in all three candidate runs. Inspected `j
 Both the final Apollo stop and final daylight site isolation wait 90 seconds; their last twelve windows have 16.67 ms mean/p99/max and zero missed callbacks. See `Apollo/final-settled.json`, `Isolation/final-settled.json` and `Isolation/luminance.json`.
 
 Physical Vision Pro gates remain open: stereo relief and crossfade, tracked head/hand/gaze input, comfort, device CPU/GPU pacing, memory pressure, thermal behavior and space lifecycle. No physical device was used. C proceeds against the accepted A baseline; E remains independently reviewable on its branch.
+
+
+## Run checkpoint — stopped at owner request, 2026-09-07 20:53 PDT
+
+Validation is stopped. No runtime item was landed after A. The driver, capture
+child and Simulator app were terminated; completed and partial evidence and
+all five candidate branches are preserved. This checkpoint changes only the
+two one-zoom documents.
+
+Landed during this run: `2d72f2c` (corrected performance protocol), `db86a0c`
+(E's completed revalidation report and measurement tooling), and `ceac6fc`
+(A's relief lighting and sun-dependent radiance). Steps 1–3 remain landed.
+The landing branch's runtime baseline is `ceac6fc`.
+
+| Candidate branch | Preserved commit | Current status |
+|---|---|---|
+| `onezoom/A` | `ceac6fcc7071fe82eb6ebca3d8f1fc2dac0e90d6` | Landed; complete Simulator acceptance |
+| `onezoom/B` | `8693749cd6dfc9a4ef7aa4ec725600b03c3169dc` | Not landed; Simulator eye calibration fix and protocol-2 validation outstanding |
+| `onezoom/C` | `afef8c76d80a8ef78e1e5e174f9ccf2d04f5893b` | Rebased onto A; not landed; validation interrupted |
+| `onezoom/D` | `06fb4abfb856e748fcdeb9cfc34ceac6b7444bbe` | Not landed; concurrency experiment and full protocol-2 validation outstanding |
+| `onezoom/E` | `b750e58df459f3b1178956fd7c01f7390a573257` | Not landed; completed protocol-2 soak/highland failures |
+
+B, D and E retain their existing bases; no wrap-up rebase was performed. There
+is no F candidate. F still depends on D and E landing; the subsequent Apollo
+peak attribution has not started.
+
+**Completed gates.** A passed 74 selected Release Simulator tests, alternating
+three-run journey and five-cycle soak comparisons, all eleven byte-identical
+Apollo PNGs, resource/protected-body contracts (only the authorized radiance
+lookup differs), and the 90-second settled checks. Its 42.8 km and 7.5 km
+captures show opposing lit and shadowed crater sides; the mare remains low
+contrast. Globe/site luminance differs by −0.3762% at mission sun and −0.3422%
+at about 25°, both within 1%. A's executable SHA-256 is
+`ab9bbf279ef0ca677121bf005ba21feffc2c5c6d74c897dac3bac9c989b7304a`.
+
+E passed 79 selected tests, the complete journey comparison, all eleven exact
+Apollo images, fixed-disk identity, resource/protected-body checks and final
+90-second settles. The 210 km image resolves finer crater detail. Journey
+median lifetime peak fell from 1,620.269 to 621.159 MiB, but the complete soak
+failed mean/p99 gates; warm highland failed footprint/p99 and cold highland
+failed footprint/largest-callback gates. These are completed three-run
+failures, not conclusions from partial data. Full tables, texture intervals
+and kernel peaks remain in the E report above and its evidence directory.
+The original 76 MiB JPEG XL remains bundled alongside the 15.4 MiB companion;
+removal remains an owner bundle decision.
+
+**C is incomplete, not accepted or rejected.** Its Release build and 75 selected
+tests completed. All six journeys completed and the existing protocol-2
+comparison passes: median maximum footprint 383.8 → 321.8 MiB; lifetime peak
+1,619.347 → 1,620.363 MiB; hitches over 25 ms 18 → 16; largest callback outside
+the texture interval 166.082 → 137.000 ms. The complete per-run and
+min/median/max tables are preserved in `C/completed-journey.md` and
+`C/journey/comparison-v2.json` under the evidence root below.
+
+Four five-cycle soak runs completed: Control-1, Candidate-1, Control-2 and
+Candidate-2. Control-3 was interrupted after the latest logged stage
+`soak-1-returned`; its completion marker and metrics file are absent.
+Candidate-3 never started. No aggregate soak verdict is assigned. Partial
+images/logs remain in `C/soak/Control-3/`, marked `INCOMPLETE.md`. Fresh C
+anchored-pinch timing/0.0005 m accuracy, full Apollo ladder, final 90-second
+settle, final contract audit and complete surface/returned checkpoint
+comparison were not reached. The index removal is implemented on the branch;
+the complete fresh checkpoint gate for its retained-memory saving remains
+outstanding. Prior 0.018 ms picking is historical evidence, not a new result.
+C's executable SHA-256 is
+`6a336ca18628b9059adb2d78a50e21e19790fb4ac79e03a05958ce8f360293c9`;
+its frozen control is A's executable above.
+
+B has no fresh gate results this run. Unify its Simulator eye constant before
+validation; retain frame-contact switching, corner intersection and border
+fade. D likewise has no fresh gate results: compare concurrency 1/2/4 with
+three warm dives each, report regional/per-generation ready times, then run
+the complete matched suite. Their historical single-run withholds do not
+constitute protocol-2 failures. E's smallest proposed experiments remain
+sampling verified slabs without the duplicate concatenated buffer and
+isolating fine-imagery import deferral around Apollo publication; neither
+was implemented during wrap-up.
+
+Evidence root: `/tmp/LM-Explorer-OneZoom-2026-09-07/Revalidation/`.
+A's complete tables, captures and isolation measurements are in `A/`; E's
+complete tables, texture/kernel markers, soak, warm/cold dives and Apollo
+captures are in `E/`; C's completed tests/journeys and partial soak are in
+`C/`, with stop details in `C/INTERRUPTED.md`. Exact preserved branch refs are
+in `wrap-up-branches.txt`. Original evidence and patches under
+`/tmp/LM-Explorer-OneZoom-2026-09-07/{A,B,C,D,E}/` remain intact.
+
+**Next action:** finish C's acceptance before landing it. Budget roughly
+60–75 minutes for a fresh alternating six-run soak set after the interruption,
+then the pinch probe, Apollo ladder/90-second settle and contract audit.
+Keep the completed journey evidence; repeat it only if the binary or test
+conditions change. The broader E/B/D validation still represents roughly
+5–8 hours of serial Simulator work after fixes, excluding implementation,
+F and physical validation; these are scheduling estimates, not measured gates.
+
+All results here are Xcode 26.6 Release on the visionOS 26.5 Simulator
+`8F38C0E7-6366-4DAC-9372-DCF6F9151DCB`. Physical Vision Pro stereo/crossfade,
+tracked head/hand/gaze interactions, comfort, real CPU/GPU pacing, memory
+pressure, thermal behavior and space lifecycle remain unvalidated. No AGC,
+terrain data, residual caps, source ordering or contact geometry was changed.
+Unrelated owner documents, both scheme-user files and RealityKitContent
+xcuserdata remain outside this checkpoint commit.

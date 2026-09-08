@@ -21,7 +21,7 @@ zoom-out stops at the handoff width, and leaving immersion restores the window.
 | 1 Window container and immersion gate | Complete in Simulator | 54 focused tests; 11 byte-identical Apollo captures; seven-stage portal journey including partial opacity. Physical gates remain open. |
 | 2 One camera model and gesture set | Implemented; visual/device gates open | `4c8bd2a`: camera/gestures, 61 focused tests. Separate final Apollo adapter: 65 tests, 11/11 byte-identical ladder, eleven-stage journey and five exact restore cycles. Shared camera/ENU uses source-derived coverage bounds. Close-view faceting and physical acceptance remain open. |
 | 3 Scene stepping off the observation graph | Complete in Simulator | 63 focused tests; 11 byte-identical Apollo images; seven-stage portal journey; five restore cycles exact. Over-60s sample shows no SwiftUI update loop. Physical lifecycle/pacing gates remain open. |
-| 4 Coarse-first terrain and prefetch | Withheld: performance gate | D candidate and measurements retained; §4 contracts unchanged |
+| 4 Coarse-first terrain and prefetch | Pending protocol-2 revalidation | `onezoom/D` preserved; concurrency 1/2/4 experiment outstanding; §4 contracts unchanged |
 | 5 Sliding region | Waiting for Steps 4 and 6 | F was not started; §4 |
 | 6 Tiled globe imagery | Withheld under protocol 2 | Journey passes; three-run soak mean/p99 and highland footprint/callback gates fail. 79 tests and 11 exact Apollo images pass; source on `onezoom/E` |
 
@@ -71,11 +71,22 @@ bundled; removing it is a separate owner bundle decision.
 | Item | State | Gate |
 |---|---|---|
 | A Relief lighting and sun-dependent radiance | Complete in Simulator under protocol 2 | 74 tests; three-run journey/soak pass; 11 exact Apollo PNGs; mission/daylight radiance within 1%; physical gates open |
-| B Free-standing disk and smaller portal | Withheld: memory gate | Corrected switch and 11 Apollo images pass; journey peak +1.203 MiB. Patch retained; next experiment is lazy portal realization |
-| C Height-field gesture anchor | Withheld: performance gate | 0.0184 ms pick and about 64 MiB lower retained footprint; matched lifetime peaks rise, patch retained |
-| D Coarse-first terrain, plan Step 4 | Withheld: performance gate | Coarse prefetch ready before handoff in diagnostic dive; matched journey peak +1.063 MiB and hitches 15→18. Full patch retained |
+| B Free-standing disk and smaller portal | Pending calibration fix and protocol-2 revalidation | `onezoom/B` at `8693749`; historical single-run result is not a protocol-2 failure |
+| C Height-field gesture anchor | Validation stopped by owner; not landed | `onezoom/C` at `afef8c7`, based on A; 75 tests and three-run journey pass; soak incomplete (four runs complete, Control-3 interrupted); fresh pinch/Apollo/settle gates outstanding |
+| D Coarse-first terrain, plan Step 4 | Pending concurrency experiment and protocol-2 revalidation | `onezoom/D` at `06fb4ab`; historical coarse prefetch ready before handoff; no fresh acceptance result |
 | E Tiled globe imagery, plan Step 6 | Withheld under protocol 2 | Three-run journey passes; soak and highland fail. Complete evidence appended; `onezoom/E` preserves source |
 | F Sliding region, plan Step 5 | Waiting for D and E | 100 km pan, final contact equals rendered |
+
+### Stop checkpoint, 2026-09-07 20:53 PDT
+
+A landed as `ceac6fc`; E remains withheld on completed protocol-2 soak and
+highland failures. All `onezoom/A`–`onezoom/E` branches and evidence are
+preserved. C's partial soak has no aggregate verdict; no further runtime
+changes landed during wrap-up. See the final checkpoint in
+[MoonExplorerOneZoom.md](MoonExplorerOneZoom.md) for exact hashes, completed
+and outstanding gates, evidence paths and timing estimates. Next: finish C
+acceptance (roughly 60–75 minutes of Simulator validation). All physical gates
+remain open; F and the post-F peak attribution have not started.
 
 ## 1. Evaluation of the branch at `739a0e5`
 
