@@ -1,0 +1,43 @@
+{
+  "method": "27 actual triangle meshes; roll/yaw/pitch grid -11,0,+11 degrees. BVH surface intersections; no containment, continuous sweep or hand clearance claim. Housing is fixed; moving pivots follow pinned interface.",
+  "ACA_root_cabin_m": [
+    -0.49000000953674316,
+    0.9075000286102295,
+    -0.3700000047683716
+  ],
+  "panel5_face_pose": {
+    "space": "Cabin-relative",
+    "translation_m": [
+      -0.5587999820709229,
+      0.8983525633811951,
+      -0.2950824499130249
+    ],
+    "quaternion_xyzw": [
+      -0.6087614297866821,
+      0.0,
+      0.0,
+      0.7933533191680908
+    ],
+    "scale": [
+      1,
+      1,
+      1
+    ]
+  },
+  "runtime_baseline": "LM11f7335 LMCommanderStationGeometry.swift center(-.5588,.88,-.30), rotX=-75, depth .038; face conversion agrees with Cabin mount within 1um",
+  "neutral_surface_intersections": [],
+  "sampled_surface_intersections": {},
+  "sampled_ACA_aabb_cabin_m": [
+    [
+      -0.5509207248687744,
+      0.9075000286102295,
+      -0.4549500048160553
+    ],
+    [
+      -0.4290793240070343,
+      1.1671321392059326,
+      -0.28505000472068787
+    ]
+  ],
+  "status": "no sampled surface intersections; broad AABB remains only a warning"
+}

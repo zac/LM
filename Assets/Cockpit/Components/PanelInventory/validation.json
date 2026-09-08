@@ -1,0 +1,5267 @@
+{
+  "checks": [
+    {
+      "check": "meters and Y up",
+      "pass": true
+    },
+    {
+      "check": "unique stable IDs",
+      "pass": true
+    },
+    {
+      "check": "labels default hidden",
+      "pass": true
+    },
+    {
+      "check": "Panel1 panel path",
+      "pass": true
+    },
+    {
+      "check": "Panel1 Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "Panel1__FDAI node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__FDAI default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__FDAI label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__FDAI separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Warning node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Warning default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Warning label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Warning separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Timers node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Timers default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Timers label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Timers separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel1__CrossPointer node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__CrossPointer default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__CrossPointer label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__CrossPointer separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Propulsion node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Propulsion default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Propulsion label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Propulsion separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel1__RangeThrust node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__RangeThrust default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__RangeThrust label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__RangeThrust separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Guidance node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Guidance default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Guidance label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Guidance separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel1__FDAI disjoint Panel1__Warning",
+      "pass": true
+    },
+    {
+      "check": "Panel1__FDAI disjoint Panel1__Timers",
+      "pass": true
+    },
+    {
+      "check": "Panel1__FDAI disjoint Panel1__CrossPointer",
+      "pass": true
+    },
+    {
+      "check": "Panel1__FDAI disjoint Panel1__Propulsion",
+      "pass": true
+    },
+    {
+      "check": "Panel1__FDAI disjoint Panel1__RangeThrust",
+      "pass": true
+    },
+    {
+      "check": "Panel1__FDAI disjoint Panel1__Guidance",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Warning disjoint Panel1__Timers",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Warning disjoint Panel1__CrossPointer",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Warning disjoint Panel1__Propulsion",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Warning disjoint Panel1__RangeThrust",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Warning disjoint Panel1__Guidance",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Timers disjoint Panel1__CrossPointer",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Timers disjoint Panel1__Propulsion",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Timers disjoint Panel1__RangeThrust",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Timers disjoint Panel1__Guidance",
+      "pass": true
+    },
+    {
+      "check": "Panel1__CrossPointer disjoint Panel1__Propulsion",
+      "pass": true
+    },
+    {
+      "check": "Panel1__CrossPointer disjoint Panel1__RangeThrust",
+      "pass": true
+    },
+    {
+      "check": "Panel1__CrossPointer disjoint Panel1__Guidance",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Propulsion disjoint Panel1__RangeThrust",
+      "pass": true
+    },
+    {
+      "check": "Panel1__Propulsion disjoint Panel1__Guidance",
+      "pass": true
+    },
+    {
+      "check": "Panel1__RangeThrust disjoint Panel1__Guidance",
+      "pass": true
+    },
+    {
+      "check": "Panel2 panel path",
+      "pass": true
+    },
+    {
+      "check": "Panel2 Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "Panel2__FDAI node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__FDAI default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__FDAI label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__FDAI separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel2__Caution node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__Caution default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__Caution label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__Caution separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel2__RCSECS node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__RCSECS default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__RCSECS label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__RCSECS separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel2__CrossPointer node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__CrossPointer default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__CrossPointer label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__CrossPointer separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel2__Systems node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__Systems default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__Systems label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__Systems separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel2__Lower node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__Lower default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__Lower label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel2__Lower separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel2__FDAI disjoint Panel2__Caution",
+      "pass": true
+    },
+    {
+      "check": "Panel2__FDAI disjoint Panel2__RCSECS",
+      "pass": true
+    },
+    {
+      "check": "Panel2__FDAI disjoint Panel2__CrossPointer",
+      "pass": true
+    },
+    {
+      "check": "Panel2__FDAI disjoint Panel2__Systems",
+      "pass": true
+    },
+    {
+      "check": "Panel2__FDAI disjoint Panel2__Lower",
+      "pass": true
+    },
+    {
+      "check": "Panel2__Caution disjoint Panel2__RCSECS",
+      "pass": true
+    },
+    {
+      "check": "Panel2__Caution disjoint Panel2__CrossPointer",
+      "pass": true
+    },
+    {
+      "check": "Panel2__Caution disjoint Panel2__Systems",
+      "pass": true
+    },
+    {
+      "check": "Panel2__Caution disjoint Panel2__Lower",
+      "pass": true
+    },
+    {
+      "check": "Panel2__RCSECS disjoint Panel2__CrossPointer",
+      "pass": true
+    },
+    {
+      "check": "Panel2__RCSECS disjoint Panel2__Systems",
+      "pass": true
+    },
+    {
+      "check": "Panel2__RCSECS disjoint Panel2__Lower",
+      "pass": true
+    },
+    {
+      "check": "Panel2__CrossPointer disjoint Panel2__Systems",
+      "pass": true
+    },
+    {
+      "check": "Panel2__CrossPointer disjoint Panel2__Lower",
+      "pass": true
+    },
+    {
+      "check": "Panel2__Systems disjoint Panel2__Lower",
+      "pass": true
+    },
+    {
+      "check": "Panel3 panel path",
+      "pass": true
+    },
+    {
+      "check": "Panel3 Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "Panel3__EngineRadar node",
+      "pass": true
+    },
+    {
+      "check": "Panel3__EngineRadar default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel3__EngineRadar label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel3__EngineRadar separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel3__Stability node",
+      "pass": true
+    },
+    {
+      "check": "Panel3__Stability default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel3__Stability label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel3__Stability separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel3__TimerHeaters node",
+      "pass": true
+    },
+    {
+      "check": "Panel3__TimerHeaters default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel3__TimerHeaters label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel3__TimerHeaters separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel3__Lighting node",
+      "pass": true
+    },
+    {
+      "check": "Panel3__Lighting default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel3__Lighting label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel3__Lighting separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel3__EngineRadar disjoint Panel3__Stability",
+      "pass": true
+    },
+    {
+      "check": "Panel3__EngineRadar disjoint Panel3__TimerHeaters",
+      "pass": true
+    },
+    {
+      "check": "Panel3__EngineRadar disjoint Panel3__Lighting",
+      "pass": true
+    },
+    {
+      "check": "Panel3__Stability disjoint Panel3__TimerHeaters",
+      "pass": true
+    },
+    {
+      "check": "Panel3__Stability disjoint Panel3__Lighting",
+      "pass": true
+    },
+    {
+      "check": "Panel3__TimerHeaters disjoint Panel3__Lighting",
+      "pass": true
+    },
+    {
+      "check": "Panel4 panel path",
+      "pass": true
+    },
+    {
+      "check": "Panel4 Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "Panel4__DSKY node",
+      "pass": true
+    },
+    {
+      "check": "Panel4__DSKY default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel4__DSKY label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel4__DSKY separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel4__EnableLeft node",
+      "pass": true
+    },
+    {
+      "check": "Panel4__EnableLeft default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel4__EnableLeft label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel4__EnableLeft separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel4__EnableRight node",
+      "pass": true
+    },
+    {
+      "check": "Panel4__EnableRight default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel4__EnableRight label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel4__EnableRight separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel4__Lower node",
+      "pass": true
+    },
+    {
+      "check": "Panel4__Lower default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel4__Lower label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel4__Lower separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel4__DSKY disjoint Panel4__EnableLeft",
+      "pass": true
+    },
+    {
+      "check": "Panel4__DSKY disjoint Panel4__EnableRight",
+      "pass": true
+    },
+    {
+      "check": "Panel4__DSKY disjoint Panel4__Lower",
+      "pass": true
+    },
+    {
+      "check": "Panel4__EnableLeft disjoint Panel4__EnableRight",
+      "pass": true
+    },
+    {
+      "check": "Panel4__EnableLeft disjoint Panel4__Lower",
+      "pass": true
+    },
+    {
+      "check": "Panel4__EnableRight disjoint Panel4__Lower",
+      "pass": true
+    },
+    {
+      "check": "Panel5 panel path",
+      "pass": true
+    },
+    {
+      "check": "Panel5 Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Engine node",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Engine default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Engine label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Engine separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Timer node",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Timer default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Timer label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Timer separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Translation node",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Translation default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Translation label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Translation separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Lighting node",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Lighting default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Lighting label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Lighting separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Engine disjoint Panel5__Timer",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Engine disjoint Panel5__Translation",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Engine disjoint Panel5__Lighting",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Timer disjoint Panel5__Translation",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Timer disjoint Panel5__Lighting",
+      "pass": true
+    },
+    {
+      "check": "Panel5__Translation disjoint Panel5__Lighting",
+      "pass": true
+    },
+    {
+      "check": "Panel6 panel path",
+      "pass": true
+    },
+    {
+      "check": "Panel6 Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "Panel6__DEDA node",
+      "pass": true
+    },
+    {
+      "check": "Panel6__DEDA default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel6__DEDA label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel6__DEDA separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel6__AGS node",
+      "pass": true
+    },
+    {
+      "check": "Panel6__AGS default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel6__AGS label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel6__AGS separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel6__DEDA disjoint Panel6__AGS",
+      "pass": true
+    },
+    {
+      "check": "Panel8 panel path",
+      "pass": true
+    },
+    {
+      "check": "Panel8 Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "Panel8__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "Panel8__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel8__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel8__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel8__Region2 node",
+      "pass": true
+    },
+    {
+      "check": "Panel8__Region2 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel8__Region2 label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel8__Region2 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel8__Region3 node",
+      "pass": true
+    },
+    {
+      "check": "Panel8__Region3 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel8__Region3 label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel8__Region3 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel8__Region1 disjoint Panel8__Region2",
+      "pass": true
+    },
+    {
+      "check": "Panel8__Region1 disjoint Panel8__Region3",
+      "pass": true
+    },
+    {
+      "check": "Panel8__Region2 disjoint Panel8__Region3",
+      "pass": true
+    },
+    {
+      "check": "Panel11 panel path",
+      "pass": true
+    },
+    {
+      "check": "Panel11 Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region2 node",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region2 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region2 label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region2 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region3 node",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region3 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region3 label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region3 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region4 node",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region4 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region4 label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region4 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region5 node",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region5 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region5 label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region5 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region1 disjoint Panel11__Region2",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region1 disjoint Panel11__Region3",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region1 disjoint Panel11__Region4",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region1 disjoint Panel11__Region5",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region2 disjoint Panel11__Region3",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region2 disjoint Panel11__Region4",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region2 disjoint Panel11__Region5",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region3 disjoint Panel11__Region4",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region3 disjoint Panel11__Region5",
+      "pass": true
+    },
+    {
+      "check": "Panel11__Region4 disjoint Panel11__Region5",
+      "pass": true
+    },
+    {
+      "check": "Panel12 panel path",
+      "pass": true
+    },
+    {
+      "check": "Panel12 Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "Panel12__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "Panel12__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel12__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel12__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel12__Region2 node",
+      "pass": true
+    },
+    {
+      "check": "Panel12__Region2 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel12__Region2 label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel12__Region2 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel12__Region3 node",
+      "pass": true
+    },
+    {
+      "check": "Panel12__Region3 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel12__Region3 label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel12__Region3 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel12__Region1 disjoint Panel12__Region2",
+      "pass": true
+    },
+    {
+      "check": "Panel12__Region1 disjoint Panel12__Region3",
+      "pass": true
+    },
+    {
+      "check": "Panel12__Region2 disjoint Panel12__Region3",
+      "pass": true
+    },
+    {
+      "check": "Panel14 panel path",
+      "pass": true
+    },
+    {
+      "check": "Panel14 Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "Panel14__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "Panel14__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel14__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel14__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel14__Region2 node",
+      "pass": true
+    },
+    {
+      "check": "Panel14__Region2 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel14__Region2 label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel14__Region2 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel14__Region1 disjoint Panel14__Region2",
+      "pass": true
+    },
+    {
+      "check": "Panel16 panel path",
+      "pass": true
+    },
+    {
+      "check": "Panel16 Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region2 node",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region2 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region2 label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region2 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region3 node",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region3 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region3 label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region3 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region4 node",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region4 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region4 label_node",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region4 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region1 disjoint Panel16__Region2",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region1 disjoint Panel16__Region3",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region1 disjoint Panel16__Region4",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region2 disjoint Panel16__Region3",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region2 disjoint Panel16__Region4",
+      "pass": true
+    },
+    {
+      "check": "Panel16__Region3 disjoint Panel16__Region4",
+      "pass": true
+    },
+    {
+      "check": "ORDEAL panel path",
+      "pass": true
+    },
+    {
+      "check": "ORDEAL Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "ORDEAL__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "ORDEAL__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "ORDEAL__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "ORDEAL__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "OpticalAOT panel path",
+      "pass": true
+    },
+    {
+      "check": "OpticalAOT Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "OpticalAOT__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "OpticalAOT__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "OpticalAOT__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "OpticalAOT__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "UtilityLights panel path",
+      "pass": true
+    },
+    {
+      "check": "UtilityLights Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "UtilityLights__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "UtilityLights__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "UtilityLights__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "UtilityLights__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "OpticalCOAS panel path",
+      "pass": true
+    },
+    {
+      "check": "OpticalCOAS Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "OpticalCOAS__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "OpticalCOAS__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "OpticalCOAS__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "OpticalCOAS__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "SequenceCamera panel path",
+      "pass": true
+    },
+    {
+      "check": "SequenceCamera Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "SequenceCamera__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "SequenceCamera__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "SequenceCamera__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "SequenceCamera__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "ECSOxygen panel path",
+      "pass": true
+    },
+    {
+      "check": "ECSOxygen Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "ECSOxygen__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "ECSOxygen__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "ECSOxygen__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "ECSOxygen__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "ECSOxygen__Region2 node",
+      "pass": true
+    },
+    {
+      "check": "ECSOxygen__Region2 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "ECSOxygen__Region2 label_node",
+      "pass": true
+    },
+    {
+      "check": "ECSOxygen__Region2 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "ECSOxygen__Region1 disjoint ECSOxygen__Region2",
+      "pass": true
+    },
+    {
+      "check": "ECSWater panel path",
+      "pass": true
+    },
+    {
+      "check": "ECSWater Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "ECSWater__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "ECSWater__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "ECSWater__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "ECSWater__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "ECSWater__Region2 node",
+      "pass": true
+    },
+    {
+      "check": "ECSWater__Region2 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "ECSWater__Region2 label_node",
+      "pass": true
+    },
+    {
+      "check": "ECSWater__Region2 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "ECSWater__Region1 disjoint ECSWater__Region2",
+      "pass": true
+    },
+    {
+      "check": "ECSRecirculation panel path",
+      "pass": true
+    },
+    {
+      "check": "ECSRecirculation Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "ECSRecirculation__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "ECSRecirculation__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "ECSRecirculation__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "ECSRecirculation__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "ECSRecirculation__Region2 node",
+      "pass": true
+    },
+    {
+      "check": "ECSRecirculation__Region2 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "ECSRecirculation__Region2 label_node",
+      "pass": true
+    },
+    {
+      "check": "ECSRecirculation__Region2 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "ECSRecirculation__Region1 disjoint ECSRecirculation__Region2",
+      "pass": true
+    },
+    {
+      "check": "ECSCartridgeStowage panel path",
+      "pass": true
+    },
+    {
+      "check": "ECSCartridgeStowage Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "ECSCartridgeStowage__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "ECSCartridgeStowage__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "ECSCartridgeStowage__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "ECSCartridgeStowage__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "AftGuidance panel path",
+      "pass": true
+    },
+    {
+      "check": "AftGuidance Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "AftGuidance__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "AftGuidance__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "AftGuidance__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "AftGuidance__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "AftGuidance__Region2 node",
+      "pass": true
+    },
+    {
+      "check": "AftGuidance__Region2 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "AftGuidance__Region2 label_node",
+      "pass": true
+    },
+    {
+      "check": "AftGuidance__Region2 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "AftGuidance__Region1 disjoint AftGuidance__Region2",
+      "pass": true
+    },
+    {
+      "check": "AftCDU panel path",
+      "pass": true
+    },
+    {
+      "check": "AftCDU Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "AftCDU__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "AftCDU__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "AftCDU__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "AftCDU__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "AftStowage panel path",
+      "pass": true
+    },
+    {
+      "check": "AftStowage Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "AftStowage__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "AftStowage__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "AftStowage__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "AftStowage__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "AftStowage__Region2 node",
+      "pass": true
+    },
+    {
+      "check": "AftStowage__Region2 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "AftStowage__Region2 label_node",
+      "pass": true
+    },
+    {
+      "check": "AftStowage__Region2 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "AftStowage__Region1 disjoint AftStowage__Region2",
+      "pass": true
+    },
+    {
+      "check": "AftWaste panel path",
+      "pass": true
+    },
+    {
+      "check": "AftWaste Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "AftWaste__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "AftWaste__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "AftWaste__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "AftWaste__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "OverheadRelief panel path",
+      "pass": true
+    },
+    {
+      "check": "OverheadRelief Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "OverheadRelief__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "OverheadRelief__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "OverheadRelief__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "OverheadRelief__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "ForwardRelief panel path",
+      "pass": true
+    },
+    {
+      "check": "ForwardRelief Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "ForwardRelief__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "ForwardRelief__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "ForwardRelief__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "ForwardRelief__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "ForwardStowageCDR panel path",
+      "pass": true
+    },
+    {
+      "check": "ForwardStowageCDR Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "ForwardStowageCDR__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "ForwardStowageCDR__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "ForwardStowageCDR__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "ForwardStowageCDR__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "ForwardStowageLMP panel path",
+      "pass": true
+    },
+    {
+      "check": "ForwardStowageLMP Cabin-relative pose",
+      "pass": true
+    },
+    {
+      "check": "ForwardStowageLMP__Region1 node",
+      "pass": true
+    },
+    {
+      "check": "ForwardStowageLMP__Region1 default_placeholder_node",
+      "pass": true
+    },
+    {
+      "check": "ForwardStowageLMP__Region1 label_node",
+      "pass": true
+    },
+    {
+      "check": "ForwardStowageLMP__Region1 separate aligned label",
+      "pass": true
+    },
+    {
+      "check": "USDZ ARKit compliance",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftCDU authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftCDU Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftCDU/AftCDU__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftCDU/AftCDU__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftCDU_Labels/AftCDU__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftCDU_Labels/AftCDU__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftCDU_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftCDU_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/AftGuidance__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/AftGuidance__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftGuidance_Labels/AftGuidance__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftGuidance_Labels/AftGuidance__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/AftGuidance__Region2 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/AftGuidance__Region2 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftGuidance_Labels/AftGuidance__Region2_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftGuidance_Labels/AftGuidance__Region2_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftGuidance_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftGuidance_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/AftStowage__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/AftStowage__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftStowage_Labels/AftStowage__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftStowage_Labels/AftStowage__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/AftStowage__Region2 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/AftStowage__Region2 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftStowage_Labels/AftStowage__Region2_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftStowage_Labels/AftStowage__Region2_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftStowage_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftStowage_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftWaste authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftWaste Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftWaste/AftWaste__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftWaste/AftWaste__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftWaste_Labels/AftWaste__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftWaste_Labels/AftWaste__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftWaste_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftWaste_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSCartridgeStowage authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSCartridgeStowage Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSCartridgeStowage/ECSCartridgeStowage__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSCartridgeStowage/ECSCartridgeStowage__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSCartridgeStowage_Labels/ECSCartridgeStowage__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSCartridgeStowage_Labels/ECSCartridgeStowage__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSCartridgeStowage_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSCartridgeStowage_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/ECSOxygen__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/ECSOxygen__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSOxygen_Labels/ECSOxygen__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSOxygen_Labels/ECSOxygen__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/ECSOxygen__Region2 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/ECSOxygen__Region2 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSOxygen_Labels/ECSOxygen__Region2_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSOxygen_Labels/ECSOxygen__Region2_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSOxygen_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSOxygen_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/ECSRecirculation__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/ECSRecirculation__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSRecirculation_Labels/ECSRecirculation__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSRecirculation_Labels/ECSRecirculation__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/ECSRecirculation__Region2 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/ECSRecirculation__Region2 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSRecirculation_Labels/ECSRecirculation__Region2_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSRecirculation_Labels/ECSRecirculation__Region2_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSRecirculation_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSRecirculation_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/ECSWater__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/ECSWater__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSWater_Labels/ECSWater__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSWater_Labels/ECSWater__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/ECSWater__Region2 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/ECSWater__Region2 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSWater_Labels/ECSWater__Region2_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSWater_Labels/ECSWater__Region2_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSWater_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSWater_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardRelief authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardRelief Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardRelief/ForwardRelief__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardRelief/ForwardRelief__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardRelief_Labels/ForwardRelief__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardRelief_Labels/ForwardRelief__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardRelief_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardRelief_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageCDR authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageCDR Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageCDR/ForwardStowageCDR__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageCDR/ForwardStowageCDR__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardStowageCDR_Labels/ForwardStowageCDR__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardStowageCDR_Labels/ForwardStowageCDR__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardStowageCDR_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardStowageCDR_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageLMP authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageLMP Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageLMP/ForwardStowageLMP__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageLMP/ForwardStowageLMP__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardStowageLMP_Labels/ForwardStowageLMP__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardStowageLMP_Labels/ForwardStowageLMP__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardStowageLMP_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardStowageLMP_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ORDEAL/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ORDEAL/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalAOT/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalAOT/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/UtilityLights/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/UtilityLights/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalCOAS/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalCOAS/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/SequenceCamera/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/SequenceCamera/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSCartridgeStowage/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSCartridgeStowage/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftCDU/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftCDU/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftWaste/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftWaste/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OverheadRelief/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OverheadRelief/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardRelief/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardRelief/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageCDR/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageCDR/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageLMP/Frame authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageLMP/Frame Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Frame/FrameH_Notch0 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Frame/FrameH_Notch0 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Frame/FrameH_Notch1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Frame/FrameH_Notch1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ORDEAL/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ORDEAL/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalAOT/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalAOT/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/UtilityLights/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/UtilityLights/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalCOAS/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalCOAS/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/SequenceCamera/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/SequenceCamera/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSCartridgeStowage/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSCartridgeStowage/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftCDU/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftCDU/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftWaste/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftWaste/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OverheadRelief/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OverheadRelief/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardRelief/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardRelief/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageCDR/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageCDR/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageLMP/Frame/FrameHA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageLMP/Frame/FrameHA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ORDEAL/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ORDEAL/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalAOT/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalAOT/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/UtilityLights/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/UtilityLights/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalCOAS/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalCOAS/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/SequenceCamera/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/SequenceCamera/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSCartridgeStowage/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSCartridgeStowage/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftCDU/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftCDU/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftWaste/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftWaste/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OverheadRelief/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OverheadRelief/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardRelief/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardRelief/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageCDR/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageCDR/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageLMP/Frame/FrameHB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageLMP/Frame/FrameHB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ORDEAL/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ORDEAL/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalAOT/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalAOT/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/UtilityLights/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/UtilityLights/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalCOAS/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalCOAS/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/SequenceCamera/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/SequenceCamera/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSCartridgeStowage/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSCartridgeStowage/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftCDU/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftCDU/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftWaste/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftWaste/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OverheadRelief/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OverheadRelief/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardRelief/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardRelief/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageCDR/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageCDR/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageLMP/Frame/FrameVA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageLMP/Frame/FrameVA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ORDEAL/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ORDEAL/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalAOT/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalAOT/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/UtilityLights/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/UtilityLights/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalCOAS/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalCOAS/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/SequenceCamera/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/SequenceCamera/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSCartridgeStowage/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSCartridgeStowage/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftCDU/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftCDU/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftWaste/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftWaste/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OverheadRelief/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OverheadRelief/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardRelief/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardRelief/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageCDR/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageCDR/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageLMP/Frame/FrameVB authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageLMP/Frame/FrameVB Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalAOT authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalAOT Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalAOT/OpticalAOT__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalAOT/OpticalAOT__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OpticalAOT_Labels/OpticalAOT__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OpticalAOT_Labels/OpticalAOT__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OpticalAOT_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OpticalAOT_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalCOAS authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalCOAS Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalCOAS/OpticalCOAS__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalCOAS/OpticalCOAS__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OpticalCOAS_Labels/OpticalCOAS__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OpticalCOAS_Labels/OpticalCOAS__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OpticalCOAS_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OpticalCOAS_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ORDEAL authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ORDEAL Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ORDEAL/ORDEAL__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ORDEAL/ORDEAL__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ORDEAL_Labels/ORDEAL__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ORDEAL_Labels/ORDEAL__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ORDEAL_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ORDEAL_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OverheadRelief authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OverheadRelief Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OverheadRelief/OverheadRelief__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OverheadRelief/OverheadRelief__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OverheadRelief_Labels/OverheadRelief__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OverheadRelief_Labels/OverheadRelief__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OverheadRelief_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OverheadRelief_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region2 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region2 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region2_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region2_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region3 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region3 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region3_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region3_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region4 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region4 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region4_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region4_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region5 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region5 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region5_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region5_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Panel12__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Panel12__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Panel12__Region2 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Panel12__Region2 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region2_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region2_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Panel12__Region3 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Panel12__Region3 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region3_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region3_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel12_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel12_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Panel14__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Panel14__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel14_Labels/Panel14__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel14_Labels/Panel14__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Panel14__Region2 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Panel14__Region2 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel14_Labels/Panel14__Region2_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel14_Labels/Panel14__Region2_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel14_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel14_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Panel16__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Panel16__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Panel16__Region2 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Panel16__Region2 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region2_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region2_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Panel16__Region3 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Panel16__Region3 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region3_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region3_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Panel16__Region4 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Panel16__Region4 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region4_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region4_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__CrossPointer authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__CrossPointer Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__CrossPointer_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__CrossPointer_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__FDAI authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__FDAI Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__FDAI_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__FDAI_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__Guidance authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__Guidance Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Guidance_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Guidance_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__Propulsion authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__Propulsion Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Propulsion_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Propulsion_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__RangeThrust authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__RangeThrust Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__RangeThrust_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__RangeThrust_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__Timers authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__Timers Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Timers_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Timers_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__Warning authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__Warning Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Warning_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Warning_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__Caution authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__Caution Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Caution_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Caution_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__CrossPointer authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__CrossPointer Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__CrossPointer_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__CrossPointer_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__FDAI authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__FDAI Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__FDAI_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__FDAI_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__Lower authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__Lower Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Lower_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Lower_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__RCSECS authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__RCSECS Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__RCSECS_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__RCSECS_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__Systems authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__Systems Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Systems_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Systems_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Panel3__EngineRadar authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Panel3__EngineRadar Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__EngineRadar_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__EngineRadar_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Panel3__Lighting authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Panel3__Lighting Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__Lighting_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__Lighting_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Panel3__Stability authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Panel3__Stability Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__Stability_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__Stability_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Panel3__TimerHeaters authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Panel3__TimerHeaters Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__TimerHeaters_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__TimerHeaters_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4/Panel4__DSKY authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4/Panel4__DSKY Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__DSKY_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__DSKY_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4/Panel4__EnableLeft authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4/Panel4__EnableLeft Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__EnableLeft_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__EnableLeft_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4/Panel4__EnableRight authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4/Panel4__EnableRight Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__EnableRight_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__EnableRight_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4/Panel4__Lower authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4/Panel4__Lower Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__Lower_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__Lower_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Panel5__Engine authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Panel5__Engine Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Engine_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Engine_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Panel5__Lighting authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Panel5__Lighting Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Lighting_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Lighting_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Panel5__Timer authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Panel5__Timer Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Timer_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Timer_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Panel5__Translation authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Panel5__Translation Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Translation_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Translation_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Panel6__AGS authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Panel6__AGS Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel6_Labels/Panel6__AGS_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel6_Labels/Panel6__AGS_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Panel6__DEDA authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Panel6__DEDA Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel6_Labels/Panel6__DEDA_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel6_Labels/Panel6__DEDA_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel6_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel6_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Panel8__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Panel8__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Panel8__Region2 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Panel8__Region2 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region2_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region2_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Panel8__Region3 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Panel8__Region3 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region3_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region3_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel8_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel8_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__FDAI/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__FDAI/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__Warning/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__Warning/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__Timers/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__Timers/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__CrossPointer/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__CrossPointer/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__Propulsion/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__Propulsion/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__RangeThrust/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__RangeThrust/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__Guidance/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel1/Panel1__Guidance/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__FDAI/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__FDAI/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__Caution/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__Caution/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__RCSECS/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__RCSECS/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__CrossPointer/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__CrossPointer/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__Systems/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__Systems/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__Lower/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel2/Panel2__Lower/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Panel3__EngineRadar/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Panel3__EngineRadar/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Panel3__Stability/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Panel3__Stability/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Panel3__TimerHeaters/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Panel3__TimerHeaters/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Panel3__Lighting/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel3/Panel3__Lighting/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4/Panel4__DSKY/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4/Panel4__DSKY/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4/Panel4__EnableLeft/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4/Panel4__EnableLeft/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4/Panel4__EnableRight/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4/Panel4__EnableRight/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4/Panel4__Lower/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel4/Panel4__Lower/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Panel5__Engine/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Panel5__Engine/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Panel5__Timer/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Panel5__Timer/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Panel5__Translation/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Panel5__Translation/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Panel5__Lighting/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel5/Panel5__Lighting/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Panel6__DEDA/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Panel6__DEDA/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Panel6__AGS/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel6/Panel6__AGS/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Panel8__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Panel8__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Panel8__Region2/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Panel8__Region2/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Panel8__Region3/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel8/Panel8__Region3/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region2/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region2/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region3/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region3/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region4/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region4/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region5/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel11/Panel11__Region5/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Panel12__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Panel12__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Panel12__Region2/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Panel12__Region2/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Panel12__Region3/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel12/Panel12__Region3/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Panel14__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Panel14__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Panel14__Region2/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel14/Panel14__Region2/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Panel16__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Panel16__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Panel16__Region2/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Panel16__Region2/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Panel16__Region3/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Panel16__Region3/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Panel16__Region4/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/Panel16/Panel16__Region4/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ORDEAL/ORDEAL__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ORDEAL/ORDEAL__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalAOT/OpticalAOT__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalAOT/OpticalAOT__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/UtilityLights/UtilityLights__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/UtilityLights/UtilityLights__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalCOAS/OpticalCOAS__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OpticalCOAS/OpticalCOAS__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/SequenceCamera/SequenceCamera__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/SequenceCamera/SequenceCamera__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/ECSOxygen__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/ECSOxygen__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/ECSOxygen__Region2/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSOxygen/ECSOxygen__Region2/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/ECSWater__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/ECSWater__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/ECSWater__Region2/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSWater/ECSWater__Region2/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/ECSRecirculation__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/ECSRecirculation__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/ECSRecirculation__Region2/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSRecirculation/ECSRecirculation__Region2/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSCartridgeStowage/ECSCartridgeStowage__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ECSCartridgeStowage/ECSCartridgeStowage__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/AftGuidance__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/AftGuidance__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/AftGuidance__Region2/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftGuidance/AftGuidance__Region2/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftCDU/AftCDU__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftCDU/AftCDU__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/AftStowage__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/AftStowage__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/AftStowage__Region2/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftStowage/AftStowage__Region2/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftWaste/AftWaste__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/AftWaste/AftWaste__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OverheadRelief/OverheadRelief__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/OverheadRelief/OverheadRelief__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardRelief/ForwardRelief__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardRelief/ForwardRelief__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageCDR/ForwardStowageCDR__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageCDR/ForwardStowageCDR__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageLMP/ForwardStowageLMP__Region1/Placeholder authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/ForwardStowageLMP/ForwardStowageLMP__Region1/Placeholder Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/SequenceCamera authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/SequenceCamera Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/SequenceCamera/SequenceCamera__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/SequenceCamera/SequenceCamera__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/SequenceCamera_Labels/SequenceCamera__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/SequenceCamera_Labels/SequenceCamera__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/SequenceCamera_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/SequenceCamera_Labels Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__FDAI_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__FDAI_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Warning_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Warning_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Timers_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Timers_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__CrossPointer_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__CrossPointer_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Propulsion_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Propulsion_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__RangeThrust_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__RangeThrust_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Guidance_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel1_Labels/Panel1__Guidance_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__FDAI_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__FDAI_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Caution_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Caution_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__RCSECS_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__RCSECS_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__CrossPointer_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__CrossPointer_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Systems_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Systems_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Lower_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel2_Labels/Panel2__Lower_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__EngineRadar_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__EngineRadar_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__Stability_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__Stability_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__TimerHeaters_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__TimerHeaters_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__Lighting_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel3_Labels/Panel3__Lighting_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__DSKY_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__DSKY_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__EnableLeft_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__EnableLeft_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__EnableRight_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__EnableRight_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__Lower_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel4_Labels/Panel4__Lower_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Engine_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Engine_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Timer_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Timer_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Translation_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Translation_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Lighting_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel5_Labels/Panel5__Lighting_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel6_Labels/Panel6__DEDA_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel6_Labels/Panel6__DEDA_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel6_Labels/Panel6__AGS_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel6_Labels/Panel6__AGS_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region2_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region2_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region3_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel8_Labels/Panel8__Region3_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region2_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region2_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region3_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region3_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region4_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region4_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region5_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel11_Labels/Panel11__Region5_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region2_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region2_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region3_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel12_Labels/Panel12__Region3_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel14_Labels/Panel14__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel14_Labels/Panel14__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel14_Labels/Panel14__Region2_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel14_Labels/Panel14__Region2_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region2_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region2_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region3_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region3_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region4_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/Panel16_Labels/Panel16__Region4_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ORDEAL_Labels/ORDEAL__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ORDEAL_Labels/ORDEAL__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OpticalAOT_Labels/OpticalAOT__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OpticalAOT_Labels/OpticalAOT__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/UtilityLights_Labels/UtilityLights__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/UtilityLights_Labels/UtilityLights__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OpticalCOAS_Labels/OpticalCOAS__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OpticalCOAS_Labels/OpticalCOAS__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/SequenceCamera_Labels/SequenceCamera__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/SequenceCamera_Labels/SequenceCamera__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSOxygen_Labels/ECSOxygen__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSOxygen_Labels/ECSOxygen__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSOxygen_Labels/ECSOxygen__Region2_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSOxygen_Labels/ECSOxygen__Region2_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSWater_Labels/ECSWater__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSWater_Labels/ECSWater__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSWater_Labels/ECSWater__Region2_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSWater_Labels/ECSWater__Region2_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSRecirculation_Labels/ECSRecirculation__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSRecirculation_Labels/ECSRecirculation__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSRecirculation_Labels/ECSRecirculation__Region2_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSRecirculation_Labels/ECSRecirculation__Region2_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSCartridgeStowage_Labels/ECSCartridgeStowage__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ECSCartridgeStowage_Labels/ECSCartridgeStowage__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftGuidance_Labels/AftGuidance__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftGuidance_Labels/AftGuidance__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftGuidance_Labels/AftGuidance__Region2_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftGuidance_Labels/AftGuidance__Region2_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftCDU_Labels/AftCDU__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftCDU_Labels/AftCDU__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftStowage_Labels/AftStowage__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftStowage_Labels/AftStowage__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftStowage_Labels/AftStowage__Region2_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftStowage_Labels/AftStowage__Region2_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftWaste_Labels/AftWaste__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/AftWaste_Labels/AftWaste__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OverheadRelief_Labels/OverheadRelief__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/OverheadRelief_Labels/OverheadRelief__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardRelief_Labels/ForwardRelief__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardRelief_Labels/ForwardRelief__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardStowageCDR_Labels/ForwardStowageCDR__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardStowageCDR_Labels/ForwardStowageCDR__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardStowageLMP_Labels/ForwardStowageLMP__Region1_Label/Text authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/ForwardStowageLMP_Labels/ForwardStowageLMP__Region1_Label/Text Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/UtilityLights authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/UtilityLights Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/UtilityLights/UtilityLights__Region1 authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/Panels/UtilityLights/UtilityLights__Region1 Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/UtilityLights_Labels/UtilityLights__Region1_Label authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/UtilityLights_Labels/UtilityLights__Region1_Label Blender/USD transform",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/UtilityLights_Labels authored node",
+      "pass": true
+    },
+    {
+      "check": "/PanelInventory/PlanningLabels/UtilityLights_Labels Blender/USD transform",
+      "pass": true
+    }
+  ],
+  "failed": 0,
+  "compliance_errors": [],
+  "compliance_failed": []
+}

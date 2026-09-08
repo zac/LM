@@ -1,0 +1,6 @@
+{
+  "reference_commit": "5699e64",
+  "interface_commit": "80c9b2d",
+  "method": "triangle surface crossing; labels excluded; containment and service clearances not tested",
+  "surface_intersections": []
+}

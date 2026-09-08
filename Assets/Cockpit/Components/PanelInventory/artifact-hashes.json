@@ -1,0 +1,50 @@
+{
+  "PanelInventory.blend": {
+    "sha256": "d06eb275ab63f405a0a70ae9330495bab72398aa60e4a03ea2b321eaba5f7d42",
+    "bytes": 3175801
+  },
+  "PanelInventory.usdz": {
+    "sha256": "4b95b051b27831c97a47e9ccfb36b2f62e23469d3be50a09225e57685dc56b24",
+    "bytes": 2214951
+  },
+  "PanelInventory.usdc": {
+    "sha256": "5e00cf3a84c4e76ae97343a704608fca62362b8792f23d68183067bef6b62450",
+    "bytes": 2214785
+  },
+  "PanelInventory.usda": {
+    "sha256": "2cb7a4e91168997d997e134d8530f8069338e63c6c6a9dfb74b006bfb54e116f",
+    "bytes": 8425344
+  },
+  "inventory.json": {
+    "sha256": "f315bdcbd8a6e597231b33420652fb6297241bf3af7c585708f472583522ec49",
+    "bytes": 190532
+  },
+  "build.py": {
+    "sha256": "18e3e03efad7f42506c2b78b3e5ccef85ed568f96318a1ec00ad93deb2b0f2a4",
+    "bytes": 20645
+  },
+  "validate.py": {
+    "sha256": "1a6c67732533cb8a1032e5d13d402037903ae4b2c3fa02a33c47662ed72d5e3c",
+    "bytes": 7904
+  },
+  "validate_native.swift": {
+    "sha256": "b4ef3b862531fc5795c5dcdca6dfe9c56ac683499f7193c77427fd5b1effb536",
+    "bytes": 2648
+  },
+  "validation.json": {
+    "sha256": "97a42007e42b36531483f79d819464b52de094e4f19a0b6fd03140a2d16f39e9",
+    "bytes": 147731
+  },
+  "native-validation.json": {
+    "sha256": "12e38221333ded828524c1bb6a1b788851f15b2493bcf4e70d33b1e3e5b1563d",
+    "bytes": 571
+  },
+  "clearance.json": {
+    "sha256": "8df0d2c523bc3d240f3478351e6668b9c3d133e8e85805346ca098a0ee1bdc6f",
+    "bytes": 1199
+  },
+  "windows-clearance.json": {
+    "sha256": "4e61651dab468263a675a88048d1ec7c05c656c187aded0391bdd236f39a6059",
+    "bytes": 205
+  }
+}

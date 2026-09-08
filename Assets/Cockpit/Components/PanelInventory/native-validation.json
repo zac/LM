@@ -1,0 +1,21 @@
+{
+  "actual_external_replacement" : "NOT TESTED; no peer assets embedded",
+  "boundsMax" : [
+    1.0915104150772095,
+    2.0917208194732666,
+    0.97200000286102295
+  ],
+  "boundsMin" : [
+    -1.0605828762054443,
+    0.18999998271465302,
+    -0.95006382465362549
+  ],
+  "label_layer_independence" : "PASS",
+  "metric_panel_translations" : "PASS",
+  "native_load" : "PASS",
+  "path_parentage" : "PASS",
+  "placeholder_independence" : "PASS",
+  "platform" : "macOS RealityKit",
+  "slots_checked" : 66,
+  "visionOS" : "NOT TESTED; coordinator owns packaging and simulator"
+}
