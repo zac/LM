@@ -248,6 +248,13 @@ struct TerminalDescentCockpitView: View {
                 logger.error("Cockpit terrain failed: \(error.localizedDescription, privacy: .public)")
             }
         }
+        .task {
+            #if DEBUG
+            // Separate task keeps normal cockpit loading and simulation intact.
+            try? await Task.sleep(for: .seconds(5))
+            await LMInstrumentValidation.run(session: appModel.session)
+            #endif
+        }
         .onChange(of: appModel.session.snapshot?.agc.cycle) { _, _ in
             updateExperience()
         }
