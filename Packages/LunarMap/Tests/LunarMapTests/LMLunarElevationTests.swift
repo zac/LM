@@ -3,7 +3,6 @@
 import Foundation
 import Testing
 import simd
-@testable import LM
 
 @Suite("Pinned lunar elevation")
 struct LMLunarElevationTests {

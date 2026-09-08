@@ -1,7 +1,6 @@
 @testable import LunarMap
 import Foundation
 import Testing
-@testable import LM
 
 @Suite("Photo-derived lunar crater catalog")
 struct LMLunarCraterCatalogTests {

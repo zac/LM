@@ -5,7 +5,6 @@ import Foundation
 import ImageIO
 import simd
 import Testing
-@testable import LM
 
 @Suite("Pinned lunar globe")
 struct LMLunarGlobeTests {

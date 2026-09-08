@@ -25,7 +25,7 @@ The current Apollo 11 vertical slice combines the LROC
 observations, the LROC WAC empirical normalized 643 nm reflectance mosaic,
 and LOLA/SELENE `SLDEM2015` V2.0. All eight source inputs and their exact PDS
 byte ranges are pinned in
-`LM/Terrain/TerrainManifest.json`:
+`Packages/LunarMap/Sources/LunarMap/Resources/Terrain/TerrainManifest.json`:
 
 - **Near field:** 1,025 × 1,025 posts at 2 m spacing, centered on the Apollo 11
   retroreflector coordinate. These samples drive rendered geometry, local

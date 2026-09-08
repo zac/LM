@@ -517,3 +517,119 @@ under Step 2. A final LM build follows the test move.
 Deferred: Moon/LM Apollo byte comparisons and 90-second settle, visual journey
 and restore acceptance, matched performance sets, and all physical gates.
 Ordinary launch does not establish visual parity.
+
+
+### Step 4: package tests and generator paths
+
+Moved 20 standalone map-test files with `git mv` to
+`Packages/LunarMap/Tests/LunarMapTests`. From the original `LMTests.swift`,
+three whole suites moved into same-named files: `ProgressiveLunarTerrainTests`
+(23 tests), `TerrainRelativeLandingTests` (5), and `TerrainDetailTextureTests`
+(15). Seven map cases from `LMTests` and 18 map cases from
+`SourceBackedTerrainTileTests` moved into same-named package suites; their
+cockpit cases remain in LM. The app-model case from `LunarExplorerTests`
+stays hosted. Total test identities remain 317: 231 package and 86 host.
+
+The three whole suites are verbatim apart from imports/resource qualification.
+The remaining `LMTests.swift` equals the original minus the removed blocks;
+all four standalone cockpit test files and P64's method body are byte-identical.
+Evidence: `Development/Step4/final-source-audit.json`, `move-audit.json` and
+`LMTests-remaining.diff`. Five map fixture helpers moved verbatim with their
+suite. Host-only fixture types retain verbatim builders used by cockpit tests,
+so those test bodies need no changes and no test cases are duplicated.
+
+One moved mixed-suite test, `apollo11TerrainAssetsRemainByteIdenticalToStage1`,
+previously located resources relative to `#filePath`. Moving its file broke
+that location. It now uses `LunarMap.resources.resourceURL` plus `Terrain`;
+its eleven expected hashes and assertions are unchanged. The first executed
+package run exposed that lookup failure; the corrected full run passes.
+This is a test-resource location change, with no runtime behavior change.
+
+All package tests run unhosted with the `LunarMap-Package` scheme, from
+`Packages/LunarMap`; the product scheme `LunarMap` has no test action.
+No Moon-hosted fallback test bundle was necessary. The generator's default
+output and strip-catalog output now point to package Terrain resources.
+Both tool dry runs resolve those paths without reading source rasters or
+writing pinned assets. The Swift generator compiles. Evidence:
+`Development/Step4/terrain-generator-dry-run.txt` and
+`strip-generator-dry-run.txt`. Generator algorithms are unchanged.
+
+#### Same-state functional control
+
+The separate AGC checkout advanced externally during this development run
+from `166b5860f19ea5a4ced0b0d6d36b4e779d530935` to
+`b3f15533db335ee882dc07401790c93010809e8f`. We made no AGC changes. Its
+existing uncommitted state remained:
+
+```text
+ M Sources/LMCore/LMAGCPadLoad.swift
+```
+
+The dirty pad-load SHA-256 remains
+`9a2a31a38b024e4f1bf92e34a499d146a16a1583ba33908f5db3f1b9a8b165c0`.
+To avoid attributing dependency changes to extraction, the unchanged LM
+control `89ecb0f` was tested again against this exact AGC checkout, followed
+by a fresh package run. The final host run also uses this state. Recorded in
+`Development/agc-state.json` and `Development/CurrentAGC-Control/`.
+
+| Simulator Release suite | Passed | Failed | Result |
+|---|---:|---:|---|
+| Unchanged control `89ecb0f` | 316 | 1 | Exempt P64 only |
+| LunarMap package | 231 | 0 | Pass |
+| Final LM-hosted tests | 85 | 1 | Exempt P64 only |
+| Combined package + host vs control | 316 | 1 | Same 317 identities and outcomes |
+
+`PoweredDescentCheckpointSessionTests/p64PROAndACAChangeLuminaryLandingTarget()`
+fails with identical failure text on the refreshed control and final host.
+It remains exempt and handed to the cockpit owner. No outcome changed in
+either direction. Evidence: `Development/Step4/outcome-comparison.json`,
+`PackageTests-CurrentAGC.xcresult`, `HostTests-Final/Tests.xcresult` and
+`Development/CurrentAGC-Control/Tests.xcresult`.
+
+#### Final ordinary Release builds and contract audit
+
+Both apps build with Xcode 26.6 for the designated visionOS 26.5 Simulator,
+serially. These are ordinary Release builds, after the testable builds.
+
+| App | Executable SHA-256 | Bundle bytes | MiB |
+|---|---|---:|---:|
+| LM | `c146cc689373fc896685c4b36a1051ea3151c9639721819c2a780c7d24c32091` | 469,806,950 | 448.04 |
+| Moon | `970d1773103b7557ae9e7bf6bcc13683681b0a42013c9569948b2b0b31e8d77c` | 193,419,316 | 184.46 |
+
+Frozen apps are under `Development/Final-LM/` and `Development/Final-Moon/`;
+build logs and `Development/final-builds.json` retain exact provenance.
+The source contract audit passes all eleven pinned resources and all five
+protected method bodies (`Development/Contracts/`, `Development/contracts.log`).
+No terrain data, contact geometry, residual limits, source ordering, shaders,
+or capture algorithms changed. The 76 MB capture JPEG XL remains bundled.
+
+### Final development checkpoint: integration authorized, qualification open
+
+The owner explicitly requested development completion and integration into
+`terrain-realism-and-explorer` with lengthy validation documented as
+outstanding. This supersedes the previous instruction to withhold package
+integration until all performance/capture gates passed; it does not turn
+failed or unrun gates into passing evidence. Steps 1–4 are development-complete.
+Steps 5 and 6 remain not started. Candidate branches and earlier evidence
+are preserved; nothing is pushed.
+
+| Scope | Completed evidence | Still outstanding |
+|---|---|---|
+| Step 1 | Same-outcome tests; ordinary Release; eleven Apollo PNGs identical; 90-second settle; contracts; journey triplicates | Fresh soak peak **failed by 1.562546 MiB**; warm-highland incomplete; no passing replacement claimed |
+| Step 2 | Ordinary Release; 45 focused passes; final combined outcome audit; no package ProcessInfo/host-model references | Step-specific Apollo/settle and alternating journey, soak, warm-highland qualification |
+| Step 3 | Moon Release and ordinary launch; 13 tool tests under each bundle ID; final build | Moon eleven PNGs vs baseline, LM regression ladder, settle, inspected journey/switch, restore and matched performance |
+| Step 4 | 231 package passes; 85 host passes + identical P64; full 317-outcome control match; source audit; both Release apps; generator dry runs | Final LM/Moon visual and performance qualification; intermediate-step performance isolation was not run |
+
+No new captures, soaks or benchmarks were started in this development
+continuation. Prior interrupted warm-highland work stays incomplete.
+Performance and visual parity cannot be inferred from passing builds/tests.
+Future qualification must use the existing corrected named gates, including
+callback margin and ≤16.70 ms settled mean/p99/max with zero missed callbacks.
+All new visual inspections are deferred; earlier Step 1 inspected images
+remain the only package-run capture evidence.
+
+Every physical Vision Pro gate remains open: stereo appearance and continuity,
+tracked hand/head/gaze input, comfort, device CPU/GPU pacing, memory pressure,
+thermal behavior and long-session stability. Simulator results do not establish
+physical-device acceptance. The separate AGC modification and both user scheme
+files are preserved; no AGC code or cockpit tests were edited by this work.

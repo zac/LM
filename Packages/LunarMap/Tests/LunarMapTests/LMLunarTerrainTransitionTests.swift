@@ -3,7 +3,6 @@ import Foundation
 import RealityKit
 import Testing
 import simd
-@testable import LM
 
 @Suite("Global terrain transitions")
 struct LMLunarTerrainTransitionTests {

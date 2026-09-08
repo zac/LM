@@ -49,8 +49,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--image', type=pathlib.Path, required=True)
     parser.add_argument('--label', type=pathlib.Path, required=True)
-    parser.add_argument('--output', type=pathlib.Path, required=True)
+    parser.add_argument('--output', type=pathlib.Path, default=pathlib.Path(__file__).resolve().parents[2] / 'Packages/LunarMap/Sources/LunarMap/Resources/Terrain/LunarElevationStrips.json')
+    parser.add_argument('--dry-run', action='store_true', help='Print the output path without reading sources or writing assets')
     args = parser.parse_args()
+    if args.dry_run:
+        print(args.output.resolve())
+        raise SystemExit(0)
     catalog = generate(args.image, args.label)
     payload = (json.dumps(catalog, sort_keys=True, separators=(',', ':')) + '\n').encode()
     args.output.write_bytes(payload)

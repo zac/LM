@@ -65,8 +65,6 @@
 		};
 		11F3D7952D4569A900205449 /* LMTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = LMTests;
 			sourceTree = "<group>";
 		};
@@ -268,8 +266,8 @@
 			mainGroup = 11F3D76A2D4569A800205449;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "AGC" */,
-				1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */,
+				3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */,
+				1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 11F3D7742D4569A800205449 /* Products */;
@@ -644,11 +642,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */ = {
+		1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/LunarMap;
 		};
-		3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "AGC" */ = {
+		3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../AGC;
 		};
@@ -661,32 +659,32 @@
 		};
 		484902EAE3DD096F7FE83CD5 /* LunarMap */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */;
+			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */;
 			productName = LunarMap;
 		};
 		7F923C8DED5D27B4856DF91E /* AGC */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "AGC" */;
+			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */;
 			productName = AGC;
 		};
 		A9EB3C526EF0E03AA143B6C9 /* LMCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "AGC" */;
+			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */;
 			productName = LMCore;
 		};
 		B61A332620F9023911743D64 /* LunarMapExplorer */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */;
+			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */;
 			productName = LunarMapExplorer;
 		};
 		D0ADE5292D7FBA8CE751FD6A /* LunarMapExplorer */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */;
+			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */;
 			productName = LunarMapExplorer;
 		};
 		E0160C33A71CDD4B67B2F4A5 /* LunarMap */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */;
+			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */;
 			productName = LunarMap;
 		};
 /* End XCSwiftPackageProductDependency section */

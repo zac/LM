@@ -1,7 +1,6 @@
 @testable import LunarMap
 import Foundation
 import Testing
-@testable import LM
 
 @Suite("Streaming terrain detail")
 struct LMTerrainDetailStreamingTests {

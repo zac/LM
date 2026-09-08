@@ -3,7 +3,6 @@
 import Foundation
 import Testing
 import simd
-@testable import LM
 
 @Suite("Moon Explorer experience") @MainActor
 struct LunarExplorerExperienceTests {

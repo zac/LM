@@ -22,7 +22,7 @@ import UniformTypeIdentifiers
 //     --wac-medium Tools/TerrainGenerator/cache/WAC_EMP_643NM_304P_N_ROWS_17951_18118_FLOAT.bin \
 //     --wac-far-north Tools/TerrainGenerator/cache/WAC_EMP_643NM_064P_N_ROWS_3518_3839_FLOAT.bin \
 //     --wac-far-south Tools/TerrainGenerator/cache/WAC_EMP_643NM_064P_S_ROWS_0_235_FLOAT.bin \
-//     --out LM/Terrain
+//     --out Packages/LunarMap/Sources/LunarMap/Resources/Terrain
 
 // MARK: - Pinned sources (Docs/visionOS Immersive.md)
 
@@ -1784,9 +1784,11 @@ func run() throws {
     var wacMediumPath: URL?
     var wacFarNorthPath: URL?
     var wacFarSouthPath: URL?
-    var outDir = URL(fileURLWithPath: "LM/Terrain")
+    var outDir = URL(fileURLWithPath: "Packages/LunarMap/Sources/LunarMap/Resources/Terrain")
+    var dryRun = false
     var arguments = Array(CommandLine.arguments.dropFirst())
     while !arguments.isEmpty {
+        if arguments[0] == "--dry-run" { dryRun = true; arguments.removeFirst(); continue }
         guard arguments.count >= 2 else {
             throw TerrainError("missing value for \(arguments[0])")
         }
@@ -1813,6 +1815,7 @@ func run() throws {
             throw TerrainError("unknown argument \(arguments[0])")
         }
     }
+    if dryRun { print("output: \(outDir.standardizedFileURL.path)"); return }
     guard let dtmPath, let sldemMediumPath, let sldemFarPath,
           let nacOrthoAPath, let nacOrthoBPath,
           let wacMediumPath, let wacFarNorthPath, let wacFarSouthPath else {

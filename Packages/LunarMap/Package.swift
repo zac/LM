@@ -16,6 +16,7 @@ let package = Package(
             resources: [.copy("Resources/Terrain"), .process("Resources/LunarTerrainSR.mlpackage")]
         ),
         .target(name: "LunarMapExplorer", dependencies: ["LunarMap"]),
+        .testTarget(name: "LunarMapTests", dependencies: ["LunarMap", "LunarMapExplorer", .product(name: "LMCore", package: "AGC")]),
     ],
     swiftLanguageModes: [.v5]
 )

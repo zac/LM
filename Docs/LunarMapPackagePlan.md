@@ -16,13 +16,23 @@ one test suite, two thin app shells.
 
 | Step | State | Notes |
 |---|---|---|
-| 1 Package skeleton and file moves | Withheld on `lunar-map/step-1`; stopped by owner | Runtime `3e94add` on `89ecb0f`. Tests, Apollo, contracts and journey pass. Fresh soak peak exceeds gate by 1.563 MiB; warm-highland incomplete. See stop checkpoint in `LunarMapPackage.md`. |
+| 1 Package skeleton and file moves | Development complete; integration authorized | Runtime `3e94add` on `89ecb0f`. Tests, Apollo, contracts and journey pass. Fresh soak peak exceeds gate by 1.563 MiB; warm-highland incomplete. Owner authorized integration with qualification outstanding. |
 | 2 Decouple the six seams | Development complete, `f1f9767` | Release build and 45 focused tests pass; long qualification deferred by owner |
-| 3 Moon app target | Development complete on `lunar-map/step-3` | Release build and ordinary launch pass; both-ID tool tests pass; visual/performance qualification deferred |
-| 4 Tests and tools move into the package | Not started | §4 |
+| 3 Moon app target | Development complete, `e797590` | Release build and ordinary launch pass; both-ID tool tests pass; visual/performance qualification deferred |
+| 4 Tests and tools move into the package | Development complete on `lunar-map/step-4` | 231 package passes; host 85 passes and unchanged exempt P64 failure; combined 317 outcomes equal refreshed control. Both Release apps build; generator path dry runs pass. |
 | 5 Optional: `LunarMapCore` split for macOS-hosted tests | Not started | §4 |
 | 6 Later: sibling repository split | Not started | §7 |
 | Baseline P64 test exemption | Owner accepted | `p64PROAndACAChangeLuminaryLandingTarget` fails unchanged on control with the same AGC state; handed to cockpit owner; no changes to that test or AGC |
+
+**Current integration decision (2026-09-08):** the owner asked to finish the
+remaining development steps and integrate into `terrain-realism-and-explorer`,
+documenting the lengthy validation still outstanding. Steps 1–4 are integrated
+as development work, without asserting full capture/performance acceptance.
+The earlier soak failure is retained; no new captures, soaks or benchmarks
+were run in this development continuation. See the final development checkpoint
+in `LunarMapPackage.md` for commit references, functional evidence and the
+remaining qualification ledger. The original gates below remain the criteria
+for that future qualification; steps 5 and 6 are not started.
 
 ## 1. What exists today (refreshed 2026-09-08 after B)
 
@@ -284,7 +294,8 @@ ten-percent margin; settled mean/p99/max are ≤16.70 ms with zero misses).
 4. **Tests and tools into the package.** Move the map tests to
    `LunarMapTests` with `@testable import LunarMap`; resource loading in tests
    uses `LunarMap.resources`. Run them with
-   `xcodebuild test -scheme LunarMap -destination 'platform=visionOS Simulator,id=8F38C0E7-…'`.
+   `xcodebuild test -scheme LunarMap-Package -destination 'platform=visionOS Simulator,id=8F38C0E7-…'`
+   from `Packages/LunarMap`. The product-only `LunarMap` scheme has no test action.
    If a RealityKit-dependent test cannot run unhosted, keep that test in an
    app-hosted bundle in the Moon target and say which.
    Owner clarification: move map-only suites from `LMTests.swift` verbatim

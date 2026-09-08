@@ -1,6 +1,5 @@
 @testable import LunarMap
 import Testing
-@testable import LM
 
 @Suite("Selenographic coordinate authority")
 struct LMSelenographicCoordinateTests {

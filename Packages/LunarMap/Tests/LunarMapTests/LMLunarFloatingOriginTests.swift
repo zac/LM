@@ -3,7 +3,6 @@
 import Testing
 import RealityKit
 import simd
-@testable import LM
 
 @Suite("Floating lunar ENU")
 struct LMLunarFloatingOriginTests {

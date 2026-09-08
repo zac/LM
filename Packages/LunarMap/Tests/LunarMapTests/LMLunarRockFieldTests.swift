@@ -4,7 +4,6 @@ import LMCore
 import RealityKit
 import Testing
 import simd
-@testable import LM
 
 @Suite("Apollo 11 source-constrained rock field")
 struct LMLunarRockFieldTests {

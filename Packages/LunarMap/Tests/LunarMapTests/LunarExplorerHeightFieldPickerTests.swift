@@ -2,7 +2,6 @@
 @testable import LunarMap
 import Testing
 import simd
-@testable import LM
 
 @Suite("Measured height-field gesture picking")
 struct LunarExplorerHeightFieldPickerTests {

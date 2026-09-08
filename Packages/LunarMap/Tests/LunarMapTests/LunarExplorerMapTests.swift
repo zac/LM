@@ -4,7 +4,6 @@ import Testing
 import Observation
 import Synchronization
 import simd
-@testable import LM
 
 @Suite("Moon map controls") @MainActor
 struct LunarExplorerMapTests {

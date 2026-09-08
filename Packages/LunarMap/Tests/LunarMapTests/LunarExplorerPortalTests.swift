@@ -2,7 +2,6 @@
 import Foundation
 import Testing
 import simd
-@testable import LM
 
 @Suite("Moon Explorer portal silhouette") @MainActor
 struct LunarExplorerPortalTests {

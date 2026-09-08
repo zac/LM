@@ -5,7 +5,6 @@ import Metal
 import RealityKit
 import Testing
 import simd
-@testable import LM
 
 @Suite("Lunar terrain arrival")
 struct LMLunarTerrainArrivalTests {

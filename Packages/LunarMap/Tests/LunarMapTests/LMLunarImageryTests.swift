@@ -2,7 +2,6 @@
 import CryptoKit
 import Foundation
 import Testing
-@testable import LM
 
 @Suite @MainActor
 struct LMLunarImageryTests {

@@ -2,7 +2,6 @@
 import Foundation
 import Testing
 import simd
-@testable import LM
 
 @Suite("Global lunar source resolver")
 struct LMLunarResolverTests {

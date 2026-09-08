@@ -3,7 +3,6 @@ import Foundation
 import Testing
 import simd
 import LMCore
-@testable import LM
 
 @Suite("Global rendered contact")
 struct LMLunarContactTests {
