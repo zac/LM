@@ -9,8 +9,9 @@ import simd
 struct LMCommanderStationAssemblyTests {
     @Test func reconcilesNestedMountsAndPreservesOpticalBasis() throws {
         let assembly = try LMCommanderStationAssembly.load()
-        for (name, position) in [("Mount_DSKY", LMCommanderStationGeometry.dskyMountPositionMeters),
-                                  ("Mount_FDAI", LMCommanderStationGeometry.fdaiMountPositionMeters)] {
+        for name in ["Mount_DSKY", "Mount_FDAI"] {
+            let proposed = try #require(assembly.manifest.mounts[name])
+            let position = SIMD3<Float>(proposed.position[0], proposed.position[1], proposed.position[2])
             let entity = try LMCommanderStationAssembly.unique(name, in: assembly.cabin)
             #expect(simd_distance(entity.position(relativeTo: assembly.cabin), position) < 0.00001)
             #expect(simd_length(entity.scale - SIMD3<Float>(repeating: 1)) < 0.00001)
@@ -31,7 +32,7 @@ struct LMCommanderStationAssemblyTests {
     @Test func atomicFallbackAndInstallKeepLiveIdentities() throws {
         let station = LMCommanderStationScene()
         let keys = station.dskyKeyEntities
-        let transforms = keys.map { $0.transformMatrix(relativeTo: station.root) }
+        let transforms = keys.map { $0.transformMatrix(relativeTo: station.dskyFaceRoot) }
         let nodes = LMCommanderStationAssembly.descendants(station.root)
         let enabledBefore = nodes.map(\.isEnabled)
         let grids = nodes.filter { $0.name == LMCockpitAssetContract.Node.landingPointDesignatorInner.rawValue || $0.name == LMCockpitAssetContract.Node.landingPointDesignatorOuter.rawValue }
@@ -41,11 +42,15 @@ struct LMCommanderStationAssemblyTests {
         #expect(station.commanderAssembly == nil)
         #expect(nodes.map(\.isEnabled) == enabledBefore)
         #expect(station.installCommanderAssembly())
+        let assembly = try #require(station.commanderAssembly)
+        let reservation = try LMCommanderStationAssembly.unique("Mount_DSKY", in: assembly.cabin)
+        #expect(simd_distance(station.dskyFaceRoot.position, reservation.position(relativeTo: assembly.cabin)) < 0.00001)
+        #expect(station.dskyFaceRoot.scale == SIMD3<Float>(repeating: 1))
         #expect(station.installCommanderAssembly { throw LMCommanderStationAssembly.AssemblyError.invalidContract("must not reload") })
         for (i, key) in keys.enumerated() {
             #expect(key === station.dskyKeyEntities[i])
             #expect(station.dskyKeyCode(for: key) != nil)
-            #expect(LMCommanderStationAssembly.near(key.transformMatrix(relativeTo: station.root), transforms[i]))
+            #expect(LMCommanderStationAssembly.near(key.transformMatrix(relativeTo: station.dskyFaceRoot), transforms[i]))
         }
         for (i, grid) in grids.enumerated() {
             #expect(grid.isEnabled)

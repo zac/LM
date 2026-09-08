@@ -67,20 +67,18 @@ final class LMCommanderStationAssembly {
                 throw AssemblyError.invalidContract("CDR pane basis")
             }
         }
-        // Preserve the app's reviewed reach/face registration. USD mount origins
-        // are face centers, whereas app surface origins are box centers.
-        for (index, surface) in LMCommanderStationGeometry.panelSurfaces.enumerated() {
+        // Front/side/design-eye comparison rejects the old forward stack:
+        // the FDAI was almost beside the calibrated eye and Panel 3 occluded
+        // the DSKY. Adopt the delivered forward 1–4 reservations for this
+        // optional assembly only. Panel 5/6 keep the live control basis.
+        for (index, surface) in LMCommanderStationGeometry.panelSurfaces.enumerated() where index >= 4 {
             let panel = try Self.unique("Mount_Panel_\(index + 1)", in: cabin)
             panel.setTransformMatrix(Transform(rotation: surface.orientation,
                 translation: surface.scenePoint(local: [0, 0, surface.sizeMeters.z / 2])).matrix,
                 relativeTo: cabin)
         }
-        for (name, position, orientation) in [
-            ("Mount_DSKY", LMCommanderStationGeometry.dskyMountPositionMeters, LMCommanderStationGeometry.dskyMountOrientation),
-            ("Mount_FDAI", LMCommanderStationGeometry.fdaiMountPositionMeters, LMCommanderStationGeometry.fdaiMountOrientation)
-        ] {
+        for name in ["Mount_DSKY", "Mount_FDAI"] {
             let mount = try Self.unique(name, in: cabin)
-            mount.setTransformMatrix(Transform(rotation: orientation, translation: position).matrix, relativeTo: cabin)
             // Reservation outlines are not additional instrument renderers.
             for child in mount.children { child.isEnabled = false }
         }

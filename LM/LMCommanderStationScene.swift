@@ -663,6 +663,14 @@ final class LMCommanderStationScene {
                 logger.error("Cabin assembly requires both live imported instruments; fallback retained")
                 return false
             }
+            let dskyReservation = try LMCommanderStationAssembly.unique("Mount_DSKY", in: assembly.cabin)
+            let fdaiReservation = try LMCommanderStationAssembly.unique("Mount_FDAI", in: assembly.cabin)
+            // Commit the reviewed optional registration by moving the existing
+            // mounts, never recreating instruments or their live key dictionaries.
+            dskyFaceRoot.position = dskyReservation.position(relativeTo: assembly.cabin)
+            dskyFaceRoot.orientation = dskyReservation.orientation(relativeTo: assembly.cabin)
+            fdaiMount.position = fdaiReservation.position(relativeTo: assembly.cabin)
+            fdaiMount.orientation = fdaiReservation.orientation(relativeTo: assembly.cabin)
             let retained = Entity()
             retained.name = "App optical marks and functional control supports"
             // These meshes are already expressed in cabin coordinates. Preserve
