@@ -184,7 +184,7 @@ struct LMCommanderStationAssemblyTests {
     }
 
     @Test func instrumentObserverHasPrecedence() {
-        for name in ["cdr", "lmp", "rear", "overhead", "control-closeup", "detail-side"] {
+        for name in ["cdr", "lmp", "rear", "overhead", "control-closeup", "detail-side", "cross-pointer"] {
             #expect(LMCommanderStationAssemblyObserver.selected(arguments: ["--assembly-validation-view=\(name)"]) != nil)
         }
         #expect(LMCommanderStationAssemblyObserver.selected(arguments: []) == nil)

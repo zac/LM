@@ -37,6 +37,7 @@ final class LMImportedDescentControl {
     let actuator: Entity
     let target = Entity()
     let definition: Contract.Control
+    let backingMaterials: [any Material]
     private let rotationReference: simd_quatf
     private let neutralPosition: SIMD3<Float>
 
@@ -81,7 +82,15 @@ final class LMImportedDescentControl {
         }
         // Both are partial-region components. Keep inventory backing and remove
         // only the supplied duplicate neutral backing, never its upright/support.
-        try LMCommanderStationAssembly.unique(definition.neutral_backing, in: root).isEnabled = false
+        let backing = try LMCommanderStationAssembly.unique(definition.neutral_backing, in: root)
+        backingMaterials = LMCommanderStationAssembly.descendants(backing).compactMap { $0.components[ModelComponent.self] }.flatMap(\.materials)
+        guard !backingMaterials.isEmpty else { throw LMCommanderStationAssembly.AssemblyError.invalidContract("Missing control backing material") }
+        backing.isEnabled = false
+        if kind == .attitudeMode {
+            for suffix in ["Heading", "PGNS", "AUTO", "ATTHOLD", "OFF"] {
+                LMCockpitComponentSupport.readableMarkings(try LMCommanderStationAssembly.unique("AttitudeMode__" + suffix, in: root))
+            }
+        }
         LMCockpitComponentSupport.removeInput(root)
         target.name = kind.rawValue + " interaction proxy"
         target.position = [0, 0.01, 0.015]

@@ -288,7 +288,7 @@ final class LMCommanderStationAssembly {
     /// Partial equipment leaves the original neutral region backing in place.
     /// A failed optional component cannot remove a peer or publish an empty slot.
     func installPartialOccupant(slotID: String, componentID: String,
-                                pose: Transform = Transform(),
+                                pose: Transform = Transform(), backingMaterial: (any Material)? = nil,
                                 loadAndValidate: @MainActor () throws -> Entity) throws {
         guard let slot = slots[slotID], slot.replacement_allowed, slot.external_occupant == nil,
               !installedSlots.contains(slotID), !installedPartialComponents.contains(componentID),
@@ -305,8 +305,16 @@ final class LMCommanderStationAssembly {
               Self.descendants(occupant).contains(where: { $0.components[ModelComponent.self] != nil }) else {
             throw AssemblyError.invalidContract("Non-neutral or empty partial occupant")
         }
+        let backing = try Self.path(slot.default_placeholder_node, in: panelInventory)
         occupant.transform = pose
         mount.addChild(occupant)
+        if let backingMaterial {
+            for node in Self.descendants(backing) {
+                guard var model = node.components[ModelComponent.self] else { continue }
+                model.materials = model.materials.map { _ in backingMaterial }
+                node.components.set(model)
+            }
+        }
         installedPartialComponents.insert(componentID)
         installedSlots.insert(slotID)
     }

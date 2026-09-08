@@ -705,7 +705,8 @@ final class LMCommanderStationScene {
         do {
             let control = try loader?() ?? LMImportedDescentControl.load(kind)
             guard control.kind == kind else { throw LMCommanderStationAssembly.AssemblyError.invalidContract("Control kind") }
-            try assembly.installPartialOccupant(slotID: control.definition.slot, componentID: kind.rawValue) { control.root }
+            try assembly.installPartialOccupant(slotID: control.definition.slot, componentID: kind.rawValue,
+                backingMaterial: kind == .attitudeMode ? control.backingMaterials.first : nil) { control.root }
             if kind == .attitudeMode {
                 importedAttitudeMode = control
                 attitudeModeSwitch.isEnabled = false
