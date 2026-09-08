@@ -16,7 +16,7 @@ enum LMCommanderStationAssemblyObserver {
         switch view {
         case .front: return ([-0.15, 1.60, 0.48], [-0.15, 1.30, -0.55])
         case .side: return ([-0.78, 1.57, 0.30], [-0.15, 1.30, -0.55])
-        case .crewEye: return (LMLandingPointDesignator().commanderEyeMeters, [-0.15, 1.29, -0.65])
+        case .crewEye: return (LMLandingPointDesignator().commanderEyeMeters, [-0.15, 1.43, -0.65])
         }
     }
     static func frame(_ root: Entity, arguments: [String] = ProcessInfo.processInfo.arguments) {
