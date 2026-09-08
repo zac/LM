@@ -6,14 +6,16 @@ import UIKit
 /// Window navigation and scene controls have separate homes.
 public struct LunarExplorerControls: View {
     @Bindable var session: LunarExplorerSession
-    var close: () -> Void
-    var landInCockpit: (() -> Void)? = nil
+    var actions: LunarExplorerHostActions
+
+    public init(session: LunarExplorerSession, actions: LunarExplorerHostActions) {
+        self.session = session
+        self.actions = actions
+    }
 
     public init(session: LunarExplorerSession, close: @escaping () -> Void,
                 landInCockpit: (() -> Void)? = nil) {
-        self.session = session
-        self.close = close
-        self.landInCockpit = landInCockpit
+        self.init(session: session, actions: .init(close: close, landInCockpit: landInCockpit))
     }
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -68,7 +70,7 @@ public struct LunarExplorerControls: View {
             Button("Cancel", role: .cancel) {}
         } message: { Text("Remembers this location, camera and sunlight.") }
         .task {
-            guard ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile-browser") else { return }
+            guard LunarMapLaunchOptions.current.arguments.contains("--lunar-explorer-profile-browser") else { return }
             let logger = Logger(subsystem: LunarMapLog.subsystem, category: "MoonBrowser")
             let originalLibrary = session.library
             let captureDomain = "MoonBrowserCapture." + UUID().uuidString
@@ -88,7 +90,7 @@ public struct LunarExplorerControls: View {
                 }
                 guard let place = session.catalogPlaces.first(where: { $0.id == "apollo-11" }) else { return }
                 session.previewPlace(place)
-                if ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile-browser-search") {
+                if LunarMapLaunchOptions.current.arguments.contains("--lunar-explorer-profile-browser-search") {
                     search = "Tycho"
                     try await stage("search")
                     search = "No such place"
@@ -102,7 +104,7 @@ public struct LunarExplorerControls: View {
                     logger.info("Moon browser stage=passed")
                     return
                 }
-                if ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile-browser-lighting") {
+                if LunarMapLaunchOptions.current.arguments.contains("--lunar-explorer-profile-browser-lighting") {
                     showsSun = true
                     try await stage("lighting")
                     showsSun = false
@@ -110,7 +112,7 @@ public struct LunarExplorerControls: View {
                     return
                 }
                 try await stage("selected")
-                if ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile-browser-selected") {
+                if LunarMapLaunchOptions.current.arguments.contains("--lunar-explorer-profile-browser-selected") {
                     logger.info("Moon browser stage=passed")
                     return
                 }
@@ -150,7 +152,7 @@ public struct LunarExplorerControls: View {
             }.frame(width: dynamicTypeSize.isAccessibilitySize ? 720 : 560, height: 760)
         }
         .sheet(isPresented: $showsInspector) {
-            LunarExplorerInspector(session: session, close: { showsInspector = false }, landInCockpit: landInCockpit)
+            LunarExplorerInspector(session: session, close: { showsInspector = false }, landInCockpit: actions.landInCockpit, cockpitDisplayName: actions.cockpitDisplayName)
         }
     }
 

@@ -34,7 +34,7 @@ class MainMenuViewModel {
         // Configure before any restorable window is created. visionOS can
         // relaunch directly into the Explorer controls window, bypassing the
         // powered-descent view that normally handles automation arguments.
-        lunarExplorerSession.configure(arguments: arguments)
+        lunarExplorerSession.configure(options: .init(arguments: arguments))
         if let value = arguments.first(where: { $0.hasPrefix("--cockpit-coordinate=") }) {
             cockpitCoordinate = LMLunarNavigation.parse(String(value.dropFirst("--cockpit-coordinate=".count)))
         }

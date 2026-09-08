@@ -45,7 +45,7 @@ public struct LunarExplorerView: View {
             }
         }
         .onChange(of: reduceMotion, initial: true) { _, value in
-            explorer.reduceMotion = value || ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile-reduce-motion")
+            explorer.reduceMotion = value || LunarMapLaunchOptions.current.arguments.contains("--lunar-explorer-profile-reduce-motion")
         }
         .simultaneousGesture(SpatialTapGesture().targetedToAnyEntity().onEnded { value in
             guard !explorer.navigationInProgress, !explorer.landingRunning,
@@ -73,7 +73,7 @@ public struct LunarExplorerView: View {
         .task { await scene.startGestureTracking() }
         .onAppear {
             LunarExplorerPerformanceProbe.shared.start(
-                arguments: ProcessInfo.processInfo.arguments
+                arguments: LunarMapLaunchOptions.current.arguments
             )
         }
         .onDisappear {
@@ -87,7 +87,7 @@ public struct LunarExplorerView: View {
             if explorer.isExplorerExperience { explorer.cancelNavigation() }
         }
         .task {
-            let arguments = ProcessInfo.processInfo.arguments
+            let arguments = LunarMapLaunchOptions.current.arguments
             if arguments.contains("--lunar-explorer-profile-journey") {
                 await LunarExplorerExperienceProbe.run(explorer, scene: scene)
                 return
@@ -134,7 +134,7 @@ public struct LunarExplorerView: View {
         for _ in 0..<600 {
             if !session.navigationInProgress && session.diagnostics.loadMessage == "Lunar terrain ready" {
                 let prefix = "--lunar-explorer-transition-hold-seconds="
-                let hold = ProcessInfo.processInfo.arguments.first { $0.hasPrefix(prefix) }
+                let hold = LunarMapLaunchOptions.current.arguments.first { $0.hasPrefix(prefix) }
                     .flatMap { Double($0.dropFirst(prefix.count)) } ?? 100
                 try await Task.sleep(for: .seconds(hold.isFinite ? max(5, hold) : 100))
                 return
@@ -241,6 +241,7 @@ struct LunarExplorerInspector: View {
     @Bindable var session: LunarExplorerSession
     let close: () -> Void
     var landInCockpit: (() -> Void)? = nil
+    var cockpitDisplayName = "cockpit"
     @State private var coordinateEntry = ""
     @State private var search = ""
     @State private var navigationExpanded = true
@@ -320,7 +321,7 @@ struct LunarExplorerInspector: View {
                     if !session.usesBundledSite {
                         Button("Test landing here") { session.testLanding() }.disabled(session.landingRunning)
                         if let landInCockpit {
-                            Button(session.usesBundledSite ? "Fly Apollo 11 in cockpit" : "Land here in cockpit", action: landInCockpit)
+                            Button(session.usesBundledSite ? "Fly Apollo 11 in \(cockpitDisplayName)" : "Land here in \(cockpitDisplayName)", action: landInCockpit)
                                 .disabled(session.navigationInProgress || session.currentCoordinate == nil)
                         }
                         Text(session.landingMessage).font(.caption)

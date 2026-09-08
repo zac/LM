@@ -208,7 +208,7 @@ final class LMLunarTerrainMorphRenderer {
             let materials: [any Material]
             // A region's appearance is deterministic for a fixed plan. Retain
             // its existing material when only geometry or ownership changed.
-            if (a.0 == b.0 || ProcessInfo.processInfo.arguments.contains("--lunar-explorer-tile-tint=id")),
+            if (a.0 == b.0 || LunarMapLaunchOptions.current.arguments.contains("--lunar-explorer-tile-tint=id")),
                let original = template.entity.model?.materials {
                 materials = original
             } else {
@@ -242,7 +242,7 @@ final class LMLunarTerrainMorphRenderer {
                 let colorResource = try await TextureResource(from: color)
                 let normalResource = try await TextureResource(from: normal)
                 var material = LMTerrainWorld.terrainMaterial(texture: colorResource)
-                if !ProcessInfo.processInfo.arguments.contains("--lunar-explorer-normal-maps=off") {
+                if !LunarMapLaunchOptions.current.arguments.contains("--lunar-explorer-normal-maps=off") {
                     material.normal = .init(texture: LMTerrainWorld.terrainTexture(normalResource))
                 }
                 materials = [material]

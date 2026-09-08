@@ -65,7 +65,7 @@ package enum LMLunarGlobeResource {
         else {
             throw ResourceError.inconsistentDatum
         }
-        let arguments = ProcessInfo.processInfo.arguments
+        let arguments = LunarMapLaunchOptions.current.arguments
         let tiers = textureLoadTiers(
             from: manifest.globe.textureTiers,
             arguments: arguments

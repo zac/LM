@@ -179,12 +179,13 @@ and descent-session cases in LM. If a moved test exercises
    Keep the `.pngdata` extension on the P3 companion; SwiftPM `.copy` does
    not run the PNG optimizer, but the extension still documents the intent.
 2. **Launch options.** Add `public struct LunarMapLaunchOptions` in
-   `LunarMap`, parsed once from `[String]` by the host app and passed to
+   `LunarMap`, constructed from `[String]` by the host app and passed to
    `LunarExplorerSession.configure(options:)`, `LMLunarTerrainTiming`, the
    probes, `LMTerrainWorld` and `LMLunarGlobeResource`. It carries every
    `--lunar-explorer-*`, `--lunar-globe-*` and profile flag that map code
-   reads today; the parsing code moves verbatim so the capture scripts keep
-   working unchanged. No map file calls `ProcessInfo.processInfo.arguments`
+   reads today; the ordered argument payload is retained so the existing session and
+   capture parsers keep their exact precedence and duplicate-argument behavior.
+   Profiling enablement is parsed once at construction. No map file calls `ProcessInfo.processInfo.arguments`
    afterwards.
 3. **Log subsystem.** `public enum LunarMapLog { public static var subsystem }`
    defaults to `"io.positron.LM"` so existing `log stream` predicates and
@@ -204,6 +205,14 @@ and descent-session cases in LM. If a moved test exercises
    `PoweredDescentSession` and `LMLunarCockpitTerrain` call them.
 
 ## 4. Steps and gates
+
+**Owner development/integration decision, 2026-09-08:** finish steps 2–4 and
+integrate the package into `terrain-realism-and-explorer`. Long capture,
+soak and benchmark qualification is deferred and must stay explicitly listed
+as outstanding. The previous soak peak failure remains recorded; it is not
+reclassified as a pass. Use Release builds, focused tests and source/resource
+audits for this development run. No new terrain behavior, step 5 or sibling
+repository split is authorized by this change of priority.
 
 **Test gate, owner restatement 2026-09-08:** each package step must preserve
 the complete baseline control pass/fail set using the same AGC checkout

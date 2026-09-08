@@ -218,7 +218,7 @@ final class LunarExplorerScene {
             -bounds.max.y + bounds.extents.y * (76.0 / 80.0), 0)
         guard marker.parent !== markerBillboard else { return }
         markerBillboard.addChild(marker)
-        if ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile") {
+        if LunarMapLaunchOptions.current.arguments.contains("--lunar-explorer-profile") {
             let bounds = marker.visualBounds(relativeTo: marker)
             logger.info("Moon label bounds min=\(String(describing: bounds.min), privacy: .public) max=\(String(describing: bounds.max), privacy: .public)")
         }
@@ -686,7 +686,7 @@ final class LunarExplorerScene {
                 self.pendingDiagnostics.latestGenerationMilliseconds = milliseconds
                 self.requestSceneUpdate()
                 if milliseconds != nil {
-                    if ProcessInfo.processInfo.arguments.contains("--lunar-explorer-ownership-probe") {
+                    if LunarMapLaunchOptions.current.arguments.contains("--lunar-explorer-ownership-probe") {
                         let snapshot = globalTerrain.snapshot
                         let focus = SIMD3(Float(focus.x), snapshot.sample(east: focus.y, north: focus.x)?.elevation ?? 0, Float(-focus.y))
                         let inverse = self.presentationRoot.orientation.inverse
@@ -1304,9 +1304,9 @@ final class LunarExplorerScene {
         // Capture-only control for a same-camera, same-feature LOD A/B. It is
         // more reliable than comparing different lunar pixels on opposite
         // sides of a footprint boundary after residency geometry changes.
-        let terminalOnlyCapture = ProcessInfo.processInfo.arguments.contains(
+        let terminalOnlyCapture = LunarMapLaunchOptions.current.arguments.contains(
             "--lunar-explorer-capture-max-detail=terminal"
-        ) && ProcessInfo.processInfo.arguments.contains(
+        ) && LunarMapLaunchOptions.current.arguments.contains(
             "--lunar-explorer-capture"
         )
         let requestedAltitude = terminalOnlyCapture

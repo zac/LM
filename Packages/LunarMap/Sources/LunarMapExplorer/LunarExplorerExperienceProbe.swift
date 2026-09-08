@@ -6,15 +6,15 @@ import OSLog
 /// the buttons; it does not certify physical gesture or UI hit-target comfort.
 @MainActor enum LunarExplorerExperienceProbe {
     static func run(_ session: LunarExplorerSession, scene: LunarExplorerScene) async {
-        if ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile"),
-           ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile-reentry") {
+        if LunarMapLaunchOptions.current.arguments.contains("--lunar-explorer-profile"),
+           LunarMapLaunchOptions.current.arguments.contains("--lunar-explorer-profile-reentry") {
             await runReentry(session)
             return
         }
         let logger = Logger(subsystem: LunarMapLog.subsystem, category: "MoonExperience")
         let originalLibrary = session.library
         defer { session.library = originalLibrary }
-        let arguments = ProcessInfo.processInfo.arguments
+        let arguments = LunarMapLaunchOptions.current.arguments
         let tokenPrefix = "--lunar-explorer-profile-capture-token="
         let token = arguments.first(where: { $0.hasPrefix(tokenPrefix) })
             .flatMap { UUID(uuidString: String($0.dropFirst(tokenPrefix.count))) }

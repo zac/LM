@@ -791,6 +791,11 @@ public final class LunarExplorerSession {
     /// and visual regression checks. Interactive navigation remains available
     /// after launch, but every named preset starts from the same terrain state.
     public func configure(arguments: [String]) {
+        configure(options: LunarMapLaunchOptions(arguments: arguments))
+    }
+
+    public func configure(options: LunarMapLaunchOptions) {
+        let arguments = options.arguments
         let isCapture = arguments.contains("--lunar-explorer-capture")
         let inspectionOptions = arguments.contains {
             $0.hasPrefix("--lunar-explorer-") && !$0.hasPrefix("--lunar-explorer-profile")

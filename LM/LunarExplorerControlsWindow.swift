@@ -10,7 +10,7 @@ struct LunarExplorerControlsWindow: View {
     @State private var leavingForCockpit = false
 
     var body: some View {
-        LunarExplorerControls(session: appModel.lunarExplorerSession) {
+        LunarExplorerControls(session: appModel.lunarExplorerSession, actions: .init(close: {
             Task { @MainActor in
                 await dismissImmersiveSpace()
                 if appModel.lunarExplorerSession.isExplorerExperience {
@@ -18,7 +18,7 @@ struct LunarExplorerControlsWindow: View {
                 }
                 dismissWindow(id: appModel.lunarExplorerControlsWindowID)
             }
-        } landInCockpit: {
+        }, landInCockpit: {
             leavingForCockpit = true
             appModel.cockpitCoordinate = appModel.lunarExplorerSession.usesBundledSite ? nil
                 : appModel.lunarExplorerSession.currentCoordinate
@@ -29,7 +29,7 @@ struct LunarExplorerControlsWindow: View {
                 let result = await openImmersiveSpace(id: appModel.cockpitSpaceID)
                 if case .opened = result { dismissWindow(id: appModel.lunarExplorerControlsWindowID) }
             }
-        }
+        }))
         .onDisappear {
             guard appModel.lunarExplorerSession.isExplorerExperience,
                   !leavingForCockpit, appModel.lunarExplorerSpaceState == .open else { return }

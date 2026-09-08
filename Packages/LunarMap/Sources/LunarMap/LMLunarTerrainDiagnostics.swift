@@ -6,7 +6,7 @@ import UIKit
 /// Opt-in phase attribution using the same clock/log stream as the frame probe.
 /// Begin/end records retain overlap and distinguish worker work from UI stalls.
 public enum LMLunarTerrainTiming {
-    private static let enabled = ProcessInfo.processInfo.arguments.contains("--lunar-explorer-profile")
+    private static var enabled: Bool { LunarMapLaunchOptions.current.profilingEnabled }
     private static let logger = Logger(subsystem: LunarMapLog.subsystem, category: "TerrainTiming")
     public struct Interval {
         let phase: String

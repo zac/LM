@@ -1,11 +1,19 @@
+import LunarMap
 import LunarMapExplorer
 import SwiftUI
 
 @main
 struct LMApp: App {
-    @State private var viewModel = MainMenuViewModel()
+    @State private var viewModel: MainMenuViewModel
     @State private var cockpitImmersionStyle: any ImmersionStyle =
         LMCockpitImmersionPolicy.style
+
+    init() {
+        let arguments = ProcessInfo.processInfo.arguments
+        LunarMap.configure(options: .init(arguments: arguments),
+                           logSubsystem: Bundle.main.bundleIdentifier ?? "io.positron.LM")
+        _viewModel = State(wrappedValue: MainMenuViewModel(arguments: arguments))
+    }
 
     var body: some Scene {
         WindowGroup(id: viewModel.descentConsoleWindowID) {

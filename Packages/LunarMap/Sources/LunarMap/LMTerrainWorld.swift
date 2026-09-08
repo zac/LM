@@ -189,6 +189,7 @@ public enum LMTerrainWorld {
 
     /// Presentation grade in force. Materials read the exposure floor from
     /// here, so changing it requires rebuilding resident tiles.
+    // Process-wide presentation state; each host owns one Explorer scene.
     package static var presentationGrade: LMTerrainPresentationGrade = .calibrated
 
     /// The flat emissive lift applied to every terrain material. The
@@ -211,7 +212,8 @@ public enum LMTerrainWorld {
     /// the dominant directional relief. This is deliberately below 1 so it
     /// cannot flatten the low-Sun topography into an unlit texture.
     nonisolated static let regolithExposureFloor: Float = 0.08
-    @MainActor private static var tileEdgeOpacityTextures = [Int: TextureResource]()
+    // Process-wide texture cache shared by terrain publications in this app.
+    @MainActor package static var tileEdgeOpacityTextures = [Int: TextureResource]()
 
     public struct Assembly {
         public let worldRoot: Entity
@@ -353,7 +355,7 @@ public enum LMTerrainWorld {
         // keyed by its level and grid parity so a screenshot attributes every
         // rendered rectangle to one concrete tile. Never set for production or
         // interactive launches.
-        if ProcessInfo.processInfo.arguments.contains(
+        if LunarMapLaunchOptions.current.arguments.contains(
             "--lunar-explorer-tile-tint=id"
         ) {
             // Keep the diagnostic palette independent of lighting and tone
@@ -386,7 +388,7 @@ public enum LMTerrainWorld {
         // path from tangent-space normal realization. This is deliberately an
         // opt-out launch diagnostic; production and interactive launches keep
         // the exact shipping material unless the explicit argument is present.
-        if !ProcessInfo.processInfo.arguments.contains(
+        if !LunarMapLaunchOptions.current.arguments.contains(
             "--lunar-explorer-normal-maps=off"
         ) {
             guard let normalImage = LMTerrainTileDetailBaker.image(
@@ -490,7 +492,7 @@ public enum LMTerrainWorld {
 
     static func terrainMaterial(texture: TextureResource) -> PhysicallyBasedMaterial {
         var material = PhysicallyBasedMaterial()
-        if ProcessInfo.processInfo.arguments.contains(
+        if LunarMapLaunchOptions.current.arguments.contains(
             "--lunar-explorer-terrain-reflectance=constant"
         ) {
             material.baseColor = .init(tint: .init(white: 0.25, alpha: 1))
