@@ -76,6 +76,9 @@ final class LMCommanderStationAssembly {
         let new_cutaways: [String: String]
     }
 
+    private(set) var consoleEnclosures: [String: LMCockpitConsoleEnclosure] = [:]
+    private var enclosureSuppressions = Set<String>()
+
     let root = Entity()
     let cabin: Entity
     let windows: Entity
@@ -273,6 +276,50 @@ final class LMCommanderStationAssembly {
     }
 
     /// Validate every mapped datum before publishing a multi-slot overlay or hiding blanks.
+    /// Resolve every replacement and protected datum before publishing any geometry.
+    /// Existing disabled placeholders stay disabled; structural coverage is not equipment occupancy.
+    func installConsoleEnclosure(_ enclosure: LMCockpitConsoleEnclosure) throws {
+        guard consoleEnclosures[enclosure.kind.rawValue] == nil, enclosure.root.parent == nil else {
+            throw AssemblyError.invalidContract("Duplicate or already attached enclosure")
+        }
+        let components = ["Cabin": cabin, "CommanderPanels": panels, "PanelInventory": panelInventory, "WindowsLPD": windows]
+        func resolve(_ ref: LMCockpitConsoleEnclosure.Reference) throws -> Entity {
+            guard let component = components[ref.component], ref.path.hasPrefix("/" + ref.component + "/") else {
+                throw AssemblyError.invalidContract("Enclosure component scope")
+            }
+            let node = try Self.path(ref.path, in: component)
+            guard Self.near(node.transformMatrix(relativeTo: component), try ref.pose.matrix()) else {
+                throw AssemblyError.invalidContract("Enclosure datum mismatch: \(ref.path)")
+            }
+            return node
+        }
+        let protected = try enclosure.contract.protected_mounts.map(resolve)
+        var replacements: [Entity] = []
+        for ref in enclosure.contract.suppressions {
+            guard !enclosureSuppressions.contains(ref.path) else { throw AssemblyError.invalidContract("Conflicting enclosure replacement") }
+            let node = try resolve(ref)
+            let descendants = Self.descendants(node)
+            let omittedBlank = inventory.panels.flatMap(\.slots).contains {
+                $0.default_placeholder_node == ref.path && $0.physical_blank_omitted
+            }
+            guard (omittedBlank || descendants.contains(where: { $0.components[ModelComponent.self] != nil })),
+                  !protected.contains(where: { Self.isDescendant($0, of: node) }),
+                  descendants.allSatisfy({ $0.components[InputTargetComponent.self] == nil && $0.components[CollisionComponent.self] == nil }) else {
+                throw AssemblyError.invalidContract("Unsafe enclosure replacement")
+            }
+            if ref.component == "Cabin" {
+                guard node.children.isEmpty, node.components[ModelComponent.self] != nil else {
+                    throw AssemblyError.invalidContract("Shell replacement must be a leaf mesh")
+                }
+            }
+            replacements.append(node)
+        }
+        root.addChild(enclosure.root)
+        for node in replacements { node.isEnabled = false }
+        enclosureSuppressions.formUnion(enclosure.contract.suppressions.map(\.path))
+        consoleEnclosures[enclosure.kind.rawValue] = enclosure
+    }
+
     func installStaticOverlay(_ overlay: LMCockpitStaticOverlay) throws {
         guard overlay.root.parent == nil, Self.near(overlay.root.transform.matrix, matrix_identity_float4x4),
               Set(overlay.slots.map(\.id)).count == overlay.slots.count else {

@@ -506,6 +506,7 @@ final class LMCommanderStationScene {
             } else if let shell = proceduralCabin.findEntity(named: LMCockpitAssetContract.Node.cabinShell.rawValue) {
                 casters.append(shell)
             }
+            casters += commanderAssembly?.consoleEnclosures.values.flatMap(\.castingGroups) ?? []
             if let exteriorLunarModule { casters.append(exteriorLunarModule) }
             // visualBounds(excludeInactive:) excludes an unanchored scene too,
             // yielding infinite empty bounds before first publication. Traverse
@@ -802,6 +803,9 @@ final class LMCommanderStationScene {
                 _ = installStaticOverlay("BreakerBanks", assetURL: LMKitAssets.breakerBanksURL,
                     interfaceURL: LMKitAssets.breakerBanksInterfaceURL, schema: "lmkit.breaker-banks.interface.v1")
             }
+            if !arguments.contains("--no-console-enclosures") {
+                for kind in LMCockpitConsoleEnclosure.Kind.allCases { _ = installConsoleEnclosure(kind) }
+            }
         }
         return installed
     }
@@ -814,6 +818,10 @@ final class LMCommanderStationScene {
             "captured_at": ISO8601DateFormatter().string(from: Date()),
             "arguments": arguments,
             "foundation": commanderAssembly != nil,
+            "console_enclosures": commanderAssembly?.consoleEnclosures.mapValues {
+                ["suppressed_paths": $0.contract.suppressions.map(\.path),
+                 "casting_groups": $0.contract.groups.filter(\.casts_shadows).map(\.path)]
+            } ?? [:],
             "commander_fdai": importedFDAI != nil,
             "pilot_fdai": importedPilotFDAI != nil,
             "timer_readouts": importedTimers?.readouts.children.map(\.name) ?? [],
@@ -924,6 +932,43 @@ final class LMCommanderStationScene {
             return true
         } catch {
             logger.error("Descent control unavailable; functional fallback retained: \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    @discardableResult
+    func installConsoleEnclosure(_ kind: LMCockpitConsoleEnclosure.Kind,
+        loader: (@MainActor () throws -> LMCockpitConsoleEnclosure)? = nil) -> Bool {
+        guard let assembly = commanderAssembly else { return false }
+        if assembly.consoleEnclosures[kind.rawValue] != nil { return true }
+        // A continuous face with an empty instrument aperture is not a valid fallback.
+        switch kind {
+        case .instrument: guard importedFDAI != nil, importedPilotFDAI != nil else { return false }
+        case .lower: guard importedDSKY != nil, importedACA != nil else { return false }
+        case .windows: break // A validated foundation already owns the optical interfaces.
+        }
+        do {
+            let enclosure: LMCockpitConsoleEnclosure
+            if let loader { enclosure = try loader() }
+            else {
+                let urls: (URL, URL)
+                switch kind {
+                case .instrument: urls = (LMKitAssets.instrumentConsoleURL, LMKitAssets.instrumentConsoleInterfaceURL)
+                case .lower: urls = (LMKitAssets.lowerConsoleURL, LMKitAssets.lowerConsoleInterfaceURL)
+                case .windows: urls = (LMKitAssets.windowSurroundsURL, LMKitAssets.windowSurroundsInterfaceURL)
+                }
+                enclosure = try LMCockpitConsoleEnclosure(kind: kind, asset: Entity.load(contentsOf: urls.0),
+                    interfaceData: Data(contentsOf: urls.1))
+            }
+            guard enclosure.kind == kind else { throw LMCommanderStationAssembly.AssemblyError.invalidContract("Wrong enclosure requested") }
+            try assembly.installConsoleEnclosure(enclosure)
+            // Suppressed shell leaves must leave the fit, while their replacement
+            // pressure surfaces enter it. No change to sun direction or intensity.
+            cachedShadowCasterCorners = nil
+            updateCockpitShadow()
+            return true
+        } catch {
+            logger.error("Console enclosure unavailable; prior surfaces retained: \(kind.rawValue, privacy: .public): \(String(describing: error), privacy: .public)")
             return false
         }
     }
