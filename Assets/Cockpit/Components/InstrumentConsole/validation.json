@@ -1,0 +1,6959 @@
+{
+  "passed": 1702,
+  "failed": 0,
+  "failures": [],
+  "meshes": 39,
+  "triangles": 2922,
+  "checks": [
+    {
+      "name": "root identity",
+      "pass": true
+    },
+    {
+      "name": "units meters Y up",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /Materials",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /Materials/ConsoleEdgeGray",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /Materials/ConsoleEdgeGray/Surface",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /Materials/ConsoleInterior",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /Materials/ConsoleInterior/Surface",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /Materials/ConsoleNeutralGray",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /Materials/ConsoleNeutralGray/Surface",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /Materials/SeamShadow",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /Materials/SeamShadow/Surface",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Enclosure",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Enclosure/Panel1Body",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Enclosure/Panel1Body/OutboardReturnPanel1",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel1Body/OutboardReturnPanel1 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel1Body/OutboardReturnPanel1 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel1Body/OutboardReturnPanel1 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Enclosure/Panel1Body/RearCoverPanel1",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel1Body/RearCoverPanel1 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel1Body/RearCoverPanel1 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel1Body/RearCoverPanel1 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Enclosure/Panel1Body/TopReturnPanel1",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel1Body/TopReturnPanel1 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel1Body/TopReturnPanel1 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel1Body/TopReturnPanel1 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Enclosure/Panel2Body",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Enclosure/Panel2Body/OutboardReturnPanel2",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel2Body/OutboardReturnPanel2 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel2Body/OutboardReturnPanel2 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel2Body/OutboardReturnPanel2 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Enclosure/Panel2Body/RearCoverPanel2",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel2Body/RearCoverPanel2 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel2Body/RearCoverPanel2 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel2Body/RearCoverPanel2 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Enclosure/Panel2Body/TopReturnPanel2",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel2Body/TopReturnPanel2 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel2Body/TopReturnPanel2 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel2Body/TopReturnPanel2 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Enclosure/Panel3Body",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Enclosure/Panel3Body/Panel3BottomReturn",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel3Body/Panel3BottomReturn triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel3Body/Panel3BottomReturn explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel3Body/Panel3BottomReturn exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Enclosure/Panel3Body/Panel3LeftReturn",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel3Body/Panel3LeftReturn triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel3Body/Panel3LeftReturn explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel3Body/Panel3LeftReturn exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Enclosure/Panel3Body/Panel3RearCover",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel3Body/Panel3RearCover triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel3Body/Panel3RearCover explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel3Body/Panel3RearCover exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Enclosure/Panel3Body/Panel3RightReturn",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel3Body/Panel3RightReturn triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel3Body/Panel3RightReturn explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/Panel3Body/Panel3RightReturn exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Enclosure/UpperLowerClosure",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/UpperLowerClosure triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/UpperLowerClosure explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Enclosure/UpperLowerClosure exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel1",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel1/CommanderSeat0",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/CommanderSeat0 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/CommanderSeat0 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/CommanderSeat0 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel1/CommanderSeat1",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/CommanderSeat1 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/CommanderSeat1 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/CommanderSeat1 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel1/CommanderSeat2",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/CommanderSeat2 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/CommanderSeat2 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/CommanderSeat2 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel1/CommanderSeat3",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/CommanderSeat3 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/CommanderSeat3 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/CommanderSeat3 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel0",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel0 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel0 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel0 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel1",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel1 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel1 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel1 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel2",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel2 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel2 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel2 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel3",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel3 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel3 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel3 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel1/Panel1SkinLeft",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1SkinLeft triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1SkinLeft explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1SkinLeft exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel1/Panel1SkinLower",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1SkinLower triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1SkinLower explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1SkinLower exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel1/Panel1SkinRight",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1SkinRight triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1SkinRight explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1SkinRight exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel1/Panel1SkinUpper",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1SkinUpper triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1SkinUpper explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1SkinUpper exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel1/Panel1TopEdge",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1TopEdge triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1TopEdge explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel1/Panel1TopEdge exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel2",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel0",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel0 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel0 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel0 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel1",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel1 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel1 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel1 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel2",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel2 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel2 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel2 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel3",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel3 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel3 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel3 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel2/Panel2SkinLeft",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2SkinLeft triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2SkinLeft explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2SkinLeft exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel2/Panel2SkinLower",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2SkinLower triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2SkinLower explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2SkinLower exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel2/Panel2SkinRight",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2SkinRight triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2SkinRight explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2SkinRight exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel2/Panel2SkinUpper",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2SkinUpper triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2SkinUpper explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2SkinUpper exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel2/Panel2TopEdge",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2TopEdge triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2TopEdge explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel2/Panel2TopEdge exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel3",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/Panel3/Panel3Skin",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel3/Panel3Skin triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel3/Panel3Skin explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/Panel3/Panel3Skin exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Faces/UpperToSlopingBridge",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/UpperToSlopingBridge triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/UpperToSlopingBridge explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Faces/UpperToSlopingBridge exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Seams",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Seams/CenterJoint",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Seams/CenterJoint/CenterSeam",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Seams/CenterJoint/CenterSeam triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Seams/CenterJoint/CenterSeam explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Seams/CenterJoint/CenterSeam exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Seams/Panel3Seams",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint0",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint0 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint0 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint0 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint1",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint1 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint1 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint1 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "no instrument or camera geometry /InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint2",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint2 triangulated finite",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint2 explicit face normals",
+      "pass": true
+    },
+    {
+      "name": "/InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint2 exactly one shadow group",
+      "pass": true
+    },
+    {
+      "name": "declared group /InstrumentConsole/Faces",
+      "pass": true
+    },
+    {
+      "name": "declared group /InstrumentConsole/Enclosure",
+      "pass": true
+    },
+    {
+      "name": "declared group /InstrumentConsole/Seams",
+      "pass": true
+    },
+    {
+      "name": "source path /CommanderPanels/Panel_1/Panel_1_Shell",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /CommanderPanels/Panel_1/Panel_1_Shell",
+      "pass": true
+    },
+    {
+      "name": "source path /CommanderPanels/Panel_1/Panel_1_Trim",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /CommanderPanels/Panel_1/Panel_1_Trim",
+      "pass": true
+    },
+    {
+      "name": "source path /CommanderPanels/Panel_1/Panel_1_RemovableBacking",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /CommanderPanels/Panel_1/Panel_1_RemovableBacking",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel2/Frame",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel2/Frame",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel3/Frame",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel3/Frame",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel1/Panel1__FDAI/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel1/Panel1__FDAI/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel1/Panel1__Warning/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel1/Panel1__Warning/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel1/Panel1__Timers/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel1/Panel1__Timers/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel1/Panel1__CrossPointer/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel1/Panel1__CrossPointer/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel1/Panel1__Propulsion/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel1/Panel1__Propulsion/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel1/Panel1__RangeThrust/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel1/Panel1__RangeThrust/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel1/Panel1__Guidance/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel1/Panel1__Guidance/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel2/Panel2__FDAI/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel2/Panel2__FDAI/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel2/Panel2__Caution/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel2/Panel2__Caution/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel2/Panel2__RCSECS/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel2/Panel2__RCSECS/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel2/Panel2__CrossPointer/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel2/Panel2__CrossPointer/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel2/Panel2__Systems/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel2/Panel2__Systems/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel2/Panel2__Lower/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel2/Panel2__Lower/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel3/Panel3__EngineRadar/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel3/Panel3__EngineRadar/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel3/Panel3__Stability/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel3/Panel3__Stability/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel3/Panel3__TimerHeaters/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel3/Panel3__TimerHeaters/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel3/Panel3__Lighting/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel3/Panel3__Lighting/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel1",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel1",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel1/Panel1__FDAI",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel1/Panel1__FDAI",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel1/Panel1__Warning",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel1/Panel1__Warning",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel1/Panel1__Timers",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel1/Panel1__Timers",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel1/Panel1__CrossPointer",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel1/Panel1__CrossPointer",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel1/Panel1__Propulsion",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel1/Panel1__Propulsion",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel1/Panel1__RangeThrust",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel1/Panel1__RangeThrust",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel1/Panel1__Guidance",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel1/Panel1__Guidance",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel2",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel2",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel2/Panel2__FDAI",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel2/Panel2__FDAI",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel2/Panel2__Caution",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel2/Panel2__Caution",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel2/Panel2__RCSECS",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel2/Panel2__RCSECS",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel2/Panel2__CrossPointer",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel2/Panel2__CrossPointer",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel2/Panel2__Systems",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel2/Panel2__Systems",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel2/Panel2__Lower",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel2/Panel2__Lower",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel3",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel3",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel3/Panel3__EngineRadar",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel3/Panel3__EngineRadar",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel3/Panel3__Stability",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel3/Panel3__Stability",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel3/Panel3__TimerHeaters",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel3/Panel3__TimerHeaters",
+      "pass": true
+    },
+    {
+      "name": "source path /PanelInventory/Panels/Panel3/Panel3__Lighting",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /PanelInventory/Panels/Panel3/Panel3__Lighting",
+      "pass": true
+    },
+    {
+      "name": "source path /Cabin/Mounts/Mount_Panel_1",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /Cabin/Mounts/Mount_Panel_1",
+      "pass": true
+    },
+    {
+      "name": "source path /Cabin/Mounts/Mount_Panel_1/Mount_FDAI",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /Cabin/Mounts/Mount_Panel_1/Mount_FDAI",
+      "pass": true
+    },
+    {
+      "name": "source path /Cabin/Mounts/Mount_Panel_2",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /Cabin/Mounts/Mount_Panel_2",
+      "pass": true
+    },
+    {
+      "name": "source path /Cabin/Mounts/Mount_Panel_3",
+      "pass": true
+    },
+    {
+      "name": "exact source pose /Cabin/Mounts/Mount_Panel_3",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /CommanderPanels/Panel_1/Panel_1_Shell",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /CommanderPanels/Panel_1/Panel_1_Shell",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /CommanderPanels/Panel_1/Panel_1_Trim",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /CommanderPanels/Panel_1/Panel_1_Trim",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /CommanderPanels/Panel_1/Panel_1_RemovableBacking",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /CommanderPanels/Panel_1/Panel_1_RemovableBacking",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel2/Frame",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel2/Frame",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel3/Frame",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel3/Frame",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel1/Panel1__FDAI/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel1/Panel1__FDAI/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel1/Panel1__Warning/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel1/Panel1__Warning/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel1/Panel1__Timers/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel1/Panel1__Timers/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel1/Panel1__CrossPointer/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel1/Panel1__CrossPointer/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel1/Panel1__Propulsion/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel1/Panel1__Propulsion/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel1/Panel1__RangeThrust/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel1/Panel1__RangeThrust/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel1/Panel1__Guidance/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel1/Panel1__Guidance/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel2/Panel2__FDAI/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel2/Panel2__FDAI/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel2/Panel2__Caution/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel2/Panel2__Caution/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel2/Panel2__RCSECS/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel2/Panel2__RCSECS/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel2/Panel2__CrossPointer/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel2/Panel2__CrossPointer/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel2/Panel2__Systems/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel2/Panel2__Systems/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel2/Panel2__Lower/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel2/Panel2__Lower/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel3/Panel3__EngineRadar/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel3/Panel3__EngineRadar/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel3/Panel3__Stability/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel3/Panel3__Stability/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel3/Panel3__TimerHeaters/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel3/Panel3__TimerHeaters/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "unique suppression /PanelInventory/Panels/Panel3/Panel3__Lighting/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "protected datum not suppressed /PanelInventory/Panels/Panel3/Panel3__Lighting/Placeholder",
+      "pass": true
+    },
+    {
+      "name": "accepted source bytes CommanderPanels/CommanderPanels.usdz",
+      "pass": true
+    },
+    {
+      "name": "accepted source bytes PanelInventory/PanelInventory.usdz",
+      "pass": true
+    },
+    {
+      "name": "accepted source bytes Cabin/Cabin.usdz",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,7",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,8",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,9",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,10",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,11",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,12",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 0,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,7",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,8",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,9",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,10",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,11",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,12",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 1,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 2,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 2,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 2,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 2,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 2,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 2,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 2,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 2,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 2,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 2,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 2,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 2,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 2,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 2,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 2,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 3,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 3,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 3,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 3,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 3,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 3,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 3,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 3,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 3,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 3,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 3,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 3,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 3,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 3,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 3,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 4,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 4,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 4,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 4,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 4,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 4,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 4,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 4,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 4,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 4,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 4,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 4,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 4,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 4,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 4,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 5,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 5,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 5,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 5,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 5,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 5,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 5,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 5,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 5,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 5,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 5,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 5,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 5,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 5,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 5,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 6,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 6,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 6,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 6,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 6,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 6,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 6,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 6,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 6,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 6,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 6,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 6,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 6,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 6,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 6,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 7,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 7,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 7,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 7,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 7,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 7,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 7,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 7,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 7,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 7,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 7,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 7,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 7,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 7,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 7,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 8,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 8,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 8,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 8,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 8,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 8,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 8,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 8,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 8,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 8,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 8,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 8,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 8,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 8,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 8,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,7",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,8",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,9",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,10",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,11",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,12",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 9,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,7",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,8",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,9",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,10",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,11",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,12",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 10,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,7",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,8",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,9",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,10",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,11",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,12",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 11,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,7",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,8",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,9",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,10",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,11",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,12",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 12,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,7",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,8",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,9",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,10",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,11",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,12",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 13,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,7",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,8",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,9",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,10",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,11",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,12",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 14,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,7",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,8",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,9",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,10",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,11",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,12",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 15,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,7",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,8",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,9",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,10",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,11",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,12",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 16,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,7",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,8",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,9",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,10",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,11",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,12",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 17,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,7",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,8",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,9",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,10",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,11",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,12",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 18,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,7",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,8",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,9",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,10",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,11",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,12",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 19,20",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,0",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,1",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,2",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,3",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,4",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,5",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,6",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,7",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,8",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,9",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,10",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,11",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,12",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,13",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,14",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,15",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,16",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,17",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,18",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 solid face sample 20,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,3",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,4",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,5",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,6",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,7",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 0,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,3",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,4",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,5",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,6",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,7",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 1,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,3",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,4",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,5",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,6",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,7",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 2,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,3",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,4",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,5",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,6",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,7",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 3,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,3",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,4",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,5",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,6",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,7",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 4,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,3",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,4",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,5",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,6",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,7",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 5,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,3",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,4",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,5",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,6",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,7",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 6,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,3",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,4",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,5",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,6",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,7",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 7,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,3",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,4",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,5",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,6",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,7",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 8,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,3",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,4",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,5",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,6",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,7",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 9,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,3",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,4",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,5",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,6",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,7",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 10,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,3",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,4",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,5",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,6",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,7",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 11,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,3",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,4",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,5",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,6",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,7",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 12,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 13,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 13,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 13,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 13,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 13,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 13,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 13,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 13,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 13,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 13,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 13,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 13,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 13,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 13,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 13,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 13,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 14,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 14,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 14,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 14,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 14,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 14,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 14,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 14,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 14,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 14,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 14,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 14,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 14,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 14,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 14,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 14,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 15,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 15,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 15,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 15,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 15,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 15,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 15,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 15,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 15,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 15,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 15,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 15,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 15,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 15,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 15,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 15,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 16,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 16,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 16,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 16,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 16,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 16,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 16,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 16,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 16,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 16,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 16,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 16,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 16,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 16,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 16,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 16,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 17,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 17,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 17,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 17,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 17,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 17,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 17,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 17,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 17,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 17,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 17,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 17,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 17,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 17,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 17,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 17,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 18,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 18,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 18,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 18,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 18,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 18,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 18,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 18,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 18,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 18,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 18,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 18,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 18,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 18,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 18,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 18,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,3",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,4",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,5",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,6",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,7",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 19,20",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,0",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,1",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,2",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,3",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,4",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,5",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,6",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,7",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,8",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,9",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,10",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,11",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,13",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,14",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,15",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,16",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,17",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,18",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 solid face sample 20,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 0,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 1,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 2,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 3,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 4,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 5,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 6,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 7,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 8,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 9,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 10,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 11,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 12,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 13,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 14,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 15,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 16,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 17,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 18,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 19,20",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,0",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,1",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,2",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,3",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,4",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,5",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,6",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,7",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,8",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,9",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,10",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,11",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,12",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,13",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,14",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,15",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,16",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,17",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,18",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,19",
+      "pass": true
+    },
+    {
+      "name": "Panel3 solid face sample 20,20",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Seams/CenterJoint",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Seams/CenterJoint",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Seams/CenterJoint/CenterSeam",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Seams/CenterJoint/CenterSeam",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel1/CommanderSeat0",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel1/CommanderSeat0",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel1/CommanderSeat1",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel1/CommanderSeat1",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel1/CommanderSeat2",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel1/CommanderSeat2",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel1/CommanderSeat3",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel1/CommanderSeat3",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Enclosure",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Enclosure",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Enclosure/Panel1Body/OutboardReturnPanel1",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Enclosure/Panel1Body/OutboardReturnPanel1",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Enclosure/Panel2Body/OutboardReturnPanel2",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Enclosure/Panel2Body/OutboardReturnPanel2",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel1",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel1",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel0",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel0",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel1",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel1",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel2",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel2",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel3",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel1/Panel1ApertureTunnel3",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Enclosure/Panel1Body",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Enclosure/Panel1Body",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel1/Panel1SkinLeft",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel1/Panel1SkinLeft",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel1/Panel1SkinLower",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel1/Panel1SkinLower",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel1/Panel1SkinRight",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel1/Panel1SkinRight",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel1/Panel1SkinUpper",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel1/Panel1SkinUpper",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel1/Panel1TopEdge",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel1/Panel1TopEdge",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel2",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel2",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel0",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel0",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel1",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel1",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel2",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel2",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel3",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel2/Panel2ApertureTunnel3",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Enclosure/Panel2Body",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Enclosure/Panel2Body",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel2/Panel2SkinLeft",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel2/Panel2SkinLeft",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel2/Panel2SkinLower",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel2/Panel2SkinLower",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel2/Panel2SkinRight",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel2/Panel2SkinRight",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel2/Panel2SkinUpper",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel2/Panel2SkinUpper",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel2/Panel2TopEdge",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel2/Panel2TopEdge",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel3",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel3",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Enclosure/Panel3Body",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Enclosure/Panel3Body",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Enclosure/Panel3Body/Panel3BottomReturn",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Enclosure/Panel3Body/Panel3BottomReturn",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Enclosure/Panel3Body/Panel3LeftReturn",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Enclosure/Panel3Body/Panel3LeftReturn",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Enclosure/Panel3Body/Panel3RearCover",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Enclosure/Panel3Body/Panel3RearCover",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Enclosure/Panel3Body/Panel3RightReturn",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Enclosure/Panel3Body/Panel3RightReturn",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Seams/Panel3Seams",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Seams/Panel3Seams",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint0",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint0",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint1",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint1",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint2",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Seams/Panel3Seams/Panel3SectionJoint2",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/Panel3/Panel3Skin",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/Panel3/Panel3Skin",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Enclosure/Panel1Body/RearCoverPanel1",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Enclosure/Panel1Body/RearCoverPanel1",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Enclosure/Panel2Body/RearCoverPanel2",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Enclosure/Panel2Body/RearCoverPanel2",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Seams",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Seams",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Enclosure/Panel1Body/TopReturnPanel1",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Enclosure/Panel1Body/TopReturnPanel1",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Enclosure/Panel2Body/TopReturnPanel2",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Enclosure/Panel2Body/TopReturnPanel2",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Enclosure/UpperLowerClosure",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Enclosure/UpperLowerClosure",
+      "pass": true
+    },
+    {
+      "name": "authored path /InstrumentConsole/Faces/UpperToSlopingBridge",
+      "pass": true
+    },
+    {
+      "name": "authored transform /InstrumentConsole/Faces/UpperToSlopingBridge",
+      "pass": true
+    },
+    {
+      "name": "console does not occlude CDR_FDAI/FDAI_Mount/FDAI_Fixed/FDAI_Glass",
+      "pass": true
+    },
+    {
+      "name": "console does not occlude CommanderLunarContact/LunarContact_Mount/LunarContact__LightFace",
+      "pass": true
+    },
+    {
+      "name": "console does not occlude CrossPointer/CrossPointer/Fixed/DialFace",
+      "pass": true
+    },
+    {
+      "name": "console does not occlude EventTimerControls/EventTimerControls/EventTimer_MinutesSlew_Pivot/EventTimer_MinutesSlew_Grip",
+      "pass": true
+    },
+    {
+      "name": "console does not occlude EventTimerControls/EventTimerControls/EventTimer_ResetCount_Pivot/EventTimer_ResetCount_Grip",
+      "pass": true
+    },
+    {
+      "name": "console does not occlude EventTimerControls/EventTimerControls/EventTimer_SecondsSlew_Pivot/EventTimer_SecondsSlew_Grip",
+      "pass": true
+    },
+    {
+      "name": "console does not occlude EventTimerControls/EventTimerControls/EventTimer_TimerControl_Pivot/EventTimer_TimerControl_Grip",
+      "pass": true
+    },
+    {
+      "name": "console does not occlude LMP_FDAI/FDAI_Mount/FDAI_Fixed/FDAI_Glass",
+      "pass": true
+    },
+    {
+      "name": "console does not occlude PilotLunarContact/LunarContact_Mount/LunarContact__LightFace",
+      "pass": true
+    },
+    {
+      "name": "console does not occlude PropulsionInstruments/PropulsionInstruments/Pressure/Fixed/DialFace",
+      "pass": true
+    },
+    {
+      "name": "console does not occlude PropulsionInstruments/PropulsionInstruments/Temperature/Fixed/DialFace",
+      "pass": true
+    },
+    {
+      "name": "console does not occlude PropulsionInstruments/PropulsionInstruments/Thrust/Fixed/DialFace",
+      "pass": true
+    },
+    {
+      "name": "console does not occlude PropulsionInstruments/PropulsionInstruments/ThrustToWeight/Fixed/DialFace",
+      "pass": true
+    },
+    {
+      "name": "both FDAI actual glass targets probed",
+      "pass": true
+    },
+    {
+      "name": "multiple actual instrument faces probed",
+      "pass": true,
+      "detail": 13
+    },
+    {
+      "name": "Panel1 housing hidden side-1 depth-0.05",
+      "pass": true
+    },
+    {
+      "name": "Panel1 housing hidden side-1 depth-0.12",
+      "pass": true
+    },
+    {
+      "name": "Panel1 housing hidden side-1 depth-0.19",
+      "pass": true
+    },
+    {
+      "name": "Panel1 housing hidden side1 depth-0.05",
+      "pass": true
+    },
+    {
+      "name": "Panel1 housing hidden side1 depth-0.12",
+      "pass": true
+    },
+    {
+      "name": "Panel1 housing hidden side1 depth-0.19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 housing hidden side-1 depth-0.05",
+      "pass": true
+    },
+    {
+      "name": "Panel2 housing hidden side-1 depth-0.12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 housing hidden side-1 depth-0.19",
+      "pass": true
+    },
+    {
+      "name": "Panel2 housing hidden side1 depth-0.05",
+      "pass": true
+    },
+    {
+      "name": "Panel2 housing hidden side1 depth-0.12",
+      "pass": true
+    },
+    {
+      "name": "Panel2 housing hidden side1 depth-0.19",
+      "pass": true
+    },
+    {
+      "name": "ARKit USDZ compliance",
+      "pass": true
+    }
+  ],
+  "face_rays": [
+    {
+      "component": "CDR_FDAI",
+      "surface": "/FDAI_Mount/FDAI_Fixed/FDAI_Glass",
+      "target_cabin_m": [
+        -0.30000004172325134,
+        1.5998836755752563,
+        -0.8242774605751038
+      ],
+      "console_hit": null
+    },
+    {
+      "component": "CommanderLunarContact",
+      "surface": "/LunarContact_Mount/LunarContact__LightFace",
+      "target_cabin_m": [
+        -0.20400002598762512,
+        1.7025489807128906,
+        -0.8985333442687988
+      ],
+      "console_hit": null
+    },
+    {
+      "component": "CrossPointer",
+      "surface": "/CrossPointer/Fixed/DialFace",
+      "target_cabin_m": [
+        -0.3149999678134918,
+        1.702978253364563,
+        -0.9018583297729492
+      ],
+      "console_hit": null
+    },
+    {
+      "component": "EventTimerControls",
+      "surface": "/EventTimerControls/EventTimer_MinutesSlew_Pivot/EventTimer_MinutesSlew_Grip",
+      "target_cabin_m": [
+        0.14299999177455902,
+        1.319861650466919,
+        -0.8108075857162476
+      ],
+      "console_hit": null
+    },
+    {
+      "component": "EventTimerControls",
+      "surface": "/EventTimerControls/EventTimer_ResetCount_Pivot/EventTimer_ResetCount_Grip",
+      "target_cabin_m": [
+        0.05100000277161598,
+        1.319861650466919,
+        -0.8108075857162476
+      ],
+      "console_hit": null
+    },
+    {
+      "component": "EventTimerControls",
+      "surface": "/EventTimerControls/EventTimer_SecondsSlew_Pivot/EventTimer_SecondsSlew_Grip",
+      "target_cabin_m": [
+        0.18900001049041748,
+        1.319861650466919,
+        -0.8108075857162476
+      ],
+      "console_hit": null
+    },
+    {
+      "component": "EventTimerControls",
+      "surface": "/EventTimerControls/EventTimer_TimerControl_Pivot/EventTimer_TimerControl_Grip",
+      "target_cabin_m": [
+        0.09699998795986176,
+        1.319861650466919,
+        -0.8108075857162476
+      ],
+      "console_hit": null
+    },
+    {
+      "component": "LMP_FDAI",
+      "surface": "/FDAI_Mount/FDAI_Fixed/FDAI_Glass",
+      "target_cabin_m": [
+        0.3049999177455902,
+        1.4986248016357422,
+        -0.8226698637008667
+      ],
+      "console_hit": null
+    },
+    {
+      "component": "PilotLunarContact",
+      "surface": "/LunarContact_Mount/LunarContact__LightFace",
+      "target_cabin_m": [
+        0.4379998445510864,
+        1.304800033569336,
+        -0.8272832632064819
+      ],
+      "console_hit": null
+    },
+    {
+      "component": "PropulsionInstruments",
+      "surface": "/PropulsionInstruments/Pressure/Fixed/DialFace",
+      "target_cabin_m": [
+        -0.03999999910593033,
+        1.6856558322906494,
+        -0.8906805515289307
+      ],
+      "console_hit": null
+    },
+    {
+      "component": "PropulsionInstruments",
+      "surface": "/PropulsionInstruments/Temperature/Fixed/DialFace",
+      "target_cabin_m": [
+        -0.06800001114606857,
+        1.6856558322906494,
+        -0.8906805515289307
+      ],
+      "console_hit": null
+    },
+    {
+      "component": "PropulsionInstruments",
+      "surface": "/PropulsionInstruments/Thrust/Fixed/DialFace",
+      "target_cabin_m": [
+        -0.09600000828504562,
+        1.6856558322906494,
+        -0.8906805515289307
+      ],
+      "console_hit": null
+    },
+    {
+      "component": "PropulsionInstruments",
+      "surface": "/PropulsionInstruments/ThrustToWeight/Fixed/DialFace",
+      "target_cabin_m": [
+        -0.046000007539987564,
+        1.5615700483322144,
+        -0.8688008785247803
+      ],
+      "console_hit": null
+    }
+  ],
+  "compliance_errors": [],
+  "compliance_failed": [],
+  "compliance_warnings": [],
+  "limitations": [
+    "Finite sampled front and housing rays, not continuous sweep or headset acceptance",
+    "Accepted rear instrument housings and enclosure penetrate existing forward pressure-shell volume; hidden overlap is not mechanical fit",
+    "Workbench review omits transparent glass only visually; ray targets use unchanged glass geometry",
+    "Coordinator owns package/runtime fallback checks"
+  ]
+}

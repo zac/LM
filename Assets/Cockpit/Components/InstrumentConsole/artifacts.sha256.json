@@ -1,0 +1,89 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "EVIDENCE.md": {
+      "bytes": 2909,
+      "sha256": "5225f7420c1d4cc312064e025f6e3a2824644b18c276719119e7743fecababdf"
+    },
+    "HANDOFF.md": {
+      "bytes": 6830,
+      "sha256": "ddf1894a395ca84a77b777445045fc8d86503925a8570a326e1227ba42b76b9d"
+    },
+    "InstrumentConsole.blend": {
+      "bytes": 112607,
+      "sha256": "03432ced69b3108b2234d858631dfe7690b7da435a4a3ac81d424db7431ad540"
+    },
+    "InstrumentConsole.usda": {
+      "bytes": 419943,
+      "sha256": "92bfe17b8ca1d00a9d4c6a9de2697b91c7fd670c84e104e2bbffeb08ce12230b"
+    },
+    "InstrumentConsole.usdc": {
+      "bytes": 124397,
+      "sha256": "489b920ef392cd6221602b0233d205f60b4ad305b7d0bd40c9e5696856ea8036"
+    },
+    "InstrumentConsole.usdz": {
+      "bytes": 124563,
+      "sha256": "27a29aee1d909d482b0a4edcca5fbdf1ba227bebcb85bcee1c94405ac1475b26"
+    },
+    "build.py": {
+      "bytes": 10374,
+      "sha256": "5d8a1879284b43a9bca5e4d068109ef6532de351c4dc67a4f676606ac5ab36d6"
+    },
+    "evidence/SI-99-15229h.jpg": {
+      "bytes": 2634088,
+      "sha256": "663ed06e149f3aeb991c5589835bfb1afda5c908b23c668a1853d7546572dd6d"
+    },
+    "evidence/accepted-inventory.json": {
+      "bytes": 190532,
+      "sha256": "f315bdcbd8a6e597231b33420652fb6297241bf3af7c585708f472583522ec49"
+    },
+    "evidence/input-manifest.json": {
+      "bytes": 1035,
+      "sha256": "3032d3bf61dd3d3a8f0081d1279f6427a1074bd5bd171db290a1208216f5c7cc"
+    },
+    "hash_artifacts.py": {
+      "bytes": 543,
+      "sha256": "9fd345607b311773c5a9bb3afadd6b8949f20bfec394b6001604386dba85995f"
+    },
+    "interface.json": {
+      "bytes": 23266,
+      "sha256": "1e8de14c9220d95955aede45760934e8f404f9113ec3b1c636e7e328d7692735"
+    },
+    "native-validation.json": {
+      "bytes": 219,
+      "sha256": "25d8b76a49e1ff1e1bac182a1ab3b7a4d3876b39e2752228be9cef3185582485"
+    },
+    "review/assembly-inputs.json": {
+      "bytes": 21676,
+      "sha256": "9b9ffce486bcd555d784c28ffb02b2e7e7b3928d5cb005130dcc4e4789358b8f"
+    },
+    "review/central-oblique.png": {
+      "bytes": 1844774,
+      "sha256": "5e546687e751fd2ec518a9be12cec33aeb519a9fd06af7b46f30b5adcfce5544"
+    },
+    "review/crew-eye.png": {
+      "bytes": 1947534,
+      "sha256": "847f790b023d9295c0f040fb486ea1d0bc1f7999993e6bf94958741ba10a734d"
+    },
+    "review/pilot-eye.png": {
+      "bytes": 1989474,
+      "sha256": "268e544e16d742ae792671cab38ebc511a78d75c569b9cb734d65943deb087ef"
+    },
+    "review_assembly.py": {
+      "bytes": 5821,
+      "sha256": "40fdb88c594fe3797765cf7819fbaeaba8a323ac689c79d292746d4d03e90ffb"
+    },
+    "validate.py": {
+      "bytes": 8852,
+      "sha256": "94daf7f5f403f7bb71f2127c8bd2185e83b6a6e916a268e913d9f14eb1993904"
+    },
+    "validate_native.swift": {
+      "bytes": 1647,
+      "sha256": "dc3560c032163777e33e2e57b263b25cb9166755ef439fcd4cb073ef8eb6a363"
+    },
+    "validation.json": {
+      "bytes": 156489,
+      "sha256": "303dea48b8327c0721c1e02f38495343437b7f0b473277b86dc62e21c38032ec"
+    }
+  }
+}
