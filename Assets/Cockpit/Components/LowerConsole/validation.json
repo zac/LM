@@ -1,0 +1,890 @@
+{
+  "checks": [
+    {
+      "check": "Default root",
+      "passed": true
+    },
+    {
+      "check": "Meters and Y-up",
+      "passed": true
+    },
+    {
+      "check": "Identity Cabin root",
+      "passed": true
+    },
+    {
+      "check": "Mesh budget matches",
+      "passed": true
+    },
+    {
+      "check": "No physics /Materials",
+      "passed": true
+    },
+    {
+      "check": "No physics /Materials/ConsoleGray",
+      "passed": true
+    },
+    {
+      "check": "No physics /Materials/ConsoleGray/Surface",
+      "passed": true
+    },
+    {
+      "check": "No physics /Materials/CaseSide",
+      "passed": true
+    },
+    {
+      "check": "No physics /Materials/CaseSide/Surface",
+      "passed": true
+    },
+    {
+      "check": "No physics /Materials/LipMetal",
+      "passed": true
+    },
+    {
+      "check": "No physics /Materials/LipMetal/Surface",
+      "passed": true
+    },
+    {
+      "check": "No physics /Materials/Recess",
+      "passed": true
+    },
+    {
+      "check": "No physics /Materials/Recess/Surface",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/CenterLowerApron",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/CenterLowerApron",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/CommanderShoulder",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/CommanderShoulder/EquipmentCheek",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/CommanderShoulder/EquipmentCheek",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/ControllerCase",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/ControllerCase/CrewApron",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/ControllerCase/CrewApron",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/ControllerCase/InboardWall",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/ControllerCase/InboardWall",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/ControllerCase/OutboardWall",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/ControllerCase/OutboardWall",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/ControllerCase/RearClosure_001",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/ControllerCase/RearClosure_001",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/ControllerCase/SealBottom",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/ControllerCase/SealBottom",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/ControllerCase/SealLeft",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/ControllerCase/SealLeft",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/ControllerCase/SealRight",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/ControllerCase/SealRight",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/ControllerCase/SealTopLeft",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/ControllerCase/SealTopLeft",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/ControllerCase/SealTopRight",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/ControllerCase/SealTopRight",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/ControllerCase/SlopingFaceLeft",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/ControllerCase/SlopingFaceLeft",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/ControllerCase/SlopingFaceLower",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/ControllerCase/SlopingFaceLower",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/ControllerCase/SlopingFaceRight",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/ControllerCase/SlopingFaceRight",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/ControllerCase/UpperReturnBelowACA",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/ControllerCase/UpperReturnBelowACA",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/ControllerCase/UpperReturnLeft",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/ControllerCase/UpperReturnLeft",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/ControllerCase/UpperReturnRight",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/ControllerCase/UpperReturnRight",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/DSKYCase",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/DSKYCase/ApertureLipBottom",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/DSKYCase/ApertureLipBottom",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/DSKYCase/ApertureLipLeft",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/DSKYCase/ApertureLipLeft",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/DSKYCase/ApertureLipRight",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/DSKYCase/ApertureLipRight",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/DSKYCase/ApertureLipTop",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/DSKYCase/ApertureLipTop",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/DSKYCase/BottomReturn",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/DSKYCase/BottomReturn",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/DSKYCase/FaceApron",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/DSKYCase/FaceApron",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/DSKYCase/FaceLeft",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/DSKYCase/FaceLeft",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/DSKYCase/FaceRight",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/DSKYCase/FaceRight",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/DSKYCase/FaceTop",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/DSKYCase/FaceTop",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/DSKYCase/LeftReturn",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/DSKYCase/LeftReturn",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/DSKYCase/RearClosure",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/DSKYCase/RearClosure",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/DSKYCase/RightReturn",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/DSKYCase/RightReturn",
+      "passed": true
+    },
+    {
+      "check": "Explicit flat face normals /LowerConsole/DSKYCase/TopReturn",
+      "passed": true
+    },
+    {
+      "check": "No physics /LowerConsole/DSKYCase/TopReturn",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/CenterLowerApron",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/CommanderShoulder/EquipmentCheek",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/ControllerCase/CrewApron",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/ControllerCase/InboardWall",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/ControllerCase/OutboardWall",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/ControllerCase/RearClosure_001",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/ControllerCase/SealBottom",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/ControllerCase/SealLeft",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/ControllerCase/SealRight",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/ControllerCase/SealTopLeft",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/ControllerCase/SealTopRight",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/ControllerCase/SlopingFaceLeft",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/ControllerCase/SlopingFaceLower",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/ControllerCase/SlopingFaceRight",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/ControllerCase/UpperReturnBelowACA",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/ControllerCase/UpperReturnLeft",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/ControllerCase/UpperReturnRight",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/DSKYCase/ApertureLipBottom",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/DSKYCase/ApertureLipLeft",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/DSKYCase/ApertureLipRight",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/DSKYCase/ApertureLipTop",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/DSKYCase/BottomReturn",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/DSKYCase/FaceApron",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/DSKYCase/FaceLeft",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/DSKYCase/FaceRight",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/DSKYCase/FaceTop",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/DSKYCase/LeftReturn",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/DSKYCase/RearClosure",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/DSKYCase/RightReturn",
+      "passed": true
+    },
+    {
+      "check": "Closed manifold /LowerConsole/DSKYCase/TopReturn",
+      "passed": true
+    },
+    {
+      "check": "Shadow group exists /LowerConsole/CenterLowerApron",
+      "passed": true
+    },
+    {
+      "check": "Shadow group exists /LowerConsole/CommanderShoulder",
+      "passed": true
+    },
+    {
+      "check": "Shadow group exists /LowerConsole/ControllerCase",
+      "passed": true
+    },
+    {
+      "check": "Shadow group exists /LowerConsole/DSKYCase",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/CenterLowerApron",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/CommanderShoulder/EquipmentCheek",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/ControllerCase/CrewApron",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/ControllerCase/InboardWall",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/ControllerCase/OutboardWall",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/ControllerCase/RearClosure_001",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/ControllerCase/SealBottom",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/ControllerCase/SealLeft",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/ControllerCase/SealRight",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/ControllerCase/SealTopLeft",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/ControllerCase/SealTopRight",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/ControllerCase/SlopingFaceLeft",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/ControllerCase/SlopingFaceLower",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/ControllerCase/SlopingFaceRight",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/ControllerCase/UpperReturnBelowACA",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/ControllerCase/UpperReturnLeft",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/ControllerCase/UpperReturnRight",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/DSKYCase/ApertureLipBottom",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/DSKYCase/ApertureLipLeft",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/DSKYCase/ApertureLipRight",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/DSKYCase/ApertureLipTop",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/DSKYCase/BottomReturn",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/DSKYCase/FaceApron",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/DSKYCase/FaceLeft",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/DSKYCase/FaceRight",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/DSKYCase/FaceTop",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/DSKYCase/LeftReturn",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/DSKYCase/RearClosure",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/DSKYCase/RightReturn",
+      "passed": true
+    },
+    {
+      "check": "Disjoint complete shadow group /LowerConsole/DSKYCase/TopReturn",
+      "passed": true
+    },
+    {
+      "check": "Referenced node exists /CommanderPanels/Panel_4/Panel_4_Shell",
+      "passed": true
+    },
+    {
+      "check": "Full component-relative pose /CommanderPanels/Panel_4/Panel_4_Shell",
+      "passed": true
+    },
+    {
+      "check": "Referenced node exists /CommanderPanels/Panel_4/Panel_4_RemovableBacking",
+      "passed": true
+    },
+    {
+      "check": "Full component-relative pose /CommanderPanels/Panel_4/Panel_4_RemovableBacking",
+      "passed": true
+    },
+    {
+      "check": "Referenced node exists /CommanderPanels/Panel_4/Panel_4_Trim",
+      "passed": true
+    },
+    {
+      "check": "Full component-relative pose /CommanderPanels/Panel_4/Panel_4_Trim",
+      "passed": true
+    },
+    {
+      "check": "Referenced node exists /CommanderPanels/Panel_4/Panel_4_Fasteners",
+      "passed": true
+    },
+    {
+      "check": "Full component-relative pose /CommanderPanels/Panel_4/Panel_4_Fasteners",
+      "passed": true
+    },
+    {
+      "check": "Referenced node exists /Cabin/Mounts/Mount_Panel_4",
+      "passed": true
+    },
+    {
+      "check": "Full component-relative pose /Cabin/Mounts/Mount_Panel_4",
+      "passed": true
+    },
+    {
+      "check": "Referenced node exists /Cabin/Mounts/Mount_Panel_4/Mount_DSKY",
+      "passed": true
+    },
+    {
+      "check": "Full component-relative pose /Cabin/Mounts/Mount_Panel_4/Mount_DSKY",
+      "passed": true
+    },
+    {
+      "check": "Referenced node exists /Cabin/Mounts/Mount_Panel_5",
+      "passed": true
+    },
+    {
+      "check": "Full component-relative pose /Cabin/Mounts/Mount_Panel_5",
+      "passed": true
+    },
+    {
+      "check": "Referenced node exists /PanelInventory/Panels/Panel5/Panel5__Engine",
+      "passed": true
+    },
+    {
+      "check": "Full component-relative pose /PanelInventory/Panels/Panel5/Panel5__Engine",
+      "passed": true
+    },
+    {
+      "check": "Referenced node exists /PanelInventory/Panels/Panel5/Panel5__Timer",
+      "passed": true
+    },
+    {
+      "check": "Full component-relative pose /PanelInventory/Panels/Panel5/Panel5__Timer",
+      "passed": true
+    },
+    {
+      "check": "ARKit compliance",
+      "passed": true
+    },
+    {
+      "check": "No surface crossings Cabin",
+      "passed": true
+    },
+    {
+      "check": "No surface crossings WindowsLPD",
+      "passed": true
+    },
+    {
+      "check": "No surface crossings PanelInventory",
+      "passed": true
+    },
+    {
+      "check": "No surface crossings CommanderPanels",
+      "passed": true
+    },
+    {
+      "check": "No surface crossings DSKY",
+      "passed": true
+    },
+    {
+      "check": "No surface crossings ACA",
+      "passed": true
+    },
+    {
+      "check": "No surface crossings DescentRate",
+      "passed": true
+    },
+    {
+      "check": "No surface crossings EngineButtons",
+      "passed": true
+    },
+    {
+      "check": "No surface crossings InteriorDetails",
+      "passed": true
+    },
+    {
+      "check": "No surface crossings BreakerBanks",
+      "passed": true
+    },
+    {
+      "check": "No surface crossings CautionWarning",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (-0.1, -0.085)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (-0.1, -0.04)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (-0.1, 0.015)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (-0.1, 0.07)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (-0.1, 0.115)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (-0.05, -0.085)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (-0.05, -0.04)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (-0.05, 0.015)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (-0.05, 0.07)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (-0.05, 0.115)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (0, -0.085)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (0, -0.04)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (0, 0.015)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (0, 0.07)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (0, 0.115)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (0.05, -0.085)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (0.05, -0.04)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (0.05, 0.015)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (0.05, 0.07)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (0.05, 0.115)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (0.1, -0.085)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (0.1, -0.04)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (0.1, 0.015)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (0.1, 0.07)",
+      "passed": true
+    },
+    {
+      "check": "DSKY opening ray (0.1, 0.115)",
+      "passed": true
+    },
+    {
+      "check": "Cavity rear closure covers provisional housing",
+      "passed": true
+    },
+    {
+      "check": "DES RATE clearance state -17",
+      "passed": true
+    },
+    {
+      "check": "DES RATE clearance state 0",
+      "passed": true
+    },
+    {
+      "check": "DES RATE clearance state 17",
+      "passed": true
+    },
+    {
+      "check": "No ACA intersections in125 articulation samples",
+      "passed": true
+    }
+  ],
+  "peers": {
+    "Cabin": {
+      "sha256": "9b30f113235bea7832dd0d9f245d3f6ad98bd8a64af2d217943a5489e498c21b",
+      "crossings": [],
+      "mesh_count": 267
+    },
+    "WindowsLPD": {
+      "sha256": "91c03cc4b6826473cfdccdce195fece5f591b778b8afdb3a71505df8f528cc32",
+      "crossings": [],
+      "mesh_count": 194
+    },
+    "PanelInventory": {
+      "sha256": "026a908793a01c3f1c6fa6a024500f70fda8edc75287ac4749003719fb7eaf30",
+      "crossings": [],
+      "mesh_count": 168
+    },
+    "CommanderPanels": {
+      "sha256": "52e4c13cf302e080edbd163fb3f6d26ce53785c28bc49dcefd3a75c876f9d604",
+      "crossings": [],
+      "mesh_count": 16
+    },
+    "DSKY": {
+      "sha256": "e20a69864d4c7e0ff068172e0e672d9fbcc510c1dc4e97e4db0246fde08fbdfd",
+      "crossings": [],
+      "mesh_count": 390
+    },
+    "ACA": {
+      "sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5",
+      "crossings": [],
+      "mesh_count": 13
+    },
+    "DescentRate": {
+      "sha256": "ffa295038be35261353a8a0c8fe35316647d4e0b910b7ca108e97f55375cf078",
+      "crossings": [],
+      "mesh_count": 9
+    },
+    "EngineButtons": {
+      "sha256": "eedf4dcadf8e075bc3d6084c273ea5a335506d3680966aa528298dcae7bec369",
+      "crossings": [],
+      "mesh_count": 32
+    },
+    "InteriorDetails": {
+      "sha256": "069cdfb9923a6953f1ce4ffc5053a948e0c4f76840866553435d778dfd84b201",
+      "crossings": [],
+      "mesh_count": 557
+    },
+    "BreakerBanks": {
+      "sha256": "fce4e4248806f4ff963775bc8013e17e6dee370671e656390bb8d05fcddfc217",
+      "crossings": [],
+      "mesh_count": 383
+    },
+    "CautionWarning": {
+      "sha256": "580b16119a484c1a6138731e81e6960aab12324524dd267c0b227628e23b743b",
+      "crossings": [],
+      "mesh_count": 85
+    }
+  },
+  "limits": [
+    "Mesh intersection and sampled articulation are not fabrication or human-reach qualification.",
+    "Peer peer collisions are outside this overlay test.",
+    "No electrical/input/motion implementation is supplied."
+  ],
+  "compliance": {
+    "errors": [],
+    "failed": [],
+    "warnings": []
+  },
+  "aca_sampled_sweep": {
+    "degrees": [
+      -11,
+      -5.5,
+      0,
+      5.5,
+      11
+    ],
+    "pose_count": 125,
+    "intersections": []
+  },
+  "counts": {
+    "passed": 201,
+    "total": 201
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "bounds_match" : true,
+  "disjoint_complete_shadow_groups" : 4,
+  "full_component_relative_pose_checks" : 9,
+  "identity_root" : true,
+  "meshes" : 30,
+  "no_authored_collision_or_input" : true,
+  "platform" : "macOS RealityKit",
+  "status" : "PASS",
+  "VisionPro" : "not tested"
+}

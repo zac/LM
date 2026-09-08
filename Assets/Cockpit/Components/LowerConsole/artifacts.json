@@ -1,0 +1,117 @@
+{
+  "schema": "lmkit.artifacts.sha256.v1",
+  "files": {
+    ".gitattributes": {
+      "sha256": "fb55452b011d64691e0857955a89d76edcb787824c40756518c7205ef9cc590e",
+      "bytes": 84
+    },
+    ".gitignore": {
+      "sha256": "e9377f7afe22fe574eb065f57e80617538d092aeee369d91c702fbb5e779d238",
+      "bytes": 22
+    },
+    "HANDOFF.md": {
+      "sha256": "7bcfe67d293d1b19f40197851495cc502217ef714ce4e6876e8ff656662b0bea",
+      "bytes": 5958
+    },
+    "LowerConsole.blend": {
+      "sha256": "52721acfe283adc49bf8f857ad91fdc77370f02e3eb50c6123f6e3ac8e1c22e4",
+      "bytes": 119395
+    },
+    "LowerConsole.usda": {
+      "sha256": "fa962f5eab6d183d07fef88f20924cf1858eacae093e771d081741eaf04906ba",
+      "bytes": 105986
+    },
+    "LowerConsole.usdc": {
+      "sha256": "67f1ebd986d427ebf492c6810d9cbc08e12fb3164b42b31bd7aee5bec33e9bdf",
+      "bytes": 28134
+    },
+    "LowerConsole.usdz": {
+      "sha256": "8ee9a28d08735a225c081e96509b611cdaf552f6af8f59d7ed7ca6874d4bc4f0",
+      "bytes": 28300
+    },
+    "build.py": {
+      "sha256": "afc5583e7341ed625df3c1135b539fe5fdd91a55f900d8153e9bcea7f9968ee8",
+      "bytes": 7187
+    },
+    "evidence/SI-99-15229h.jpg": {
+      "sha256": "663ed06e149f3aeb991c5589835bfb1afda5c908b23c668a1853d7546572dd6d",
+      "bytes": 2634088
+    },
+    "evidence/commander-mounting.json": {
+      "sha256": "eb1efb3ab4ef0d43fc6036ec676431bf8b861cc69e83d26bc15cf2ed0182dde8",
+      "bytes": 5451
+    },
+    "evidence/inventory.json": {
+      "sha256": "f315bdcbd8a6e597231b33420652fb6297241bf3af7c585708f472583522ec49",
+      "bytes": 190532
+    },
+    "evidence/mounts.json": {
+      "sha256": "92bd8a2bf39794a99332226197a6c19b3aa0cb9d3d3149cc2404e1209903d6db",
+      "bytes": 7682
+    },
+    "evidence/provenance.json": {
+      "sha256": "9600a25c62508677816e911713b812e76b4b7d2fafcff4e510729767b79917de",
+      "bytes": 6958
+    },
+    "evidence/runtime/LMCommanderStationAssembly.swift": {
+      "sha256": "2da7dcb7e5295b5c4911a2cfa7b07f864d066e8b1503f2727c3f4a3e27da256e",
+      "bytes": 30976
+    },
+    "evidence/runtime/LMCommanderStationGeometry.swift": {
+      "sha256": "447ce35526b475ad71b889083c3cf28f0d673ca0b22076e37a6c00336d371659",
+      "bytes": 12172
+    },
+    "evidence/runtime/LMImportedACA.swift": {
+      "sha256": "1ee14d530a399b45c669ef8ff217f2ff58c8f78f2e8b96c14f09fe3c46c63741",
+      "bytes": 4485
+    },
+    "geometry.py": {
+      "sha256": "5342090af4a8000928d6a0104b053d6026ad97f47278bc84a9c341184fc15b7e",
+      "bytes": 4690
+    },
+    "hash_artifacts.py": {
+      "sha256": "741323ef15795a9fe94d740e022c37793c1c00fea7af2ced81cd1192f240affe",
+      "bytes": 556
+    },
+    "interface.json": {
+      "sha256": "70d9a87334b353f490a06b02b9585d52252c9e6fd202992195393d73eb15f18f",
+      "bytes": 6805
+    },
+    "review/cameras.json": {
+      "sha256": "60f3923e5ceda954f5381203d70cd526ea6f07566e8f2b96857c9db46e81b5f4",
+      "bytes": 846
+    },
+    "review/controller-oblique.png": {
+      "sha256": "409dab407e8f96d9d7524cf215e31b8ad5755581786b98ae4fab1d6d97e15ed1",
+      "bytes": 2026254
+    },
+    "review/crew-entry.png": {
+      "sha256": "c0d9fb3426d180b2f21fde56f3be9313caa43d89749b681b1943293262f17db0",
+      "bytes": 2119779
+    },
+    "review/dsky-oblique.png": {
+      "sha256": "f76240c7c666b19b219555fab98ed6c84d75880e4cd417fa33332f407da57352",
+      "bytes": 2112659
+    },
+    "review.py": {
+      "sha256": "c2fefe11841e86cbc18acd274c8e4946e9cfb3f2a0b127a7eb63a1dd847f9c41",
+      "bytes": 2931
+    },
+    "validate.py": {
+      "sha256": "0b895dca53ef2ce0431fc2c7aa953f4e6b2a1e7dbeafd704bb00e97777634b3b",
+      "bytes": 8274
+    },
+    "validate_native.swift": {
+      "sha256": "79258114c45cac7236096bb952ead44c8d8d6c3b64e09a7d8473a1fe96611bb2",
+      "bytes": 3328
+    },
+    "validation-native.json": {
+      "sha256": "81dceef528196dd4c9ebfeff7fa2a40dd146c6a925eae754689f2b30dd2f0a98",
+      "bytes": 285
+    },
+    "validation.json": {
+      "sha256": "d791f4cf2507822b96dcd69f63c723301b7ef0b4f5271160745deabc930b4bbd",
+      "bytes": 23231
+    }
+  }
+}
