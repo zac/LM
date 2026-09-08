@@ -1,0 +1,12 @@
+{
+  "blank_cells" : 9,
+  "full_slot_matrices" : 2,
+  "independent_cells" : true,
+  "individual_lenses" : 40,
+  "live_bindings" : false,
+  "master_reference_loaded_separately" : true,
+  "named_lamps" : 31,
+  "platform" : "macOS RealityKit",
+  "status" : "PASS",
+  "VisionPro" : "NOT TESTED"
+}

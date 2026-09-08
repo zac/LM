@@ -1,0 +1,2 @@
+# Retain the exact inspected upstream source bytes, including original whitespace.
+evidence/runtime/** -whitespace
