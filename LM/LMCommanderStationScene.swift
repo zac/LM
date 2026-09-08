@@ -120,6 +120,7 @@ final class LMCommanderStationScene {
     private var exteriorLunarModule: Entity?
     private var fdaiBall: Entity?
     private var importedFDAI: LMImportedFDAI?
+    private(set) var importedACA: LMImportedACA?
     private var retiredCommanderEntryAnchors = [AnchorEntity]()
     private var lastVehicleState: LMVehicleStateSnapshot?
     private var dskyKeyEntitiesByRawValue = [Int: Entity]()
@@ -133,7 +134,7 @@ final class LMCommanderStationScene {
     private let attitudeModeAutomaticPosition =
         LMCommanderStationGeometry.attitudeHoldPivotPositionMeters
 
-    init() {
+    init(loadACA: Bool = true) {
         commanderEntryAnchor.name = "Commander entry head anchor"
         commanderEntryAnchor.anchoring.trackingMode = .once
         root.name = "LM Commander Station"
@@ -167,6 +168,7 @@ final class LMCommanderStationScene {
         buildPhysicalDSKY()
         installImportedDSKY()
         buildPhysicalControls()
+        if loadACA { installImportedACA() }
         // RealityKit models cast dynamic-light shadows by default, even when
         // they have no DynamicLightShadowComponent. Explicitly opt every
         // layered cabin model out before restoring the pressure shell as the
@@ -188,6 +190,7 @@ final class LMCommanderStationScene {
         #if DEBUG
         LMInstrumentValidation.frameObserver(root)
         LMCommanderStationAssemblyObserver.frame(root)
+        LMACAValidation.frame(root)
         #endif
     }
 
@@ -696,7 +699,39 @@ final class LMCommanderStationScene {
         }
     }
 
+    @discardableResult
+    func installImportedACA(loader: @MainActor () throws -> LMImportedACA = { try LMImportedACA.load() }) -> Bool {
+        guard importedACA == nil else { return true }
+        do {
+            let imported = try loader()
+            for child in Array(acaHandle.children) { child.removeFromParent() }
+            acaHandle.components.remove(CollisionComponent.self)
+            acaHandle.components.remove(InputTargetComponent.self)
+            acaHandle.components.remove(HoverEffectComponent.self)
+            acaHandle.components.remove(LMACAInteractionTarget.self)
+            acaHandle.orientation = simd_quatf()
+            imported.root.position = LMImportedACA.registration
+            acaHandle.addChild(imported.root)
+            importedACA = imported
+            return true
+        } catch {
+            logger.error("Articulated ACA unavailable; functional fallback retained: \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    func isACAEntity(_ entity: Entity) -> Bool {
+        var node: Entity? = entity
+        while let current = node {
+            if current === acaHandle { return true }
+            node = current.parent
+        }
+        return false
+    }
+
     func setACAVisual(_ input: LMACANormalizedInput) {
+        let input = input.clamped
+        if let importedACA { importedACA.apply(input); return }
         let travel = LMCommanderStationGeometry.acaProportionalTravelDegrees * .pi / 180
         acaHandle.position = acaNeutralPosition
         acaHandle.orientation = simd_quatf(
@@ -1752,6 +1787,7 @@ final class LMCommanderStationScene {
         acaHandle.name = LMCockpitAssetContract.Node.acaPivot.rawValue
         acaHandle.position = acaNeutralPosition
         addACAHandleGeometry(to: acaHandle, material: handleMaterial, housing: housing)
+        acaHandle.components.set(LMACAInteractionTarget())
         acaHandle.components.set(InputTargetComponent())
         acaHandle.components.set(HoverEffectComponent())
         acaHandle.components.set(CollisionComponent(shapes: [

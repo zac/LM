@@ -12,6 +12,8 @@ struct TerminalDescentCockpitView: View {
     @State private var didStart = false
     @State private var terrainStatus = "Loading Apollo 11 terrain…"
     @State private var recenterGeneration = 0
+    @State private var acaInteractionGeneration: UUID?
+    @State private var cockpitVisible = false
     @State private var acaGestureOrigin: SIMD3<Float>?
     @State private var rodGestureOrigin: SIMD3<Float>?
     @State private var showsFallbackControls = false
@@ -270,6 +272,8 @@ struct TerminalDescentCockpitView: View {
         .onChange(of: acaGestureIsActive) { wasActive, isActive in
             if wasActive && !isActive {
                 releaseACAControl()
+                acaGestureOrigin = nil
+                acaInteractionGeneration = nil
             }
         }
         .onChange(of: rodGestureIsActive) { wasActive, isActive in
@@ -277,7 +281,12 @@ struct TerminalDescentCockpitView: View {
                 releaseRODControl()
             }
         }
+        .onAppear { cockpitVisible = true }
+        .onChange(of: appModel.session.isRunning) { _, running in
+            if !running { releaseACAControl() }
+        }
         .onDisappear {
+            cockpitVisible = false
             LunarExplorerPerformanceProbe.shared.stop()
             releaseSpatialControls()
             appModel.session.setSceneActive(false)
@@ -289,27 +298,30 @@ struct TerminalDescentCockpitView: View {
 
     private var acaGesture: some Gesture {
         DragGesture(minimumDistance: 0)
-            .targetedToEntity(station.acaHandle)
+            .targetedToEntity(where: .has(LMACAInteractionTarget.self))
             .updating($acaGestureIsActive) { _, isActive, _ in
                 isActive = true
             }
             .onChanged { value in
-                let sceneLocation = value.convert(value.location3D, from: .local, to: .scene)
+                guard cockpitVisible, scenePhase == .active, acaGestureIsActive,
+                      station.isACAEntity(value.entity), let cabin = station.acaHandle.parent else { return }
+                // Cabin-relative displacement remains correct after recentering
+                // or observer/root rotations; the moving grip is not the basis.
+                let sceneLocation = value.convert(value.location3D, from: .local, to: cabin)
                 if acaGestureOrigin == nil {
                     acaGestureOrigin = sceneLocation
+                    acaInteractionGeneration = appModel.session.beginACAInteraction()
                 }
-                guard let origin = acaGestureOrigin else { return }
+                guard let origin = acaGestureOrigin, let generation = acaInteractionGeneration else { return }
                 let input = controlMapper.acaInput(for: sceneLocation - origin)
+                guard appModel.session.updateACAInteraction(input, generation: generation) else { return }
                 recordValidation { $0.observeDirectACA(input) }
-                appModel.session.setACA(
-                    pitch: input.pitch,
-                    yaw: input.yaw,
-                    roll: input.roll
-                )
-                station.setACAVisual(input)
+                station.setACAVisual(appModel.session.aca)
             }
             .onEnded { _ in
                 releaseACAControl()
+                acaGestureOrigin = nil
+                acaInteractionGeneration = nil
             }
     }
 
@@ -377,6 +389,9 @@ struct TerminalDescentCockpitView: View {
         station.apply(appModel.session.vehicleState)
         station.applyDSKY(appModel.session.dsky)
         station.setACAVisual(appModel.session.aca)
+        #if DEBUG
+        if let pose = LMACAValidation.pose { station.setACAVisual(pose) }
+        #endif
         station.setRODVisual(appModel.session.rodSwitchPosition)
         station.setAttitudeHoldVisual(appModel.session.attitudeMode == .attitudeHold)
         station.setLandingPointCalledAngle(
@@ -402,7 +417,6 @@ struct TerminalDescentCockpitView: View {
     }
 
     private func releaseACAControl() {
-        acaGestureOrigin = nil
         appModel.session.releaseACA()
         station.setACAVisual(.neutral)
         recordValidation { $0.observeDirectACARelease() }

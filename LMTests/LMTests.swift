@@ -3194,7 +3194,7 @@ struct SpatialCockpitControlTests {
     }
 
     @Test @MainActor func proceduralControlsPivotAtTheirFlightDatums() {
-        let station = LMCommanderStationScene()
+        let station = LMCommanderStationScene(loadACA: false)
         station.setACAVisual(LMACANormalizedInput(pitch: 1, yaw: 0, roll: 0))
         #expect(simd_distance(
             station.acaHandle.position,
