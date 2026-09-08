@@ -123,4 +123,42 @@ public enum LMKitAssets {
         Bundle.module.url(forResource: "interface", withExtension: "json", subdirectory: "BreakerBanks")!
     }
 
+
+    // Systems hardware is neutral. Availability and behavior are host-owned.
+    public static var missionTimerURL: URL {
+        Bundle.module.url(forResource: "MissionTimer", withExtension: "usdz", subdirectory: "Timers")!
+    }
+    public static var eventTimerURL: URL {
+        Bundle.module.url(forResource: "EventTimer", withExtension: "usdz", subdirectory: "Timers")!
+    }
+    public static var missionTimerControlsURL: URL {
+        Bundle.module.url(forResource: "MissionTimerControls", withExtension: "usdz", subdirectory: "Timers")!
+    }
+    public static var eventTimerControlsURL: URL {
+        Bundle.module.url(forResource: "EventTimerControls", withExtension: "usdz", subdirectory: "Timers")!
+    }
+    public static var engineButtonsURL: URL {
+        Bundle.module.url(forResource: "EngineButtons", withExtension: "usdz", subdirectory: "EngineControls")!
+    }
+    public static var lunarContactURL: URL {
+        Bundle.module.url(forResource: "LunarContact", withExtension: "usdz", subdirectory: "EngineControls")!
+    }
+    public static var propulsionInstrumentsURL: URL {
+        Bundle.module.url(forResource: "PropulsionInstruments", withExtension: "usdz", subdirectory: "PropulsionInstruments")!
+    }
+    public static var cautionWarningURL: URL {
+        Bundle.module.url(forResource: "CautionWarning", withExtension: "usdz", subdirectory: "CautionWarning")!
+    }
+    public static var timersInterfaceURL: URL {
+        Bundle.module.url(forResource: "interface", withExtension: "json", subdirectory: "Timers")!
+    }
+    public static var engineControlsInterfaceURL: URL {
+        Bundle.module.url(forResource: "interface", withExtension: "json", subdirectory: "EngineControls")!
+    }
+    public static var propulsionInstrumentsInterfaceURL: URL {
+        Bundle.module.url(forResource: "interface", withExtension: "json", subdirectory: "PropulsionInstruments")!
+    }
+    public static var cautionWarningInterfaceURL: URL {
+        Bundle.module.url(forResource: "interface", withExtension: "json", subdirectory: "CautionWarning")!
+    }
 }

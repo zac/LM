@@ -18,6 +18,10 @@ COMPONENTS = {
     "CrossPointer": ("CrossPointer.usdz", "interface.json"),
     "InteriorDetails": ("InteriorDetails.usdz", "interface.json"),
     "BreakerBanks": ("BreakerBanks.usdz", "interface.json"),
+    "Timers": ("MissionTimer.usdz", "EventTimer.usdz", "MissionTimerControls.usdz", "EventTimerControls.usdz", "interface.json"),
+    "EngineControls": ("EngineButtons.usdz", "LunarContact.usdz", "interface.json"),
+    "PropulsionInstruments": ("PropulsionInstruments.usdz", "interface.json"),
+    "CautionWarning": ("CautionWarning.usdz", "interface.json"),
 }
 
 

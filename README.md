@@ -2,6 +2,20 @@
 
 Reusable lunar-module models and independently addressable cockpit components for RealityKit. LMKit owns model authoring and packaged geometry; the LM application owns presentation/input bindings, AGC owns computer behavior, and LMCore owns flight dynamics. This package has no AGC or LMCore dependency.
 
+## Pilot station and systems hardware
+
+The consuming LM app can reuse the FDAI asset for an independently addressed pilot instrument at `Panel2__FDAI`. LMKit supplies one reusable model; attitude-source selection and live state remain app responsibilities.
+
+| Component | Resource APIs | Placement / qualification |
+|---|---|---|
+| Mission and event timers | `missionTimerURL`, `eventTimerURL`, `missionTimerControlsURL`, `eventTimerControlsURL`, `timersInterfaceURL` | Readouts at Panel1__Timers; event controls at Panel3__TimerHeaters. Mission controls remain uninstalled because Panel5__Timer is blocked. A runtime clock is not automatically launch GET. |
+| Engine buttons and contact lamps | `engineButtonsURL`, `lunarContactURL`, `engineControlsInterfaceURL` | Engine guard shares Panel5__Engine with DES RATE; contact lamps use explicit commander/pilot mounts. Crew engine commands require an authoritative API; probe contact is distinct from footpad contact. |
+| Propulsion displays | `propulsionInstrumentsURL`, `propulsionInstrumentsInterfaceURL` | Panel1 upper cluster and T/W scale; addressable needles/digits ship neutral. No inferred pressures, quantities or warning signals. |
+| Caution and warning faces | `cautionWarningURL`, `cautionWarningInterfaceURL` | Panel1__Warning and Panel2__Caution, 40 cells including nine source blanks. Master-alarm reference is authoring-only and unmounted. |
+| Interior refinement | Existing `interiorDetailsURL` and `interiorDetailsInterfaceURL` | Thirteen optional groups including overhead liners, mesh, hatch fittings and cables. Disable hatch-attached detail if the hatch later opens. |
+
+See [the current phase plan](Docs/PilotStationAndSystemsPhase.md) for ownership, signal qualifications and acceptance. Refresh with `python3 Tools/sync_landing_station.py Timers EngineControls PropulsionInstruments CautionWarning InteriorDetails`. Geometry names do not establish simulation bindings; use each component's explicit interface and handoff.
+
 ## Commander instruments and interior detail
 
 New components keep authored geometry separate from LM-owned state and input bindings:
@@ -48,10 +62,10 @@ Run `swift test` on macOS. Tests load the actual packaged assets in RealityKit a
 
 ## Component workflow
 
-Workers own one component directory and a separate branch/worktree. Commit source assets through LFS, scripts, small review images, evidence and HANDOFF.md. Deliver an exact SHA to the coordinator; only the coordinator accepts component changes, refreshes shipping resources, edits shared contracts or builds the master assembly. One heavy render per machine initially. Keep disposable renders and scratch files ignored.
+Workers own one component directory and a separate branch/worktree. Commit source assets through LFS, scripts, small review images, evidence and HANDOFF.md. Deliver an exact SHA to the coordinator; only the coordinator accepts component changes, refreshes shipping resources, edits shared contracts or builds the master assembly. Run independent component work in parallel; coordinate heavy rendering and give native simulator validation a single owner. Keep disposable renders and scratch files ignored.
 
 Keep imports and new work distinguishable. Record source revision, dimensions, axes, pivots, moving parts, materials, bounds, packaging hashes, validation actually performed and unresolved issues. Preserve names consumed by LM until a coordinated replacement updates and verifies its bindings.
 
 ## Current acceptance evidence
 
-Thirteen package test functions cover the accepted resource set, including two parameterized functions with six new-resource cases each. The new component checks load actual USDZs without interaction/physics ownership and verify packaged bytes against accepted source exports and hash receipts. Native RealityKit checks load controls, hand controllers, surrounds, enclosed cabin, windows and panel inventory; verify independent moving/removable nodes, full cabin/panel/slot transforms, optical pane bases, crew eye, separate LPD layers, removed legacy visuals and blocked reservations. App-level replacement/fallback behavior and final combined appearance require separate LM validation. Shipping asset bytes match accepted authoring exports except the documented PanelInventory planning-visibility derivation; its canonical layer changes exactly one property. This establishes packaged resource compatibility, not historical fit, final panel placement, live simulation behavior or Vision Pro acceptance. Per-delivery acceptance records are under `Provenance/`.
+Thirteen package test functions cover the accepted resource set, including two parameterized functions with fourteen new-resource cases each. The new component checks load actual USDZs without interaction/physics ownership and verify packaged bytes against accepted source exports and hash receipts. Native RealityKit checks load controls, hand controllers, surrounds, enclosed cabin, windows and panel inventory; verify independent moving/removable nodes, full cabin/panel/slot transforms, optical pane bases, crew eye, separate LPD layers, removed legacy visuals and blocked reservations. App-level replacement/fallback behavior and final combined appearance require separate LM validation. Shipping asset bytes match accepted authoring exports except the documented PanelInventory planning-visibility derivation; its canonical layer changes exactly one property. This establishes packaged resource compatibility, not historical fit, final panel placement, live simulation behavior or Vision Pro acceptance. Per-delivery acceptance records are under `Provenance/`.

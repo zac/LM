@@ -27,3 +27,15 @@ Initial engine audit identifies landingGear.isProbeContact separately from surfa
 ## Acceptance
 
 Preserve DSKY/FDAI/ACA, altitude/rate, cross-pointer and mode/DES RATE behavior, source mount datums, optional overlay fallback and the corrected startup lighting. Keep unbuilt partial-region backing. Update planning labels to reflect actual occupancy. Qualify dimensions and signal provenance. Review the combined assembly in native visionOS simulator and retain exact source/resource hashes, test results and normal/inspection comparisons. Only one simulator owner at a time; no physical Vision Pro acceptance is claimed without a device session.
+
+## Clock and system-source audit
+
+The audited AGC/LMCore revision is `b3f15533db335ee882dc07401790c93010809e8f`. `LMSimulationSnapshot.timeSeconds` is runtime elapsed time, reset/restored with the session; it is not launch GET. `Luminary99LandingPadLoad.pdiClockCentiseconds` gives a sourced epoch for scenario geometry, but its `clockWords()` helper has no callers in audited Sources. Runtime construction does not establish a mission-timer preset, and `loadP63PadLoads()` places TLAND relative to the existing AGC counter. Therefore this phase does not present that counter or a manufactured offset as a historically synchronized mission timer.
+
+The app-owned event timer advances from supplied simulation time with explicit session generation, pause/restart and replay availability. Its later Apollo 13 countdown-to-count-up behavior is a documented hybrid, not an Apollo 11 qualification. Engine START/STOP stays inert: starting or stopping `PoweredDescentSession` is not an engine-button command. Only optional `landingGear.isProbeContact` supports the qualified contact lamps. Missing data stays distinguishable from false in host status. Pressure, separated propellant/helium quantities, historical T/W indication and CWEA/master-alarm behavior are unavailable in this baseline.
+
+## Accepted package checkpoint
+
+All five model deliveries are merged with original worker history, including the second InteriorDetails pass; receipts and exact revisions are recorded in `Provenance/pilot-systems-acceptance.json`. Required DSKY refresh completed. Native macOS SwiftPM/RealityKit validation passes all 13 test functions, including two parameterized functions with 14 resource cases each. Shipping resources are byte-identical to accepted exports. The combined geometry audit checks 153 component pairs and 61 named face/grip sightlines; no new-component intersections or blocked sampled rays remain. Fourteen rear seating/backing mesh-pair intersections remain documented, including the pilot FDAI shell penetration. These checks do not qualify fabrication or headset appearance.
+
+Consuming LM integration and native simulator review are recorded separately after final runtime acceptance. This package checkpoint does not claim that unsupported physical systems have live behavior.

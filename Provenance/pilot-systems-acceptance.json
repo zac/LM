@@ -1,0 +1,132 @@
+{
+  "schema": "lmkit.pilot-systems-acceptance.v1",
+  "date": "2026-09-08",
+  "components": {
+    "InteriorDetails": "a0a8a9b97ba50900bfa2e02040bc97736e7e0856",
+    "Timers": "ae5fbf9805511b2327b43fbdc0430c8ba1775bec",
+    "EngineControls": "07b93f851c6dfee97917b78a24ef4ff447101800",
+    "PropulsionInstruments": "7e5df813fe391975781cc6657623fb2e092d0e36",
+    "CautionWarning": "7410f0b2f7809635eacbbbd50e4b9cce4382f60d"
+  },
+  "documentation_followups": {
+    "InteriorDetails": "f84eff614843d785c8023905ad9fa5000cd6a9d8"
+  },
+  "packaging": {
+    "InteriorDetails": {
+      "schema": "lmkit.component-packaging.v1",
+      "component": "InteriorDetails",
+      "derivation": "byte-identical copy of accepted authoring resources",
+      "files": {
+        "InteriorDetails.usdz": {
+          "sha256": "069cdfb9923a6953f1ce4ffc5053a948e0c4f76840866553435d778dfd84b201",
+          "bytes": 133614
+        },
+        "interface.json": {
+          "sha256": "7e4f798b4df1b22f70e6cf7fd919ddb71b3ec1aa5b95bf1bb7ebb889d0ac9a29",
+          "bytes": 6245
+        }
+      }
+    },
+    "Timers": {
+      "schema": "lmkit.component-packaging.v1",
+      "component": "Timers",
+      "derivation": "byte-identical copy of accepted authoring resources",
+      "files": {
+        "MissionTimer.usdz": {
+          "sha256": "ef6eb8d8d54de5dc39b31f0f9f38a3151343dc8c73ede7762615c41613570bea",
+          "bytes": 23787
+        },
+        "EventTimer.usdz": {
+          "sha256": "d22f9ec7b70c28a12725414f9150f2edb3f641c97c91c67cd0b7409326d8b540",
+          "bytes": 16470
+        },
+        "MissionTimerControls.usdz": {
+          "sha256": "f887e0508328d50b8c2e40bcb0bfaa4daa2379ea902a82e6ceb9a03258f121d5",
+          "bytes": 33761
+        },
+        "EventTimerControls.usdz": {
+          "sha256": "3cf2edba9154f991e386337acda721a3cd163c5cef22c5164f889ec28cce3cbb",
+          "bytes": 36628
+        },
+        "interface.json": {
+          "sha256": "6f105803efeee6f1b4240604d871f7eb85f0780c266233d4000aeb8c635fcacd",
+          "bytes": 19353
+        }
+      }
+    },
+    "EngineControls": {
+      "schema": "lmkit.component-packaging.v1",
+      "component": "EngineControls",
+      "derivation": "byte-identical copy of accepted authoring resources",
+      "files": {
+        "EngineButtons.usdz": {
+          "sha256": "eedf4dcadf8e075bc3d6084c273ea5a335506d3680966aa528298dcae7bec369",
+          "bytes": 75396
+        },
+        "LunarContact.usdz": {
+          "sha256": "6f97cc39c398f9f19555d7ea283e8d1c711deedd9b762cc529b53725d5f31346",
+          "bytes": 61552
+        },
+        "interface.json": {
+          "sha256": "9cfd8057a7dfb5c5eb2419b276a993633f1d9458864d2b56f2414413acde6a05",
+          "bytes": 4145
+        }
+      }
+    },
+    "PropulsionInstruments": {
+      "schema": "lmkit.component-packaging.v1",
+      "component": "PropulsionInstruments",
+      "derivation": "byte-identical copy of accepted authoring resources",
+      "files": {
+        "PropulsionInstruments.usdz": {
+          "sha256": "9eedc3e28ebc5be2b5da07c5c5ff99176c17df66df974879d0348d8061d8d1e8",
+          "bytes": 172594
+        },
+        "interface.json": {
+          "sha256": "6eaff875dd82a0a2b50bc7bdb5d9899a1856475d3352addeb63affb8761f4ad7",
+          "bytes": 12516
+        }
+      }
+    },
+    "CautionWarning": {
+      "schema": "lmkit.component-packaging.v1",
+      "component": "CautionWarning",
+      "derivation": "byte-identical copy of accepted authoring resources",
+      "files": {
+        "CautionWarning.usdz": {
+          "sha256": "580b16119a484c1a6138731e81e6960aab12324524dd267c0b227628e23b743b",
+          "bytes": 83851
+        },
+        "interface.json": {
+          "sha256": "771e0cd4db889bb245ff2e5b46f5c3ffd0e337e1bfca01d6fb744ac4e3fe0608",
+          "bytes": 27753
+        }
+      }
+    }
+  },
+  "combined_geometry": {
+    "report": "Docs/Validation/PilotSystems/CombinedGeometry/REPORT.md",
+    "installed_component_pair_checks": 153,
+    "new_component_pairs": 36,
+    "new_component_intersections": 0,
+    "named_face_grip_rays": 61,
+    "blocked_rays": 0,
+    "retained_rear_seating_mesh_pairs": 14
+  },
+  "limits": [
+    "Mechanical dimensions and seating remain provisional; rear backing intersections explicitly retained.",
+    "Mission timer epoch, crew engine command API, measured propulsion quantities and CWEA circuits unavailable in audited baseline.",
+    "MissionTimerControls packaged for authoring access but not installed; Panel5 timer reservation remains blocked.",
+    "MasterAlarmReference remains authoring-only, unmounted and not packaged.",
+    "Native app behavior and appearance require separate consuming LM validation.",
+    "Physical Vision Pro acceptance outstanding."
+  ],
+  "package_validation": {
+    "command": "swift test --scratch-path /private/tmp/lmkit-pilot-systems-package-build",
+    "result": "passed",
+    "test_functions": 13,
+    "parameterized_functions": 2,
+    "cases_per_parameterized_function": 14,
+    "log": "Docs/Validation/PilotSystems/package-tests.log"
+  }
+}

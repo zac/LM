@@ -1,0 +1,19 @@
+{
+  "schema": "lmkit.component-packaging.v1",
+  "component": "EngineControls",
+  "derivation": "byte-identical copy of accepted authoring resources",
+  "files": {
+    "EngineButtons.usdz": {
+      "sha256": "eedf4dcadf8e075bc3d6084c273ea5a335506d3680966aa528298dcae7bec369",
+      "bytes": 75396
+    },
+    "LunarContact.usdz": {
+      "sha256": "6f97cc39c398f9f19555d7ea283e8d1c711deedd9b762cc529b53725d5f31346",
+      "bytes": 61552
+    },
+    "interface.json": {
+      "sha256": "9cfd8057a7dfb5c5eb2419b276a993633f1d9458864d2b56f2414413acde6a05",
+      "bytes": 4145
+    }
+  }
+}

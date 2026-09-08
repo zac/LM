@@ -1,0 +1,15 @@
+{
+  "schema": "lmkit.component-packaging.v1",
+  "component": "PropulsionInstruments",
+  "derivation": "byte-identical copy of accepted authoring resources",
+  "files": {
+    "PropulsionInstruments.usdz": {
+      "sha256": "9eedc3e28ebc5be2b5da07c5c5ff99176c17df66df974879d0348d8061d8d1e8",
+      "bytes": 172594
+    },
+    "interface.json": {
+      "sha256": "6eaff875dd82a0a2b50bc7bdb5d9899a1856475d3352addeb63affb8761f4ad7",
+      "bytes": 12516
+    }
+  }
+}

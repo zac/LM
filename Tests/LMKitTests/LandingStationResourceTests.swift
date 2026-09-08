@@ -6,6 +6,7 @@ import Testing
 
 private enum LandingResource: String, CaseIterable, Sendable {
     case altitudeRate, attitudeMode, descentRate, crossPointer, interiorDetails, breakerBanks
+    case missionTimer, eventTimer, missionTimerControls, eventTimerControls, engineButtons, lunarContact, propulsionInstruments, cautionWarning
 
     var asset: URL {
         switch self {
@@ -15,6 +16,14 @@ private enum LandingResource: String, CaseIterable, Sendable {
         case .crossPointer: LMKitAssets.crossPointerURL
         case .interiorDetails: LMKitAssets.interiorDetailsURL
         case .breakerBanks: LMKitAssets.breakerBanksURL
+        case .missionTimer: LMKitAssets.missionTimerURL
+        case .eventTimer: LMKitAssets.eventTimerURL
+        case .missionTimerControls: LMKitAssets.missionTimerControlsURL
+        case .eventTimerControls: LMKitAssets.eventTimerControlsURL
+        case .engineButtons: LMKitAssets.engineButtonsURL
+        case .lunarContact: LMKitAssets.lunarContactURL
+        case .propulsionInstruments: LMKitAssets.propulsionInstrumentsURL
+        case .cautionWarning: LMKitAssets.cautionWarningURL
         }
     }
     var contract: URL {
@@ -24,6 +33,10 @@ private enum LandingResource: String, CaseIterable, Sendable {
         case .crossPointer: LMKitAssets.crossPointerInterfaceURL
         case .interiorDetails: LMKitAssets.interiorDetailsInterfaceURL
         case .breakerBanks: LMKitAssets.breakerBanksInterfaceURL
+        case .missionTimer, .eventTimer, .missionTimerControls, .eventTimerControls: LMKitAssets.timersInterfaceURL
+        case .engineButtons, .lunarContact: LMKitAssets.engineControlsInterfaceURL
+        case .propulsionInstruments: LMKitAssets.propulsionInstrumentsInterfaceURL
+        case .cautionWarning: LMKitAssets.cautionWarningInterfaceURL
         }
     }
 }
