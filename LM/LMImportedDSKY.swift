@@ -70,6 +70,11 @@ final class LMImportedDSKY {
             bound[placement.code.rawValue] = key
         }
         keys = bound
+        // Readability treatment only; no new power/backlight control or bloom.
+        // Keep the ink dark and lift the keycap floor without flattening shading.
+        for key in keys.values {
+            Self.treatReadability(in: key, emissiveFloor: 0.28)
+        }
         var names: [String] = []
         for (field, count) in [("PROG", 2), ("VERB", 2), ("NOUN", 2), ("R1", 5), ("R2", 5), ("R3", 5)] {
             for index in 0..<count {
@@ -87,6 +92,9 @@ final class LMImportedDSKY {
                 for child in entity.children { visit(child) }
             }
             visit(node)
+            if name.contains("Lamp") || name == "DSKY_COMP_ACTY_Lens" {
+                Self.treatReadability(in: node, emissiveFloor: 0.10)
+            }
             guard !meshes.isEmpty else { throw ContractError.missingOrDuplicate(name + " geometry") }
             surfaces[name] = meshes
             neutral[name] = meshes.compactMap { $0.components[ModelComponent.self] }
@@ -95,6 +103,25 @@ final class LMImportedDSKY {
             key.components.set(InputTargetComponent())
             key.components.set(CollisionComponent(shapes: [.generateBox(size: SIMD3(0.01778, 0.015748, 0.008))], mode: .trigger, filter: .sensor))
             key.components.set(HoverEffectComponent())
+        }
+    }
+
+    /// Preserve authored base color, textures, geometry and dark legend ink.
+    private static func treatReadability(in node: Entity, emissiveFloor: Float) {
+        if var model = node.components[ModelComponent.self] {
+            model.materials = model.materials.map { material in
+                guard var pbr = material as? PhysicallyBasedMaterial else { return material }
+                // Only cap/lens subtrees reach here; legends retain their ink.
+                if node.name.contains("Legend") || node.name.contains("legend") { return material }
+                pbr.roughness = .init(floatLiteral: 0.8)
+                pbr.emissiveColor = .init(color: pbr.baseColor.tint)
+                pbr.emissiveIntensity = emissiveFloor
+                return pbr
+            }
+            node.components.set(model)
+        }
+        for child in node.children where !child.name.contains("Legend") {
+            treatReadability(in: child, emissiveFloor: emissiveFloor)
         }
     }
 

@@ -36,6 +36,12 @@ final class LMImportedFDAI {
         for node in [ball, fixed] {
             guard node.parent === root else { throw LMImportedDSKY.ContractError.invalidParent(node.name) }
         }
+        // Reduce distracting reflections on the fixed surround. Preserve ball
+        // texture, glass, fixed transforms and all live attitude behavior.
+        for name in ["FDAI_BallSurround", "FDAI_InnerOctagonalMask", "FDAI_FaceBezel"] {
+            let node = try LMImportedDSKY.unique(name, in: root)
+            Self.matte(in: node)
+        }
         for name in Self.unboundNames {
             let node = try LMImportedDSKY.unique(name, in: root)
             guard node.parent === root else { throw LMImportedDSKY.ContractError.invalidParent(name) }
@@ -43,6 +49,20 @@ final class LMImportedFDAI {
             node.isEnabled = false
         }
     }
+    private static func matte(in node: Entity) {
+        if var model = node.components[ModelComponent.self] {
+            model.materials = model.materials.map { material in
+                guard var pbr = material as? PhysicallyBasedMaterial else { return material }
+                pbr.metallic = .init(floatLiteral: 0)
+                pbr.roughness = .init(floatLiteral: 0.9)
+                pbr.specular = .init(floatLiteral: 0.1)
+                return pbr
+            }
+            node.components.set(model)
+        }
+        for child in node.children { matte(in: child) }
+    }
+
     func apply(_ attitude: LMQuaternion) {
         ball.orientation = LMImportedFDAIOrientation.ballOrientation(for: attitude)
     }

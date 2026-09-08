@@ -11,6 +11,18 @@ enum LMInstrumentValidation {
     static var enabled: Bool { ProcessInfo.processInfo.arguments.contains("--instrument-validation") }
     static let logger = Logger(subsystem: "io.positron.LM", category: "InstrumentValidation")
 
+    private static var observer: [String: Any] = [:]
+    private static var completedTaps: [[String: Any]] = []
+
+    static func recordCompletedTap(_ key: DSKYKeyCode, entity: Entity) {
+        guard enabled else { return }
+        completedTaps.append([
+            "key": key.label, "entity": entity.name,
+            "date": ISO8601DateFormatter().string(from: Date()),
+            "inputKind": "SpatialTapGesture.onEnded"
+        ])
+    }
+
     static func frameObserver(_ root: Entity) {
         guard enabled else { return }
         let eye = LMCommanderStationGeometry.comfortableEntryEyeMeters
@@ -23,6 +35,14 @@ enum LMInstrumentValidation {
         // cabin mounts, metric scale and relative occlusion remain unchanged.
         root.orientation = inverseObserver
         root.position = inverseObserver.act(-eye)
+        observer = [
+            "eyeMeters": [eye.x, eye.y, eye.z],
+            "targetMeters": [target.x, target.y, target.z],
+            "rootPositionMeters": [root.position.x, root.position.y, root.position.z],
+            "rootQuaternionXYZW": [root.orientation.imag.x, root.orientation.imag.y,
+                                   root.orientation.imag.z, root.orientation.real],
+            "cameraMethod": "inverse observer on complete scene; native simulator camera reset"
+        ]
         logger.notice("DEBUG observer aimed at DSKY; instrument mounts unchanged")
     }
 
@@ -35,7 +55,8 @@ enum LMInstrumentValidation {
         defer { try? handle.close() }
         let start = Date()
         let automatic = ProcessInfo.processInfo.arguments.contains("--instrument-validation-inputs")
-        for tick in 0..<240 {
+        completedTaps.removeAll()
+        for tick in 0..<2400 {
             guard !Task.isCancelled else { return }
             var action = "observe"
             if automatic {
@@ -56,6 +77,8 @@ enum LMInstrumentValidation {
                 }
             }
             var row: [String: Any] = ["processID": ProcessInfo.processInfo.processIdentifier, "elapsedSeconds": Date().timeIntervalSince(start), "date": ISO8601DateFormatter().string(from: Date()), "action": action, "inputKind": automatic ? "programmatic-session-input" : "observation-only"]
+            row["observer"] = observer
+            row["completedSpatialTaps"] = completedTaps
             if let s = session.dsky {
                 row["mode"] = s.mode; row["verb"] = s.verb; row["noun"] = s.noun
                 row["r1"] = s.r1; row["r2"] = s.r2; row["r3"] = s.r3
