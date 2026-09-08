@@ -1,0 +1,195 @@
+{
+  "inputs": {
+    "InstrumentConsole": {
+      "InstrumentConsole.usdz": "27a29aee1d909d482b0a4edcca5fbdf1ba227bebcb85bcee1c94405ac1475b26",
+      "interface.json": "1e8de14c9220d95955aede45760934e8f404f9113ec3b1c636e7e328d7692735",
+      "build.py": "5d8a1879284b43a9bca5e4d068109ef6532de351c4dc67a4f676606ac5ab36d6"
+    },
+    "LowerConsole": {
+      "LowerConsole.usdz": "8ee9a28d08735a225c081e96509b611cdaf552f6af8f59d7ed7ca6874d4bc4f0",
+      "interface.json": "70d9a87334b353f490a06b02b9585d52252c9e6fd202992195393d73eb15f18f",
+      "build.py": "afc5583e7341ed625df3c1135b539fe5fdd91a55f900d8153e9bcea7f9968ee8"
+    },
+    "WindowSurrounds": {
+      "WindowSurrounds.usdz": "1c5e9057ed75469edc3d63524680cada285b14ca6143acd7cc82f58a761ce9a6",
+      "interface.json": "835e611453b732b6c894cf2c27326629dc6628b58578048d34db759b379473ee",
+      "build.py": "7d3a07a7285ee138c728a7a425be87b01df80dbb943264df956622c5c3ad4688"
+    }
+  },
+  "crossings": {
+    "InstrumentConsole__LowerConsole": [],
+    "InstrumentConsole__WindowSurrounds": [],
+    "LowerConsole__WindowSurrounds": []
+  },
+  "rays": {
+    "windows": {
+      "tested": 1560,
+      "blocked": []
+    },
+    "instruments": {
+      "tested": 13,
+      "blocked": []
+    },
+    "dsky_front_aperture": {
+      "tested": 25,
+      "blocked": []
+    }
+  },
+  "limits": [
+    "Surface crossings include intentional contact; containment and all seams are not decided by BVH alone.",
+    "Finite rays are not continuous head/reach clearance or native visual acceptance."
+  ],
+  "peer_checks": {
+    "ACA": {
+      "input": {
+        "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/HandControllers/ACA.usdz",
+        "sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5",
+        "stage_up_axis": "Y",
+        "meters_per_unit": 1.0,
+        "matrix_cabin_row_major": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.49000000953674316
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.9075000286102295
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -0.3700000047683716
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "meshes": 13
+      },
+      "actual_bounds": [
+        [
+          -0.5408000349998474,
+          0.9075000286102295,
+          -0.4549500048160553
+        ],
+        [
+          -0.4392000138759613,
+          1.1629999876022339,
+          -0.28505000472068787
+        ]
+      ],
+      "crossings": {
+        "InstrumentConsole": [],
+        "LowerConsole": [],
+        "WindowSurrounds": []
+      }
+    },
+    "MissionTimer": {
+      "input": {
+        "path": "/private/tmp/lmkit-timers/Assets/Cockpit/Components/Timers/MissionTimer.usdz",
+        "sha256": "ef6eb8d8d54de5dc39b31f0f9f38a3151343dc8c73ede7762615c41613570bea",
+        "stage_up_axis": "Y",
+        "meters_per_unit": 1.0,
+        "matrix_cabin_row_major": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.33500000834465027
+          ],
+          [
+            0.0,
+            0.9848077297210693,
+            0.1736481636762619,
+            1.7607048749923706
+          ],
+          [
+            0.0,
+            -0.1736481636762619,
+            0.9848077297210693,
+            -0.9084831476211548
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "meshes": 65
+      },
+      "actual_bounds": [
+        [
+          -0.4000000059604645,
+          1.744080901145935,
+          -0.924295961856842
+        ],
+        [
+          -0.27000001072883606,
+          1.7768958806991577,
+          -0.9012317657470703
+        ]
+      ],
+      "crossings": {
+        "InstrumentConsole": [
+          {
+            "a": "/InstrumentConsole/Faces/Panel1/Panel1SkinLeft",
+            "b": "/MissionTimer/MissionTimer_Fixed/MissionTimer_Housing",
+            "triangle_pairs": 16,
+            "aabb_overlap_m": [
+              0.028000056743621826,
+              0.031164169311523438,
+              0.019807934761047363
+            ],
+            "intersection_min": [
+              -0.3930000066757202,
+              1.7443413734436035,
+              -0.9228187203407288
+            ],
+            "intersection_max": [
+              -0.3649999499320984,
+              1.7735954523086548,
+              -0.9138436317443848
+            ]
+          },
+          {
+            "a": "/InstrumentConsole/Faces/Panel1/Panel1SkinUpper",
+            "b": "/MissionTimer/MissionTimer_Fixed/MissionTimer_Housing",
+            "triangle_pairs": 20,
+            "aabb_overlap_m": [
+              0.08799993991851807,
+              0.031164169311523438,
+              0.019807934761047363
+            ],
+            "intersection_min": [
+              -0.3649999499320984,
+              1.7443413734436035,
+              -0.9228187203407288
+            ],
+            "intersection_max": [
+              -0.2770000100135803,
+              1.7735954523086548,
+              -0.9138436913490295
+            ]
+          }
+        ],
+        "LowerConsole": [],
+        "WindowSurrounds": []
+      }
+    }
+  },
+  "aca_sampled_motion": {
+    "poses": 125,
+    "hits": []
+  },
+  "inputs_stable_during_audit": true,
+  "suppression_conflicts": []
+}

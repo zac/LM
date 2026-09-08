@@ -1,0 +1,33 @@
+{
+  "user_reference": {
+    "file": "SI 99-15229h.jpg",
+    "sha256": "663ed06e149f3aeb991c5589835bfb1afda5c908b23c668a1853d7546572dd6d",
+    "bytes": 2634088,
+    "provided_path": "/Users/zac/Downloads/SI 99-15229h.jpg",
+    "usage": "User-supplied research reference preserved unedited; no photograph-derived metric survey"
+  },
+  "museum_context": {
+    "object_url": "https://airandspace.si.edu/collection-objects/lunar-module-2-apollo/nasm_A19711598000",
+    "verified_indexed_text": "LM2 never flew; modified to appear like Apollo11 Eagle",
+    "exact_image_inventory_id": "Not independently resolved from filename; photo identity is not treated as proof of LM5 flight hardware",
+    "retrieved_date": "2026-09-08"
+  },
+  "geometry_dependencies": {
+    "Cabin": {
+      "file": "Cabin.usdz",
+      "sha256": "9b30f113235bea7832dd0d9f245d3f6ad98bd8a64af2d217943a5489e498c21b"
+    },
+    "WindowsLPD": {
+      "file": "WindowsLPD.usdz",
+      "sha256": "91c03cc4b6826473cfdccdce195fece5f591b778b8afdb3a71505df8f528cc32"
+    },
+    "BreakerBanks": {
+      "file": "BreakerBanks.usdz",
+      "sha256": "fce4e4248806f4ff963775bc8013e17e6dee370671e656390bb8d05fcddfc217"
+    },
+    "EngineControls": {
+      "file": "mounting-matrices.json",
+      "sha256": "a312fb6602d3731022b4197f100bca23a42e246da2be0ee4ec7754b7f89b2463"
+    }
+  }
+}
