@@ -1,0 +1,723 @@
+{
+  "schema": "lmkit.timers.interface.v1",
+  "units": "meters",
+  "axes": "+X right +Y up +Z crew",
+  "all_roots_identity": true,
+  "dimension_status": "provisional visual fit, not surveyed hardware",
+  "assets": [
+    {
+      "filename": "MissionTimer.usdz",
+      "root": "MissionTimer",
+      "kind": "readout",
+      "panel_slot": "Panel1__Timers",
+      "slot_local_pose": {
+        "translation_m": [
+          -0.03,
+          0,
+          0.004
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "size_m": [
+        0.13,
+        0.032,
+        0.022
+      ],
+      "digits": [
+        {
+          "name": "MissionTimer_H100",
+          "place": "H100",
+          "position_m": [
+            -0.04,
+            -0.001,
+            0.0045
+          ],
+          "segments": {
+            "A": "MissionTimer_H100_A",
+            "B": "MissionTimer_H100_B",
+            "C": "MissionTimer_H100_C",
+            "D": "MissionTimer_H100_D",
+            "E": "MissionTimer_H100_E",
+            "F": "MissionTimer_H100_F",
+            "G": "MissionTimer_H100_G"
+          }
+        },
+        {
+          "name": "MissionTimer_H10",
+          "place": "H10",
+          "position_m": [
+            -0.029,
+            -0.001,
+            0.0045
+          ],
+          "segments": {
+            "A": "MissionTimer_H10_A",
+            "B": "MissionTimer_H10_B",
+            "C": "MissionTimer_H10_C",
+            "D": "MissionTimer_H10_D",
+            "E": "MissionTimer_H10_E",
+            "F": "MissionTimer_H10_F",
+            "G": "MissionTimer_H10_G"
+          }
+        },
+        {
+          "name": "MissionTimer_H1",
+          "place": "H1",
+          "position_m": [
+            -0.018,
+            -0.001,
+            0.0045
+          ],
+          "segments": {
+            "A": "MissionTimer_H1_A",
+            "B": "MissionTimer_H1_B",
+            "C": "MissionTimer_H1_C",
+            "D": "MissionTimer_H1_D",
+            "E": "MissionTimer_H1_E",
+            "F": "MissionTimer_H1_F",
+            "G": "MissionTimer_H1_G"
+          }
+        },
+        {
+          "name": "MissionTimer_M10",
+          "place": "M10",
+          "position_m": [
+            0,
+            -0.001,
+            0.0045
+          ],
+          "segments": {
+            "A": "MissionTimer_M10_A",
+            "B": "MissionTimer_M10_B",
+            "C": "MissionTimer_M10_C",
+            "D": "MissionTimer_M10_D",
+            "E": "MissionTimer_M10_E",
+            "F": "MissionTimer_M10_F",
+            "G": "MissionTimer_M10_G"
+          }
+        },
+        {
+          "name": "MissionTimer_M1",
+          "place": "M1",
+          "position_m": [
+            0.011,
+            -0.001,
+            0.0045
+          ],
+          "segments": {
+            "A": "MissionTimer_M1_A",
+            "B": "MissionTimer_M1_B",
+            "C": "MissionTimer_M1_C",
+            "D": "MissionTimer_M1_D",
+            "E": "MissionTimer_M1_E",
+            "F": "MissionTimer_M1_F",
+            "G": "MissionTimer_M1_G"
+          }
+        },
+        {
+          "name": "MissionTimer_S10",
+          "place": "S10",
+          "position_m": [
+            0.029,
+            -0.001,
+            0.0045
+          ],
+          "segments": {
+            "A": "MissionTimer_S10_A",
+            "B": "MissionTimer_S10_B",
+            "C": "MissionTimer_S10_C",
+            "D": "MissionTimer_S10_D",
+            "E": "MissionTimer_S10_E",
+            "F": "MissionTimer_S10_F",
+            "G": "MissionTimer_S10_G"
+          }
+        },
+        {
+          "name": "MissionTimer_S1",
+          "place": "S1",
+          "position_m": [
+            0.04,
+            -0.001,
+            0.0045
+          ],
+          "segments": {
+            "A": "MissionTimer_S1_A",
+            "B": "MissionTimer_S1_B",
+            "C": "MissionTimer_S1_C",
+            "D": "MissionTimer_S1_D",
+            "E": "MissionTimer_S1_E",
+            "F": "MissionTimer_S1_F",
+            "G": "MissionTimer_S1_G"
+          }
+        }
+      ],
+      "neutral": "all segments use Timer_EL_Off material; no live numeric epoch asserted",
+      "power_failure_indicator": "MissionTimer_TuningFork",
+      "protective_lens": "MissionTimer_Lens",
+      "controls_asset": "MissionTimerControls.usdz",
+      "rear_housing_width_m": 0.116,
+      "rear_housing_fit_note": "Rear body inset7mm each side behind130mmflange; approved+20mmpairmount and116mmrearwidth clear CommanderPanels left return by1mm."
+    },
+    {
+      "filename": "EventTimer.usdz",
+      "root": "EventTimer",
+      "kind": "readout",
+      "panel_slot": "Panel1__Timers",
+      "slot_local_pose": {
+        "translation_m": [
+          0.093,
+          0,
+          0.004
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "size_m": [
+        0.084,
+        0.032,
+        0.022
+      ],
+      "digits": [
+        {
+          "name": "EventTimer_M10",
+          "place": "M10",
+          "position_m": [
+            -0.024,
+            -0.001,
+            0.0045
+          ],
+          "segments": {
+            "A": "EventTimer_M10_A",
+            "B": "EventTimer_M10_B",
+            "C": "EventTimer_M10_C",
+            "D": "EventTimer_M10_D",
+            "E": "EventTimer_M10_E",
+            "F": "EventTimer_M10_F",
+            "G": "EventTimer_M10_G"
+          }
+        },
+        {
+          "name": "EventTimer_M1",
+          "place": "M1",
+          "position_m": [
+            -0.013,
+            -0.001,
+            0.0045
+          ],
+          "segments": {
+            "A": "EventTimer_M1_A",
+            "B": "EventTimer_M1_B",
+            "C": "EventTimer_M1_C",
+            "D": "EventTimer_M1_D",
+            "E": "EventTimer_M1_E",
+            "F": "EventTimer_M1_F",
+            "G": "EventTimer_M1_G"
+          }
+        },
+        {
+          "name": "EventTimer_S10",
+          "place": "S10",
+          "position_m": [
+            0.011,
+            -0.001,
+            0.0045
+          ],
+          "segments": {
+            "A": "EventTimer_S10_A",
+            "B": "EventTimer_S10_B",
+            "C": "EventTimer_S10_C",
+            "D": "EventTimer_S10_D",
+            "E": "EventTimer_S10_E",
+            "F": "EventTimer_S10_F",
+            "G": "EventTimer_S10_G"
+          }
+        },
+        {
+          "name": "EventTimer_S1",
+          "place": "S1",
+          "position_m": [
+            0.022,
+            -0.001,
+            0.0045
+          ],
+          "segments": {
+            "A": "EventTimer_S1_A",
+            "B": "EventTimer_S1_B",
+            "C": "EventTimer_S1_C",
+            "D": "EventTimer_S1_D",
+            "E": "EventTimer_S1_E",
+            "F": "EventTimer_S1_F",
+            "G": "EventTimer_S1_G"
+          }
+        }
+      ],
+      "neutral": "all segments use Timer_EL_Off material; no live numeric epoch asserted",
+      "power_failure_indicator": null,
+      "protective_lens": "EventTimer_Lens",
+      "controls_asset": "EventTimerControls.usdz"
+    },
+    {
+      "filename": "MissionTimerControls.usdz",
+      "root": "MissionTimerControls",
+      "kind": "control_bank",
+      "size_m": [
+        0.19,
+        0.066,
+        0.04
+      ],
+      "installation_allowed": false,
+      "panel_slot": null,
+      "blocked_historical_slot": "Panel5__Timer",
+      "slot_local_pose": null,
+      "controls": [
+        {
+          "id": "MissionTimer_TimerControl",
+          "pivot": "MissionTimer_TimerControl_Pivot",
+          "stem": "MissionTimer_TimerControl_Stem",
+          "position_m": [
+            -0.069,
+            -0.003,
+            0.005
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "angles_degrees": [
+            -25,
+            0,
+            25
+          ],
+          "positions": [
+            "START",
+            "STOP",
+            "RESET"
+          ],
+          "neutral_index": 1,
+          "semantics_qualification": "Source guided control; see EVIDENCE.md and CLOCK_AUDIT.md. LM owns state and input semantics.",
+          "slew_digit_rate_per_second": null,
+          "detent_modes_qualification": "Mission control function sourced but detent retention not yet verified; bank deliberately uninstalled; do not infer input binding."
+        },
+        {
+          "id": "MissionTimer_HoursSlew",
+          "pivot": "MissionTimer_HoursSlew_Pivot",
+          "stem": "MissionTimer_HoursSlew_Stem",
+          "position_m": [
+            -0.023,
+            -0.003,
+            0.005
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "angles_degrees": [
+            -25,
+            0,
+            25
+          ],
+          "positions": [
+            "TENS",
+            "CENTER",
+            "UNITS"
+          ],
+          "neutral_index": 1,
+          "semantics_qualification": "Source guided control; see EVIDENCE.md and CLOCK_AUDIT.md. LM owns state and input semantics.",
+          "slew_digit_rate_per_second": 2,
+          "detent_modes": [
+            "momentary",
+            "maintained",
+            "momentary"
+          ],
+          "release_index": 1
+        },
+        {
+          "id": "MissionTimer_MinutesSlew",
+          "pivot": "MissionTimer_MinutesSlew_Pivot",
+          "stem": "MissionTimer_MinutesSlew_Stem",
+          "position_m": [
+            0.023,
+            -0.003,
+            0.005
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "angles_degrees": [
+            -25,
+            0,
+            25
+          ],
+          "positions": [
+            "TENS",
+            "CENTER",
+            "UNITS"
+          ],
+          "neutral_index": 1,
+          "semantics_qualification": "Source guided control; see EVIDENCE.md and CLOCK_AUDIT.md. LM owns state and input semantics.",
+          "slew_digit_rate_per_second": 2,
+          "detent_modes": [
+            "momentary",
+            "maintained",
+            "momentary"
+          ],
+          "release_index": 1
+        },
+        {
+          "id": "MissionTimer_SecondsSlew",
+          "pivot": "MissionTimer_SecondsSlew_Pivot",
+          "stem": "MissionTimer_SecondsSlew_Stem",
+          "position_m": [
+            0.069,
+            -0.003,
+            0.005
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "angles_degrees": [
+            -25,
+            0,
+            25
+          ],
+          "positions": [
+            "TENS",
+            "CENTER",
+            "UNITS"
+          ],
+          "neutral_index": 1,
+          "semantics_qualification": "Source guided control; see EVIDENCE.md and CLOCK_AUDIT.md. LM owns state and input semantics.",
+          "slew_digit_rate_per_second": 2,
+          "detent_modes": [
+            "momentary",
+            "maintained",
+            "momentary"
+          ],
+          "release_index": 1
+        }
+      ]
+    },
+    {
+      "filename": "EventTimerControls.usdz",
+      "root": "EventTimerControls",
+      "kind": "control_bank",
+      "size_m": [
+        0.19,
+        0.066,
+        0.04
+      ],
+      "installation_allowed": true,
+      "panel_slot": "Panel3__TimerHeaters",
+      "blocked_historical_slot": null,
+      "slot_local_pose": {
+        "translation_m": [
+          0,
+          0.036,
+          0.004
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "controls": [
+        {
+          "id": "EventTimer_ResetCount",
+          "pivot": "EventTimer_ResetCount_Pivot",
+          "stem": "EventTimer_ResetCount_Stem",
+          "position_m": [
+            -0.069,
+            -0.003,
+            0.005
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "angles_degrees": [
+            -25,
+            0,
+            25
+          ],
+          "positions": [
+            "RESET",
+            "UP",
+            "DOWN"
+          ],
+          "neutral_index": 1,
+          "semantics_qualification": "Source guided control; see EVIDENCE.md and CLOCK_AUDIT.md. LM owns state and input semantics.",
+          "slew_digit_rate_per_second": null,
+          "detent_modes": [
+            "momentary",
+            "maintained",
+            "momentary"
+          ],
+          "reset_release_index": 1,
+          "release_index": 1,
+          "detent_qualification": "1967 DataBook p4-62 explicitly labelsMom-main-mom; final late-flight retention not independently surveyed. App stores selected direction separately; center return alone is not a freshUPcommand."
+        },
+        {
+          "id": "EventTimer_TimerControl",
+          "pivot": "EventTimer_TimerControl_Pivot",
+          "stem": "EventTimer_TimerControl_Stem",
+          "position_m": [
+            -0.023,
+            -0.003,
+            0.005
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "angles_degrees": [
+            -25,
+            0,
+            25
+          ],
+          "positions": [
+            "START",
+            "CENTER",
+            "STOP"
+          ],
+          "neutral_index": 1,
+          "semantics_qualification": "Source guided control; see EVIDENCE.md and CLOCK_AUDIT.md. LM owns state and input semantics.",
+          "slew_digit_rate_per_second": null,
+          "detent_modes": [
+            "momentary",
+            "maintained",
+            "momentary"
+          ],
+          "release_index": 1
+        },
+        {
+          "id": "EventTimer_MinutesSlew",
+          "pivot": "EventTimer_MinutesSlew_Pivot",
+          "stem": "EventTimer_MinutesSlew_Stem",
+          "position_m": [
+            0.023,
+            -0.003,
+            0.005
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "angles_degrees": [
+            -25,
+            0,
+            25
+          ],
+          "positions": [
+            "TENS",
+            "CENTER",
+            "UNITS"
+          ],
+          "neutral_index": 1,
+          "semantics_qualification": "Source guided control; see EVIDENCE.md and CLOCK_AUDIT.md. LM owns state and input semantics.",
+          "slew_digit_rate_per_second": 2,
+          "detent_modes": [
+            "momentary",
+            "maintained",
+            "momentary"
+          ],
+          "release_index": 1
+        },
+        {
+          "id": "EventTimer_SecondsSlew",
+          "pivot": "EventTimer_SecondsSlew_Pivot",
+          "stem": "EventTimer_SecondsSlew_Stem",
+          "position_m": [
+            0.069,
+            -0.003,
+            0.005
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "angles_degrees": [
+            -25,
+            0,
+            25
+          ],
+          "positions": [
+            "TENS",
+            "CENTER",
+            "UNITS"
+          ],
+          "neutral_index": 1,
+          "semantics_qualification": "Source guided control; see EVIDENCE.md and CLOCK_AUDIT.md. LM owns state and input semantics.",
+          "slew_digit_rate_per_second": 2,
+          "detent_modes": [
+            "momentary",
+            "maintained",
+            "momentary"
+          ],
+          "release_index": 1
+        }
+      ]
+    }
+  ],
+  "seven_segment_order": "A top, B upper-right, C lower-right, D bottom, E lower-left, F upper-left, G middle",
+  "digit_masks": {
+    "0": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F"
+    ],
+    "1": [
+      "B",
+      "C"
+    ],
+    "2": [
+      "A",
+      "B",
+      "D",
+      "E",
+      "G"
+    ],
+    "3": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "G"
+    ],
+    "4": [
+      "B",
+      "C",
+      "F",
+      "G"
+    ],
+    "5": [
+      "A",
+      "C",
+      "D",
+      "F",
+      "G"
+    ],
+    "6": [
+      "A",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ],
+    "7": [
+      "A",
+      "B",
+      "C"
+    ],
+    "8": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ],
+    "9": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "F",
+      "G"
+    ]
+  },
+  "display_materials": {
+    "off": "Timer_EL_Off",
+    "off_linear_rgb": [
+      0.018,
+      0.027,
+      0.021
+    ],
+    "on_linear_rgb": [
+      0.63,
+      0.82,
+      0.6
+    ],
+    "on_color_status": "provisional pale-green EL approximation, not measured spectrum; use native emissive/unlit material only for active segments",
+    "visibility": "all USD visibility inherited; swap materials or disable segments explicitly; do not hide Readout parent then forget to enable"
+  },
+  "mission": {
+    "digits": 7,
+    "format": "HHH MM SS",
+    "valid_seconds": [
+      0,
+      3599999
+    ],
+    "count_direction": "up only",
+    "clock_policy": "no mission epoch is inferred; leave blank unless coordinator supplies qualified value or explicit simulation elapsed mode",
+    "tuning_fork_semantics": "historical internal oscillator fallback indicator, NOT generic unavailable flag; no automatic binding exists"
+  },
+  "event": {
+    "digits": 4,
+    "format": "MM SS",
+    "valid_seconds": [
+      0,
+      3599
+    ],
+    "count_directions": [
+      "up",
+      "down"
+    ],
+    "clock_policy": "new app-local timer state driven by simulation timestamp; no existing AGC event timer channel",
+    "endpoint_policy": "Later behavior documented Apollo13 MSC02680 pA-2: reaching zero in countdown changes effective count direction to UP and continues; up59:59 wraps00:00 per1967 DataBook. This reconstruction combines documented revisions, not Apollo11 qualification.",
+    "countdown_display": "state owner supplies whole seconds; no model-local clock",
+    "reset_policy": "Momentary RESET sets00:00 and stops untilSTART; physical release returnscenter. App retains explicit selecteddirection separately fromneutralleverpose.",
+    "slew_policy": "Independent tens/units digits increment2Hz while held, all increase regardless count direction. Tens wrap0..5, units0..9 with no adjacent carry. Runtime uses simulation timestamps and explicit press/release.",
+    "source_revision": "LM event timer control topology:1967 DataBook rev2 p4-63; downzero:autoUP NASA Apollo13 Mission Report September1970 pA-2.",
+    "direction_input_policy": "ExplicitUP/DOWN user command changes appselecteddirection; releasing momentaryDOWN tocenter does not issueUP. This command/pose separation is an app interaction policy, not an asserted electrical circuit."
+  },
+  "partial_slot_policy": "Retain original neutral backing under Panel1 timer pair and upper Panel3 timer bank. Suppress only their planning labels after load; leave heater backing. Mission controls UNINSTALLED.",
+  "mounting_exception": {
+    "approved_by": "integration coordinator",
+    "unchanged_datum": "Panel1__Timers and Panel1 mounting poses unchanged",
+    "readout_pair_shift_x_m": 0.02,
+    "reason": "Original blank extends20mm beyond CommanderPanels left surround; shift faces inboard for structural support",
+    "nominal_slot_right_overrun_m": 0.02,
+    "dimensions_unchanged": true
+  }
+}

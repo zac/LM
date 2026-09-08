@@ -1,0 +1,117 @@
+{
+  "sources": [
+    {
+      "id": "NASA_TND6722",
+      "url": "https://apollojournals.org/alsj/tnD6722LMDisplayControl.pdf",
+      "pdf_bytes": 666829,
+      "pdf_sha256": "9b79e66083a17824b41622c1d7f361c218128a9b9dbbe86b10b1bed4277ef054",
+      "preserved_pages": [
+        {
+          "pdf_page_one_based": 23,
+          "printed_page": "19",
+          "file": "tnD6722-p23.png",
+          "sha256": "407962050bde3eea6de0de2703d677479fcb6caae57dca0dc7d04c923b789f95"
+        },
+        {
+          "pdf_page_one_based": 25,
+          "printed_page": "21",
+          "file": "tnD6722-p25.png",
+          "sha256": "5ddc9aeea1b2939a6257b30b5ebfa9f123c35e6da03f1a187b9d9d830cfc205c"
+        }
+      ]
+    },
+    {
+      "id": "Grumman_LM10_AOH",
+      "url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+      "pdf_bytes": 35282617,
+      "pdf_sha256": "58f51eb2a1c0fe8debc66013af4ae89d9e7a6ca665c74dfb19b43d49281bed95",
+      "preserved_pages": [
+        {
+          "pdf_page_one_based": 614,
+          "printed_page": "3-16",
+          "file": "aoh-timer-indicators.png",
+          "sha256": "4d6ecbb7680b8125d5542b3932502900a7d0724e8f51757200d4a0924cf3c408"
+        },
+        {
+          "pdf_page_one_based": 664,
+          "printed_page": "3-70",
+          "file": "aoh-event-controls-664.png",
+          "sha256": "ce167171081021e7efbe3cd5e2891ddfa46503f56841e867ada379b3f220fcb5"
+        },
+        {
+          "pdf_page_one_based": 675,
+          "printed_page": "3-81",
+          "file": "aoh-mission-controls-675.png",
+          "sha256": "eefed06626eb4c51ff6653c5311a409a61c6b7655952ff09203ee1895c614a2f"
+        },
+        {
+          "pdf_page_one_based": 676,
+          "printed_page": "3-82",
+          "file": "aoh-mission-controls-676.png",
+          "sha256": "d99a5b321fb6a831a06fc1141460104fdf937fc7832b0317f385456dd5eab47f"
+        },
+        {
+          "pdf_page_one_based": 677,
+          "printed_page": "3-83",
+          "file": "aoh-mission-controls-677.png",
+          "sha256": "ddbf5fd4128db0012941ef401cde359804ea2dc22d88194b6fad5c29955185cc"
+        }
+      ]
+    },
+    {
+      "id": "TRW_LM_DataBook_1967_rev2",
+      "url": "https://www.ibiblio.org/apollo/Documents/102789076-05-01-acc.pdf",
+      "pdf_bytes": 47602004,
+      "pdf_sha256": "c5ec44b1d94736a9d6db63baa6ea98a30775ffe0a4a6d7b602f689e2c017d5a2",
+      "preserved_pages": [
+        {
+          "pdf_page_one_based": 1,
+          "printed_page": "cover",
+          "file": "databook1967-cover.png",
+          "sha256": "8b45c995952e28f2b216c46d22d3f9f413e07cf682eff6c6c78b17b29914b31d"
+        },
+        {
+          "pdf_page_one_based": 2,
+          "printed_page": "preface",
+          "file": "databook1967-preface.png",
+          "sha256": "2b8a2158f405d364d3382521d3f42d40110e57e0e4789e00870c60dc5f3e9d0e"
+        },
+        {
+          "pdf_page_one_based": 90,
+          "printed_page": "4-63",
+          "file": "databook1967-p90.png",
+          "sha256": "9d059764f26c6abc3c5b4e4db6ca8fa47eb0b3e4bacc8702a55d085393cfe306"
+        },
+        {
+          "pdf_page_one_based": 89,
+          "printed_page": "4-62",
+          "file": "databook1967-p89.png",
+          "sha256": "adf39510f05997c6527b6fc53fec7034ba58730ab5f00cb3ce8ddb94e7a55bfd"
+        }
+      ]
+    },
+    {
+      "id": "NASA_Apollo13_MSC02680",
+      "url": "https://www.ibiblio.org/apollo/Documents/19710003598.pdf",
+      "pdf_bytes": 2588172,
+      "pdf_sha256": "f6941eaeabf8d611d3da88853923d7e85a8f578c577b02b7e65ba9d92bb54988",
+      "preserved_pages": [
+        {
+          "pdf_page_one_based": 1,
+          "printed_page": "cover",
+          "file": "apollo13-cover.png",
+          "sha256": "68c4a5165a57565aa1aa6c45cf84a4bac3e50b795dc230074d88952db8a807ff"
+        },
+        {
+          "pdf_page_one_based": 139,
+          "printed_page": "A-2",
+          "file": "apollo13-p139.png",
+          "sha256": "6fb5a67683807e5560befd221cb12a38c438df46cccaaf72bbc6d4a6241df696"
+        }
+      ]
+    }
+  ],
+  "reproduction": "pdftoppm -f PAGE -l PAGE -singlefile -scale-to 2000 -png SOURCE TARGET; cover pages scaled1400; earlier extracts may use their original resolution",
+  "scope": "Selected original technical reference pages; retained as evidence, not agent instructions",
+  "retrieval_date": "2026-09-08"
+}

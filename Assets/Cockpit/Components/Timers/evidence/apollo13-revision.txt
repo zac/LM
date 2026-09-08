@@ -1,0 +1,53 @@
+A-2
+
+
+
+reliability  of television  coverage on the lunar surface.  The primary
+guidance programs were modified to permit reentr_ into the automatic and
+attitude hold modes of operation after manual control was exercised; this
+change was incorporated to provide improved final descent capability in
+the event of obscuration   from lunar dust.  The event timer was modified
+so that after it counted down to zero, it would count up automatically
+and thus reduce crew workload during critical events.     The descent pro-
+pulsion system was changed to include a bypass line around the fuel/helium
+heat exchanger such that if the heat exchanger should freeze during vent-
+ing, pressures would equalize on both sides of the heat exchanger.      The
+sensing point for the water separator drain tank was changed from the
+location of the carbon dioxide sensor to a point upstream of the suit
+fans, thus eliminating migration of water to the carbon dioxide sensor
+and improving its operation.    A removable flow limiter was added to the
+inlet for the primary lithium hydroxide cartridge to reduce the water
+separator speed and to minimize the possibility    of condensed water in
+the suit.   A dust filter was incorporated   at the inlet of the cabin fan
+to reduce the amount of free lunar dust in the cabin.     Redesigned water/
+glycol and oxygen disconnects having redundant seals were installed to
+improve reliability and to permit up to 5 degrees of connector misalign-
+ment.   To decrease the possibility  of lunar dust contamination,   a brush
+was added for cleaning the suits before ingress, the bristles on the
+vacuum brush were changed from Teflon to Nylon, and a cover was added to
+the lunar sample tote bag.
+
+      The extravehicular   mobility unit underwent several modifications     to
+improve lunar surface capability.      Scuff patches were added to the pres-
+sure garment assembly to prevent wear of the thermal/meteoroid       garment
+caused by chaffing of the lunar boots.       A device was added in the neck
+area of the pressure suit to provide drinking water to the crewmen during
+extravehicular   activity.   A center eyeshade was installed at the top of
+the extravehicular   visor assembly to reduce incoming glare and to aid in
+dark adaptation when entering shadow.       Abrasion cover gloves were included
+to be used over the extravehicular     gloves to reduce wear and heat conduc-
+tion during core drilling operations.       The electrical connnector on the
+remote control unit for the portable life support system was redesigned
+to permit easier engagement.      The manufacturing   technique for the regu-
+lator in the oxygen purge system was modified to minimize the possibility
+of gas leakage.
+
+
+                       A.3   EXPERIMENT   EQUIPMENT
+
+
+
+      The Apollo lunar surface experiment package stowed for Apollo 13
+was similar to that for Apollo 12.    However, the solar wind spectrometer,
+magnetometer,   and suprathermal ion detector, included on Apollo 12, were
+

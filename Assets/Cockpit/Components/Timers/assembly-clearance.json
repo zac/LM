@@ -1,0 +1,2720 @@
+{
+  "reviewer": "independent audit_model worker",
+  "method": "new installed components vs each other and accepted peers; neutral USDZ at contracted transforms; AABB then triangle BVH; full replacement blanks and duplicate panel backing suppressed, partial backings retained",
+  "source_report_sha256": "ba2acac9fa807170b27340396b22d861ca4bdc90160a1c5b3c2e6d32283f6550",
+  "input_hashes": {
+    "Cabin": "9b30f113235bea7832dd0d9f245d3f6ad98bd8a64af2d217943a5489e498c21b",
+    "WindowsLPD": "91c03cc4b6826473cfdccdce195fece5f591b778b8afdb3a71505df8f528cc32",
+    "PanelInventory": "4b95b051b27831c97a47e9ccfb36b2f62e23469d3be50a09225e57685dc56b24",
+    "CommanderPanels": "52e4c13cf302e080edbd163fb3f6d26ce53785c28bc49dcefd3a75c876f9d604",
+    "InteriorDetails": "069cdfb9923a6953f1ce4ffc5053a948e0c4f76840866553435d778dfd84b201",
+    "BreakerBanks": "fce4e4248806f4ff963775bc8013e17e6dee370671e656390bb8d05fcddfc217",
+    "AltitudeRate": "047bd435c51ecb1920aedc8f8b1cefbc9ea9056ac1139503a81abe29b42254c1",
+    "CrossPointer": "8095cdf3c12c4b77025e415ad21ea24a5bf51615674fd076f7458b9369ae1eae",
+    "DSKY": "e20a69864d4c7e0ff068172e0e672d9fbcc510c1dc4e97e4db0246fde08fbdfd",
+    "FDAI": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d",
+    "PilotFDAI": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d",
+    "ACA": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5",
+    "AttitudeMode": "4e7b811a7ed251bd9065a852a2ed652ca16a5fd06b48beea98702a492dc63f86",
+    "DescentRate": "ffa295038be35261353a8a0c8fe35316647d4e0b910b7ca108e97f55375cf078",
+    "EngineButtons": "eedf4dcadf8e075bc3d6084c273ea5a335506d3680966aa528298dcae7bec369",
+    "CommanderLunarContact": "6f97cc39c398f9f19555d7ea283e8d1c711deedd9b762cc529b53725d5f31346",
+    "PilotLunarContact": "6f97cc39c398f9f19555d7ea283e8d1c711deedd9b762cc529b53725d5f31346",
+    "PropulsionInstruments": "9eedc3e28ebc5be2b5da07c5c5ff99176c17df66df974879d0348d8061d8d1e8",
+    "MissionTimer": "ef6eb8d8d54de5dc39b31f0f9f38a3151343dc8c73ede7762615c41613570bea",
+    "EventTimer": "d22f9ec7b70c28a12725414f9150f2edb3f641c97c91c67cd0b7409326d8b540",
+    "EventTimerControls": "3cf2edba9154f991e386337acda721a3cd163c5cef22c5164f889ec28cce3cbb",
+    "CautionWarning": "580b16119a484c1a6138731e81e6960aab12324524dd267c0b227628e23b743b"
+  },
+  "timer_mount_matrices": {
+    "MissionTimer": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        -0.33500000834465027
+      ],
+      [
+        0.0,
+        0.9848077297210693,
+        0.1736481636762619,
+        1.7607048749923706
+      ],
+      [
+        0.0,
+        -0.1736481636762619,
+        0.9848077297210693,
+        -0.9084831476211548
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "EventTimer": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        -0.2120000123977661
+      ],
+      [
+        0.0,
+        0.9848077297210693,
+        0.1736481636762619,
+        1.7607048749923706
+      ],
+      [
+        0.0,
+        -0.1736481636762619,
+        0.9848077297210693,
+        -0.9084831476211548
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "EventTimerControls": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.11999999731779099
+      ],
+      [
+        0.0,
+        0.7071067690849304,
+        0.7071068286895752,
+        1.3064265251159668
+      ],
+      [
+        0.0,
+        -0.7071068286895752,
+        0.7071067690849304,
+        -0.8284852504730225
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "pairs": [
+    {
+      "a": "Cabin",
+      "b": "MissionTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "Cabin",
+      "b": "EventTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "Cabin",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "WindowsLPD",
+      "b": "MissionTimer",
+      "broadphase_candidates": 434,
+      "candidates": [
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_S1_E"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H1_G"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_Fastener_N62_13"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H100_A"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_M1_E"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H10_D"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_M10_B"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_S10_B"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_M1_A"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_S1_A"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_Fork_Stem"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H100_G"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H1_C"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_LensMesh"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_ReadoutBacking"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_Housing"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H10_E"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_M10_C"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_S10_C"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_S1_F"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H100_B"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_M1_F"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_Fastener_N62_N13"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_M1_B"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_S1_B"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H1_D"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H10_A"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H10_F"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_S10_D"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_S1_G"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_Legend_HOURS"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_M1_G"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_M10_D"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H100_C"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H10_B"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_S1_C"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H1_E"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_M1_C"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_S10_E"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_Legend_MIN"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H100_D"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_MountingFace"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_Fork_Bar"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_M10_E"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H10_G"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_M10_A"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_S10_A"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H1_F"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_M1_D"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_S1_D"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H10_C"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_Fork_L"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_Legend_SEC"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H100_E"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_Name"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H1_A"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_M10_F"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_S10_F"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_M10_G"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_S10_G"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_Fork_R"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H100_F"
+        ],
+        [
+          "CDR_Glazing_Inner",
+          "MissionTimer_H1_B"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_S1_E"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H1_G"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_Fastener_N62_13"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H100_A"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_M1_E"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H10_D"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_M10_B"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_S10_B"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_M1_A"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_S1_A"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_Fork_Stem"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H100_G"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H1_C"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_LensMesh"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_ReadoutBacking"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_Housing"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H10_E"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_M10_C"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_S10_C"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_S1_F"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H100_B"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_M1_F"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_Fastener_N62_N13"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_M1_B"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_S1_B"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H1_D"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H10_A"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H10_F"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_S10_D"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_S1_G"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_Legend_HOURS"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_M1_G"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_M10_D"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H100_C"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_Fastener_62_13"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H10_B"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_S1_C"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H1_E"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_M1_C"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_S10_E"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_Legend_MIN"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H100_D"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_MountingFace"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_Fork_Bar"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_M10_E"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H10_G"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_M10_A"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_S10_A"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H1_F"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_M1_D"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_S1_D"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_Fastener_62_N13"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H10_C"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_Fork_L"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_Legend_SEC"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H100_E"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_Name"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H1_A"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_M10_F"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_S10_F"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_M10_G"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_S10_G"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_Fork_R"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H100_F"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "MissionTimer_H1_B"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_S1_E"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H1_G"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_Fastener_N62_13"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H100_A"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_M1_E"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H10_D"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_M10_B"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_S10_B"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_M1_A"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_S1_A"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_Fork_Stem"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H100_G"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H1_C"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_LensMesh"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_ReadoutBacking"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_Housing"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H10_E"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_M10_C"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_S10_C"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_S1_F"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H100_B"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_M1_F"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_Fastener_N62_N13"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_M1_B"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_S1_B"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H1_D"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H10_A"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H10_F"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_S10_D"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_S1_G"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_Legend_HOURS"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_M1_G"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_M10_D"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H100_C"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_Fastener_62_13"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H10_B"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_S1_C"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H1_E"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_M1_C"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_S10_E"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_Legend_MIN"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H100_D"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_MountingFace"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_Fork_Bar"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_M10_E"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H10_G"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_M10_A"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_S10_A"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H1_F"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_M1_D"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_S1_D"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_Fastener_62_N13"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H10_C"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_Fork_L"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_Legend_SEC"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H100_E"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_Name"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H1_A"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_M10_F"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_S10_F"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_M10_G"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_S10_G"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_Fork_R"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H100_F"
+        ],
+        [
+          "CDR_BlackEdge",
+          "MissionTimer_H1_B"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_S1_E"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H1_G"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_Fastener_N62_13"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H100_A"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_M1_E"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H10_D"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_M10_B"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_S10_B"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_M1_A"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_S1_A"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_Fork_Stem"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H100_G"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H1_C"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_LensMesh"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_ReadoutBacking"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_Housing"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H10_E"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_M10_C"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_S10_C"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_S1_F"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H100_B"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_M1_F"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_Fastener_N62_N13"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_M1_B"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_S1_B"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H1_D"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H10_A"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H10_F"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_S10_D"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_S1_G"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_Legend_HOURS"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_M1_G"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_M10_D"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H100_C"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_Fastener_62_13"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H10_B"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_S1_C"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H1_E"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_M1_C"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_S10_E"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_Legend_MIN"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H100_D"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_MountingFace"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_Fork_Bar"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_M10_E"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H10_G"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_M10_A"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_S10_A"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H1_F"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_M1_D"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_S1_D"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_Fastener_62_N13"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H10_C"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_Fork_L"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_Legend_SEC"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H100_E"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_Name"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H1_A"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_M10_F"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_S10_F"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_M10_G"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_S10_G"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_Fork_R"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H100_F"
+        ],
+        [
+          "CDR_Glazing_Outer",
+          "MissionTimer_H1_B"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H1_G"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_Fastener_N62_13"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H100_A"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_M1_E"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H10_D"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_M10_B"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_M1_A"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_Fork_Stem"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H100_G"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H1_C"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_LensMesh"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_ReadoutBacking"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_Housing"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H10_E"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_M10_C"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H100_B"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_M1_F"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_Fastener_N62_N13"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H1_D"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H10_A"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H10_F"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_Legend_HOURS"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_M1_G"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_M10_D"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H100_C"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H10_B"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H1_E"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_Legend_MIN"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H100_D"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_MountingFace"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_Fork_Bar"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_M10_E"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H10_G"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_M10_A"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H1_F"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_M1_D"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H10_C"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_Fork_L"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H100_E"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_Name"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H1_A"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_M10_F"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_M10_G"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_Fork_R"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H100_F"
+        ],
+        [
+          "CDR_DefogBus_1",
+          "MissionTimer_H1_B"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_S1_E"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H1_G"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_Fastener_N62_13"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H100_A"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_M1_E"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H10_D"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_M10_B"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_S10_B"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_M1_A"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_S1_A"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_Fork_Stem"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H100_G"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H1_C"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_LensMesh"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_ReadoutBacking"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_Housing"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H10_E"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_M10_C"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_S10_C"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_S1_F"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H100_B"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_M1_F"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_Fastener_N62_N13"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_M1_B"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_S1_B"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H1_D"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H10_A"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H10_F"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_S10_D"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_S1_G"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_Legend_HOURS"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_M1_G"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_M10_D"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H100_C"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_Fastener_62_13"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H10_B"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_S1_C"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H1_E"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_M1_C"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_S10_E"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_Legend_MIN"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H100_D"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_MountingFace"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_Fork_Bar"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_M10_E"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H10_G"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_M10_A"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_S10_A"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H1_F"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_M1_D"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_S1_D"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_Fastener_62_N13"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H10_C"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_Fork_L"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_Legend_SEC"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H100_E"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_Name"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H1_A"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_M10_F"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_S10_F"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_M10_G"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_S10_G"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_Fork_R"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H100_F"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "MissionTimer_H1_B"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_S1_E"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H1_G"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_Fastener_N62_13"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H100_A"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_M1_E"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H10_D"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_M10_B"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_S10_B"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_M1_A"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_S1_A"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_Fork_Stem"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H100_G"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H1_C"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_LensMesh"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_ReadoutBacking"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_Housing"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H10_E"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_M10_C"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_S10_C"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_S1_F"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H100_B"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_M1_F"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_Fastener_N62_N13"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_M1_B"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_S1_B"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H1_D"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H10_A"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H10_F"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_S10_D"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_S1_G"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_Legend_HOURS"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_M1_G"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_M10_D"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H100_C"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_Fastener_62_13"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H10_B"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_S1_C"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H1_E"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_M1_C"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_S10_E"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_Legend_MIN"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H100_D"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_MountingFace"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_Fork_Bar"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_M10_E"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H10_G"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_M10_A"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_S10_A"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H1_F"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_M1_D"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_S1_D"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_Fastener_62_N13"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H10_C"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_Fork_L"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_Legend_SEC"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H100_E"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_Name"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H1_A"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_M10_F"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_S10_F"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_M10_G"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_S10_G"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_Fork_R"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H100_F"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "MissionTimer_H1_B"
+        ]
+      ],
+      "surface_crossings": []
+    },
+    {
+      "a": "WindowsLPD",
+      "b": "EventTimer",
+      "broadphase_candidates": 44,
+      "candidates": [
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_M10_A"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_M10_G"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_M1_D"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_MountingFace"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_M10_E"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_Legend_MIN"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_M1_G"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_M10_D"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_Housing"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_M10_C"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_M1_F"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_Fastener_N39_N13"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_LensMesh"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_M10_B"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_M1_A"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_M1_E"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_M10_F"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_ReadoutBacking"
+        ],
+        [
+          "CDR_StructuralFrame",
+          "EventTimer_Fastener_N39_13"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "EventTimer_MountingFace"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "EventTimer_Housing"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "EventTimer_Fastener_N39_N13"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "EventTimer_LensMesh"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "EventTimer_ReadoutBacking"
+        ],
+        [
+          "CDR_OuterRetainer",
+          "EventTimer_Fastener_N39_13"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_M10_A"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_M10_G"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_M1_D"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_MountingFace"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_M10_E"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_Legend_MIN"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_M1_G"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_M10_D"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_Housing"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_M10_C"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_M1_F"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_Fastener_N39_N13"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_LensMesh"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_M10_B"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_M1_A"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_M1_E"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_M10_F"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_ReadoutBacking"
+        ],
+        [
+          "CDR_InnerRetainer",
+          "EventTimer_Fastener_N39_13"
+        ]
+      ],
+      "surface_crossings": []
+    },
+    {
+      "a": "WindowsLPD",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "PanelInventory",
+      "b": "MissionTimer",
+      "broadphase_candidates": 2,
+      "candidates": [
+        [
+          "Placeholder.025",
+          "MissionTimer_Housing"
+        ],
+        [
+          "Placeholder.025",
+          "MissionTimer_MountingFace"
+        ]
+      ],
+      "surface_crossings": [
+        {
+          "a": "Placeholder.025",
+          "b": "MissionTimer_Housing",
+          "triangle_pairs": 20
+        }
+      ]
+    },
+    {
+      "a": "PanelInventory",
+      "b": "EventTimer",
+      "broadphase_candidates": 2,
+      "candidates": [
+        [
+          "Placeholder.025",
+          "EventTimer_MountingFace"
+        ],
+        [
+          "Placeholder.025",
+          "EventTimer_Housing"
+        ]
+      ],
+      "surface_crossings": [
+        {
+          "a": "Placeholder.025",
+          "b": "EventTimer_Housing",
+          "triangle_pairs": 20
+        }
+      ]
+    },
+    {
+      "a": "PanelInventory",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 31,
+      "candidates": [
+        [
+          "Placeholder.050",
+          "EventTimer_TimerControl_Grip"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_MinutesSlew_Title"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_ResetCount_Grip"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_ResetCount_Title"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_SecondsSlew_BottomLabel"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_SecondsSlew_Stem"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimerControls_Screw_91_29"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_TimerControl_BottomLabel"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_MinutesSlew_Nut"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_ResetCount_CenterLabel"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_ResetCount_Stem"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_TimerControl_TopLabel"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimerControls_Plate"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_MinutesSlew_Grip"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_ResetCount_BottomLabel"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_SecondsSlew_Nut"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_SecondsSlew_TopLabel"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_TimerControl_Title"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimerControls_Heading"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimerControls_Screw_N91_N29"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_TimerControl_Nut"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_MinutesSlew_BottomLabel"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_MinutesSlew_Stem"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_MinutesSlew_TopLabel"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_ResetCount_Nut"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_ResetCount_TopLabel"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_SecondsSlew_Grip"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_SecondsSlew_Title"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimer_TimerControl_Stem"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimerControls_Screw_N91_29"
+        ],
+        [
+          "Placeholder.050",
+          "EventTimerControls_Screw_91_N29"
+        ]
+      ],
+      "surface_crossings": []
+    },
+    {
+      "a": "CommanderPanels",
+      "b": "MissionTimer",
+      "broadphase_candidates": 11,
+      "candidates": [
+        [
+          "Panel_1_Return_Left",
+          "MissionTimer_Fastener_N62_13"
+        ],
+        [
+          "Panel_1_Return_Left",
+          "MissionTimer_LensMesh"
+        ],
+        [
+          "Panel_1_Return_Left",
+          "MissionTimer_ReadoutBacking"
+        ],
+        [
+          "Panel_1_Return_Left",
+          "MissionTimer_Fastener_N62_N13"
+        ],
+        [
+          "Panel_1_Return_Left",
+          "MissionTimer_MountingFace"
+        ],
+        [
+          "Panel_1_RearFlange_Left",
+          "MissionTimer_Fastener_N62_13"
+        ],
+        [
+          "Panel_1_RearFlange_Left",
+          "MissionTimer_LensMesh"
+        ],
+        [
+          "Panel_1_RearFlange_Left",
+          "MissionTimer_ReadoutBacking"
+        ],
+        [
+          "Panel_1_RearFlange_Left",
+          "MissionTimer_Housing"
+        ],
+        [
+          "Panel_1_RearFlange_Left",
+          "MissionTimer_Fastener_N62_N13"
+        ],
+        [
+          "Panel_1_RearFlange_Left",
+          "MissionTimer_MountingFace"
+        ]
+      ],
+      "surface_crossings": []
+    },
+    {
+      "a": "CommanderPanels",
+      "b": "EventTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "CommanderPanels",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "InteriorDetails",
+      "b": "MissionTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "InteriorDetails",
+      "b": "EventTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "InteriorDetails",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "BreakerBanks",
+      "b": "MissionTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "BreakerBanks",
+      "b": "EventTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "BreakerBanks",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "AltitudeRate",
+      "b": "MissionTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "AltitudeRate",
+      "b": "EventTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "AltitudeRate",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "CrossPointer",
+      "b": "MissionTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "CrossPointer",
+      "b": "EventTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "CrossPointer",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "DSKY",
+      "b": "MissionTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "DSKY",
+      "b": "EventTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "DSKY",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "FDAI",
+      "b": "MissionTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "FDAI",
+      "b": "EventTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "FDAI",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "PilotFDAI",
+      "b": "MissionTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "PilotFDAI",
+      "b": "EventTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "PilotFDAI",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "ACA",
+      "b": "MissionTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "ACA",
+      "b": "EventTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "ACA",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "AttitudeMode",
+      "b": "MissionTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "AttitudeMode",
+      "b": "EventTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "AttitudeMode",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "DescentRate",
+      "b": "MissionTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "DescentRate",
+      "b": "EventTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "DescentRate",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "EngineButtons",
+      "b": "MissionTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "EngineButtons",
+      "b": "EventTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "EngineButtons",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "CommanderLunarContact",
+      "b": "MissionTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "CommanderLunarContact",
+      "b": "EventTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "CommanderLunarContact",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "PilotLunarContact",
+      "b": "MissionTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "PilotLunarContact",
+      "b": "EventTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "PilotLunarContact",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "PropulsionInstruments",
+      "b": "MissionTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "PropulsionInstruments",
+      "b": "EventTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "PropulsionInstruments",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "MissionTimer",
+      "b": "EventTimer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "MissionTimer",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "MissionTimer",
+      "b": "CautionWarning",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "EventTimer",
+      "b": "EventTimerControls",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "EventTimer",
+      "b": "CautionWarning",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "EventTimerControls",
+      "b": "CautionWarning",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    }
+  ],
+  "face_rays": [
+    {
+      "asset": "EventTimer",
+      "surface": "EventTimer_LensMesh",
+      "eye": "CDR",
+      "target_cabin_m": [
+        -0.2120000272989273,
+        1.760640263557434,
+        -0.9030899405479431
+      ],
+      "hits": []
+    },
+    {
+      "asset": "EventTimerControls",
+      "surface": "EventTimer_TimerControl_Grip",
+      "eye": "CDR",
+      "target_cabin_m": [
+        0.09699998795986176,
+        1.3198615312576294,
+        -0.8108075857162476
+      ],
+      "hits": []
+    },
+    {
+      "asset": "EventTimerControls",
+      "surface": "EventTimer_ResetCount_Grip",
+      "eye": "CDR",
+      "target_cabin_m": [
+        0.05100000277161598,
+        1.3198615312576294,
+        -0.8108075857162476
+      ],
+      "hits": []
+    },
+    {
+      "asset": "EventTimerControls",
+      "surface": "EventTimer_MinutesSlew_Grip",
+      "eye": "CDR",
+      "target_cabin_m": [
+        0.14299999177455902,
+        1.3198615312576294,
+        -0.8108075857162476
+      ],
+      "hits": []
+    },
+    {
+      "asset": "EventTimerControls",
+      "surface": "EventTimer_SecondsSlew_Grip",
+      "eye": "CDR",
+      "target_cabin_m": [
+        0.18900001049041748,
+        1.3198615312576294,
+        -0.8108075857162476
+      ],
+      "hits": []
+    },
+    {
+      "asset": "MissionTimer",
+      "surface": "MissionTimer_LensMesh",
+      "eye": "CDR",
+      "target_cabin_m": [
+        -0.33500003814697266,
+        1.760640263557434,
+        -0.9030899405479431
+      ],
+      "hits": []
+    }
+  ],
+  "classification": "No crossing with CommanderPanels left return or other new components. Own retained timer blank intersects shallow rear housing intentionally. Final MissionTimer rear width116mm gives1mm nominal return gap.",
+  "limits": [
+    "Static neutral geometry; no self-intersection or continuous motion proof",
+    "Rear housing penetration of retained backing may be intentional; each candidate needs classification",
+    "No material/native/simulator/headset acceptance",
+    "MissionTimerControls not installed and omitted"
+  ]
+}

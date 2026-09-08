@@ -1,0 +1,13 @@
+"""Panel-plane checks use actual USD bounds, do not certify rear hardware clearance."""
+import json,hashlib
+from pathlib import Path
+P=Path(__file__).resolve().parent;c=json.loads((P/'interface.json').read_text());inv=json.loads((P.parent/'PanelInventory/inventory.json').read_text());vals=json.loads((P/'validation.json').read_text())['assets'];rows=[]
+for a in c['assets']:
+ if not a.get('panel_slot'):assert a['installation_allowed']==False;continue
+ panel=next(p for p in inv['panels'] if any(s['id']==a['panel_slot'] for s in p['slots']));slot=next(s for s in panel['slots'] if s['id']==a['panel_slot']);b=next(v for v in vals if v['asset']==a['filename']);offset=a['slot_local_pose']['translation_m'];lo=[x+y for x,y in zip(b['bounds_min_m'],offset)];hi=[x+y for x,y in zip(b['bounds_max_m'],offset)];margins=[min(lo[i]+slot['envelope_m'][i]/2,slot['envelope_m'][i]/2-hi[i]) for i in [0,1]];assert min(margins)>=(-.020001 if a['kind']=='readout' else -1e-6)
+ adjacent=[]
+ for other in panel['slots']:
+  if other['id']==slot['id']:continue
+  gap=[max((other['pose']['translation_m'][i]-other['envelope_m'][i]/2)-(slot['pose']['translation_m'][i]+hi[i]),(slot['pose']['translation_m'][i]+lo[i])-(other['pose']['translation_m'][i]+other['envelope_m'][i]/2),0) for i in [0,1]];assert max(gap)>0;adjacent.append({'slot':other['id'],'xy_separation_m':gap})
+ rows.append({'asset':a['filename'],'slot':a['panel_slot'],'slot_local_bounds_min_m':lo,'slot_local_bounds_max_m':hi,'xy_minimum_edge_margins_m':margins,'adjacent_slot_separations':adjacent})
+report={'status':'PASS provisional front-envelope fit','assets':rows,'readout_pair_horizontal_gap_m':.016,'approved_exception':c['mounting_exception'],'blank_z_m':[-.003,0],'readout_segment_slot_z_m':.0085,'event_control_plate_slot_z_m':[.0025,.0055],'backing_policy':'Retain blank behind both readouts and partial timer/heater control bank. Suppress only timer planning labels. Housing intentionally penetrates rear panel plane; rear mounting unqualified.','provenance':{'inventory_sha256':hashlib.sha256((P.parent/'PanelInventory/inventory.json').read_bytes()).hexdigest()},'limits':['No surveyed dimensions or full hand-controller sweep','Mission face reaches CommanderPanels surround left edge; exact return clearance reviewed separately by coordinator','Panel5 remains blocked and mission controls uninstalled','Readout depth is a shallow visualization housing','Fit images show only current authored components against panel blanks, not complete runtime assembly']};(P/'mounting.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))

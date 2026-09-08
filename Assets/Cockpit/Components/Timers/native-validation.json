@@ -1,0 +1,18 @@
+{
+  "checks" : 1623,
+  "control_states" : "Every pivot each of three detents",
+  "digit_states" : "Every digit all ten seven-segment masks; native material swaps",
+  "limitations" : [
+    "No simulator\/headset",
+    "No real clock behavior exercised",
+    "Native material mutation is not rendered-appearance acceptance"
+  ],
+  "loaded_assets" : [
+    "MissionTimer.usdz",
+    "EventTimer.usdz",
+    "MissionTimerControls.usdz",
+    "EventTimerControls.usdz"
+  ],
+  "platform" : "macOS RealityKit",
+  "status" : "PASS"
+}
