@@ -70,8 +70,8 @@ struct TerminalDescentCockpitView: View {
             VStack(spacing: 8) {
                 if presentation.trainingEnabled {
                     Text(appModel.session.vehicleState?.landingGear.map {
-                        "Contact lamps: probe " + ($0.isProbeContact ? "contact" : "clear") + "; lamp power and test circuits are not modeled."
-                    } ?? "Contact lamps: probe data unavailable; lamp power and test circuits are not modeled.")
+                        "Contact lamps: probe " + ($0.isProbeContact ? "contact" : "clear") + "; lamp power, test and stop-reset circuits are not modeled."
+                    } ?? "Contact lamps: probe data unavailable; lamp power, test and stop-reset circuits are not modeled.")
                         .font(.caption)
                 }
                 HStack(spacing: 10) {

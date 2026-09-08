@@ -160,7 +160,7 @@ final class LMCommanderStationScene {
     private(set) var commanderAssembly: LMCommanderStationAssembly?
     private var exteriorLunarModule: Entity?
     private var fdaiBall: Entity?
-    private var importedFDAI: LMImportedFDAI?
+    private(set) var importedFDAI: LMImportedFDAI?
     private(set) var importedPilotFDAI: LMImportedFDAI?
     private(set) var importedACA: LMImportedACA?
     private(set) var importedTimers: LMImportedTimers?

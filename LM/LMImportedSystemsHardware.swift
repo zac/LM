@@ -44,7 +44,7 @@ final class LMImportedSystemsHardware {
             var needleCount = 0, digitCount = 0
             for instrument in instruments.values {
                 for needle in (instrument["needles"] as? [String: [String: Any]])?.values ?? [:].values {
-                    guard let path = needle["node"] as? String, let parked = needle["parked_translation_m"] as? [Float] else { throw Self.invalid(kind) }
+                    guard let path = needle["node"] as? String, let parked = Self.numbers(needle["parked_translation_m"]) else { throw Self.invalid(kind) }
                     let node = try LMCommanderStationAssembly.path(path, in: root)
                     guard simd_distance(node.position, try LMCockpitComponentSupport.vector(parked)) < 0.00001 else { throw Self.invalid(path) }
                     node.isEnabled = false
@@ -68,9 +68,14 @@ final class LMImportedSystemsHardware {
         guard let result = try JSONSerialization.jsonObject(with: data) as? [String: Any], result["units"] as? String == "meters" else { throw invalid("Units") }
         return result
     }
+    private static func numbers(_ value: Any?) -> [Float]? {
+        guard let values = value as? [NSNumber], values.allSatisfy({ CFGetTypeID($0) != CFBooleanGetTypeID() }) else { return nil }
+        let result = values.map(\.floatValue)
+        return result.allSatisfy(\.isFinite) ? result : nil
+    }
     static func pose(_ data: [String: Any]) throws -> Transform {
-        guard let position = data["translation_m"] as? [Float], let rotation = data["quaternion_xyzw"] as? [Float], rotation.count == 4,
-              rotation.allSatisfy(\.isFinite), (data["scale"] as? [Float] ?? [1, 1, 1]) == [1, 1, 1] else { throw invalid("Pose") }
+        guard let position = numbers(data["translation_m"]), let rotation = numbers(data["quaternion_xyzw"]), rotation.count == 4,
+              rotation.allSatisfy(\.isFinite), (data["scale"] == nil || numbers(data["scale"]) == [1, 1, 1]) else { throw invalid("Pose") }
         let q = simd_quatf(vector: SIMD4(rotation[0], rotation[1], rotation[2], rotation[3]))
         guard abs(simd_length(q.vector) - 1) < 0.00001 else { throw invalid("Quaternion") }
         return Transform(rotation: q, translation: try LMCockpitComponentSupport.vector(position))

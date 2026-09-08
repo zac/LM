@@ -15,7 +15,7 @@ struct LMPilotFDAIIntegrationTests {
 
     @Test func pilotTracksCommanderWithIndependentEntitiesAtItsOwnSlot() throws {
         let station = LMCommanderStationScene()
-        let commander = try LMCommanderStationAssembly.unique("FDAI_Mount", in: station.root)
+        let commander = try #require(station.importedFDAI?.root)
         let commanderBall = try LMCommanderStationAssembly.unique("FDAI_Ball_Pivot", in: commander)
         let commanderFixed = try LMCommanderStationAssembly.unique("FDAI_Fixed", in: commander)
         #expect(station.installCommanderAssembly())
@@ -69,7 +69,7 @@ struct LMPilotFDAIIntegrationTests {
         let blank = try LMCommanderStationAssembly.path(pilotSlot.default_placeholder_node, in: assembly.panelInventory)
         let peer = try #require(assembly.inventory.panels.flatMap(\.slots).first { $0.id == "Panel2__CrossPointer" })
         let peerBlank = try LMCommanderStationAssembly.path(peer.default_placeholder_node, in: assembly.panelInventory)
-        let commander = try LMCommanderStationAssembly.unique("FDAI_Mount", in: station.root)
+        let commander = try #require(station.importedFDAI?.root)
         #expect(!station.installPilotFDAI { throw CocoaError(.fileNoSuchFile) })
         #expect(blank.isEnabled && peerBlank.isEnabled && station.importedPilotFDAI == nil)
         #expect(!station.installPilotFDAI { try LMImportedFDAI(asset: Entity()) })
