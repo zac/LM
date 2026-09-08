@@ -1,0 +1,15 @@
+{
+  "AGC_HEAD": "b3f15533db335ee882dc07401790c93010809e8f",
+  "LM_HEAD": "f9d77ea3a0b1c83dfafedd4768e579a5c24e8e08",
+  "read_only_audit_files": {
+    "/Users/zac/Projects/personal/lm/AGC/Sources/LMCore/LMVehicleActuation.swift": {
+      "sha256": "92398a4264de23241e4b840cc78e0ee88bcd2dbe8f11988775fc24c0a3612e90"
+    },
+    "/Users/zac/Projects/personal/lm/AGC/Sources/LMCore/LMVehicleCommands.swift": {
+      "sha256": "cc5c5174584849240edfe36d1e811f760a8446d6764aec24735dfa58d266300e"
+    },
+    "/Users/zac/Projects/personal/lm/AGC/Sources/LMCore/LMSimulation.swift": {
+      "sha256": "75c27b1e0bc3630372f6f093c1becbed8c1f1b96759dbff5101674990f694ab6"
+    }
+  }
+}
