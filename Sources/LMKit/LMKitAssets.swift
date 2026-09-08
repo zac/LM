@@ -12,4 +12,8 @@ public enum LMKitAssets {
     public static var dskyURL: URL {
         Bundle.module.url(forResource: "DSKY", withExtension: "usdz", subdirectory: "DSKY")!
     }
+    /// Standalone FDAI with provisional dimensions; state and calibration are app-owned.
+    public static var fdaiURL: URL {
+        Bundle.module.url(forResource: "FDAI", withExtension: "usdz", subdirectory: "FDAI")!
+    }
 }

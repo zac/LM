@@ -4,6 +4,8 @@ Reusable lunar-module models and independently addressable cockpit components fo
 
 ## Initial components
 
+- **FDAI**: standalone component from `c4c565f`, available through `LMKitAssets.fdaiURL`. Eight independent moving groups; all physical dimensions and pivots remain provisional. New ball UV mapping needs an explicit runtime adapter; do not blindly reuse the legacy texture-alignment quaternion. Live state/calibration and Vision Pro appearance remain open. Use `Tools/sync_fdai.py` after accepted source export changes. See `Provenance/fdai-acceptance.json` and the component handoff.
+
 - **DSKY**: imported from `zac/LM` commit `c655fe5` (full SHA in `Provenance/imports.json`). Source Blender file, reproducible scripts, evidence, preview exports, validation and handoff are under `Assets/Cockpit/Components/DSKY/`. Only the neutral `DSKY.usdz` ships as a runtime resource. The original worker reported 276 checks and native loading; this package separately tests its bundled asset. Live AGC, hover/pinch bindings and Vision Pro verification remain unimplemented. Rear housing and mounting aperture remain provisional; do not derive a panel cutout from that box.
 - **Legacy exterior**: exact `lm.usda` wrapper and `lunar_module.usdz` bytes imported from LM commit `97f877b`. Retains Physics, lunarlander, DPS and RCS hierarchy. Existing scale, coordinate registration, center-of-mass calculations and simulation behavior stay with LM. This is the starting model to improve incrementally, not a claim of historical fidelity.
 

@@ -5,7 +5,7 @@ let package = Package(
     platforms: [.macOS(.v15), .iOS(.v18), .visionOS(.v2)],
     products: [.library(name: "LMKit", targets: ["LMKit"])],
     targets: [
-        .target(name: "LMKit", resources: [.copy("Resources/Legacy"), .copy("Resources/DSKY")]),
+        .target(name: "LMKit", resources: [.copy("Resources/Legacy"), .copy("Resources/DSKY"), .copy("Resources/FDAI")]),
         .testTarget(name: "LMKitTests", dependencies: ["LMKit"])
     ]
 )

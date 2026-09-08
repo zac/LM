@@ -31,3 +31,23 @@ import RealityKit
     let source = repository.appendingPathComponent("Assets/Cockpit/Components/DSKY/DSKY.usdz")
     #expect(try Data(contentsOf: source) == Data(contentsOf: LMKitAssets.dskyURL))
 }
+
+@Test @MainActor func packagedFDAIRetainsIndependentPivots() throws {
+    let scene = try Entity.load(contentsOf: LMKitAssets.fdaiURL)
+    let root = try #require(scene.findEntity(named: "FDAI_Mount"))
+    let fixed = try #require(root.findEntity(named: "FDAI_Fixed"))
+    let neutral = fixed.transform
+    let names = ["FDAI_Ball_Pivot", "FDAI_RollBug_Pivot"] + ["Rate", "Error"].flatMap { kind in
+        ["Roll", "Pitch", "Yaw"].map { "FDAI_\(kind)_\($0)_Pivot" }
+    }
+    for name in names {
+        let pivot = try #require(root.findEntity(named: name))
+        #expect(pivot.parent === root)
+        #expect(!pivot.children.isEmpty)
+        pivot.orientation = simd_quatf(angle: .pi / 8, axis: SIMD3<Float>(0, 0, 1))
+        #expect(fixed.transform == neutral)
+    }
+    let repository = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+    let authoring = repository.appendingPathComponent("Assets/Cockpit/Components/FDAI/FDAI.usdz")
+    #expect(try Data(contentsOf: authoring) == Data(contentsOf: LMKitAssets.fdaiURL))
+}
