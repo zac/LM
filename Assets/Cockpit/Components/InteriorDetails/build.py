@@ -120,6 +120,71 @@ for side,sign in [('CDR',-1),('LMP',1)]:
   tube(side+'_HeaderReturnBolt_%d'%n,[(sign*.36,y,-1.011),(sign*.36,y,-1.008)],.0033,'FastenerSteel',g,10)
 for n,x in enumerate([-.27,-.135,0,.135,.27]):
  tube('ForwardHeader_Bolt_%d'%n,[(x,2.1,-1.011),(x,2.1,-1.008)],.0033,'FastenerSteel',g,10)
+# Phase 2: shallow cover frames and mesh inserts, following existing liner surfaces.
+# Open mesh centers are actual openings; no alpha cards, texture decals or new lights.
+material('LinerCream',(.67,.66,.56));material('LinerMesh',(.39,.40,.34),.15)
+def plane_box(name,center,u,v,n,size,mat,parent):
+ center,u,v,n=Vector(center),Vector(u),Vector(v),Vector(n);a,b,c=(f/2 for f in size)
+ pts=[center+u*x*a+v*y*b+n*z*c for x,y,z in [(-1,-1,-1),(-1,-1,1),(-1,1,-1),(-1,1,1),(1,-1,-1),(1,-1,1),(1,1,-1),(1,1,1)]]
+ return mesh(name,pts,[(2,6,4,0),(5,7,3,1),(4,5,1,0),(3,7,6,2),(1,3,2,0),(6,7,5,4)],mat,parent)
+def insert(name,center,u,v,n,width,length,parent):
+ center,u,v,n=Vector(center),Vector(u),Vector(v),Vector(n)
+ # Closed sheet bands around a physical open lattice: plain solid margins retain liner vocabulary.
+ border=.017;thick=.002
+ for side in [-1,1]:
+  plane_box(name+'_CoverSide_'+str(side),center+u*side*(width-border)/2,u,v,n,(border,length,thick),'LinerCream',parent)
+  plane_box(name+'_CoverEnd_'+str(side),center+v*side*(length-border)/2,u,v,n,(width-2*border,border,thick),'LinerCream',parent)
+ innerw=width-2*border;innerl=length-2*border
+ # Bars are 1mm wide; these are generic mesh/perforation approximations, not a surveyed hole pattern.
+ countw=max(2,round(innerw/.012));countl=max(2,round(innerl/.012))
+ for j in range(countw+1):
+  pos=center+u*(-innerw/2+innerw*j/countw)-n*.0012
+  plane_box(name+'_MeshLong_%02d'%j,pos,u,v,n,(.001,innerl,.0007),'LinerMesh',parent)
+ for j in range(countl+1):
+  pos=center+v*(-innerl/2+innerl*j/countl)-n*.0020
+  plane_box(name+'_MeshCross_%02d'%j,pos,u,v,n,(innerw,.001,.0007),'LinerMesh',parent)
+ for j,(a,b) in enumerate([(-1,-1),(-1,1),(1,-1),(1,1)]):
+  pos=center+u*a*(width/2-.008)+v*b*(length/2-.008)+n*.002
+  tube(name+'_CoverScrew_%d'%j,[pos,pos+n*.0018],.0027,'FastenerSteel',parent,10)
+roof=1.1+math.sqrt(RADIUS*RADIUS-.43*.43)
+g=group('ForwardOverheadLiner')
+for side,sign in [('CDR',-1),('LMP',1)]:
+ insert(side+'_OverheadCover',(sign*.255,roof-.007,-.73),(1,0,0),(0,0,1),(0,-1,0),.245,.35,g)
+# Rear portions of crown facets 1/2 remain clear of the docking and transfer apertures.
+for side,sign in [('CDR',-1),('LMP',1)]:
+ g=group(side+'AftCrownInserts')
+ a,b=arc[2].copy(),arc[3].copy();a.x*=sign;b.x*=sign
+ mid=(a+b)/2;out=Vector((mid.x,mid.y-1.1,0)).normalized();u=(b-a).normalized()
+ center=mid-out*.006;center.z=.67
+ insert(side+'_AftLinerCover',center,u,(0,0,1),-out,.096,.48,g)
+# A restrained pair of exposed header sleeves is visible above the control stack.
+g=group('ForwardHeaderCableRun')
+for j,y in enumerate([2.044,2.056]):
+ tube('HeaderSleeve_%d'%j,[(-.33,y,-1.005),(-.20,y,-1.003),(0,y,-1.003),(.20,y,-1.003),(.33,y,-1.005)],.0032,'CableSleeveIvory' if j==0 else 'CableSleeveDark',g)
+for j,x in enumerate([-.28,-.095,.095,.28]):
+ plane_box('HeaderClampBridge_%d'%j,(x,2.05,-.997),(1,0,0),(0,1,0),(0,0,1),(.009,.035,.002),'ClampAluminum',g)
+ for k,sgn in enumerate([-1,1]):
+  plane_box('HeaderClampReturn_%d_%d'%(j,k),(x,2.05+sgn*.017,-1.005),(1,0,0),(0,1,0),(0,0,1),(.009,.002,.016),'ClampAluminum',g)
+  tube('HeaderClampScrew_%d_%d'%(j,k),[(x,2.05+sgn*.023,-1.011),(x,2.05+sgn*.023,-1.008)],.0025,'FastenerSteel',g,10)
+# Static fittings are attached to the closed leaf surfaces only. No hatch hinge/action claim.
+def u_handle(name,a,b,n,parent):
+ a,b,n=Vector(a),Vector(b),Vector(n)
+ tube(name+'_Grip',[a,a+n*.035,b+n*.035,b],.006,'ClampAluminum',parent,10)
+ for j,p in enumerate([a,b]):
+  tube(name+'_Foot_%d'%j,[p-n*.002,p+n*.003],.012,'TrimGray',parent,12)
+  tube(name+'_FootScrew_%d'%j,[p+n*.004,p+n*.006],.003,'FastenerSteel',parent,10)
+g=group('ForwardHatchFittings')
+# Existing leaf front field reaches z=-.993; preserve separate rib footprints at x±.23.
+u_handle('ForwardHatch_ProvisionalGrip',(-.095,.47,-.987),(-.095,.62,-.987),(0,0,1),g)
+for j,(x,y) in enumerate([(x,y) for x in [-.34,.34] for y in [.25,.45,.65,.85]]+[(x,y) for x in [-.16,.0,.16] for y in [.20,.90]]):
+ tube('ForwardHatch_Fastener_%02d'%j,[(x,y,-.985),(x,y,-.982)],.0038,'FastenerSteel',g,10)
+# Small plain boss around the handle base is deliberately unnamed as a latch subsystem.
+plane_box('ForwardHatch_HandleBacking',(-.095,.545,-.990),(1,0,0),(0,1,0),(0,0,1),(.045,.195,.003),'TrimGray',g)
+g=group('TransferHatchFittings')
+u_handle('TransferHatch_ProvisionalGrip',(-.075,roof-.007,.45),(.075,roof-.007,.45),(0,-1,0),g)
+for j in range(20):
+ t=2*math.pi*j/20;point=Vector((.36*math.cos(t),roof-.004,.65+.36*math.sin(t)))
+ tube('TransferHatch_Fastener_%02d'%j,[point,point+Vector((0,-.003,0))],.0035,'FastenerSteel',g,10)
 # Export a minimal USD graph: no behaviors, collisions, lights, cameras or input metadata.
 bpy.context.view_layer.update()
 def emit_usd():
@@ -145,7 +210,7 @@ for name,g in groups.items():
   if o.type=='MESH':
    o.data.calc_loop_triangles();tris+=len(o.data.loop_triangles);points += [C.inverted().to_3x3()@v.co for v in o.data.vertices]
  total+=tris;entries.append({'name':name,'path':'/InteriorDetails/'+name,'aabb_cabin_m':[[min(p[i] for p in points) for i in range(3)],[max(p[i] for p in points) for i in range(3)]],'triangles':tris,'removable':True})
-meta={'schema':'lmkit.interior-details.v1','root':'/InteriorDetails','root_pose':{'translation_m':[0,0,0],'quaternion_xyzw':[0,0,0,1],'scale':[1,1,1]},'axes':'+X right, +Y up, -Z forward','meters_per_unit':1,'installation':'identity Cabin-relative; optional additive sibling; never hides slots','base_commit':'ee3a19f','groups':entries,'triangles':total,'material_count':len(materials),'simulation':'none','input':'none','collisions':'none','lights':'none','dimensions':'all provisional visual reconstruction; not fabrication','artifact_sha256':hashlib.sha256((D/'InteriorDetails.usdz').read_bytes()).hexdigest()}
+meta={'schema':'lmkit.interior-details.v1','root':'/InteriorDetails','root_pose':{'translation_m':[0,0,0],'quaternion_xyzw':[0,0,0,1],'scale':[1,1,1]},'axes':'+X right, +Y up, -Z forward','meters_per_unit':1,'installation':'identity Cabin-relative; optional additive sibling; never hides slots','base_commit':'035c5b3','groups':entries,'triangles':total,'material_count':len(materials),'simulation':'none','input':'none','collisions':'none','lights':'none','dimensions':'all provisional visual reconstruction; not fabrication','hatch_fittings':'static closed-leaf visual groups; disable or reparent if a future host opens/removes either hatch','preserved_groups_evidence':'evidence/phase1-group-fingerprints.json','artifact_sha256':hashlib.sha256((D/'InteriorDetails.usdz').read_bytes()).hexdigest()}
 (D/'interface.json').write_text(json.dumps(meta,indent=2)+'\n')
 assert total<15000,total
 bpy.ops.wm.save_as_mainfile(filepath=str(D/'InteriorDetails.blend'))

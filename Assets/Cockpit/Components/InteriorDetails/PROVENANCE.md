@@ -21,4 +21,15 @@ Shared original file provenance and hashes remain in [reference manifest](../../
 
 ## Preserved boundaries
 
-No breaker-strip hardware is included: the separate BreakerBanks worker owns it. No control slot is filled or hidden; no switch, instrument, support, panel datum or window is moved. No hatch operation, simulation, emissive effect, input target, collision or light is introduced. All seven groups can be removed independently.
+No breaker-strip hardware is included: the separate BreakerBanks worker owns it. No control slot is filled or hidden; no switch, instrument, support, panel datum or window is moved. No hatch operation, simulation, emissive effect, input target, collision or light is introduced. All detail groups can be removed independently.
+
+## Second detail phase
+
+The original seven groups retain identical mesh/topology/attribute fingerprints; `evidence/phase1-group-fingerprints.json` and `validation.json` record that check. Six added groups extend the same optional overlay:
+
+- `ForwardOverheadLiner`: two shallow cover frames and actual open mesh inserts below the existing forward roof bridge. The supplied museum photo and panorama notes show pale solid liner sections interrupted by mesh/perforated patches. These particular rectangular subdivisions, 12 mm mesh pitch, 1 mm bars and placements are visual approximations, not copied flight part geometry. They do not cut or replace the cabin roof.
+- `CDRAftCrownInserts` and `LMPAftCrownInserts`: similar narrow mesh/cover fields follow actual crown facet 2 behind the docking window and outboard of the transfer hatch. They are not claimed to be ventilation grilles or a working airflow path. The underlying liner remains intact.
+- `ForwardHeaderCableRun`: two sleeved routes with four simple retaining clamps above the forward control stack. The photos support exposed constrained routing in this region; specific circuit identities, end connectors and mirrored route details remain unknown. This is visible geometric texture, not a new instrument.
+- `ForwardHatchFittings` and `TransferHatchFittings`: simple fixed handgrips, mounting bosses and discrete fasteners relieve the otherwise blank closed hatch faces. Neither the exact handle design nor fastener count is established by these references. They are explicitly provisional and do not model a latch, pressure seal, lock or qualified hinge. They stay within the existing closed-leaf outlines. Disable/reparent these groups if a future host opens or removes a leaf; this overlay itself has no hatch state or animation.
+
+These additions preserve all existing openings and underlying boundaries. No source image is used as a texture. Fine mesh, handle proportions, fastener spacing and colors remain explicit approximations awaiting closer source drawings or suitably licensed detailed photographs.

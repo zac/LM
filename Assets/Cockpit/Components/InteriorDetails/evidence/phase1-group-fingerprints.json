@@ -1,0 +1,13 @@
+{
+  "source_commit": "9eca80d651189d7790e662c32a96cca76c7087eb",
+  "source_usdz_sha256": "1d6fef1c8815d902235bdb0df32d201dbc25ac95fb7bb6ff90852781ed918231",
+  "groups": {
+    "CDRLinerEdgeTrim": "dae03a9bf74f7566a81bddbd46949c29950e12e1099d67ea9eb6b7fb93812a5a",
+    "CDRLowerCableHarness": "b6568b29ce6b98bf35ce37aa1b85d1682ea8c5e6f7d7c5e70575567cb00fd9fe",
+    "CDRUpperLinerDetails": "dc32efb46cb576fec2b0930a0a637a1c599ad35334aa82e8cf59e465979d0a9d",
+    "ForwardHeaderTrim": "982198ef96b014ff28fd991b68747f069833ec727f6050ac628331b8c27a863c",
+    "LMPLinerEdgeTrim": "b2761eae25d6f6e6320297ea324dfb856b61f61fc6f76da6a55b740b64cba183",
+    "LMPLowerCableHarness": "f02ebce5df90dc39e12d5df1c30c873a5cf05562d7199795aedefe2d47cca861",
+    "LMPUpperLinerDetails": "a5150f0ef7c792eef7ea4931e843f7136a739a362ec8e60bcf9d9f2891117a44"
+  }
+}
