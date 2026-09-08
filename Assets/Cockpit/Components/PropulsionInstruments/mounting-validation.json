@@ -1,0 +1,120 @@
+{
+  "front_fit": [
+    {
+      "instrument": "Thrust",
+      "actual_panel_local_bounds_m": [
+        [
+          0.13599999886751174,
+          0.040999994748272,
+          -0.0060000004321336745
+        ],
+        [
+          0.16199999940395354,
+          0.12100000110920518,
+          0.010125000100932084
+        ]
+      ],
+      "altitude_rate_xy_separation_m": [
+        0,
+        0.013499996834434563
+      ]
+    },
+    {
+      "instrument": "Temperature",
+      "actual_panel_local_bounds_m": [
+        [
+          0.1639999997317791,
+          0.040999994748272,
+          -0.0060000004321336745
+        ],
+        [
+          0.1900000002682209,
+          0.12100000110920518,
+          0.009900000032037497
+        ]
+      ],
+      "altitude_rate_xy_separation_m": [
+        0,
+        0.013499996834434563
+      ]
+    },
+    {
+      "instrument": "Pressure",
+      "actual_panel_local_bounds_m": [
+        [
+          0.19200000059604644,
+          0.040999994748272,
+          -0.0060000004321336745
+        ],
+        [
+          0.21800000113248824,
+          0.12100000110920518,
+          0.010125000100932084
+        ]
+      ],
+      "altitude_rate_xy_separation_m": [
+        0.025999999463558188,
+        0.013499996834434563
+      ]
+    },
+    {
+      "instrument": "ThrustToWeight",
+      "actual_panel_local_bounds_m": [
+        [
+          0.18299999912083148,
+          -0.10750000596046448,
+          -0.0060000004321336745
+        ],
+        [
+          0.2150000009899959,
+          0.01749999403953552,
+          0.009900000032037497
+        ]
+      ],
+      "altitude_rate_xy_separation_m": [
+        0.01699999798834323,
+        0
+      ]
+    },
+    {
+      "instrument": "Quantity",
+      "actual_panel_local_bounds_m": [
+        [
+          0.13600000038091092,
+          0.12449999819044023,
+          -0.0060000004321336745
+        ],
+        [
+          0.17399999985750764,
+          0.16549999967217444,
+          0.009900000032037497
+        ]
+      ],
+      "altitude_rate_xy_separation_m": [
+        0,
+        0.0970000002766028
+      ]
+    },
+    {
+      "instrument": "Helium",
+      "actual_panel_local_bounds_m": [
+        [
+          0.17699999965075403,
+          0.13349999908357857,
+          -0.0060000004321336745
+        ],
+        [
+          0.21700000131782143,
+          0.15649999912828205,
+          0.009900000032037497
+        ]
+      ],
+      "altitude_rate_xy_separation_m": [
+        0.010999998518265774,
+        0.10600000116974113
+      ]
+    }
+  ],
+  "status": "no overlap with accepted AltitudeRate or other Panel1 slots",
+  "limits": "provisional XY envelope only; backing registration overlap, full cabin sightlines and mechanical fit unqualified"
+}

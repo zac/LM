@@ -1,0 +1,16 @@
+{
+  "reference_meshes": 660,
+  "view": "Panel1 front, Y up",
+  "root_panel_local_offset_m": [
+    0.177,
+    0.105,
+    0.008
+  ],
+  "AltitudeRate_panel_local_offset_m": [
+    0.125,
+    -0.045,
+    0.008
+  ],
+  "reference_color": "blue-gray AltitudeRate; gray real CommanderPanels and PanelInventory",
+  "limitations": "inspection-only neutral source references, no runtime bindings, no full cabin or headset view; peer assets unchanged"
+}

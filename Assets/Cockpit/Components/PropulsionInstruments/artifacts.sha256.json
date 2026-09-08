@@ -1,0 +1,121 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "EVIDENCE.md": {
+      "bytes": 4287,
+      "sha256": "b2b1c7f4bb351241b9a3e02771a1cb38a834d534b11a9b33345cfb44b224d536"
+    },
+    "HANDOFF.md": {
+      "bytes": 6422,
+      "sha256": "11cf88dfdda9dfc5aa6b8b8cf4d90747ebb9ffe635eec8c96d3b0bb8b4a3fee7"
+    },
+    "PropulsionInstruments.blend": {
+      "bytes": 355700,
+      "sha256": "2bbd14108e02193de1807f23c7d7ccfc46e73a3dfae28d5a61a16d450bde25ff"
+    },
+    "PropulsionInstruments.usda": {
+      "bytes": 1399517,
+      "sha256": "df3f770beddd330e9538da28608ef68494a5cc72b690573bac82221421eeddc9"
+    },
+    "PropulsionInstruments.usdc": {
+      "bytes": 172428,
+      "sha256": "3fb105cce7695a207323bca17ecfa3e49820a3a5c524e923d63ab0bc349c88fc"
+    },
+    "PropulsionInstruments.usdz": {
+      "bytes": 172594,
+      "sha256": "9eedc3e28ebc5be2b5da07c5c5ff99176c17df66df974879d0348d8061d8d1e8"
+    },
+    "build.py": {
+      "bytes": 10321,
+      "sha256": "ae33dfb1bd165caf72eb076847626c321501c237869808a72e6272ee1bb4e405"
+    },
+    "evidence/AltitudeRate-mounting.json": {
+      "bytes": 2909,
+      "sha256": "4097a28fe553c1d478ebe53ad3bbda84855f39ae8c19b6d712b2b99535a12bcf"
+    },
+    "evidence/LM-Panel1.jpg": {
+      "bytes": 178628,
+      "sha256": "03f420589d23e14b8196aca4a6c088f0aa481e54bce54f02799641cd4fb14699"
+    },
+    "evidence/PanelInventory-inventory.json": {
+      "bytes": 190532,
+      "sha256": "f315bdcbd8a6e597231b33420652fb6297241bf3af7c585708f472583522ec49"
+    },
+    "evidence/SIGNAL_AUDIT.md": {
+      "bytes": 3052,
+      "sha256": "798d8d199389a824da2ce00dd7447d3aecc2e3cad60cfa8398fef47ba8be59c2"
+    },
+    "evidence/lm10-aoh-vol1-controls-excerpts.manifest.json": {
+      "bytes": 4117,
+      "sha256": "102c0570c83f17d1d03ac19408210862f5a4686ff864b78ac745f9a9710650d8"
+    },
+    "evidence/lm10-aoh-vol1-controls-excerpts.pdf": {
+      "bytes": 6974978,
+      "sha256": "6194242b2dd076a469474d5bcdb5f4a6bddf9929aedf543d8911fd5f9ca63e2c"
+    },
+    "evidence/signal-audit-files.json": {
+      "bytes": 669,
+      "sha256": "78e93f4987557abfb696a423d7d5380dd50910161b0b9b6cebdf9d5e35c591e0"
+    },
+    "evidence/tnD6722.pdf": {
+      "bytes": 666829,
+      "sha256": "9b79e66083a17824b41622c1d7f361c218128a9b9dbbe86b10b1bed4277ef054"
+    },
+    "evidence/tnD6722.txt": {
+      "bytes": 98127,
+      "sha256": "2adcee5febe688e6a4d02d1070d2a4f3beff72f9cd7be30caeb77a623816fcc2"
+    },
+    "hash_artifacts.py": {
+      "bytes": 543,
+      "sha256": "9fd345607b311773c5a9bb3afadd6b8949f20bfec394b6001604386dba85995f"
+    },
+    "interface.json": {
+      "bytes": 12516,
+      "sha256": "6eaff875dd82a0a2b50bc7bdb5d9899a1856475d3352addeb63affb8761f4ad7"
+    },
+    "mounting-validation.json": {
+      "bytes": 2724,
+      "sha256": "78733533e5b16ef65600ef654ff9413471732c52abca9b85ed86c57ef73a8b2a"
+    },
+    "native-validation.json": {
+      "bytes": 340,
+      "sha256": "a087a540dcc03b53ab5dd295836c0f3f34d225d5a78606f8f6b010d36be049ca"
+    },
+    "review/README.md": {
+      "bytes": 1134,
+      "sha256": "0411a5e00baafa92696006a3fa3d5481a145769356dfcdb091f9c0ffa4b30d0f"
+    },
+    "review/fit-metadata.json": {
+      "bytes": 441,
+      "sha256": "e9f6e5e4f0da6b40b5d84dc7eb1d721b6648cba0c473743173789dc30edde54b"
+    },
+    "review/neutral-unavailable.png": {
+      "bytes": 1020946,
+      "sha256": "d928d52aaabe2e3d739f6158e55be17098226184832abc55dfd0d2d3baba53a8"
+    },
+    "review/panel1-fit.png": {
+      "bytes": 1409661,
+      "sha256": "2c139364b385e4558d8ffa9e6dfa0ddeb0b55f162b4446ff8d06ae9ecdc6f1f9"
+    },
+    "review/synthetic-layout-example.png": {
+      "bytes": 1026670,
+      "sha256": "7ca5894460f6d7e3fff31a7699c29e07ba298182515e223a9341e1ccf00ec491"
+    },
+    "review_fit.py": {
+      "bytes": 3086,
+      "sha256": "3ea7a39da815fb66051e5357c5fad5b167673395d8a282a48a362ef6b2f53bb4"
+    },
+    "validate.py": {
+      "bytes": 6180,
+      "sha256": "fee55bae6af2346291f4010015520c0a5d3fbcba317dbfdf838849d67b4fad7f"
+    },
+    "validate_native.swift": {
+      "bytes": 3285,
+      "sha256": "d5605fcd7660c0d03308937944843a45665b0c182f1fcfd0f87ff58e9d9bc014"
+    },
+    "validation.json": {
+      "bytes": 205750,
+      "sha256": "d180cfbf8e770a30b6552636f5588969aeec500d18196d48a7ebad68760ef66f"
+    }
+  }
+}

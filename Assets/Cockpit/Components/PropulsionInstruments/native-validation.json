@@ -1,0 +1,11 @@
+{
+  "assertions" : 240,
+  "independent_segments" : 56,
+  "native_load" : "PASS",
+  "needle_channels" : 7,
+  "neutral_unavailable" : "PASS; all moving indicators parked",
+  "platform" : "macOS RealityKit",
+  "roots_preserved" : "PASS",
+  "simulation_sources" : "NOT SUPPLIED; asset does not fabricate readings",
+  "visionOS" : "NOT TESTED"
+}
