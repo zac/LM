@@ -9,7 +9,7 @@ Authorized 2026-09-08. Baselines: LMKit main 4ac9e3e; LM cockpit/integration d49
 | 1 | Panel1__RangeThrust | Altitude and altitude-rate instrument only, with separately addressable moving scales, fixed pointers, bezel and source-backed legends | Fills the primary descent readout. LM already exposes altitudeMeters and verticalSpeedMetersPerSecond. Verify display units, scale motion, sign, range and source validity; simulation truth is not automatically a modeled radar signal. Defer thrust/chamber-pressure and T/W behavior. |
 | 2 | Panel3__Stability + Panel5__Engine | Correctly placed attitude-mode and DES RATE controls, reusing ControlLibrary where hardware matches | PoweredDescentSession already has attitudeMode and setROD; CrewControlPanel uses both. Verify actual subcontrol location against source drawings, since inventory regions are approximate. Preserve existing AGC routing, supported modes, spring return and release on cancellation/pause/scene exit. No abort, +X translation or manual-throttle implementation. |
 | 3 | Panel1__CrossPointer | One commander cross-pointer with independently addressable needles and a documented supported landing display mode | Makes lateral/forward motion visible alongside altitude/rate and FDAI. Vehicle velocity exists, but aircraft/display coordinate conversion, scale and selected source require explicit mapping. No rendezvous/AGS modes without supported data. Resolve mapping with source review before binding; do not substitute unqualified axes. |
-| 4, parallel | Panel11__Region1 through Region5; Panel16 later | Repeated breaker rows, labels and shallow mounting detail from the existing library | Strong visual density with reused geometry. Static hardware only; no invented electrical simulation. Begin with one commander strip. Avoid changing Cabin or the shared inventory datum. |
+| 4, parallel | Panel11__Region1 through Region5; Panel16__Region1 through Region4 | Repeated breaker rows, labels and shallow mounting detail from the existing library | Strong visual density with reused geometry. Static hardware only; no invented electrical simulation. Both commander and pilot banks are delivered. Avoid changing Cabin or the shared inventory datum. |
 
 ## Parallel work and integration
 
@@ -61,4 +61,18 @@ PGNS MODE CONTROL is on Panel 3 (AOH printed 3-65 / PDF 661), so use Panel3__Sta
 
 All five worktrees started at ee3a19f. Later user correction removes all cutoffs from that historical plan commit. Worker commits are reviewed and merged preserving history; coordinator alone publishes main. LM runtime integration proceeds in cockpit/integration with a separate read-only signal-source review.
 
-DES RATE source refinement: ad013 depicts an unplacarded switch on the engine-button guard/housing. The worker is evaluating Panel5__Engine partial mounting and ACA clearance rather than inventing a Translation-panel placard; no engine-button behavior is included.
+DES RATE source refinement: ad013 depicts an unplacarded switch on the engine-button guard/housing. The accepted delivery uses Panel5__Engine partial mounting, with sampled ACA clearance checked. It adds no Translation-panel placard or engine-button behavior.
+
+## Accepted model deliveries
+
+All five branches are merged and packaged in LMKit `1285040` (published). Component source revisions:
+
+- AltitudeRate: `7670439d0b053b3bcf98d964f6b3c03601c4e573`.
+- DescentControls: `9e598a7`.
+- CrossPointer: `daf7f32983534da17d8fcc21810cc3c05fd0fa11`.
+- InteriorDetails: `9eca80d651189d7790e662c32a96cca76c7087eb`.
+- BreakerBanks: `975f1dbb297e008f31e8d86ee5d4aee206a477da`.
+
+Native package validation passes. Independent new-component geometry checks exclude cross-component overlaps at the tested neutral poses and find no obstruction in 20 representative face rays. See `Docs/Validation/CommanderInstruments/`. App-level state/input and native combined visual acceptance are recorded in LM's phase evidence.
+
+The phase adds four partial functional regions (altitude/rate, cross-pointer, mode, DES RATE), nine optional breaker regions, and seven removable detail groups. The shared inventory's original blank asset stays unchanged; runtime installation records occupancy and suppresses only the correct defaults. It remains a replaceable framework for later equipment, not a completed cabin or electrical system.

@@ -3,7 +3,7 @@
   "date": "2026-09-08",
   "components": {
     "AltitudeRate": "7670439d0b053b3bcf98d964f6b3c03601c4e573",
-    "DescentControls": "9e598a7",
+    "DescentControls": "9e598a7477288f9b875402a287764849ba0f4be6",
     "CrossPointer": "daf7f32983534da17d8fcc21810cc3c05fd0fa11",
     "InteriorDetails": "9eca80d651189d7790e662c32a96cca76c7087eb",
     "BreakerBanks": "975f1dbb297e008f31e8d86ee5d4aee206a477da"
@@ -101,6 +101,26 @@
     "Dimensions and mechanical seating provisional",
     "Display simulation source and polarity qualifications remain explicit; no new AGC or LMCore semantics",
     "Breaker circuits and fittings have no live behavior",
-    "Combined LM integration validation pending; physical Vision Pro untested"
-  ]
+    "Physical Vision Pro untested; simulator acceptance recorded in consuming LM"
+  ],
+  "tested_package_revision": "1285040",
+  "combined_geometry": {
+    "report": "Docs/Validation/CommanderInstruments/CombinedGeometry/REPORT.md",
+    "new_component_pairs": 15,
+    "mesh_bound_overlaps": 0,
+    "representative_eye_rays": 20,
+    "blocked_by_other_new_components": 0,
+    "scope": "neutral authored new components; no renderer or motion/hand/eye-box qualification"
+  },
+  "consumer_validation": {
+    "repository": "https://github.com/zac/LM",
+    "branch": "cockpit/integration",
+    "source_revision": "5ec10b8404130b1b0cefdbdc28d93aa3d221ec4a",
+    "passed_tests": 64,
+    "failed_tests": 0,
+    "skipped_tests": 0,
+    "platform": "visionOS 26.5 Simulator",
+    "evidence": "Docs/Validation/CommanderInstruments/README.md",
+    "startup_lighting": "Mission lighting consistent before and after terrain load; temporal capture inspected"
+  }
 }
