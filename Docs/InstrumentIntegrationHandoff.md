@@ -19,3 +19,29 @@ Validation in progress: initial generic visionOS simulator build passed; targete
 FDAI attitude integration follows this checkpoint. Source-model corrections, mechanical fitting and the master cabin remain coordinator-owned.
 
 Test-target baseline reconciliation: two existing LPD assertions named uncommitted AGC constants. They now use the identical CH31 bit masks (positive pitch 0o1, positive roll 0o20) inline, preserving assertions without importing the shared dirty change. This does not establish that the unrelated LPD feature passes. The skill runner also emitted the wrong `-only-testing` argument form; a temporary runner copy uses `-only-testing:<selector>`. No skill files were changed.
+
+## FDAI adapter
+
+DSKY checkpoint is `11572c8`. The neutral `LMKitAssets.fdaiURL` replaces the legacy sphere and fixed procedural markers atomically after hierarchy validation. Removed the cockpit's separate FDAI SwiftUI overlay. The console FDAIPanel remains unchanged outside this cockpit.
+
+The imported UV zero meridian faces +Z, positive latitude is +X, and positive longitude is toward -Y. Transforming the legacy GASTA motion basis by -90° around Z maps old Y to new X and old X to new -Y. Thus the new ball motion is `Rz(-CDUX) * Ry(CDUZ) * Rx(-CDUY)`, with **no legacy +90° texture-alignment rotation**. This keeps the existing `LMIMUGimbalMap.cduRadians` reference convention (identity/site-local stable frame); old research recommending a PDI-relative reset conflicts with current source and is not applied. REFSMMAT/ORDEAL selector behavior is not added.
+
+Only the ball pivot rotates. Fixed housing/reticle are independent. The six rate/error pointer pivots and separate roll bug are explicitly hidden/unbound: current app selection, units, signs and calibration are not established. Their modeled sweep is not a spacecraft measurement. No zero indication or independent roll-reference behavior is invented.
+
+FDAI uses unit scale at the existing app FDAI mount, with the asset's local ball center retained at z=-8 mm. Its smaller ball/face and provisional seating datum are accepted only as visual registration; panel aperture, rear clearance and historical fit are not qualified.
+
+## Validation ledger
+
+- DSKY checkpoint: four instrument tests passed on visionOS 26.5 simulator (native resource binding, all keys, PRO cancellation, display masks/lamps).
+- FDAI first pass: seven instrument tests passed, including ±30°/±85° pitch/yaw/roll, explicit authored UV points, composition, reference cancellation, native fixed/pivot independence and hidden unsupported needles.
+- Shared LMKit advanced to `75bdea7` during validation. Both dependencies are now isolated git archives of the required exact revisions; final validation uses fresh derived data. The archive operation supplied hydrated resources. No dependency branch was switched.
+- Existing asset validation is reused: DSKY 276 authoring checks and FDAI 1,012 checks; no Blender render/bake repeated.
+- Final tests additionally inspect live material replacement/restoration and all pairwise key-target spacing. Simulator visual smoke and final fresh build results follow below.
+
+### Final acceptance evidence
+
+Fresh pinned-dependency simulator build and targeted test action passed on visionOS 26.5 (23O470), arm64: **7 passed, 0 failed, 0 skipped**, confirmed by xcresulttool rather than runner exit text. Summary: `Docs/Validation/InstrumentIntegration-tests.json`. Local result bundle: `/tmp/lm-instrument-final/Logs/Test/Test-LM-2026.09.08_12-16-12--0700.xcresult`. Generic simulator app build also passed earlier. Existing unrelated concurrency warnings in lunar test files remain; the entire LM test suite was not run.
+
+Visual smoke: final app installed and launched with `--terminal-descent-cockpit` on isolated simulator `2F598E08-CF7D-43D7-8203-B0AB65897849` (LM Instruments Smoke 25f3). Screenshot `/tmp/lm-instruments-smoke.png` shows the imported FDAI ball, housing and fixed frame, with no old overlay. DSKY is below the initial camera view; its rendered face was not visually qualified. AXe describe-ui failed with “No translation object returned for simulator”, so no simulator pinch/key interaction is claimed. Native tests prove shipping DSKY hierarchy, per-key input components, nonoverlapping boxes, identity resolution and material state changes. This remains partial visual acceptance, not a full cockpit image/interaction qualification.
+
+Remaining gates: Vision Pro gaze/pinch ergonomics, PRO interaction in headset, neighboring-key selection, stereo scale, materials/transparency/brightness, and frame time; DSKY camera/visual smoke; mechanical fitting; independent FDAI rate/error calibration and roll-reference linkage. No shared AGC/LMCore, LMKit source models, cabin assembly, terrain or exterior behavior was edited. No new binary assets are required.

@@ -34,13 +34,10 @@ struct TerminalDescentCockpitView: View {
     )
 
     var body: some View {
-        RealityView { content, attachments in
+        RealityView { content in
             content.add(station.commanderEntryAnchor)
-            if let fdai = attachments.entity(for: "commander-fdai") {
-                station.mountFDAI(fdai)
-            }
             applySceneState()
-        } update: { content, attachments in
+        } update: { content in
             _ = recenterGeneration
             for retiredAnchor in station.takeRetiredCommanderEntryAnchors() {
                 content.remove(retiredAnchor)
@@ -48,16 +45,7 @@ struct TerminalDescentCockpitView: View {
             if !content.entities.contains(where: { $0 === station.commanderEntryAnchor }) {
                 content.add(station.commanderEntryAnchor)
             }
-            if let fdai = attachments.entity(for: "commander-fdai") {
-                station.mountFDAI(fdai)
-            }
             applySceneState()
-        } attachments: {
-            Attachment(id: "commander-fdai") {
-                FDAIPanel(session: appModel.session, presentsFlightFace: true)
-                    .frame(width: 205, height: 205)
-            }
-
         }
         .gesture(acaGesture)
         .simultaneousGesture(rodGesture)
