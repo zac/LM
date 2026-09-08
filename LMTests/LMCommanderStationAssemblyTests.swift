@@ -125,6 +125,30 @@ struct LMCommanderStationAssemblyTests {
         #expect(!blank.isEnabled && peerBlank.isEnabled)
     }
 
+    @Test func planningLayerRetainsTextMeshesAndTogglePreservesAllBlankStates() throws {
+        let assembly = try LMCommanderStationAssembly.load()
+        let labels = try LMCommanderStationAssembly.path(assembly.inventory.planning_label_layer, in: assembly.panelInventory)
+        let slots = assembly.inventory.panels.flatMap(\.slots)
+        let blanks = try slots.map { try LMCommanderStationAssembly.path($0.default_placeholder_node, in: assembly.panelInventory) }
+        let states = blanks.map(\.isEnabled)
+        for slot in slots {
+            let label = try LMCommanderStationAssembly.path(slot.label_node, in: assembly.panelInventory)
+            let models = LMCommanderStationAssembly.descendants(label).compactMap { $0.components[ModelComponent.self] }
+            #expect(!models.isEmpty)
+            #expect(models.allSatisfy { !$0.materials.isEmpty && !$0.mesh.contents.models.isEmpty })
+        }
+        #expect(!labels.isEnabled)
+        assembly.setPlanningLabelsVisible(true)
+        #expect(labels.isEnabled)
+        #expect(blanks.map(\.isEnabled) == states)
+        assembly.setPlanningLabelsVisible(false)
+        #expect(!labels.isEnabled)
+        #expect(blanks.map(\.isEnabled) == states)
+        // These checks establish retained geometry and app state only. Authored USD
+        // visibility can still suppress rendering; packaged visibility and simulator
+        // captures must verify the labels actually appear when enabled.
+    }
+
     @Test func rejectsMisregisteredWindowsAndPanelInterfacesBeforeInstall() throws {
         let invalid = try Entity.load(contentsOf: LMKitAssets.windowsURL)
         let pane = try LMCommanderStationAssembly.unique("CDR_Window_Inner", in: invalid)
