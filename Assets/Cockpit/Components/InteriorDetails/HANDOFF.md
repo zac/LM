@@ -1,38 +1,35 @@
-# InteriorDetails handoff
+# InteriorDetails phase 2 handoff
 
-Branch `cockpit/interior-details`, isolated worktree `/private/tmp/lmkit-interior-details`, baseline `ee3a19f21e31d77645e7b6451db800d2b3d60f5e`. Only `Assets/Cockpit/Components/InteriorDetails/` is owned/changed. No merge, push, package refresh, shared-source edit or peer asset save performed.
+Branch `cockpit/interior-detail-phase2`, isolated `/private/tmp/lmkit-interior-detail-phase2`, baseline LMKit `035c5b3`. Only `Assets/Cockpit/Components/InteriorDetails/` changed. No shared resources, peer binaries, simulator, merge or push.
 
-## Delivery
+## Result and contract
 
-Optional additive `InteriorDetails.usdz`, editable `InteriorDetails.blend`, reproducible `build.py`, USD intermediates, `interface.json`, `PROVENANCE.md`, geometry/native validators and small combined review images. Seven independently removable groups: two lower cable harnesses, two lower liner trims, two upper crown cable/seam groups and one forward header trim.
+The existing seven accepted groups remain unchanged. Six additional optional groups add forward overhead mesh/cover fields, aft-crown mesh inserts, a forward header cable pair, and provisional static fittings on the two closed hatch leaves. Thirteen independently removable groups total. Original mesh/topology/attribute fingerprints compare identically to accepted component commit `9eca80d651189d7790e662c32a96cca76c7087eb`; source evidence and exact fingerprints are included.
 
-Root `/InteriorDetails` is identity under Cabin: meters, +X right, +Y up, -Z forward. No panel transform, slot replacement or blank hiding. The optional resource may fail or be omitted without changing the existing foundation or instruments. No lights, input, collision, physics, animations or simulation. No breaker details; separate BreakerBanks component owns that scope. Material appearance is neutral and uncalibrated.
+Identity `/InteriorDetails`, meters, +X right, +Y up, -Z forward, parent Cabin coordinate frame. No panel transform, slot fill/hiding, input, collision, physics, lights or simulation. Existing root and group identifiers retained. Hatch fittings assume the current static closed leaves; a future opening/removal must disable or reparent those two groups. All geometry is optional and independently removable.
 
-**USDZ SHA-256:** `1d6fef1c8815d902235bdb0df32d201dbc25ac95fb7bb6ff90852781ed918231`
+Final USDZ SHA-256: `069cdfb9923a6953f1ce4ffc5053a948e0c4f76840866553435d778dfd84b201`.
 
-**Budget:** 7,024 triangles, 278 meshes, 7 materials; no textures or text geometry. Native hierarchy contains 286 entities including root/groups. Under the proposed 15,000-triangle budget. Blender 5.2.1 LTS build `9e2066aef7ef`.
+Budget: **12,244 triangles**, 557 meshes, 9 materials, no textures or text mesh. Native hierarchy 571 entities. Below the original 15,000-triangle target. Blender 5.2.1 LTS build `9e2066aef7ef`. Exact groups/bounds in `interface.json`.
 
-## Geometry/source decisions
+## Evidence and design limits
 
-All dimensions and paths are provisional source-guided reconstruction. Three supplied photos and the coordinator's LM-2 panorama notes were inspected; no exact Apollo 11 cable routes or hardware dimensions can be inferred. Existing twelve-facet Cabin crown geometry supplies the upper mounting surface. Forward header trim is on the existing `Forward_Above_Hatch` plane. Slots and existing structural supports constrain trim locations; no underlying asset is changed. Cables are capped visual segments with unknown destinations rather than invented subsystem connector identities. Mirrored station treatment is explicitly provisional.
-
-Actual bounds for every group are in `interface.json`. Lower routes remain around |X|1.14–1.17, Y.21–.31; upper details around |X|.73–.90, Y1.84–2.01; forward header Y1.87–2.11 at Z-1.01. Header returns were moved inward to clear center-stack supports. The forward lower seam straps stop below side tray slot envelopes.
+Shared user photos and coordinator Smithsonian LM-2 observations guide liner segmentation, restrained cable routing and simple hatch fittings; see `PROVENANCE.md`. Mesh pitch, plate proportions, routes, handle forms and fastener placement/count are provisional. No vent functionality, latch/pressure-seal/hinge design or mission-accurate hardware identity is implied. Open mesh patches sit ahead of existing liner surfaces; they do not create new holes in the shell. Original functional/instrument/window/breaker assets are untouched.
 
 ## Validation performed
 
-- USD ARKit compliance: no errors, failed checks or warnings; meters/Y-up, identity root, no camera/light/physics/input schema.
-- All 278 component meshes are closed manifold solids with positive signed volume after outward-normal normalization.
-- Exact triangle surface comparison: **zero crossing pairs** against the pinned Cabin, WindowsLPD, PanelInventory, CommanderPanels and neutral mounted ACA assets. Exact paths and SHA-256 input hashes are in `validation.json`.
-- Conservative oriented slot-envelope comparison for all 66 existing slot reservations: **zero candidate overlaps**. This is independent of the fact that slot blanks are thinner than future instruments.
-- Native macOS RealityKit loads the actual USDZ, verifies identity root, independently toggles all seven groups, and inspects all 286 entities for absence of collision/physics/input/light components. `native-validation.json` records actual native bounds.
-- Small Workbench reviews were visually inspected: lower CDR/LMP context, CDR closeup, upper CDR crown and default CDR forward. No new gross window occlusion or standing-space obstruction appears. Header strips are deliberately subtle; upper runs become clearer when looking toward the side crown. Material/illumination/headset appearance is not qualified by Workbench.
+- USD ARKit compliance: zero errors, warnings and failed checks. Identity root/meters/Y-up.
+- All 557 mesh solids are manifold with positive signed volume.
+- Zero actual triangle surface crossings against accepted Cabin, WindowsLPD, PanelInventory, CommanderPanels, neutral ACA, DSKY, FDAI, AltitudeRate, CrossPointer, AttitudeMode, DescentRate and BreakerBanks at contracted transforms. Input paths/hashes are in `validation.json`.
+- Zero new-vs-other detail-group surface crossings; designed contacts within a single fitting/group remain intentional.
+- Zero conservative overlaps with any of 66 reserved slot envelopes.
+- **145 representative window rays** (center and 70%-inset vertex samples from CDR/LMP design eyes, including docking) encounter no InteriorDetails geometry. This is sampled obstruction checking, not full optical acceptance.
+- Original seven group fingerprints preserved exactly.
+- macOS native RealityKit loads the final USDZ, checks identity root and independent visibility for all 13 groups and inspects all 571 entities for absence of input/physics/collision/light components.
+- Small Workbench crew, upper, hatch and crown views visually inspected. Mesh fields, cable clamps and handles read as shallow additions; no new gross window or standing-space obstruction appears. No heavy rendering or source-assembly save.
 
-## Review semantics and limitations
+## Review semantics and remaining work
 
-Review images include the cabin/windows/inventory/commander surround context but leave DSKY/FDAI as fallback blanks; this worker does not replicate live runtime instrument installation. Glazing is omitted for Workbench and the coordinator-known duplicate CommanderPanels backing is hidden. Planning labels stay hidden. No authoring source is saved from these review assemblies.
+Review images use original cabin/windows/inventory/surround context with DSKY/FDAI fallback blanks, not current app state. Glazing and coordinator-known duplicate panel backing are hidden; labels remain hidden. Default commander plus dedicated overhead/hatch angles are included. App lighting/material differences and fine mesh aliasing need coordinator native/headset review.
 
-Not tested: Vision Pro, simulator/app integration, future detailed instrument/breaker combinations, continuous human/hand sweep, optical eye-box, exact support/fastener seating or fabrication fit. Native load and geometry checks do not establish runtime frame cost or historic mission accuracy. All surfaces are visual; absence of physics means they cannot obstruct a simulated body through collision, while physical human clearance still needs review.
-
-## Coordinator actions
-
-Cherry-pick the component commit, refresh package resources through the coordinator-owned tooling, expose the optional URL/interface, and add identity under Cabin after load validation. Do not hide any fallback slot. Include it in the next combined runtime visual acceptance, retaining the existing live instruments. If any future equipment needs this volume, hide the affected named detail group or revise its provisional route; functional equipment has priority.
+No simulator or Vision Pro, continuous actuator/human sweep, fabrication fit, hatch interaction or full optical calibration qualified. Geometry tests compare exact input snapshots; later peer revisions require appropriate integration checks. Coordinator owns package resource synchronization and optional runtime installation. Omission/load failure must preserve all functional assets. No push or merge performed.
