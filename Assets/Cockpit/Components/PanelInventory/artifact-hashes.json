@@ -24,8 +24,8 @@
     "bytes": 20645
   },
   "validate.py": {
-    "sha256": "1a6c67732533cb8a1032e5d13d402037903ae4b2c3fa02a33c47662ed72d5e3c",
-    "bytes": 7904
+    "sha256": "88948f43bda8427bc357f49c3b419ee4ced00a7d26952a135c39ff576f96a0af",
+    "bytes": 10212
   },
   "validate_native.swift": {
     "sha256": "b4ef3b862531fc5795c5dcdca6dfe9c56ac683499f7193c77427fd5b1effb536",
@@ -46,5 +46,13 @@
   "windows-clearance.json": {
     "sha256": "4e61651dab468263a675a88048d1ec7c05c656c187aded0391bdd236f39a6059",
     "bytes": 205
+  },
+  "check_validator.py": {
+    "sha256": "be13310ef0d95f8352945bf2220711d8a1481fb4f8bbce68dc665258bb61ede6",
+    "bytes": 4421
+  },
+  "evidence/validator-policy-check.json": {
+    "sha256": "d70d3f4b9c56befb7b061bef1fac0c2240adfc50f5270ecdbaa19d69588cc855",
+    "bytes": 2199
   }
 }

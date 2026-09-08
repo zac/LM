@@ -1,0 +1,98 @@
+{
+  "scope": "synthetic policy/error-path checks only; no geometry rerun or render",
+  "ACA_revision": "750caea3dea7feeaf5ffea15eedcf2d031cca0be",
+  "ACA_sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5",
+  "ACA_bytes": 96068,
+  "cases": [
+    {
+      "case": "existing passing reports",
+      "expected_exit": 0,
+      "actual_exit": 0
+    },
+    {
+      "case": "nonzero failure count",
+      "expected_exit": 1,
+      "actual_exit": 1
+    },
+    {
+      "case": "failed individual check despite zero counter",
+      "expected_exit": 1,
+      "actual_exit": 1
+    },
+    {
+      "case": "compliance errors",
+      "expected_exit": 1,
+      "actual_exit": 1
+    },
+    {
+      "case": "compliance failed checks",
+      "expected_exit": 1,
+      "actual_exit": 1
+    },
+    {
+      "case": "neutral ACA crossing",
+      "expected_exit": 1,
+      "actual_exit": 1
+    },
+    {
+      "case": "sampled ACA crossing",
+      "expected_exit": 1,
+      "actual_exit": 1
+    },
+    {
+      "case": "ACA conflict status",
+      "expected_exit": 1,
+      "actual_exit": 1
+    },
+    {
+      "case": "window crossing",
+      "expected_exit": 1,
+      "actual_exit": 1
+    },
+    {
+      "case": "malformed report exception",
+      "expected_exit": 1,
+      "actual_exit": 1
+    },
+    {
+      "case": "missing report exception",
+      "expected_exit": 1,
+      "actual_exit": 1
+    },
+    {
+      "case": "reviewed hydrated ACA bytes",
+      "expected_exit": 0,
+      "actual_exit": 0
+    },
+    {
+      "case": "reviewed ACA pointer and cached bytes",
+      "expected_exit": 0,
+      "actual_exit": 0
+    },
+    {
+      "case": "changed hydrated ACA with same size",
+      "expected_exit": 1,
+      "actual_exit": 1
+    },
+    {
+      "case": "different LFS pointer digest",
+      "expected_exit": 1,
+      "actual_exit": 1
+    },
+    {
+      "case": "corrupted cached ACA behind matching pointer",
+      "expected_exit": 1,
+      "actual_exit": 1
+    },
+    {
+      "case": "missing cached ACA exception",
+      "expected_exit": 1,
+      "actual_exit": 1
+    },
+    {
+      "case": "geometry main invokes digest and result gates",
+      "pass": true
+    }
+  ],
+  "result": "PASS"
+}
