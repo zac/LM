@@ -16,10 +16,10 @@ one test suite, two thin app shells.
 
 | Step | State | Notes |
 |---|---|---|
-| 1 Package skeleton and file moves | Development complete; integration authorized | Runtime `3e94add` on `89ecb0f`. Tests, Apollo, contracts and journey pass. Fresh soak peak exceeds gate by 1.563 MiB; warm-highland incomplete. Owner authorized integration with qualification outstanding. |
-| 2 Decouple the six seams | Development complete, `f1f9767` | Release build and 45 focused tests pass; long qualification deferred by owner |
-| 3 Moon app target | Development complete, `e797590` | Release build and ordinary launch pass; both-ID tool tests pass; visual/performance qualification deferred |
-| 4 Tests and tools move into the package | Development complete on `lunar-map/step-4` | 231 package passes; host 85 passes and unchanged exempt P64 failure; combined 317 outcomes equal refreshed control. Both Release apps build; generator path dry runs pass. |
+| 1 Package skeleton and file moves | Development integrated, `3e94add` | Tests, Apollo, contracts and journey pass. Fresh soak peak exceeds gate by 1.563 MiB; warm-highland incomplete. Owner authorized integration with qualification outstanding. |
+| 2 Decouple the six seams | Development integrated, `f1f9767` | Release build and 45 focused tests pass; long qualification deferred by owner |
+| 3 Moon app target | Development integrated, `e797590` | Release build and ordinary launch pass; both-ID tool tests pass; visual/performance qualification deferred |
+| 4 Tests and tools move into the package | Development integrated, `de2cbb9` | 231 package passes; host 85 passes and unchanged exempt P64 failure; combined 317 outcomes equal refreshed control. Both Release apps build; generator path dry runs pass. |
 | 5 Optional: `LunarMapCore` split for macOS-hosted tests | Not started | §4 |
 | 6 Later: sibling repository split | Not started | §7 |
 | Baseline P64 test exemption | Owner accepted | `p64PROAndACAChangeLuminaryLandingTarget` fails unchanged on control with the same AGC state; handed to cockpit owner; no changes to that test or AGC |

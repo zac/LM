@@ -21,7 +21,7 @@ zoom-out stops at the handoff width, and leaving immersion restores the window.
 | 1 Window container and immersion gate | Landed in Simulator | 54 focused tests; 11 byte-identical Apollo captures; seven-stage portal journey including partial opacity. Physical gates remain open. |
 | 2 One camera model and gesture set | Landed; physical gates open | `4c8bd2a`: camera/gestures, 61 focused tests. Separate final Apollo adapter: 65 tests, 11/11 byte-identical ladder, eleven-stage journey and five exact restore cycles. Shared camera/ENU uses source-derived coverage bounds. Close-view faceting and physical acceptance remain open. |
 | 3 Scene stepping off the observation graph | Landed in Simulator | 63 focused tests; 11 byte-identical Apollo images; seven-stage portal journey; five restore cycles exact. Over-60s sample shows no SwiftUI update loop. Physical lifecycle/pacing gates remain open. |
-| 4 Coarse-first terrain and prefetch | Parked on `onezoom/D` | Rebased on the landed baseline; build/tests checked; concurrency 1/2/4 experiment and acceptance captures not run |
+| 4 Coarse-first terrain and prefetch | Parked on `onezoom/D` | Rebased for LunarMap integration; engine/Explorer compile and 12 affected tests pass; concurrency 1/2/4 experiment and acceptance captures remain open |
 | 5 Sliding region | Parked, not started, on `onezoom/F` | Branch reserves the final base only; resume after D acceptance; no sliding-region implementation |
 | 6 Tiled globe imagery | Landed by owner decision | 82 rebased tests, one journey, 11 exact Apollo PNGs and settled/contracts pass; completed triplicates retained with accepted regressions |
 
@@ -77,7 +77,7 @@ bundled; removing it is a separate owner bundle decision.
 | A Relief lighting and sun-dependent radiance | Landed in Simulator | 74 tests; three-run journey/soak pass; 11 exact Apollo PNGs; mission/daylight radiance within 1%; physical gates open |
 | B Free-standing disk and smaller portal | Landed in Simulator | 78 fresh tests; unchanged qualified executable; existing journey passes 10% callback margin, settled windows pass ≤16.70 ms, and 11 exact Apollo PNGs remain valid |
 | C Height-field gesture anchor | Landed in Simulator | 75 tests; retained three-run journey and fresh three-run soak pass; 0.003875 ms pick within 0.0005 m bound; 11 exact Apollo PNGs, settled and contract checks pass |
-| D Coarse-first terrain, plan Step 4 | Parked on `onezoom/D` | 97 focused tests; final Release build check; next experiment is concurrency 1/2/4, three warm dives each, ranked by regional ready time |
+| D Coarse-first terrain, plan Step 4 | Parked on `onezoom/D` | 97 tests passed before extraction; after package rebase 12 affected tests pass with engine/Explorer compilation. App build and broader qualification not repeated. Next: concurrency 1/2/4, three warm dives each, ranked by regional ready time |
 | E Tiled globe imagery, plan Step 6 | Landed by owner decision | Peak reduction accepted with reported regressions and 1.630 ms soak callback excess; fresh rebase gates pass |
 | F Sliding region, plan Step 5 | Parked, not started, on `onezoom/F` | No implementation; base branch only; 100 km pan/contact gate waits for D |
 
@@ -316,3 +316,15 @@ Physical Vision Pro, Release, from `MoonExplorerEntryAndImport.md` and
   https://developer.apple.com/videos/play/wwdc2024/10153/
 - What's new in visionOS 26, WWDC25:
   https://developer.apple.com/videos/play/wwdc2025/317/
+
+
+### LunarMap integration checkpoint, 2026-09-08
+
+Package development steps 1–4 are integrated into
+`terrain-realism-and-explorer` through `de2cbb9`, per the owner's request to
+finish development with lengthy validation documented as outstanding. This
+does not qualify package performance or Moon capture parity. See
+`LunarMapPackage.md` for the 317-outcome functional comparison, both ordinary
+Release executables, the retained Step 1 soak failure and the deferred gates.
+D remains a preserved candidate adapted to the new package paths; F remains
+unimplemented. No one-zoom terrain runtime changes were landed in this run.

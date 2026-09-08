@@ -633,3 +633,38 @@ tracked hand/head/gaze input, comfort, device CPU/GPU pacing, memory pressure,
 thermal behavior and long-session stability. Simulator results do not establish
 physical-device acceptance. The separate AGC modification and both user scheme
 files are preserved; no AGC code or cockpit tests were edited by this work.
+
+
+#### Integrated commits and preserved branches
+
+`terrain-realism-and-explorer` was fast-forwarded to runtime integration head
+`de2cbb94b7714d5c38f65a48af673f18ea5d0fa8`:
+
+| Development item | Commit | Preserved branch tip before final documentation |
+|---|---|---|
+| Package skeleton/resource seams | `3e94add` | `lunar-map/step-1` at `9778bd7` (includes stop checkpoint) |
+| Launch options and host actions | `f1f9767` | `lunar-map/step-2` at `f1f9767` |
+| Standalone Moon target | `e797590` | `lunar-map/step-3` at `e797590` |
+| Package tests and generator paths | `de2cbb9` | `lunar-map/step-4` at `de2cbb9` |
+
+The final documentation-only commit does not change either recorded Release
+executable. Exact final refs, worktree status and AGC state are retained in
+`/tmp/LM-LunarMap-2026-09-08/Development/final-state.json`.
+
+
+Parked `onezoom/D` was rebased onto the integrated runtime tree. Its validated
+runtime revision is `12c8a4ab70396d95e7e512e9ca51cc4418ef5d4f`; the subsequent
+rebase over this documentation-only checkpoint preserves that runtime tree.
+Mechanical adaptations moved its new test with `git mv`, redirected the
+existing finer-owner helper to its package location, and applied compiler-
+required `package` visibility to `prepareCoarse`. No algorithm changed.
+The engine and Explorer compile with 12 affected resolver/refinement tests
+passing (`Development/Parked-D-Tests-Accessible.xcresult`). Earlier dependency-
+path and compile failures are preserved in `Development/parked-d-tests*.log`;
+the temporary worktree now links to the same existing AGC checkout.
+The broader 97-test pre-package check and D app-build/capture/performance
+qualification were not repeated. D stays parked. Its next experiment remains
+concurrency 1/2/4 with three warm highland dives each, ranked by regional and
+per-generation ready time, followed by acceptance gates. F remains an
+unimplemented branch at the final base, pending D. Nothing from D or F was
+merged into the integrated apps.
