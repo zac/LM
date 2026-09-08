@@ -40,6 +40,23 @@ Evidence: `Docs/CommanderStationAssemblyHandoff.md`, `Docs/Validation/CommanderS
 - Publish the accepted assembly merge with its verification record, then scope hand-controller runtime installation in LM against accepted mounting and existing simulation input APIs. ACA runtime integration has now been dispatched below; TTCA remains an audit.
 - Do not infer switch/controller semantics from geometry names or invent unavailable dynamics. Component workers keep assigned asset-directory ownership; coordinator handles shared APIs and master assembly.
 
+## Enclosed interior phase dispatched — 2026-09-08
+
+Authoritative phase plan: LMKit `Docs/InteriorFoundationPhase.md` at `09364460e8be570338f3d39a07067fe2bee0b044`. LM source baseline `11f7335b73884ce8dd8ebe33583f666e2b329c72`.
+
+User correction supersedes earlier optical freeze: existing LPD assumptions are untrusted/provisional. Approximate appearance closer to hardware is acceptable. Review magenta/green scales; remove synthetic digital LPD indicator/readout and diagnostic eye overlays from normal historical view. Actual DSKY/AGC readouts remain real instrumentation. Historical appearance, numerical reconstruction and physical optical qualification must remain distinct.
+
+| Task | ID | Worktree / owned scope |
+|---|---|---|
+| Enclosed foundation | `01a082c7-5917-7ff0-b958-2e65d14d8903` | `/Users/zac/.codex/worktrees/6943/LMKit`, `cabin-enclosed-foundation`, Cabin only |
+| Windows/LPD | `01a082c7-6520-7c91-a2cd-b7424bd156cb` | `/Users/zac/.codex/worktrees/4155/LMKit`, `work/windows-lpd-enclosed`, WindowsLPD only |
+| Panel inventory | `01a082c8-0171-7a93-a11d-d49ee8136592` | `/Users/zac/.codex/worktrees/fc70/LMKit`, `codex/panel-inventory-enclosed`, PanelInventory only |
+| Historical presentation | `01a082c8-129a-7e72-bf03-7b482e54be97` | `/Users/zac/.codex/worktrees/556e/LM`, overlay/LPD presentation and focused tests; owns sole simulator slot |
+
+Cabin initial committed proposal `2fafa5bda020b83cb7e6dff7af1a45cf6f9b35fe`, `Cabin/interface-v1.json`, was shared with WindowsLPD and PanelInventory. Its old eye/pane/mount coordinates remain provisional and subject to the source audit. Proposed aft extension/closed hatch are visual layout choices. Final opening/eye/pane contract must be agreed before geometry installation. Metadata nodes should remain stable while old shell/window/reservation visuals are explicitly migrated.
+
+Panel schema separates Cabin-relative panel poses from parent-local equipment slots, placeholder meshes and optional PlanningLabels. External working instruments/surrounds are occupants, never duplicated in the blank model. Descent-ready closed-cabin state is the phase baseline, with optional inspection cutaways. Coordinator owns shared packaging, normal-interior promotion, placeholder fallback and combined verification; none of these new deliveries is complete yet.
+
 ## ACA and CommanderPanels integration — 2026-09-08
 
 - Panel delivery `6c8c271a1027d29edf24b17c6cd86b137e1e0a35` accepted as provisional visual surrounds, merged preserving original history and packaged in published LMKit `86aa71b4b9ed203f11e8b572e23da2b0285a0ad8`. Nine native package tests pass. Original source reports 286 geometry/transform/clearance checks; independent coordinator review confirmed artifacts, transforms and selected views.
