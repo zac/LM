@@ -39,4 +39,16 @@ public enum LMKitAssets {
     public static var cabinMountsURL: URL {
         Bundle.module.url(forResource: "mounts", withExtension: "json", subdirectory: "Cabin")!
     }
+    /// Standalone hand-controller prototypes; installation and input mappings are app-owned.
+    public enum HandController: String, CaseIterable, Sendable {
+        case aca = "ACA"
+        case ttca = "TTCA"
+    }
+    public static func handControllerURL(_ controller: HandController) -> URL {
+        Bundle.module.url(forResource: controller.rawValue, withExtension: "usdz", subdirectory: "HandControllers")!
+    }
+    /// Neutral origins are parent-local; demonstration offsets are not mechanical limits.
+    public static var handControllerInterfacesURL: URL {
+        Bundle.module.url(forResource: "interface", withExtension: "json", subdirectory: "HandControllers")!
+    }
 }

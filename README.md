@@ -4,6 +4,9 @@ Reusable lunar-module models and independently addressable cockpit components fo
 
 ## Initial components
 
+- **Hand controllers**: ACA and TTCA prototypes from `750caea`, via `LMKitAssets.handControllerURL(_:)` and `handControllerInterfacesURL`. Separate nested pivots support future input adapters; no runtime bindings or cabin placements are included. Neutral origins are parent-local. ACA has a program-level maximum-envelope reference; TTCA dimensions, mechanism coupling and motion limits remain provisional. Refresh accepted exports with `Tools/sync_hand_controllers.py`.
+
+
 - **Control library**: six reusable neutral control specimens from `3963737`: maintained/momentary toggles, guarded switch, rotary selector, circuit breaker and talkback. Load with `LMKitAssets.controlURL(_:)`; metadata is at `controlInterfacesURL`. Every mounting dimension is provisional and the generic hinged guard is not verified flown hardware. Detents, returns and indication semantics require per-panel application bindings. Refresh accepted exports with `Tools/sync_control_library.py`.
 - **Cabin skeleton**: optional open structural resource from `8956702`, available through `LMKitAssets.cabinSkeletonURL` and `cabinMountsURL`. Panel positions, shields, clearances and 20 mm pane cavity are provisional. It does not replace the running cockpit. **Manifest mount positions and rotations are relative to the Cabin root, including nested DSKY/FDAI nodes; they are not parent-local transforms.** Resolve the named nodes and convert coordinate spaces deliberately. Refresh with `Tools/sync_cabin.py`.
 
