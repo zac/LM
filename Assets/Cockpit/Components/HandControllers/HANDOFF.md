@@ -1,6 +1,6 @@
 # ACA and TTCA hand-controller components
 
-Worker branch `cockpit/hand-controllers`, starting at verified clean detached `75bdea77b57e0ae4971bb4ffbee21c4643e3b4cf`. Only `Assets/Cockpit/Components/HandControllers/` is owned/changed. New authored assets preserve the original repository history. Exact implementation commit is recorded by the following documentation-only delivery commit.
+Worker branch `cockpit/hand-controllers`, starting at verified clean detached `75bdea77b57e0ae4971bb4ffbee21c4643e3b4cf`. Only `Assets/Cockpit/Components/HandControllers/` is owned/changed. New authored assets preserve the original repository history. Exact implementation and validation commit: `5629523166bd03ff35244351fa852dd55a2127e1`. This following documentation-only delivery commit records that immutable asset revision.
 
 ## Deliverables and reproduction
 
