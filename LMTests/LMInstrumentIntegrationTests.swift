@@ -85,6 +85,70 @@ struct LMInstrumentIntegrationTests {
         #expect(Set(keys.map(\.rawValue)).count == 18)
         #expect(edges == [true, false])
     }
+    @Test @MainActor func sessionQueuePreservesCompletedTapsBehindDelayedPRO() async {
+        let queue = LMDSKYInputQueue()
+        let gate = InstrumentInputGate()
+        var events: [String] = []
+        func enqueue(_ key: DSKYKeyCode) {
+            queue.enqueue(key, sendKey: { events.append($0.label) }, sendPRO: { pressed in
+                events.append(pressed ? "PRO down" : "PRO up")
+                if pressed { await gate.wait() }
+            })
+        }
+        enqueue(.pro)
+        await gate.waitForArrival()
+        enqueue(.digit1)
+        enqueue(.digit2)
+        enqueue(.enter)
+        enqueue(.pro)
+        enqueue(.pro)
+        gate.open()
+        await queue.waitUntilIdle()
+        #expect(events == ["PRO down", "PRO up", "1", "2", "ENTR", "PRO down", "PRO up", "PRO down", "PRO up"])
+    }
+
+    @Test @MainActor func sessionQueueTeardownDropsPendingButWaitsForPRORelease() async {
+        let queue = LMDSKYInputQueue()
+        let pressGate = InstrumentInputGate()
+        let releaseGate = InstrumentInputGate()
+        var events: [String] = []
+        func enqueue(_ key: DSKYKeyCode) {
+            queue.enqueue(key, sendKey: { events.append($0.label) }, sendPRO: { pressed in
+                if pressed {
+                    events.append("PRO down")
+                    await pressGate.wait()
+                } else {
+                    events.append("PRO releasing")
+                    await releaseGate.wait()
+                    events.append("PRO up")
+                }
+            })
+        }
+        enqueue(.pro)
+        await pressGate.waitForArrival()
+        enqueue(.digit1)
+        enqueue(.pro)
+        queue.cancelPendingAndRelease()
+        queue.cancelPendingAndRelease() // Teardown is idempotent.
+        enqueue(.digit9) // New session input must not overtake the old release.
+        pressGate.open()
+        await releaseGate.waitForArrival()
+        #expect(events == ["PRO down", "PRO releasing"])
+        releaseGate.open()
+        await queue.waitUntilIdle()
+        #expect(events == ["PRO down", "PRO releasing", "PRO up", "9"])
+    }
+
+    @Test @MainActor func sessionQueueTeardownBeforeDispatchSendsNothing() async {
+        let queue = LMDSKYInputQueue()
+        var events: [String] = []
+        queue.enqueue(.pro, sendKey: { events.append($0.label) }, sendPRO: { events.append("PRO \($0)") })
+        queue.enqueue(.digit1, sendKey: { events.append($0.label) }, sendPRO: { events.append("PRO \($0)") })
+        queue.cancelPendingAndRelease()
+        await queue.waitUntilIdle()
+        #expect(events.isEmpty)
+    }
+
     @Test func importedFDAIKnownAxesAndCapApproaches() {
         let zero = LMImportedFDAIOrientation.ballOrientation(for: .identity)
         #expect(simd_length(zero.act(SIMD3<Float>(0, 0, 1)) - SIMD3(0, 0, 1)) < 1e-5)
@@ -137,4 +201,26 @@ struct LMInstrumentIntegrationTests {
         }
     }
 
+}
+
+@MainActor
+private final class InstrumentInputGate {
+    private var continuation: CheckedContinuation<Void, Never>?
+    private var arrival: CheckedContinuation<Void, Never>?
+    private var isOpen = false
+    func wait() async {
+        if isOpen { return }
+        await withCheckedContinuation { continuation in
+            self.continuation = continuation
+            arrival?.resume(); arrival = nil
+        }
+    }
+    func waitForArrival() async {
+        if continuation != nil { return }
+        await withCheckedContinuation { arrival = $0 }
+    }
+    func open() {
+        isOpen = true
+        continuation?.resume(); continuation = nil
+    }
 }
