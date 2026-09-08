@@ -118,7 +118,6 @@
     "Mission timer epoch, crew engine command API, measured propulsion quantities and CWEA circuits unavailable in audited baseline.",
     "MissionTimerControls packaged for authoring access but not installed; Panel5 timer reservation remains blocked.",
     "MasterAlarmReference remains authoring-only, unmounted and not packaged.",
-    "Native app behavior and appearance require separate consuming LM validation.",
     "Physical Vision Pro acceptance outstanding."
   ],
   "package_validation": {
@@ -128,5 +127,17 @@
     "parameterized_functions": 2,
     "cases_per_parameterized_function": 14,
     "log": "Docs/Validation/PilotSystems/package-tests.log"
+  },
+  "consumer_validation": {
+    "lm_runtime": "bdbf70f8b47f744c78dac7352477a6cd699754c5",
+    "lm_published": "471b4739153750377520bf5d0af776c0ec10933d",
+    "lmkit_runtime": "d8c24dd5591bc8b874e643df65932ac863713832",
+    "platform": "visionOS 26.5 Simulator",
+    "tests": 98,
+    "suites": 18,
+    "failures": 0,
+    "gallery": "https://github.com/zac/LM/blob/471b4739153750377520bf5d0af776c0ec10933d/Docs/Validation/SystemsIntegration/README.md",
+    "lighting": "Imported shell shadow casting restored; fitted local cabin/lander shadow coverage. Distant terrain shadows and physical headset acceptance not qualified.",
+    "visual_followup": "User requests substantial console enclosure and recessed instrument mounting improvements; simulator behavior acceptance does not imply final interior visual quality."
   }
 }
