@@ -1,0 +1,76 @@
+{
+  "repository": "zac/LM",
+  "revision": "ed230a6ee4286bc2385f44bc8f1889bdcc39a8ab",
+  "files": [
+    {
+      "path": "Docs/CommanderWindowCalibration.md",
+      "bytes": 5890,
+      "sha256": "cd39139a66075d2a18d0eacfb109d3f8c0e3e3c15885638867bcbc79b936a215"
+    },
+    {
+      "path": "LM/LMCommanderStationGeometry.swift",
+      "bytes": 12172,
+      "sha256": "447ce35526b475ad71b889083c3cf28f0d673ca0b22076e37a6c00336d371659"
+    },
+    {
+      "path": "LM/LMLandingPointDesignator.swift",
+      "bytes": 10481,
+      "sha256": "b60b4980c312cc79d4909c152bcc5b007e0eb1902764d8c34b6575fc46508229"
+    },
+    {
+      "path": "Docs/Research/LunarModuleInterior/geometry-materials-and-evidence.md",
+      "bytes": 12857,
+      "sha256": "b5845e1c869b3240a8652861733a202e5c7a490d37b24e5492cbf47981194b13"
+    },
+    {
+      "path": "Docs/Research/LunarModuleInterior/measurements.csv",
+      "bytes": 3253,
+      "sha256": "34a4fd0512f9ac860d6634709a371c49a04823da383a62ea3c549730b05953a8"
+    },
+    {
+      "path": "Docs/Research/LunarModuleInterior/controls-and-panels.md",
+      "bytes": 23802,
+      "sha256": "8dcef0e36e81fffa1b6fbfc52b3d1646b42f45f51ae7b1dbee90ef946909fea2"
+    },
+    {
+      "path": "Docs/Research/LunarModuleInterior/photo-reference-catalog.md",
+      "bytes": 14090,
+      "sha256": "47e7706eec5e0ba6257cd7d841f6590d4e40e7f6eb9ea40ab2d751283ea7e49c"
+    },
+    {
+      "path": "Docs/Research/LunarModuleInterior/references/manifest.json",
+      "bytes": 8308,
+      "sha256": "954d318823f256f5ef2ef0d2cadcd48a6e4d6a3e591cf5ad6803b32db1bfc086"
+    },
+    {
+      "path": "Docs/Research/LunarModuleInterior/references/images/manifest.json",
+      "bytes": 7383,
+      "sha256": "0a793e8ab4413d34e63e3b18983f1661543124bc535447af1c80da0527c11ef8"
+    },
+    {
+      "path": "Docs/Research/LunarModuleInterior/references/images/69-H-134.jpg",
+      "bytes": 165479,
+      "sha256": "b851a1d0e20ea309beec4a33454d8b70e9923e2c3553d9da2d9275368665abb9"
+    },
+    {
+      "path": "Docs/Research/LunarModuleInterior/references/images/AS11-36-5389HR.jpg",
+      "bytes": 876209,
+      "sha256": "9a87df320e1fcd6c624ebb14ac2980bc72e4d3173a323e6197dd44c4469be5a1"
+    },
+    {
+      "path": "Docs/Research/LunarModuleInterior/references/images/LM11-co42.jpg",
+      "bytes": 1933953,
+      "sha256": "cda83061e39a8819647aaec967c0e8eca7ab46eb5e664870a850f02a5c3a2f67"
+    },
+    {
+      "path": "Docs/Research/LunarModuleInterior/references/documents/grumman-1967-crew-station-excerpt.pdf",
+      "bytes": 11937843,
+      "sha256": "bbba844ab4598fe659f1e7dbb915abb329f8e6cc91531c9d0b46aa1492926295"
+    },
+    {
+      "path": "Docs/Research/LunarModuleInterior/references/documents/19730023038-spacecraft-windows.pdf",
+      "bytes": 1370212,
+      "sha256": "341effa41329abc44590e17d89110699f25fb74a9c6dc1919e460e66244193d8"
+    }
+  ]
+}
