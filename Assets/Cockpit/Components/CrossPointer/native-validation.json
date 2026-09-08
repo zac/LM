@@ -1,0 +1,10 @@
+{
+  "identity_root" : "PASS",
+  "independent_needles" : "PASS",
+  "invalid_hides_needles_keeps_face" : "PASS",
+  "native_load" : "PASS",
+  "numeric_full_scale_positions" : "PASS",
+  "platform" : "macOS RealityKit",
+  "simulation_frame_and_polarity" : "owned by LM; not exercised here",
+  "visionOS" : "NOT TESTED"
+}

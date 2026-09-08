@@ -1,0 +1,2277 @@
+{
+  "checks": [
+    {
+      "check": "metric Y up",
+      "pass": true
+    },
+    {
+      "check": "default root",
+      "pass": true
+    },
+    {
+      "check": "identity root",
+      "pass": true
+    },
+    {
+      "check": "no cameras lights in neutral asset",
+      "pass": true
+    },
+    {
+      "check": "no external composition or textures",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel/Bezel_Bottom finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel/Bezel_Bottom triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel/Bezel_Left finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel/Bezel_Left triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel/Bezel_Right finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel/Bezel_Right triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel/Bezel_Top finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel/Bezel_Top triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/BezelScrew_0 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/BezelScrew_0 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/BezelScrew_1 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/BezelScrew_1 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/BezelScrew_2 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/BezelScrew_2 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/BezelScrew_3 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/BezelScrew_3 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/DialFace finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/DialFace triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel/InnerBezel_Bottom finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel/InnerBezel_Bottom triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel/InnerBezel_Left finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel/InnerBezel_Left triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel/InnerBezel_Right finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel/InnerBezel_Right triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel/InnerBezel_Top finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel/InnerBezel_Top triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends/ForwardLegend finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends/ForwardLegend triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends/LateralLegend finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends/LateralLegend triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends/MultiplierX10 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends/MultiplierX10 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends/MultiplierXPoint1 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends/MultiplierXPoint1 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/PowerFailureFlag/PowerFailureLens finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/PowerFailureFlag/PowerFailureLens triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/RearHousing finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/RearHousing triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_0 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_0 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_10 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_10 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_15 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_15 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_20 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_20 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_25 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_25 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_30 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_30 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_35 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_35 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_40 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_40 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_5 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_5 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_00 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_00 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_01 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_01 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_02 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_02 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_03 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_03 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_04 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_04 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_05 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_05 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_06 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_06 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_07 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_07 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_08 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_08 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_09 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_09 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_10 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_10 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_11 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_11 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_12 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_12 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_13 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_13 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_14 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_14 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_15 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_15 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_16 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_16 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_17 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_17 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_18 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_18 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_19 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_19 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_20 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_20 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_21 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_21 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_22 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_22 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_23 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_23 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_24 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_24 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_25 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_25 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_26 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_26 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_27 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_27 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_28 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_28 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_29 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_29 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_30 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_30 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_31 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_31 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_32 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_32 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_33 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_33 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_34 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_34 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_35 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_35 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_36 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_36 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_37 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_37 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_38 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_38 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_39 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_39 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_40 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_40 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_0 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_0 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_10 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_10 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_15 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_15 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_20 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_20 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_25 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_25 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_30 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_30 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_35 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_35 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_40 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_40 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_5 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_5 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_00 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_00 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_01 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_01 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_02 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_02 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_03 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_03 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_04 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_04 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_05 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_05 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_06 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_06 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_07 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_07 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_08 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_08 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_09 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_09 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_10 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_10 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_11 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_11 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_12 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_12 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_13 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_13 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_14 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_14 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_15 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_15 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_16 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_16 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_17 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_17 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_18 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_18 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_19 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_19 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_20 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_20 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_21 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_21 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_22 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_22 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_23 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_23 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_24 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_24 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_25 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_25 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_26 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_26 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_27 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_27 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_28 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_28 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_29 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_29 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_30 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_30 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_31 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_31 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_32 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_32 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_33 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_33 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_34 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_34 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_35 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_35 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_36 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_36 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_37 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_37 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_38 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_38 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_39 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_39 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_40 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_40 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ZeroLineHorizontal finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ZeroLineHorizontal triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ZeroLineVertical finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ZeroLineVertical triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/ScrewSlot_0 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/ScrewSlot_0 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/ScrewSlot_1 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/ScrewSlot_1 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/ScrewSlot_2 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/ScrewSlot_2 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/ScrewSlot_3 finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/ScrewSlot_3 triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Needles/ForwardNeedle/ForwardBlade finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Needles/ForwardNeedle/ForwardBlade triangulated",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Needles/LateralNeedle/LateralBlade finite points",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Needles/LateralNeedle/LateralBlade triangulated",
+      "pass": true
+    },
+    {
+      "check": "face fits declared slot at unit scale",
+      "pass": true
+    },
+    {
+      "check": "declared 61mm square preserved",
+      "pass": true
+    },
+    {
+      "check": "LO velocity range SI conversion",
+      "pass": true
+    },
+    {
+      "check": "lateral explicit node is Xform",
+      "pass": true
+    },
+    {
+      "check": "lateral neutral datum",
+      "pass": true
+    },
+    {
+      "check": "lateral at -0.016 preserves fixed frame",
+      "pass": true
+    },
+    {
+      "check": "lateral at -0.016 inside aperture",
+      "pass": true
+    },
+    {
+      "check": "lateral at -0.016 numeric displacement",
+      "pass": true
+    },
+    {
+      "check": "lateral at 0.016 preserves fixed frame",
+      "pass": true
+    },
+    {
+      "check": "lateral at 0.016 inside aperture",
+      "pass": true
+    },
+    {
+      "check": "lateral at 0.016 numeric displacement",
+      "pass": true
+    },
+    {
+      "check": "lateral at 0 preserves fixed frame",
+      "pass": true
+    },
+    {
+      "check": "lateral at 0 inside aperture",
+      "pass": true
+    },
+    {
+      "check": "lateral at 0 numeric displacement",
+      "pass": true
+    },
+    {
+      "check": "forward explicit node is Xform",
+      "pass": true
+    },
+    {
+      "check": "forward neutral datum",
+      "pass": true
+    },
+    {
+      "check": "forward at -0.016 preserves fixed frame",
+      "pass": true
+    },
+    {
+      "check": "forward at -0.016 inside aperture",
+      "pass": true
+    },
+    {
+      "check": "forward at -0.016 numeric displacement",
+      "pass": true
+    },
+    {
+      "check": "forward at 0.016 preserves fixed frame",
+      "pass": true
+    },
+    {
+      "check": "forward at 0.016 inside aperture",
+      "pass": true
+    },
+    {
+      "check": "forward at 0.016 numeric displacement",
+      "pass": true
+    },
+    {
+      "check": "forward at 0 preserves fixed frame",
+      "pass": true
+    },
+    {
+      "check": "forward at 0 inside aperture",
+      "pass": true
+    },
+    {
+      "check": "forward at 0 numeric displacement",
+      "pass": true
+    },
+    {
+      "check": "two separate moving children",
+      "pass": true
+    },
+    {
+      "check": "ARKit USDZ compliance",
+      "pass": true
+    },
+    {
+      "check": "Blender metric",
+      "pass": true
+    },
+    {
+      "check": "Blender no external libraries",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel/Bezel_Bottom source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel/Bezel_Bottom source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel/Bezel_Left source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel/Bezel_Left source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel/Bezel_Right source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel/Bezel_Right source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel/Bezel_Top source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Bezel/Bezel_Top source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/BezelScrew_0 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/BezelScrew_0 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/BezelScrew_1 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/BezelScrew_1 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/BezelScrew_2 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/BezelScrew_2 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/BezelScrew_3 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/BezelScrew_3 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/DialFace source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/DialFace source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Needles/ForwardNeedle/ForwardBlade source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Needles/ForwardNeedle/ForwardBlade source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends/ForwardLegend source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends/ForwardLegend source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Needles/ForwardNeedle source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Needles/ForwardNeedle source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_0 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_0 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_10 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_10 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_15 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_15 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_20 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_20 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_25 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_25 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_30 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_30 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_35 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_35 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_40 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_40 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_5 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardNumber_5 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_00 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_00 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_01 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_01 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_02 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_02 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_03 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_03 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_04 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_04 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_05 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_05 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_06 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_06 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_07 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_07 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_08 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_08 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_09 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_09 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_10 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_10 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_11 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_11 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_12 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_12 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_13 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_13 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_14 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_14 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_15 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_15 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_16 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_16 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_17 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_17 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_18 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_18 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_19 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_19 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_20 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_20 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_21 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_21 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_22 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_22 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_23 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_23 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_24 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_24 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_25 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_25 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_26 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_26 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_27 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_27 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_28 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_28 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_29 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_29 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_30 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_30 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_31 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_31 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_32 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_32 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_33 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_33 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_34 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_34 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_35 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_35 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_36 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_36 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_37 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_37 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_38 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_38 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_39 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_39 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_40 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ForwardTick_40 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel/InnerBezel_Bottom source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel/InnerBezel_Bottom source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel/InnerBezel_Left source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel/InnerBezel_Left source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel/InnerBezel_Right source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel/InnerBezel_Right source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel/InnerBezel_Top source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/InnerBezel/InnerBezel_Top source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Needles/LateralNeedle/LateralBlade source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Needles/LateralNeedle/LateralBlade source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends/LateralLegend source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends/LateralLegend source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Needles/LateralNeedle source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Needles/LateralNeedle source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_0 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_0 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_10 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_10 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_15 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_15 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_20 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_20 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_25 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_25 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_30 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_30 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_35 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_35 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_40 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_40 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_5 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralNumber_5 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_00 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_00 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_01 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_01 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_02 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_02 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_03 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_03 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_04 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_04 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_05 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_05 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_06 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_06 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_07 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_07 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_08 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_08 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_09 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_09 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_10 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_10 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_11 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_11 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_12 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_12 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_13 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_13 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_14 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_14 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_15 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_15 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_16 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_16 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_17 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_17 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_18 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_18 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_19 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_19 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_20 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_20 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_21 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_21 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_22 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_22 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_23 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_23 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_24 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_24 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_25 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_25 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_26 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_26 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_27 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_27 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_28 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_28 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_29 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_29 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_30 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_30 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_31 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_31 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_32 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_32 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_33 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_33 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_34 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_34 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_35 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_35 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_36 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_36 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_37 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_37 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_38 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_38 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_39 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_39 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_40 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/LateralTick_40 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends/MultiplierX10 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends/MultiplierX10 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends/MultiplierXPoint1 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Legends/MultiplierXPoint1 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Needles source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Needles source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/PowerFailureFlag source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/PowerFailureFlag source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/PowerFailureFlag/PowerFailureLens source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/PowerFailureFlag/PowerFailureLens source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/RearHousing source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/RearHousing source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/ScrewSlot_0 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/ScrewSlot_0 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/ScrewSlot_1 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/ScrewSlot_1 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/ScrewSlot_2 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/ScrewSlot_2 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/ScrewSlot_3 source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/ScrewSlot_3 source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ZeroLineHorizontal source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ZeroLineHorizontal source physical transform",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ZeroLineVertical source node exported",
+      "pass": true
+    },
+    {
+      "check": "/CrossPointer/Fixed/Scales/ZeroLineVertical source physical transform",
+      "pass": true
+    }
+  ],
+  "passed": 562,
+  "failed": 0,
+  "meshes": 127,
+  "triangles": 4624,
+  "bounds_m": [
+    [
+      -0.03050000057555735,
+      -0.03050000057555735,
+      -0.019999999552965164
+    ],
+    [
+      0.03050000057555735,
+      0.03050000057555735,
+      0.0023049998981150566
+    ]
+  ],
+  "compliance_errors": [],
+  "compliance_failed": [],
+  "compliance_warnings": [],
+  "limitations": [
+    "geometry validation only",
+    "simulation frame/polarity tests owned by LM",
+    "mechanical panel cutout and rear seating not qualified",
+    "no headset acceptance"
+  ]
+}

@@ -1,0 +1,192 @@
+{
+  "schema": "lmkit.cross-pointer.v1",
+  "units": "meters",
+  "axes": "+X face right, +Y face up, +Z toward crew",
+  "root": "/CrossPointer",
+  "root_pose": {
+    "translation_m": [
+      0,
+      0,
+      0
+    ],
+    "quaternion_xyzw": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "scale": [
+      1,
+      1,
+      1
+    ]
+  },
+  "mounting": {
+    "slot_id": "Panel1__CrossPointer",
+    "slot_node": "/PanelInventory/Panels/Panel1/Panel1__CrossPointer",
+    "placement": "identity child of existing slot; apply slot pose exactly once",
+    "panel_cabin_relative_pose": {
+      "space": "Cabin-relative",
+      "translation_m": [
+        -0.24500000476837158,
+        1.6044106483459473,
+        -0.8849859237670898
+      ],
+      "quaternion_xyzw": [
+        -0.08715573698282242,
+        0.0,
+        0.0,
+        0.9961947202682495
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "slot_parent_local_pose": {
+      "space": "parent-local",
+      "translation_m": [
+        -0.07,
+        0.1,
+        0
+      ],
+      "quaternion_xyzw": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "source_slot_envelope_m": [
+      0.14,
+      0.065,
+      0.003
+    ],
+    "authored_face_size_m": [
+      0.061,
+      0.061
+    ],
+    "source_aspect": "square face from original AOH schematic; absolute dimensions provisional",
+    "decision": "fit 61mm square into 140x65mm provisional slot, no anisotropic scaling; coordinator must retain neutral backing around unfilled area",
+    "rear_depth_m": 0.02,
+    "dimension_confidence": "provisional, not surveyed LM5 or mechanically qualified"
+  },
+  "supported_mode": {
+    "id": "simulation-horizontal-velocity-lo-mult-later-fly-to",
+    "source": "simulation truth converted by LM into lunar-surface yaw frame; not measured radar, AGC error-counter output or AGS",
+    "units": "feet per second",
+    "full_scale_abs_fps": 20,
+    "full_scale_abs_mps": 6.096,
+    "meters_per_foot": 0.3048,
+    "saturation": "clamp finite normalized display value to [-1,+1]",
+    "phase": "descent only; reject ascent, abort and rendezvous",
+    "frame": "surface-relative horizontal velocity resolved into yaw heading forward/right; radial velocity excluded",
+    "polarity_qualification": "operational inference from ZERLINA50 fly-to statement, not verified Apollo11 wiring",
+    "positive_forward": "horizontal bar moves UP (+local Y), suggesting pitch back to reduce forward speed",
+    "positive_right": "vertical bar moves LEFT (-local X), suggesting roll left to reduce rightward speed",
+    "sources": [
+      "MIT LUMINARY Memo165 p1",
+      "MIT LUMINARY Memo171 p2",
+      "AOH table3-1 p3-16 and X-POINTER SCALE entry"
+    ]
+  },
+  "needles": {
+    "group": "/CrossPointer/Needles",
+    "lateral": {
+      "node": "/CrossPointer/Needles/LateralNeedle",
+      "mesh": "/CrossPointer/Needles/LateralNeedle/LateralBlade",
+      "neutral_translation_m": [
+        0.003,
+        0.003,
+        0.0017
+      ],
+      "travel_axis": [
+        1,
+        0,
+        0
+      ],
+      "travel_m": [
+        -0.016,
+        0.016
+      ],
+      "position_formula": "neutral + [-0.016*clamp(right_fps/20,-1,1),0,0]",
+      "full_scale_positive_velocity_translation_m": [
+        -0.013,
+        0.003,
+        0.0017
+      ]
+    },
+    "forward": {
+      "node": "/CrossPointer/Needles/ForwardNeedle",
+      "mesh": "/CrossPointer/Needles/ForwardNeedle/ForwardBlade",
+      "neutral_translation_m": [
+        0.003,
+        0.003,
+        0.00215
+      ],
+      "travel_axis": [
+        0,
+        1,
+        0
+      ],
+      "travel_m": [
+        -0.016,
+        0.016
+      ],
+      "position_formula": "neutral + [0,+0.016*clamp(forward_fps/20,-1,1),0]",
+      "full_scale_positive_velocity_translation_m": [
+        0.003,
+        0.019,
+        0.00215
+      ]
+    },
+    "mechanical_fidelity": "independently translated shallow curved visual blades; internal rotary mechanism and pivot geometry not surveyed"
+  },
+  "scale": {
+    "printed_abs_ticks_fps": [
+      0,
+      5,
+      10,
+      15,
+      20
+    ],
+    "minor_tick_step_fps": 1,
+    "neutral_zero_xy_m": [
+      0.003,
+      0.003
+    ],
+    "travel_per_fps_m": 0.0008,
+    "multiplier_x10_node": "/CrossPointer/Fixed/Legends/MultiplierX10",
+    "multiplier_x_point_1_node": "/CrossPointer/Fixed/Legends/MultiplierXPoint1",
+    "multiplier_state": "both inactive for LO MULT velocity; HI and LOS not runtime supported"
+  },
+  "invalid_data": {
+    "action": "hide /CrossPointer/Needles; do not center invalid values or show false zero",
+    "causes": [
+      "nonfinite velocity/orientation",
+      "unavailable radial up",
+      "degenerate projected heading",
+      "unsupported phase/source"
+    ],
+    "policy_origin": "explicit application policy, not modeled meter electrical failure",
+    "power_failure_flag": "/CrossPointer/Fixed/PowerFailureFlag; inactive, electrical power not modeled"
+  },
+  "forbidden_runtime_assumptions": [
+    "no inferred input gesture or collider",
+    "no rendezvous rates",
+    "no AGS mode",
+    "no fabricated sensor-valid signal",
+    "no claim that body velocity equals horizontal at large attitude",
+    "no Apollo11 polarity certification"
+  ],
+  "presentation": {
+    "historical_face": "only source-backed FWD VEL/LAT VEL and multiplier legends; no synthetic source/mode placard",
+    "source_qualification": "interface and handoff; optional host training UI, not production spacecraft ink"
+  }
+}
