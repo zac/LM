@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Product-state integration captures; desktop gestures remain a separate check.
 set -euo pipefail
+bundle_id="${LUNAR_BUNDLE_ID:-io.positron.LM}"
 [[ $# == 3 ]] || { echo 'usage: CaptureMoonExplorerJourney.sh <udid> <LM.app> <fresh-output-directory>' >&2; exit 64; }
 udid=$1
 app=$2
@@ -9,11 +10,11 @@ out=$3
 mkdir -p "$out"
 xcrun simctl bootstatus "$udid" -b
 xcrun simctl install "$udid" "$app"
-container=$(xcrun simctl get_app_container "$udid" io.positron.LM data)
+container=$(xcrun simctl get_app_container "$udid" "$bundle_id" data)
 token=$(uuidgen)
 stage_file="$container/Documents/MoonExplorerJourney-$token-stage.txt"
 ack_file="$container/Documents/MoonExplorerJourney-$token-ack.txt"
-xcrun simctl spawn "$udid" log stream --level=info --predicate 'subsystem == "io.positron.LM"' > "$out/performance.log" 2>&1 &
+xcrun simctl spawn "$udid" log stream --level=info --predicate "subsystem == \"$bundle_id\"" > "$out/performance.log" 2>&1 &
 logger=$!
 trap 'kill "$logger" 2>/dev/null || true; wait "$logger" 2>/dev/null || true; rm -f "$stage_file" "$ack_file"' EXIT
 args=(--lunar-explorer --lunar-explorer-profile --lunar-explorer-profile-label=experience-journey --lunar-explorer-profile-journey "--lunar-explorer-profile-capture-token=$token")
@@ -43,7 +44,7 @@ cycles=${LUNAR_PROFILE_SOAK_CYCLES:-0}
 if [[ "$cycles" -gt 0 ]]; then args+=("--lunar-explorer-profile-soak-cycles=$cycles"); fi
 if [[ ${LUNAR_CAPTURE_REDUCE_MOTION:-0} == 1 ]]; then args+=(--lunar-explorer-profile-reduce-motion); fi
 printf '%s\n' "${args[@]}" > "$out/launch-arguments.txt"
-launch=$(xcrun simctl launch --terminate-running-process "$udid" io.positron.LM "${args[@]}")
+launch=$(xcrun simctl launch --terminate-running-process "$udid" "$bundle_id" "${args[@]}")
 pid=${launch##*: }
 printf 'stage\tpid\tsha256\n' > "$out/stages.tsv"
 wait_stage() {
@@ -80,7 +81,7 @@ for ((attempt=0; attempt<90; attempt++)); do
     sleep 1
 done
 awk -v pid="$pid" '$6 == pid && /Moon experience stage=passed/ {found=1} END {exit !found}' "$out/performance.log"
-container=$(xcrun simctl get_app_container "$udid" io.positron.LM data)
+container=$(xcrun simctl get_app_container "$udid" "$bundle_id" data)
 if [[ ${LUNAR_ONE_ZOOM:-0} != 1 && ${LUNAR_HIGHLAND_DIVE:-0} != 1 ]]; then
     cp "$container/Documents/MoonExplorerJourney.json" "$out/camera-and-sunlight.json"
 fi

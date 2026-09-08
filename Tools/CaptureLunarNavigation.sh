@@ -3,6 +3,7 @@
 # The app waits for ready terrain plus 100 s before each action; captures wait
 # at least 90 s after ready/contact. Video covers the actual fly-to transition.
 set -euo pipefail
+bundle_id="${LUNAR_BUNDLE_ID:-io.positron.LM}"
 [[ $# == 5 ]] || { echo "usage: $0 <udid> <LM.app> <start-lat,lon> <destination-lat,lon> <fresh-output-directory>" >&2; exit 64; }
 udid=$1
 app=$2
@@ -12,7 +13,7 @@ out=$5
 [[ -d "$app" && ! -e "$out/performance.log" ]] || exit 66
 mkdir -p "$out"
 xcrun simctl install "$udid" "$app"
-xcrun simctl spawn "$udid" log stream --level=info --predicate 'subsystem == "io.positron.LM"' > "$out/performance.log" 2>&1 &
+xcrun simctl spawn "$udid" log stream --level=info --predicate "subsystem == \"$bundle_id\"" > "$out/performance.log" 2>&1 &
 logger_pid=$!
 video_pid=
 cleanup() {
@@ -20,7 +21,7 @@ cleanup() {
     kill "$logger_pid" 2>/dev/null || true
 }
 trap cleanup EXIT
-launch=$(xcrun simctl launch --terminate-running-process "$udid" io.positron.LM --lunar-explorer "--lunar-explorer-coordinate=$start" --lunar-explorer-preset=surface --lunar-explorer-meters-across=30 --lunar-explorer-capture --lunar-explorer-detail=procedural "--lunar-explorer-fly-to=$destination" --lunar-explorer-contact-probe --lunar-explorer-profile --lunar-explorer-profile-label=navigation --lunar-globe-texture-tier=wac-global-64ppd)
+launch=$(xcrun simctl launch --terminate-running-process "$udid" "$bundle_id" --lunar-explorer "--lunar-explorer-coordinate=$start" --lunar-explorer-preset=surface --lunar-explorer-meters-across=30 --lunar-explorer-capture --lunar-explorer-detail=procedural "--lunar-explorer-fly-to=$destination" --lunar-explorer-contact-probe --lunar-explorer-profile --lunar-explorer-profile-label=navigation --lunar-globe-texture-tier=wac-global-64ppd)
 pid=${launch##*: }
 echo "$pid" > "$out/pid"
 for ((i=0;i<600;i++)); do

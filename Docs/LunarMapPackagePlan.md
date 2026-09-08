@@ -17,8 +17,8 @@ one test suite, two thin app shells.
 | Step | State | Notes |
 |---|---|---|
 | 1 Package skeleton and file moves | Withheld on `lunar-map/step-1`; stopped by owner | Runtime `3e94add` on `89ecb0f`. Tests, Apollo, contracts and journey pass. Fresh soak peak exceeds gate by 1.563 MiB; warm-highland incomplete. See stop checkpoint in `LunarMapPackage.md`. |
-| 2 Decouple the six seams | Not started | §4 |
-| 3 Moon app target | Not started | §4 |
+| 2 Decouple the six seams | Development complete, `f1f9767` | Release build and 45 focused tests pass; long qualification deferred by owner |
+| 3 Moon app target | Development complete on `lunar-map/step-3` | Release build and ordinary launch pass; both-ID tool tests pass; visual/performance qualification deferred |
 | 4 Tests and tools move into the package | Not started | §4 |
 | 5 Optional: `LunarMapCore` split for macOS-hosted tests | Not started | §4 |
 | 6 Later: sibling repository split | Not started | §7 |

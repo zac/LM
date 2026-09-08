@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Each app runs three times, in alternating order. Judge only the complete set.
 set -euo pipefail
+bundle_id="${LUNAR_BUNDLE_ID:-io.positron.LM}"
 [[ $# == 5 ]] || { echo 'usage: RunMoonExplorerComparison.sh <udid> <control.app> <candidate.app> <fresh-output> <journey|soak|highland-warm|highland-cold>' >&2; exit 64; }
 udid=$1
 control=$2
@@ -16,11 +17,11 @@ for repetition in 1 2 3; do
  for role in Control Candidate; do
   app=$control
   [[ "$role" == Control ]] || app=$candidate
-  sha=$(shasum -a 256 "$app/LM" | awk '{print $1}')
+  sha=$(shasum -a 256 "$app/$(/usr/libexec/PlistBuddy -c 'Print CFBundleExecutable' "$app/Info.plist")" | awk '{print $1}')
   sequence=$((sequence + 1))
   printf '%s\t%s\t%s\t%s\n' "$sequence" "$role" "$repetition" "$sha" >> "$out/run-order.tsv"
   printf '%s %s %s\n' "$workload" "$role" "$repetition" > "$out/current-run.txt"
-  xcrun simctl terminate "$udid" io.positron.LM >/dev/null 2>&1 || true
+  xcrun simctl terminate "$udid" "$bundle_id" >/dev/null 2>&1 || true
   sleep 10
   if [[ "$workload" == journey ]]; then
    LUNAR_ONE_ZOOM=1 bash Tools/CaptureMoonExplorerJourney.sh "$udid" "$app" "$out/$role-$repetition"

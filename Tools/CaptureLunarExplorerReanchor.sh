@@ -2,6 +2,7 @@
 # Hold one settled view across the production re-anchor trigger. The capture
 # probe starts in an ENU 4.2 km from the focus and releases it after 100 seconds.
 set -euo pipefail
+bundle_id="${LUNAR_BUNDLE_ID:-io.positron.LM}"
 if [[ $# -lt 2 || $# -gt 3 ]]; then
     echo "usage: $0 <simulator-udid> <LM.app> [output-directory]" >&2
     exit 64
@@ -14,10 +15,10 @@ command -v magick >/dev/null
 mkdir -p "$out"
 xcrun simctl install "$udid" "$app_path"
 xcrun simctl spawn "$udid" log stream --level=info \
-    --predicate 'subsystem == "io.positron.LM"' > "$out/performance.log" 2>&1 &
+    --predicate "subsystem == \"$bundle_id\"" > "$out/performance.log" 2>&1 &
 log_pid=$!
 trap 'kill "$log_pid" 2>/dev/null || true; wait "$log_pid" 2>/dev/null || true' EXIT
-launch=$(xcrun simctl launch --terminate-running-process "$udid" io.positron.LM \
+launch=$(xcrun simctl launch --terminate-running-process "$udid" "$bundle_id" \
     --lunar-explorer --lunar-explorer-preset=surface \
     --lunar-explorer-altitude=2 --lunar-explorer-meters-across=8 \
     --lunar-explorer-detail=procedural --lunar-explorer-capture \

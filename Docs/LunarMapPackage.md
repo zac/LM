@@ -468,3 +468,52 @@ All physical Vision Pro gates remain open: stereo/crossfade perception,
 tracked head/hand/gaze input, gesture comfort, CPU/GPU pacing, memory
 pressure, thermal behavior and long-session stability. Simulator acceptance
 does not establish physical-device performance or comfort.
+
+## Development and integration resumed, 2026-09-08
+
+The owner authorized finishing steps 2–4 and integration while documenting
+the long validation as outstanding. The prior soak peak failure stays a
+failure; highland stays incomplete. No new captures, soaks or performance
+benchmarks are being run.
+
+### Step 2: app seams (`f1f9767`)
+
+Hosts now supply launch options and log identity before creating models.
+Package code has no ProcessInfo reads or MainMenuViewModel references. The
+ordered argument payload preserves existing parser precedence and duplicate
+handling; profiling enablement is parsed at construction. HostActions makes
+close/cockpit callbacks optional and supplies the cockpit display name.
+Process-wide presentation state and texture-cache scope are documented.
+Existing compatibility initializers preserve callers and test behavior.
+
+Release build passed; 45 focused Explorer, experience, navigation
+and portal tests passed, 0 failed. Evidence: `Development/Step2/`.
+Executable SHA-256: `9fd41307c563c03312fc23ab92ccda9f46b049e01c75293b6e0e658bb34e3415`.
+No Moon binary exists at this step. Full-suite comparison on this revision,
+Apollo captures/settle, matched performance and physical gates are deferred.
+
+### Step 3: standalone Moon host
+
+Added native `Moon` target, bundle identifier `io.positron.Moon`, sharing the
+engine and Explorer products. MoonModel owns one session and immersive-space
+state; the host opens the map, supports the existing immersion styles and
+capture flags, and supplies close only. Scene manifest, automatic signing
+team and placeholder spatial app icons match the project conventions.
+The target has no direct AGC, RealityKitContent or cockpit dependency. LMCore
+still brings AGC transitively, as accepted in the plan.
+
+Capture scripts now use `LUNAR_BUNDLE_ID` with the LM default, including log
+filters, container lookup, launch and termination. Executable hashing reads
+CFBundleExecutable instead of assuming LM. Measurement output records bundle
+identity; the 13 tool tests pass under both identifiers, and all capture
+scripts pass bash syntax checks. No capture sequence was run.
+
+Moon Release builds and ordinary launch succeeds. Evidence: `Development/Step3/`.
+Moon executable SHA-256: `ef2a6d82a7847a5fcdb7ac8b14e20a35b12d2fd7735fbdf00ffb2e6b1773cc02`.
+Release bundle: 193,419,316 bytes (184.46 MiB), including pinned resources.
+LM source is unchanged by this step; its latest ordinary SHA is recorded
+under Step 2. A final LM build follows the test move.
+
+Deferred: Moon/LM Apollo byte comparisons and 90-second settle, visual journey
+and restore acceptance, matched performance sets, and all physical gates.
+Ordinary launch does not establish visual parity.

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Exercise real session requests, cancellation, and whole-generation arrival.
 set -euo pipefail
+bundle_id="${LUNAR_BUNDLE_ID:-io.positron.LM}"
 [[ $# == 4 ]] || { echo "usage: $0 <udid> <LM.app> <lat,lon> <fresh-output-directory>" >&2; exit 64; }
 udid=$1 app=$2 coordinate=$3 out=$4
 hold=${LUNAR_TRANSITION_HOLD_SECONDS:-100}
@@ -10,7 +11,7 @@ mkdir -p "$out"
 command -v ffprobe >/dev/null
 xcrun simctl install "$udid" "$app"
 xcrun simctl spawn "$udid" log stream --level=info \
-    --predicate 'subsystem == "io.positron.LM"' > "$out/performance.log" 2>&1 &
+    --predicate "subsystem == \"$bundle_id\"" > "$out/performance.log" 2>&1 &
 logger_pid=$!
 recorder_pid=
 cleanup() {
@@ -27,8 +28,8 @@ arguments=(--lunar-explorer "--lunar-explorer-coordinate=$coordinate" --lunar-ex
     "--lunar-explorer-normal-maps=${LUNAR_CAPTURE_NORMAL_MAPS:-on}"
     --lunar-globe-texture-tier=wac-global-64ppd)
 printf '%s\n' "${arguments[@]}" > "$out/launch-arguments.txt"
-shasum -a 256 "$app/LM" > "$out/binary-sha256.txt"
-launch=$(xcrun simctl launch --terminate-running-process "$udid" io.positron.LM "${arguments[@]}")
+shasum -a 256 "$app/$(/usr/libexec/PlistBuddy -c 'Print CFBundleExecutable' "$app/Info.plist")" > "$out/binary-sha256.txt"
+launch=$(xcrun simctl launch --terminate-running-process "$udid" "$bundle_id" "${arguments[@]}")
 pid=${launch##*: }
 wait_for() {
     local pattern=$1 minimum=$2 found=false

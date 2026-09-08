@@ -15,7 +15,7 @@ output_directory=${3:-Artifacts/LunarExplorerAB}
 # settle so a screenshot never compares one complete mode with one partial one.
 capture_wait_seconds=${LUNAR_CAPTURE_WAIT_SECONDS:-30}
 capture_filter=${LUNAR_CAPTURE_FILTER:-}
-bundle_id=io.positron.LM
+bundle_id="${LUNAR_BUNDLE_ID:-io.positron.LM}"
 
 if [[ ! -d "$app_path" ]]; then
     echo "LM app bundle does not exist: $app_path" >&2

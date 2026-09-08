@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Capture the actual cockpit flight, using AGC state to label each stop.
 set -euo pipefail
+bundle_id="${LUNAR_BUNDLE_ID:-io.positron.LM}"
 if [[ $# != 4 ]]; then
     echo "usage: $0 <simulator-udid> <LM.app> <lat,lon> <output-directory>" >&2
     exit 64
@@ -12,14 +13,14 @@ out=$4
 mkdir -p "$out"
 date -u +%FT%TZ > "$out/started-at.txt"
 xcrun simctl install "$udid" "$app"
-xcrun simctl terminate "$udid" io.positron.LM 2>/dev/null || true
-container=$(xcrun simctl get_app_container "$udid" io.positron.LM data)
+xcrun simctl terminate "$udid" "$bundle_id" 2>/dev/null || true
+container=$(xcrun simctl get_app_container "$udid" "$bundle_id" data)
 latest="$container/Documents/CockpitMissionLatest.json"
 recording="$container/Documents/CockpitMissionRecording.json"
 # Only these capture artifacts are replaced; other app documents are retained.
 rm -f "$latest" "$recording"
 xcrun simctl spawn "$udid" log stream --level=info \
-    --predicate 'subsystem == "io.positron.LM"' > "$out/performance.log" 2>&1 &
+    --predicate "subsystem == \"$bundle_id\"" > "$out/performance.log" 2>&1 &
 log_pid=$!
 trap 'kill "$log_pid" 2>/dev/null || true; wait "$log_pid" 2>/dev/null || true' EXIT
 diagnostics=(--cockpit-mission-capture)
@@ -27,12 +28,12 @@ if [[ ${LUNAR_CAPTURE_TERRAIN_RAYS:-0} == 1 ]]; then diagnostics+=(--cockpit-ter
 printf '%s\n' --terminal-descent-cockpit "--cockpit-coordinate=$coordinate" \
     --lunar-explorer-profile "--lunar-explorer-profile-label=cockpit-$coordinate" \
     "${diagnostics[@]}" > "$out/launch-arguments.txt"
-launch=$(xcrun simctl launch --terminate-running-process "$udid" io.positron.LM \
+launch=$(xcrun simctl launch --terminate-running-process "$udid" "$bundle_id" \
     --terminal-descent-cockpit "--cockpit-coordinate=$coordinate" \
     --lunar-explorer-profile "--lunar-explorer-profile-label=cockpit-$coordinate" "${diagnostics[@]}")
 app_pid=${launch##*: }
 echo "$app_pid" > "$out/app-pid.txt"
-shasum -a 256 "$app/LM" > "$out/binary-sha256.txt"
+shasum -a 256 "$app/$(/usr/libexec/PlistBuddy -c 'Print CFBundleExecutable' "$app/Info.plist")" > "$out/binary-sha256.txt"
 for ((attempt=0; attempt<1200; attempt++)); do
     kill -0 "$app_pid"
     if [[ -f "$latest" ]]; then

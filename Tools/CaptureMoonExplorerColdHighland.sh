@@ -1,20 +1,21 @@
 #!/bin/bash
 set -euo pipefail
+bundle_id="${LUNAR_BUNDLE_ID:-io.positron.LM}"
 udid=$1
 app=$2
 out=$3
 [[ ! -e "$out" ]] || exit 66
 mkdir -p "$out"
-xcrun simctl terminate "$udid" io.positron.LM >/dev/null 2>&1 || true
+xcrun simctl terminate "$udid" "$bundle_id" >/dev/null 2>&1 || true
 xcrun simctl install "$udid" "$app"
-container=$(xcrun simctl get_app_container "$udid" io.positron.LM data)
+container=$(xcrun simctl get_app_container "$udid" "$bundle_id" data)
 cache="$container/Library/Caches/LunarElevation-v1"
 imagery="$container/Library/Caches/LunarImagery-wac64-r8-box-pyramid-v1"
 restore() {
-    xcrun simctl terminate "$udid" io.positron.LM >/dev/null 2>&1 || true
+    xcrun simctl terminate "$udid" "$bundle_id" >/dev/null 2>&1 || true
     # Reinstallation can rotate the data-container UUID. Resolve it again;
     # the preserved caches must return to the live container, not its old path.
-    container=$(xcrun simctl get_app_container "$udid" io.positron.LM data)
+    container=$(xcrun simctl get_app_container "$udid" "$bundle_id" data)
     cache="$container/Library/Caches/LunarElevation-v1"
     imagery="$container/Library/Caches/LunarImagery-wac64-r8-box-pyramid-v1"
     mkdir -p "$container/Library/Caches"

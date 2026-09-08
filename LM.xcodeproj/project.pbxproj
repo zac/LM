@@ -11,8 +11,11 @@
 		1198E01A304C949700B88593 /* LMLunarCockpitTerrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1198E019304C949700B88593 /* LMLunarCockpitTerrain.swift */; };
 		11F3D7792D4569A800205449 /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 11F3D7782D4569A800205449 /* RealityKitContent */; };
 		153481058BB7D6ABE3016B26 /* AGC in Frameworks */ = {isa = PBXBuildFile; productRef = 7F923C8DED5D27B4856DF91E /* AGC */; };
+		7E26622530FF45E8BBAAE3C9 /* LunarMapExplorer in Frameworks */ = {isa = PBXBuildFile; productRef = B61A332620F9023911743D64 /* LunarMapExplorer */; };
 		8B235D3F452923FA7A4072FF /* LMCore in Frameworks */ = {isa = PBXBuildFile; productRef = A9EB3C526EF0E03AA143B6C9 /* LMCore */; };
 		AD038F2CF7897D832DB8E5AE /* LunarMap in Frameworks */ = {isa = PBXBuildFile; productRef = E0160C33A71CDD4B67B2F4A5 /* LunarMap */; };
+		E4915064A6B24502F75B3E29 /* LunarMap in Frameworks */ = {isa = PBXBuildFile; productRef = 484902EAE3DD096F7FE83CD5 /* LunarMap */; };
+		FC232BDCB79631626E544F32 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE2BB9AFF4F3A2C52B2BE8A8 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +33,8 @@
 		11F3D7732D4569A800205449 /* LM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		11F3D7772D4569A800205449 /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 		11F3D7922D4569A900205449 /* LMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B731BF12C81287FF638318E3 /* Moon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moon.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE2BB9AFF4F3A2C52B2BE8A8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/XROS.platform/Developer/SDKs/XROS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -39,6 +44,13 @@
 				Info.plist,
 			);
 			target = 11F3D7722D4569A800205449 /* LM */;
+		};
+		BBA3291436B040F4F42E4619 /* Exceptions for "Moon" folder in "Moon" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3860AFA7C39963C73A8D16E3 /* Moon */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -53,7 +65,17 @@
 		};
 		11F3D7952D4569A900205449 /* LMTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = LMTests;
+			sourceTree = "<group>";
+		};
+		1324768FC2A9985EFE5F4210 /* Moon */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				BBA3291436B040F4F42E4619 /* Exceptions for "Moon" folder in "Moon" target */,
+			);
+			path = Moon;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -78,6 +100,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3622C22F05789D49358BF863 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FC232BDCB79631626E544F32 /* Foundation.framework in Frameworks */,
+				E4915064A6B24502F75B3E29 /* LunarMap in Frameworks */,
+				7E26622530FF45E8BBAAE3C9 /* LunarMapExplorer in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -89,6 +121,8 @@
 				11F3D7952D4569A900205449 /* LMTests */,
 				11F3D7742D4569A800205449 /* Products */,
 				1198E019304C949700B88593 /* LMLunarCockpitTerrain.swift */,
+				398BD7B6AC5AB63A74EBA817 /* Frameworks */,
+				1324768FC2A9985EFE5F4210 /* Moon */,
 			);
 			sourceTree = "<group>";
 		};
@@ -97,6 +131,7 @@
 			children = (
 				11F3D7732D4569A800205449 /* LM.app */,
 				11F3D7922D4569A900205449 /* LMTests.xctest */,
+				B731BF12C81287FF638318E3 /* Moon.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -107,6 +142,22 @@
 				11F3D7772D4569A800205449 /* RealityKitContent */,
 			);
 			path = Packages;
+			sourceTree = "<group>";
+		};
+		398BD7B6AC5AB63A74EBA817 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F92D79897892E3AF6FFE8E7F /* visionOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F92D79897892E3AF6FFE8E7F /* visionOS */ = {
+			isa = PBXGroup;
+			children = (
+				BE2BB9AFF4F3A2C52B2BE8A8 /* Foundation.framework */,
+			);
+			name = visionOS;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -160,6 +211,30 @@
 			productReference = 11F3D7922D4569A900205449 /* LMTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		3860AFA7C39963C73A8D16E3 /* Moon */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8BFCEBAB5A85F71EEF28E03A /* Build configuration list for PBXNativeTarget "Moon" */;
+			buildPhases = (
+				5BBD9B02DFF9C11BC0BCB18D /* Sources */,
+				3622C22F05789D49358BF863 /* Frameworks */,
+				AD0528A0A399316B125796E3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				1324768FC2A9985EFE5F4210 /* Moon */,
+			);
+			name = Moon;
+			packageProductDependencies = (
+				484902EAE3DD096F7FE83CD5 /* LunarMap */,
+				B61A332620F9023911743D64 /* LunarMapExplorer */,
+			);
+			productName = Moon;
+			productReference = B731BF12C81287FF638318E3 /* Moon.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -177,6 +252,10 @@
 						CreatedOnToolsVersion = 16.2;
 						TestTargetID = 11F3D7722D4569A800205449;
 					};
+					3860AFA7C39963C73A8D16E3 = {
+						CreatedOnToolsVersion = 26.6;
+						DevelopmentTeam = 32R66SNDGS;
+					};
 				};
 			};
 			buildConfigurationList = 11F3D76E2D4569A800205449 /* Build configuration list for PBXProject "LM" */;
@@ -189,8 +268,8 @@
 			mainGroup = 11F3D76A2D4569A800205449;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */,
-				1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */,
+				3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "AGC" */,
+				1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 11F3D7742D4569A800205449 /* Products */;
@@ -199,6 +278,7 @@
 			targets = (
 				11F3D7722D4569A800205449 /* LM */,
 				11F3D7912D4569A900205449 /* LMTests */,
+				3860AFA7C39963C73A8D16E3 /* Moon */,
 			);
 		};
 /* End PBXProject section */
@@ -218,6 +298,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AD0528A0A399316B125796E3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -230,6 +317,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		11F3D78E2D4569A900205449 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5BBD9B02DFF9C11BC0BCB18D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -458,6 +552,56 @@
 			};
 			name = Release;
 		};
+		85DA862CB3C903837D6A10C9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 32R66SNDGS;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.positron.Moon;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 7;
+			};
+			name = Release;
+		};
+		FB002A8B54C22C6398F2C0F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 32R66SNDGS;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.positron.Moon;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 7;
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -488,14 +632,23 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		8BFCEBAB5A85F71EEF28E03A /* Build configuration list for PBXNativeTarget "Moon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85DA862CB3C903837D6A10C9 /* Release */,
+				FB002A8B54C22C6398F2C0F0 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */ = {
+		1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/LunarMap;
 		};
-		3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */ = {
+		3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "AGC" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../AGC;
 		};
@@ -506,24 +659,34 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = RealityKitContent;
 		};
+		484902EAE3DD096F7FE83CD5 /* LunarMap */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */;
+			productName = LunarMap;
+		};
 		7F923C8DED5D27B4856DF91E /* AGC */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */;
+			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "AGC" */;
 			productName = AGC;
 		};
 		A9EB3C526EF0E03AA143B6C9 /* LMCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */;
+			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "AGC" */;
 			productName = LMCore;
+		};
+		B61A332620F9023911743D64 /* LunarMapExplorer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */;
+			productName = LunarMapExplorer;
 		};
 		D0ADE5292D7FBA8CE751FD6A /* LunarMapExplorer */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */;
+			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */;
 			productName = LunarMapExplorer;
 		};
 		E0160C33A71CDD4B67B2F4A5 /* LunarMap */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */;
+			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */;
 			productName = LunarMap;
 		};
 /* End XCSwiftPackageProductDependency section */

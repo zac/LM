@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Production global clipmaps, pinned source status and >=90 s settled captures.
 set -euo pipefail
+bundle_id="${LUNAR_BUNDLE_ID:-io.positron.LM}"
 [[ $# == 4 ]] || { echo "usage: $0 <udid> <LM.app> <lat,lon> <fresh-output-directory>" >&2; exit 64; }
 udid=$1
 app=$2
@@ -13,7 +14,7 @@ xcrun simctl boot "$udid" 2>/dev/null || true
 xcrun simctl bootstatus "$udid" -b
 xcrun simctl install "$udid" "$app"
 xcrun simctl spawn "$udid" log stream --level=info \
-    --predicate 'subsystem == "io.positron.LM"' > "$out/performance.log" 2>&1 &
+    --predicate "subsystem == \"$bundle_id\"" > "$out/performance.log" 2>&1 &
 logger_pid=$!
 cleanup() { kill "$logger_pid" 2>/dev/null || true; wait "$logger_pid" 2>/dev/null || true; }
 trap cleanup EXIT
@@ -45,7 +46,7 @@ for spec in "${stops[@]}"; do
     IFS='|' read -r name preset altitude width <<< "$spec"
     filter=${LUNAR_CAPTURE_FILTER:-}
     if [[ -n "$filter" && ",$filter," != *",$name,"* ]]; then continue; fi
-    launch=$(xcrun simctl launch --terminate-running-process "$udid" io.positron.LM \
+    launch=$(xcrun simctl launch --terminate-running-process "$udid" "$bundle_id" \
         --lunar-explorer "--lunar-explorer-coordinate=$coordinate" \
         "--lunar-explorer-preset=$preset" "--lunar-explorer-altitude=$altitude" \
         "--lunar-explorer-meters-across=$width" "--lunar-explorer-profile-label=$name" \

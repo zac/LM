@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Tests for the owner's noise-floor rule and callback exclusion boundary."""
 import unittest
+import os
 from MeasureMoonExplorerRuns import compare, distribution, overlaps, settled_window_passes
 
 
@@ -11,6 +12,7 @@ def run(value):
 
 
 class MeasurementTests(unittest.TestCase):
+    bundle_id = os.environ.get("LUNAR_BUNDLE_ID", "io.positron.LM")
     def test_decimal_boundary_is_inclusive(self):
         result = compare([run(19.52), run(19.52), run(19.67)], [run(19.67)] * 3)
         self.assertTrue(result['passed'])

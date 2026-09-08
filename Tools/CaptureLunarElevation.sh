@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Verify a real streamed source, persistent offline reuse, and the global base.
 set -euo pipefail
+bundle_id="${LUNAR_BUNDLE_ID:-io.positron.LM}"
 if [[ $# -lt 2 || $# -gt 3 ]]; then
     echo "usage: $0 <simulator-udid> <LM.app> [output-directory]" >&2
     exit 64
@@ -17,12 +18,12 @@ mkdir -p "$out"
 xcrun simctl boot "$udid" 2>/dev/null || true
 xcrun simctl bootstatus "$udid" -b
 xcrun simctl install "$udid" "$app_path"
-xcrun simctl terminate "$udid" io.positron.LM 2>/dev/null || true
-container=$(xcrun simctl get_app_container "$udid" io.positron.LM data)
+xcrun simctl terminate "$udid" "$bundle_id" 2>/dev/null || true
+container=$(xcrun simctl get_app_container "$udid" "$bundle_id" data)
 cache="$container/Library/Caches/LunarElevation-v1"
 log_pid=
 cleanup() {
-    xcrun simctl terminate "$udid" io.positron.LM 2>/dev/null || true
+    xcrun simctl terminate "$udid" "$bundle_id" 2>/dev/null || true
     if [[ -n "$log_pid" ]]; then
         kill "$log_pid" 2>/dev/null || true
         wait "$log_pid" 2>/dev/null || true
@@ -34,7 +35,7 @@ trap cleanup EXIT
 # Preserve any existing app cache and prove this run begins with a cold fetch.
 if [[ -d "$cache" ]]; then mv "$cache" "$out/original-cache"; fi
 xcrun simctl spawn "$udid" log stream --level=info \
-    --predicate 'subsystem == "io.positron.LM"' > "$out/performance.log" 2>&1 &
+    --predicate "subsystem == \"$bundle_id\"" > "$out/performance.log" 2>&1 &
 log_pid=$!
 printf 'case\tcoordinate\tpid\tsha256\n' > "$out/captures.tsv"
 for spec in 'streamed|0.67,25|online|sldem2015-512-apollo11-slab' \
@@ -43,12 +44,12 @@ for spec in 'streamed|0.67,25|online|sldem2015-512-apollo11-slab' \
             'cache-miss|0.67,25|offline|lola-ldem-16ppd-global'; do
     IFS='|' read -r name coordinate mode expected_source <<< "$spec"
     if [[ "$name" == cache-miss ]]; then
-        xcrun simctl terminate "$udid" io.positron.LM
+        xcrun simctl terminate "$udid" "$bundle_id"
         mv "$cache" "$out/verified-cache"
     fi
     args=(--lunar-explorer-capture)
     if [[ "$mode" == offline ]]; then args+=(--lunar-explorer-elevation-offline); fi
-    launch=$(xcrun simctl launch --terminate-running-process "$udid" io.positron.LM \
+    launch=$(xcrun simctl launch --terminate-running-process "$udid" "$bundle_id" \
         --lunar-explorer --lunar-explorer-preset=approach \
         --lunar-explorer-altitude=2000 --lunar-explorer-meters-across=8000 \
         "--lunar-explorer-elevation-preview=$coordinate" \

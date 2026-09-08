@@ -15,7 +15,7 @@ capture_attempts=${LUNAR_CAPTURE_ATTEMPTS:-2}
 maximum_mean_saturation=${LUNAR_CAPTURE_MAXIMUM_MEAN_SATURATION:-0.01}
 capture_filter=${LUNAR_CAPTURE_FILTER:-}
 capture_profile=${LUNAR_CAPTURE_PROFILE:-0}
-bundle_id=io.positron.LM
+bundle_id="${LUNAR_BUNDLE_ID:-io.positron.LM}"
 
 if [[ ! -d "$app_path" ]]; then
     echo "LM app bundle does not exist: $app_path" >&2
@@ -41,7 +41,7 @@ if [[ "$capture_profile" == 1 ]]; then
     : > "$profile_runs"
     xcrun simctl spawn "$simulator_udid" log stream \
         --level=info \
-        --predicate 'subsystem == "io.positron.LM"' \
+        --predicate "subsystem == \"$bundle_id\"" \
         > "$profile_log" 2>&1 &
     profile_logger_pid=$!
 fi

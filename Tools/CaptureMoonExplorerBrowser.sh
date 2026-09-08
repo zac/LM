@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Opt-in native view-state captures, not synthesized UI taps.
 set -euo pipefail
+bundle_id="${LUNAR_BUNDLE_ID:-io.positron.LM}"
 [[ $# == 3 ]] || { echo 'usage: CaptureMoonExplorerBrowser.sh <udid> <LM.app> <fresh-output-directory>' >&2; exit 64; }
 udid=$1
 app=$2
@@ -9,7 +10,7 @@ out=$3
 mkdir -p "$out"
 xcrun simctl bootstatus "$udid" -b
 xcrun simctl install "$udid" "$app"
-xcrun simctl spawn "$udid" log stream --level=info --predicate 'subsystem == "io.positron.LM"' > "$out/performance.log" 2>&1 &
+xcrun simctl spawn "$udid" log stream --level=info --predicate "subsystem == \"$bundle_id\"" > "$out/performance.log" 2>&1 &
 logger=$!
 trap 'kill "$logger" 2>/dev/null || true; wait "$logger" 2>/dev/null || true' EXIT
 args=(--lunar-explorer --lunar-explorer-profile --lunar-explorer-profile-browser)
@@ -25,7 +26,7 @@ elif [[ ${LUNAR_BROWSER_CAPTURE_SEARCH_ONLY:-0} == 1 ]]; then
     stages=(search empty coordinate coordinate-selected)
 fi
 printf '%s\n' "${args[@]}" > "$out/launch-arguments.txt"
-launch=$(xcrun simctl launch --terminate-running-process "$udid" io.positron.LM "${args[@]}")
+launch=$(xcrun simctl launch --terminate-running-process "$udid" "$bundle_id" "${args[@]}")
 pid=${launch##*: }
 printf 'stage\tpid\tsha256\n' > "$out/stages.tsv"
 wait_stage() {

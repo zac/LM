@@ -5,6 +5,7 @@ A callback is excluded from the non-texture maximum if any part of its elapsed
 interval overlaps a globe-texture interval. Raw maxima and hitch counts remain.
 """
 import argparse
+import os
 import datetime as dt
 import json
 from pathlib import Path
@@ -57,7 +58,7 @@ def measure(folder):
     outside = [h['elapsed'] for h in hitches if not overlaps(h['start'], h['end'], texture)]
     outside += [w['max'] for w in windows if not overlaps(w['start'], w['end'], texture)]
     assert outside, 'No callbacks outside texture interval'
-    result = dict(windows=len(windows), footprint_min_mib=min(w['physical'] for w in windows),
+    result = dict(bundle_id=os.environ.get("LUNAR_BUNDLE_ID", "io.positron.LM"), windows=len(windows), footprint_min_mib=min(w['physical'] for w in windows),
                   footprint_max_mib=max(w['physical'] for w in windows),
                   lifetime_peak_mib=max(m['peak_mib'] for m in memory),
                   max_window_mean_ms=max(w['mean'] for w in windows),
