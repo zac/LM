@@ -26,6 +26,7 @@ The first modeling target should be the commander station, its window and landin
 | [Blender, USDZ, and visionOS](blender-usdz-visionos.md) | Current app contract, proposed hierarchy and pivots, materials, control bindings, and on-device validation |
 | [Measurements CSV](measurements.csv) | Values with original units, converted units, source/page, applicability and uncertainty |
 | [Research backlog](research-backlog.md) | Specific unresolved questions and what evidence would close them |
+| [Additional reference assessment](additional-reference-assessment.md) | User-supplied large panel scan, NASA collection overlap, and research prerequisites for modeling |
 | [Reference manifest](references/manifest.json) | Local document/figure hashes, original source locations and excerpt mappings |
 | [Image manifest](references/images/manifest.json) | Image IDs, dimensions, hashes, working sources and failed retrieval history |
 

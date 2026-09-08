@@ -200,6 +200,16 @@
       "visually_inspected": true,
       "bytes": 427206,
       "sha256": "8fc975ee40b3ade2827c9d999747112b8f85e6bf0bad3fb8c97feba087cc1c46"
+    },
+    {
+      "file": "references/documents/user-lunar-module-controls-and-displays.pdf",
+      "title": "Lunar Module Controls and Displays \u2014 user supplied",
+      "source_url": null,
+      "source_origin": "User attachment: Lunar Module Controls and Displays.pdf",
+      "retrieved": "2026-09-08",
+      "content": "Complete original; one page; embedded 10943 x 5310 grayscale JPEG; mission and revision unconfirmed",
+      "bytes": 10883155,
+      "sha256": "8b5b96fece2fd5fcdbb5b5ceb22f8492033569c52aff8db36a4e82009703828b"
     }
   ],
   "additional_manifests": [

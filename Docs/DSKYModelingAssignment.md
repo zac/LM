@@ -1,0 +1,25 @@
+# DSKY modeling worker prompt
+
+Build the first high-fidelity Blender DSKY component for our Apollo 11-led lunar-module cockpit, destined for USDZ and a native RealityKit Vision Pro app. Work in this separate worktree created from `cockpit/integration`. Use branch `cockpit/dsky` if it is available; otherwise retain your assigned isolated branch and report it. Verify the checkout, clean/dirty state and exact starting SHA before edits. Preserve unrelated changes.
+
+Read these repository-relative files first:
+
+- `Assets/Cockpit/AGENTS.md` and `Assets/Cockpit/CONTRACT.md`
+- `Docs/CockpitCoordination.md` and `Docs/CockpitComponentHandoff.md`
+- `Docs/Research/LunarModuleInterior/README.md`, `controls-and-panels.md`, `photo-reference-catalog.md`, `blender-usdz-visionos.md`, and `additional-reference-assessment.md` in that research directory
+- `LM/LMDSKYGeometry.swift`, `LM/LMCockpitAssetContract.swift`, and the DSKY construction/update paths in `LM/LMCommanderStationScene.swift`
+- The DSKY input paths in `LM/PoweredDescentSession.swift` and `LM/TerminalDescentCockpitView.swift`
+
+Own only `Assets/Cockpit/Components/DSKY/`. Create `HANDOFF.md` from the shared template and record your machine, Blender version, source baseline, deliverables and acceptance criteria. Do not edit the app, shared contracts, master assembly, other components or AGC/LMCore. Propose necessary integration changes in your handoff. Do not wait for the LunarMap extraction to finish: this assignment produces a standalone asset.
+
+Use the existing `LMDSKYGeometry.swift` envelope and key positions as the compatibility baseline, preserving the distinction between claimed drawing dimensions and digitized positions. Inspect the cited original MIT/IL outline 2003956 Rev B and assembly 2003994-091 when obtainable; record any discrepancies rather than silently changing the interface. Use Apollo 11 photographs for visible appearance, and identify any later-mission substitutions. NASA overview drawings and the supplied PDF are inventory references, not dimensioned plans. Record unknown dimensions as provisional. Freeze the local mounting datum and envelope in your handoff before detailing.
+
+Produce the housing, bezel, fasteners, face legends, 19 separate keycaps and their press transforms, and independently addressable display/lamp regions. Match `LMDSKYGeometry.artistNodeName` exactly for every key. Under `DSKY_Mount`, keep `DSKY_Face`, `DSKY_Display_Mount` and the 19 `DSKY_Key_*` transforms as direct children; key meshes belong under their key transforms. Keep the fixed face separate from moving keys. Record neutral positions, press axes and provisional/verified travel. Use meters and identity root scale, and document/verify Blender-to-USD orientation and the local origin. This is a standalone DSKY; integration owns global cabin placement and `LM_Cabin` assembly.
+
+Our existing AGC owns key semantics, digits and annunciations. LMCore owns vehicle dynamics. Do not build another computer, verb/noun interpreter or simulated flight model. Keep live readouts replaceable and provide named regions plus a proposed mapping to existing snapshots. A static demonstration display must be labeled as a preview. Preserve PRO's separate press/release requirement in the binding notes. Do not claim live interaction merely because the asset has matching names: the present application still binds procedural controls, and integration will implement/test imported bindings.
+
+Deliver a reproducible Blender build script where practical, the editable `.blend`, all textures/dependencies with portable relative paths, a standalone USDZ export if the available tools support it, and small front/oblique/key-detail review images. Use Git LFS for `.blend` and applicable exports; verify files contain assets rather than unresolved LFS pointers. Inspect the available Blender/toolchain first. Workbench or small lightweight previews are appropriate; a heavy render/bake requires an assigned machine render slot under the coordination rules. Continue geometry and lightweight verification if no slot exists.
+
+Validate a clean reopen, missing dependencies, physical dimensions, root scale, hierarchy, unique names, all 19 key transforms, display-region separation and normals/material appearance. If export is available, reimport it and verify dimensions, axes, hierarchy and materials; record export settings and SHA-256. Include triangle/material/texture counts and observed render cost where measurable. Distinguish checks actually performed from planned RealityKit/Vision Pro tests. Document source evidence and unresolved issues in `HANDOFF.md`.
+
+Complete and commit your scoped deliverables on the worker branch, without pushing or merging. Return the exact commit, file paths, review images, checks performed and integration proposals. If a required tool or original drawing is unavailable, document the limitation and complete the useful work that remains possible; do not present a placeholder as a finished high-fidelity model.
