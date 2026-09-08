@@ -1,0 +1,10 @@
+{
+  "cabin_mesh_count" : 267,
+  "closest_panel_mesh" : "CDR_Front_Lower_00",
+  "method" : "Native macOS RealityKit AABB separation for every Cabin mesh against whole ACA bounds; 729 sampled poses at 2.75 degrees; not continuous collision or hand clearance proof",
+  "minimum_aabb_gap_m" : 0.025049984455108643,
+  "possible_aabb_overlaps" : [
+
+  ],
+  "sample_count" : 729
+}

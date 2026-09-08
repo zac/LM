@@ -25,6 +25,15 @@ import RealityKit
    let n=optics["CDR_Window_"+layer]!["normal"] as! [Double]
    precondition(simd_length(actual-SIMD3<Float>(Float(n[0]),Float(n[1]),Float(n[2])))<1e-5)
   }
+  for name in ["Forward_Hatch_Closed", "Transfer_Hatch_Closed", "Docking_Window_Opening", "Cutaway_Aft", "Cutaway_Ceiling", "Cabin_Deck"] {
+   precondition(root.findEntity(named:name) != nil)
+  }
+  let hatch=root.findEntity(named:"Forward_Hatch_Closed")!
+  let leaf=hatch.findEntity(named:"Forward_Hatch_Leaf")!
+  let old=leaf.position(relativeTo:root);hatch.position.x += 0.01
+  precondition(abs(leaf.position(relativeTo:root).x-old.x-0.01)<1e-5)
+  hatch.position.x -= 0.01
+  for name in ["Panel_1_Reservation", "CDR_Glareshield", "CDR_Pane_Inner", "CDR_Frame_Inner_0"] { precondition(root.findEntity(named:name) == nil) }
   let bounds=root.visualBounds(relativeTo:root)
   let output:[String:Any] = ["native_load":"PASS","platform":"macOS RealityKit","mount_positions":"PASS","mount_count":mounts.count,"eye_and_pane_basis":"PASS","separate_lpd_layers":"PASS","bounds_min":[bounds.min.x,bounds.min.y,bounds.min.z],"bounds_max":[bounds.max.x,bounds.max.y,bounds.max.z],"Vision_Pro":"NOT TESTED"]
   print(String(decoding:try JSONSerialization.data(withJSONObject:output,options:[.prettyPrinted,.sortedKeys]),as:UTF8.self))

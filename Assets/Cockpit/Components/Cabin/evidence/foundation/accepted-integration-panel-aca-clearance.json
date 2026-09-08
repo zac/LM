@@ -1,0 +1,10 @@
+{
+  "closest_panel_mesh" : "Panel_4_Backing_Left",
+  "method" : "Native macOS RealityKit AABB separation for every CommanderPanels mesh against whole ACA bounds; 729 sampled poses at 2.75 degrees; not continuous collision or hand clearance proof",
+  "minimum_aabb_gap_m" : 0.22263449430465698,
+  "panel_mesh_count" : 40,
+  "possible_aabb_overlaps" : [
+
+  ],
+  "sample_count" : 729
+}

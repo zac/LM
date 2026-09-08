@@ -1,42 +1,55 @@
-# Cabin structural blockout handoff
+# Enclosed Cabin foundation handoff
 
-## Scope and provenance
+Built on clean `09364460e8be570338f3d39a07067fe2bee0b044` in `/Users/zac/.codex/worktrees/6943/LMKit`, branch `cabin-enclosed-foundation`. All changes are inside `Assets/Cockpit/Components/Cabin/`. No shared Sources/Tests/Tools, simulation, LM master assembly, other component assets, merge or push. Early proposal and preserved baseline were committed as `2fafa5b` before final window-edge geometry. Final commit is supplied by task handoff; this document does not embed its own hash.
 
-Owned directory: `Assets/Cockpit/Components/Cabin/` only. Branch `codex/cabin-structure` created because the provisioned worktree was detached; verified clean baseline `d8e35fa3ec8dc400cbb2762c24953022b07e8ebb`. Main was not checked out or modified. Git LFS 3.8.0; Blender 5.2.1 LTS build 9e2066aef7ef. No heavy render/bake was started.
+## Delivered
 
-Exact asset commit: `eb4efc12614ad45bd7df1d82e848f5f41b776c1e`. This following handoff-only commit records that immutable asset revision.
+A coherent, neutral, descent-ready visual shell: connected deck, forward cheek/backing surfaces, side liner and faceted crown, aft bulkhead and approximate engine cover; independent closed forward and upper transfer hatch leaves; independently addressable inspection cutaways. Actual forward and docking apertures remain open for WindowsLPD. 267 meshes / 2,760 triangles. No copied instrument/catalog/panel placeholder/surround/window geometry is present in the production shell.
 
-New authored geometry, not an import of the legacy exterior. Consulted LM revision `ed230a6ee4286bc2385f44bc8f1889bdcc39a8ab`. Exact local evidence snapshots, byte counts and SHA-256 hashes are in `evidence/sources.json`; source manifests preserve original URLs and photograph scan provenance. `capture_evidence.py` documents the source paths used. No app calibration, AGC, LMCore, DSKY, FDAI, package Sources/Tests/Tools or master assembly was edited.
+Original metric datum and panel/instrument world poses remain unchanged. Forward hatch opening shifts Z -.95 to -1.02. Existing aft termination Z .5868 extends to an approximate midsection closure at 1.15; this does not revise the source's 42in forward-barrel dimension. Eye and construction triangle corners remain unchanged and provisional. See `DATUM.md`, controlling `interface-v2.json`, and `mounts.json`.
 
-## Files and regeneration
+The forward finite-thickness cheeks are trimmed along the provisional eye-to-construction-corner rays to avoid clipping the opening. This is a compatibility treatment, not optical calibration. The original datum, source builder, mounts, handoff and USDA remain in `evidence/baseline-0936446/`; original authoring provenance `eb4efc1` is retained. Retained Optical nodes and empty LPD layers are comparison metadata only.
 
-- `DATUM.md`: written measurement/coordinate freeze established before modeling, with historical qualifiers and legacy deltas.
-- `build.py`: reproducible Blender builder, direct USD exporter and small Workbench previews. Run from the repository root: `blender -b --factory-startup --python Assets/Cockpit/Components/Cabin/build.py`.
-- `Cabin.blend`: editable metric source, separate mesh/empty hierarchy, three review cameras, no external textures, linked libraries or add-ons.
-- `Cabin.usda`, `Cabin.usdc`, `Cabin.usdz`: equivalent neutral geometry, Preview Surface materials, 74 meshes / 872 triangles. No lights/cameras, state bindings or baked illumination exported.
-- `mounts.json`: exact proposed scene positions, pitch and stable USD paths. DSKY/FDAI mating surfaces and cutouts are explicitly null.
-- `reviews/REVIEW.md` and front/side/crew-eye PNGs: dimensions, photo comparisons, camera states and remaining gates.
-- `validate.py`, `validation.json`: 1,028 successful checks, artifact hashes and physical bounds.
-- `validate_native.swift`, `validation-native.json`: macOS RealityKit load, ten proposed mount transforms, CDR eye and pane normal checks, separate LPD nodes.
+## Dependencies and evidence
 
-Validation commands: `blender -b --factory-startup --python Assets/Cockpit/Components/Cabin/validate.py`; compile native checker with `xcrun swiftc -module-cache-path /tmp/cabin-swift-module-cache -parse-as-library Assets/Cockpit/Components/Cabin/validate_native.swift -o /tmp/cabin-validate-native`, then run that executable with the absolute Cabin.usdz path. Blender may print an exit code of zero on Python exceptions: require the PASS line and refreshed validation report. On this host Blender and RealityKit required execution outside the sandbox; Swift's cache was directed to /tmp.
+- Windows contract: `80c9b2d`, exact `interface-v1.json` SHA-256 `28bb74258353bbc8365b7a54011782332ff69927c0683154a46b80b8ad24f22f`. Local pinned copy in `evidence/foundation/`. Its right-handed docking basis uses local up +Z; the earlier reflected proposal is preserved separately as superseded evidence.
+- Combined visual review only: Windows `5699e64d29ee0ec77c60d2324f64e51fe68156e3`, USDZ `91c03cc4b6826473cfdccdce195fece5f591b778b8afdb3a71505df8f528cc32`. Imported at identity into a temporary Blender scene, never saved into Cabin.blend or Cabin USD.
+- Accepted ACA: SHA-256 `df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5`, runtime mount (-.49,.9075,-.37), from accepted LMKit `86aa71b`. Read-only LM integration evidence at `11f7335` retained under `evidence/foundation/`; original validation manifest distinguishes its test-source commit `7c1b4a7`.
+- `evidence/foundation/provenance.json` records exact reference file hashes, original URLs, page locators, applicability, helper provenance and substitutes. Grumman 1967 plan/section full-page renders retain their captions. Apollo11 photo guides forward relationships; Apollo16 deck photo is a qualitative substitute only. Aft closure, transfer hatch pose, engine-cover size and wall thickness are explicitly approximate.
+- `artifacts.json` is the final source/output/review hash index. Blender 5.2.1 LTS build `9e2066aef7ef`. No add-ons, linked libraries, network dependency, external texture or heavy render/bake.
 
-## Coordinate and mounting interface
+## Validation
 
-USD root `/Cabin` has identity transform/scale, meters, +X LMP/right, +Y overhead, -Z forward. Native Blender authoring is +X right, +Z overhead, +Y forward; exporter physically maps `(x,y,z)` to `(x,z,-y)` for points, normals and every local transform. Validation compares every exported world matrix against the authoring scene, then reimports and checks every transform and physical bounds. Axis metadata alone is not used as proof.
+- `validation.json`: 3,556 checks pass. Metric Blender, USD meters/Y-up, proper rotations, identity scales/root, closed outward solids, nondegenerate geometry, bound Preview Surface materials, every world transform, USDZ reimport, physical bounds. ARKit compliance: zero errors/failed checks/warnings.
+- 342 interior construction-triangle sightline samples are unobstructed. 16,384 spherical rays from CDR/LMP/aft/low positions show zero unexpected escapes; permitted escapes are through agreed windows. This samples visual enclosure, not pressure-tight topology.
+- `validation-native.json`: native macOS RealityKit load, preserved ten mount poses, eye/pane comparison bases, named independent hatch/leaf groups and absence of duplicated old geometry. No simulator jobs.
+- `aca-clearance.json`: 729 sampled poses at 2.75-degree steps over +/-11 degrees on all three axes, zero Cabin mesh AABB overlaps, minimum 25.049984mm gap at `CDR_Front_Lower_00`. Conservative AABB separation at sampled poses; not continuous collision or hand/reach certification.
+- `reviews/`: front, side cutaway, CDR, LMP, rear, overhead, deck cutaway and side interior. Combined views include actual final Windows miters and docking retainer. Workbench glazing is hidden to expose opening edges; actual USD keeps neutral material semantics.
 
-Eye: `/Cabin/Optical/CDR_Eye` at (-.5588,1.78,-.38). `/Cabin/Optical/CDR_Window_Inner` and `CDR_Window_Outer` originate at respective upper-outboard pane corners. Local +X follows the top edge inboard, local +Z points toward eye. Each has its own child `LPD_Inner` / `LPD_Outer` mounting node; no grid or simulation is duplicated. CDR pane corners exactly preserve the existing reconstruction; both sets of corresponding rays collimate. Outer plane offset .020 m is provisional. LMP panes are an explicitly proposed mirrored reconstruction.
+Combined review shows rounded frame corners covering the sharp shell construction edges and an open docking window. Wall-to-retainer backing contact is expected; no claim of mechanical seal mating. Fine surface intersection/contact, optical targeting, panel sightlines in the full assembly, pressure vessel, hinge sweep/egress, headset stereo/reach/photometry and performance remain unqualified. Blank aft/side spaces are intentional equipment mounting areas. Imported and old LPD targeting remain unqualified.
 
-`/Cabin/Mounts/Mount_Panel_1` through `Mount_Panel_6` are face-centered mount origins, local +Z toward crew. Their blank backing meshes extend into local -Z. DSKY and FDAI reservations are children of Panel_4 and Panel_1 respectively; their origins are proposed legacy display-origin offsets, NOT surveyed mounting planes. Named middle-tier mounts remain unnumbered pending inventory reconciliation. Every panel and optical layer remains independently addressable. Moving the DSKY reservation group was verified to move its children without moving the deck. No actuation/hinge geometry belongs to this delivery.
+P5 Timer/top-rail notch is PanelInventory-owned. It does not create a hull opening: this shell remains continuous behind/below that equipment tray. No ACA or panel pose change was made. Mount metadata does not imply live bindings.
 
-Visual bounds in meters: min (-1.18336946, .07750000, -.99266378); max (1.18336946, 2.28336962, .58680000). Barrel diameter nominal 2.3368 m, depth 1.0668 m; outer visual thickness and forward nose projection explain the larger visual envelope. Do not scale the asset to the visual bounding box to recover nominal diameter.
+## Reproduce
 
-## Evidence limits and acceptance
+From repo root, using a materialized Git LFS checkout:
 
-Apollo 11 press-kit dimensions and 1967 Grumman relationships are distinct from proposed mesh dimensions. The preserved LM code is compatibility evidence, not automatic historical truth. Panel forward placements and tall shields deliberately differ from legacy geometry, as documented in DATUM.md and the installed-photo review. LM-10-derived panel sizes remain provisional, not certified LM-5 outlines. Apollo 16 photo use is limited to qualitative floor/threshold relationship; no later equipment is silently substituted.
+```sh
+/Applications/Blender.app/Contents/MacOS/Blender -b --factory-startup --python-exit-code 1 --python Assets/Cockpit/Components/Cabin/build.py
+/Applications/Blender.app/Contents/MacOS/Blender -b --factory-startup --python-exit-code 1 --python Assets/Cockpit/Components/Cabin/validate.py
+xcrun swiftc -module-cache-path /tmp/cabin-swift-module-cache -parse-as-library Assets/Cockpit/Components/Cabin/validate_native.swift -o /tmp/cabin-validate-native
+/tmp/cabin-validate-native "$PWD/Assets/Cockpit/Components/Cabin/Cabin.usdz"
+```
 
-This is a forward structural mounting skeleton with open aft termination and incomplete forward skin. It is not a pressure-tight hull, complete aft cabin, exterior replacement, hatch-swing model or certified instrument installation. No switches, hatch leaf, docking window, full side-panel catalog or master assembly is included. The coordinator should resolve forward shell closure/nominal-depth registration, exact panel boundaries, shield profile, mechanical clearances, pane cavity and hatch radii before detailing or accepting the proposed mount positions.
+Compile `check-aca-clearance.swift` the same way; arguments are the materialized resource base containing `HandControllers/ACA.usdz`, then absolute Cabin.usdz path. `review_combined.py` accepts `-- /absolute/path/WindowsLPD.usdz` after Blender's script argument. It writes only review PNGs/report; no production asset save. The exact dependency hashes above are required for comparison. Rebuilding produces equivalent geometry; binary authoring timestamps are not claimed bit-reproducible.
 
-USDZ ARKit compliance: zero errors, failed checks or warnings. All authored solids are closed, nondegenerate and outward wound; the assembled skeleton is intentionally open. Native macOS RealityKit checks passed; Vision Pro optical/interaction, RCP GUI, calibrated materials, collision/egress and mechanical fit were not tested. Shared package packaging/resource refresh is coordinator-owned; `Tools/sync_dsky.py` was not run because DSKY and packaged resources were unchanged.
+## Install — coordinator only
 
-Publication is limited to this component branch and its required LFS objects on LMKit origin. No merge or main push is authorized or performed. Final branch head and remote verification are reported after publication.
+1. Replace the complete old `/Cabin` once with this Cabin.usdz at identity. Keep independently loaded instruments and CommanderPanels. `migration.json` enumerates all 71 removed original visual nodes/paths; do not reinstall old panes, frames, reservations or glareshields by name.
+2. Install WindowsLPD separately at identity, using its corrected contract and historical-view policy. Cabin Optical nodes are metadata only. Install PanelInventory blanks and separate planning labels; preserve its unresolved ACA/Timer slot.
+3. All `Cutaway_*` groups and `Hatches` start visible. Inspection may disable named cutaway groups; restore them for the enclosed view. Hatch leaves are static authored surfaces, not actuated or certified hinge pivots.
+4. Coordinator refreshes shared runtime resources using the approved Tools workflow, including `Tools/sync_dsky.py`, then validates packaging and serial LM integration. This worker intentionally did not touch shared packaging or run a simulator.
+
+## Late user-reference review
+
+All three images from coordinator reference commit `a525dd6` were visually inspected after the asset commit. `reviews/USER-REFERENCE-COMPARISON.md` records visible deviations: smooth/faceted lining lacks perforated ceiling and detailed hatch hardware; side equipment bays remain intentionally empty; the coarse central cover is not positively identified with the photographed obstruction. Unknown image provenance and Smithsonian LM-2 restoration applicability remain explicit. This is a qualified foundation, not a finished historical cabin. No agreed interface or geometry changed from those qualitative images.

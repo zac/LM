@@ -1,0 +1,337 @@
+{
+  "schema": "lmkit.cabin.artifacts.v1",
+  "baseline": "09364460e8be570338f3d39a07067fe2bee0b044",
+  "branch": "cabin-enclosed-foundation",
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 22,
+      "sha256": "3bb521c0465e956b098b4c68a48be6dee74a7c0a697b8bdf534a658168e0db6e"
+    },
+    {
+      "path": "Cabin.blend",
+      "bytes": 201762,
+      "sha256": "93b6e765e77507d786addb82743ce35f3bebff4a311a02c2d419634b15bd3497"
+    },
+    {
+      "path": "Cabin.usda",
+      "bytes": 427202,
+      "sha256": "a701a352b0382d586fdbea7820d8ae0f84165de2291bc0a044d8096a9eeea49d"
+    },
+    {
+      "path": "Cabin.usdc",
+      "bytes": 86003,
+      "sha256": "781d5678e4241849b3f4b97b59afbcb30b5ec03270f38dd56bca06cd90729163"
+    },
+    {
+      "path": "Cabin.usdz",
+      "bytes": 86169,
+      "sha256": "9b30f113235bea7832dd0d9f245d3f6ad98bd8a64af2d217943a5489e498c21b"
+    },
+    {
+      "path": "DATUM.md",
+      "bytes": 3658,
+      "sha256": "42ac20bb0bcb3a68e514994e343b58dc6da89ba27ef6f90834eb50d40ea594c7"
+    },
+    {
+      "path": "HANDOFF.md",
+      "bytes": 8219,
+      "sha256": "03c99a7dcf10145ef34483ba88512d1dd25f91a3829a3e1f6bbba1728acd85d9"
+    },
+    {
+      "path": "aca-clearance.json",
+      "bytes": 373,
+      "sha256": "5d3d5e99900473c1d19e453a422842306e45ecdb057a66ef9f740ac511124b22"
+    },
+    {
+      "path": "build.py",
+      "bytes": 18585,
+      "sha256": "b73154b5c4351e8a221c567ba364a4bd500b009642f3f1e60b99c7f567d8a885"
+    },
+    {
+      "path": "capture_evidence.py",
+      "bytes": 1234,
+      "sha256": "eba19a2394f4f7483f7dbbce69c7f6828e4346c3bc57e13fc0d7bbf98d243f72"
+    },
+    {
+      "path": "check-aca-clearance.swift",
+      "bytes": 2145,
+      "sha256": "1088a29933f9ec9135ddb84050dabd995594bbecc473d1b825f24e3e39b6ac4c"
+    },
+    {
+      "path": "combined-review.json",
+      "bytes": 642,
+      "sha256": "346b54132af2715dbd51e344bd040e95a8ee3d5cbae3b5fe87f9335342d9d034"
+    },
+    {
+      "path": "enclosure-rays.json",
+      "bytes": 91,
+      "sha256": "17461eda4fe36c81eaad8d287d776b78ef8db0011df2f30f46807f59ab6bf72e"
+    },
+    {
+      "path": "evidence/Docs/CommanderWindowCalibration.md",
+      "bytes": 5890,
+      "sha256": "cd39139a66075d2a18d0eacfb109d3f8c0e3e3c15885638867bcbc79b936a215"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/controls-and-panels.md",
+      "bytes": 23802,
+      "sha256": "8dcef0e36e81fffa1b6fbfc52b3d1646b42f45f51ae7b1dbee90ef946909fea2"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/geometry-materials-and-evidence.md",
+      "bytes": 12857,
+      "sha256": "b5845e1c869b3240a8652861733a202e5c7a490d37b24e5492cbf47981194b13"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/measurements.csv",
+      "bytes": 3253,
+      "sha256": "34a4fd0512f9ac860d6634709a371c49a04823da383a62ea3c549730b05953a8"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/photo-reference-catalog.md",
+      "bytes": 14090,
+      "sha256": "47e7706eec5e0ba6257cd7d841f6590d4e40e7f6eb9ea40ab2d751283ea7e49c"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/references/documents/19730023038-spacecraft-windows.pdf",
+      "bytes": 1370212,
+      "sha256": "341effa41329abc44590e17d89110699f25fb74a9c6dc1919e460e66244193d8"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/references/documents/grumman-1967-crew-station-excerpt.pdf",
+      "bytes": 11937843,
+      "sha256": "bbba844ab4598fe659f1e7dbb915abb329f8e6cc91531c9d0b46aa1492926295"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/references/images/69-H-134.jpg",
+      "bytes": 165479,
+      "sha256": "b851a1d0e20ea309beec4a33454d8b70e9923e2c3553d9da2d9275368665abb9"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/references/images/AS11-36-5389HR.jpg",
+      "bytes": 876209,
+      "sha256": "9a87df320e1fcd6c624ebb14ac2980bc72e4d3173a323e6197dd44c4469be5a1"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/references/images/LM11-co42.jpg",
+      "bytes": 1933953,
+      "sha256": "cda83061e39a8819647aaec967c0e8eca7ab46eb5e664870a850f02a5c3a2f67"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/references/images/manifest.json",
+      "bytes": 7383,
+      "sha256": "0a793e8ab4413d34e63e3b18983f1661543124bc535447af1c80da0527c11ef8"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/references/manifest.json",
+      "bytes": 8308,
+      "sha256": "954d318823f256f5ef2ef0d2cadcd48a6e4d6a3e591cf5ad6803b32db1bfc086"
+    },
+    {
+      "path": "evidence/LM/LMCommanderStationGeometry.swift",
+      "bytes": 12172,
+      "sha256": "447ce35526b475ad71b889083c3cf28f0d673ca0b22076e37a6c00336d371659"
+    },
+    {
+      "path": "evidence/LM/LMLandingPointDesignator.swift",
+      "bytes": 10481,
+      "sha256": "b60b4980c312cc79d4909c152bcc5b007e0eb1902764d8c34b6575fc46508229"
+    },
+    {
+      "path": "evidence/baseline-0936446/Cabin.usda",
+      "bytes": 122575,
+      "sha256": "e94041a61036604b1b858b1a4cf495c37e22d7e9cc903dba58f8d58020ca5bac"
+    },
+    {
+      "path": "evidence/baseline-0936446/DATUM.md",
+      "bytes": 3491,
+      "sha256": "016fdedc75a16a7f96b0fa3f18f400c77907b6b3bb5cdb2202a3784d3183462c"
+    },
+    {
+      "path": "evidence/baseline-0936446/HANDOFF.md",
+      "bytes": 6568,
+      "sha256": "481189a6d18230e639738107bb47bd97119ad4bf67763bfc53ec418091a8e2c9"
+    },
+    {
+      "path": "evidence/baseline-0936446/build.py",
+      "bytes": 11570,
+      "sha256": "075f8a0081279bc80538c54e19b957a297f49af3855d4fd6d75382c7ba8d8d11"
+    },
+    {
+      "path": "evidence/baseline-0936446/mounts.json",
+      "bytes": 5922,
+      "sha256": "652565f404e2596d697681c8e1de9b4f8bb5279997cd124b408e285bb76f4b93"
+    },
+    {
+      "path": "evidence/foundation/accepted-integration-manifest.json",
+      "bytes": 5927,
+      "sha256": "2bac9e4654a1760c399542b3403b3f51e046ea33946b792e933ece899410fe01"
+    },
+    {
+      "path": "evidence/foundation/accepted-integration-panel-aca-clearance.json",
+      "bytes": 383,
+      "sha256": "aefb262ddcc177341b9d6b0d3bba14108902929d64b36a3360da79b322157007"
+    },
+    {
+      "path": "evidence/foundation/accepted-integration-source-files.json",
+      "bytes": 158434,
+      "sha256": "f406c184aad75b8226d7c1e7086103db5c37cdb5cd2259f773b26881026e523f"
+    },
+    {
+      "path": "evidence/foundation/grumman-p18-plan.png",
+      "bytes": 2352351,
+      "sha256": "3ab5d7eae008f300198822dc23036d3a8b8bcd0c258adcfba25f4b3c2a05cd7a"
+    },
+    {
+      "path": "evidence/foundation/grumman-p19-section.png",
+      "bytes": 2180348,
+      "sha256": "eb610723f391dba227791a6709d04e018f91e2065c92f771d6770c7b9868e360"
+    },
+    {
+      "path": "evidence/foundation/provenance.json",
+      "bytes": 8178,
+      "sha256": "e2d93165800a697f9397bf123b563f7d740e3a091b33bb229dcbbd2484c81179"
+    },
+    {
+      "path": "evidence/foundation/user-reference-manifest-a525dd6.json",
+      "bytes": 1815,
+      "sha256": "0db53442a5d03c87768377319af78f14034d25feb6c5f1048c0823bceacd8f74"
+    },
+    {
+      "path": "evidence/foundation/windows-interface-80c9b2d.json",
+      "bytes": 4374,
+      "sha256": "28bb74258353bbc8365b7a54011782332ff69927c0683154a46b80b8ad24f22f"
+    },
+    {
+      "path": "evidence/foundation/windows-interface-8dc1b6c.json",
+      "bytes": 3284,
+      "sha256": "432357e74e6310a5e25e9408a79d3f0b4405ea34714dd23f131542c1d2704203"
+    },
+    {
+      "path": "evidence/sources.json",
+      "bytes": 2852,
+      "sha256": "a65e04161bb90cc1e25e37112cb8803debad68eb00165a1ac262d062ffd4748b"
+    },
+    {
+      "path": "interface-v1.json",
+      "bytes": 5959,
+      "sha256": "3cc3cfdab491d9e70172eccd17b44dc44e3609360168b94e70bb98290aacbb24"
+    },
+    {
+      "path": "interface-v2.json",
+      "bytes": 7008,
+      "sha256": "1e1991db8f12d1b4432a966f90d5d78062176a150e66622998ce9dceae330d6e"
+    },
+    {
+      "path": "migration.json",
+      "bytes": 9166,
+      "sha256": "c7bb979f8f58111abfb4769bb0d520792f772e9b8fb5d1af6086959ee8a85dac"
+    },
+    {
+      "path": "mounts.json",
+      "bytes": 7682,
+      "sha256": "92bd8a2bf39794a99332226197a6c19b3aa0cb9d3d3149cc2404e1209903d6db"
+    },
+    {
+      "path": "review_combined.py",
+      "bytes": 1812,
+      "sha256": "1b666275b744f74d808f1b34a81acad9813f3d755e4ea768e9997cb76ec75c64"
+    },
+    {
+      "path": "reviews/REVIEW.md",
+      "bytes": 2208,
+      "sha256": "ec837e0629069292082291dca609e4ac793ec6e38a2ca8dd175c0075b6f29896"
+    },
+    {
+      "path": "reviews/USER-REFERENCE-COMPARISON.md",
+      "bytes": 3202,
+      "sha256": "ea3a57a34c013a9743758513079f88bc8b3e913559b2025338dbb33a52dcffd4"
+    },
+    {
+      "path": "reviews/combined-crew-eye.png",
+      "bytes": 1155715,
+      "sha256": "411ca532f07253ea6063b60d3ddeb19009183e5d869102bdf4edbc68a96f5867"
+    },
+    {
+      "path": "reviews/combined-docking-review.png",
+      "bytes": 1052311,
+      "sha256": "35edd1f9f0fe3a3a6f5d0216835d87d6bd311273e1c83d324153ecf125613117"
+    },
+    {
+      "path": "reviews/combined-lmp-eye.png",
+      "bytes": 1129985,
+      "sha256": "49226e787564a87d083cd451a399dc35ebdf8240a469d346a39e96b12f4894ae"
+    },
+    {
+      "path": "reviews/combined-overhead.png",
+      "bytes": 1040056,
+      "sha256": "e2eb4262445ce0cb9d5eefacd1062e5dbfad11e1c3ec5895b68adabfa5ac8f7f"
+    },
+    {
+      "path": "reviews/combined-side-interior.png",
+      "bytes": 1137166,
+      "sha256": "ce7bccea9648fdd72ed97dd5019c7919f75dc8b9556ef1dcd3298a7c7589bb13"
+    },
+    {
+      "path": "reviews/crew-eye.png",
+      "bytes": 1125729,
+      "sha256": "22e7730b10ac72fc6ffc569ef8e3f96a9c65310b623ee28af6100a2c47e1ca01"
+    },
+    {
+      "path": "reviews/front.png",
+      "bytes": 1185637,
+      "sha256": "017575656efaa0ddc76c0f8da462fd3b6325a0f568e3a254852335f591c7a20f"
+    },
+    {
+      "path": "reviews/lmp-eye.png",
+      "bytes": 1115526,
+      "sha256": "963ec9a89abd671790d6618d1286feca9782a4ab2c51f50e14904d74bb3801cb"
+    },
+    {
+      "path": "reviews/overhead-cutaway.png",
+      "bytes": 1084154,
+      "sha256": "d787b04b565006f8bdd9393d262990b4b641c432463ceaad1ac190ce9fbab1fe"
+    },
+    {
+      "path": "reviews/overhead.png",
+      "bytes": 1039986,
+      "sha256": "ec9b6b2142adc8a1f8e3d98851dd91241b778f705a778cb80d9eff12cf25feec"
+    },
+    {
+      "path": "reviews/rear.png",
+      "bytes": 1100631,
+      "sha256": "cf1e52cd0857d36a9e0f36526c708287c5b936526e1a2d44acc3922651bcface"
+    },
+    {
+      "path": "reviews/side-interior.png",
+      "bytes": 1127245,
+      "sha256": "67b193a856b7d6c8bb487f9360204a8c65827c8f20c3e6638231a8818b9950fe"
+    },
+    {
+      "path": "reviews/side.png",
+      "bytes": 1142114,
+      "sha256": "eca3045b6e3fb31c15652e81a701a35525af6af78d38f42e3d93109f9f5b472d"
+    },
+    {
+      "path": "validate.py",
+      "bytes": 9213,
+      "sha256": "b12348704f96ad8f9d4616f81dd997384d69fc2c2b1b2a0eea292e122d11d0fb"
+    },
+    {
+      "path": "validate_native.swift",
+      "bytes": 2633,
+      "sha256": "cee0e0471f7dae87fad5d8e3ec531e3996dd29a41db8c5a36cbe5bad28af58a1"
+    },
+    {
+      "path": "validation-native.json",
+      "bytes": 408,
+      "sha256": "9f2bf785dff400c0ea3245a278106c38902dc6b76626f05461f3ced0e739ccc0"
+    },
+    {
+      "path": "validation.json",
+      "bytes": 165196,
+      "sha256": "d16b82c1e7668bc9f3fa69f1ca06099bb1fd669a8496f0ba603dac21d3738f90"
+    }
+  ]
+}

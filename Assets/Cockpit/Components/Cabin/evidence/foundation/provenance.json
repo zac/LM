@@ -1,0 +1,193 @@
+{
+  "baseline": "09364460e8be570338f3d39a07067fe2bee0b044",
+  "original_authoring_commit": "eb4efc12614ad45bd7df1d82e848f5f41b776c1e",
+  "windows_contract_commit": "80c9b2d",
+  "integration_readonly_LM": "11f7335b73884ce8dd8ebe33583f666e2b329c72",
+  "accepted_ACA_sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5",
+  "sources": [
+    {
+      "id": "grumman-1967",
+      "url": "https://www.ibiblio.org/apollo/Documents/lm_structures_study_guide.pdf",
+      "locators": "printed18/Fig11 (local excerpt page4), printed19/Fig12 (local page5), printed27/deck (local13), printed31/hatch (local17)",
+      "mission": "1967 early LM-2 design basis; not LM-5 survey",
+      "application": "qualitative forward barrel/aft region, floor, raised cover, upper hatch relationships",
+      "rendered_pages": [
+        "grumman-p18-plan.png",
+        "grumman-p19-section.png"
+      ],
+      "crop": "full source pages with captions, no photo scaling measurement"
+    },
+    {
+      "id": "Apollo11-press-kit",
+      "url": "https://www.nasa.gov/wp-content/uploads/static/apollo50th/pdf/A11_PressKit.pdf#page=100",
+      "locators": "printed96 PDF100",
+      "application": "92in diameter,42in forward compartment depth,32in nominal forward hatch",
+      "mission": "Apollo11; retained research transcription and live URL verified; not locally duplicated entire press kit"
+    },
+    {
+      "id": "69-H-134",
+      "url": "https://apollojournals.org/alsj/a11/ap11-69-H-134.jpg",
+      "mission": "Apollo11 closeout, archive mirror of NASA photograph",
+      "application": "continuous roof/cheek surrounding separate window and central panel; no detailed instruments copied",
+      "crop": "full retained photo"
+    },
+    {
+      "id": "LM11-co42",
+      "url": "https://apollojournals.org/alsj/a16/LM11-co42.jpg",
+      "mission": "Apollo16 LM11, qualitative substitute only",
+      "application": "low threshold, floor strip treatment; stowed items excluded",
+      "crop": "full retained photo"
+    },
+    {
+      "id": "TN-D7439",
+      "url": "https://ntrs.nasa.gov/api/citations/19730023038/downloads/19730023038.pdf",
+      "locators": "printed9 PDF14",
+      "mission": "Apollo experience report across missions",
+      "application": "forward nominal triangle and docking viewing area/curvature; exact geometry delegated to pinned WindowsLPD review"
+    }
+  ],
+  "files": [
+    {
+      "path": "evidence/Docs/CommanderWindowCalibration.md",
+      "bytes": 5890,
+      "sha256": "cd39139a66075d2a18d0eacfb109d3f8c0e3e3c15885638867bcbc79b936a215"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/controls-and-panels.md",
+      "bytes": 23802,
+      "sha256": "8dcef0e36e81fffa1b6fbfc52b3d1646b42f45f51ae7b1dbee90ef946909fea2"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/geometry-materials-and-evidence.md",
+      "bytes": 12857,
+      "sha256": "b5845e1c869b3240a8652861733a202e5c7a490d37b24e5492cbf47981194b13"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/measurements.csv",
+      "bytes": 3253,
+      "sha256": "34a4fd0512f9ac860d6634709a371c49a04823da383a62ea3c549730b05953a8"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/photo-reference-catalog.md",
+      "bytes": 14090,
+      "sha256": "47e7706eec5e0ba6257cd7d841f6590d4e40e7f6eb9ea40ab2d751283ea7e49c"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/references/documents/19730023038-spacecraft-windows.pdf",
+      "bytes": 1370212,
+      "sha256": "341effa41329abc44590e17d89110699f25fb74a9c6dc1919e460e66244193d8"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/references/documents/grumman-1967-crew-station-excerpt.pdf",
+      "bytes": 11937843,
+      "sha256": "bbba844ab4598fe659f1e7dbb915abb329f8e6cc91531c9d0b46aa1492926295"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/references/images/69-H-134.jpg",
+      "bytes": 165479,
+      "sha256": "b851a1d0e20ea309beec4a33454d8b70e9923e2c3553d9da2d9275368665abb9"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/references/images/AS11-36-5389HR.jpg",
+      "bytes": 876209,
+      "sha256": "9a87df320e1fcd6c624ebb14ac2980bc72e4d3173a323e6197dd44c4469be5a1"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/references/images/LM11-co42.jpg",
+      "bytes": 1933953,
+      "sha256": "cda83061e39a8819647aaec967c0e8eca7ab46eb5e664870a850f02a5c3a2f67"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/references/images/manifest.json",
+      "bytes": 7383,
+      "sha256": "0a793e8ab4413d34e63e3b18983f1661543124bc535447af1c80da0527c11ef8"
+    },
+    {
+      "path": "evidence/Docs/Research/LunarModuleInterior/references/manifest.json",
+      "bytes": 8308,
+      "sha256": "954d318823f256f5ef2ef0d2cadcd48a6e4d6a3e591cf5ad6803b32db1bfc086"
+    },
+    {
+      "path": "evidence/LM/LMCommanderStationGeometry.swift",
+      "bytes": 12172,
+      "sha256": "447ce35526b475ad71b889083c3cf28f0d673ca0b22076e37a6c00336d371659"
+    },
+    {
+      "path": "evidence/LM/LMLandingPointDesignator.swift",
+      "bytes": 10481,
+      "sha256": "b60b4980c312cc79d4909c152bcc5b007e0eb1902764d8c34b6575fc46508229"
+    },
+    {
+      "path": "evidence/baseline-0936446/Cabin.usda",
+      "bytes": 122575,
+      "sha256": "e94041a61036604b1b858b1a4cf495c37e22d7e9cc903dba58f8d58020ca5bac"
+    },
+    {
+      "path": "evidence/baseline-0936446/DATUM.md",
+      "bytes": 3491,
+      "sha256": "016fdedc75a16a7f96b0fa3f18f400c77907b6b3bb5cdb2202a3784d3183462c"
+    },
+    {
+      "path": "evidence/baseline-0936446/HANDOFF.md",
+      "bytes": 6568,
+      "sha256": "481189a6d18230e639738107bb47bd97119ad4bf67763bfc53ec418091a8e2c9"
+    },
+    {
+      "path": "evidence/baseline-0936446/build.py",
+      "bytes": 11570,
+      "sha256": "075f8a0081279bc80538c54e19b957a297f49af3855d4fd6d75382c7ba8d8d11"
+    },
+    {
+      "path": "evidence/baseline-0936446/mounts.json",
+      "bytes": 5922,
+      "sha256": "652565f404e2596d697681c8e1de9b4f8bb5279997cd124b408e285bb76f4b93"
+    },
+    {
+      "path": "evidence/foundation/accepted-integration-manifest.json",
+      "bytes": 5927,
+      "sha256": "2bac9e4654a1760c399542b3403b3f51e046ea33946b792e933ece899410fe01"
+    },
+    {
+      "path": "evidence/foundation/accepted-integration-panel-aca-clearance.json",
+      "bytes": 383,
+      "sha256": "aefb262ddcc177341b9d6b0d3bba14108902929d64b36a3360da79b322157007"
+    },
+    {
+      "path": "evidence/foundation/accepted-integration-source-files.json",
+      "bytes": 158434,
+      "sha256": "f406c184aad75b8226d7c1e7086103db5c37cdb5cd2259f773b26881026e523f"
+    },
+    {
+      "path": "evidence/foundation/grumman-p18-plan.png",
+      "bytes": 2352351,
+      "sha256": "3ab5d7eae008f300198822dc23036d3a8b8bcd0c258adcfba25f4b3c2a05cd7a"
+    },
+    {
+      "path": "evidence/foundation/grumman-p19-section.png",
+      "bytes": 2180348,
+      "sha256": "eb610723f391dba227791a6709d04e018f91e2065c92f771d6770c7b9868e360"
+    },
+    {
+      "path": "evidence/foundation/windows-interface-80c9b2d.json",
+      "bytes": 4374,
+      "sha256": "28bb74258353bbc8365b7a54011782332ff69927c0683154a46b80b8ad24f22f"
+    },
+    {
+      "path": "evidence/foundation/windows-interface-8dc1b6c.json",
+      "bytes": 3284,
+      "sha256": "432357e74e6310a5e25e9408a79d3f0b4405ea34714dd23f131542c1d2704203"
+    },
+    {
+      "path": "evidence/sources.json",
+      "bytes": 2852,
+      "sha256": "a65e04161bb90cc1e25e37112cb8803debad68eb00165a1ac262d062ffd4748b"
+    }
+  ],
+  "geometry_dependencies": {
+    "baseline_builder_sha256": "075f8a0081279bc80538c54e19b957a297f49af3855d4fd6d75382c7ba8d8d11",
+    "baseline_mounts_sha256": "652565f404e2596d697681c8e1de9b4f8bb5279997cd124b408e285bb76f4b93",
+    "window_contract_sha256": "28bb74258353bbc8365b7a54011782332ff69927c0683154a46b80b8ad24f22f"
+  },
+  "authoring": "Blender5.2.1 LTS9e2066aef7ef, direct pxr USD exporter; no linked libraries/textures/addons",
+  "substitutions": "All wall stations, liner thickness25mm, aft extension, transfer hatch placement and engine cover dimensions approximate."
+}
