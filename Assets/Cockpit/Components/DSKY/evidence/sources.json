@@ -35,5 +35,11 @@
       "bytes": 3641564,
       "sha256": "8a68785bd259889c86edde06e3e07bc1c4fbf6f86f228809caa4540ca8340327"
     }
-  ]
+  ],
+  "user_style_reference": {
+    "file": "evidence/user-display-style-reference.png",
+    "provenance": "User supplied craft-model image; maker and URL unknown; styling reference only",
+    "bytes": 1316063,
+    "sha256": "d9166aad12b4c5c8f0342fafedfa27b646c65b22e6920a00a83b666924a40f73"
+  }
 }

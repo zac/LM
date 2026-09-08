@@ -62,16 +62,46 @@ def screw(name,x,y,z,parent):
  # Dark recessed-looking cross; visual approximation, not a certified screw specification.
  for i,sz in enumerate([(.0033,.00055,.00012),(.00055,.0033,.00012)]):
   box(name+'_Recess'+str(i),(x,y,z+.0008),sz,black,parent,.00006)
+def rounded_bezel(name,p,w,h,t,mat,parent):
+ # Continuous cast rim, four rounded corners; no seams between straight rails.
+ loops=[]
+ for z,inset in [(-.001,0),(.002,0),(.002,t),(-.001,t)]:
+  pts=[]; r=.004-inset*.35
+  for cx,cy,a in [(w/2-inset-r,h/2-inset-r,0),(-w/2+inset+r,h/2-inset-r,90),
+                  (-w/2+inset+r,-h/2+inset+r,180),(w/2-inset-r,-h/2+inset+r,270)]:
+   for n in range(9):
+    angle=math.radians(a+n*90/8)
+    pts.append(xyz((cx+r*math.cos(angle),cy+r*math.sin(angle),z)))
+  loops.extend(pts)
+ n=36; faces=[]
+ for a,b in [(0,1),(1,2),(2,3),(3,0)]:
+  for i in range(n):
+   j=(i+1)%n; faces.append((a*n+i,a*n+j,b*n+j,b*n+i))
+ mesh=bpy.data.meshes.new(name+'_Geometry');mesh.from_pydata(loops,[],faces);mesh.update()
+ o=bpy.data.objects.new(name,mesh);bpy.context.collection.objects.link(o)
+ finish(o,name,mat,parent,p)
+ # Recalculate outward normals for this closed ring.
+ bpy.ops.object.select_all(action='DESELECT');o.select_set(True);bpy.context.view_layer.objects.active=o
+ bpy.ops.object.mode_set(mode='EDIT');bpy.ops.mesh.select_all(action='SELECT');bpy.ops.mesh.normals_make_consistent(inside=False);bpy.ops.object.mode_set(mode='OBJECT')
+ return o
+
+def segment(name,sx,sy,length,thick,vertical,parent):
+ # Six-sided EL strokes, tapered ends and deliberate gaps; not rounded LCD bars.
+ a=length/2; b=thick/2
+ pts=[(-a+b,-b),(a-b,-b),(a,0),(a-b,b),(-a+b,b),(-a,0)]
+ if vertical: pts=[(-y,x) for x,y in pts]
+ verts=[xyz((x+sx+.24*(y+sy),y+sy,.0003)) for x,y in pts]
+ mesh=bpy.data.meshes.new(name+'_Geometry'); mesh.from_pydata(verts,[],[tuple(range(6))]);mesh.update()
+ o=bpy.data.objects.new(name,mesh);bpy.context.collection.objects.link(o);o.parent=parent;mesh.materials.append(phosphor)
+ return o
+
 def digit(parent,name,x,y,width=.010,height=.014):
- d=empty(name,parent,(x,y,0)); thick=.001
- positions=[(0,height/2,width-thick,thick),(width/2,height/4,thick,height/2-thick),
- (width/2,-height/4,thick,height/2-thick),(0,-height/2,width-thick,thick),
- (-width/2,-height/4,thick,height/2-thick),(-width/2,height/4,thick,height/2-thick),(0,0,width-thick,thick)]
- for letter,(sx,sy,sw,sh) in zip('ABCDEFG',positions):
-  box(name+'_'+letter,(sx,sy,.00025),(sw,sh,.0003),phosphor,d,.00012)
- for child in d.children:
-  for v in child.data.vertices: v.co.x += .12*v.co.z
-  child.location.x += .12*child.location.z
+ d=empty(name,parent,(x,y,0)); thick=.00155
+ horizontal=width-thick*.35; vertical=height/2-thick*.85
+ for letter,sx,sy,ln,vertical_axis in [('A',0,height/2,horizontal,False),('B',width/2,height/4,vertical,True),
+ ('C',width/2,-height/4,vertical,True),('D',0,-height/2,horizontal,False),
+ ('E',-width/2,-height/4,vertical,True),('F',-width/2,height/4,vertical,True),('G',0,0,horizontal,False)]:
+  segment(name+'_'+letter,sx,sy,ln,thick,vertical_axis,d)
  return d
 
 def build():
@@ -85,11 +115,11 @@ def build():
  steel=material('Fasteners',(.39,.42,.40),.8,.29)
  keys_mat=material('Keycap_ivory',(.72,.74,.65),0,.42)
  ink=material('Key_ink',(.018,.024,.019),0,.6)
- glass=material('Display_dark_filter',(.012,.032,.024),.05,.24)
- legend=material('Face_legend',(.35,.63,.43),0,.55,.20)
+ glass=material('Display_dark_filter',(.020,.032,.014),.12,.20)
+ legend=material('Face_legend',(.12,.25,.018),0,.55,.025)
  lampmat=material('Lamp_unpowered',(.23,.23,.23),0,.85)
- phosphor=material('Segments_unpowered',(.022,.052,.032),0,.48,.02)
- lit=material('EL_green_on',(.20,.85,.42),0,.4,.9)
+ phosphor=material('Segments_unpowered',(.018,.029,.009),0,.48,.005)
+ lit=material('EL_green_on',(.30,.95,.035),0,.38,1.8)
  white_on=material('Status_white_on',(.75,.86,.71),0,.4,.35)
  amber_on=material('Caution_amber_on',(.95,.58,.10),0,.4,.35)
  for m in [lit,white_on,amber_on]: m.use_fake_user=True
@@ -111,8 +141,8 @@ def build():
  frame('DSKY_Display_OuterBezel',(0,0,-.0002),.179,.122,.003,.003,steel,display)
  box('DSKY_Annunciator_Filter',(-.047,0,0),(.075,.112,.001),glass,display,.0015)
  box('DSKY_Numeric_Filter',(.040,0,0),(.088,.112,.001),glass,display,.0015)
- frame('DSKY_AlarmBezel',(-.047,0,.0008),.077,.115,.002,.002,face_mat,display)
- frame('DSKY_NumericBezel',(.040,0,.0008),.091,.115,.002,.002,face_mat,display)
+ rounded_bezel('DSKY_AlarmBezel',(-.047,0,.0008),.077,.115,.003,face_mat,display)
+ rounded_bezel('DSKY_NumericBezel',(.040,0,.0008),.091,.115,.003,face_mat,display)
  lamp_specs=[]
  for row in [5,6]:
   box('DSKY_Lamp_Blank_'+str(row),(-.066,.045-row*.015113,.0012),(.02794,.013462,.0008),lampmat,display,.0006)
@@ -133,15 +163,20 @@ def build():
   region=empty('DSKY_Readout_'+name,display,(x,y,.001))
   fields[name]={'path':'/DSKY_Mount/DSKY_Display_Mount/'+region.name,'positions':count,'sign':name.startswith('R')}
   if count==2:
-   text('DSKY_Label_'+name,name,(x,y+.012,.0014),.004,legend,display)
-   for n in range(2): digit(region,'DSKY_Digit_'+name+'_'+str(n),-.007+n*.014,0,.009,.013)
+   box('DSKY_LabelStrip_'+name,(x,y+.012,.0011),(.029,.0058,.0004),phosphor,display,.0002)
+   text('DSKY_Label_'+name,name,(x,y+.012,.0015),.0036,ink,display)
+   for n in range(2): digit(region,'DSKY_Digit_'+name+'_'+str(n),-.007+n*.014,0,.009,.014)
   else:
-   for n in range(5): digit(region,'DSKY_Digit_'+name+'_'+str(n),-.021+n*.012,0,.008,.012)
+   for n in range(5): digit(region,'DSKY_Digit_'+name+'_'+str(n),-.021+n*.012,0,.0085,.013)
    sign=empty('DSKY_Sign_'+name,region,(-.034,0,0))
    box('DSKY_Sign_'+name+'_Minus',(0,0,.00025),(.006,.001,.0003),phosphor,sign,.0001)
    box('DSKY_Sign_'+name+'_Plus',(0,0,.00025),(.001,.006,.0003),phosphor,sign,.0001)
   if name in ['R1','R2']:
-   box('DSKY_RegisterRule_'+name,(.040,y-.009,.0014),(.079,.0005,.0002),legend,display,.00005)
+   box('DSKY_RegisterRule_'+name,(.040,y-.009,.0014),(.075,.0011,.0002),phosphor,display,.00005)
+ box('DSKY_RegisterRule_Top',(.040,-.0015,.0014),(.075,.0011,.0002),phosphor,display,.00005)
+ # Small mask registration dots, visual-reference inference rather than new dimension claims.
+ for idx,(x,y) in enumerate([(.041,.049),(.041,.023),(.002,-.002),(.078,-.002),(.002,-.021),(.078,-.021),(.002,-.039),(.078,-.039)]):
+  cylinder('DSKY_MaskDot_'+str(idx),(x,y,.0013),.00055,.00012,legend,display,16)
  manifest_keys=[]
  for name,x,y in KEYS:
   pos=(x*I-W/2,y*I-H/2,.011)
@@ -231,6 +266,25 @@ def build():
  scene.render.filepath=str(OUT/'review'/'lighting-preview.png'); start=time.monotonic()
  bpy.ops.render.render(write_still=True); times['lighting-preview']=time.monotonic()-start
  for o,m in original: o.data.materials[0]=m
- (OUT/'review'/'render-cost.json').write_text(json.dumps({'engine':'Workbench; lighting preview Eevee','resolution':{'front':[900,900],'oblique':[900,900],'key-detail':[900,900],'lighting-preview':[720,720]},
+ root['binding_status']='STATIC_DISPLAY_PREVIEW_NOT_AGC'
+ # Fixed reference-inspired glyph sample; this is not a verb/noun interpreter.
+ preview={'PROG':['ACDEFG','ACDEFG'],'VERB':['ABCDEF','ACDEFG'],'NOUN':['ACDEFG','ABCDEF'],
+          'R1':['ABCDEF']*5,'R2':['ABCDEF']*5,'R3':['ABCDEF']*5}
+ for field,patterns in preview.items():
+  for index,active in enumerate(patterns):
+   for letter in 'ABCDEFG':
+    bpy.data.objects['DSKY_Digit_'+field+'_'+str(index)+'_'+letter].data.materials[0]=lit if letter in active else phosphor
+ for o in bpy.data.objects:
+  if o.type!='MESH': continue
+  if o.name.startswith(('DSKY_LabelStrip_','DSKY_RegisterRule_')): o.data.materials[0]=lit
+  if o.name.startswith('DSKY_Sign_'):
+   o.data.materials[0]=lit if o.name.endswith('_Minus') or o.name=='DSKY_Sign_R2_Plus' else phosphor
+ bpy.ops.object.select_all(action='DESELECT')
+ for o in [root]+list(root.children_recursive): o.select_set(True)
+ bpy.ops.wm.usd_export(filepath=str(OUT/'DSKY-DisplayPreview.usda'),**settings)
+ normalize_and_package(OUT/'DSKY-DisplayPreview.usda')
+ scene.render.filepath=str(OUT/'review'/'display-preview.png');start=time.monotonic()
+ bpy.ops.render.render(write_still=True);times['display-preview']=time.monotonic()-start
+ (OUT/'review'/'render-cost.json').write_text(json.dumps({'engine':'Workbench; lighting preview Eevee','resolution':{'front':[900,900],'oblique':[900,900],'key-detail':[900,900],'lighting-preview':[720,720],'display-preview':[720,720]},
  'seconds':times,'peak_memory':'not measured','machine':'zacbookpro.local'},indent=2)+'\n')
 if __name__=='__main__': build()

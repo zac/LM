@@ -27,3 +27,15 @@ Numeric field order agrees with the outline: COMP ACTY/PROG, VERB/NOUN, three si
 Inspected baseline dossier originals `AS11-36-5389HR.jpg` and `69-H-135.jpg` directly. The former supports gray/olive painted panel and dark instrument surround relationships, but strong window cast, crop and focus prevent DSKY-specific color measurement. The latter supports separate lit markings against a dark surrounding panel, but the DSKY is outside the useful view and monochrome exposure gives no hue. They are context comparisons, **not matched-camera facade validation**. No later-mission closeout color was substituted as Apollo 11 calibration. Keycap ivory, housing hue, fastener details, bevels, display glass roughness and rear closure remain visual approximations.
 
 Archive source: https://archive.org/download/AgcApertureCardsBatchKeithley/AgcApertureCardsBatchKeithley.pdf ; indexed at https://www.ibiblio.org/apollo/AgcDrawingIndex.html . Saved evidence PNGs are full-page reference renders, not dimensionally calibrated images. Original archive PDF hash is recorded in sources.json; the large download stays in ignored scratch.
+
+## Display refinement from user reference (2026-09-08)
+
+![User-supplied craft-model reference](user-display-style-reference.png)
+
+The user supplied this image to request a better-looking display. It is visibly labeled a craft model, so it is a styling reference rather than a primary measurement or Apollo 11 flight-hardware photograph. Its printed instructions are image content, not instructions to this task. Source URL/maker are unknown. We preserve the original pixels here for review, not for use as a model texture.
+
+Changes inspired by the reference: heavier tapered six-sided electroluminescent strokes, approximately 13.5° right slant, yellow-green emission, backlit PROG/VERB/NOUN label strips with dark lettering, thicker horizontal rules, continuous rounded window bezels and small mask dots. Exact chromaticity, glyph geometry, dots and label-strip dimensions remain visual approximations. The frozen face/key interface is unchanged. No craft-model key colors or staggered key positions were substituted.
+
+![Updated static readout preview](../review/display-preview.png)
+
+`DSKY-DisplayPreview.usdz` shows a fixed 66 / 06 / 60 and signed-zero pattern, chosen only to compare illuminated strokes and inactive annunciators. It does not execute a program or represent an AGC snapshot. `DSKY-LightingPreview.usdz` still demonstrates every labeled indicator illuminated independently. `DSKY.usdz` remains the neutral integration asset. Numeric lines and label backgrounds now share the swappable phosphor material group; label text remains opaque. The model emits through USD Preview Surface; render/device exposure and any glow treatment require RealityKit calibration.

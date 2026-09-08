@@ -46,7 +46,7 @@ report['source']={'meshes':len(meshes),'triangles':sum(len(o.data.loop_triangles
 # Flat text is intentionally open geometry; every solid must have nonzero polygon normals.
 check(all(p.area>1e-14 and p.normal.length>.9 for o in meshes for p in o.data.polygons),'No zero-area faces or invalid normals')
 report['exports']={}
-for filename in ['DSKY.usdz','DSKY-LightingPreview.usdz']:
+for filename in ['DSKY.usdz','DSKY-LightingPreview.usdz','DSKY-DisplayPreview.usdz']:
  stage=Usd.Stage.Open(str(OUT/filename)); rootprim=stage.GetPrimAtPath('/DSKY_Mount')
  check(bool(rootprim) and stage.GetDefaultPrim()==rootprim,filename+' default root')
  check(UsdGeom.GetStageUpAxis(stage)=='Y' and UsdGeom.GetStageMetersPerUnit(stage)==1,filename+' Y up and meters')
@@ -66,7 +66,7 @@ for filename in ['DSKY.usdz','DSKY-LightingPreview.usdz']:
  check(all(UsdShade.MaterialBindingAPI(p).ComputeBoundMaterial()[0] for p in usdmeshes),filename+' all meshes material bound')
  check(all(all(n==3 for n in UsdGeom.Mesh(p).GetFaceVertexCountsAttr().Get()) for p in usdmeshes),filename+' triangulated')
  emissive=[p for p in stage.Traverse() if p.IsA(UsdShade.Shader) and p.GetAttribute('inputs:emissiveColor').Get() and sum(p.GetAttribute('inputs:emissiveColor').Get())>0]
- check(len(emissive)>=(3 if 'Preview' in filename else 1),filename+' emissive Preview Surface shaders')
+ check(len(emissive)>=(3 if 'LightingPreview' in filename else 1),filename+' emissive Preview Surface shaders')
  checker=UsdUtils.ComplianceChecker(arkit=False,skipARKitRootLayerCheck=True)
  checker.CheckCompliance(str(OUT/filename))
  errors=checker.GetErrors(); failed=checker.GetFailedChecks()

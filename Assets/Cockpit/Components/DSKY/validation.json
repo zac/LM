@@ -148,6 +148,54 @@
     "DSKY-LightingPreview.usdz triangulated",
     "DSKY-LightingPreview.usdz emissive Preview Surface shaders",
     "DSKY-LightingPreview.usdz OpenUSD compliance",
+    "DSKY-DisplayPreview.usdz default root",
+    "DSKY-DisplayPreview.usdz Y up and meters",
+    "DSKY-DisplayPreview.usdz identity root transform",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_VERB",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_VERB",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_NOUN",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_NOUN",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_PLUS",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_PLUS",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_7",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_7",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_8",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_8",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_9",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_9",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_CLR",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_CLR",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_MINUS",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_MINUS",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_4",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_4",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_5",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_5",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_6",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_6",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_PRO",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_PRO",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_0",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_0",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_1",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_1",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_2",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_2",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_3",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_3",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_KEY_REL",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_KEY_REL",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_ENTR",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_ENTR",
+    "DSKY-DisplayPreview.usdz path DSKY_Key_RSET",
+    "DSKY-DisplayPreview.usdz local axes DSKY_Key_RSET",
+    "DSKY-DisplayPreview.usdz display above origin",
+    "DSKY-DisplayPreview.usdz face envelope",
+    "DSKY-DisplayPreview.usdz depth within budget",
+    "DSKY-DisplayPreview.usdz all meshes material bound",
+    "DSKY-DisplayPreview.usdz triangulated",
+    "DSKY-DisplayPreview.usdz emissive Preview Surface shaders",
+    "DSKY-DisplayPreview.usdz OpenUSD compliance",
     "Clean USDZ reimport",
     "Reimport position DSKY_Key_VERB",
     "Reimport position DSKY_Key_NOUN",
@@ -177,8 +225,8 @@
     "RealityKit input and Vision Pro not tested"
   ],
   "source": {
-    "meshes": 372,
-    "triangles": 70135,
+    "meshes": 378,
+    "triangles": 44415,
     "materials_used": 10,
     "textures": 0,
     "bounds_blender": [
@@ -196,7 +244,7 @@
   },
   "exports": {
     "DSKY.usdz": {
-      "sha256": "0c9b4b0b5101e7b94e407124c32171bcc347e38f7a502b202adfb163307dff67",
+      "sha256": "25e8df75b940f86b35a4e9ac722d7626e37eec1ebdb677a2033d23e803feeb91",
       "bounds_usd_m": [
         [
           -0.10317479819059372,
@@ -209,13 +257,13 @@
           0.015200000256299962
         ]
       ],
-      "mesh_count": 372,
+      "mesh_count": 378,
       "compliance_errors": [],
       "compliance_failed": [],
       "compliance_warnings": []
     },
     "DSKY-LightingPreview.usdz": {
-      "sha256": "2e8abea3cc47e9a4f6cf793e0a88061b04d88c5f6c29af107a771cd550f64214",
+      "sha256": "7fc672d98c356755140c0e2012f2611bc0b4badc76b80ed8e563d4df2550eb11",
       "bounds_usd_m": [
         [
           -0.10317479819059372,
@@ -228,7 +276,26 @@
           0.015200000256299962
         ]
       ],
-      "mesh_count": 372,
+      "mesh_count": 378,
+      "compliance_errors": [],
+      "compliance_failed": [],
+      "compliance_warnings": []
+    },
+    "DSKY-DisplayPreview.usdz": {
+      "sha256": "ab605dfe8f095925391d2adbc08298c9d51883905482e1ca9eb413b8d1af2f3c",
+      "bounds_usd_m": [
+        [
+          -0.10317479819059372,
+          -0.10159999877214432,
+          -0.1602140029426664
+        ],
+        [
+          0.10317479819059372,
+          0.10159999877214432,
+          0.015200000256299962
+        ]
+      ],
+      "mesh_count": 378,
       "compliance_errors": [],
       "compliance_failed": [],
       "compliance_warnings": []

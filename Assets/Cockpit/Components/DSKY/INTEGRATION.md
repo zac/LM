@@ -26,10 +26,16 @@ Read `snapshot.agc.dsky` through the existing session; do not parse a second ver
 | Named lamps | `indicatorIsOn(id)` or `lampTest`; IDs in bindings.json |
 | Two blank lower-left cells | No runtime binding; spare cells, remain blank |
 
-The neutral export keeps all segments faintly visible as physical phosphor. Switch their assigned material (or visibility) for live output. LightingPreview supplies `DSKY_EL_green_on`, `DSKY_Status_white_on`, `DSKY_Caution_amber_on`; their shader emission is authored in USD Preview Surface. Fixed numeric legends have independent modest emission. Lamp characters remain opaque black while their background lights. Green COMP ACTY is a provisional lookdev choice: the dossier's white/green source conflict remains unresolved. Engine strengths are not measured luminance; the primary lamp specification is 15 ±3 foot-lamberts, requiring renderer/device calibration.
+The neutral export keeps all segments faintly visible as physical phosphor. Switch their assigned material (or visibility) for live output. LightingPreview supplies `DSKY_EL_green_on`, `DSKY_Status_white_on`, `DSKY_Caution_amber_on`; their shader emission is authored in USD Preview Surface. Numeric label strips and register rules have separately swappable phosphor materials; the label characters stay dark. Lamp characters remain opaque black while their background lights. Green COMP ACTY is a provisional lookdev choice: the dossier's white/green source conflict remains unresolved. Engine strengths are not measured luminance; the primary lamp specification is 15 ±3 foot-lamberts, requiring renderer/device calibration.
 
 The current procedural display mount z=0.010 m and this asset's region placement are provisional surface locations. Bind to the named regions instead of overlaying the existing whole-panel attachment blindly; that could occlude the modeled lamp/numeric separation.
 
 ## Coordinator acceptance
 
 Required before claiming interaction: import in RCP, inspect materials and hierarchy, native load on accepted app/AGC commits, all 19 key dispatches, neighboring-key selection, single-key hover, key spring return, PRO release/cancellation, blank/flashing digits, signs, all lamps/lamp test, no duplicate procedural geometry, and on-device label readability. Measure scene memory and frame timing with the full cockpit and terrain. No runtime or Vision Pro acceptance is claimed here.
+
+## Refined display preview
+
+`DSKY-DisplayPreview.usdz` is an additional static appearance example (66 / 06 / 60, signed zero registers, annunciators off). It preserves the same key and region hierarchy. It is not AGC-driven. The original `DSKY-LightingPreview.usdz` remains the all-lamps/all-segments material test.
+
+`DSKY_LabelStrip_PROG/VERB/NOUN` and `DSKY_RegisterRule_*` are separate phosphor-backed meshes. Drive their light level with display power/brightness alongside active segments. The label text is dark, fixed geometry. Tapered segments retain the original A–G object names and indices. Lamp backgrounds can switch materials independently; shared authoring materials do not imply shared runtime state. Keep lamp text black in either state. Emission inputs are present in USDZ, but actual glow and scene illumination depend on the native renderer; neither automatic AGC binding nor a particular bloom effect is baked into USDZ.

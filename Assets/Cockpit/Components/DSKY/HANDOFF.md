@@ -20,13 +20,14 @@ Housing depth, rear details, bevels, fastener sizes, display subdivision and typ
 
 ## Delivered revision
 
-- Exact component commit: `85c072502a087aadf97c118e5de8bad9a2b6ba5d`. The following handoff-only commit records this immutable asset revision; no asset changes in that follow-up.
+- Exact component commit: REFINEMENT_COMMIT_PENDING. Previous delivered asset revision was `85c072502a087aadf97c118e5de8bad9a2b6ba5d`; this display refinement started at `d3cd89721f5b788ebca1984c90c029a42e9cc010`.
 - Blender: 5.2.1 LTS, build 9e2066aef7ef; no add-ons. Native smoke check: Apple Swift 6.3.3, macOS RealityKit.
 - Editable source: `DSKY.blend`; reproducible builder: `build.py`; USD coordinate bake/package: `usd_pipeline.py`.
 - Neutral exports: `DSKY.usda`, `DSKY.usdc`, `DSKY.usdz`. Lighting exports: `DSKY-LightingPreview.usda`, `.usdc`, `.usdz` (STATIC lamp-test lookdev, never live output).
 - Materials are mesh-bound USD Preview Surface PBR, with separately addressable phosphor, lamp backgrounds, fixed legends and key ink. On-state materials retained in the neutral Blender source; lighting export demonstrates them. Zero texture dependencies; built-in font converted to geometry. Relative `//review/front.png` output setting; no linked libraries.
 - Settings: `export-settings.json`. Blender exports triangulated Y-up, meter-based USD with separate parent transforms and Preview Surface. `usd_pipeline.py` bakes the exporter's rotation into every local transform, mesh point and normal, then emits binary USDC and a self-contained USDZ. Root transform is identity after baking, not just root scale. No review cameras/lights are exported.
-- Review images: `review/front.png`, `review/oblique.png`, `review/key-detail.png` (900 square Workbench); `review/lighting-preview.png` (720 square Eevee, STATIC all-segments display).
+- Additional selective lookdev export: `DSKY-DisplayPreview.usda`, `.usdc`, `.usdz` (STATIC 66/06/60 and signed zeros, annunciators off; no AGC execution).
+- Review images: `review/front.png`, `review/oblique.png`, `review/key-detail.png` (900 square Workbench); `review/lighting-preview.png` (720 square Eevee, STATIC all-segments display), plus `review/display-preview.png` (720 square Eevee, selective static readout).
 
 ### Reproduce
 
@@ -54,20 +55,21 @@ Blender requires host execution on this machine: sandboxed startup crashed; the 
 
 ## Validation
 
-- **171 automated checks passed**, detailed in `validation.json`: clean Blender reopen, no missing external dependencies, unique names, all 19 exact centers and direct parents, mesh scales, nondegenerate faces/normals, root transform, dimension budget, separate regions, material bindings, emissive shader inputs, OpenUSD compliance and clean USDZ reimport.
-- Source complexity: 70,135 triangles, 372 meshes, 10 used neutral materials, zero textures. Extra lookdev material states are separate. No scene budget was specified; integration should profile draw calls before optimizing.
+- **219 automated checks passed**, detailed in `validation.json`: clean Blender reopen, no missing external dependencies, unique names, all 19 exact centers and direct parents, mesh scales, nondegenerate faces/normals, root transform, dimension budget, separate regions, material bindings, emissive shader inputs, OpenUSD compliance and clean USDZ reimport.
+- Source complexity: 44,415 triangles, 378 meshes, 10 used neutral materials, zero textures. Extra lookdev material states are separate. No scene budget was specified; integration should profile draw calls before optimizing.
 - Native macOS RealityKit load **passed**: all 19 direct keys, positions, required parents and scale (`native-validation.json`, reproducible `validate_native.swift`). This is not an app build or on-device interaction check.
 - Final front, oblique, key-detail and lit images visually inspected. Corrected thin-fastener degenerate bevels, lower-register bezel occlusion and overexposed preview lighting before final acceptance. No measured camera match or photometric calibration claimed.
-- LFS verification: all seven Blender/USD asset files contain real local asset bytes; each staged pointer OID matches its local SHA-256. Scoped `.gitattributes` adds USDC coverage; existing root rules cover Blender/USDA/USDZ.
-- OpenUSD compliance: zero errors, failed checks or warnings for both packages. Reimport preserved key/face parent paths and materials. Native shader visual appearance in RCP remains untested.
+- LFS verification: all ten Blender/USD asset files contain real local asset bytes; each staged pointer OID matches its local SHA-256. Scoped `.gitattributes` adds USDC coverage; existing root rules cover Blender/USDA/USDZ.
+- OpenUSD compliance: zero errors, failed checks or warnings for all three packages. Reimport preserved key/face parent paths and materials. Native shader visual appearance in RCP remains untested.
 - Reality Composer Pro GUI, visionOS app, gaze/hover/pinch, PRO runtime behavior, frame timing and Vision Pro hardware: **not tested**; coordinator-owned gates.
-- Review wall time per image (seconds): front 0.215, oblique 0.094, key-detail 0.091, lighting-preview 0.401. Peak memory not measured. Machine zacbookpro.local; no heavy render/bake.
+- Review wall time per image (seconds): front 0.199, oblique 0.078, key-detail 0.075, lighting-preview 0.495, display-preview 0.512. Peak memory not measured. Machine zacbookpro.local; no heavy render/bake.
 - Known gaps: exact Gorton lettering, original key surface sculpt, historical key travel, exact fastener and flange contours, numeric optical stack, calibrated emission and COMP ACTY white/green disagreement. Source drawing stagger differs from required app key centers; retained compatibility and proposed coordinator reconciliation. This is a detailed external facade delivery with explicit fidelity limits, not a certified flight-unit reconstruction.
 
 ### Export SHA-256
 
-- `DSKY.usdz`: `0c9b4b0b5101e7b94e407124c32171bcc347e38f7a502b202adfb163307dff67`
-- `DSKY-LightingPreview.usdz`: `2e8abea3cc47e9a4f6cf793e0a88061b04d88c5f6c29af107a771cd550f64214`
+- `DSKY.usdz`: `25e8df75b940f86b35a4e9ac722d7626e37eec1ebdb677a2033d23e803feeb91`
+- `DSKY-LightingPreview.usdz`: `7fc672d98c356755140c0e2012f2611bc0b4badc76b80ed8e563d4df2550eb11`
+- `DSKY-DisplayPreview.usdz`: `ab605dfe8f095925391d2adbc08298c9d51883905482e1ca9eb413b8d1af2f3c`
 
 ## Integration acceptance
 
@@ -79,3 +81,7 @@ Coordinator fills after review:
 - Follow-up work: import in RCP, apply accepted cabin placement, bind collision/input/hover per key and live snapshot display, preserve PRO release/cancel, eliminate duplicate procedural controls, validate on Vision Pro. Reconcile historical key staggering only through a coordinated geometry-contract change.
 
 No push or merge was performed. All delivered changes are confined to this component directory.
+
+## Display refinement
+
+User-requested refinement uses the supplied craft-model image solely as a visual reference (`evidence/user-display-style-reference.png`); primary evidence and frozen key/envelope dimensions remain unchanged. Added heavier tapered six-sided segments, ~13.5° slant, stronger yellow-green emission, backlit label strips with dark text, thicker register rules, mask dots and continuous rounded bezels. Segment names, separate lamps, key hierarchy and press transforms are preserved. Exact glow, hue and photometry remain renderer-dependent; no RCP or Vision Pro appearance claim. Lamp backgrounds are emissive and individually addressable, but still require coordinator-owned live AGC material/state binding. Both the lit-lamp view and selective static readout were visually reviewed.
