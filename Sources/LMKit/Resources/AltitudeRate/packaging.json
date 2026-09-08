@@ -1,0 +1,15 @@
+{
+  "schema": "lmkit.component-packaging.v1",
+  "component": "AltitudeRate",
+  "derivation": "byte-identical copy of accepted authoring resources",
+  "files": {
+    "AltitudeRate.usdz": {
+      "sha256": "047bd435c51ecb1920aedc8f8b1cefbc9ea9056ac1139503a81abe29b42254c1",
+      "bytes": 177929
+    },
+    "interface.json": {
+      "sha256": "3325743a54604abc6b41d3cd9bd285f3fb68a3f47b1150d8d1e9bc7b89fda7f2",
+      "bytes": 95096
+    }
+  }
+}

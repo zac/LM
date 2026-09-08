@@ -1,0 +1,5199 @@
+{
+  "schema": "lmkit.altitude-rate.interface.v1",
+  "root": "AltitudeRate",
+  "units": "meters",
+  "axes": "+X right, +Y up, +Z crew; root identity",
+  "slot": "Panel1__RangeThrust",
+  "slot_local_pose": {
+    "translation_m": [
+      -0.02,
+      0,
+      0.008
+    ],
+    "quaternion_xyzw": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "scale": [
+      1,
+      1,
+      1
+    ]
+  },
+  "envelope_m": [
+    0.082,
+    0.145,
+    0.028
+  ],
+  "envelope_center_m": [
+    0,
+    0,
+    -0.002
+  ],
+  "dimensions_status": "provisional visual82x145mm exception approved by coordinator; not manufacturing measurement",
+  "source_mode": "simulation truth only; no radar/PGNS/AGS signal claim",
+  "altitude": {
+    "group": "AltitudeTape",
+    "pointer": "AltitudePointer",
+    "unavailable": "InvalidAltitude",
+    "units": "feet",
+    "valid_range": [
+      0,
+      60000
+    ],
+    "q_knots": [
+      [
+        0,
+        0
+      ],
+      [
+        1000,
+        0.2
+      ],
+      [
+        10000,
+        0.38
+      ],
+      [
+        60000,
+        0.58
+      ]
+    ],
+    "q": "piecewise linear; do not extrapolate",
+    "origin_m": [
+      -0.018,
+      0,
+      0.005
+    ],
+    "rows": [
+      {
+        "name": "AltitudeTick_00000",
+        "value": 0,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_00020",
+        "value": 20,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00040",
+        "value": 40,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00060",
+        "value": 60,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00080",
+        "value": 80,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00100",
+        "value": 100,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_00120",
+        "value": 120,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00140",
+        "value": 140,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00160",
+        "value": 160,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00180",
+        "value": 180,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00200",
+        "value": 200,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_00220",
+        "value": 220,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00240",
+        "value": 240,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00260",
+        "value": 260,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00280",
+        "value": 280,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00300",
+        "value": 300,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_00320",
+        "value": 320,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00340",
+        "value": 340,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00360",
+        "value": 360,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00380",
+        "value": 380,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00400",
+        "value": 400,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_00420",
+        "value": 420,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00440",
+        "value": 440,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00460",
+        "value": 460,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00480",
+        "value": 480,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00500",
+        "value": 500,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_00520",
+        "value": 520,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00540",
+        "value": 540,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00560",
+        "value": 560,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00580",
+        "value": 580,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00600",
+        "value": 600,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_00620",
+        "value": 620,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00640",
+        "value": 640,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00660",
+        "value": 660,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00680",
+        "value": 680,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00700",
+        "value": 700,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_00720",
+        "value": 720,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00740",
+        "value": 740,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00760",
+        "value": 760,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00780",
+        "value": 780,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00800",
+        "value": 800,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_00820",
+        "value": 820,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00840",
+        "value": 840,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00860",
+        "value": 860,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00880",
+        "value": 880,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00900",
+        "value": 900,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_00920",
+        "value": 920,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00940",
+        "value": 940,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00960",
+        "value": 960,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_00980",
+        "value": 980,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_01000",
+        "value": 1000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_01200",
+        "value": 1200,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_01400",
+        "value": 1400,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_01600",
+        "value": 1600,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_01800",
+        "value": 1800,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_02000",
+        "value": 2000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_02200",
+        "value": 2200,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_02400",
+        "value": 2400,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_02600",
+        "value": 2600,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_02800",
+        "value": 2800,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_03000",
+        "value": 3000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_03200",
+        "value": 3200,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_03400",
+        "value": 3400,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_03600",
+        "value": 3600,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_03800",
+        "value": 3800,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_04000",
+        "value": 4000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_04200",
+        "value": 4200,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_04400",
+        "value": 4400,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_04600",
+        "value": 4600,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_04800",
+        "value": 4800,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_05000",
+        "value": 5000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_05200",
+        "value": 5200,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_05400",
+        "value": 5400,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_05600",
+        "value": 5600,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_05800",
+        "value": 5800,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_06000",
+        "value": 6000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_06200",
+        "value": 6200,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_06400",
+        "value": 6400,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_06600",
+        "value": 6600,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_06800",
+        "value": 6800,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_07000",
+        "value": 7000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_07200",
+        "value": 7200,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_07400",
+        "value": 7400,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_07600",
+        "value": 7600,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_07800",
+        "value": 7800,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_08000",
+        "value": 8000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_08200",
+        "value": 8200,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_08400",
+        "value": 8400,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_08600",
+        "value": 8600,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_08800",
+        "value": 8800,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_09000",
+        "value": 9000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_09200",
+        "value": 9200,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_09400",
+        "value": 9400,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_09600",
+        "value": 9600,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_09800",
+        "value": 9800,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_10000",
+        "value": 10000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_11000",
+        "value": 11000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_12000",
+        "value": 12000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_13000",
+        "value": 13000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_14000",
+        "value": 14000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_15000",
+        "value": 15000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_16000",
+        "value": 16000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_17000",
+        "value": 17000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_18000",
+        "value": 18000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_19000",
+        "value": 19000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_20000",
+        "value": 20000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_21000",
+        "value": 21000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_22000",
+        "value": 22000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_23000",
+        "value": 23000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_24000",
+        "value": 24000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_25000",
+        "value": 25000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_26000",
+        "value": 26000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_27000",
+        "value": 27000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_28000",
+        "value": 28000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_29000",
+        "value": 29000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_30000",
+        "value": 30000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_31000",
+        "value": 31000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_32000",
+        "value": 32000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_33000",
+        "value": 33000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_34000",
+        "value": 34000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_35000",
+        "value": 35000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_36000",
+        "value": 36000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_37000",
+        "value": 37000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_38000",
+        "value": 38000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_39000",
+        "value": 39000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_40000",
+        "value": 40000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_41000",
+        "value": 41000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_42000",
+        "value": 42000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_43000",
+        "value": 43000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_44000",
+        "value": 44000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_45000",
+        "value": 45000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_46000",
+        "value": 46000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_47000",
+        "value": 47000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_48000",
+        "value": 48000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_49000",
+        "value": 49000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_50000",
+        "value": 50000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_51000",
+        "value": 51000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_52000",
+        "value": 52000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_53000",
+        "value": 53000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_54000",
+        "value": 54000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_55000",
+        "value": 55000,
+        "major": true
+      },
+      {
+        "name": "AltitudeTick_56000",
+        "value": 56000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_57000",
+        "value": 57000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_58000",
+        "value": 58000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_59000",
+        "value": 59000,
+        "major": false
+      },
+      {
+        "name": "AltitudeTick_60000",
+        "value": 60000,
+        "major": true
+      }
+    ],
+    "unavailable_active_position_m": [
+      -0.018,
+      0,
+      0.007
+    ],
+    "unavailable_parked_position_m": [
+      -0.018,
+      0,
+      -0.005
+    ],
+    "neutral_rows": {
+      "AltitudeTick_00000": {
+        "position_m": [
+          0,
+          0.0,
+          0
+        ],
+        "visible": true
+      },
+      "AltitudeTick_00020": {
+        "position_m": [
+          0,
+          0.004,
+          0
+        ],
+        "visible": true
+      },
+      "AltitudeTick_00040": {
+        "position_m": [
+          0,
+          0.008,
+          0
+        ],
+        "visible": true
+      },
+      "AltitudeTick_00060": {
+        "position_m": [
+          0,
+          0.012,
+          0
+        ],
+        "visible": true
+      },
+      "AltitudeTick_00080": {
+        "position_m": [
+          0,
+          0.016,
+          0
+        ],
+        "visible": true
+      },
+      "AltitudeTick_00100": {
+        "position_m": [
+          0,
+          0.020000000000000004,
+          0
+        ],
+        "visible": true
+      },
+      "AltitudeTick_00120": {
+        "position_m": [
+          0,
+          0.024,
+          0
+        ],
+        "visible": true
+      },
+      "AltitudeTick_00140": {
+        "position_m": [
+          0,
+          0.028000000000000004,
+          0
+        ],
+        "visible": true
+      },
+      "AltitudeTick_00160": {
+        "position_m": [
+          0,
+          0.032,
+          0
+        ],
+        "visible": true
+      },
+      "AltitudeTick_00180": {
+        "position_m": [
+          0,
+          0.036,
+          0
+        ],
+        "visible": true
+      },
+      "AltitudeTick_00200": {
+        "position_m": [
+          0,
+          0.04000000000000001,
+          0
+        ],
+        "visible": true
+      },
+      "AltitudeTick_00220": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00240": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00260": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00280": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00300": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00320": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00340": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00360": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00380": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00400": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00420": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00440": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00460": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00480": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00500": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00520": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00540": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00560": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00580": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00600": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00620": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00640": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00660": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00680": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00700": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00720": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00740": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00760": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00780": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00800": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00820": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00840": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00860": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00880": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00900": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00920": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00940": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00960": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_00980": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_01000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_01200": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_01400": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_01600": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_01800": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_02000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_02200": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_02400": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_02600": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_02800": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_03000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_03200": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_03400": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_03600": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_03800": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_04000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_04200": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_04400": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_04600": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_04800": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_05000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_05200": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_05400": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_05600": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_05800": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_06000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_06200": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_06400": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_06600": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_06800": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_07000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_07200": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_07400": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_07600": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_07800": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_08000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_08200": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_08400": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_08600": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_08800": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_09000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_09200": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_09400": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_09600": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_09800": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_10000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_11000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_12000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_13000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_14000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_15000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_16000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_17000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_18000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_19000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_20000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_21000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_22000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_23000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_24000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_25000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_26000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_27000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_28000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_29000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_30000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_31000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_32000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_33000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_34000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_35000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_36000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_37000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_38000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_39000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_40000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_41000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_42000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_43000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_44000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_45000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_46000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_47000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_48000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_49000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_50000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_51000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_52000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_53000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_54000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_55000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_56000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_57000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_58000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_59000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "AltitudeTick_60000": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      }
+    }
+  },
+  "altitude_rate": {
+    "group": "AltitudeRateTape",
+    "pointer": "RatePointer",
+    "unavailable": "InvalidRate",
+    "units": "feet_per_second",
+    "positive_direction": "up; descent negative",
+    "valid_range": [
+      -700,
+      700
+    ],
+    "q_abs_knots": [
+      [
+        0,
+        0
+      ],
+      [
+        20,
+        0.08
+      ],
+      [
+        100,
+        0.24
+      ],
+      [
+        700,
+        0.48
+      ]
+    ],
+    "q": "sign(value)*piecewise_linear(abs(value)); no extrapolation",
+    "origin_m": [
+      0.016,
+      0,
+      0.005
+    ],
+    "rows": [
+      {
+        "name": "RateTick_M700",
+        "value": -700,
+        "major": true
+      },
+      {
+        "name": "RateTick_M690",
+        "value": -690,
+        "major": false
+      },
+      {
+        "name": "RateTick_M680",
+        "value": -680,
+        "major": false
+      },
+      {
+        "name": "RateTick_M670",
+        "value": -670,
+        "major": false
+      },
+      {
+        "name": "RateTick_M660",
+        "value": -660,
+        "major": false
+      },
+      {
+        "name": "RateTick_M650",
+        "value": -650,
+        "major": true
+      },
+      {
+        "name": "RateTick_M640",
+        "value": -640,
+        "major": false
+      },
+      {
+        "name": "RateTick_M630",
+        "value": -630,
+        "major": false
+      },
+      {
+        "name": "RateTick_M620",
+        "value": -620,
+        "major": false
+      },
+      {
+        "name": "RateTick_M610",
+        "value": -610,
+        "major": false
+      },
+      {
+        "name": "RateTick_M600",
+        "value": -600,
+        "major": true
+      },
+      {
+        "name": "RateTick_M590",
+        "value": -590,
+        "major": false
+      },
+      {
+        "name": "RateTick_M580",
+        "value": -580,
+        "major": false
+      },
+      {
+        "name": "RateTick_M570",
+        "value": -570,
+        "major": false
+      },
+      {
+        "name": "RateTick_M560",
+        "value": -560,
+        "major": false
+      },
+      {
+        "name": "RateTick_M550",
+        "value": -550,
+        "major": true
+      },
+      {
+        "name": "RateTick_M540",
+        "value": -540,
+        "major": false
+      },
+      {
+        "name": "RateTick_M530",
+        "value": -530,
+        "major": false
+      },
+      {
+        "name": "RateTick_M520",
+        "value": -520,
+        "major": false
+      },
+      {
+        "name": "RateTick_M510",
+        "value": -510,
+        "major": false
+      },
+      {
+        "name": "RateTick_M500",
+        "value": -500,
+        "major": true
+      },
+      {
+        "name": "RateTick_M490",
+        "value": -490,
+        "major": false
+      },
+      {
+        "name": "RateTick_M480",
+        "value": -480,
+        "major": false
+      },
+      {
+        "name": "RateTick_M470",
+        "value": -470,
+        "major": false
+      },
+      {
+        "name": "RateTick_M460",
+        "value": -460,
+        "major": false
+      },
+      {
+        "name": "RateTick_M450",
+        "value": -450,
+        "major": true
+      },
+      {
+        "name": "RateTick_M440",
+        "value": -440,
+        "major": false
+      },
+      {
+        "name": "RateTick_M430",
+        "value": -430,
+        "major": false
+      },
+      {
+        "name": "RateTick_M420",
+        "value": -420,
+        "major": false
+      },
+      {
+        "name": "RateTick_M410",
+        "value": -410,
+        "major": false
+      },
+      {
+        "name": "RateTick_M400",
+        "value": -400,
+        "major": true
+      },
+      {
+        "name": "RateTick_M390",
+        "value": -390,
+        "major": false
+      },
+      {
+        "name": "RateTick_M380",
+        "value": -380,
+        "major": false
+      },
+      {
+        "name": "RateTick_M370",
+        "value": -370,
+        "major": false
+      },
+      {
+        "name": "RateTick_M360",
+        "value": -360,
+        "major": false
+      },
+      {
+        "name": "RateTick_M350",
+        "value": -350,
+        "major": true
+      },
+      {
+        "name": "RateTick_M340",
+        "value": -340,
+        "major": false
+      },
+      {
+        "name": "RateTick_M330",
+        "value": -330,
+        "major": false
+      },
+      {
+        "name": "RateTick_M320",
+        "value": -320,
+        "major": false
+      },
+      {
+        "name": "RateTick_M310",
+        "value": -310,
+        "major": false
+      },
+      {
+        "name": "RateTick_M300",
+        "value": -300,
+        "major": true
+      },
+      {
+        "name": "RateTick_M290",
+        "value": -290,
+        "major": false
+      },
+      {
+        "name": "RateTick_M280",
+        "value": -280,
+        "major": false
+      },
+      {
+        "name": "RateTick_M270",
+        "value": -270,
+        "major": false
+      },
+      {
+        "name": "RateTick_M260",
+        "value": -260,
+        "major": false
+      },
+      {
+        "name": "RateTick_M250",
+        "value": -250,
+        "major": true
+      },
+      {
+        "name": "RateTick_M240",
+        "value": -240,
+        "major": false
+      },
+      {
+        "name": "RateTick_M230",
+        "value": -230,
+        "major": false
+      },
+      {
+        "name": "RateTick_M220",
+        "value": -220,
+        "major": false
+      },
+      {
+        "name": "RateTick_M210",
+        "value": -210,
+        "major": false
+      },
+      {
+        "name": "RateTick_M200",
+        "value": -200,
+        "major": true
+      },
+      {
+        "name": "RateTick_M190",
+        "value": -190,
+        "major": false
+      },
+      {
+        "name": "RateTick_M180",
+        "value": -180,
+        "major": false
+      },
+      {
+        "name": "RateTick_M170",
+        "value": -170,
+        "major": false
+      },
+      {
+        "name": "RateTick_M160",
+        "value": -160,
+        "major": false
+      },
+      {
+        "name": "RateTick_M150",
+        "value": -150,
+        "major": true
+      },
+      {
+        "name": "RateTick_M140",
+        "value": -140,
+        "major": false
+      },
+      {
+        "name": "RateTick_M130",
+        "value": -130,
+        "major": false
+      },
+      {
+        "name": "RateTick_M120",
+        "value": -120,
+        "major": false
+      },
+      {
+        "name": "RateTick_M110",
+        "value": -110,
+        "major": false
+      },
+      {
+        "name": "RateTick_M100",
+        "value": -100,
+        "major": true
+      },
+      {
+        "name": "RateTick_M098",
+        "value": -98,
+        "major": false
+      },
+      {
+        "name": "RateTick_M096",
+        "value": -96,
+        "major": false
+      },
+      {
+        "name": "RateTick_M094",
+        "value": -94,
+        "major": false
+      },
+      {
+        "name": "RateTick_M092",
+        "value": -92,
+        "major": false
+      },
+      {
+        "name": "RateTick_M090",
+        "value": -90,
+        "major": true
+      },
+      {
+        "name": "RateTick_M088",
+        "value": -88,
+        "major": false
+      },
+      {
+        "name": "RateTick_M086",
+        "value": -86,
+        "major": false
+      },
+      {
+        "name": "RateTick_M084",
+        "value": -84,
+        "major": false
+      },
+      {
+        "name": "RateTick_M082",
+        "value": -82,
+        "major": false
+      },
+      {
+        "name": "RateTick_M080",
+        "value": -80,
+        "major": true
+      },
+      {
+        "name": "RateTick_M078",
+        "value": -78,
+        "major": false
+      },
+      {
+        "name": "RateTick_M076",
+        "value": -76,
+        "major": false
+      },
+      {
+        "name": "RateTick_M074",
+        "value": -74,
+        "major": false
+      },
+      {
+        "name": "RateTick_M072",
+        "value": -72,
+        "major": false
+      },
+      {
+        "name": "RateTick_M070",
+        "value": -70,
+        "major": true
+      },
+      {
+        "name": "RateTick_M068",
+        "value": -68,
+        "major": false
+      },
+      {
+        "name": "RateTick_M066",
+        "value": -66,
+        "major": false
+      },
+      {
+        "name": "RateTick_M064",
+        "value": -64,
+        "major": false
+      },
+      {
+        "name": "RateTick_M062",
+        "value": -62,
+        "major": false
+      },
+      {
+        "name": "RateTick_M060",
+        "value": -60,
+        "major": true
+      },
+      {
+        "name": "RateTick_M058",
+        "value": -58,
+        "major": false
+      },
+      {
+        "name": "RateTick_M056",
+        "value": -56,
+        "major": false
+      },
+      {
+        "name": "RateTick_M054",
+        "value": -54,
+        "major": false
+      },
+      {
+        "name": "RateTick_M052",
+        "value": -52,
+        "major": false
+      },
+      {
+        "name": "RateTick_M050",
+        "value": -50,
+        "major": true
+      },
+      {
+        "name": "RateTick_M048",
+        "value": -48,
+        "major": false
+      },
+      {
+        "name": "RateTick_M046",
+        "value": -46,
+        "major": false
+      },
+      {
+        "name": "RateTick_M044",
+        "value": -44,
+        "major": false
+      },
+      {
+        "name": "RateTick_M042",
+        "value": -42,
+        "major": false
+      },
+      {
+        "name": "RateTick_M040",
+        "value": -40,
+        "major": true
+      },
+      {
+        "name": "RateTick_M038",
+        "value": -38,
+        "major": false
+      },
+      {
+        "name": "RateTick_M036",
+        "value": -36,
+        "major": false
+      },
+      {
+        "name": "RateTick_M034",
+        "value": -34,
+        "major": false
+      },
+      {
+        "name": "RateTick_M032",
+        "value": -32,
+        "major": false
+      },
+      {
+        "name": "RateTick_M030",
+        "value": -30,
+        "major": true
+      },
+      {
+        "name": "RateTick_M028",
+        "value": -28,
+        "major": false
+      },
+      {
+        "name": "RateTick_M026",
+        "value": -26,
+        "major": false
+      },
+      {
+        "name": "RateTick_M024",
+        "value": -24,
+        "major": false
+      },
+      {
+        "name": "RateTick_M022",
+        "value": -22,
+        "major": false
+      },
+      {
+        "name": "RateTick_M020",
+        "value": -20,
+        "major": true
+      },
+      {
+        "name": "RateTick_M019",
+        "value": -19,
+        "major": false
+      },
+      {
+        "name": "RateTick_M018",
+        "value": -18,
+        "major": false
+      },
+      {
+        "name": "RateTick_M017",
+        "value": -17,
+        "major": false
+      },
+      {
+        "name": "RateTick_M016",
+        "value": -16,
+        "major": false
+      },
+      {
+        "name": "RateTick_M015",
+        "value": -15,
+        "major": true
+      },
+      {
+        "name": "RateTick_M014",
+        "value": -14,
+        "major": false
+      },
+      {
+        "name": "RateTick_M013",
+        "value": -13,
+        "major": false
+      },
+      {
+        "name": "RateTick_M012",
+        "value": -12,
+        "major": false
+      },
+      {
+        "name": "RateTick_M011",
+        "value": -11,
+        "major": false
+      },
+      {
+        "name": "RateTick_M010",
+        "value": -10,
+        "major": true
+      },
+      {
+        "name": "RateTick_M009",
+        "value": -9,
+        "major": false
+      },
+      {
+        "name": "RateTick_M008",
+        "value": -8,
+        "major": false
+      },
+      {
+        "name": "RateTick_M007",
+        "value": -7,
+        "major": false
+      },
+      {
+        "name": "RateTick_M006",
+        "value": -6,
+        "major": false
+      },
+      {
+        "name": "RateTick_M005",
+        "value": -5,
+        "major": true
+      },
+      {
+        "name": "RateTick_M004",
+        "value": -4,
+        "major": false
+      },
+      {
+        "name": "RateTick_M003",
+        "value": -3,
+        "major": false
+      },
+      {
+        "name": "RateTick_M002",
+        "value": -2,
+        "major": false
+      },
+      {
+        "name": "RateTick_M001",
+        "value": -1,
+        "major": false
+      },
+      {
+        "name": "RateTick_P000",
+        "value": 0,
+        "major": true
+      },
+      {
+        "name": "RateTick_P001",
+        "value": 1,
+        "major": false
+      },
+      {
+        "name": "RateTick_P002",
+        "value": 2,
+        "major": false
+      },
+      {
+        "name": "RateTick_P003",
+        "value": 3,
+        "major": false
+      },
+      {
+        "name": "RateTick_P004",
+        "value": 4,
+        "major": false
+      },
+      {
+        "name": "RateTick_P005",
+        "value": 5,
+        "major": true
+      },
+      {
+        "name": "RateTick_P006",
+        "value": 6,
+        "major": false
+      },
+      {
+        "name": "RateTick_P007",
+        "value": 7,
+        "major": false
+      },
+      {
+        "name": "RateTick_P008",
+        "value": 8,
+        "major": false
+      },
+      {
+        "name": "RateTick_P009",
+        "value": 9,
+        "major": false
+      },
+      {
+        "name": "RateTick_P010",
+        "value": 10,
+        "major": true
+      },
+      {
+        "name": "RateTick_P011",
+        "value": 11,
+        "major": false
+      },
+      {
+        "name": "RateTick_P012",
+        "value": 12,
+        "major": false
+      },
+      {
+        "name": "RateTick_P013",
+        "value": 13,
+        "major": false
+      },
+      {
+        "name": "RateTick_P014",
+        "value": 14,
+        "major": false
+      },
+      {
+        "name": "RateTick_P015",
+        "value": 15,
+        "major": true
+      },
+      {
+        "name": "RateTick_P016",
+        "value": 16,
+        "major": false
+      },
+      {
+        "name": "RateTick_P017",
+        "value": 17,
+        "major": false
+      },
+      {
+        "name": "RateTick_P018",
+        "value": 18,
+        "major": false
+      },
+      {
+        "name": "RateTick_P019",
+        "value": 19,
+        "major": false
+      },
+      {
+        "name": "RateTick_P020",
+        "value": 20,
+        "major": true
+      },
+      {
+        "name": "RateTick_P022",
+        "value": 22,
+        "major": false
+      },
+      {
+        "name": "RateTick_P024",
+        "value": 24,
+        "major": false
+      },
+      {
+        "name": "RateTick_P026",
+        "value": 26,
+        "major": false
+      },
+      {
+        "name": "RateTick_P028",
+        "value": 28,
+        "major": false
+      },
+      {
+        "name": "RateTick_P030",
+        "value": 30,
+        "major": true
+      },
+      {
+        "name": "RateTick_P032",
+        "value": 32,
+        "major": false
+      },
+      {
+        "name": "RateTick_P034",
+        "value": 34,
+        "major": false
+      },
+      {
+        "name": "RateTick_P036",
+        "value": 36,
+        "major": false
+      },
+      {
+        "name": "RateTick_P038",
+        "value": 38,
+        "major": false
+      },
+      {
+        "name": "RateTick_P040",
+        "value": 40,
+        "major": true
+      },
+      {
+        "name": "RateTick_P042",
+        "value": 42,
+        "major": false
+      },
+      {
+        "name": "RateTick_P044",
+        "value": 44,
+        "major": false
+      },
+      {
+        "name": "RateTick_P046",
+        "value": 46,
+        "major": false
+      },
+      {
+        "name": "RateTick_P048",
+        "value": 48,
+        "major": false
+      },
+      {
+        "name": "RateTick_P050",
+        "value": 50,
+        "major": true
+      },
+      {
+        "name": "RateTick_P052",
+        "value": 52,
+        "major": false
+      },
+      {
+        "name": "RateTick_P054",
+        "value": 54,
+        "major": false
+      },
+      {
+        "name": "RateTick_P056",
+        "value": 56,
+        "major": false
+      },
+      {
+        "name": "RateTick_P058",
+        "value": 58,
+        "major": false
+      },
+      {
+        "name": "RateTick_P060",
+        "value": 60,
+        "major": true
+      },
+      {
+        "name": "RateTick_P062",
+        "value": 62,
+        "major": false
+      },
+      {
+        "name": "RateTick_P064",
+        "value": 64,
+        "major": false
+      },
+      {
+        "name": "RateTick_P066",
+        "value": 66,
+        "major": false
+      },
+      {
+        "name": "RateTick_P068",
+        "value": 68,
+        "major": false
+      },
+      {
+        "name": "RateTick_P070",
+        "value": 70,
+        "major": true
+      },
+      {
+        "name": "RateTick_P072",
+        "value": 72,
+        "major": false
+      },
+      {
+        "name": "RateTick_P074",
+        "value": 74,
+        "major": false
+      },
+      {
+        "name": "RateTick_P076",
+        "value": 76,
+        "major": false
+      },
+      {
+        "name": "RateTick_P078",
+        "value": 78,
+        "major": false
+      },
+      {
+        "name": "RateTick_P080",
+        "value": 80,
+        "major": true
+      },
+      {
+        "name": "RateTick_P082",
+        "value": 82,
+        "major": false
+      },
+      {
+        "name": "RateTick_P084",
+        "value": 84,
+        "major": false
+      },
+      {
+        "name": "RateTick_P086",
+        "value": 86,
+        "major": false
+      },
+      {
+        "name": "RateTick_P088",
+        "value": 88,
+        "major": false
+      },
+      {
+        "name": "RateTick_P090",
+        "value": 90,
+        "major": true
+      },
+      {
+        "name": "RateTick_P092",
+        "value": 92,
+        "major": false
+      },
+      {
+        "name": "RateTick_P094",
+        "value": 94,
+        "major": false
+      },
+      {
+        "name": "RateTick_P096",
+        "value": 96,
+        "major": false
+      },
+      {
+        "name": "RateTick_P098",
+        "value": 98,
+        "major": false
+      },
+      {
+        "name": "RateTick_P100",
+        "value": 100,
+        "major": true
+      },
+      {
+        "name": "RateTick_P110",
+        "value": 110,
+        "major": false
+      },
+      {
+        "name": "RateTick_P120",
+        "value": 120,
+        "major": false
+      },
+      {
+        "name": "RateTick_P130",
+        "value": 130,
+        "major": false
+      },
+      {
+        "name": "RateTick_P140",
+        "value": 140,
+        "major": false
+      },
+      {
+        "name": "RateTick_P150",
+        "value": 150,
+        "major": true
+      },
+      {
+        "name": "RateTick_P160",
+        "value": 160,
+        "major": false
+      },
+      {
+        "name": "RateTick_P170",
+        "value": 170,
+        "major": false
+      },
+      {
+        "name": "RateTick_P180",
+        "value": 180,
+        "major": false
+      },
+      {
+        "name": "RateTick_P190",
+        "value": 190,
+        "major": false
+      },
+      {
+        "name": "RateTick_P200",
+        "value": 200,
+        "major": true
+      },
+      {
+        "name": "RateTick_P210",
+        "value": 210,
+        "major": false
+      },
+      {
+        "name": "RateTick_P220",
+        "value": 220,
+        "major": false
+      },
+      {
+        "name": "RateTick_P230",
+        "value": 230,
+        "major": false
+      },
+      {
+        "name": "RateTick_P240",
+        "value": 240,
+        "major": false
+      },
+      {
+        "name": "RateTick_P250",
+        "value": 250,
+        "major": true
+      },
+      {
+        "name": "RateTick_P260",
+        "value": 260,
+        "major": false
+      },
+      {
+        "name": "RateTick_P270",
+        "value": 270,
+        "major": false
+      },
+      {
+        "name": "RateTick_P280",
+        "value": 280,
+        "major": false
+      },
+      {
+        "name": "RateTick_P290",
+        "value": 290,
+        "major": false
+      },
+      {
+        "name": "RateTick_P300",
+        "value": 300,
+        "major": true
+      },
+      {
+        "name": "RateTick_P310",
+        "value": 310,
+        "major": false
+      },
+      {
+        "name": "RateTick_P320",
+        "value": 320,
+        "major": false
+      },
+      {
+        "name": "RateTick_P330",
+        "value": 330,
+        "major": false
+      },
+      {
+        "name": "RateTick_P340",
+        "value": 340,
+        "major": false
+      },
+      {
+        "name": "RateTick_P350",
+        "value": 350,
+        "major": true
+      },
+      {
+        "name": "RateTick_P360",
+        "value": 360,
+        "major": false
+      },
+      {
+        "name": "RateTick_P370",
+        "value": 370,
+        "major": false
+      },
+      {
+        "name": "RateTick_P380",
+        "value": 380,
+        "major": false
+      },
+      {
+        "name": "RateTick_P390",
+        "value": 390,
+        "major": false
+      },
+      {
+        "name": "RateTick_P400",
+        "value": 400,
+        "major": true
+      },
+      {
+        "name": "RateTick_P410",
+        "value": 410,
+        "major": false
+      },
+      {
+        "name": "RateTick_P420",
+        "value": 420,
+        "major": false
+      },
+      {
+        "name": "RateTick_P430",
+        "value": 430,
+        "major": false
+      },
+      {
+        "name": "RateTick_P440",
+        "value": 440,
+        "major": false
+      },
+      {
+        "name": "RateTick_P450",
+        "value": 450,
+        "major": true
+      },
+      {
+        "name": "RateTick_P460",
+        "value": 460,
+        "major": false
+      },
+      {
+        "name": "RateTick_P470",
+        "value": 470,
+        "major": false
+      },
+      {
+        "name": "RateTick_P480",
+        "value": 480,
+        "major": false
+      },
+      {
+        "name": "RateTick_P490",
+        "value": 490,
+        "major": false
+      },
+      {
+        "name": "RateTick_P500",
+        "value": 500,
+        "major": true
+      },
+      {
+        "name": "RateTick_P510",
+        "value": 510,
+        "major": false
+      },
+      {
+        "name": "RateTick_P520",
+        "value": 520,
+        "major": false
+      },
+      {
+        "name": "RateTick_P530",
+        "value": 530,
+        "major": false
+      },
+      {
+        "name": "RateTick_P540",
+        "value": 540,
+        "major": false
+      },
+      {
+        "name": "RateTick_P550",
+        "value": 550,
+        "major": true
+      },
+      {
+        "name": "RateTick_P560",
+        "value": 560,
+        "major": false
+      },
+      {
+        "name": "RateTick_P570",
+        "value": 570,
+        "major": false
+      },
+      {
+        "name": "RateTick_P580",
+        "value": 580,
+        "major": false
+      },
+      {
+        "name": "RateTick_P590",
+        "value": 590,
+        "major": false
+      },
+      {
+        "name": "RateTick_P600",
+        "value": 600,
+        "major": true
+      },
+      {
+        "name": "RateTick_P610",
+        "value": 610,
+        "major": false
+      },
+      {
+        "name": "RateTick_P620",
+        "value": 620,
+        "major": false
+      },
+      {
+        "name": "RateTick_P630",
+        "value": 630,
+        "major": false
+      },
+      {
+        "name": "RateTick_P640",
+        "value": 640,
+        "major": false
+      },
+      {
+        "name": "RateTick_P650",
+        "value": 650,
+        "major": true
+      },
+      {
+        "name": "RateTick_P660",
+        "value": 660,
+        "major": false
+      },
+      {
+        "name": "RateTick_P670",
+        "value": 670,
+        "major": false
+      },
+      {
+        "name": "RateTick_P680",
+        "value": 680,
+        "major": false
+      },
+      {
+        "name": "RateTick_P690",
+        "value": 690,
+        "major": false
+      },
+      {
+        "name": "RateTick_P700",
+        "value": 700,
+        "major": true
+      }
+    ],
+    "unavailable_active_position_m": [
+      0.016,
+      0,
+      0.007
+    ],
+    "unavailable_parked_position_m": [
+      0.016,
+      0,
+      -0.005
+    ],
+    "neutral_rows": {
+      "RateTick_M700": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M690": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M680": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M670": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M660": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M650": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M640": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M630": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M620": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M610": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M600": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M590": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M580": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M570": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M560": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M550": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M540": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M530": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M520": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M510": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M500": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M490": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M480": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M470": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M460": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M450": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M440": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M430": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M420": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M410": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M400": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M390": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M380": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M370": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M360": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M350": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M340": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M330": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M320": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M310": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M300": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M290": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M280": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M270": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M260": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M250": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M240": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M230": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M220": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M210": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M200": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M190": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M180": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M170": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M160": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M150": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M140": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M130": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M120": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M110": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M100": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M098": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M096": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M094": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M092": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M090": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M088": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M086": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M084": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M082": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M080": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M078": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M076": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M074": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M072": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M070": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M068": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M066": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M064": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M062": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M060": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M058": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M056": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M054": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M052": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M050": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M048": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M046": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M044": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M042": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M040": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M038": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M036": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M034": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M032": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M030": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M028": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M026": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M024": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M022": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M020": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M019": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M018": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M017": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M016": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M015": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M014": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M013": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M012": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M011": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_M010": {
+        "position_m": [
+          0,
+          -0.04,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_M009": {
+        "position_m": [
+          0,
+          -0.036000000000000004,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_M008": {
+        "position_m": [
+          0,
+          -0.032,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_M007": {
+        "position_m": [
+          0,
+          -0.027999999999999997,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_M006": {
+        "position_m": [
+          0,
+          -0.024,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_M005": {
+        "position_m": [
+          0,
+          -0.02,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_M004": {
+        "position_m": [
+          0,
+          -0.016,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_M003": {
+        "position_m": [
+          0,
+          -0.012,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_M002": {
+        "position_m": [
+          0,
+          -0.008,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_M001": {
+        "position_m": [
+          0,
+          -0.004,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_P000": {
+        "position_m": [
+          0,
+          0.0,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_P001": {
+        "position_m": [
+          0,
+          0.004,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_P002": {
+        "position_m": [
+          0,
+          0.008,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_P003": {
+        "position_m": [
+          0,
+          0.012,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_P004": {
+        "position_m": [
+          0,
+          0.016,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_P005": {
+        "position_m": [
+          0,
+          0.02,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_P006": {
+        "position_m": [
+          0,
+          0.024,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_P007": {
+        "position_m": [
+          0,
+          0.027999999999999997,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_P008": {
+        "position_m": [
+          0,
+          0.032,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_P009": {
+        "position_m": [
+          0,
+          0.036000000000000004,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_P010": {
+        "position_m": [
+          0,
+          0.04,
+          0
+        ],
+        "visible": true
+      },
+      "RateTick_P011": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P012": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P013": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P014": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P015": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P016": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P017": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P018": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P019": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P020": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P022": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P024": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P026": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P028": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P030": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P032": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P034": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P036": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P038": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P040": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P042": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P044": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P046": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P048": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P050": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P052": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P054": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P056": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P058": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P060": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P062": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P064": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P066": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P068": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P070": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P072": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P074": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P076": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P078": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P080": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P082": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P084": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P086": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P088": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P090": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P092": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P094": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P096": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P098": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P100": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P110": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P120": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P130": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P140": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P150": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P160": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P170": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P180": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P190": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P200": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P210": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P220": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P230": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P240": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P250": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P260": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P270": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P280": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P290": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P300": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P310": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P320": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P330": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P340": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P350": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P360": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P370": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P380": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P390": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P400": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P410": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P420": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P430": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P440": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P450": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P460": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P470": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P480": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P490": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P500": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P510": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P520": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P530": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P540": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P550": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P560": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P570": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P580": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P590": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P600": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P610": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P620": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P630": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P640": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P650": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P660": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P670": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P680": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P690": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      },
+      "RateTick_P700": {
+        "position_m": [
+          0,
+          0,
+          -0.01
+        ],
+        "visible": false
+      }
+    }
+  },
+  "motion": {
+    "row_translation": "row.position = [0,q(row.value)-q(currentValue),0], relative to its Tape group; group has fixed origin_m",
+    "row_authored_translation_m": "See each channel neutral_rows: valid zero neighborhood at computed Y; others [0,0,-.010]",
+    "visibility": "enable row iff abs(row.position.y)<=.043; all other rows disabled; enable parent Tape only for finite in-range data",
+    "visible_aperture_half_height_m": 0.047,
+    "row_max_half_height_m": 0.0035,
+    "row_center_limit_m": 0.043,
+    "tape_group_moves": false,
+    "moving_parts": "individually addressable tick+numeral rows, preauthored; rows slide together under common numeric displacement",
+    "invalid": "disable all tape rows and show InvalidAltitude or InvalidRate; no stale or clamped numeric value",
+    "neutral_value": 0,
+    "usd_visibility_policy": "All prim visibility inherited. Neutral unused rows parked inside opaque housing at localz=-.010; adapter positions valid rows with localz0 and disables out-of-window rows. Shutters parked inside housing; set active position on invalid.",
+    "fixed_mask_policy": "physical front bezel with opaque top/bottom masks, no shader clipping"
+  },
+  "fit": {
+    "panel_local_xy_bounds_m": [
+      [
+        0.084,
+        -0.1175
+      ],
+      [
+        0.166,
+        0.0275
+      ]
+    ],
+    "nearby_provisional_gaps_m": {
+      "Propulsion": 0.0075,
+      "Guidance": 0.003,
+      "FDAI": 0.065
+    },
+    "rear_registration": "body extends16mm behind component root; provisional interference with existing blank/backing requires assembled visual review",
+    "partial_region": "only this instrument replaces left subregion; retain backing and deferred T/W space"
+  },
+  "qualification": "source-backed twin vertical tapes and fixed pointers; landing-focused piecewise scale pitch, signed labels, shutters and dimensions are provisional readability choices; no rendezvous/thrust/TW"
+}

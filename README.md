@@ -2,6 +2,22 @@
 
 Reusable lunar-module models and independently addressable cockpit components for RealityKit. LMKit owns model authoring and packaged geometry; the LM application owns presentation/input bindings, AGC owns computer behavior, and LMCore owns flight dynamics. This package has no AGC or LMCore dependency.
 
+## Commander instruments and interior detail
+
+New components keep authored geometry separate from LM-owned state and input bindings:
+
+| Component | Resource APIs | Placement / meaning |
+|---|---|---|
+| Altitude / altitude-rate tapes | `altitudeRateURL`, `altitudeRateInterfaceURL` | Panel1__RangeThrust partial region; explicit moving rows and unavailable-data shutters. Landing-focused scale pitch and metric fit remain provisional. |
+| PGNS mode and DES RATE | `attitudeModeURL`, `descentRateURL`, `descentControlsInterfaceURL` | Source-correct Panel3__Stability and Panel5__Engine partial regions. AUTO/ATT HOLD and momentary DES RATE; OFF unsupported, no engine behavior. |
+| Commander cross-pointer | `crossPointerURL`, `crossPointerInterfaceURL` | Panel1__CrossPointer; independent needles, explicit later-inspired LO landing reconstruction, not verified Apollo 11 signal wiring. |
+| Interior fittings | `interiorDetailsURL`, `interiorDetailsInterfaceURL` | Optional Cabin-relative cable/clamp/trim overlay; independent groups, no slot suppression or simulation. |
+| Breaker banks | `breakerBanksURL`, `breakerBanksInterfaceURL` | Optional source-guided Panel11/16 terraces; per-slot occupants, static hardware without electrical behavior. |
+
+Read each component's `HANDOFF.md` and `interface.json` before placement. A resource name never establishes an input binding. Partial-region instruments retain surrounding blanks; optional overlays must fail independently from the working station. Refresh accepted assets with `python3 Tools/sync_landing_station.py AltitudeRate DescentControls CrossPointer InteriorDetails BreakerBanks`, then `python3 Tools/sync_dsky.py` and `swift test`. Every new packaged resource is byte-identical to its authoring export; each directory includes a hash receipt.
+
+The current scope and worker ownership are in [the phase plan](Docs/TwoHourCockpitPriorities.md). The historical filename is retained; user timing guidance supersedes its original two-hour proposal. Priority and safe parallelism determine work order, with no estimated-time cutoffs.
+
 ## Initial components
 
 - **Commander panel surrounds**: provisional Panel 1/FDAI and Panel 4/DSKY backing/openings from `6c8c271`, via `LMKitAssets.commanderPanelsURL` and `commanderPanelMountsURL`. Install once at Cabin identity while keeping original Panel 1/4 reservations disabled. The 3 mm visual-envelope allowance and narrowed Panel 1 outline do not qualify instrument seating, structural attachment or runtime control clearance. Refresh with `Tools/sync_commander_panels.py`; rebuild only against pinned source references.
@@ -38,4 +54,4 @@ Keep imports and new work distinguishable. Record source revision, dimensions, a
 
 ## Current acceptance evidence
 
-Eleven package tests cover the accepted resource set. Native RealityKit checks load controls, hand controllers, surrounds, enclosed cabin, windows and panel inventory; verify independent moving/removable nodes, full cabin/panel/slot transforms, optical pane bases, crew eye, separate LPD layers, removed legacy visuals and blocked reservations. App-level replacement/fallback behavior and final combined appearance require separate LM validation. Shipping asset bytes match accepted authoring exports except the documented PanelInventory planning-visibility derivation; its canonical layer changes exactly one property. This establishes packaged resource compatibility, not historical fit, final panel placement, live simulation behavior or Vision Pro acceptance. Per-delivery acceptance records are under `Provenance/`.
+Thirteen package test functions cover the accepted resource set, including two parameterized functions with six new-resource cases each. The new component checks load actual USDZs without interaction/physics ownership and verify packaged bytes against accepted source exports and hash receipts. Native RealityKit checks load controls, hand controllers, surrounds, enclosed cabin, windows and panel inventory; verify independent moving/removable nodes, full cabin/panel/slot transforms, optical pane bases, crew eye, separate LPD layers, removed legacy visuals and blocked reservations. App-level replacement/fallback behavior and final combined appearance require separate LM validation. Shipping asset bytes match accepted authoring exports except the documented PanelInventory planning-visibility derivation; its canonical layer changes exactly one property. This establishes packaged resource compatibility, not historical fit, final panel placement, live simulation behavior or Vision Pro acceptance. Per-delivery acceptance records are under `Provenance/`.

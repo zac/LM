@@ -1,0 +1,15 @@
+{
+  "schema": "lmkit.component-packaging.v1",
+  "component": "InteriorDetails",
+  "derivation": "byte-identical copy of accepted authoring resources",
+  "files": {
+    "InteriorDetails.usdz": {
+      "sha256": "1d6fef1c8815d902235bdb0df32d201dbc25ac95fb7bb6ff90852781ed918231",
+      "bytes": 73276
+    },
+    "interface.json": {
+      "sha256": "34b61bd906f9710157bfc5a049c468d7f922494bbd7ba1c15acd8b99bbfe5251",
+      "bytes": 3603
+    }
+  }
+}

@@ -87,4 +87,40 @@ public enum LMKitAssets {
     public static var handControllerInterfacesURL: URL {
         Bundle.module.url(forResource: "interface", withExtension: "json", subdirectory: "HandControllers")!
     }
+
+    // Neutral landing-station components. The consuming app owns every live binding.
+    public static var altitudeRateURL: URL {
+        Bundle.module.url(forResource: "AltitudeRate", withExtension: "usdz", subdirectory: "AltitudeRate")!
+    }
+    public static var attitudeModeURL: URL {
+        Bundle.module.url(forResource: "AttitudeMode", withExtension: "usdz", subdirectory: "DescentControls")!
+    }
+    public static var descentRateURL: URL {
+        Bundle.module.url(forResource: "DescentRate", withExtension: "usdz", subdirectory: "DescentControls")!
+    }
+    public static var crossPointerURL: URL {
+        Bundle.module.url(forResource: "CrossPointer", withExtension: "usdz", subdirectory: "CrossPointer")!
+    }
+    public static var interiorDetailsURL: URL {
+        Bundle.module.url(forResource: "InteriorDetails", withExtension: "usdz", subdirectory: "InteriorDetails")!
+    }
+    public static var breakerBanksURL: URL {
+        Bundle.module.url(forResource: "BreakerBanks", withExtension: "usdz", subdirectory: "BreakerBanks")!
+    }
+    public static var altitudeRateInterfaceURL: URL {
+        Bundle.module.url(forResource: "interface", withExtension: "json", subdirectory: "AltitudeRate")!
+    }
+    public static var descentControlsInterfaceURL: URL {
+        Bundle.module.url(forResource: "interface", withExtension: "json", subdirectory: "DescentControls")!
+    }
+    public static var crossPointerInterfaceURL: URL {
+        Bundle.module.url(forResource: "interface", withExtension: "json", subdirectory: "CrossPointer")!
+    }
+    public static var interiorDetailsInterfaceURL: URL {
+        Bundle.module.url(forResource: "interface", withExtension: "json", subdirectory: "InteriorDetails")!
+    }
+    public static var breakerBanksInterfaceURL: URL {
+        Bundle.module.url(forResource: "interface", withExtension: "json", subdirectory: "BreakerBanks")!
+    }
+
 }

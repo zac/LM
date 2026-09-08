@@ -1,0 +1,15 @@
+{
+  "schema": "lmkit.component-packaging.v1",
+  "component": "BreakerBanks",
+  "derivation": "byte-identical copy of accepted authoring resources",
+  "files": {
+    "BreakerBanks.usdz": {
+      "sha256": "fce4e4248806f4ff963775bc8013e17e6dee370671e656390bb8d05fcddfc217",
+      "bytes": 748925
+    },
+    "interface.json": {
+      "sha256": "f3cbb8d96c45473c2f2dc1ceb8ca91ce2924de74fc151b954af5cdb5ed30ffea",
+      "bytes": 13298
+    }
+  }
+}
