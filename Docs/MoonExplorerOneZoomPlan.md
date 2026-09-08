@@ -18,11 +18,11 @@ zoom-out stops at the handoff width, and leaving immersion restores the window.
 
 | Step | State | Notes |
 |---|---|---|
-| 1 Window container and immersion gate | Complete in Simulator | 54 focused tests; 11 byte-identical Apollo captures; seven-stage portal journey including partial opacity. Physical gates remain open. |
-| 2 One camera model and gesture set | Implemented; visual/device gates open | `4c8bd2a`: camera/gestures, 61 focused tests. Separate final Apollo adapter: 65 tests, 11/11 byte-identical ladder, eleven-stage journey and five exact restore cycles. Shared camera/ENU uses source-derived coverage bounds. Close-view faceting and physical acceptance remain open. |
-| 3 Scene stepping off the observation graph | Complete in Simulator | 63 focused tests; 11 byte-identical Apollo images; seven-stage portal journey; five restore cycles exact. Over-60s sample shows no SwiftUI update loop. Physical lifecycle/pacing gates remain open. |
-| 4 Coarse-first terrain and prefetch | Pending protocol-2 revalidation | `onezoom/D` preserved; concurrency 1/2/4 experiment outstanding; §4 contracts unchanged |
-| 5 Sliding region | Waiting for Steps 4 and 6 | F was not started; §4 |
+| 1 Window container and immersion gate | Landed in Simulator | 54 focused tests; 11 byte-identical Apollo captures; seven-stage portal journey including partial opacity. Physical gates remain open. |
+| 2 One camera model and gesture set | Landed; physical gates open | `4c8bd2a`: camera/gestures, 61 focused tests. Separate final Apollo adapter: 65 tests, 11/11 byte-identical ladder, eleven-stage journey and five exact restore cycles. Shared camera/ENU uses source-derived coverage bounds. Close-view faceting and physical acceptance remain open. |
+| 3 Scene stepping off the observation graph | Landed in Simulator | 63 focused tests; 11 byte-identical Apollo images; seven-stage portal journey; five restore cycles exact. Over-60s sample shows no SwiftUI update loop. Physical lifecycle/pacing gates remain open. |
+| 4 Coarse-first terrain and prefetch | Parked on `onezoom/D` | Rebased on the landed baseline; build/tests checked; concurrency 1/2/4 experiment and acceptance captures not run |
+| 5 Sliding region | Parked, not started, on `onezoom/F` | Branch reserves the final base only; resume after D acceptance; no sliding-region implementation |
 | 6 Tiled globe imagery | Landed by owner decision | 82 rebased tests, one journey, 11 exact Apollo PNGs and settled/contracts pass; completed triplicates retained with accepted regressions |
 
 ### Owner review follow-up, 2026-09-07
@@ -74,12 +74,12 @@ bundled; removing it is a separate owner bundle decision.
 
 | Item | State | Gate |
 |---|---|---|
-| A Relief lighting and sun-dependent radiance | Complete in Simulator under protocol 2 | 74 tests; three-run journey/soak pass; 11 exact Apollo PNGs; mission/daylight radiance within 1%; physical gates open |
-| B Free-standing disk and smaller portal | Pending calibration fix and protocol-2 revalidation | `onezoom/B` at `8693749`; historical single-run result is not a protocol-2 failure |
+| A Relief lighting and sun-dependent radiance | Landed in Simulator | 74 tests; three-run journey/soak pass; 11 exact Apollo PNGs; mission/daylight radiance within 1%; physical gates open |
+| B Free-standing disk and smaller portal | Parked on `onezoom/B` | Single attempt: 78 tests, exact Apollo and switch inspection pass; callback median 135.88 ms exceeds 130.31 ms control max; exact settled mean also rejected at 16.61 ms |
 | C Height-field gesture anchor | Landed in Simulator | 75 tests; retained three-run journey and fresh three-run soak pass; 0.003875 ms pick within 0.0005 m bound; 11 exact Apollo PNGs, settled and contract checks pass |
-| D Coarse-first terrain, plan Step 4 | Pending concurrency experiment and protocol-2 revalidation | `onezoom/D` at `06fb4ab`; historical coarse prefetch ready before handoff; no fresh acceptance result |
+| D Coarse-first terrain, plan Step 4 | Parked on `onezoom/D` | 97 focused tests; final Release build check; next experiment is concurrency 1/2/4, three warm dives each, ranked by regional ready time |
 | E Tiled globe imagery, plan Step 6 | Landed by owner decision | Peak reduction accepted with reported regressions and 1.630 ms soak callback excess; fresh rebase gates pass |
-| F Sliding region, plan Step 5 | Waiting for D and E | 100 km pan, final contact equals rendered |
+| F Sliding region, plan Step 5 | Parked, not started, on `onezoom/F` | No implementation; base branch only; 100 km pan/contact gate waits for D |
 
 ### Tracked imagery follow-ups
 

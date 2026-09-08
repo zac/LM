@@ -1229,3 +1229,172 @@ only A's radiance substitution. The final 90-second capture wait ends with
 twelve 16.67 ms mean/p99/max windows and zero missed callbacks. E is accepted
 and landed by owner decision. Physical stereo, tracked gestures, pacing,
 memory pressure, thermals, comfort and lifecycle remain unvalidated.
+
+## B single wrap-up attempt, parked, 2026-09-07
+
+Candidate `dbbc048` is based on landed E, `7be191b`. It retains the free-standing
+disk, first-frame-contact switch, sphere/rounded-frame aperture intersection,
+border fade and 1.6 × 1.1 m default portal. `simulatorEyePosition` is the one
+named 1.60 m calibration used by the gesture ray, deterministic pinch probe
+and portal projection. On device, gesture and portal eye queries share the
+tracked-device-anchor path. The 1.45 m portal placement height is unchanged.
+No optional lazy-mesh experiment was implemented.
+
+78 focused tests and the Release build pass. Candidate executable SHA-256:
+`2d669f868a6c05b05636f8acea23a63bf5d871b906da0bcda6810f18bc26a874`.
+Control is landed E's executable,
+`d08b291820d537f3dd9b3ee850a0155cf5a3e2ef4fa721eb527af57338707a04`.
+Evidence: `/tmp/LM-Explorer-OneZoom-2026-09-07/Wrapup/B/`.
+
+All six journeys passed their integration stages. The complete performance
+comparison fails the outside-texture callback gate: candidate median 135.880 ms
+exceeds the control maximum 130.310 ms by 5.570 ms. Lifetime peak and hitch
+count pass. B is parked without another attempt; reported-only metrics do not
+change that decision.
+
+| Run | Footprint MiB | Peak MiB | Max mean ms | Max p99 ms | Largest ms / outside texture | Hitches >25 ms | Texture ms |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Control 1 | 116.5–322.4 | 618.831 | 19.56 | 84.09 | 540.140 / 103.923 | 19 | 460.750 |
+| Candidate 1 | 119.4–326.0 | 623.393 | 19.75 | 113.79 | 646.130 / 135.880 | 14 | 423.678 |
+| Control 2 | 117.1–323.4 | 620.284 | 19.19 | 117.52 | 452.910 / 130.310 | 16 | 309.094 |
+| Candidate 2 | 112.6–319.4 | 615.768 | 19.15 | 112.50 | 454.580 / 134.284 | 19 | 413.057 |
+| Control 3 | 117.5–322.9 | 619.222 | 19.43 | 101.52 | 421.330 / 130.002 | 17 | 510.094 |
+| Candidate 3 | 120.5–326.8 | 623.237 | 19.28 | 116.68 | 542.500 / 183.554 | 17 | 554.561 |
+
+| Metric | Control min / median / max | Candidate min / median / max | Gate limit | Result |
+|---|---:|---:|---:|---|
+| footprint_min_mib | 116.500 / 117.100 / 117.500 | 112.600 / 119.400 / 120.500 | — | Reported |
+| footprint_max_mib | 322.400 / 322.900 / 323.400 | 319.400 / 326.000 / 326.800 | — | Reported |
+| lifetime_peak_mib | 618.831 / 619.222 / 620.284 | 615.768 / 623.237 / 623.393 | 644.222 | Pass |
+| max_window_mean_ms | 19.190 / 19.430 / 19.560 | 19.150 / 19.280 / 19.750 | — | Reported |
+| max_window_p99_ms | 84.090 / 101.520 / 117.520 | 112.500 / 113.790 / 116.680 | — | Reported |
+| largest_callback_ms | 421.330 / 452.910 / 540.140 | 454.580 / 542.500 / 646.130 | — | Reported |
+| largest_callback_excluding_texture_ms | 103.923 / 130.002 / 130.310 | 134.284 / 135.880 / 183.554 | 130.310 | Fail |
+| hitches_over_25ms | 16.000 / 17.000 / 19.000 | 14.000 / 17.000 / 19.000 | 19.550 | Pass |
+
+
+Inspected `journey/Candidate-1/disk.png`: the globe is free-standing in the
+room with no black rectangle or frame, and the flag, site markers and selected
+label remain visible. Inspected `Switch/switch-before.png` and
+`Switch/switch-after.png`, widths 4,211,610.403 and 4,203,195.597 m: room remains
+visible around the limb, no black corners appear, and there is no visible
+position/scale pop beyond the expected small zoom. Still images do not qualify
+stereo or tracked-head motion. The performance failure remains decisive.
+
+Resume here on `onezoom/B`: first attribute the callbacks outside texture
+loading to portal/aperture realization versus terrain/imagery publication,
+using the retained phase logs and the worst callback intervals. The smallest
+next implementation experiment is to defer initial portal mesh realization
+until frame contact if that work is implicated. No causal attribution or
+improvement is claimed yet. Rerun the same named gates after that isolated
+change. No new B soak, highland dive or device test was run in this wrap-up;
+the requested scope was the journey comparison, threshold pair and Apollo
+ladder. Do not treat E's owner exception as an exception for B.
+
+All eleven fresh Apollo PNGs are byte-identical, and eleven resource hashes
+plus five protected-body comparisons pass. The final 90-second wait produced
+zero missed callbacks and 16.67 ms p99/max in the inspected final windows,
+but the strict exact-mean checker rejected a 16.61 ms mean window. This is
+recorded as an additional failed hard check, not retried or silently rounded
+into a pass. See `Apollo/final-settled.json` and `B-validation.log`.
+
+## Parked branches: resume here
+
+These hashes identify the source revisions that were built and tested before
+the final documentation-only rebase. Final resolved refs, including the closure
+commit, are preserved in `Wrapup/final-state.json`; their runtime trees must
+match these qualified revisions exactly.
+
+| Branch | Qualified source commit | Build/tests | Next work |
+|---|---|---|---|
+| `onezoom/B` | `dbbc048f24d5b7d609a80b708046998d9b0ba3b3` | Release build, 78 tests; one failed acceptance attempt documented above | Attribute the outside-texture callback excess; no second attempt this run |
+| `onezoom/D` | `9a23a600f13d81374b8442bc9322399e3ca58ccb` | Release build, 97 tests; eleven resources and five protected bodies pass | Concurrency 1/2/4, three warm highland dives each, regional ready time |
+| `onezoom/F` | Final landing head, no unique commits | Not started; no build-specific change | Sliding region after D acceptance; 100 km pan/contact gate not run |
+
+D is parked, with no performance iteration in this wrap-up. It implements
+coarse-first 512 m publication and prefetch below about 600 km, followed by
+finer generations; allocation-free source selection and the immutable parent
+resolution table are retained. The historical diagnostic showed the coarse
+generation ready before the 240 km crossing, but that is not fresh acceptance
+of the final rebased branch.
+
+Resume with the exact next experiment: expose sibling concurrency as 1, 2 and
+4; run three warm highland dives at each setting, coordinate −42°, 120°;
+compare source-start-to-16-tile-ready time and per-generation ready times,
+not sums of overlapping intervals. Ship the fastest measured setting, including
+serial if it wins. Then run the matched journey/soak and warm/cold dive gates,
+Apollo ladder, settled check and contract audit. None of those performance or
+visual gates was run on the final parked D revision in this wrap-up.
+
+
+D's rebase conflict in `stopStepping()` retained both E's imagery suspension
+and D's prefetch cancellation. Its final parked tests include the resolver and
+refinement suites, including serial/concurrent parent-sampling equality.
+No new D benchmark or capture was started. B already has the final landed
+runtime baseline as its parent; no runtime change was made after its tests.
+The final rebases add documentation only, verified by comparing runtime trees,
+so their existing build/test evidence applies without repeating it. Nothing
+was pushed.
+
+## Run closed
+
+The final landed **runtime head** is
+`7be191bed566bad76a9e2f93b0eabea069c1bb2e`. The closure report and the owner's
+pending package-plan documents are the only commits added after it. The exact
+final branch head SHA and all rebased `onezoom/*` refs are recorded after those
+commits in `/tmp/LM-Explorer-OneZoom-2026-09-07/Wrapup/final-state.json` and in
+the final handoff. This avoids describing a parked candidate as the landing
+head or embedding a self-referential commit hash in its own tree.
+
+Accepted runtime for the closed run: A `ceac6fc` supplies relief lighting and
+sun-dependent radiance; C `f9e7b14` removes the retained triangle index and
+uses measured height-field gesture anchors; E `7be191b` supplies tiled imagery
+with the owner's documented performance acceptance. A was already landed at
+the opening checkpoint; C and E landed in this wrap-up. B remains parked
+because its single attempt missed the callback gate and strict settled mean.
+D is parked, F is parked without implementation, and E1/E2 are not started.
+
+The landed executable SHA-256 is
+`d08b291820d537f3dd9b3ee850a0155cf5a3e2ef4fa721eb527af57338707a04`,
+archived as `Wrapup/E/Candidate.app`. It is also the frozen control in the last
+complete alternating set, `Wrapup/B/journey/Control-1` through `Control-3`.
+The current baseline from that set is:
+
+| Metric | Control min | Control median | Control max |
+|---|---:|---:|---:|
+| lifetime_peak_mib | 618.831 | 619.222 | 620.284 |
+| hitches_over_25ms | 16.000 | 17.000 | 19.000 |
+| largest_callback_excluding_texture_ms | 103.923 | 130.002 | 130.310 |
+| largest_callback_ms | 421.330 | 452.910 | 540.140 |
+| texture_interval_ms | 309.094 | 460.750 | 510.094 |
+
+
+The raw callback includes the texture interval and is reported only. The
+619.222 MiB journey peak median is not a universal lifetime ceiling: the
+retained E soak triplicates reached 919.144 MiB median. Existing E performance
+exceptions and pending imagery follow-ups remain visible above.
+
+All wrap-up work used serial Xcode 26.6 Release tests/builds and the visionOS
+26.5 Simulator `8F38C0E7-6366-4DAC-9372-DCF6F9151DCB`. C and E pass all eleven
+byte-identical Apollo captures and the settled checks. B's exact images pass
+but its named failures remain failures. All terrain resources, residual caps,
+contact geometry and source ordering remain unchanged; no AGC change was
+made. Only the authorized radiance lookup differs among protected bodies.
+All complete and failed evidence remains under
+`/tmp/LM-Explorer-OneZoom-2026-09-07/Wrapup/`; previous evidence and the earlier
+interrupted C soak are preserved separately.
+
+Physical Vision Pro gates remain open: stereo and crossfade perception,
+tracked head/hand/gaze behavior and gesture comfort, physical CPU/GPU pacing,
+memory pressure, thermals and immersive-space lifecycle. Simulator evidence
+does not qualify those gates. D's coarse handoff and F's 100 km sliding-region
+acceptance are also still outstanding.
+
+The next run starts `Docs/LunarMapPackagePlan.md` on the closed landing branch.
+No package extraction, new app target or other package-plan implementation was
+started here. The owner's package plan and its two cross-reference documents
+are committed unchanged as `docs: add LunarMap package plan and cross-references`.
+Both scheme-user files remain modified and outside commits. All other work
+is committed; parked candidates remain reviewable and rebased onto the closure
+head. The final state artifact records the verified status and runtime-tree
+comparisons after that last documentation-only rebase.
