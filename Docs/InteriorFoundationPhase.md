@@ -38,4 +38,10 @@ Workers deliver reproducible Blender source, neutral USDZ, evidence with URLs/pa
 
 Coordinator verifies no double shell/windows/LPD/instruments, correct placeholder substitution/fallback, visible enclosure, instrument sightlines, rough controller/panel clearance and normal-view overlay suppression. Run native package tests and serial visionOS integration tests/captures on exact pinned revisions. Promote the enclosed assembly to the normal interior only after combined review; keep a fallback for asset failures. Physical headset gaze/pinch, stereo, reach, photometry and performance remain separate acceptance work when a headset is available.
 
-This document starts the phase; it does not claim any of these new deliverables or physical checks are complete.
+## Delivery status — 2026-09-08
+
+Cabin `bae0c02`, WindowsLPD `b794640` and PanelInventory `0c58843` are reviewed and merged preserving worker history. Eleven native LMKit package tests pass. All 66 slot poses, full Cabin mount rotations/bases, independent windows/marking layers and old visual removal are checked. Detailed hashes and limits are in `Provenance/enclosed-foundation-acceptance.json`.
+
+User photographs are preserved at `References/Interior/User-2026-09-08/`; the Smithsonian LM-2 panorama was inspected interactively. It supports stepped side terraces, shaped solid/mesh ceiling covers and projecting consoles/supports, without establishing new numerical dimensions. These remain later detail refinements to the current foundation.
+
+LM historical presentation `3a8b9b6` passed independent review (43 worker tests). Coordinator master assembly integration and combined simulator acceptance are in progress. New assembly promotion is pending that validation; physical headset checks remain outstanding.

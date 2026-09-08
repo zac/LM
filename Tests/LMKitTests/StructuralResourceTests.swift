@@ -93,8 +93,20 @@ private func authoringURL(_ component: String, _ file: String) -> URL {
     }
     let eye = try #require(root.findEntity(named: "CDR_Eye"))
     #expect(simd_length(eye.position(relativeTo: root) - SIMD3<Float>(-0.5588, 1.78, -0.38)) < 1e-5)
-    for layer in ["Inner", "Outer"] {
-        let pane = try #require(root.findEntity(named: "CDR_Window_" + layer))
-        #expect(pane.findEntity(named: "LPD_" + layer)?.parent === pane)
+    // Optical metadata survives migration; visible panes/marks are exclusively WindowsLPD.
+    let optical = try #require(root.findEntity(named: "Optical"))
+    func descendants(_ node: Entity) -> [Entity] { [node] + node.children.flatMap(descendants) }
+    #expect(descendants(optical).allSatisfy { $0.components[ModelComponent.self] == nil })
+    let migration = try #require(JSONSerialization.jsonObject(with: Data(contentsOf: LMKitAssets.cabinMigrationURL)) as? [String: Any])
+    let removed = try #require(migration["removed_visual_nodes"] as? [[String: String]])
+    for item in removed {
+        let name = try #require(item["name"])
+        #expect(root.findEntity(named: name) == nil)
+    }
+    let cutaways = try #require(migration["new_cutaways"] as? [String: String])
+    #expect(cutaways.count == 6)
+    for name in cutaways.keys {
+        let part = try #require(root.findEntity(named: name))
+        #expect(part.isEnabled)
     }
 }

@@ -1,0 +1,82 @@
+{
+  "acceptance": "Resource compatibility and provisional visual foundation; complete LM assembly validation pending",
+  "date": "2026-09-08",
+  "deliveries": {
+    "Cabin": "bae0c02e84ddc528e2c2a40e1d06df61a31d0d9c",
+    "WindowsLPD": "b794640c32ff1279a54d9776d3c329b0f679fd49",
+    "PanelInventory": "0c58843078c993b085b5b72ea10d697e7a29a4cc"
+  },
+  "history": "Original component histories preserved by coordinator merges",
+  "validation": {
+    "native_package_tests": 11,
+    "failures": 0,
+    "scope": [
+      "actual RealityKit resource loading",
+      "byte-identical accepted USDZ payloads",
+      "full Cabin mount rotations and optical bases",
+      "all 66 panel/slot poses and full paths",
+      "independent placeholder and planning label layers",
+      "blocked Timer reservation metadata and empty geometry",
+      "all four window pane bases and separate commander marking parents",
+      "removed legacy visible Cabin nodes absent"
+    ],
+    "reported_worker_checks": {
+      "Cabin": 3556,
+      "PanelInventory": 1315
+    }
+  },
+  "integration_requirements": [
+    "WindowsLPD and PanelInventory install at shared Cabin identity once",
+    "Optical metadata has no visible panes; separate WindowsLPD owns all physical marks",
+    "Explicitly disable PlanningLabels during RealityKit installation; authored USD visibility does not set isEnabled",
+    "Check replacement_allowed before loading occupants; blocked Panel5__Timer remains empty",
+    "Suppress procedural panes/frames/grids/projected marker only after successful imported assembly validation",
+    "Preserve independently owned live instrument/control entities"
+  ],
+  "limits": [
+    "Unverified historical dimensions and pane spacing",
+    "New and old LPD representations are not angular-targeting qualified",
+    "Smooth cabin lining and simplified terraces/frame profiles remain visual placeholders",
+    "P5 timer layout blocked; future physical support, continuous controller sweep and hand reach unresolved",
+    "Package tests do not establish combined app appearance, flight correctness or physical Vision Pro acceptance"
+  ],
+  "packaged_files": {
+    "Sources/LMKit/Resources/Cabin/Cabin.usdz": {
+      "bytes": 86169,
+      "sha256": "9b30f113235bea7832dd0d9f245d3f6ad98bd8a64af2d217943a5489e498c21b"
+    },
+    "Sources/LMKit/Resources/Cabin/interface-v2.json": {
+      "bytes": 7263,
+      "sha256": "8cf5e986f63a46cd03518a526438781a6259e0d8377bb00336633ac1c2a149f9"
+    },
+    "Sources/LMKit/Resources/Cabin/migration.json": {
+      "bytes": 9166,
+      "sha256": "c7bb979f8f58111abfb4769bb0d520792f772e9b8fb5d1af6086959ee8a85dac"
+    },
+    "Sources/LMKit/Resources/Cabin/mounts.json": {
+      "bytes": 7944,
+      "sha256": "faf4a620eef94487bb374458fea7f012dda46089936dd4a9d9b9625cd5ba8b23"
+    },
+    "Sources/LMKit/Resources/WindowsLPD/WindowsLPD.usdz": {
+      "bytes": 104721,
+      "sha256": "91c03cc4b6826473cfdccdce195fece5f591b778b8afdb3a71505df8f528cc32"
+    },
+    "Sources/LMKit/Resources/WindowsLPD/interface-v1.json": {
+      "bytes": 4374,
+      "sha256": "28bb74258353bbc8365b7a54011782332ff69927c0683154a46b80b8ad24f22f"
+    },
+    "Sources/LMKit/Resources/WindowsLPD/manifest.json": {
+      "bytes": 51375,
+      "sha256": "50616739fb2febc210d3724b8008133b90b1c5f3c71a25e91609b249aa614d71"
+    },
+    "Sources/LMKit/Resources/PanelInventory/PanelInventory.usdz": {
+      "bytes": 2214951,
+      "sha256": "4b95b051b27831c97a47e9ccfb36b2f62e23469d3be50a09225e57685dc56b24"
+    },
+    "Sources/LMKit/Resources/PanelInventory/inventory.json": {
+      "bytes": 190532,
+      "sha256": "f315bdcbd8a6e597231b33420652fb6297241bf3af7c585708f472583522ec49"
+    }
+  },
+  "additional_references": "References/Interior/User-2026-09-08/PANORAMA-OBSERVATIONS.md"
+}
