@@ -49,12 +49,27 @@ struct LMLunarNavigationTests {
         let apollo = try #require(catalog.features.first { $0.id == "apollo-11" })
         #expect(apollo.coordinate == (try LMTerrainManifest.load()).landingOriginCoordinate)
     }
-    @Test @MainActor func globalPanHasFiniteSourceWindowAndApolloBoundsStayUnchanged() {
+    @Test @MainActor func globalPanHasFiniteSourceWindowAndApolloBoundsStayUnchanged() throws {
+        let manifest = try LMTerrainManifest.load()
+        let landmark = try #require(manifest.landmark(id: LMTerrainManifest.eagleLandmarkID))
+        let focusOrigin = manifest.localPosition(of: landmark)
+        let pack = try LunarExplorerSitePack(manifest: manifest, focusOrigin: focusOrigin)
+        let nearField = try #require(manifest.tile(id: "near-field"))
+        let halfExtent = nearField.extentMeters / 2 - 128
+        #expect(pack.panBounds.north == (-halfExtent - focusOrigin.x)...(halfExtent - focusOrigin.x))
+        #expect(pack.panBounds.east == (-halfExtent - focusOrigin.y)...(halfExtent - focusOrigin.y))
+
         let session = LunarExplorerSession()
+        session.residentPanBounds = pack.panBounds
         session.pan(northMeters: 100_000, eastMeters: -100_000)
-        #expect(session.focusNorthOffsetMeters == 900)
+        #expect(session.focusNorthOffsetMeters == pack.panBounds.north.upperBound)
+        #expect(session.focusEastOffsetMeters == pack.panBounds.east.lowerBound)
+        session.pan(northMeters: -100_000, eastMeters: 100_000)
+        #expect(session.focusNorthOffsetMeters == pack.panBounds.north.lowerBound)
+        #expect(session.focusEastOffsetMeters == pack.panBounds.east.upperBound)
         session.destinationCoordinate = .init(latitudeDegrees: 0, longitudeDegrees: 0)
         session.usesBundledSite = false
+        session.residentPanBounds = .regional
         session.pan(northMeters: 100_000, eastMeters: -100_000)
         #expect(session.focusNorthOffsetMeters == 20_000)
         #expect(session.focusEastOffsetMeters == -20_000)
