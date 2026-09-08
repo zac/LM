@@ -184,6 +184,9 @@ final class LMCommanderStationScene {
         cabinFrame.addChild(fdaiMount)
         buildPhysicalFDAI()
         installImportedFDAI()
+        #if DEBUG
+        LMInstrumentValidation.frameObserver(root)
+        #endif
     }
 
     /// Re-captures the current headset pose while preserving the live vehicle,
