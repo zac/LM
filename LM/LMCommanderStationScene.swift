@@ -60,6 +60,11 @@ final class LMCommanderStationScene {
         subsystem: Bundle.main.bundleIdentifier ?? "io.positron.LM",
         category: "ProgressiveTerrain"
     )
+    // The Apollo demo keeps one non-overlapping measured terrain set resident.
+    // Progressive overlays used to leave the base mesh underneath them and
+    // trigger mesh/texture uploads precisely as the vehicle reached the ground.
+    private var usesPreparedApolloTerrain = false
+    private(set) var apolloTerrainReady = false
     private var globalCockpitTerrain: LMLunarCockpitTerrain?
     var globalTerrainReady: Bool { globalCockpitTerrain?.permitsPhysicsStep ?? true }
     var globalTerrainDescription: String {
@@ -410,6 +415,7 @@ final class LMCommanderStationScene {
         around terrainPosition: LMVector3D,
         altitudeMeters: Double
     ) {
+        guard !usesPreparedApolloTerrain else { return }
         guard let heightField = terrainHeightField else { return }
         guard altitudeMeters <= LMTerrainContactSurfaceBuilder.buildAltitudeMeters else {
             return
@@ -454,8 +460,13 @@ final class LMCommanderStationScene {
     }
 
     func loadApollo11Terrain() async throws {
-        let heightField = try Apollo11TerrainResource.loadSourceBackedHeightField()
-        let assembly = try await LMTerrainWorld.load()
+        apolloTerrainReady = false
+        usesPreparedApolloTerrain = true
+        let heightField = try await Task.detached(priority: .userInitiated) {
+            try Apollo11TerrainResource.loadSourceBackedHeightField()
+        }.value
+        let assembly = try await LMTerrainWorld.load(prepareProgressiveDetail: false)
+        try Task.checkCancellation()
         let terrain = assembly.worldRoot
         terrainHeightField = heightField
         terrainFrameAlignment = try LMTerrainFrameAlignment(manifest: assembly.manifest)
@@ -465,14 +476,30 @@ final class LMCommanderStationScene {
             )
         }
         terrainEnvironment = terrain
-        terrainAlbedoField = try? LMMeasuredAlbedoField.load(tile: heightField.tile)
-        if terrainAlbedoField == nil {
-            logger.error("Measured albedo unavailable; tiles bake procedural contrast only")
-        }
         let eagle = terrainFrameAlignment?.terrainReferenceTouchdown ?? .zero
         terrainDatumElevationMeters = Double(
             heightField.relativeElevation(eastMeters: eagle.y, northMeters: eagle.x) ?? 0
         )
+        // Retain the exact rendered near-field posts for gear contact. This
+        // includes the parent morph at its perimeter and needs no landing-time
+        // patch generation, even if the pilot moves away from Eagle's position.
+        let grid = assembly.nearFieldGrid
+        let tile = heightField.tile
+        let reference = Float(terrainDatumElevationMeters)
+        let alignment = terrainFrameAlignment
+        let surface = await Task.detached(priority: .userInitiated) {
+            LMTerrainContactSurface(
+                cornerEastMeters: -tile.extentMeters / 2,
+                cornerNorthMeters: tile.extentMeters / 2,
+                spacingMeters: tile.postSpacingMeters,
+                columns: tile.postsPerSide, rows: tile.postsPerSide,
+                heights: grid.positions.map { $0.y - reference },
+                heightField: heightField, alignment: alignment,
+                referenceElevationMeters: reference)
+        }.value
+        try Task.checkCancellation()
+        contactSurface = surface
+        onContactSurfaceChange?(surface)
         terrainRockField?.removeFromParent()
         let rockField = try LMLunarRockFieldResource.makeEntity(
             heightField: heightField,
@@ -491,6 +518,7 @@ final class LMCommanderStationScene {
         apply(lastVehicleState)
         updateCockpitShadow()
         recordLighting(stage: "after-apollo-terrain-swap")
+        apolloTerrainReady = true
     }
 
     private func updateCockpitShadow() {
@@ -606,6 +634,7 @@ final class LMCommanderStationScene {
         velocityEastMetersPerSecond: Double,
         altitudeMeters: Double
     ) {
+        guard !usesPreparedApolloTerrain else { return }
         guard let heightField = terrainHeightField,
               let terrainEnvironment else { return }
         let albedoField = terrainAlbedoField

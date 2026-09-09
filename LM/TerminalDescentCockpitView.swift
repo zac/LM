@@ -239,13 +239,8 @@ struct TerminalDescentCockpitView: View {
             appModel.session.setSceneActive(scenePhase == .active)
             audioController.isEnabled = audioEnabled
             audioController.start()
-            if appModel.cockpitCoordinate == nil, appModel.session.canStart {
-                let startPoint = PoweredDescentSession.StartPoint.cockpitLaunch(
-                    arguments: ProcessInfo.processInfo.arguments)
-                appModel.session.start(from: startPoint)
-                #if DEBUG
-                if ProcessInfo.processInfo.arguments.contains("--cockpit-validation-paused") { appModel.session.pause() }
-                #endif
+            if appModel.cockpitCoordinate == nil {
+                appModel.session.terrainReady = { [weak station] in station?.apolloTerrainReady ?? false }
             }
             if ProcessInfo.processInfo.arguments.contains("--cockpit-recenter-after-launch") {
                 try? await Task.sleep(for: .milliseconds(500))
@@ -271,10 +266,21 @@ struct TerminalDescentCockpitView: View {
                     terrainStatus = station.globalTerrainDescription
                     appModel.session.start(from: .ignition)
                 } else {
-                    appModel.session.terrainReady = nil
+                    terrainStatus = "Preparing landing terrain…"
                     appModel.session.vehicleDidAdvance = nil
                     try await station.loadApollo11Terrain()
-                    terrainStatus = "LROC/SLDEM terrain · 0.5 m NAC + normalized WAC reflectance"
+                    try Task.checkCancellation()
+                    terrainStatus = "Landing terrain ready"
+                    if appModel.session.canStart {
+                        let startPoint = PoweredDescentSession.StartPoint.cockpitLaunch(
+                            arguments: ProcessInfo.processInfo.arguments)
+                        appModel.session.start(from: startPoint)
+                        #if DEBUG
+                        if ProcessInfo.processInfo.arguments.contains("--cockpit-validation-paused") {
+                            appModel.session.pause()
+                        }
+                        #endif
+                    }
                 }
                 recordValidation { $0.observeTerrainLoaded() }
                 logger.info("Cockpit terrain loaded: \(terrainStatus, privacy: .public); artist cabin: \(artistCabinLoaded)")

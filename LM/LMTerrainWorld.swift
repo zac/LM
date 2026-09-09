@@ -238,7 +238,8 @@ enum LMTerrainWorld {
         bundle: Bundle = .main,
         detailPipeline: LMTerrainDetailPipeline = Apollo11TerrainResource
             .detailPipeline,
-        prepareGesturePicking: Bool = false
+        prepareGesturePicking: Bool = false,
+        prepareProgressiveDetail: Bool = true
     ) async throws -> Assembly {
         let loadInterval = LMLunarTerrainTiming.begin("apollo-base-load")
         LMLunarTerrainTiming.memory("apollo-base-before")
@@ -247,9 +248,9 @@ enum LMTerrainWorld {
             LMLunarTerrainTiming.memory("apollo-base-after")
         }
         async let terrainDetailPreparation: Void =
-            Apollo11TerrainResource.prepareTerrainDetail(
+            prepareProgressiveDetail ? Apollo11TerrainResource.prepareTerrainDetail(
                 pipeline: detailPipeline
-            )
+            ) : ()
         let manifest = try LMTerrainManifest.load(bundle: bundle)
 
         let worldRoot = Entity()

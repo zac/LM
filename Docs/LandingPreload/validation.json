@@ -1,0 +1,14 @@
+{
+  "baseHead": "90002a9cd000248400f0a176a7f5fad99b8621e8",
+  "sourceSHA256": {
+    "LM/LMCommanderStationScene.swift": "649ef3fbc8546780ec19ca119391ef59cf0b004475653a3aad0f41b8d30711e3",
+    "LM/LMTerrainWorld.swift": "7b50be6d1a33b5a2432fddd9e2a17a0230662236cacbedd64eb8fb1a783c971e",
+    "LM/TerminalDescentCockpitView.swift": "7a4568f1b33a2a31284ad2bcf09c7e02ca3b40a925421c683ec29ab692c5ee47"
+  },
+  "build": "passed; generic visionOS Simulator destination; isolated checkout",
+  "buildLogSHA256": "0c9771c133c3f36cf6bae70f942ed4634d9f75ba8ac14626259c9e59d0e1f797",
+  "contactSamplerAssertionsPassed": 8,
+  "appLaunched": false,
+  "simulatorControlled": false,
+  "devicePerformanceVerified": false
+}
