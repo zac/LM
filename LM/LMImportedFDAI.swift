@@ -38,9 +38,17 @@ final class LMImportedFDAI {
             guard node.parent === root else { throw LMImportedDSKY.ContractError.invalidParent(node.name) }
         }
         // Reduce distracting reflections on the fixed surround. Preserve ball
-        // texture, glass, fixed transforms and all live attitude behavior.
+        // texture, fixed transforms and all live attitude behavior.
         let matteNames: Set<String> = ["FDAI_BallSurround", "FDAI_InnerOctagonalMask", "FDAI_FaceBezel"]
         func visit(_ node: Entity) {
+            // The cosmetic cover imports with transparent opacity scale 1.0
+            // despite USD opacity 0.055, and its glossy material washes out the
+            // ball under mission lighting. Omit only this cover in the app;
+            // the fixed reticle and textured moving ball remain untouched.
+            if node.name == "FDAI_Glass" {
+                node.isEnabled = false
+                return
+            }
             // USD imports can repeat a cosmetic object's name on its mesh
             // child. These are not semantic binding/identity contracts.
             if matteNames.contains(node.name) {

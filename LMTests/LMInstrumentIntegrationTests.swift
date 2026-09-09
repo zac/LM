@@ -191,6 +191,9 @@ struct LMInstrumentIntegrationTests {
     @Test @MainActor func importedFDAINativeHierarchyKeepsFixedStructureStill() throws {
         let binding = try LMImportedFDAI(asset: Entity.load(contentsOf: LMKitAssets.fdaiURL))
         #expect(binding.readabilitySurfaceCount > 3)
+        let covers = LMCommanderStationAssembly.descendants(binding.fixed).filter { $0.name == "FDAI_Glass" }
+        #expect(!covers.isEmpty)
+        #expect(covers.allSatisfy { !$0.isEnabledInHierarchy })
         let face = try #require(LMCommanderStationAssembly.descendants(binding.ball).first {
             $0.name == "FDAI_Ball" && $0.components[ModelComponent.self] != nil
         })
