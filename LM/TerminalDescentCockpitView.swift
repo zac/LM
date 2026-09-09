@@ -78,7 +78,7 @@ struct TerminalDescentCockpitView: View {
                     Button {
                         restartExperience()
                     } label: {
-                        Label(appModel.cockpitCoordinate == nil ? "Restart P64" : "Restart P63", systemImage: "arrow.counterclockwise")
+                        Label(appModel.cockpitCoordinate == nil ? "Restart \(PoweredDescentSession.StartPoint.cockpitLaunch(arguments: ProcessInfo.processInfo.arguments).programLabel)" : "Restart P63", systemImage: "arrow.counterclockwise")
                     }
                     .disabled(!appModel.session.canStop && !appModel.session.canStart)
 
@@ -240,10 +240,8 @@ struct TerminalDescentCockpitView: View {
             audioController.isEnabled = audioEnabled
             audioController.start()
             if appModel.cockpitCoordinate == nil, appModel.session.canStart {
-                let startPoint: PoweredDescentSession.StartPoint = ProcessInfo
-                    .processInfo.arguments.contains("--cockpit-start-p65")
-                    ? .p65TerminalDescent
-                    : .p64Approach
+                let startPoint = PoweredDescentSession.StartPoint.cockpitLaunch(
+                    arguments: ProcessInfo.processInfo.arguments)
                 appModel.session.start(from: startPoint)
                 #if DEBUG
                 if ProcessInfo.processInfo.arguments.contains("--cockpit-validation-paused") { appModel.session.pause() }

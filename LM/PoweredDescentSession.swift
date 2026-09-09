@@ -15,6 +15,12 @@ final class PoweredDescentSession {
         case p64Approach
         case p65TerminalDescent
 
+        /// Apollo cockpit defaults to the validated late-descent checkpoint.
+        /// The longer P64 approach remains available through an explicit launch option.
+        static func cockpitLaunch(arguments: [String]) -> Self {
+            arguments.contains("--cockpit-start-p64") ? .p64Approach : .p65TerminalDescent
+        }
+
         var programLabel: String {
             switch self {
             case .ignition: "P63"
@@ -142,6 +148,8 @@ final class PoweredDescentSession {
     @ObservationIgnored var terrainCaptureMetrics: (() -> [String: Double])?
     @ObservationIgnored private var captureExport: Task<Void, Never>?
     @ObservationIgnored private var lastCaptureSecond = -1
+    @ObservationIgnored private var captureStartSimulationSeconds: Double?
+    @ObservationIgnored private var captureStartWallSeconds: Double?
     @ObservationIgnored private var terrainWaitSeconds = 0.0
     @ObservationIgnored private var publicationWaitSeconds = 0.0
     @ObservationIgnored private var maximumPublicationWaitSeconds = 0.0
@@ -371,6 +379,8 @@ final class PoweredDescentSession {
         releaseEventTimerControls()
         let runID = UUID()
         self.runID = runID
+        captureStartSimulationSeconds = nil
+        captureStartWallSeconds = nil
         lastStartPoint = startPoint
         replayFrame = nil
         recordedFrames.removeAll(keepingCapacity: true)
@@ -752,6 +762,10 @@ final class PoweredDescentSession {
     }
 
     private func record(_ snapshot: LMSimulationSnapshot) {
+        if captureStartSimulationSeconds == nil {
+            captureStartSimulationSeconds = snapshot.timeSeconds
+            captureStartWallSeconds = CACurrentMediaTime()
+        }
         recordedFrames.append(LMFlightFrame(snapshot: snapshot))
         guard ProcessInfo.processInfo.arguments.contains("--cockpit-mission-capture"),
               Int(snapshot.timeSeconds) != lastCaptureSecond || snapshot.vehicleState.flightOutcome.isTerminal else { return }
@@ -759,6 +773,12 @@ final class PoweredDescentSession {
         let state = snapshot.vehicleState
         var report: [String: Any] = ["timeSeconds": snapshot.timeSeconds,
             "program": snapshot.agc.dsky.programNumber ?? 0, "scenarioID": scenario.id,
+            "startProgram": lastStartPoint.programLabel,
+            "elapsedSimulationSeconds": snapshot.timeSeconds - (captureStartSimulationSeconds ?? snapshot.timeSeconds),
+            "elapsedWallSeconds": CACurrentMediaTime() - (captureStartWallSeconds ?? CACurrentMediaTime()),
+            "terminal": state.flightOutcome.isTerminal,
+            "probeContact": state.landingGear.map { $0.isProbeContact as Any } ?? NSNull(),
+            "footpadContact": state.surfaceContact != nil,
             "altitudeMeters": state.altitudeMeters, "outcome": state.flightOutcome.rawValue,
             "northMeters": state.positionMeters.x, "eastMeters": state.positionMeters.y,
             "terrain": terrainCaptureMetrics?() ?? [:],
