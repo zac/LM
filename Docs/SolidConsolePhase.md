@@ -19,6 +19,6 @@ Review both crew positions and oblique views: no exposed instrument backs, float
 
 ## Progress
 
-All three enclosure deliveries and the LPD placement correction are merged with original worker history. Combined geometry clears the resolved lamp/timer/console/breaker incursions, all sampled sightlines and 125 ACA poses; see Docs/Validation/SolidConsole/CombinedGeometry/REVIEW.md. Runtime integration is implemented, with native package and simulator acceptance pending.
+All three enclosure deliveries and the LPD placement correction are merged with original worker history. Combined geometry clears the resolved lamp/timer/console/breaker incursions, all sampled sightlines and 125 ACA poses; see Docs/Validation/SolidConsole/CombinedGeometry/REVIEW.md. Runtime0b98768 passes105 tests in19 suites; package tests pass13 functions with two17-case parameterized checks. Native views confirm solid embedding, with a visible pilot-contact surround notch retained. A later lining draft is excluded at user wrap-up request. Short P65 default demo967f16b reached soft landing in49.23 simulated seconds headlessly; the user requested no further app runs, so final demo app acceptance is not claimed. See consuming LM Docs/Validation/SolidConsole/README.md for images and evidence.
 
 The user explicitly added the window-marking audit while enclosure work was in progress. This runs on an isolated WindowsLPD branch alongside WindowSurrounds; reference placement and optical calibration must be distinguished.

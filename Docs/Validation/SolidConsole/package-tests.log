@@ -1,0 +1,108 @@
+Building for debugging...
+[0/28] /private/tmp/lmkit-solid-console-package-build/arm64-apple-macosx/debug/LMKitPackageTests.derived/runner.swift
+[0/28] Write sources
+[4/28] Copying DSKY
+[5/28] Copying FDAI
+[6/28] Copying CommanderPanels
+[6/28] Copying Legacy
+[6/28] Copying LowerConsole
+[6/28] Copying WindowsLPD
+[10/28] Copying CautionWarning
+[10/28] Copying InteriorDetails
+[10/28] Copying CrossPointer
+[10/28] Copying PanelInventory
+[14/28] Copying InstrumentConsole
+[14/28] Copying BreakerBanks
+[14/28] Copying DescentControls
+[14/28] Copying EngineControls
+[14/28] Copying HandControllers
+[17/28] Copying Cabin
+[20/28] Copying WindowSurrounds
+[21/28] Copying ControlLibrary
+[22/28] Copying PropulsionInstruments
+[23/28] Copying AltitudeRate
+[24/28] Copying Timers
+[25/28] Write swift-version-3CD7052B146186F2.txt
+[27/31] Compiling LMKit LMKitAssets.swift
+[28/31] Emitting module LMKit
+[29/31] Compiling LMKit resource_bundle_accessor.swift
+[30/39] Compiling LMKitTests CommanderPanelResourceTests.swift
+[31/39] Compiling LMKitTests LandingStationResourceTests.swift
+[32/39] Compiling LMKitTests AssetTests.swift
+[33/39] Compiling LMKitTests PanelInventoryResourceTests.swift
+[34/39] Compiling LMKitTests StructuralResourceTests.swift
+[35/39] Emitting module LMKitTests
+[36/39] Compiling LMKitTests HandControllerResourceTests.swift
+[37/39] Compiling LMKitTests WindowResourceTests.swift
+[38/41] Emitting module LMKitPackageTests
+[39/41] Compiling LMKitPackageTests runner.swift
+[39/41] Write Objects.LinkFileList
+[40/41] Linking LMKitPackageTests
+Build complete! (10.06s)
+Test Suite 'All tests' started at 2026-09-08 16:58:28.757.
+Test Suite 'All tests' passed at 2026-09-08 16:58:28.758.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Test resourcePayloadsAreHydrated() started.
+􀟈  Test legacySceneRetainsSimulationNodes() started.
+􀟈  Test packagedWindowsPreserveIndependentPaneBasesAndMarkOwnership() started.
+􀟈  Test packagedInventoryPreservesSlotPosesAndBlockedReservations() started.
+􀟈  Test packagedCabinPreservesRootSpaceMountsAndOpticalBasis() started.
+􀟈  Test packagedControlFamiliesPreserveIndependentMechanisms() started.
+􀟈  Test packagedDSKYMatchesAcceptedAuthoringExport() started.
+􀟈  Test packagedFDAIRetainsIndependentPivots() started.
+􀟈  Test packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test packagedCommanderPanelsPreserveInterfacesAndIndependentBacking() started.
+􀟈  Test packagedHandControllersPreserveNeutralNestedMechanisms() started.
+􀟈  Test landingResourcesLoadWithoutOwningInteraction(_:) started.
+􀟈  Test neutralDSKYRetainsAddressableParts() started.
+􀟈  Test case passing 1 argument resource → .attitudeMode to packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test case passing 1 argument resource → .altitudeRate to packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test case passing 1 argument resource → .missionTimerControls to packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test case passing 1 argument resource → .engineButtons to packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test case passing 1 argument resource → .descentRate to packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test case passing 1 argument resource → .altitudeRate to landingResourcesLoadWithoutOwningInteraction(_:) started.
+􀟈  Test case passing 1 argument resource → .crossPointer to packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test case passing 1 argument resource → .breakerBanks to packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test case passing 1 argument resource → .interiorDetails to packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test case passing 1 argument resource → .lunarContact to packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test case passing 1 argument resource → .attitudeMode to landingResourcesLoadWithoutOwningInteraction(_:) started.
+􀟈  Test case passing 1 argument resource → .eventTimer to packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test case passing 1 argument resource → .eventTimerControls to packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test case passing 1 argument resource → .missionTimer to packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test case passing 1 argument resource → .propulsionInstruments to packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test case passing 1 argument resource → .cautionWarning to packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test case passing 1 argument resource → .descentRate to landingResourcesLoadWithoutOwningInteraction(_:) started.
+􀟈  Test case passing 1 argument resource → .crossPointer to landingResourcesLoadWithoutOwningInteraction(_:) started.
+􀟈  Test case passing 1 argument resource → .instrumentConsole to packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test case passing 1 argument resource → .lowerConsole to packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test case passing 1 argument resource → .interiorDetails to landingResourcesLoadWithoutOwningInteraction(_:) started.
+􀟈  Test case passing 1 argument resource → .windowSurrounds to packagedLandingResourcesPreserveAuthoringBytes(_:) started.
+􀟈  Test case passing 1 argument resource → .breakerBanks to landingResourcesLoadWithoutOwningInteraction(_:) started.
+􀟈  Test case passing 1 argument resource → .missionTimer to landingResourcesLoadWithoutOwningInteraction(_:) started.
+􀟈  Test case passing 1 argument resource → .eventTimer to landingResourcesLoadWithoutOwningInteraction(_:) started.
+􀟈  Test case passing 1 argument resource → .missionTimerControls to landingResourcesLoadWithoutOwningInteraction(_:) started.
+􀟈  Test case passing 1 argument resource → .eventTimerControls to landingResourcesLoadWithoutOwningInteraction(_:) started.
+􀟈  Test case passing 1 argument resource → .engineButtons to landingResourcesLoadWithoutOwningInteraction(_:) started.
+􀟈  Test case passing 1 argument resource → .lunarContact to landingResourcesLoadWithoutOwningInteraction(_:) started.
+􀟈  Test case passing 1 argument resource → .propulsionInstruments to landingResourcesLoadWithoutOwningInteraction(_:) started.
+􀟈  Test case passing 1 argument resource → .cautionWarning to landingResourcesLoadWithoutOwningInteraction(_:) started.
+􀟈  Test case passing 1 argument resource → .instrumentConsole to landingResourcesLoadWithoutOwningInteraction(_:) started.
+􀟈  Test case passing 1 argument resource → .lowerConsole to landingResourcesLoadWithoutOwningInteraction(_:) started.
+􀟈  Test case passing 1 argument resource → .windowSurrounds to landingResourcesLoadWithoutOwningInteraction(_:) started.
+􁁛  Test packagedDSKYMatchesAcceptedAuthoringExport() passed after 0.006 seconds.
+􁁛  Test resourcePayloadsAreHydrated() passed after 0.006 seconds.
+􁁛  Test packagedLandingResourcesPreserveAuthoringBytes(_:) with 17 test cases passed after 0.007 seconds.
+􁁛  Test legacySceneRetainsSimulationNodes() passed after 0.212 seconds.
+􁁛  Test packagedWindowsPreserveIndependentPaneBasesAndMarkOwnership() passed after 0.317 seconds.
+􁁛  Test packagedCabinPreservesRootSpaceMountsAndOpticalBasis() passed after 0.464 seconds.
+􁁛  Test packagedControlFamiliesPreserveIndependentMechanisms() passed after 0.536 seconds.
+􁁛  Test packagedCommanderPanelsPreserveInterfacesAndIndependentBacking() passed after 0.715 seconds.
+􁁛  Test packagedInventoryPreservesSlotPosesAndBlockedReservations() passed after 0.907 seconds.
+􁁛  Test packagedFDAIRetainsIndependentPivots() passed after 1.170 seconds.
+􁁛  Test packagedHandControllersPreserveNeutralNestedMechanisms() passed after 1.943 seconds.
+􁁛  Test neutralDSKYRetainsAddressableParts() passed after 2.525 seconds.
+􁁛  Test landingResourcesLoadWithoutOwningInteraction(_:) with 17 test cases passed after 3.925 seconds.
+􁁛  Test run with 13 tests in 0 suites passed after 3.925 seconds.

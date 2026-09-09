@@ -7,7 +7,7 @@
     "WindowsLPD": "f5824e4ab804419262f663b1d5e3bf0ac6551dd7",
     "WindowSurrounds": "38eaad3ea04b781b5f3acd140007fe8d846441a5"
   },
-  "status": "Combined geometry accepted; native package and simulator acceptance pending",
+  "status": "Published enclosure geometry and package validation; native cockpit regression passed, visible pilot-contact notch retained at user wrap-up request",
   "limits": [
     "Provisional visual enclosure, not fabrication or mission-specific qualification.",
     "LPD spine follows forward axis relative to frozen provisional eye and pane; crossbar spacing is visual and numeric targeting remains unqualified.",
@@ -75,5 +75,23 @@
     "WindowsLPD.usdz": "a9a8cc1fd43f5c95a3be729d44afbe8704f07ac551cea9e1518479b96e0c9c18",
     "interface-v1.json": "2d20b0247250853e073720c993f0a42fa23a3b21f223d8c3019ddf1cf53c4a72",
     "manifest.json": "36531101cf50a2094f9e436fd0159d377cca62922bdf6ca9a262efa4657bd6f0"
+  },
+  "package_validation": {
+    "source": "c425dcfc8a753c20159fe2226a181faace96b9dc",
+    "command": "swift test --scratch-path /private/tmp/lmkit-solid-console-package-build",
+    "result": "passed",
+    "test_functions": 13,
+    "parameterized_functions": 2,
+    "cases_per_parameterized_function": 17,
+    "log": "Docs/Validation/SolidConsole/package-tests.log"
+  },
+  "consumer_validation": {
+    "runtime": "0b987686b63b1d92b06c120d29be65a01cfd5c66",
+    "tests": 105,
+    "suites": 19,
+    "failures": 0,
+    "skipped": 0,
+    "gallery": "https://github.com/zac/LM/blob/cockpit/integration/Docs/Validation/SolidConsole/README.md",
+    "limits": "Later short P65 demo configuration headless-only; user requested no further app runs. Pilot-contact notch lining draft not integrated."
   }
 }
