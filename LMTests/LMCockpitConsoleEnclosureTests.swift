@@ -131,6 +131,22 @@ struct LMCockpitConsoleEnclosureTests {
     }
 
     @Test func invalidOrOverlappingGroupsAndNonfinitePoseAreRejected() throws {
+        let measured: [Float] = [0.99999994, 0.99999988, 0.99999988]
+        let pose = LMCockpitConsoleEnclosure.Pose(position_m: [0, 0, 0],
+            rotation_quaternion_xyzw: [0, 0, 0, 1], scale: measured)
+        let matrix = try pose.matrix()
+        #expect(matrix.columns.0.x == measured[0] && matrix.columns.1.y == measured[1])
+        for invalid: [Float] in [[1.001, 1, 1], [1, 1, 0.99], [.nan, 1, 1], [.infinity, 1, 1], [1, 1]] {
+            #expect(throws: (any Error).self) {
+                try LMCockpitConsoleEnclosure.Pose(position_m: [0, 0, 0],
+                    rotation_quaternion_xyzw: [0, 0, 0, 1], scale: invalid).matrix()
+            }
+        }
+        // Enclosure tolerance does not relax authored instrument-slot contracts.
+        #expect(throws: (any Error).self) {
+            try LMCommanderStationAssembly.Inventory.Pose(translation_m: [0, 0, 0],
+                quaternion_xyzw: [0, 0, 0, 1], scale: measured).transform()
+        }
         #expect(throws: (any Error).self) {
             try load(.windows) { contract in
                 var groups = contract["groups"] as! [[String: Any]]
