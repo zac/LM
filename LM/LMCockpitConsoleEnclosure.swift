@@ -11,8 +11,15 @@ struct LMCockpitConsoleEnclosure {
         let rotation_quaternion_xyzw: [Float]
         let scale: [Float]
         func matrix() throws -> simd_float4x4 {
-            try LMCommanderStationAssembly.Inventory.Pose(translation_m: position_m,
-                quaternion_xyzw: rotation_quaternion_xyzw, scale: scale).transform().matrix
+            // Native matrix decomposition carries Float roundoff (e.g. 0.99999988).
+            // Preserve that measured scale in the matrix; reject actual rescaling.
+            guard scale.count == 3, scale.allSatisfy({ $0.isFinite && abs($0 - 1) <= 0.000001 }) else {
+                throw LMCommanderStationAssembly.AssemblyError.invalidContract("Enclosure scale")
+            }
+            var transform = try LMCommanderStationAssembly.Inventory.Pose(translation_m: position_m,
+                quaternion_xyzw: rotation_quaternion_xyzw, scale: [1, 1, 1]).transform()
+            transform.scale = SIMD3(scale[0], scale[1], scale[2])
+            return transform.matrix
         }
     }
     struct Reference: Decodable { let component: String; let path: String; let pose: Pose }
