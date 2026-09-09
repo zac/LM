@@ -1,0 +1,15 @@
+{
+  "advanceSteps" : 2678,
+  "baselineStartSeconds" : 614.57037429833713,
+  "checkpointRoundTripEqual" : true,
+  "checkpointStartSeconds" : 703.83704096492261,
+  "elapsedSimulationSeconds" : 119.99999999989086,
+  "finalAltitudeMeters" : 2.3283064365386963e-10,
+  "finalProgram" : 65,
+  "initialAltitudeMeters" : 205.53213568823412,
+  "initialProgram" : 64,
+  "stepSeconds" : 0.033333333333333333,
+  "surface" : "Default LMCore surface; rendered terrain and user input can change timing\/outcome",
+  "terminal" : true,
+  "terminalOutcome" : "softLanding"
+}

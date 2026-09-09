@@ -13,18 +13,21 @@ final class PoweredDescentSession {
     enum StartPoint: Equatable {
         case ignition
         case p64Approach
+        case twoMinuteApproach
         case p65TerminalDescent
 
-        /// Apollo cockpit defaults to the validated late-descent checkpoint.
+        /// Apollo cockpit defaults to approximately two minutes before touchdown.
         /// The longer P64 approach remains available through an explicit launch option.
         static func cockpitLaunch(arguments: [String]) -> Self {
-            arguments.contains("--cockpit-start-p64") ? .p64Approach : .p65TerminalDescent
+            if arguments.contains("--cockpit-start-p64") { return .p64Approach }
+            if arguments.contains("--cockpit-start-p65") { return .p65TerminalDescent }
+            return .twoMinuteApproach
         }
 
         var programLabel: String {
             switch self {
             case .ignition: "P63"
-            case .p64Approach: "P64"
+            case .p64Approach, .twoMinuteApproach: "P64"
             case .p65TerminalDescent: "P65"
             }
         }
@@ -174,6 +177,7 @@ final class PoweredDescentSession {
     @ObservationIgnored private var runID = UUID()
     @ObservationIgnored private var isSceneActive = true
     @ObservationIgnored private var p64Checkpoint: LMSimulationCheckpoint?
+    @ObservationIgnored private var twoMinuteCheckpoint: LMSimulationCheckpoint?
     @ObservationIgnored private var p65Checkpoint: LMSimulationCheckpoint?
     @ObservationIgnored private var lastStartPoint: StartPoint = .ignition
 
@@ -282,6 +286,12 @@ final class PoweredDescentSession {
         try bundledCheckpoint(named: "P64ApproachCheckpoint", in: bundle)
     }
 
+    nonisolated static func bundledTwoMinuteCheckpoint(
+        in bundle: Bundle = .main
+    ) throws -> LMSimulationCheckpoint {
+        try bundledCheckpoint(named: "TwoMinuteApproachCheckpoint", in: bundle)
+    }
+
     nonisolated static func bundledP65Checkpoint(
         in bundle: Bundle = .main
     ) throws -> LMSimulationCheckpoint {
@@ -315,6 +325,12 @@ final class PoweredDescentSession {
                 p65Checkpoint = nil
                 loadMessage = "P65 checkpoint unavailable: \(error.localizedDescription)"
             }
+            do {
+                twoMinuteCheckpoint = try Self.bundledTwoMinuteCheckpoint()
+            } catch {
+                twoMinuteCheckpoint = nil
+                loadMessage = "Two-minute checkpoint unavailable: \(error.localizedDescription)"
+            }
             let arguments = ProcessInfo.processInfo.arguments
             if arguments.contains("--replay-automatic") {
                 recording = try? Self.bundledAutomaticRecording()
@@ -326,6 +342,7 @@ final class PoweredDescentSession {
             if scenario.initialState.landingSite != nil {
                 p64Checkpoint = nil
                 p65Checkpoint = nil
+                twoMinuteCheckpoint = nil
                 recording = nil
             }
             loadMessage = "Luminary 099 · \(scenario.title)"
@@ -360,6 +377,8 @@ final class PoweredDescentSession {
             checkpoint = nil
         case .p64Approach:
             checkpoint = p64Checkpoint
+        case .twoMinuteApproach:
+            checkpoint = twoMinuteCheckpoint
         case .p65TerminalDescent:
             checkpoint = p65Checkpoint
         }

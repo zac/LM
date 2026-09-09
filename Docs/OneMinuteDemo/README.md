@@ -1,3 +1,5 @@
+> Superseded default: [two-minute cockpit entry](../TwoMinuteDescent/README.md) is now selected without an override. The short P65 demonstration below remains available with `--cockpit-start-p65`.
+
 # Short live landing demo
 
 The Apollo cockpit now starts from the existing P65 terminal-descent checkpoint by default. It is a roughly one-minute demonstration: the default-surface headless trace reaches real `softLanding` after **49.233 simulated seconds**, starting at **43.818 m**. It is not an exact 60-second scripted landing. Rendered terrain, user control, pauses and machine load can change the duration and outcome. No timewarp, synthetic touchdown, new vehicle state or AGC/LMCore changes are introduced.

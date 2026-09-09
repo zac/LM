@@ -3,8 +3,8 @@ import Testing
 
 @MainActor
 struct LMOneMinuteDemoTests {
-    @Test func shortCockpitDemoUsesExistingTerminalCheckpointAndPreservesLongApproach() {
-        #expect(PoweredDescentSession.StartPoint.cockpitLaunch(arguments: []) == .p65TerminalDescent)
+    @Test func cockpitDefaultsToTwoMinutesAndPreservesExplicitCheckpoints() {
+        #expect(PoweredDescentSession.StartPoint.cockpitLaunch(arguments: []) == .twoMinuteApproach)
         #expect(PoweredDescentSession.StartPoint.cockpitLaunch(arguments: ["--cockpit-start-p65"]) == .p65TerminalDescent)
         #expect(PoweredDescentSession.StartPoint.cockpitLaunch(arguments: ["--cockpit-start-p64"]) == .p64Approach)
     }
