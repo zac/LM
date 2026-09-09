@@ -668,3 +668,20 @@ concurrency 1/2/4 with three warm highland dives each, ranked by regional and
 per-generation ready time, followed by acceptance gates. F remains an
 unimplemented branch at the final base, pending D. Nothing from D or F was
 merged into the integrated apps.
+
+
+### Main integration, 2026-09-09
+
+The owner authorized combining the completed package development with the
+newer LMKit cockpit and publishing directly to main. Runtime merge `3ec34fa`
+preserves the terrain/package and cockpit histories. Compiler-required package
+interfaces expose existing sun values and rendered positions; the prepared
+Apollo contact construction moves into LunarMap without changing its arithmetic.
+A new regression verifies contact uses the rendered grid, including both
+triangle interiors. Full results and the direct-main publication checkpoint
+are in [MainIntegration.md](MainIntegration.md).
+
+This adds 232 package passes, 170 host passes plus the independently confirmed
+unchanged P64 failure, clean AGC/LMKit dependency checks, both ordinary Release
+builds and bounded runtime inspection. It does not close the historical soak,
+matched performance, full LM/Moon Apollo parity, or physical-device gates above.

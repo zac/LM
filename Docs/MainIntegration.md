@@ -150,3 +150,101 @@ the cockpit/guidance owner. Neither that test nor AGC was altered to pass it.
 The existing standalone production contact-sampler check also passes all eight
 corners/interior/diagonal/fallback assertions after its path update
 (`contact-interpolation.log`).
+
+
+## Final ordinary Release apps and Apollo flight
+
+Runtime merge commit: `3ec34fa32010f0038e9ebf1ec1e3acbdc9218981`.
+Both ordinary Release builds pass with Xcode 26.6 on the visionOS 26.5
+Simulator, after the test builds; frozen apps and metadata are in
+`Final-LM/`, `Final-Moon/` and `release-apps.json`.
+
+| App | Executable SHA-256 | Bundle bytes (uncompressed) |
+|---|---|---:|
+| LM | `e5c9f32bb05c48e3e28479ce0634100bb62e31e7a7c5759e01364c3f9c46f8af` | 478,035,566 |
+| Moon | `a93e0c8dd101acf85190d3e48ef344e6bf3cb3dc49523c519906535a2dd67f71` | 193,420,724 |
+
+The actual LM Release app completed the default automatic Apollo flight from
+P64 through P65 to **softLanding** in 114.200 simulation seconds / 114.197
+wall seconds. Footpad and probe contact are true. Contact vertical speed is
+0.893892 m/s; horizontal speed 0.278128 m/s; local slope 1.29850 degrees;
+contact tilt 1.15102 degrees. Terrain wait and simulation-time clamping are
+both zero; maximum publication wait is 0.0095 ms. These are one-flight
+functional observations, not comparative performance qualification.
+
+The evidence-only copy of `CaptureLunarCockpitMission.sh` removes the custom
+coordinate argument to exercise the default Apollo checkpoint; it retains
+the recorder, phase screenshots and terminal checks. `Apollo/recording.json`
+and `Apollo/latest.json` hold the flight data. `Apollo/P64.png` shows imported
+panels and both uncovered FDAIs; the high Simulator viewpoint exposes only
+part of the forward terrain. `Apollo/settled.png` shows the blue contact light,
+both instruments and a continuous bright terrain surface through the forward
+window. Cabin panels remain dark and the terrain has low contrast at this
+view; this inspection does not qualify stereo readability or terrain lighting.
+
+The initial install command found the Simulator shut down and did not launch
+the app (`apollo-install-shutdown.log`). The designated device was booted
+without erasing data; the subsequent completed flight is recorded separately
+in `apollo-runtime.log`. No result is inferred from the failed install.
+
+
+## Moon journey inspection
+
+The frozen ordinary Release Moon app (`io.positron.Moon`) completed all seven
+programmatic one-zoom stages: disk, clipped, crossfade, handoff, terrain,
+immersion and return. `Moon/completion.txt` records `passed`; stage PNG hashes
+are in `Moon/stages.tsv`. The existing script ran with `LUNAR_ONE_ZOOM=1` and
+no soak cycles. This tests product-state transitions, not native hand gestures.
+
+Inspected captures under the evidence root:
+
+- `Moon/disk.png`: free-standing textured Moon in the room, with multiple place
+  markers, the Apollo flag/label and the search/detail window; no black plane.
+- `Moon/crossfade.png` and `Moon/handoff.png`: rounded portal filled with imagery
+  and then terrain. Craters have lit and dark sides; the handoff surface is
+  softer than the imagery. No empty frame appears at these captured stops.
+- `Moon/terrain.png`: at 7.5 km, small central craters remain visible; surrounding
+  mare and distant features are low contrast and soft. This does not establish
+  full ladder parity or improved sharpness.
+- `Moon/immersion.png`: terrain fills the view behind the surface window, with
+  a visible Leave immersion control. `Moon/return.png` restores the room and
+  the same framed 7.5 km surface view.
+
+One-run telemetry (`moon-measurements.json`, `Moon/performance.log`):
+
+| Metric | Observation |
+|---|---:|
+| Frame-window footprint range | 92.3–332.5 MiB |
+| Lifetime kernel peak | 598.675 MiB |
+| Maximum window mean / p99 | 18.83 / 114.05 ms |
+| Largest callback, including/excluding texture | 391.6 / 391.596 ms |
+| Hitches over 25 ms | 12 |
+| Globe-texture interval | 148.677 ms |
+| Texture-before / texture-after kernel peak | 73.830 / 198.284 MiB |
+
+These are single-run observations with screenshot overhead. No matched control,
+triplicate decision, 90-second settle or performance improvement is claimed.
+The existing deferred qualification and physical gates remain open.
+
+## Main publication checkpoint
+
+The owner-authorized runtime merge `3ec34fa` includes both input histories.
+The following documentation commit records the completed validation without
+changing either executable. Main is advanced by fast-forward, with no force
+push or pull request. Exact final local and remote refs are retained in
+`/tmp/LM-Main-Integration-2026-09-09/final-state.json` after publication.
+AGC main stays `b3f1553` and LMKit main stays `5287dfd`; both were already
+published and were tested from clean committed worktrees.
+
+`preservation-audit.json` confirms every pre-existing dirty file and status in
+canonical LM, AGC, LMKit and the cockpit owner's worktree is unchanged. Main
+is landed from the isolated checkout; the canonical LM working branch remains
+`terrain-realism-and-explorer` to preserve that workspace. No candidate branches
+are deleted and no unrelated feature branches are merged.
+
+Remaining work is qualification and independent development: the known P64
+redesignation failure; package Apollo parity and matched performance/soaks;
+D's concurrency experiment and F's unimplemented sliding region; physical
+Vision Pro stereo, input, readability, comfort, memory/thermal and long-session
+acceptance. The completed Simulator automatic landing does not close those
+physical gates.

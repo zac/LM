@@ -14,6 +14,13 @@ one test suite, two thin app shells.
 
 ## 0. Status board (update when you land work)
 
+**Main integration (2026-09-09):** package steps 1–4 and the newer LMKit cockpit
+are combined at runtime merge `3ec34fa` for the owner-authorized main landing.
+See [MainIntegration.md](MainIntegration.md) for bounded integration validation
+and publication. The deferred package qualification below remains open; no
+step 5 or package split was started.
+
+
 | Step | State | Notes |
 |---|---|---|
 | 1 Package skeleton and file moves | Development integrated, `3e94add` | Tests, Apollo, contracts and journey pass. Fresh soak peak exceeds gate by 1.563 MiB; warm-highland incomplete. Owner authorized integration with qualification outstanding. |

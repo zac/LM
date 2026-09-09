@@ -328,3 +328,14 @@ does not qualify package performance or Moon capture parity. See
 Release executables, the retained Step 1 soak failure and the deferred gates.
 D remains a preserved candidate adapted to the new package paths; F remains
 unimplemented. No one-zoom terrain runtime changes were landed in this run.
+
+
+### Main integration checkpoint, 2026-09-09
+
+Runtime merge `3ec34fa` combines the landed one-zoom/LunarMap work with the
+LMKit cockpit for direct main publication; see
+[MainIntegration.md](MainIntegration.md). D remains parked on `onezoom/D` at
+`b37aec4`, with its concurrency experiment and acceptance gates outstanding.
+F remains unimplemented on `onezoom/F` at `cc42b92`, pending D. Neither branch
+was merged or rebased in this main integration. Physical and matched performance
+qualification remain open despite the bounded Simulator checks.
