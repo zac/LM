@@ -1,0 +1,43 @@
+{
+  "coordinateSpace": "Cabin root, meters; eye/target are converted to an inverse observer transform on the entire app scene",
+  "source": "11a98f0179732de9d46ffc766cf1a099e82f6d58",
+  "front": {
+    "eye": [
+      -0.15,
+      1.6,
+      0.48
+    ],
+    "target": [
+      -0.15,
+      1.3,
+      -0.55
+    ]
+  },
+  "side": {
+    "eye": [
+      -0.78,
+      1.57,
+      0.3
+    ],
+    "target": [
+      -0.15,
+      1.3,
+      -0.55
+    ]
+  },
+  "crew-eye": {
+    "eye": [
+      -0.5588,
+      1.78,
+      -0.38
+    ],
+    "target": [
+      -0.15,
+      1.29,
+      -0.65
+    ]
+  },
+  "instrumentObserver": "Existing LMInstrumentValidation observer; comfortable entry eye, target existing DSKY mount",
+  "precedence": "--instrument-validation disables every --assembly-validation-view preset",
+  "limits": "These are DEBUG monoscopic observer views, not headset optical, hand reach or pinch acceptance. No local cabin/instrument geometry is transformed by the observer."
+}

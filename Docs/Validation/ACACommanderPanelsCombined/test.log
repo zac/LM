@@ -1,0 +1,474 @@
+Command: xcodebuild test -parallel-testing-enabled NO -project /tmp/lm-aca-panels-verification/LM/LM.xcodeproj -scheme LM -destination 'platform=visionOS Simulator,id=6EB2B257-9EFE-4CEB-A64A-5EF0086FFF85' -derivedDataPath /tmp/lm-aca-panels-verification/build -clonedSourcePackagesDirPath /tmp/lm-aca-panels-verification/packages -skipPackagePluginValidation -only-testing:LMTests/LMImportedACATests -only-testing:LMTests/LMCommanderStationAssemblyTests -only-testing:LMTests/LMInstrumentIntegrationTests -only-testing:LMTests/LMInstrumentInteractionTests -only-testing:LMTests/ACAInputMappingTests -only-testing:LMTests/SpatialCockpitControlTests -resultBundlePath /tmp/lm-aca-panels-verification/combined.xcresult
+Success
+
+----- xcbeautify -----
+Version: 3.2.1
+----------------------
+
+Resolving Package Graph
+Resolved source packages
+note: Building targets in dependency order
+note: Target dependency graph (12 targets)
+[RealityKitContent_RealityKitContent] Write Auxiliary File e58fda98bfeed291f0a62c4c1d493c06.sb
+[RealityKitContent_RealityKitContent] Write Auxiliary File RealityKitContent_RealityKitContent.DependencyStaticMetadataFileList
+[RealityKitContent_RealityKitContent] Write Auxiliary File empty-RealityKitContent_RealityKitContent.plist
+[RealityKitContent_RealityKitContent] Write Auxiliary File RealityKitContent_RealityKitContent.DependencyMetadataFileList
+[RealityKitContent_RealityKitContent] Write Auxiliary File 4013e17d09c507479b374e96e272b9ff.sb
+[RealityKitContent] Write Auxiliary File RealityKitContent.modulemap
+[RealityKitContent] Write Auxiliary File RealityKitContent.DependencyStaticMetadataFileList
+[RealityKitContent] Write Auxiliary File RealityKitContent.DependencyMetadataFileList
+[LMKit] Write Auxiliary File LMKit.DependencyStaticMetadataFileList
+[LMKit] Write Auxiliary File LMKit.modulemap
+[LMKit] Write Auxiliary File LMKit.DependencyMetadataFileList
+[LMKit] Write Auxiliary File resource_bundle_accessor.swift
+[LMKit] Write Auxiliary File LMKit.SwiftFileList
+[LMKit] Write Auxiliary File LMKit.SwiftConstValuesFileList
+[LMKit] Write Auxiliary File LMKit-OutputFileMap.json
+[LMKit] Write Auxiliary File LMKit.LinkFileList
+[LMKit] Write Auxiliary File LMKit_const_extract_protocols.json
+[RealityKitContent] Write Auxiliary File RealityKitContent.LinkFileList
+[RealityKitContent] Write Auxiliary File RealityKitContent-OutputFileMap.json
+[RealityKitContent] Write Auxiliary File RealityKitContent.SwiftConstValuesFileList
+[RealityKitContent] Write Auxiliary File RealityKitContent_const_extract_protocols.json
+[RealityKitContent] Write Auxiliary File RealityKitContent.SwiftFileList
+[RealityKitContent] Write Auxiliary File resource_bundle_accessor.swift
+[LMTests] Write Auxiliary File empty-LMTests.plist
+[LMTests] Write Auxiliary File LMTests.hmap
+[LMTests] Write Auxiliary File LMTests.LinkFileList
+[LMTests] Write Auxiliary File LMTests.SwiftConstValuesFileList
+[LMTests] Write Auxiliary File LMTests_const_extract_protocols.json
+[LMTests] Write Auxiliary File LMTests.SwiftFileList
+[RealityKitContent] Copy RealityKitContent.modulemap -> RealityKitContent.modulemap
+[LMTests] Write Auxiliary File LMTests-OutputFileMap.json
+[LMTests] Write Auxiliary File LMTests.DependencyStaticMetadataFileList
+[LMTests] Write Auxiliary File LMTests.DependencyMetadataFileList
+[LMTests] Write Auxiliary File LMTests-project-headers.hmap
+[LMTests] Write Auxiliary File LMTests-generated-files.hmap
+[LMTests] Write Auxiliary File LMTests-own-target-headers.hmap
+[LMTests] Write Auxiliary File LMTests-all-target-headers.hmap
+[LMTests] Write Auxiliary File LMTests-all-non-framework-target-headers.hmap
+[LMKit] Copy LMKit.modulemap -> LMKit.modulemap
+[LMKit_LMKit] Write Auxiliary File LMKit_LMKit.DependencyMetadataFileList
+[LMKit_LMKit] Write Auxiliary File empty-LMKit_LMKit.plist
+[LMKit_LMKit] Write Auxiliary File LMKit_LMKit.DependencyStaticMetadataFileList
+[LMCore] Write Auxiliary File LMCore.SwiftConstValuesFileList
+[LMCore] Write Auxiliary File LMCore.SwiftFileList
+[LMCore] Write Auxiliary File LMCore_const_extract_protocols.json
+[LMCore] Write Auxiliary File LMCore.LinkFileList
+[LMCore] Write Auxiliary File LMCore-OutputFileMap.json
+[LMCore] Write Auxiliary File LMCore.modulemap
+[LMCore] Write Auxiliary File LMCore.DependencyStaticMetadataFileList
+[LMCore] Write Auxiliary File LMCore.DependencyMetadataFileList
+[LM] Write Auxiliary File LM.hmap
+[LM] Write Auxiliary File LM.DependencyStaticMetadataFileList
+[LM] Write Auxiliary File LM.DependencyMetadataFileList
+[LM] Write Auxiliary File LM-project-headers.hmap
+[LM] Write Auxiliary File LM-own-target-headers.hmap
+[LM] Write Auxiliary File LM-generated-files.hmap
+[LM] Write Auxiliary File LM-all-target-headers.hmap
+[LM] Write Auxiliary File LM-all-non-framework-target-headers.hmap
+[LM] Write Auxiliary File LM.SwiftFileList
+[LM] Write Auxiliary File LM.SwiftConstValuesFileList
+[LM] Write Auxiliary File LM_const_extract_protocols.json
+[LM] Write Auxiliary File LM.LinkFileList
+[LM] Write Auxiliary File LM-OutputFileMap.json
+[LM] Write Auxiliary File LM-DebugDylibPath-normal-arm64.txt
+[LM] Write Auxiliary File LM-DebugDylibInstallName-normal-arm64.txt
+[LMCore] Copy LMCore.modulemap -> LMCore.modulemap
+[LM] Write Auxiliary File Entitlements-Simulated.plist
+[LM] Write Auxiliary File 3acc8700eb2aead85900ecb0656c2023.sb
+[LM] Write Auxiliary File 21ec82d6cd3f6ae4e29223ba4144974f.sb
+[AGC] Write Auxiliary File AGC.modulemap
+[AGC] Write Auxiliary File AGC.DependencyStaticMetadataFileList
+[AGC] Write Auxiliary File AGC.DependencyMetadataFileList
+[AGC] Write Auxiliary File AGC.SwiftConstValuesFileList
+[AGC] Write Auxiliary File AGC_const_extract_protocols.json
+[AGC] Write Auxiliary File AGC.LinkFileList
+[AGC] Write Auxiliary File AGC-OutputFileMap.json
+[AGC] Write Auxiliary File AGC.SwiftFileList
+[AGC] Copy AGC.modulemap -> AGC.modulemap
+[LMKit_LMKit] Processing empty-LMKit_LMKit.plist
+[LMKit_LMKit] Copying Legacy
+[LMKit_LMKit] Copying FDAI
+[LMKit_LMKit] Copying HandControllers
+[LMKit_LMKit] Copying DSKY
+[LMKit_LMKit] Copying ControlLibrary
+[LMKit_LMKit] Copying CommanderPanels
+[LMKit_LMKit] Copying Cabin
+Signing LMKit_LMKit.bundle (in target 'LMKit_LMKit' from project 'LMKit')
+[LMKit_LMKit] RegisterExecutionPolicyException LMKit_LMKit.bundle
+[LMKit_LMKit] Touching LMKit_LMKit.bundle
+[AGC] Compiling AGCState.swift
+[AGC] Compiling AGCPacket.swift
+[AGC] Compiling AGCScenarioRunner.swift
+[AGC] Compiling AGCErasable.swift
+[AGC] Compiling DSKYSnapshot.swift
+[AGC] Compiling AGCSHA256.swift
+[AGC] Compiling AGCRuntimeCheckpoint.swift
+[AGC] Compiling AGCEngineInterrupts.swift
+[AGC] Compiling AGCEngineMemory.swift
+[AGC] Compiling AGCIO.swift
+[AGC] Compiling AGCGoldenTrace.swift
+[AGC] Compiling DSKY.swift
+[AGC] Compiling AGCEngineRuntimeIO.swift
+[AGC] Compiling AGCEnginePeripherals.swift
+[AGC] Compiling AGCEngineNumerics.swift
+[AGC] Compiling AGCEnginePeripheralTypes.swift
+[AGC] Compiling AGCEngineExecution.swift
+[AGC] Compiling AGCEngineInstructions.swift
+[LMKit] Compiling resource_bundle_accessor.swift
+[LMKit] Copy arm64-apple-xros-simulator.swiftmodule -> LMKit.swiftmodule
+[LMKit] Copy arm64-apple-xros-simulator.swiftdoc -> LMKit.swiftdoc
+[LMKit] Copy arm64-apple-xros-simulator.abi.json -> LMKit.abi.json
+[LMKit] Copy arm64-apple-xros-simulator.swiftsourceinfo -> LMKit.swiftsourceinfo
+[AGC] Copy arm64-apple-xros-simulator.swiftmodule -> AGC.swiftmodule
+[AGC] Copy arm64-apple-xros-simulator.swiftdoc -> AGC.swiftdoc
+[AGC] Copy arm64-apple-xros-simulator.abi.json -> AGC.abi.json
+[AGC] Copy arm64-apple-xros-simulator.swiftsourceinfo -> AGC.swiftsourceinfo
+[LMKit] Compiling LMKitAssets.swift
+[AGC] Compiling AGCDebugger.swift
+[AGC] Compiling AGCEngine.swift
+[AGC] Compiling AGC.swift
+[AGC] Compiling AGCChannelTrace.swift
+[AGC] Compiling AGCEngineChannels.swift
+[AGC] Compiling AGCEngineCounters.swift
+[LMKit] Linking LMKit.o
+[LMKit] Extract App Intents Metadata
+[LMKit] RegisterExecutionPolicyException LMKit.o
+[LMCore] Compiling LMAutomaticFlightRecorder.swift
+[LMCore] Compiling LMAGCPadLoad.swift
+[LMCore] Compiling LMLandingGear.swift
+[LMCore] Compiling LMP66FlightRecorder.swift
+[LMCore] Compiling LMLunarLandingSite.swift
+[LMCore] Compiling LMP66Pilot.swift
+[LMCore] Compiling LMAGCNavState.swift
+[LMCore] Compiling LMSimulation.swift
+[LMCore] Compiling LMSimulationPace.swift
+[LMCore] Compiling LMSimulationCheckpoint.swift
+[LMCore] Compiling LMFlightRecording.swift
+[LMCore] Compiling LMTraceValidation.swift
+[LMCore] Compiling LMSensorFeedback.swift
+[LMCore] Compiling LMFrameInput.swift
+[LMCore] Compiling LMVehicleCommands.swift
+[LMCore] Compiling LuminaryMoonOrientation.swift
+[LMCore] Compiling LMVehicleActuation.swift
+[AGC] Linking AGC.o
+[AGC] Extract App Intents Metadata
+[AGC] RegisterExecutionPolicyException AGC.o
+[LMCore] Copy arm64-apple-xros-simulator.abi.json -> LMCore.abi.json
+[LMCore] Copy arm64-apple-xros-simulator.swiftdoc -> LMCore.swiftdoc
+[LMCore] Copy arm64-apple-xros-simulator.swiftmodule -> LMCore.swiftmodule
+[LMCore] Copy arm64-apple-xros-simulator.swiftsourceinfo -> LMCore.swiftsourceinfo
+[LMCore] Linking LMCore.o
+[LMCore] Extract App Intents Metadata
+[LMCore] RegisterExecutionPolicyException LMCore.o
+[RealityKitContent_RealityKitContent] Processing empty-RealityKitContent_RealityKitContent.plist
+Signing RealityKitContent_RealityKitContent.bundle (in target 'RealityKitContent_RealityKitContent' from project 'RealityKitContent')
+[RealityKitContent] Compiling resource_bundle_accessor.swift
+[RealityKitContent] Compiling RealityKitContent.swift
+[RealityKitContent] Copy arm64-apple-xros-simulator.swiftdoc -> RealityKitContent.swiftdoc
+[RealityKitContent] Copy arm64-apple-xros-simulator.swiftmodule -> RealityKitContent.swiftmodule
+[RealityKitContent] Copy arm64-apple-xros-simulator.abi.json -> RealityKitContent.abi.json
+[RealityKitContent] Copy arm64-apple-xros-simulator.swiftsourceinfo -> RealityKitContent.swiftsourceinfo
+[LM] Generate Asset Symbols Assets.xcassets
+[RealityKitContent_RealityKitContent] RegisterExecutionPolicyException RealityKitContent_RealityKitContent.bundle
+[RealityKitContent_RealityKitContent] Touching RealityKitContent_RealityKitContent.bundle
+[RealityKitContent] Linking RealityKitContent.o
+[RealityKitContent] Extract App Intents Metadata
+[RealityKitContent] RegisterExecutionPolicyException RealityKitContent.o
+[LM] Copying apollo11-nac-craters-v1.json
+[LM] Copying WACGlobal64PPD-q95.jxl
+[LM] Copying WACGlobal64GPUBase-P3.pngdata
+[LM] Copying WACGlobal16PPD.json
+[LM] Copying TerrainManifest.json
+[LM] Copying P66TerminalDescent.json
+[LM] Copying P65AutomaticTerminalDescent.json
+[LM] Copying MoonPOI.json
+[LM] Copying LunarImageryPyramid.json
+[LM] Copying LunarElevationStrips.json
+[LM] Copying LDEM_16.LBL
+[LM] Copying Luminary099.bin
+[LM] Copying LDEM_16.IMG
+[LM] Linking __preview.dylib
+[LM] Copying LDEM_128.LBL
+[LM] Copy RealityKitContent_RealityKitContent.bundle -> RealityKitContent_RealityKitContent.bundle
+[LM] Copy LMKit_LMKit.bundle -> LMKit_LMKit.bundle
+[LM] Copy libXCTestSwiftSupport.dylib -> libXCTestSwiftSupport.dylib
+[LM] Copy libXCTestBundleInject.dylib -> libXCTestBundleInject.dylib
+[LM] Copy XCUnit.framework -> XCUnit.framework
+[LM] Copy XCUIAutomation.framework -> XCUIAutomation.framework
+[LM] Copy XCTestSupport.framework -> XCTestSupport.framework
+[LM] Copy XCTestCore.framework -> XCTestCore.framework
+[LM] Copy XCTest.framework -> XCTest.framework
+[LM] Copy XCTAutomationSupport.framework -> XCTAutomationSupport.framework
+[LM] Copy Testing.framework -> Testing.framework
+[LM] Processing Info.plist
+[LM] Compiling LunarModuleModel.swift
+[LM] Compiling LunarPadEntity.swift
+[LM] Compiling MainMenuView.swift
+[LM] Compiling MainMenuViewModel.swift
+[LM] Compiling MoonCoordinateConverter.swift
+[!]  /tmp/lm-aca-panels-verification/LM/LM/LunarGlobe/LMLunarImageryTileStore.swift:13:79: converting non-Sendable function value to '@Sendable (LMTerrainManifest.Source) async throws -> Data' may introduce data races
+         fetch: @escaping LMLunarElevationStore.Fetch = LMLunarElevationStore.fetchPDS) throws {
+                                                                              ^
+[!]  /tmp/lm-aca-panels-verification/LM/LM/LMCommanderStationAssembly.swift:35:57: call to main actor-isolated static method 'load(contentsOf:withName:)' in a synchronous nonisolated context
+         loadPanels: () throws -> Entity = { try Entity.load(contentsOf: LMKitAssets.commanderPanelsURL) }) throws {
+                                                        ^
+[!]  /tmp/lm-aca-panels-verification/LM/LM/LMLunarElevationStore.swift:26:57: converting non-Sendable function value to '@Sendable (LMTerrainManifest.Source) async throws -> Data' may introduce data races
+         fetch: @escaping Fetch = LMLunarElevationStore.fetchPDS) throws {
+                                                        ^
+[LM] Compiling LunarExplorerPlaceDetails.swift
+[!]  /tmp/lm-aca-panels-verification/LM/LM/LMLunarElevationStore.swift:26:57: converting non-Sendable function value to '@Sendable (LMTerrainManifest.Source) async throws -> Data' may introduce data races
+         fetch: @escaping Fetch = LMLunarElevationStore.fetchPDS) throws {
+                                                        ^
+[LM] Compiling LunarExplorerPlaceMarker.swift
+[!]  /tmp/lm-aca-panels-verification/LM/LM/LMLunarElevationStore.swift:26:57: converting non-Sendable function value to '@Sendable (LMTerrainManifest.Source) async throws -> Data' may introduce data races
+         fetch: @escaping Fetch = LMLunarElevationStore.fetchPDS) throws {
+                                                        ^
+[LM] Compiling LunarExplorerPlacementPanel.swift
+[!]  /tmp/lm-aca-panels-verification/LM/LM/LMLunarElevationStore.swift:26:57: converting non-Sendable function value to '@Sendable (LMTerrainManifest.Source) async throws -> Data' may introduce data races
+         fetch: @escaping Fetch = LMLunarElevationStore.fetchPDS) throws {
+                                                        ^
+[LM] Compiling LunarExplorerPortalGeometry.swift
+[!]  /tmp/lm-aca-panels-verification/LM/LM/LMLunarElevationStore.swift:26:57: converting non-Sendable function value to '@Sendable (LMTerrainManifest.Source) async throws -> Data' may introduce data races
+         fetch: @escaping Fetch = LMLunarElevationStore.fetchPDS) throws {
+                                                        ^
+[LM] Compiling LunarExplorerScene.swift
+[!]  /tmp/lm-aca-panels-verification/LM/LM/LMLunarElevationStore.swift:26:57: converting non-Sendable function value to '@Sendable (LMTerrainManifest.Source) async throws -> Data' may introduce data races
+         fetch: @escaping Fetch = LMLunarElevationStore.fetchPDS) throws {
+                                                        ^
+[LM] Compiling PoweredDescentView.swift
+[LM] Compiling TerminalDescentCockpitView.swift
+[LM] Compiling LMTerrainSimulationGate.swift
+[LM] Compiling LunarTerrainSR.swift
+[LM] Compiling GeneratedAssetSymbols.swift
+[LM] Compiling LunarExplorerSceneSnapshot.swift
+[LM] Compiling LunarExplorerSession.swift
+[!]  /tmp/lm-aca-panels-verification/LM/LM/LMLunarElevationStore.swift:26:57: converting non-Sendable function value to '@Sendable (LMTerrainManifest.Source) async throws -> Data' may introduce data races
+         fetch: @escaping Fetch = LMLunarElevationStore.fetchPDS) throws {
+                                                        ^
+[LM] Compiling LunarExplorerSitePack.swift
+[LM] Compiling LunarExplorerView.swift
+[LM] Compiling LunarLanderSimulationView.swift
+[LM] Compiling MoonScene.swift
+[LM] Compiling NewGameButton.swift
+[LM] Compiling PoweredDescentImmersiveView.swift
+[LM] Compiling PoweredDescentSession.swift
+[LM] Compiling PoweredDescentSpaceButton.swift
+[LM] Compiling LunarExplorerHeightFieldPicker.swift
+[LM] Compiling LunarExplorerLibrary.swift
+[LM] Compiling LunarExplorerMapGeometry.swift
+[LM] Compiling LunarExplorerPerformanceProbe.swift
+[LM] Compiling LunarExplorerPinchGeometry.swift
+[LM] Compiling LMWorldMapper.swift
+[LM] Compiling LunarExplorerBrowser.swift
+[LM] Compiling LunarExplorerButton.swift
+[LM] Compiling LunarExplorerCamera.swift
+[LM] Compiling LunarExplorerExperienceProbe.swift
+[LM] Compiling LMRCSJetMapping.swift
+[LM] Compiling LMSpatialControlMapper.swift
+[LM] Compiling LMTerrainDetailStreaming.swift
+[LM] Compiling LMTerrainDetailTexture.swift
+[LM] Compiling LMTerrainHeightField.swift
+[LM] Compiling LMLunarTerrainPresentation.swift
+[LM] Compiling LMLunarTerrainRegion.swift
+[LM] Compiling LMLunarTerrainResolver.swift
+[LM] Compiling LMPhysicalDSKYPresentation.swift
+[LM] Compiling LMProgressiveTerrain.swift
+[LM] Compiling LMLunarLandingRehearsal.swift
+[LM] Compiling LMLunarNavigation.swift
+[LM] Compiling LMLunarRockField.swift
+[LM] Compiling LMLunarTerrainMeshSnapshot.swift
+[LM] Compiling LMLunarTerrainMorph.swift
+[LM] Compiling LMLunarTerrainMorphRenderer.swift
+[LM] Compiling LMLunarElevationCatalog.swift
+[LM] Compiling LMLunarElevationGrid.swift
+[LM] Compiling LMLunarElevationPreview.swift
+[LM] Compiling LMLunarElevationStore.swift
+[!]  /tmp/lm-aca-panels-verification/LM/LM/LMLunarElevationStore.swift:26:57: converting non-Sendable function value to '@Sendable (LMTerrainManifest.Source) async throws -> Data' may introduce data races
+         fetch: @escaping Fetch = LMLunarElevationStore.fetchPDS) throws {
+                                                        ^
+[LM] Compiling LMLunarEphemeris.swift
+[LM] Compiling LMLunarFloatingOrigin.swift
+[LM] Compiling LMCommanderStationScene.swift
+[!]  /tmp/lm-aca-panels-verification/LM/LM/LMLunarElevationStore.swift:26:57: converting non-Sendable function value to '@Sendable (LMTerrainManifest.Source) async throws -> Data' may introduce data races
+         fetch: @escaping Fetch = LMLunarElevationStore.fetchPDS) throws {
+                                                        ^
+[LM] Compiling LMCoreMLTerrainDetailGenerator.swift
+[LM] Compiling LMDSKYGeometry.swift
+[LM] Compiling LMDSKYInputQueue.swift
+[LM] Compiling LMImportedACA.swift
+[LM] Compiling LMImportedDSKY.swift
+[LM] Compiling LMImportedFDAI.swift
+[LM] Compiling LMInstrumentInteraction.swift
+[LM] Compiling LMInstrumentValidation.swift
+[LM] Compiling LMLandingPointDesignator.swift
+[LM] Compiling LMLunarAnchoredPlacement.swift
+[LM] Compiling LMLunarCraterCatalog.swift
+[LM] Compiling LMACAInput.swift
+[LM] Compiling LMACAValidation.swift
+[LM] Compiling LMApp.swift
+[LM] Compiling LMCockpitAssetContract.swift
+[LM] Compiling LMCockpitAudioController.swift
+[LM] Compiling LMCockpitExperienceDirector.swift
+[LM] Compiling LMCockpitImmersionPolicy.swift
+[LM] Compiling LMCockpitValidationRecorder.swift
+[LM] Compiling LMCockpitWorldMapper.swift
+[LM] Compiling LMCommanderStationAssembly.swift
+[!]  /tmp/lm-aca-panels-verification/LM/LM/LMCommanderStationAssembly.swift:35:57: call to main actor-isolated static method 'load(contentsOf:withName:)' in a synchronous nonisolated context
+         loadPanels: () throws -> Entity = { try Entity.load(contentsOf: LMKitAssets.commanderPanelsURL) }) throws {
+                                                        ^
+[LM] Compiling LMCommanderStationAssemblyObserver.swift
+[LM] Compiling LMCommanderStationGeometry.swift
+[LM] Compiling CrewControlPanel.swift
+[LM] Compiling DescentRangeStrip.swift
+[LM] Compiling DSKYPanel.swift
+[LM] Compiling FDAIPanel.swift
+[LM] Compiling FDAITexturePreviewView.swift
+[LM] Compiling ImmersiveView.swift
+[LM] Compiling LMLunarCockpitTerrain.swift
+[LM] Compiling LMLunarGlobeImagery.swift
+[!]  /tmp/lm-aca-panels-verification/LM/LM/LunarGlobe/LMLunarGlobeImagery.swift:115:49: 'generate(from:withName:options:)' was deprecated in visionOS 2.0: replaced by 'init(image:withName:options:)'
+                            try TextureResource.generate(from: image, withName: tile.sha256,
+                                                ^
+[LM] Compiling LMLunarGlobeResource.swift
+[!]  /tmp/lm-aca-panels-verification/LM/LM/LunarGlobe/LMLunarGlobeResource.swift:279:43: 'generate(from:withName:options:)' was deprecated in visionOS 2.0: replaced by 'init(image:withName:options:)'
+        let texture = try TextureResource.generate(
+                                          ^
+[LM] Compiling LMLunarImageryPyramid.swift
+[LM] Compiling LMLunarImageryTileStore.swift
+[!]  /tmp/lm-aca-panels-verification/LM/LM/LunarGlobe/LMLunarImageryTileStore.swift:13:79: converting non-Sendable function value to '@Sendable (LMTerrainManifest.Source) async throws -> Data' may introduce data races
+         fetch: @escaping LMLunarElevationStore.Fetch = LMLunarElevationStore.fetchPDS) throws {
+                                                                              ^
+[LM] Compiling Apollo11TerrainResource.swift
+[LM] Compiling LMTerrainHeightMap.swift
+[LM] Compiling LMTerrainLandingSurface.swift
+[LM] Compiling LMTerrainManifest.swift
+[LM] Compiling LMTerrainMeshBuilder.swift
+[LM] Compiling LMTerrainWorld.swift
+[LM] Copy arm64-apple-xros-simulator.abi.json -> LM.abi.json
+[LM] Copy arm64-apple-xros-simulator.swiftdoc -> LM.swiftdoc
+[LM] Copy arm64-apple-xros-simulator.swiftmodule -> LM.swiftmodule
+[LM] Copy arm64-apple-xros-simulator.swiftsourceinfo -> LM.swiftsourceinfo
+[LMTests] Compiling LunarExplorerMapTests.swift
+[LMTests] Compiling LunarExplorerHeightFieldPickerTests.swift
+[LMTests] Compiling LunarExplorerTests.swift
+[LMTests] Compiling LunarExplorerPortalTests.swift
+[LMTests] Compiling LMSelenographicCoordinateTests.swift
+[LMTests] Compiling LMTerrainDetailStreamingTests.swift
+[LMTests] Compiling LMTerrainSimulationGateTests.swift
+[LMTests] Compiling LMTests.swift
+[LMTests] Compiling LMLunarTerrainArrivalTests.swift
+[!]  /tmp/lm-aca-panels-verification/LM/LMTests/LMLunarTerrainArrivalTests.swift:160:18: instance method 'waitUntilCompleted' is unavailable from asynchronous contexts; Use 'await completed()' instead.; this is an error in the Swift 6 language mode
+            copy.waitUntilCompleted()
+                 ^
+[LMTests] Compiling LMLunarTerrainTransitionTests.swift
+[!]  /tmp/lm-aca-panels-verification/LM/LMTests/LMLunarTerrainArrivalTests.swift:160:18: instance method 'waitUntilCompleted' is unavailable from asynchronous contexts; Use 'await completed()' instead.; this is an error in the Swift 6 language mode
+            copy.waitUntilCompleted()
+                 ^
+[LMTests] Compiling LunarExplorerExperienceTests.swift
+[LMTests] Compiling LMLunarResolverTests.swift
+[LMTests] Compiling LMLunarRockFieldTests.swift
+[LMTests] Compiling LMLunarCockpitRestartTests.swift
+[LMTests] Compiling LMLunarCockpitStreamingTests.swift
+[LMTests] Compiling LMImportedACATests.swift
+[LMTests] Compiling LMInstrumentIntegrationTests.swift
+[LMTests] Compiling LMLunarContactTests.swift
+[LMTests] Compiling LMLunarCraterCatalogTests.swift
+[LMTests] Compiling LMLunarFloatingOriginTests.swift
+[!]  /tmp/lm-aca-panels-verification/LM/LMTests/LMLunarGlobeTests.swift:298:29: class property 'isMainThread' is unavailable from asynchronous contexts; Work intended for the main actor should be marked with @MainActor; this is an error in the Swift 6 language mode
+            #expect(!Thread.isMainThread)
+                            ^
+[!]  /tmp/lm-aca-panels-verification/LM/LMTests/LMLunarGlobeTests.swift:337:44: main actor-isolated class property 'apollo11TouchdownUTC' can not be referenced from a nonisolated context; this is an error in the Swift 6 language mode
+        let landing = LunarExplorerSession.apollo11TouchdownUTC
+                                           ^
+[LMTests] Compiling LMLunarGlobeTests.swift
+[!]  /tmp/lm-aca-panels-verification/LM/LMTests/LMLunarGlobeTests.swift:298:29: class property 'isMainThread' is unavailable from asynchronous contexts; Work intended for the main actor should be marked with @MainActor; this is an error in the Swift 6 language mode
+            #expect(!Thread.isMainThread)
+                            ^
+[!]  /tmp/lm-aca-panels-verification/LM/LMTests/LMLunarGlobeTests.swift:337:44: main actor-isolated class property 'apollo11TouchdownUTC' can not be referenced from a nonisolated context; this is an error in the Swift 6 language mode
+        let landing = LunarExplorerSession.apollo11TouchdownUTC
+                                           ^
+[LMTests] Compiling LMLunarElevationTests.swift
+[LMTests] Compiling LMLunarEphemerisTests.swift
+[LMTests] Compiling LMCockpitImmersionPolicyTests.swift
+[LMTests] Compiling LMCommanderStationAssemblyTests.swift
+[LMTests] Compiling LMInstrumentInteractionTests.swift
+[LMTests] Compiling LMLunarCockpitMissionTests.swift
+[LMTests] Compiling LMLunarImageryTests.swift
+[LMTests] Compiling LMLunarNavigationTests.swift
+[LM] Linking LM.debug.dylib
+[LMTests] Copy arm64-apple-xros-simulator.swiftdoc -> LMTests.swiftdoc
+[LMTests] Copy arm64-apple-xros-simulator.abi.json -> LMTests.abi.json
+[LMTests] Copy arm64-apple-xros-simulator.swiftmodule -> LMTests.swiftmodule
+[LMTests] Copy arm64-apple-xros-simulator.swiftsourceinfo -> LMTests.swiftsourceinfo
+note: Using stub executor library with Swift entry point. (in target 'LM' from project 'LM')
+[LM] Linking LM
+[LM] Extract App Intents Metadata
+[LMTests] Copy RealityKitContent_RealityKitContent.bundle -> RealityKitContent_RealityKitContent.bundle
+[LMTests] Copy LMKit_LMKit.bundle -> LMKit_LMKit.bundle
+[LMTests] Processing empty-LMTests.plist
+[LMTests] Linking LMTests
+[LMTests] Extract App Intents Metadata
+Signing LMTests.xctest (in target 'LMTests' from project 'LM')
+[LMTests] RegisterExecutionPolicyException LMTests.xctest
+[LMTests] Touching LMTests.xctest
+Signing LM.debug.dylib (in target 'LM' from project 'LM')
+Signing __preview.dylib (in target 'LM' from project 'LM')
+Signing LM.app (in target 'LM' from project 'LM')
+[LM] RegisterExecutionPolicyException LM.app
+[LM] Validate LM.app
+[LM] Touching LM.app
+Test Suite 'Selected tests' started at 2026-09-08 13:38:20.161.
+Test Suite 'LMTests.xctest' started at 2026-09-08 13:38:20.161.
+Test Suite 'LMTests.xctest' passed at 2026-09-08 13:38:20.161.
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test run started.
+Suite LMCommanderStationAssemblyTests started
+    ✔ reconcilesNestedMountsAndPreservesOpticalBasis() (0.967 seconds)
+    ✔ atomicFallbackAndInstallKeepLiveIdentities() (2.028 seconds)
+    ✔ rejectsBadManifestWithoutPublishing() (0.137 seconds)
+    ✔ installsPanelSurroundsOnceAndRejectsMismatchedInterfaces() (0.575 seconds)
+    ✔ instrumentObserverHasPrecedence() (0.001 seconds)
+Suite LMCommanderStationAssemblyTests passed after 3.711 seconds
+Suite LMImportedACATests started
+    ✔ realResourcePreservesPivotsHousingAndLimits() (0.087 seconds)
+    ✔ installationIsAtomicAndHasOneTargetIncludingChildren() (1.811 seconds)
+    ✔ badInterfaceRejectsLoadAndNonfiniteInputNeutralizes() (0.136 seconds)
+    ✔ releasedStoppedAndDeactivatedGenerationsCannotReapply() (1.515 seconds)
+Suite LMImportedACATests passed after 3.552 seconds
+Suite LMInstrumentIntegrationTests started
+    ✔ preservesBlankDigitsSignsAndRuntimeFlash() (0.001 seconds)
+    ✔ lampsAreIndependentAndSparesStayUnbound() (0.001 seconds)
+    ✔ nativeNeutralAssetBindsEveryKeyAndRejectsImpostors() (2.279 seconds)
+    ✔ proCancellationAlwaysReleasesAndRegularKeysDispatchOnce() (0.052 seconds)
+    ✔ sessionQueuePreservesCompletedTapsBehindDelayedPRO() (0.373 seconds)
+    ✔ sessionQueueTeardownDropsPendingButWaitsForPRORelease() (0.001 seconds)
+    ✔ sessionQueueTeardownBeforeDispatchSendsNothing() (0.001 seconds)
+    ✔ importedFDAIKnownAxesAndCapApproaches() (0.001 seconds)
+    ✔ importedFDAICompositionAndReference() (0.001 seconds)
+    ✔ importedFDAINativeHierarchyKeepsFixedStructureStill() (0.466 seconds)
+Suite LMInstrumentIntegrationTests passed after 3.174 seconds
+Suite LMInstrumentInteractionTests started
+    ✔ completedEntitySelectionsReachFIFOInOrder() (1.698 seconds)
+    ✔ completedAdapterSequenceProducesLiveLuminaryResponse() (3.438 seconds)
+Suite LMInstrumentInteractionTests passed after 5.137 seconds
+Suite "ACA analog input mapping" started
+    ✔ centerDeadZoneSuppressesSmallDeflections() (0.001 seconds)
+    ✔ nominalFullTravelMapsTo42CountsBothWays() (0.001 seconds)
+    ✔ outOfRangeExcursionStopsAtTheMechanicalClamp() (0.001 seconds)
+    ✔ combinedButtonAndAnalogCommandsClampAtMechanicalStops() (0.001 seconds)
+    ✔ releaseReturnsEveryAxisToNeutralWithinOneFrame() (0.001 seconds)
+    ✔ sessionEncodesNegativeACAAsAGCOnesComplement() (0.054 seconds)
+Suite "ACA analog input mapping" passed after 0.055 seconds
+Suite "Spatial cockpit controls" started
+    ✔ threeDimensionalGripMapsOntoAllACAAxesAndClamps() (0.001 seconds)
+    ✔ rodUsesSpringLoadedDetentsAroundNeutral() (0.001 seconds)
+    ✔ rodGestureProjectsOntoThePhysicalPanelFiveAxis() (0.001 seconds)
+    ✔ proceduralControlsPivotAtTheirFlightDatums() (1.299 seconds)
+Suite "Spatial cockpit controls" passed after 1.300 seconds
+Test session results: /tmp/lm-aca-panels-verification/combined.xcresult
+Test Succeeded
+Testing started
+

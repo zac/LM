@@ -1,0 +1,22 @@
+Timestamp               Ty Process[PID:TID]
+2026-09-08 13:10:14.662 Df LM[2802:6a5b6b4] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 13:10:15.936 E  LM[2802:6a5b6b4] [io.positron.LM:ProgressiveTerrain] Commander skeleton unavailable; procedural fallback retained: invalidContract("test failure")
+2026-09-08 13:10:16.198 Df LM[2802:6a5b6b4] [io.positron.LM:ProgressiveTerrain] Commander skeleton installed atomically; live instruments and optical basis retained
+2026-09-08 13:10:17.142 Df LM[2802:6a5b6b4] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 13:11:21.052 Df LM[3652:6a5f8d8] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 13:11:22.253 E  LM[3652:6a5f8d8] [io.positron.LM:ProgressiveTerrain] Commander skeleton unavailable; procedural fallback retained: invalidContract("test failure")
+2026-09-08 13:11:22.510 Df LM[3652:6a5f8d8] [io.positron.LM:ProgressiveTerrain] Commander skeleton installed atomically; live instruments and optical basis retained
+2026-09-08 13:11:23.463 Df LM[3652:6a5f8d8] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 13:12:11.691 Df LM[4363:6a611d7] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 13:12:13.661 Df LM[4363:6a611d7] [io.positron.LM:ProgressiveTerrain] Commander skeleton installed atomically; live instruments and optical basis retained
+2026-09-08 13:12:14.590 Df LM[4363:6a611d7] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V06 N64
+2026-09-08 13:12:24.308 Df LM[4650:6a618e1] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 13:12:26.229 Df LM[4650:6a618e1] [io.positron.LM:ProgressiveTerrain] Commander skeleton installed atomically; live instruments and optical basis retained
+2026-09-08 13:12:27.090 Df LM[4650:6a618e1] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V06 N64
+2026-09-08 13:12:37.031 Df LM[4753:6a61d1a] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 13:12:38.895 Df LM[4753:6a61d1a] [io.positron.LM:ProgressiveTerrain] Commander skeleton installed atomically; live instruments and optical basis retained
+2026-09-08 13:12:39.814 Df LM[4753:6a61d1a] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V06 N64
+2026-09-08 13:12:49.638 Df LM[4835:6a621c6] [io.positron.LM:ProgressiveTerrain] Physical DSKY display waiting for AGC
+2026-09-08 13:12:50.860 Df LM[4835:6a621c6] [io.positron.LM:InstrumentValidation] DEBUG observer aimed at DSKY; instrument mounts unchanged
+2026-09-08 13:12:51.547 Df LM[4835:6a621c6] [io.positron.LM:ProgressiveTerrain] Commander skeleton installed atomically; live instruments and optical basis retained
+2026-09-08 13:12:52.056 Df LM[4835:6a621c6] [io.positron.LM:ProgressiveTerrain] Physical DSKY display P64 V06 N64

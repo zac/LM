@@ -1,0 +1,223 @@
+{
+  "research_date": "2026-09-08",
+  "records": [
+    {
+      "file": "references/documents/19750012347-crew-station-displays-controls.pdf",
+      "title": "NASA TN D-7919: Crew station displays and controls",
+      "publication_date": "1975-04",
+      "source_url": "https://ntrs.nasa.gov/api/citations/19750012347/downloads/19750012347.pdf",
+      "retrieved": "2026-09-08",
+      "content": "complete original",
+      "bytes": 19749161,
+      "sha256": "2f1352ae80c0baea40dc7e04eca52d1dd2cb2ae15c4ab529f9033d4bbebec550"
+    },
+    {
+      "file": "references/documents/19730017160-crew-station-lighting.pdf",
+      "title": "NASA TN D-7290: Lighting considerations",
+      "publication_date": "1973-06",
+      "source_url": "https://ntrs.nasa.gov/api/citations/19730017160/downloads/19730017160.pdf",
+      "retrieved": "2026-09-08",
+      "content": "complete original",
+      "bytes": 12910704,
+      "sha256": "8c1aadb6ee52e0b2453b03909f284b1a74311cc41ff27ac1d459ffe8f4080398"
+    },
+    {
+      "file": "references/documents/19730023038-spacecraft-windows.pdf",
+      "title": "NASA TN D-7439: Spacecraft structural windows",
+      "publication_date": "1973-09",
+      "source_url": "https://ntrs.nasa.gov/api/citations/19730023038/downloads/19730023038.pdf",
+      "retrieved": "2026-09-08",
+      "content": "complete original",
+      "bytes": 1370212,
+      "sha256": "341effa41329abc44590e17d89110699f25fb74a9c6dc1919e460e66244193d8"
+    },
+    {
+      "file": "references/documents/grumman-1967-crew-station-excerpt.pdf",
+      "title": "Grumman course 30915: Structures, mechanical systems and electroexplosive devices",
+      "publication_date": "1967-02-15",
+      "source_url": "https://www.ibiblio.org/apollo/Documents/lm_structures_study_guide.pdf",
+      "retrieved": "2026-09-08",
+      "content": "excerpt: original PDF pages 1-2 then 25-46",
+      "bytes": 11937843,
+      "sha256": "bbba844ab4598fe659f1e7dbb915abb329f8e6cc91531c9d0b46aa1492926295",
+      "original_sha256": "0efc74091c24db547bcbc634124a21f8e2b3fa0c0e14e59d0339a6b868768108",
+      "original_bytes": 63191751,
+      "page_mapping": [
+        {
+          "excerpt_page_1based": 1,
+          "original_pdf_page_1based": 1
+        },
+        {
+          "excerpt_page_1based": 2,
+          "original_pdf_page_1based": 2
+        },
+        {
+          "excerpt_page_1based": 3,
+          "original_pdf_page_1based": 25
+        },
+        {
+          "excerpt_page_1based": 4,
+          "original_pdf_page_1based": 26
+        },
+        {
+          "excerpt_page_1based": 5,
+          "original_pdf_page_1based": 27
+        },
+        {
+          "excerpt_page_1based": 6,
+          "original_pdf_page_1based": 28
+        },
+        {
+          "excerpt_page_1based": 7,
+          "original_pdf_page_1based": 29
+        },
+        {
+          "excerpt_page_1based": 8,
+          "original_pdf_page_1based": 30
+        },
+        {
+          "excerpt_page_1based": 9,
+          "original_pdf_page_1based": 31
+        },
+        {
+          "excerpt_page_1based": 10,
+          "original_pdf_page_1based": 32
+        },
+        {
+          "excerpt_page_1based": 11,
+          "original_pdf_page_1based": 33
+        },
+        {
+          "excerpt_page_1based": 12,
+          "original_pdf_page_1based": 34
+        },
+        {
+          "excerpt_page_1based": 13,
+          "original_pdf_page_1based": 35
+        },
+        {
+          "excerpt_page_1based": 14,
+          "original_pdf_page_1based": 36
+        },
+        {
+          "excerpt_page_1based": 15,
+          "original_pdf_page_1based": 37
+        },
+        {
+          "excerpt_page_1based": 16,
+          "original_pdf_page_1based": 38
+        },
+        {
+          "excerpt_page_1based": 17,
+          "original_pdf_page_1based": 39
+        },
+        {
+          "excerpt_page_1based": 18,
+          "original_pdf_page_1based": 40
+        },
+        {
+          "excerpt_page_1based": 19,
+          "original_pdf_page_1based": 41
+        },
+        {
+          "excerpt_page_1based": 20,
+          "original_pdf_page_1based": 42
+        },
+        {
+          "excerpt_page_1based": 21,
+          "original_pdf_page_1based": 43
+        },
+        {
+          "excerpt_page_1based": 22,
+          "original_pdf_page_1based": 44
+        },
+        {
+          "excerpt_page_1based": 23,
+          "original_pdf_page_1based": 45
+        },
+        {
+          "excerpt_page_1based": 24,
+          "original_pdf_page_1based": 46
+        }
+      ]
+    },
+    {
+      "file": "references/figures/crew-station-arrangement.jpg",
+      "derived_from_local_document": "references/documents/19750012347-crew-station-displays-controls.pdf",
+      "source_url": "https://ntrs.nasa.gov/api/citations/19750012347/downloads/19750012347.pdf",
+      "original_pdf_page_1based": 14,
+      "printed_page": "6",
+      "figure": "Figure 2",
+      "derivation": "pdftoppm full page render; no retouching",
+      "visually_inspected": true,
+      "bytes": 270123,
+      "sha256": "fe7b71c5f58f8aa3d75f21d184624e62256a74bc5b6bcd09b09e8ad087ebbe77"
+    },
+    {
+      "file": "references/figures/lm-main-panels.jpg",
+      "derived_from_local_document": "references/documents/19750012347-crew-station-displays-controls.pdf",
+      "source_url": "https://ntrs.nasa.gov/api/citations/19750012347/downloads/19750012347.pdf",
+      "original_pdf_page_1based": 15,
+      "printed_page": "7",
+      "figure": "Figure 3",
+      "derivation": "pdftoppm full page render; no retouching",
+      "visually_inspected": true,
+      "bytes": 519697,
+      "sha256": "def9c50baed0692faff8b1d985ac42c56a5f7eb3ce84be88090eb7075ee89897"
+    },
+    {
+      "file": "references/figures/grumman-flight-design-eye.jpg",
+      "derived_from_local_document": "references/documents/grumman-1967-crew-station-excerpt.pdf",
+      "source_url": "https://www.ibiblio.org/apollo/Documents/lm_structures_study_guide.pdf",
+      "original_pdf_page_1based": 43,
+      "printed_page": "35",
+      "figure": "T30915-39",
+      "derivation": "pdftoppm full page render; no retouching",
+      "visually_inspected": true,
+      "bytes": 386525,
+      "sha256": "c0b646d01e050899a41f1e27f1cdbae2dbae6b2e847bd994dce15bf473cd43c8"
+    },
+    {
+      "file": "references/figures/grumman-lpd-window.jpg",
+      "derived_from_local_document": "references/documents/grumman-1967-crew-station-excerpt.pdf",
+      "source_url": "https://www.ibiblio.org/apollo/Documents/lm_structures_study_guide.pdf",
+      "original_pdf_page_1based": 44,
+      "printed_page": "36",
+      "figure": "T30915-38",
+      "derivation": "pdftoppm full page render; no retouching",
+      "visually_inspected": true,
+      "bytes": 345336,
+      "sha256": "926a8a710aa783f732cc33371863b71bc76ee0f9a05f00ac2695dbd719735bcf"
+    },
+    {
+      "file": "references/figures/grumman-cdr-side.jpg",
+      "derived_from_local_document": "references/documents/grumman-1967-crew-station-excerpt.pdf",
+      "source_url": "https://www.ibiblio.org/apollo/Documents/lm_structures_study_guide.pdf",
+      "original_pdf_page_1based": 37,
+      "printed_page": "29",
+      "figure": "T30915-36",
+      "derivation": "pdftoppm full page render; no retouching",
+      "visually_inspected": true,
+      "bytes": 427206,
+      "sha256": "8fc975ee40b3ade2827c9d999747112b8f85e6bf0bad3fb8c97feba087cc1c46"
+    },
+    {
+      "file": "references/documents/user-lunar-module-controls-and-displays.pdf",
+      "title": "Lunar Module Controls and Displays \u2014 user supplied",
+      "source_url": null,
+      "source_origin": "User attachment: Lunar Module Controls and Displays.pdf",
+      "retrieved": "2026-09-08",
+      "content": "Complete original; one page; embedded 10943 x 5310 grayscale JPEG; mission and revision unconfirmed",
+      "bytes": 10883155,
+      "sha256": "8b5b96fece2fd5fcdbb5b5ceb22f8492033569c52aff8db36a4e82009703828b"
+    }
+  ],
+  "additional_manifests": [
+    "images/manifest.json",
+    "documents/lm10-aoh-vol1-controls-excerpts.manifest.json"
+  ],
+  "notes": [
+    "NASA government reports are retained as research sources. Grumman scan is training material; no blanket license claim is made for separately contributed archive media.",
+    "Original PDF page numbers differ across NASA hosts; use this local archive and its mappings."
+  ]
+}

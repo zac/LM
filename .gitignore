@@ -21,3 +21,8 @@ Tools/NeuralTerrain/checkpoints/
 Artifacts/
 # macOS
 .DS_Store
+
+# Local cockpit modeling scratch and Blender backups
+Assets/Cockpit/**/scratch/
+Assets/Cockpit/**/renders/
+Assets/Cockpit/**/*.blend[0-9]*

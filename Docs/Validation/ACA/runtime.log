@@ -1,0 +1,12 @@
+Timestamp               Ty Process[PID:TID]
+2026-09-08 13:30:37.213 E  LM[15402:6a77a21] [io.positron.LM:ProgressiveTerrain] Commander skeleton unavailable; procedural fallback retained: invalidContract("test failure")
+2026-09-08 13:30:37.480 Df LM[15402:6a77a21] [io.positron.LM:ProgressiveTerrain] Commander skeleton installed atomically; live instruments and optical basis retained
+2026-09-08 13:30:39.029 E  LM[15402:6a77a21] [io.positron.LM:ProgressiveTerrain] Articulated ACA unavailable; functional fallback retained: invalidParent("injected")
+2026-09-08 13:30:39.428 Df LM[15402:6a77a21] [io.positron.LM:ProgressiveTerrain] Commander skeleton installed atomically; live instruments and optical basis retained
+2026-09-08 13:32:02.545 E  LM[15974:6a7bd19] [io.positron.LM:ProgressiveTerrain] Commander skeleton unavailable; procedural fallback retained: invalidContract("test failure")
+2026-09-08 13:32:02.808 Df LM[15974:6a7bd19] [io.positron.LM:ProgressiveTerrain] Commander skeleton installed atomically; live instruments and optical basis retained
+2026-09-08 13:32:04.260 E  LM[15974:6a7bd19] [io.positron.LM:ProgressiveTerrain] Articulated ACA unavailable; functional fallback retained: invalidParent("injected")
+2026-09-08 13:32:04.591 Df LM[15974:6a7bd19] [io.positron.LM:ProgressiveTerrain] Commander skeleton installed atomically; live instruments and optical basis retained
+2026-09-08 13:32:48.709 Df LM[16308:6a7d26a] [io.positron.LM:ProgressiveTerrain] Commander skeleton installed atomically; live instruments and optical basis retained
+2026-09-08 13:33:01.564 Df LM[16420:6a7d6fc] [io.positron.LM:ProgressiveTerrain] Commander skeleton installed atomically; live instruments and optical basis retained
+2026-09-08 13:33:13.875 Df LM[16542:6a7db3c] [io.positron.LM:ProgressiveTerrain] Commander skeleton installed atomically; live instruments and optical basis retained

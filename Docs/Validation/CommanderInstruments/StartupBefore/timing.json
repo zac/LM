@@ -1,0 +1,65 @@
+{
+  "arguments": [
+    "xcrun",
+    "simctl",
+    "launch",
+    "--terminate-running-process",
+    "DE0FAD53-2A01-4B96-95D3-3505E6900DA3",
+    "io.positron.LM",
+    "--terminal-descent-cockpit",
+    "--assembly-validation-view=control-closeup"
+  ],
+  "launch_wall_epoch": 1788904888.477365,
+  "launch_return_seconds": 0.32319420799999987,
+  "reference": "requested offsets measured from successful simctl launch return; actual start/end recorded",
+  "captures": [
+    {
+      "name": "control-4s.png",
+      "requested_after_return_s": 4,
+      "actual_start_after_launch_s": 4.328230583,
+      "actual_end_after_launch_s": 4.683987792
+    },
+    {
+      "name": "control-5s.png",
+      "requested_after_return_s": 5,
+      "actual_start_after_launch_s": 5.328221083,
+      "actual_end_after_launch_s": 5.688969417
+    },
+    {
+      "name": "control-6s.png",
+      "requested_after_return_s": 6,
+      "actual_start_after_launch_s": 6.3261705,
+      "actual_end_after_launch_s": 6.672834208
+    },
+    {
+      "name": "control-7s.png",
+      "requested_after_return_s": 7,
+      "actual_start_after_launch_s": 7.328210167,
+      "actual_end_after_launch_s": 7.656315750000001
+    },
+    {
+      "name": "control-8s.png",
+      "requested_after_return_s": 8,
+      "actual_start_after_launch_s": 8.328225083,
+      "actual_end_after_launch_s": 8.731828417000001
+    },
+    {
+      "name": "control-9s.png",
+      "requested_after_return_s": 9,
+      "actual_start_after_launch_s": 9.328226958,
+      "actual_end_after_launch_s": 9.595974208
+    },
+    {
+      "name": "control-10s.png",
+      "requested_after_return_s": 10,
+      "actual_start_after_launch_s": 10.328233333,
+      "actual_end_after_launch_s": 10.569309292
+    },
+    {
+      "name": "control-12s.png",
+      "requested_after_return_s": 12,
+      "actual_start_after_launch_s": 12.328236042,
+      "actual_end_after_launch_s": 12.571155292
+    }
+  ]
+}

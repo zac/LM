@@ -84,6 +84,25 @@ public struct LMTerrainContactSurface: LMLandingSurfaceModel {
 
 /// Builds the contact patch from the same evaluator that generates tile meshes.
 public enum LMTerrainContactSurfaceBuilder {
+    /// Contact for the already-rendered Apollo base grid; preserves its posts
+    /// and triangle interpolation without generating a progressive patch.
+    public static func buildPreparedApollo(
+        heightField: Apollo11TerrainHeightField,
+        renderedPositions: [SIMD3<Float>],
+        alignment: LMTerrainFrameAlignment?,
+        referenceElevationMeters: Float
+    ) -> LMTerrainContactSurface {
+        let tile = heightField.tile
+        return LMTerrainContactSurface(
+            cornerEastMeters: -tile.extentMeters / 2,
+            cornerNorthMeters: tile.extentMeters / 2,
+            spacingMeters: tile.postSpacingMeters,
+            columns: tile.postsPerSide, rows: tile.postsPerSide,
+            heights: renderedPositions.map { $0.y - referenceElevationMeters },
+            heightField: heightField, alignment: alignment,
+            referenceElevationMeters: referenceElevationMeters)
+    }
+
     /// No resampling: retain the exact immutable mesh generation that became
     /// visible. Queries outside its coverage use the same measured fallback.
     public static func build(region: LMLunarTerrainRegion, snapshot: LMLunarTerrainMeshSnapshot,

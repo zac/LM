@@ -249,6 +249,7 @@ public struct LMTerrainManifest: Equatable, Decodable {
     let landingOriginElevationMeters: Double
     let projection: Projection
     let sun: Sun
+    public var sunElevationDegrees: Double { sun.elevationDegrees }
     let craterCatalog: CraterCatalog?
     let globe: Globe
     let sources: [Source]
@@ -336,7 +337,7 @@ public struct LMTerrainManifest: Equatable, Decodable {
         )
     }
 
-    package static func load(bundle: Bundle = LunarMap.resources) throws -> LMTerrainManifest {
+    public static func load(bundle: Bundle = LunarMap.resources) throws -> LMTerrainManifest {
         guard let url = bundle.url(
             forResource: "TerrainManifest",
             withExtension: "json",

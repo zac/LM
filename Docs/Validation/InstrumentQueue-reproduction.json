@@ -1,0 +1,49 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "2F598E08-CF7D-43D7-8203-B0AB65897849",
+        "deviceName" : "LM Instruments Smoke 25f3",
+        "modelName" : "Apple Vision Pro",
+        "osBuildNumber" : "23O470",
+        "osVersion" : "26.5",
+        "platform" : "visionOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 7,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "LM · Built with macOS 26.5.1",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1788895434.992,
+  "passedTests" : 7,
+  "result" : "Failed",
+  "skippedTests" : 0,
+  "startTime" : 1788895386.445,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "Expectation failed: (events → [\"PRO down\", \"PRO up\", \"PRO down\", \"PRO up\"]) == [\"PRO down\", \"PRO up\", \"1\", \"2\", \"ENTR\", \"PRO down\", \"PRO up\", \"PRO down\", \"PRO up\"]",
+      "targetName" : "LMTests",
+      "testIdentifier" : 3,
+      "testIdentifierString" : "LMInstrumentIntegrationTests/sessionQueuePreservesCompletedTapsBehindDelayedPRO()",
+      "testIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMInstrumentIntegrationTests/sessionQueuePreservesCompletedTapsBehindDelayedPRO()",
+      "testName" : "sessionQueuePreservesCompletedTapsBehindDelayedPRO()"
+    }
+  ],
+  "title" : "Test - LM",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 8
+}

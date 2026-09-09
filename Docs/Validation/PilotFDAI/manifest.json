@@ -1,0 +1,13 @@
+{
+  "base_revision": "f9d77ea3a0b1c83dfafedd4768e579a5c24e8e08",
+  "LMKit_revision": "035c5b3ad1a522cf6d25fb222d46c2fb4a4a8de8",
+  "files_sha256": {
+    "LM/LMCommanderStationScene.swift": "c23b1b5e5c31389d76b5178f688b936b1e81e190f62addd84637c2d95ea694ce",
+    "LMTests/LMPilotFDAIIntegrationTests.swift": "3528f6c5fb20a4863bc38ba14ee2bc0472f5151ade0de72e1e68a1d8fe2439c6",
+    "Docs/Validation/PilotFDAI/check_fit.py": "55a3321090eba08fec8d8c3b37098d22e809976f96ea04f096dd1fc2a854091f",
+    "Docs/Validation/PilotFDAI/check_native.swift": "5e913b17796cf88861b3a7b67cee62d2054794d31df597f602c55032614c278d"
+  },
+  "app_tests": "authored, not run; coordinator owns simulator",
+  "native_resource_check": "macOS RealityKit passed",
+  "fit": "face fits; rear housing intersects forward structure; coordinator accepted provisional visual placement"
+}

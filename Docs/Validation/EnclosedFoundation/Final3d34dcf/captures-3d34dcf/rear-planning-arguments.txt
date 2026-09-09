@@ -1,0 +1,3 @@
+--terminal-descent-cockpit
+--assembly-validation-view=rear
+--cockpit-planning-labels

@@ -1,0 +1,3 @@
+--terminal-descent-cockpit
+--assembly-validation-view=cdr
+--cockpit-planning-labels

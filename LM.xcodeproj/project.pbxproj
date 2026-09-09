@@ -13,6 +13,7 @@
 		153481058BB7D6ABE3016B26 /* AGC in Frameworks */ = {isa = PBXBuildFile; productRef = 7F923C8DED5D27B4856DF91E /* AGC */; };
 		7E26622530FF45E8BBAAE3C9 /* LunarMapExplorer in Frameworks */ = {isa = PBXBuildFile; productRef = B61A332620F9023911743D64 /* LunarMapExplorer */; };
 		8B235D3F452923FA7A4072FF /* LMCore in Frameworks */ = {isa = PBXBuildFile; productRef = A9EB3C526EF0E03AA143B6C9 /* LMCore */; };
+		9AC319D26B140F2F7C731919 /* LMKit in Frameworks */ = {isa = PBXBuildFile; productRef = DD7757E08C17C53DA912938C /* LMKit */; };
 		AD038F2CF7897D832DB8E5AE /* LunarMap in Frameworks */ = {isa = PBXBuildFile; productRef = E0160C33A71CDD4B67B2F4A5 /* LunarMap */; };
 		E4915064A6B24502F75B3E29 /* LunarMap in Frameworks */ = {isa = PBXBuildFile; productRef = 484902EAE3DD096F7FE83CD5 /* LunarMap */; };
 		FC232BDCB79631626E544F32 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE2BB9AFF4F3A2C52B2BE8A8 /* Foundation.framework */; };
@@ -65,6 +66,8 @@
 		};
 		11F3D7952D4569A900205449 /* LMTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = LMTests;
 			sourceTree = "<group>";
 		};
@@ -88,6 +91,7 @@
 				8B235D3F452923FA7A4072FF /* LMCore in Frameworks */,
 				AD038F2CF7897D832DB8E5AE /* LunarMap in Frameworks */,
 				0FC6C52E151E8CD97AA4D124 /* LunarMapExplorer in Frameworks */,
+				9AC319D26B140F2F7C731919 /* LMKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,6 +187,7 @@
 				A9EB3C526EF0E03AA143B6C9 /* LMCore */,
 				E0160C33A71CDD4B67B2F4A5 /* LunarMap */,
 				D0ADE5292D7FBA8CE751FD6A /* LunarMapExplorer */,
+				DD7757E08C17C53DA912938C /* LMKit */,
 			);
 			productName = LM;
 			productReference = 11F3D7732D4569A800205449 /* LM.app */;
@@ -266,8 +271,9 @@
 			mainGroup = 11F3D76A2D4569A800205449;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */,
-				1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */,
+				3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "AGC" */,
+				1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */,
+				681E8E8D74FE78FAB5A68158 /* XCLocalSwiftPackageReference "LMKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 11F3D7742D4569A800205449 /* Products */;
@@ -642,13 +648,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */ = {
+		1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/LunarMap;
 		};
-		3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */ = {
+		3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "AGC" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../AGC;
+		};
+		681E8E8D74FE78FAB5A68158 /* XCLocalSwiftPackageReference "LMKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../LMKit;
 		};
 /* End XCLocalSwiftPackageReference section */
 
@@ -659,32 +669,37 @@
 		};
 		484902EAE3DD096F7FE83CD5 /* LunarMap */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */;
+			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */;
 			productName = LunarMap;
 		};
 		7F923C8DED5D27B4856DF91E /* AGC */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */;
+			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "AGC" */;
 			productName = AGC;
 		};
 		A9EB3C526EF0E03AA143B6C9 /* LMCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "../AGC" */;
+			package = 3B85012C7504288891A95F7D /* XCLocalSwiftPackageReference "AGC" */;
 			productName = LMCore;
 		};
 		B61A332620F9023911743D64 /* LunarMapExplorer */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */;
+			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */;
 			productName = LunarMapExplorer;
 		};
 		D0ADE5292D7FBA8CE751FD6A /* LunarMapExplorer */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */;
+			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */;
 			productName = LunarMapExplorer;
+		};
+		DD7757E08C17C53DA912938C /* LMKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 681E8E8D74FE78FAB5A68158 /* XCLocalSwiftPackageReference "LMKit" */;
+			productName = LMKit;
 		};
 		E0160C33A71CDD4B67B2F4A5 /* LunarMap */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "Packages/LunarMap" */;
+			package = 1C2DFA611CB80D538BF2315A /* XCLocalSwiftPackageReference "LunarMap" */;
 			productName = LunarMap;
 		};
 /* End XCSwiftPackageProductDependency section */

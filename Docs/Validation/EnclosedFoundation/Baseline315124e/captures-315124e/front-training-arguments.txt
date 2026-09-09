@@ -1,0 +1,4 @@
+--terminal-descent-cockpit
+--assembly-validation-view=front
+--cockpit-training-overlays
+--cockpit-eye-alignment

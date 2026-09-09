@@ -1,0 +1,46 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "DE0FAD53-2A01-4B96-95D3-3505E6900DA3",
+        "deviceName" : "LM Presentation 556e",
+        "modelName" : "Apple Vision Pro",
+        "osBuildNumber" : "23O470",
+        "osVersion" : "26.5",
+        "platform" : "visionOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 0,
+      "passedTests" : 46,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "LM · Built with macOS 26.5.1",
+  "expectedFailures" : 0,
+  "failedTests" : 0,
+  "finishTime" : 1788902083.007,
+  "passedTests" : 46,
+  "result" : "Passed",
+  "skippedTests" : 0,
+  "startTime" : 1788901983.331,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+
+  ],
+  "title" : "Test - LM",
+  "topInsights" : [
+    {
+      "category" : "Longest Test Runs",
+      "impact" : "34% of duration",
+      "text" : "1 longest test run with outlier durations exceeding 7.71s (three standard deviations)"
+    }
+  ],
+  "totalTestCount" : 46
+}

@@ -14,12 +14,21 @@ final class PoweredDescentSession {
     enum StartPoint: Equatable {
         case ignition
         case p64Approach
+        case twoMinuteApproach
         case p65TerminalDescent
+
+        /// Apollo cockpit defaults to approximately two minutes before touchdown.
+        /// The longer P64 approach remains available through an explicit launch option.
+        static func cockpitLaunch(arguments: [String]) -> Self {
+            if arguments.contains("--cockpit-start-p64") { return .p64Approach }
+            if arguments.contains("--cockpit-start-p65") { return .p65TerminalDescent }
+            return .twoMinuteApproach
+        }
 
         var programLabel: String {
             switch self {
             case .ignition: "P63"
-            case .p64Approach: "P64"
+            case .p64Approach, .twoMinuteApproach: "P64"
             case .p65TerminalDescent: "P65"
             }
         }
@@ -45,6 +54,26 @@ final class PoweredDescentSession {
 
     private(set) var status: Status = .unloaded
     private(set) var isRunning = false
+    @ObservationIgnored private(set) var eventTimer = LMEventTimerState()
+    private(set) var eventTimerTimeline: UInt64 = 0
+    private(set) var eventTimerInteractionGeneration: UInt64 = 0
+
+    func synchronizeEventTimer() {
+        eventTimer.update(.init(timelineID: eventTimerTimeline, elapsedSeconds: snapshot?.timeSeconds,
+            isPaused: isPaused || !isRunning, isReplay: replayFrame != nil))
+    }
+    @discardableResult
+    func sendEventTimer(_ command: LMEventTimerState.Command, generation: UInt64) -> Bool {
+        guard generation == eventTimerInteractionGeneration, isRunning, !isPaused,
+              isSceneActive, replayFrame == nil else { return false }
+        synchronizeEventTimer()
+        return eventTimer.send(command)
+    }
+    func releaseEventTimerControls() {
+        eventTimer.cancelSlew()
+        eventTimerInteractionGeneration &+= 1
+    }
+
     private(set) var isPaused = false
     private(set) var snapshot: LMSimulationSnapshot?
     private(set) var replayFrame: LMFlightReplayFrame?
@@ -67,10 +96,55 @@ final class PoweredDescentSession {
     var rhcPitch = 0
     var rhcYaw = 0
     var rhcRoll = 0
+    /// A direct gesture holds this generation until release. Late samples from
+    /// a stopped/deactivated/released interaction can never reacquire control.
+    func beginACAInteraction() -> UUID? {
+        guard isRunning, !isPaused, isSceneActive else { return nil }
+        return acaInteractionGeneration
+    }
+
+    @discardableResult
+    func updateACAInteraction(_ input: LMACANormalizedInput, generation: UUID) -> Bool {
+        guard generation == acaInteractionGeneration, isRunning, !isPaused, isSceneActive else { return false }
+        setACA(pitch: input.pitch, yaw: input.yaw, roll: input.roll)
+        return true
+    }
+
     /// Continuous analog ACA axes (-1…1). Buttons add discrete ±42-count
     /// commands on top; the combined deflection clamps at ±57 counts.
     var aca = LMACANormalizedInput.neutral
+    private var acaInteractionGeneration = UUID()
     private(set) var rodSwitchPosition = RODSwitchPosition.neutral
+    private var rodInteractionGeneration = UUID()
+
+    /// Physical momentary input uses a generation so a late drag sample cannot
+    /// reassert DES RATE after pause, release, stop, or scene deactivation.
+    func beginRODInteraction() -> UUID? {
+        guard isRunning, !isPaused, isSceneActive, replayFrame == nil else { return nil }
+        return rodInteractionGeneration
+    }
+
+    @discardableResult
+    func updateRODInteraction(_ position: RODSwitchPosition, generation: UUID) -> Bool {
+        guard generation == rodInteractionGeneration, isRunning, !isPaused,
+              isSceneActive, replayFrame == nil else { return false }
+        setROD(.descendPlus, held: position == .descendPlus)
+        setROD(.descendMinus, held: position == .descendMinus)
+        return true
+    }
+
+    func releaseRODInteraction() {
+        rodInteractionGeneration = UUID()
+        rodSwitchPosition = .neutral
+    }
+
+    @discardableResult
+    func selectPhysicalAttitudeMode(_ mode: LMPoweredDescentAttitudeMode) -> Bool {
+        guard isRunning, !isPaused, isSceneActive, replayFrame == nil else { return false }
+        attitudeMode = mode
+        return true
+    }
+
 
     let terrainSimulationGate = LMTerrainSimulationGate()
     @ObservationIgnored var terrainReady: (() -> Bool)?
@@ -78,6 +152,8 @@ final class PoweredDescentSession {
     @ObservationIgnored var terrainCaptureMetrics: (() -> [String: Double])?
     @ObservationIgnored private var captureExport: Task<Void, Never>?
     @ObservationIgnored private var lastCaptureSecond = -1
+    @ObservationIgnored private var captureStartSimulationSeconds: Double?
+    @ObservationIgnored private var captureStartWallSeconds: Double?
     @ObservationIgnored private var terrainWaitSeconds = 0.0
     @ObservationIgnored private var publicationWaitSeconds = 0.0
     @ObservationIgnored private var maximumPublicationWaitSeconds = 0.0
@@ -96,12 +172,13 @@ final class PoweredDescentSession {
     @ObservationIgnored private var loopTask: Task<Void, Never>?
     @ObservationIgnored private var replayTask: Task<Void, Never>?
     @ObservationIgnored private var dskyTask: Task<Void, Never>?
-    @ObservationIgnored private var dskyKeyTask: Task<Void, Never>?
+    @ObservationIgnored private let dskyInputQueue = LMDSKYInputQueue()
     @ObservationIgnored private var snapshotTask: Task<Void, Never>?
     @ObservationIgnored private var recordedFrames: [LMFlightFrame] = []
     @ObservationIgnored private var runID = UUID()
     @ObservationIgnored private var isSceneActive = true
     @ObservationIgnored private var p64Checkpoint: LMSimulationCheckpoint?
+    @ObservationIgnored private var twoMinuteCheckpoint: LMSimulationCheckpoint?
     @ObservationIgnored private var p65Checkpoint: LMSimulationCheckpoint?
     @ObservationIgnored private var lastStartPoint: StartPoint = .ignition
 
@@ -210,6 +287,12 @@ final class PoweredDescentSession {
         try bundledCheckpoint(named: "P64ApproachCheckpoint", in: bundle)
     }
 
+    nonisolated static func bundledTwoMinuteCheckpoint(
+        in bundle: Bundle = .main
+    ) throws -> LMSimulationCheckpoint {
+        try bundledCheckpoint(named: "TwoMinuteApproachCheckpoint", in: bundle)
+    }
+
     nonisolated static func bundledP65Checkpoint(
         in bundle: Bundle = .main
     ) throws -> LMSimulationCheckpoint {
@@ -243,6 +326,12 @@ final class PoweredDescentSession {
                 p65Checkpoint = nil
                 loadMessage = "P65 checkpoint unavailable: \(error.localizedDescription)"
             }
+            do {
+                twoMinuteCheckpoint = try Self.bundledTwoMinuteCheckpoint()
+            } catch {
+                twoMinuteCheckpoint = nil
+                loadMessage = "Two-minute checkpoint unavailable: \(error.localizedDescription)"
+            }
             let arguments = ProcessInfo.processInfo.arguments
             if arguments.contains("--replay-automatic") {
                 recording = try? Self.bundledAutomaticRecording()
@@ -254,6 +343,7 @@ final class PoweredDescentSession {
             if scenario.initialState.landingSite != nil {
                 p64Checkpoint = nil
                 p65Checkpoint = nil
+                twoMinuteCheckpoint = nil
                 recording = nil
             }
             loadMessage = "Luminary 099 · \(scenario.title)"
@@ -263,6 +353,7 @@ final class PoweredDescentSession {
                 let snap = await loaded.snapshot()
                 guard !Task.isCancelled else { return }
                 self.snapshot = snap
+                self.synchronizeEventTimer()
                 self.snapshotTask = nil
             }
         } catch {
@@ -287,6 +378,8 @@ final class PoweredDescentSession {
             checkpoint = nil
         case .p64Approach:
             checkpoint = p64Checkpoint
+        case .twoMinuteApproach:
+            checkpoint = twoMinuteCheckpoint
         case .p65TerminalDescent:
             checkpoint = p65Checkpoint
         }
@@ -302,8 +395,12 @@ final class PoweredDescentSession {
         publicationWaitSeconds = 0
         maximumPublicationWaitSeconds = 0
         realtimeClampedSeconds = 0
+        eventTimerTimeline &+= 1
+        releaseEventTimerControls()
         let runID = UUID()
         self.runID = runID
+        captureStartSimulationSeconds = nil
+        captureStartWallSeconds = nil
         lastStartPoint = startPoint
         replayFrame = nil
         recordedFrames.removeAll(keepingCapacity: true)
@@ -322,6 +419,7 @@ final class PoweredDescentSession {
                     let restored = try await runtime.restore(from: checkpoint)
                     guard self.runID == runID else { return }
                     self.snapshot = restored
+                    self.synchronizeEventTimer()
                     self.record(restored)
                     self.loadMessage = "Live · restored \(startPoint.programLabel) at "
                         + Self.altitudeText(restored.vehicleState.altitudeMeters)
@@ -346,6 +444,7 @@ final class PoweredDescentSession {
                     }
                     guard !Task.isCancelled, self.runID == runID else { return }
                     self.snapshot = prepared
+                    self.synchronizeEventTimer()
                     self.record(prepared)
                     self.loadMessage = self.autoLandMessage(program: prepared.agc.dsky.programNumber, accelerated: true)
                 } catch {
@@ -393,6 +492,7 @@ final class PoweredDescentSession {
                 guard self.runID == runID else { return }
                 guard let snap = result else { continue }
                 self.snapshot = snap
+                self.synchronizeEventTimer()
                 self.vehicleDidAdvance?(snap.vehicleState)
                 self.record(snap)
                 if snap.vehicleState.flightOutcome.isTerminal {
@@ -423,6 +523,8 @@ final class PoweredDescentSession {
     }
 
     func stop() {
+        eventTimerTimeline &+= 1
+        releaseEventTimerControls()
         captureExport?.cancel()
         captureExport = nil
         runID = UUID()
@@ -432,8 +534,7 @@ final class PoweredDescentSession {
         replayTask = nil
         dskyTask?.cancel()
         dskyTask = nil
-        dskyKeyTask?.cancel()
-        dskyKeyTask = nil
+        dskyInputQueue.cancelPendingAndRelease()
         snapshotTask?.cancel()
         snapshotTask = nil
         replayFrame = nil
@@ -463,6 +564,7 @@ final class PoweredDescentSession {
                 let snapshot = try await runtime.reset()
                 guard !Task.isCancelled else { return }
                 self.snapshot = snapshot
+                self.synchronizeEventTimer()
                 self.status = .idle
             } catch {
                 guard !Task.isCancelled else { return }
@@ -481,7 +583,9 @@ final class PoweredDescentSession {
 
     func pause() {
         guard canPause else { return }
+        synchronizeEventTimer()
         isPaused = true
+        releaseEventTimerControls()
         releaseCrewControls()
     }
 
@@ -498,45 +602,35 @@ final class PoweredDescentSession {
         guard let runtime else { return }
         dskyTask?.cancel()
         dskyTask = nil
-        dskyKeyTask?.cancel()
-        dskyKeyTask = Task { @MainActor [weak self] in
-            guard let self else { return }
-            if key == .pro {
-                // PROCEED is a spring-loaded channel-032 discrete. Luminary's
-                // P64 flash handler consumes the press and then requires the
-                // release edge before later PRO operations can be recognized.
-                await runtime.sendPRO(pressed: true)
-                try? await Task.sleep(for: .milliseconds(120))
-                // Cancellation by a subsequent DSKY key must not strand the
-                // spring-loaded switch in its pressed state.
-                await runtime.sendPRO(pressed: false)
-            } else {
-                await runtime.sendDSKYKey(key)
-            }
-            guard !Task.isCancelled else { return }
-            if !self.isRunning {
+        enqueueDSKYKey(key, runtime: runtime)
+    }
+
+    private func enqueueDSKYKey(_ key: DSKYKeyCode, runtime: LMSimulationRuntime) {
+        dskyInputQueue.enqueue(
+            key,
+            sendKey: { await runtime.sendDSKYKey($0) },
+            sendPRO: { await runtime.sendPRO(pressed: $0) },
+            didSend: { [weak self] in
+                guard let self, !self.isRunning else { return }
                 let snap = await runtime.snapshot()
                 guard !Task.isCancelled else { return }
                 self.snapshot = snap
+                self.synchronizeEventTimer()
             }
-            self.dskyKeyTask = nil
-        }
+        )
     }
 
     func sendDSKYScript(_ script: DSKYScript) {
         guard let runtime else { return }
-        dskyKeyTask?.cancel()
-        dskyKeyTask = nil
         dskyTask?.cancel()
         dskyTask = Task { @MainActor [weak self] in
             guard let self else { return }
+            await self.dskyInputQueue.waitUntilIdle()
             for key in script.keys {
                 if Task.isCancelled { break }
-                await runtime.sendDSKYKey(key)
+                self.enqueueDSKYKey(key, runtime: runtime)
+                await self.dskyInputQueue.waitUntilIdle()
                 guard !Task.isCancelled else { break }
-                if !self.isRunning {
-                    self.snapshot = await runtime.snapshot()
-                }
                 try? await Task.sleep(for: .milliseconds(180))
             }
             guard !Task.isCancelled else { return }
@@ -554,11 +648,12 @@ final class PoweredDescentSession {
     /// Neutralize every momentary crew input. This is the fail-safe path for
     /// gesture cancellation, scene deactivation, tracking interruption, and stop.
     func releaseCrewControls() {
+        releaseEventTimerControls()
         rhcPitch = 0
         rhcYaw = 0
         rhcRoll = 0
         releaseACA()
-        rodSwitchPosition = .neutral
+        releaseRODInteraction()
     }
 
     func setROD(_ position: RODSwitchPosition, held: Bool) {
@@ -584,19 +679,20 @@ final class PoweredDescentSession {
     /// Continuous analog ACA axes, clamped to -1…1 per axis.
     func setACA(pitch: Double? = nil, yaw: Double? = nil, roll: Double? = nil) {
         if let pitch {
-            aca.pitch = min(max(pitch, -1), 1)
+            aca.pitch = LMACANormalizedInput.clamp(pitch)
         }
         if let yaw {
-            aca.yaw = min(max(yaw, -1), 1)
+            aca.yaw = LMACANormalizedInput.clamp(yaw)
         }
         if let roll {
-            aca.roll = min(max(roll, -1), 1)
+            aca.roll = LMACANormalizedInput.clamp(roll)
         }
     }
 
     /// Handle released or hand tracking lost: every axis returns to neutral
     /// before the next simulation frame is built.
     func releaseACA() {
+        acaInteractionGeneration = UUID()
         aca = .neutral
     }
 
@@ -686,6 +782,10 @@ final class PoweredDescentSession {
     }
 
     private func record(_ snapshot: LMSimulationSnapshot) {
+        if captureStartSimulationSeconds == nil {
+            captureStartSimulationSeconds = snapshot.timeSeconds
+            captureStartWallSeconds = CACurrentMediaTime()
+        }
         recordedFrames.append(LMFlightFrame(snapshot: snapshot))
         guard ProcessInfo.processInfo.arguments.contains("--cockpit-mission-capture"),
               Int(snapshot.timeSeconds) != lastCaptureSecond || snapshot.vehicleState.flightOutcome.isTerminal else { return }
@@ -693,6 +793,12 @@ final class PoweredDescentSession {
         let state = snapshot.vehicleState
         var report: [String: Any] = ["timeSeconds": snapshot.timeSeconds,
             "program": snapshot.agc.dsky.programNumber ?? 0, "scenarioID": scenario.id,
+            "startProgram": lastStartPoint.programLabel,
+            "elapsedSimulationSeconds": snapshot.timeSeconds - (captureStartSimulationSeconds ?? snapshot.timeSeconds),
+            "elapsedWallSeconds": CACurrentMediaTime() - (captureStartWallSeconds ?? CACurrentMediaTime()),
+            "terminal": state.flightOutcome.isTerminal,
+            "probeContact": state.landingGear.map { $0.isProbeContact as Any } ?? NSNull(),
+            "footpadContact": state.surfaceContact != nil,
             "altitudeMeters": state.altitudeMeters, "outcome": state.flightOutcome.rawValue,
             "northMeters": state.positionMeters.x, "eastMeters": state.positionMeters.y,
             "terrain": terrainCaptureMetrics?() ?? [:],

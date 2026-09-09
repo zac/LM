@@ -1,0 +1,92 @@
+{
+  "appSourceCommit": "2a7148d88930d555e532213f570656dc31427388",
+  "appSourceTree": "e7777726931025cc493c9a08c963d0c5552b4282",
+  "evidenceOnlyFollowup": true,
+  "appearanceReference": {
+    "repository": "LMKit WindowsLPD",
+    "commit": "849e250",
+    "role": "photo reference only; not a build dependency"
+  },
+  "dependencies": {
+    "LMKit": {
+      "commit": "86aa71b4b9ed203f11e8b572e23da2b0285a0ad8",
+      "files": 262,
+      "hydratedFileManifestSHA256": "ee254da7a65ecbe2abf28e06f58bfabfb38f3739c13b4fb8e21d16dc4ff15d08"
+    },
+    "AGC": {
+      "commit": "b3f15533db335ee882dc07401790c93010809e8f",
+      "files": 88,
+      "hydratedFileManifestSHA256": "0164649d1e237add5e7b108dd040476c218c45e9aeb9a4bb4d8c0c61ec2fa25d"
+    }
+  },
+  "binarySHA256": {
+    "LM": "6970c5cf0c6a977adf90abed19b5bb6f9518564a5d0eb159a6350c84ef637b4a",
+    "LM.debug.dylib": "50b73099530d5b9f1fde84ea9f7156d34d3ee63ce65a7cf7ee0deaa7ef52a2e5"
+  },
+  "tests": {
+    "xcresult": "lm-presentation-final.xcresult",
+    "log": "lm-presentation-final.log",
+    "passed": 43,
+    "suites": 8,
+    "failed": 0,
+    "skipped": 0,
+    "xctestParallelism": false,
+    "device": "DE0FAD53-2A01-4B96-95D3-3505E6900DA3",
+    "os": "visionOS Simulator 26.5 (23O470)",
+    "sourceCommit": "2a7148d88930d555e532213f570656dc31427388",
+    "inputMode": "Swift Testing; synthetic adapter calls, no physical headset input",
+    "logSHA256": "4edcb30e3b7a349a25f0dc8ca3090be1f1c116ab714bf63a5456c17bfa328806",
+    "discoverySHA256": "5a993898230b07f129a48908f1ae982a1bfc56bb9d5d6a9be41ed023dc3d72f1",
+    "summarySHA256": "6a0d0de70dd439d510a31edb041244619033b3781108b703e7ed14a13b53c14f",
+    "xcresultManifestSHA256": "0d38e66079acf9a5324ee6ac35695b47916d4d40247aa060df85187c160d6612",
+    "selectedSuites": [
+      "LMCockpitPresentationPolicyTests",
+      "LandingPointDesignatorTests",
+      "LMCommanderStationAssemblyTests",
+      "LMInstrumentInteractionTests",
+      "LMInstrumentIntegrationTests",
+      "LMImportedACATests",
+      "LMLunarCockpitRestartTests",
+      "SpatialCockpitControlTests"
+    ]
+  },
+  "captures": [
+    {
+      "file": "historical-recenter.png",
+      "sha256": "fa790e73c5db6191c4ee70a01a4bdca11961c85e9941626a7d20bebb99a4b856",
+      "bytes": 395677,
+      "arguments": [
+        "--terminal-descent-cockpit",
+        "--commander-station-assembly",
+        "--cockpit-recenter-after-launch"
+      ],
+      "inputMode": "simctl launch flags; automatic app recenter request; no OS pinch/gaze input",
+      "camera": "default comfortable entry after recenter",
+      "sourceCommit": "2a7148d88930d555e532213f570656dc31427388",
+      "visualReview": "Historical: warm physical marks, no yellow pointer. Training: diagnostic pane colors and yellow pointer visible. Baseline assembly, not enclosed replacement."
+    },
+    {
+      "file": "training-recenter.png",
+      "sha256": "c9410f3829e6a3e80fe95f236541551aaacf26283fa0e0f884ccab5ae707c843",
+      "bytes": 401801,
+      "arguments": [
+        "--terminal-descent-cockpit",
+        "--commander-station-assembly",
+        "--cockpit-recenter-after-launch",
+        "--cockpit-training-overlays",
+        "--cockpit-eye-alignment"
+      ],
+      "inputMode": "simctl launch flags; automatic app recenter request; no OS pinch/gaze input",
+      "camera": "default comfortable entry after recenter",
+      "sourceCommit": "2a7148d88930d555e532213f570656dc31427388",
+      "visualReview": "Historical: warm physical marks, no yellow pointer. Training: diagnostic pane colors and yellow pointer visible. Baseline assembly, not enclosed replacement."
+    }
+  ],
+  "limitations": [
+    "Immersive ornaments are not visible in these captures; AXe describe-ui returned no translation object. Cue/hint visibility is supported by source/state tests, not an OS UI interaction claim.",
+    "Old baseline mark geometry remains unverified and lacks the photo-supported 50-degree crossbar.",
+    "No imported window artwork installed in captures; imported ownership suppression verified by scene tests.",
+    "No physical headset execution."
+  ],
+  "simulatorReleased": true
+}

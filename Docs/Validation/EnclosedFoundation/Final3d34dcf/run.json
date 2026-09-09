@@ -1,0 +1,142 @@
+{
+  "revisions": {
+    "LM": {
+      "commit": "3d34dcfd718ae410f6c5b68d5525c93ef9d01319",
+      "tree": "db23f0e39c912b2e65e3603b546613cbae091e6d",
+      "files": 501,
+      "hydratedManifestSHA256": "5b4cbcd0c186c87edb70a377da08216b0cb0eb176cedf1a9dec7d61b91ae6b48"
+    },
+    "LMKit": {
+      "commit": "b870a9b112797d3ea627c663df2684c97f9cc2a3",
+      "tree": "ff36533a28bd3623af8312d2c3476bc9fe5f2d82",
+      "files": 425,
+      "hydratedManifestSHA256": "a68ed22b29cdd6831eda7f23b27bd65422323b09d8ea8ebdba8a59be7b42dab5"
+    },
+    "AGC": {
+      "commit": "b3f15533db335ee882dc07401790c93010809e8f",
+      "tree": "3ebd2a479ab2bd2b39dd9919ad56405b20a1b245",
+      "files": 88,
+      "hydratedManifestSHA256": "0412398ac7cc046c0f6f99bdbdf17d7d85484ccf00d36b5af2b50174e313551c"
+    }
+  },
+  "binarySHA256": {
+    "LM": "a5b63277bf333940a205e5665505e011701ec3b617576bd559b729cf20b76cdd",
+    "LM.debug.dylib": "534240f761c37f9108ad20c6149d2ad69f22267473031b6b868e4b6a82196c1d"
+  },
+  "tests": {
+    "devicesAndConfigurations": [
+      {
+        "device": {
+          "architecture": "arm64",
+          "deviceId": "DE0FAD53-2A01-4B96-95D3-3505E6900DA3",
+          "deviceName": "LM Presentation 556e",
+          "modelName": "Apple Vision Pro",
+          "osBuildNumber": "23O470",
+          "osVersion": "26.5",
+          "platform": "visionOS Simulator"
+        },
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "passedTests": 47,
+        "skippedTests": 0,
+        "testPlanConfiguration": {
+          "configurationId": "1",
+          "configurationName": "Test Scheme Action"
+        }
+      }
+    ],
+    "environmentDescription": "LM \u00b7 Built with macOS 26.5.1",
+    "expectedFailures": 0,
+    "failedTests": 0,
+    "finishTime": 1788902599.215,
+    "passedTests": 47,
+    "result": "Passed",
+    "skippedTests": 0,
+    "startTime": 1788902525.264,
+    "statistics": [],
+    "testFailures": [],
+    "title": "Test - LM",
+    "topInsights": [
+      {
+        "category": "Longest Test Runs",
+        "impact": "32% of duration",
+        "text": "1 longest test run with outlier durations exceeding 7.95s (three standard deviations)"
+      }
+    ],
+    "totalTestCount": 47
+  },
+  "xctestParallelism": false,
+  "sourceUnchanged": true,
+  "appBundledPanelInventorySHA256": "026a908793a01c3f1c6fa6a024500f70fda8edc75287ac4749003719fb7eaf30",
+  "packaging": {
+    "source_sha256": "4b95b051b27831c97a47e9ccfb36b2f62e23469d3be50a09225e57685dc56b24",
+    "runtime_sha256": "026a908793a01c3f1c6fa6a024500f70fda8edc75287ac4749003719fb7eaf30",
+    "changed_property": "/PanelInventory/PlanningLabels.visibility",
+    "source_value": "invisible",
+    "runtime_value": "inherited",
+    "canonical_source_layer_sha256": "2cb7a4e91168997d997e134d8530f8069338e63c6c6a9dfb74b006bfb54e116f",
+    "canonical_runtime_layer_sha256": "e9ed42c5e185e8db602dcfeb0e5559be0a702e96448204478ab34502bd920a66",
+    "other_layer_text_unchanged": true,
+    "consumer_requirement": "Set PlanningLabels.isEnabled=false before installation; explicitly toggle it for planning mode."
+  },
+  "captures": [
+    {
+      "file": "captures-3d34dcf/cdr-planning.png",
+      "sha256": "9fd211781612c0ae1e71eb058cdd30399c335f62f62140cbcfed6ed2d9f94946",
+      "arguments": "--terminal-descent-cockpit\n--assembly-validation-view=cdr\n--cockpit-planning-labels",
+      "review": "Pass"
+    },
+    {
+      "file": "captures-3d34dcf/front-fallback.png",
+      "sha256": "f986466179dec0a05e4e587a31a33de1b7c4389f97dd756c3951933cd64b7d60",
+      "arguments": "--terminal-descent-cockpit\n--assembly-validation-view=front\n--procedural-cockpit",
+      "review": "Pass"
+    },
+    {
+      "file": "captures-3d34dcf/front-normal.png",
+      "sha256": "83dd481a4a17dfd7afa9e7b258eaf115e78acf2c7bff50b90aa08ac98fd20c0d",
+      "arguments": "--terminal-descent-cockpit\n--assembly-validation-view=front",
+      "review": "Pass"
+    },
+    {
+      "file": "captures-3d34dcf/front-planning.png",
+      "sha256": "abb79058b8f3dd882c47f57b2352c20fdd334503ec5ff78599eecdb97946f128",
+      "arguments": "--terminal-descent-cockpit\n--assembly-validation-view=front\n--cockpit-planning-labels",
+      "review": "Pass"
+    },
+    {
+      "file": "captures-3d34dcf/front-training.png",
+      "sha256": "f1b1c8dbc7c4a5a49d732532eb4eb9c9aced0e4b583f0520fab1e3fc3be7c9f8",
+      "arguments": "--terminal-descent-cockpit\n--assembly-validation-view=front\n--cockpit-training-overlays\n--cockpit-eye-alignment",
+      "review": "Pass"
+    },
+    {
+      "file": "captures-3d34dcf/lmp-planning.png",
+      "sha256": "4a73c8113437214119f1a752d50166df6ad804517becf5c62ca8ba8a0ed40162",
+      "arguments": "--terminal-descent-cockpit\n--assembly-validation-view=lmp\n--cockpit-planning-labels",
+      "review": "Pass"
+    },
+    {
+      "file": "captures-3d34dcf/overhead-planning.png",
+      "sha256": "90677170cdc97d39c873257b172333b9a38e64101a1290194e08d50041996b4a",
+      "arguments": "--terminal-descent-cockpit\n--assembly-validation-view=overhead\n--cockpit-planning-labels",
+      "review": "Pass"
+    },
+    {
+      "file": "captures-3d34dcf/rear-planning.png",
+      "sha256": "e114f70ac3de9674e08de97b34e0a64ad5153ac97ff9e28d07c21d20f053913d",
+      "arguments": "--terminal-descent-cockpit\n--assembly-validation-view=rear\n--cockpit-planning-labels",
+      "review": "Pass"
+    }
+  ],
+  "finalReview": {
+    "planningFiveViews": "Actual labels render in front, CDR, LMP, rear and overhead. Low contrast remains provisional.",
+    "normalFront": "Planning names hidden; warm imported LPD marks and live DSKY visible.",
+    "trainingFront": "Planning names hidden; imported marks remain warm, with no diagnostic magenta/cyan marks or projected yellow sphere.",
+    "forcedFallbackFront": "Procedural foundation renders with DSKY, FDAI and ACA; no training default.",
+    "limitations": "Simulator DEBUG launch flags only; no headset, gaze/pinch, ornament accessibility, optical calibration or final photometric/fit qualification."
+  },
+  "simulatorReleased": true,
+  "simulatorFinalState": "Shutdown",
+  "suiteCount": 8
+}

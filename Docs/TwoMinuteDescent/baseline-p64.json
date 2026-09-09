@@ -1,0 +1,13 @@
+{
+  "checkpointStartSeconds" : 614.57037429833713,
+  "elapsedSimulationSeconds" : 209.26666666647634,
+  "finalAltitudeMeters" : 2.3283064365386963e-10,
+  "initialAltitudeMeters" : 2226.7022314050701,
+  "padSeconds" : 209.26666666647634,
+  "probeSeconds" : null,
+  "program" : 65,
+  "stepSeconds" : 0.033333333333333333,
+  "surface" : "default LMCore surface; rendered-terrain acceptance separately required",
+  "terminal" : true,
+  "terminalOutcome" : "softLanding"
+}

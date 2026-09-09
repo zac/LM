@@ -4,6 +4,7 @@ import LMCore
 import OSLog
 import RealityKit
 import RealityKitContent
+import LMKit
 import SwiftUI
 import UIKit
 import simd
@@ -27,9 +28,24 @@ final class LMCommanderStationScene {
     let attitudeModeSwitch = ModelEntity()
     let missionControlButton = ModelEntity()
     let landingPointCalledAngleMarker = ModelEntity()
+    enum LandingPointMarkingOwner { case appGenerated, importedWindows }
+    private(set) var landingPointMarkingOwner: LandingPointMarkingOwner = .appGenerated
+    private var landingPointMarkEntities: [(entity: ModelEntity, pane: LMLPDPane)] = []
+    private var landingPointDiagnosticColors = false
+    private(set) var planningLabelsVisible = ProcessInfo.processInfo.arguments.contains("--cockpit-planning-labels")
+
+    func setPlanningLabelsVisible(_ visible: Bool) {
+        planningLabelsVisible = visible
+        commanderAssembly?.setPlanningLabelsVisible(visible)
+    }
     let dskyFaceRoot = Entity()
 
     private let cabinFrame = Entity()
+    private var cachedShadowCasterCorners: [SIMD3<Float>]?
+    private(set) var cockpitShadowFit: LMCockpitShadowFit?
+    #if DEBUG
+    private var lastShadowEvidenceWrite: TimeInterval = 0
+    #endif
     private let fdaiMount = Entity()
     private let dskyDisplayMount = Entity()
     private let physicalDSKYAnnunciatorLegends = ModelEntity()
@@ -45,11 +61,43 @@ final class LMCommanderStationScene {
         subsystem: Bundle.main.bundleIdentifier ?? "io.positron.LM",
         category: "ProgressiveTerrain"
     )
+    // The Apollo demo keeps one non-overlapping measured terrain set resident.
+    // Progressive overlays used to leave the base mesh underneath them and
+    // trigger mesh/texture uploads precisely as the vehicle reached the ground.
+    private var usesPreparedApolloTerrain = false
+    private(set) var apolloTerrainReady = false
     private var globalCockpitTerrain: LMLunarCockpitTerrain?
     var globalTerrainReady: Bool { globalCockpitTerrain?.permitsPhysicsStep ?? true }
     var globalTerrainDescription: String {
         guard let terrain = globalCockpitTerrain else { return "Lunar terrain" }
         return String(format: "Measured floor: %.0f m · finer relief modeled", terrain.presentation.region.measuredFloorMeters)
+    }
+
+    /// Resolve global-site lighting before publishing the first RealityView frame.
+    /// Apollo metadata is already configured by buildProvisionalSurface().
+    func prepareProvisionalLighting(at coordinate: LMSelenographicCoordinate?, date: Date) {
+        guard provisionalTerrain.parent != nil else { return }
+        if let coordinate {
+            let angles = LMLunarEphemeris.sunAngles(at: date, site: coordinate)
+            let sun = LMTerrainWorld.makeMissionSun(orientation: LMFullDescentMapper.sunLightOrientation(from: angles),
+                elevationDegrees: angles.elevationDegrees, altitudeMeters: 1_000)
+            provisionalTerrain.findEntity(named: "MissionSun")?.removeFromParent()
+            provisionalTerrain.addChild(sun)
+            // The provisional light also participates in the local shadow fit.
+            terrainSun = sun
+        }
+        updateCockpitShadow()
+        recordLighting(stage: "before-first-publication")
+    }
+
+    func recordLighting(stage: String) {
+        guard ProcessInfo.processInfo.arguments.contains("--cockpit-startup-timing") else { return }
+        let suns = LMCommanderStationAssembly.descendants(root).filter { $0.name == "MissionSun" }
+        let summary = suns.map { node in
+            let light = node.components[DirectionalLightComponent.self]
+            return "lux=\(light?.intensity ?? 0) rotation=\(node.orientation(relativeTo: root).vector) shadow=\((node as? DirectionalLight)?.shadow != nil)"
+        }.joined(separator: "; ")
+        logger.notice("Cockpit lighting stage=\(stage, privacy: .public) uptime=\(ProcessInfo.processInfo.systemUptime, privacy: .public) imported=\(self.commanderAssembly != nil) suns=\(suns.count) \(summary, privacy: .public)")
     }
 
     func loadGlobalTerrain(at coordinate: LMSelenographicCoordinate, session: PoweredDescentSession, date: Date) async throws {
@@ -79,6 +127,8 @@ final class LMCommanderStationScene {
 
     func installGlobalTerrain(_ terrain: LMLunarCockpitTerrain) {
         globalCockpitTerrain = terrain
+        terrainSun = nil
+        recordLighting(stage: "before-global-terrain-swap")
         provisionalTerrain.removeFromParent()
         // The global controller owns the inverse vehicle pose and floating
         // frame. Clear any Apollo pose applied while sources were loading.
@@ -86,6 +136,10 @@ final class LMCommanderStationScene {
         dustCloud.removeFromParent()
         terrain.root.addChild(dustCloud)
         lunarWorld.addChild(terrain.root)
+        // Preserve an already-present vehicle view before the next publication.
+        if let state = lastVehicleState { terrain.apply(state) }
+        updateCockpitShadow()
+        recordLighting(stage: "after-global-terrain-swap")
     }
 
     private var terrainHeightField: Apollo11TerrainHeightField?
@@ -114,13 +168,27 @@ final class LMCommanderStationScene {
     private var terrainGenerationTasks = [LMTerrainTileID: Task<Void, Never>]()
     private var terrainGenerationTokens = [LMTerrainTileID: UUID]()
     private var lastTerrainPresentationBlendBucket: Int?
-    private var lastMissionShadowDistanceMeters: Float?
     private var artistCabin: Entity?
+    private(set) var commanderAssembly: LMCommanderStationAssembly?
     private var exteriorLunarModule: Entity?
     private var fdaiBall: Entity?
+    private(set) var importedFDAI: LMImportedFDAI?
+    private(set) var importedPilotFDAI: LMImportedFDAI?
+    private(set) var importedACA: LMImportedACA?
+    private(set) var importedTimers: LMImportedTimers?
+    private(set) var systemsHardware: [String: LMImportedSystemsHardware] = [:]
+    private(set) var lunarContacts: [String: LMImportedLunarContact] = [:]
+    private(set) var importedAltitudeRate: LMImportedAltitudeRate?
+    private(set) var importedCrossPointer: LMImportedCrossPointer?
+    private(set) var importedAttitudeMode: LMImportedDescentControl?
+    private(set) var importedDescentRate: LMImportedDescentControl?
+    private(set) var staticOverlays: [String: Entity] = [:]
+    private var lastAttitudeHold = false
+    private var lastRODPosition = PoweredDescentSession.RODSwitchPosition.neutral
     private var retiredCommanderEntryAnchors = [AnchorEntity]()
     private var lastVehicleState: LMVehicleStateSnapshot?
-    private var dskyKeyEntitiesByRawValue = [Int: ModelEntity]()
+    private var dskyKeyEntitiesByRawValue = [Int: Entity]()
+    private var importedDSKY: LMImportedDSKY?
     private var dskyKeyRestPositions = [Int: SIMD3<Float>]()
     private var dskyKeyResetTasks = [Int: Task<Void, Never>]()
     private var lastPhysicalDSKYSignature: String?
@@ -130,7 +198,7 @@ final class LMCommanderStationScene {
     private let attitudeModeAutomaticPosition =
         LMCommanderStationGeometry.attitudeHoldPivotPositionMeters
 
-    init() {
+    init(loadACA: Bool = true, lightingManifest: LMTerrainManifest? = try? LMTerrainManifest.load()) {
         commanderEntryAnchor.name = "Commander entry head anchor"
         commanderEntryAnchor.anchoring.trackingMode = .once
         root.name = "LM Commander Station"
@@ -162,7 +230,9 @@ final class LMCommanderStationScene {
         buildCabin()
         buildLandingPointCalledAngleMarker()
         buildPhysicalDSKY()
+        installImportedDSKY()
         buildPhysicalControls()
+        if loadACA { installImportedACA() }
         // RealityKit models cast dynamic-light shadows by default, even when
         // they have no DynamicLightShadowComponent. Explicitly opt every
         // layered cabin model out before restoring the pressure shell as the
@@ -174,22 +244,19 @@ final class LMCommanderStationScene {
         ) {
             setDynamicShadowCasting(true, in: shell)
         }
-        buildProvisionalSurface()
+        buildProvisionalSurface(lightingManifest: lightingManifest)
         buildDustCloud()
 
         root.addChild(lunarWorld)
         cabinFrame.addChild(fdaiMount)
         buildPhysicalFDAI()
-    }
-
-    func mountFDAI(_ entity: Entity) {
-        guard entity.parent == nil else { return }
-        entity.name = "Commander FDAI"
-        entity.position = SIMD3(0, 0, 0.004)
-        entity.orientation = simd_quatf(angle: 0, axis: SIMD3(0, 1, 0))
-        entity.scale = SIMD3(repeating: 0.00095)
-        fdaiMount.addChild(entity)
-        logger.notice("Mounted live FDAI flight face")
+        installImportedFDAI()
+        updateCockpitShadow()
+        #if DEBUG
+        LMInstrumentValidation.frameObserver(root)
+        LMCommanderStationAssemblyObserver.frame(root)
+        LMACAValidation.frame(root)
+        #endif
     }
 
     /// Re-captures the current headset pose while preserving the live vehicle,
@@ -212,20 +279,9 @@ final class LMCommanderStationScene {
         return retiredCommanderEntryAnchors
     }
 
-    func mountDSKYDisplay(_ entity: Entity) {
-        guard entity.parent == nil else { return }
-        entity.name = "Live Apollo 11 DSKY display"
-        entity.position = SIMD3(0, 0, 0.012)
-        entity.scale = SIMD3(repeating: 0.00035)
-        dskyDisplayMount.addChild(entity)
-        logger.notice("Mounted live DSKY display")
-    }
-
-    /// Keeps the flight display readable when RealityView has not mounted its
-    /// SwiftUI attachment yet. The physical text sits behind that attachment,
-    /// so the live SwiftUI face remains the preferred presentation while both
-    /// renderers consume the same immutable AGC snapshot.
+    /// Both imported and fallback renderers consume the same AGC snapshot.
     func applyDSKY(_ snapshot: DSKYSnapshot?) {
+        importedDSKY?.apply(snapshot)
         let presentation = LMPhysicalDSKYPresentation(snapshot: snapshot)
         guard presentation.signature != lastPhysicalDSKYSignature else { return }
         lastPhysicalDSKYSignature = presentation.signature
@@ -259,7 +315,7 @@ final class LMCommanderStationScene {
     /// terrain remains a sibling so vehicle/world mapping is unaffected.
     func loadExteriorLunarModule() throws {
         guard exteriorLunarModule == nil else { return }
-        let scene = try Entity.load(named: "lm", in: realityKitContentBundle)
+        let scene = try Entity.load(contentsOf: LMKitAssets.legacySceneURL)
         guard let authoredLander = scene.findEntity(named: "lunarlander") else { return }
 
         let lander = authoredLander.clone(recursive: true)
@@ -281,6 +337,8 @@ final class LMCommanderStationScene {
         registration.addChild(lander)
         root.addChild(registration)
         exteriorLunarModule = registration
+        cachedShadowCasterCorners = nil
+        updateCockpitShadow()
     }
 
     private func setDynamicShadowCasting(_ castsShadow: Bool, in entity: Entity) {
@@ -312,13 +370,11 @@ final class LMCommanderStationScene {
         lastVehicleState = state
         if let globalCockpitTerrain {
             globalCockpitTerrain.apply(state)
-            fdaiBall?.orientation = FDAIOrientation.ballOrientation(for: state.attitude)
+            updateCockpitShadow()
+            applyFDAIAttitude(state.attitude)
             return
         }
-        fdaiBall?.orientation = FDAIOrientation.ballOrientation(
-            for: state.attitude
-        )
-        updateMissionShadow(altitudeMeters: state.altitudeMeters)
+        applyFDAIAttitude(state.attitude)
         updateRockDetail(altitudeMeters: state.altitudeMeters)
         let terrainPosition = terrainPosition(for: state.positionMeters)
         let surfaceSample = progressiveSurfaceSample(
@@ -340,6 +396,7 @@ final class LMCommanderStationScene {
             attitude: state.attitude,
             surfaceElevationMeters: terrainDatumElevationMeters
         ))
+        updateCockpitShadow()
         requestProgressiveTerrain(
             around: terrainPosition,
             velocityNorthMetersPerSecond: state.velocityMetersPerSecond.x,
@@ -359,6 +416,7 @@ final class LMCommanderStationScene {
         around terrainPosition: LMVector3D,
         altitudeMeters: Double
     ) {
+        guard !usesPreparedApolloTerrain else { return }
         guard let heightField = terrainHeightField else { return }
         guard altitudeMeters <= LMTerrainContactSurfaceBuilder.buildAltitudeMeters else {
             return
@@ -403,8 +461,13 @@ final class LMCommanderStationScene {
     }
 
     func loadApollo11Terrain() async throws {
-        let heightField = try Apollo11TerrainResource.loadSourceBackedHeightField()
-        let assembly = try await LMTerrainWorld.load()
+        apolloTerrainReady = false
+        usesPreparedApolloTerrain = true
+        let heightField = try await Task.detached(priority: .userInitiated) {
+            try Apollo11TerrainResource.loadSourceBackedHeightField()
+        }.value
+        let assembly = try await LMTerrainWorld.load(prepareProgressiveDetail: false)
+        try Task.checkCancellation()
         let terrain = assembly.worldRoot
         terrainHeightField = heightField
         terrainFrameAlignment = try LMTerrainFrameAlignment(manifest: assembly.manifest)
@@ -414,15 +477,24 @@ final class LMCommanderStationScene {
             )
         }
         terrainEnvironment = terrain
-        terrainSun = assembly.sun
-        terrainAlbedoField = try? LMMeasuredAlbedoField.load(tile: heightField.tile)
-        if terrainAlbedoField == nil {
-            logger.error("Measured albedo unavailable; tiles bake procedural contrast only")
-        }
         let eagle = terrainFrameAlignment?.terrainReferenceTouchdown ?? .zero
         terrainDatumElevationMeters = Double(
             heightField.relativeElevation(eastMeters: eagle.y, northMeters: eagle.x) ?? 0
         )
+        // Retain the exact rendered near-field posts for gear contact. This
+        // includes the parent morph at its perimeter and needs no landing-time
+        // patch generation, even if the pilot moves away from Eagle's position.
+        let positions = assembly.renderedNearFieldPositions
+        let reference = Float(terrainDatumElevationMeters)
+        let alignment = terrainFrameAlignment
+        let surface = await Task.detached(priority: .userInitiated) {
+            LMTerrainContactSurfaceBuilder.buildPreparedApollo(
+                heightField: heightField, renderedPositions: positions,
+                alignment: alignment, referenceElevationMeters: reference)
+        }.value
+        try Task.checkCancellation()
+        contactSurface = surface
+        onContactSurfaceChange?(surface)
         terrainRockField?.removeFromParent()
         let rockField = try LMLunarRockFieldResource.makeEntity(
             heightField: heightField,
@@ -433,23 +505,109 @@ final class LMCommanderStationScene {
         logger.info(
             "Terrain rock field ready count=\(rockField.children.count, privacy: .public) model=\(LMLunarRockFieldModel.modelID, privacy: .public)"
         )
+        recordLighting(stage: "before-apollo-terrain-swap")
+        // Keep adaptive fallback ownership until all throwing preparation succeeds.
+        terrainSun = assembly.sun
         provisionalTerrain.removeFromParent()
         lunarWorld.addChild(terrain)
         apply(lastVehicleState)
+        updateCockpitShadow()
+        recordLighting(stage: "after-apollo-terrain-swap")
+        apolloTerrainReady = true
     }
 
-    private func updateMissionShadow(altitudeMeters: Double) {
-        guard let terrainSun else { return }
-        let distance = LMTerrainWorld.missionShadowDistance(
-            altitudeMeters: altitudeMeters
-        )
-        guard lastMissionShadowDistanceMeters.map({ abs($0 - distance) >= 0.5 })
-                ?? true else { return }
-        lastMissionShadowDistanceMeters = distance
-        terrainSun.shadow = LMTerrainWorld.missionShadow(
-            altitudeMeters: altitudeMeters
-        )
+    private func updateCockpitShadow() {
+        guard let sun = globalCockpitTerrain?.sun ?? terrainSun else { return }
+        #if DEBUG
+        defer { writeShadowEvidence(sun) }
+        #endif
+        if cachedShadowCasterCorners == nil {
+            var casters: [Entity] = []
+            if let assembly = commanderAssembly,
+               let shell = try? LMCommanderStationAssembly.path("/Cabin/Shell", in: assembly.cabin) {
+                casters.append(shell)
+            } else if let shell = proceduralCabin.findEntity(named: LMCockpitAssetContract.Node.cabinShell.rawValue) {
+                casters.append(shell)
+            }
+            casters += commanderAssembly?.consoleEnclosures.values.flatMap(\.castingGroups) ?? []
+            if let exteriorLunarModule { casters.append(exteriorLunarModule) }
+            // visualBounds(excludeInactive:) excludes an unanchored scene too,
+            // yielding infinite empty bounds before first publication. Traverse
+            // locally enabled meshes explicitly so startup and live fits agree.
+            cachedShadowCasterCorners = casters.flatMap { caster -> [SIMD3<Float>] in
+                var points: [SIMD3<Float>] = []
+                func collect(_ entity: Entity) {
+                    guard entity.isEnabled else { return }
+                    if let model = entity.components[ModelComponent.self] {
+                        let b = model.mesh.bounds
+                        for x in [b.min.x, b.max.x] { for y in [b.min.y, b.max.y] { for z in [b.min.z, b.max.z] {
+                            points.append(entity.convert(position: SIMD3(x, y, z), to: root))
+                        } } }
+                    }
+                    for child in entity.children { collect(child) }
+                }
+                collect(caster)
+                guard let first = points.first else { return [] }
+                let low = points.reduce(first, simd_min), high = points.reduce(first, simd_max)
+                return [low.x, high.x].flatMap { x in
+                    [low.y, high.y].flatMap { y in [low.z, high.z].map { SIMD3(x, y, $0) } }
+                }
+            }
+        }
+        var ground: LMCockpitShadowFit.GroundPlane?
+        if let state = lastVehicleState, state.altitudeMeters <= 45 {
+            if let global = globalCockpitTerrain {
+                let elevation = global.presentation.snapshot.sample(east: state.positionMeters.y,
+                    north: state.positionMeters.x)?.elevation ?? 0
+                let p = LMVector3D(x: state.positionMeters.x, y: state.positionMeters.y, z: Double(elevation) - 5)
+                let point = global.root.convert(position: global.anchorPosition(p), to: root)
+                let above = global.root.convert(position: global.anchorPosition(.init(x: p.x, y: p.y, z: p.z + 1)), to: root)
+                ground = .init(point: point, normal: above - point)
+            } else {
+                let position = terrainPosition(for: state.positionMeters)
+                let elevation = progressiveSurfaceSample(at: position, altitudeMeters: state.altitudeMeters)?.renderedElevationMeters
+                    ?? terrainHeightField?.relativeElevation(eastMeters: position.y, northMeters: position.x) ?? 0
+                // Five metres of receiver relief allowance; this is a shadow
+                // coverage envelope, never a collision or landing surface.
+                let local = SIMD3<Float>(Float(position.x), elevation - 5, Float(-position.y))
+                ground = .init(point: lunarWorld.convert(position: local, to: root),
+                    normal: lunarWorld.convert(direction: SIMD3(0, 1, 0), to: root))
+            }
+        }
+        cockpitShadowFit = LMCockpitShadowFit.fit(corners: cachedShadowCasterCorners ?? [],
+            orientation: sun.orientation(relativeTo: root), ground: ground)
+        guard let fit = cockpitShadowFit else {
+            sun.position = .zero
+            sun.shadow = LMTerrainWorld.missionShadow(altitudeMeters: lastVehicleState?.altitudeMeters)
+            return
+        }
+        sun.setPosition(fit.origin, relativeTo: root)
+        sun.shadow = .init(shadowProjection: .fixed(zNear: fit.near, zFar: fit.far,
+            orthographicScale: fit.span), depthBias: 1)
     }
+
+    #if DEBUG
+    private func writeShadowEvidence(_ sun: DirectionalLight) {
+        guard ProcessInfo.processInfo.arguments.contains(where: { $0.hasPrefix("--assembly-validation-view=") }) else { return }
+        let now = Date().timeIntervalSinceReferenceDate
+        guard now - lastShadowEvidenceWrite > 1 else { return }
+        lastShadowEvidenceWrite = now
+        let q = sun.orientation(relativeTo: root).vector
+        let p = sun.position(relativeTo: root)
+        let report: [String: Any] = ["time": now, "altitude_m": lastVehicleState?.altitudeMeters ?? -1,
+            "fitted": cockpitShadowFit != nil, "span": cockpitShadowFit?.span ?? -1,
+            "near": cockpitShadowFit?.near ?? -1, "far": cockpitShadowFit?.far ?? -1,
+            "sun_lux": sun.light.intensity, "sun_enabled": sun.isEnabled,
+            "sun_position": [p.x, p.y, p.z], "sun_quaternion": [q.x, q.y, q.z, q.w],
+            "projection": String(describing: sun.shadow?.shadowProjection),
+            "caster_corner_count": cachedShadowCasterCorners?.count ?? 0,
+            "coverage": "Local cockpit and lander footprint; distant terrain shadows outside this footprint are not represented"]
+        if let data = try? JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys]) {
+            try? data.write(to: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                .appendingPathComponent("shadow-validation.json"), options: .atomic)
+        }
+    }
+    #endif
 
     private func updateRockDetail(altitudeMeters: Double) {
         guard let terrainRockField else { return }
@@ -471,6 +629,7 @@ final class LMCommanderStationScene {
         velocityEastMetersPerSecond: Double,
         altitudeMeters: Double
     ) {
+        guard !usesPreparedApolloTerrain else { return }
         guard let heightField = terrainHeightField,
               let terrainEnvironment else { return }
         let albedoField = terrainAlbedoField
@@ -643,23 +802,369 @@ final class LMCommanderStationScene {
     }
 
     @discardableResult
-    func loadArtistCabinIfAvailable() async throws -> Bool {
-        guard let cabin = try await LMCockpitAssetContract.loadIfAvailable() else {
+    func loadArtistCabinIfAvailable(arguments: [String] = ProcessInfo.processInfo.arguments) async throws -> Bool {
+        #if DEBUG
+        defer { writeSystemsInstallationEvidence(arguments: arguments) }
+        #endif
+        guard !arguments.contains("--procedural-cockpit") else { return false }
+        let installed = installCommanderAssembly()
+        if installed {
+            _ = installPilotFDAI()
+            _ = installAltitudeRate()
+            _ = installCrossPointer()
+            _ = installDescentControl(.attitudeMode)
+            _ = installDescentControl(.descentRate)
+            _ = installTimers()
+            _ = installSystemsHardware("EngineButtons")
+            _ = installSystemsHardware("PropulsionInstruments")
+            _ = installLunarContact(pilot: false)
+            _ = installLunarContact(pilot: true)
+            _ = installStaticOverlay("CautionWarning", assetURL: LMKitAssets.cautionWarningURL,
+                interfaceURL: LMKitAssets.cautionWarningInterfaceURL, schema: "lmkit.caution-warning.interface.v1")
+            if !arguments.contains("--no-interior-details") {
+                _ = installStaticOverlay("InteriorDetails", assetURL: LMKitAssets.interiorDetailsURL,
+                    interfaceURL: LMKitAssets.interiorDetailsInterfaceURL, schema: "lmkit.interior-details.v1")
+                _ = installStaticOverlay("BreakerBanks", assetURL: LMKitAssets.breakerBanksURL,
+                    interfaceURL: LMKitAssets.breakerBanksInterfaceURL, schema: "lmkit.breaker-banks.interface.v1")
+            }
+            if !arguments.contains("--no-console-enclosures") {
+                for kind in LMCockpitConsoleEnclosure.Kind.allCases { _ = installConsoleEnclosure(kind) }
+            }
+        }
+        return installed
+    }
+
+    #if DEBUG
+    private func writeSystemsInstallationEvidence(arguments: [String]) {
+        guard arguments.contains(where: { $0.hasPrefix("--assembly-validation-view=") }) else { return }
+        let detailRoot = staticOverlays["InteriorDetails"]
+        let report: [String: Any] = [
+            "captured_at": ISO8601DateFormatter().string(from: Date()),
+            "arguments": arguments,
+            "foundation": commanderAssembly != nil,
+            "console_enclosures": commanderAssembly?.consoleEnclosures.mapValues {
+                ["suppressed_paths": $0.contract.suppressions.map(\.path),
+                 "casting_groups": $0.contract.groups.filter(\.casts_shadows).map(\.path)]
+            } ?? [:],
+            "commander_fdai": importedFDAI != nil,
+            "pilot_fdai": importedPilotFDAI != nil,
+            "timer_readouts": importedTimers?.readouts.children.map(\.name) ?? [],
+            "event_timer_controls": importedTimers?.controls.parent != nil,
+            "mission_timer_controls_installed": LMCommanderStationAssembly.descendants(root).contains { $0.name == "MissionTimerControls" },
+            "mission_time_available": importedTimers?.missionTimeAvailable ?? false,
+            "engine_buttons": systemsHardware["EngineButtons"] != nil,
+            "descent_rate": importedDescentRate != nil,
+            "lunar_contact_instances": lunarContacts.keys.sorted(),
+            "propulsion": systemsHardware["PropulsionInstruments"] != nil,
+            "caution_warning": staticOverlays["CautionWarning"] != nil,
+            "interior_detail_groups": detailRoot?.children.map(\.name).sorted() ?? [],
+            "breaker_banks": staticOverlays["BreakerBanks"] != nil,
+            "occupied_slots": commanderAssembly?.slotOccupancy.mapValues {
+                ["coverage": $0.coverage.rawValue, "components": $0.componentIDs] as [String: Any]
+            } ?? [:]
+        ]
+        do {
+            let target = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                .appendingPathComponent("systems-installation.json")
+            try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys]).write(to: target, options: .atomic)
+        } catch { logger.error("Cannot record installation evidence: \(String(describing: error), privacy: .public)") }
+    }
+    #endif
+
+    /// The pilot uses the same supported attitude source as the commander.
+    /// Source selection, rate/error needles and mechanical seating remain unqualified.
+    @discardableResult
+    func installPilotFDAI(loader: @MainActor () throws -> LMImportedFDAI = {
+        try LMImportedFDAI(asset: Entity.load(contentsOf: LMKitAssets.fdaiURL))
+    }) -> Bool {
+        guard importedPilotFDAI == nil else { return true }
+        guard let assembly = commanderAssembly else { return false }
+        do {
+            let instrument = try loader()
+            // Scope semantic lookup to this newly loaded instance. Duplicate FDAI
+            // names in the commander subtree are intentional and never searched here.
+            let root = try LMCockpitComponentSupport.neutralRoot("FDAI_Mount", asset: instrument.root)
+            let bounds = root.visualBounds(relativeTo: root)
+            // The accepted Panel 2 reservation is 150 mm square. This checks the
+            // visual face envelope only; the rear housing is not a qualified cutout.
+            guard !bounds.isEmpty, bounds.min.x >= -0.075, bounds.max.x <= 0.075,
+                  bounds.min.y >= -0.075, bounds.max.y <= 0.075 else {
+                throw LMCommanderStationAssembly.AssemblyError.invalidContract("Pilot FDAI face exceeds its reservation")
+            }
+            LMCockpitComponentSupport.removeInput(root)
+            if let state = lastVehicleState { instrument.apply(state.attitude) }
+            try assembly.installOccupant(slotID: "Panel2__FDAI", componentID: "Pilot FDAI") { root }
+            importedPilotFDAI = instrument
+            return true
+        } catch {
+            logger.error("Pilot FDAI unavailable; panel blank retained: \(String(describing: error), privacy: .public)")
             return false
         }
-        let issues = LMCockpitAssetContract.validate(cabin)
-        guard issues.isEmpty else {
-            throw AssetError.invalidArtistCabin(issues)
+    }
+
+    @discardableResult
+    func installAltitudeRate(loader: @MainActor () throws -> LMImportedAltitudeRate = { try LMImportedAltitudeRate.load() }) -> Bool {
+        guard importedAltitudeRate == nil else { return true }
+        guard let assembly = commanderAssembly else { return false }
+        do {
+            let instrument = try loader()
+            try assembly.installPartialOccupant(slotID: instrument.contract.slot, componentID: "AltitudeRate", pose: instrument.slotPose) { instrument.root }
+            importedAltitudeRate = instrument
+            return true
+        } catch {
+            logger.error("Altitude/rate unavailable; blank retained: \(String(describing: error), privacy: .public)")
+            return false
         }
-        artistCabin?.removeFromParent()
-        cabin.name = LMCockpitAssetContract.Node.cabinRoot.rawValue
-        cabinFrame.addChild(cabin)
-        artistCabin = cabin
-        proceduralCabin.isEnabled = false
-        return true
+    }
+
+    @discardableResult
+    func installCrossPointer(loader: @MainActor () throws -> LMImportedCrossPointer = { try LMImportedCrossPointer.load() }) -> Bool {
+        guard importedCrossPointer == nil else { return true }
+        guard let assembly = commanderAssembly else { return false }
+        do {
+            let instrument = try loader()
+            try assembly.installPartialOccupant(slotID: instrument.contract.mounting.slot_id, componentID: "CrossPointer") { instrument.root }
+            importedCrossPointer = instrument
+            return true
+        } catch {
+            logger.error("Cross-pointer unavailable; blank retained: \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    @discardableResult
+    func installDescentControl(_ kind: LMImportedDescentControl.Kind,
+        loader: (@MainActor () throws -> LMImportedDescentControl)? = nil) -> Bool {
+        if kind == .attitudeMode ? importedAttitudeMode != nil : importedDescentRate != nil { return true }
+        guard let assembly = commanderAssembly else { return false }
+        do {
+            let control = try loader?() ?? LMImportedDescentControl.load(kind)
+            guard control.kind == kind else { throw LMCommanderStationAssembly.AssemblyError.invalidContract("Control kind") }
+            try assembly.installPartialOccupant(slotID: control.definition.slot, componentID: kind.rawValue,
+                backingMaterial: kind == .attitudeMode ? control.backingMaterials.first : nil) { control.root }
+            if kind == .attitudeMode {
+                importedAttitudeMode = control
+                attitudeModeSwitch.isEnabled = false
+                setAttitudeHoldVisual(lastAttitudeHold)
+            } else {
+                importedDescentRate = control
+                rodSwitch.isEnabled = false
+                for node in LMCommanderStationAssembly.descendants(cabinFrame)
+                    where node.name == "Panel 5 DES RATE legend" || node.name == "Panel 5 DES RATE switch plate" { node.isEnabled = false }
+                setRODVisual(lastRODPosition)
+            }
+            return true
+        } catch {
+            logger.error("Descent control unavailable; functional fallback retained: \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    @discardableResult
+    func installConsoleEnclosure(_ kind: LMCockpitConsoleEnclosure.Kind,
+        loader: (@MainActor () throws -> LMCockpitConsoleEnclosure)? = nil) -> Bool {
+        guard let assembly = commanderAssembly else { return false }
+        if assembly.consoleEnclosures[kind.rawValue] != nil { return true }
+        // A continuous face with an empty instrument aperture is not a valid fallback.
+        switch kind {
+        case .instrument: guard importedFDAI != nil, importedPilotFDAI != nil else { return false }
+        case .lower: guard importedDSKY != nil, importedACA != nil else { return false }
+        case .windows: break // A validated foundation already owns the optical interfaces.
+        }
+        do {
+            let enclosure: LMCockpitConsoleEnclosure
+            if let loader { enclosure = try loader() }
+            else {
+                let urls: (URL, URL)
+                switch kind {
+                case .instrument: urls = (LMKitAssets.instrumentConsoleURL, LMKitAssets.instrumentConsoleInterfaceURL)
+                case .lower: urls = (LMKitAssets.lowerConsoleURL, LMKitAssets.lowerConsoleInterfaceURL)
+                case .windows: urls = (LMKitAssets.windowSurroundsURL, LMKitAssets.windowSurroundsInterfaceURL)
+                }
+                enclosure = try LMCockpitConsoleEnclosure(kind: kind, asset: Entity.load(contentsOf: urls.0),
+                    interfaceData: Data(contentsOf: urls.1))
+            }
+            guard enclosure.kind == kind else { throw LMCommanderStationAssembly.AssemblyError.invalidContract("Wrong enclosure requested") }
+            try assembly.installConsoleEnclosure(enclosure)
+            // Suppressed shell leaves must leave the fit, while their replacement
+            // pressure surfaces enter it. No change to sun direction or intensity.
+            cachedShadowCasterCorners = nil
+            updateCockpitShadow()
+            return true
+        } catch {
+            logger.error("Console enclosure unavailable; prior surfaces retained: \(kind.rawValue, privacy: .public): \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    @discardableResult
+    func installStaticOverlay(_ name: String, assetURL: URL, interfaceURL: URL, schema: String,
+        loader: (@MainActor () throws -> LMCockpitStaticOverlay)? = nil) -> Bool {
+        guard staticOverlays[name] == nil else { return true }
+        guard let assembly = commanderAssembly else { return false }
+        do {
+            let overlay = try loader?() ?? LMCockpitStaticOverlay(asset: Entity.load(contentsOf: assetURL),
+                interfaceData: Data(contentsOf: interfaceURL), name: name, schema: schema)
+            try assembly.installStaticOverlay(overlay)
+            staticOverlays[name] = overlay.root
+            return true
+        } catch {
+            logger.error("Optional detail unavailable: \(name, privacy: .public): \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    @discardableResult
+    func installTimers(loader: @MainActor () throws -> LMImportedTimers = { try LMImportedTimers.load() }) -> Bool {
+        guard importedTimers == nil, let assembly = commanderAssembly else { return importedTimers != nil }
+        do {
+            let timers = try loader()
+            try assembly.installTimers(timers)
+            importedTimers = timers
+            return true
+        } catch {
+            logger.error("Timers unavailable; reservations retained: \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    @discardableResult
+    func installSystemsHardware(_ kind: String) -> Bool {
+        guard systemsHardware[kind] == nil, let assembly = commanderAssembly else { return systemsHardware[kind] != nil }
+        do {
+            let engine = kind == "EngineButtons"
+            let hardware = try LMImportedSystemsHardware(asset: Entity.load(contentsOf: engine ? LMKitAssets.engineButtonsURL : LMKitAssets.propulsionInstrumentsURL),
+                interfaceData: Data(contentsOf: engine ? LMKitAssets.engineControlsInterfaceURL : LMKitAssets.propulsionInstrumentsInterfaceURL), kind: kind)
+            if engine {
+                try assembly.installComplementaryEngineButtons(hardware.root)
+            } else {
+                try assembly.installPartialOccupant(slotID: hardware.slot, componentID: kind, pose: hardware.pose) { hardware.root }
+            }
+            systemsHardware[kind] = hardware
+            return true
+        } catch {
+            logger.error("Systems hardware unavailable: \(kind, privacy: .public): \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    @discardableResult
+    func installLunarContact(pilot: Bool) -> Bool {
+        let id = pilot ? "PilotLunarContact" : "CommanderLunarContact"
+        guard lunarContacts[id] == nil, let assembly = commanderAssembly else { return lunarContacts[id] != nil }
+        do {
+            let contact = try LMImportedLunarContact(asset: Entity.load(contentsOf: LMKitAssets.lunarContactURL),
+                interfaceData: Data(contentsOf: LMKitAssets.engineControlsInterfaceURL), pilot: pilot)
+            if let slot = contact.slot {
+                try assembly.installPartialOccupant(slotID: slot, componentID: id, pose: contact.pose) { contact.root }
+            } else { try assembly.installCommanderContact(contact) }
+            lunarContacts[id] = contact
+            return true
+        } catch {
+            logger.error("Contact lamp unavailable: \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    func applyLandingReadouts(_ state: LMVehicleStateSnapshot?, program: Int?) {
+        for contact in lunarContacts.values { contact.apply(state?.landingGear?.isProbeContact) }
+        importedAltitudeRate?.apply(LMAltitudeRateReading(state: state))
+        importedCrossPointer?.apply(LMCrossPointerReading(state: state, program: program))
+    }
+
+    var rodGestureCoordinateSpace: Entity { importedDescentRate?.root ?? cabinFrame }
+    var rodGestureActuationAxis: SIMD3<Float> { importedDescentRate == nil ? LMCommanderStationGeometry.rodActuationAxis : [0, 1, 0] }
+
+    func isRODEntity(_ entity: Entity) -> Bool { isDescendant(entity, of: importedDescentRate?.target ?? rodSwitch) }
+    func isAttitudeModeEntity(_ entity: Entity) -> Bool { isDescendant(entity, of: importedAttitudeMode?.target ?? attitudeModeSwitch) }
+    private func isDescendant(_ entity: Entity, of root: Entity) -> Bool {
+        var node: Entity? = entity
+        while let current = node { if current === root { return true }; node = current.parent }
+        return false
+    }
+
+    @discardableResult
+    func installCommanderAssembly(
+        load: @MainActor () throws -> LMCommanderStationAssembly = { try LMCommanderStationAssembly.load() }
+    ) -> Bool {
+        guard commanderAssembly == nil else { return true }
+        do {
+            // All IO and validation precede any mutation of the active scene.
+            let assembly = try load()
+            guard importedDSKY != nil, importedFDAI != nil else {
+                logger.error("Cabin assembly requires both live imported instruments; fallback retained")
+                return false
+            }
+            let dskyReservation = try LMCommanderStationAssembly.unique("Mount_DSKY", in: assembly.cabin)
+            let fdaiReservation = try LMCommanderStationAssembly.unique("Mount_FDAI", in: assembly.cabin)
+            // Resolve external reservations before committing any active scene changes.
+            try assembly.confirmExternalOccupant(slotID: "Panel4__DSKY", occupantName: "DSKY")
+            try assembly.confirmExternalOccupant(slotID: "Panel1__FDAI", occupantName: "FDAI_CDR")
+            assembly.setPlanningLabelsVisible(planningLabelsVisible)
+            // Move existing mounts, preserving instruments and their live key dictionaries.
+            dskyFaceRoot.position = dskyReservation.position(relativeTo: assembly.cabin)
+            dskyFaceRoot.orientation = dskyReservation.orientation(relativeTo: assembly.cabin)
+            fdaiMount.position = fdaiReservation.position(relativeTo: assembly.cabin)
+            fdaiMount.orientation = fdaiReservation.orientation(relativeTo: assembly.cabin)
+            let retained = Entity()
+            retained.name = "App functional control supports"
+            // Retain live control backing only. WindowsLPD owns all optical geometry.
+            var retainedNames: Set<String> = ["Panel 5 DES RATE switch plate"]
+            if importedACA == nil { retainedNames.insert("ACA pedestal") }
+            for entity in Array(proceduralCabin.children)
+                where retainedNames.contains(entity.name) {
+                retained.addChild(entity)
+            }
+            assembly.root.addChild(retained)
+            cabinFrame.addChild(assembly.root)
+            proceduralCabin.isEnabled = false
+            artistCabin?.removeFromParent()
+            artistCabin = assembly.root
+            commanderAssembly = assembly
+            cachedShadowCasterCorners = nil
+            updateCockpitShadow()
+            setLandingPointMarkingOwner(.importedWindows)
+            logger.notice("Enclosed commander foundation installed atomically; live instrument identities retained")
+            return true
+        } catch {
+            logger.error("Enclosed commander foundation unavailable; procedural fallback retained: \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    @discardableResult
+    func installImportedACA(loader: @MainActor () throws -> LMImportedACA = { try LMImportedACA.load() }) -> Bool {
+        guard importedACA == nil else { return true }
+        do {
+            let imported = try loader()
+            for child in Array(acaHandle.children) { child.removeFromParent() }
+            acaHandle.components.remove(CollisionComponent.self)
+            acaHandle.components.remove(InputTargetComponent.self)
+            acaHandle.components.remove(HoverEffectComponent.self)
+            acaHandle.components.remove(LMACAInteractionTarget.self)
+            acaHandle.orientation = simd_quatf(angle: 0, axis: [0, 1, 0])
+            imported.root.position = LMImportedACA.registration
+            acaHandle.addChild(imported.root)
+            importedACA = imported
+            return true
+        } catch {
+            logger.error("Articulated ACA unavailable; functional fallback retained: \(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    func isACAEntity(_ entity: Entity) -> Bool {
+        var node: Entity? = entity
+        while let current = node {
+            if current === acaHandle { return true }
+            node = current.parent
+        }
+        return false
     }
 
     func setACAVisual(_ input: LMACANormalizedInput) {
+        let input = input.clamped
+        if let importedACA { importedACA.apply(input); return }
         let travel = LMCommanderStationGeometry.acaProportionalTravelDegrees * .pi / 180
         acaHandle.position = acaNeutralPosition
         acaHandle.orientation = simd_quatf(
@@ -675,6 +1180,12 @@ final class LMCommanderStationScene {
     }
 
     func setRODVisual(_ position: PoweredDescentSession.RODSwitchPosition) {
+        lastRODPosition = position
+        if let importedDescentRate {
+            let value: String = switch position { case .descendPlus: "descendPlus"; case .neutral: "center"; case .descendMinus: "descendMinus" }
+            importedDescentRate.apply(runtimeValue: value)
+            return
+        }
         rodSwitch.position = rodNeutralPosition
         rodSwitch.orientation = LMCommanderStationGeometry.rodNeutralOrientation * simd_quatf(
             angle: controlMapper.visualRODDeflectionRadians(for: position),
@@ -683,6 +1194,11 @@ final class LMCommanderStationScene {
     }
 
     func setAttitudeHoldVisual(_ isAttitudeHold: Bool) {
+        lastAttitudeHold = isAttitudeHold
+        if let importedAttitudeMode {
+            importedAttitudeMode.apply(runtimeValue: isAttitudeHold ? "attitudeHold" : "automatic")
+            return
+        }
         attitudeModeSwitch.position = attitudeModeAutomaticPosition
             + SIMD3(0, isAttitudeHold ? 0.028 : 0, 0)
         attitudeModeSwitch.orientation = LMCommanderStationGeometry.attitudeHoldOrientation * simd_quatf(
@@ -695,7 +1211,7 @@ final class LMCommanderStationScene {
         _ angleDegrees: Double?,
         trainingOverlayVisible: Bool
     ) {
-        guard trainingOverlayVisible, let angleDegrees else {
+        guard landingPointMarkingOwner == .appGenerated, trainingOverlayVisible, let angleDegrees else {
             landingPointCalledAngleMarker.isEnabled = false
             return
         }
@@ -1169,19 +1685,51 @@ final class LMCommanderStationScene {
     private func buildLandingPointDesignator() {
         for pane in LMLPDPane.allCases {
             guard let mesh = try? makeLandingPointDesignatorMesh(pane: pane) else { continue }
-            let color: UIColor = pane == .inner
-                ? UIColor(red: 0.95, green: 0.26, blue: 0.55, alpha: 0.82)
-                : UIColor(red: 0.34, green: 0.94, blue: 0.82, alpha: 0.72)
             let entity = ModelEntity(
                 mesh: mesh,
-                materials: [UnlitMaterial(color: color)]
+                materials: [landingPointMarkMaterial(pane: pane)]
             )
+            landingPointMarkEntities.append((entity, pane))
             entity.name = pane == .inner
                 ? LMCockpitAssetContract.Node.landingPointDesignatorInner.rawValue
                 : LMCockpitAssetContract.Node.landingPointDesignatorOuter.rawValue
             proceduralCabin.addChild(entity)
-            addLandingPointDesignatorLabels(pane: pane, color: color)
+            addLandingPointDesignatorLabels(pane: pane)
         }
+    }
+
+    /// Call only after imported window assets have successfully installed their marks.
+    /// Retains app entities for fallback while preventing double grids and labels.
+    func setLandingPointMarkingOwner(_ owner: LandingPointMarkingOwner) {
+        landingPointMarkingOwner = owner
+        if owner == .importedWindows { landingPointCalledAngleMarker.isEnabled = false }
+        for mark in landingPointMarkEntities {
+            mark.entity.isEnabled = owner == .appGenerated
+        }
+    }
+
+    func setLandingPointDiagnosticColors(_ enabled: Bool) {
+        guard landingPointDiagnosticColors != enabled else { return }
+        landingPointDiagnosticColors = enabled
+        for mark in landingPointMarkEntities {
+            mark.entity.model?.materials = [landingPointMarkMaterial(pane: mark.pane)]
+        }
+    }
+
+    private func landingPointMarkMaterial(pane: LMLPDPane) -> any RealityKit.Material {
+        if landingPointDiagnosticColors {
+            // Deliberately synthetic pane distinction; never historical ink colors.
+            let tint = pane == .inner
+                ? UIColor(red: 0.95, green: 0.26, blue: 0.55, alpha: 0.82)
+                : UIColor(red: 0.34, green: 0.94, blue: 0.82, alpha: 0.72)
+            return UnlitMaterial(color: tint)
+        }
+        // Approximate warm scribed appearance: NASA Eppler landing report, slide 38.
+        // RGB is an artistic choice, not a measured pigment. Geometry remains provisional.
+        return SimpleMaterial(
+            color: UIColor(red: 0.72, green: 0.65, blue: 0.43, alpha: 1),
+            roughness: 1, isMetallic: false
+        )
     }
 
     private func buildLandingPointCalledAngleMarker() {
@@ -1259,7 +1807,7 @@ final class LMCommanderStationScene {
         return try MeshResource.generate(from: [descriptor])
     }
 
-    private func addLandingPointDesignatorLabels(pane: LMLPDPane, color: UIColor) {
+    private func addLandingPointDesignatorLabels(pane: LMLPDPane) {
         let basis = landingPointDesignator.paneBasis(pane)
         let orientation = landingPointDesignator.paneOrientation(pane)
         for elevation in stride(from: 0, through: 60, by: 10) {
@@ -1271,7 +1819,8 @@ final class LMCommanderStationScene {
                 alignment: .left,
                 lineBreakMode: .byClipping
             )
-            let label = ModelEntity(mesh: mesh, materials: [UnlitMaterial(color: color)])
+            let label = ModelEntity(mesh: mesh, materials: [landingPointMarkMaterial(pane: pane)])
+            landingPointMarkEntities.append((label, pane))
             label.name = "LPD \(pane) \(elevation) degree label"
             label.position = landingPointDesignator.point(
                 elevationDegrees: Double(elevation),
@@ -1291,7 +1840,8 @@ final class LMCommanderStationScene {
                     alignment: .center,
                     lineBreakMode: .byClipping
                 )
-                let label = ModelEntity(mesh: mesh, materials: [UnlitMaterial(color: color)])
+                let label = ModelEntity(mesh: mesh, materials: [landingPointMarkMaterial(pane: pane)])
+                landingPointMarkEntities.append((label, pane))
                 label.name = "LPD \(pane) E\(elevation) A\(azimuth) label"
                 label.position = landingPointDesignator.point(
                     elevationDegrees: Double(elevation),
@@ -1332,6 +1882,22 @@ final class LMCommanderStationScene {
                 material: material,
                 name: "\(namePrefix) rail \(index + 1)"
             )
+        }
+    }
+
+    private func installImportedDSKY() {
+        do {
+            let asset = try Entity.load(contentsOf: LMKitAssets.dskyURL)
+            let binding = try LMImportedDSKY(asset: asset)
+            // Commit replacement only after the complete contract validates.
+            for child in Array(dskyFaceRoot.children) { child.removeFromParent() }
+            dskyFaceRoot.addChild(binding.root)
+            dskyKeyEntitiesByRawValue = binding.keys
+            dskyKeyRestPositions = binding.keys.mapValues(\.position)
+            importedDSKY = binding
+            binding.apply(nil)
+        } catch {
+            logger.error("Imported DSKY unavailable; procedural fallback retained: \(String(describing: error), privacy: .public)")
         }
     }
 
@@ -1537,6 +2103,25 @@ final class LMCommanderStationScene {
         )
     }
 
+    private func installImportedFDAI() {
+        do {
+            let binding = try LMImportedFDAI(asset: Entity.load(contentsOf: LMKitAssets.fdaiURL))
+            for child in Array(fdaiMount.children) { child.removeFromParent() }
+            fdaiMount.addChild(binding.root)
+            importedFDAI = binding
+            fdaiBall = nil
+            binding.apply(lastVehicleState?.attitude ?? .identity)
+        } catch {
+            logger.error("Imported FDAI unavailable; legacy fallback retained: \(String(describing: error), privacy: .public)")
+        }
+    }
+
+    private func applyFDAIAttitude(_ attitude: LMQuaternion) {
+        if let importedFDAI { importedFDAI.apply(attitude) }
+        else { fdaiBall?.orientation = FDAIOrientation.ballOrientation(for: attitude) }
+        importedPilotFDAI?.apply(attitude)
+    }
+
     private func buildPhysicalFDAI() {
         guard let instrument = try? Entity.load(
             named: "FDAI",
@@ -1600,7 +2185,7 @@ final class LMCommanderStationScene {
         key.addChild(label)
     }
 
-    var dskyKeyEntities: [ModelEntity] {
+    var dskyKeyEntities: [Entity] {
         LMDSKYGeometry.keyPlacements.compactMap {
             dskyKeyEntitiesByRawValue[$0.code.rawValue]
         }
@@ -1639,16 +2224,16 @@ final class LMCommanderStationScene {
         pressedPosition.z -= 0.003
         key.move(
             to: Transform(translation: pressedPosition),
-            relativeTo: dskyFaceRoot,
+            relativeTo: key.parent,
             duration: 0.035,
             timingFunction: .easeInOut
         )
         dskyKeyResetTasks[rawValue] = Task { @MainActor [weak self, weak key] in
             try? await Task.sleep(for: .milliseconds(90))
-            guard !Task.isCancelled, let self, let key else { return }
+            guard !Task.isCancelled, self != nil, let key else { return }
             key.move(
                 to: Transform(translation: restPosition),
-                relativeTo: self.dskyFaceRoot,
+                relativeTo: key.parent,
                 duration: 0.065,
                 timingFunction: .easeInOut
             )
@@ -1681,6 +2266,7 @@ final class LMCommanderStationScene {
         acaHandle.name = LMCockpitAssetContract.Node.acaPivot.rawValue
         acaHandle.position = acaNeutralPosition
         addACAHandleGeometry(to: acaHandle, material: handleMaterial, housing: housing)
+        acaHandle.components.set(LMACAInteractionTarget())
         acaHandle.components.set(InputTargetComponent())
         acaHandle.components.set(HoverEffectComponent())
         acaHandle.components.set(CollisionComponent(shapes: [
@@ -1705,6 +2291,7 @@ final class LMCommanderStationScene {
         rodSwitch.position = rodNeutralPosition
         addDescentRateSwitchGeometry(to: rodSwitch, material: switchMaterial)
         rodSwitch.components.set(InputTargetComponent())
+        rodSwitch.components.set(LMDescentRateInteractionTarget())
         rodSwitch.components.set(HoverEffectComponent())
         rodSwitch.components.set(CollisionComponent(shapes: [
             .generateBox(size: SIMD3(0.075, 0.12, 0.10))
@@ -1721,6 +2308,7 @@ final class LMCommanderStationScene {
         attitudeModeSwitch.position = attitudeModeAutomaticPosition
         attitudeModeSwitch.orientation = LMCommanderStationGeometry.attitudeHoldOrientation
         attitudeModeSwitch.components.set(InputTargetComponent())
+        attitudeModeSwitch.components.set(LMAttitudeModeInteractionTarget())
         attitudeModeSwitch.components.set(HoverEffectComponent())
         attitudeModeSwitch.components.set(CollisionComponent(shapes: [
             .generateBox(size: SIMD3(0.16, 0.20, 0.12))
@@ -1875,7 +2463,7 @@ final class LMCommanderStationScene {
         lunarWorld.addChild(dustCloud)
     }
 
-    private func buildProvisionalSurface() {
+    private func buildProvisionalSurface(lightingManifest: LMTerrainManifest?) {
         let surfaceMaterial = SimpleMaterial(
             color: UIColor(red: 0.37, green: 0.36, blue: 0.33, alpha: 1),
             roughness: 1,
@@ -1909,11 +2497,17 @@ final class LMCommanderStationScene {
         // Keep fallback lighting inside the fallback subtree. Loading the
         // source-backed terrain removes `provisionalTerrain`, which must also
         // remove this light before the mission-calibrated sun is installed.
-        let sun = Entity()
-        sun.name = "Provisional terrain sun"
-        sun.components.set(DirectionalLightComponent(color: .white, intensity: 42_000))
-        sun.orientation = simd_quatf(angle: -.pi / 3, axis: SIMD3(1, 0.25, 0))
+        let sun: DirectionalLight
+        if let manifest = lightingManifest {
+            sun = LMTerrainWorld.makeMissionSun(orientation: LMFullDescentMapper.sunLightOrientation(from: manifest),
+                elevationDegrees: manifest.sunElevationDegrees)
+        } else {
+            logger.error("Mission light metadata unavailable; retaining a shadowed reference-exposure fallback")
+            sun = LMTerrainWorld.makeMissionSun(orientation: simd_quatf(angle: 0, axis: SIMD3(0, 1, 0)),
+                elevationDegrees: LMTerrainWorld.referenceSunElevationDegrees)
+        }
         provisionalTerrain.addChild(sun)
+        terrainSun = sun
     }
 
     private func addBox(

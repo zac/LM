@@ -9,6 +9,14 @@ struct LMACANormalizedInput: Equatable, Sendable {
 
     static let neutral = LMACANormalizedInput()
 
+    static func clamp(_ value: Double) -> Double {
+        value.isFinite ? min(max(value, -1), 1) : 0
+    }
+
+    var clamped: Self {
+        Self(pitch: Self.clamp(pitch), yaw: Self.clamp(yaw), roll: Self.clamp(roll))
+    }
+
     var isNeutral: Bool { pitch == 0 && yaw == 0 && roll == 0 }
 }
 

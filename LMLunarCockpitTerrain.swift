@@ -101,7 +101,7 @@ enum LMLunarCockpitStreamingPolicy {
 final class LMLunarCockpitTerrain {
     let presentation: LMLunarTerrainPresentation
     let root = Entity()
-    let sun = DirectionalLight()
+    let sun: DirectionalLight
     let site: LMLunarLandingSite
     private let sourceSunOrientation: simd_quatf
     private var origin: LMLunarFloatingOrigin
@@ -131,13 +131,12 @@ final class LMLunarCockpitTerrain {
             radiusMeters: region.frame.coordinateSystem.datumRadiusMeters + region.frame.anchor.heightMeters)
         origin = .init(frame: region.frame)
         presentation = .init(region: region, mode: .procedural, simulationGate: gate)
-        root.addChild(presentation.root)
-        root.addChild(sun)
         let angles = LMLunarEphemeris.sunAngles(at: date, site: region.frame.anchor)
         sourceSunOrientation = LMFullDescentMapper.sunLightOrientation(from: angles)
-        sun.orientation = sourceSunOrientation
-        sun.light.intensity = LMTerrainWorld.missionSunIlluminance(elevationDegrees: angles.elevationDegrees, grade: .calibrated)
-        sun.shadow = LMTerrainWorld.missionShadow(altitudeMeters: 1_000)
+        sun = LMTerrainWorld.makeMissionSun(orientation: sourceSunOrientation,
+            elevationDegrees: angles.elevationDegrees, altitudeMeters: 1_000)
+        root.addChild(presentation.root)
+        root.addChild(sun)
         presentation.publicationAllowed = { [weak self] in self?.holdsTerrainAtContact != true }
         presentation.presentationChanged = { [weak self] in
             guard let self else { return }

@@ -1,0 +1,15 @@
+> Superseded default: [two-minute cockpit entry](../TwoMinuteDescent/README.md) is now selected without an override. The short P65 demonstration below remains available with `--cockpit-start-p65`.
+
+# Short live landing demo
+
+The Apollo cockpit now starts from the existing P65 terminal-descent checkpoint by default. It is a roughly one-minute demonstration: the default-surface headless trace reaches real `softLanding` after **49.233 simulated seconds**, starting at **43.818 m**. It is not an exact 60-second scripted landing. Rendered terrain, user control, pauses and machine load can change the duration and outcome. No timewarp, synthetic touchdown, new vehicle state or AGC/LMCore changes are introduced.
+
+Launch the LM app with `--terminal-descent-cockpit --cockpit-mission-capture` for the short demo and acceptance report. Do not supply a custom `--cockpit-coordinate`: custom sites retain their existing P63 scenario. `--cockpit-start-p64` explicitly retains the longer Apollo approach and takes precedence over the legacy `--cockpit-start-p65`. Restart reuses the selected checkpoint; the button names that program. The existing simulation loop stops at the actual terminal flight outcome.
+
+With `--cockpit-mission-capture`, Documents/CockpitMissionLatest.json records elapsedSimulationSeconds, elapsedWallSeconds (including pauses/waits after the initial snapshot), startProgram, current program, altitudeMeters, terminal, outcome, optional probeContact (JSON null when unknown), footpadContact, and existing terrain/wait metrics. The terminal recording export remains unchanged. In-app acceptance must confirm terminal touchdown on the rendered terrain and inspect actual sim/wall duration; this source change does not claim that result.
+
+## Headless evidence
+
+`headless-p65.json` is an executed 30 Hz restore-and-step trace using the bundled checkpoint/core image and existing built LMCore/AGC objects. `MeasureP65.swift` is the small reproducible driver; `provenance.json` records input/tool hashes. Source checkout AGC b3f15533db335ee882dc07401790c93010809e8f was read-only, but existing compiled objects were reused and not rebuilt, so their equivalence to current sources is not asserted. The trace used the default contact surface; probe state was unavailable there. This supplements the bundled P65 automatic flight recording and does not substitute for current app terrain acceptance.
+
+To rerun without rebuilding dependencies: take `.build/debug/LMFlightRecorder.product/Objects.LinkFileList` from AGC, remove the LMFlightRecorder.build entries, then link this driver with `swiftc -parse-as-library -I <AGC>/.build/debug/Modules MeasureP65.swift @<filtered-link-list> -o <driver>` and run `<driver> <LM-checkout>`. The driver writes only this report. App source regression covers default/explicit start selection; existing live P65 touchdown tests cover restored dynamics.

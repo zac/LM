@@ -47,7 +47,7 @@ public struct LMFullDescentMapper: Equatable {
 
     /// Orientation whose -Z axis points from the sun toward the scene, the
     /// direction a RealityKit DirectionalLight illuminates along.
-    package static func sunLightOrientation(from manifest: LMTerrainManifest) -> simd_quatf {
+    public static func sunLightOrientation(from manifest: LMTerrainManifest) -> simd_quatf {
         simd_quatf(from: SIMD3(0, 0, -1), to: -sunDirection(from: manifest))
     }
 
@@ -106,7 +106,7 @@ public enum LMTerrainWorld {
     nonisolated static let missionSunIlluminanceLux: Float = 25_000
 
     /// The elevation the reference exposure was tuned at: Eagle's touchdown.
-    package nonisolated static let referenceSunElevationDegrees = 10.689
+    public nonisolated static let referenceSunElevationDegrees = 10.689
 
     /// Ceiling for the low-Sun end of the exposure ramp, reached at about four
     /// degrees of elevation. Past that the surface is allowed to fall into the
@@ -225,6 +225,9 @@ public enum LMTerrainWorld {
         let nearAlbedoTexture: TextureResource
         package let nearFieldEntity: ModelEntity
         package let nearFieldGrid: LMTerrainMeshBuilder.VertexData
+        /// Exact row-major rendered posts, including the near-field perimeter morph.
+        /// Hosts can prepare contact without exposing the mesh builder's internals.
+        public var renderedNearFieldPositions: [SIMD3<Float>] { nearFieldGrid.positions }
         package let gestureHeightFields: [LunarExplorerHeightFieldPicker]
     }
 
@@ -240,7 +243,8 @@ public enum LMTerrainWorld {
         bundle: Bundle = LunarMap.resources,
         detailPipeline: LMTerrainDetailPipeline = Apollo11TerrainResource
             .detailPipeline,
-        prepareGesturePicking: Bool = false
+        prepareGesturePicking: Bool = false,
+        prepareProgressiveDetail: Bool = true
     ) async throws -> Assembly {
         let loadInterval = LMLunarTerrainTiming.begin("apollo-base-load")
         LMLunarTerrainTiming.memory("apollo-base-before")
@@ -249,9 +253,9 @@ public enum LMTerrainWorld {
             LMLunarTerrainTiming.memory("apollo-base-after")
         }
         async let terrainDetailPreparation: Void =
-            Apollo11TerrainResource.prepareTerrainDetail(
+            prepareProgressiveDetail ? Apollo11TerrainResource.prepareTerrainDetail(
                 pipeline: detailPipeline
-            )
+            ) : ()
         let manifest = try LMTerrainManifest.load(bundle: bundle)
 
         let worldRoot = Entity()
@@ -304,13 +308,8 @@ public enum LMTerrainWorld {
             }
         }
 
-        let sun = DirectionalLight()
-        sun.name = "MissionSun"
-        sun.light.intensity = missionSunIlluminance(
-            elevationDegrees: manifest.sun.elevationDegrees
-        )
-        sun.shadow = missionShadow(altitudeMeters: nil)
-        sun.orientation = LMFullDescentMapper.sunLightOrientation(from: manifest)
+        let sun = makeMissionSun(orientation: LMFullDescentMapper.sunLightOrientation(from: manifest),
+                                 elevationDegrees: manifest.sun.elevationDegrees)
         worldRoot.addChild(sun)
 
         // Earthshine casts no shadows of its own: it is an area source two
@@ -562,6 +561,18 @@ public enum LMTerrainWorld {
             ),
             depthBias: 1
         )
+    }
+
+    /// Shared by the immediately visible fallback and fully prepared terrain.
+    /// Resource loading must not change the canonical sun's illumination policy.
+    public static func makeMissionSun(orientation: simd_quatf, elevationDegrees: Double,
+                               altitudeMeters: Double? = nil) -> DirectionalLight {
+        let sun = DirectionalLight()
+        sun.name = "MissionSun"
+        sun.light.intensity = missionSunIlluminance(elevationDegrees: elevationDegrees)
+        sun.orientation = orientation
+        sun.shadow = missionShadow(altitudeMeters: altitudeMeters)
+        return sun
     }
 
     static func worldTransform(for state: LMVehicleStateSnapshot?) -> Transform {

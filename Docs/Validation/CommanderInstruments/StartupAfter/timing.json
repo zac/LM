@@ -1,0 +1,72 @@
+{
+  "arguments": [
+    "xcrun",
+    "simctl",
+    "launch",
+    "--terminate-running-process",
+    "DE0FAD53-2A01-4B96-95D3-3505E6900DA3",
+    "io.positron.LM",
+    "--terminal-descent-cockpit",
+    "--assembly-validation-view=control-closeup",
+    "--cockpit-startup-timing"
+  ],
+  "launch_wall_epoch": 1788905832.3344152,
+  "launch_return_seconds": 0.2860530419999999,
+  "reference": "requested offsets measured from successful simctl launch return; actual start/end recorded",
+  "captures": [
+    {
+      "name": "control-4s.png",
+      "requested_after_return_s": 4,
+      "actual_start_after_launch_s": 4.291082875,
+      "actual_end_after_launch_s": 4.642420791999999
+    },
+    {
+      "name": "control-5s.png",
+      "requested_after_return_s": 5,
+      "actual_start_after_launch_s": 5.289414708,
+      "actual_end_after_launch_s": 5.625695667
+    },
+    {
+      "name": "control-6s.png",
+      "requested_after_return_s": 6,
+      "actual_start_after_launch_s": 6.291087417,
+      "actual_end_after_launch_s": 6.6299051669999995
+    },
+    {
+      "name": "control-7s.png",
+      "requested_after_return_s": 7,
+      "actual_start_after_launch_s": 7.288661458,
+      "actual_end_after_launch_s": 7.631092624999999
+    },
+    {
+      "name": "control-8s.png",
+      "requested_after_return_s": 8,
+      "actual_start_after_launch_s": 8.288114541999999,
+      "actual_end_after_launch_s": 8.672293542
+    },
+    {
+      "name": "control-9s.png",
+      "requested_after_return_s": 9,
+      "actual_start_after_launch_s": 9.291075082999999,
+      "actual_end_after_launch_s": 9.6109165
+    },
+    {
+      "name": "control-10s.png",
+      "requested_after_return_s": 10,
+      "actual_start_after_launch_s": 10.290493249999999,
+      "actual_end_after_launch_s": 10.549297042
+    },
+    {
+      "name": "control-12s.png",
+      "requested_after_return_s": 12,
+      "actual_start_after_launch_s": 12.291077249999999,
+      "actual_end_after_launch_s": 12.538677042
+    },
+    {
+      "name": "control-20s.png",
+      "requested_after_return_s": 20,
+      "actual_start_after_launch_s": 20.288892083,
+      "actual_end_after_launch_s": 20.545590875000002
+    }
+  ]
+}

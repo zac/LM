@@ -1,0 +1,178 @@
+{
+  "arguments" : [
+    "\/Users\/zac\/Library\/Developer\/CoreSimulator\/Devices\/DE0FAD53-2A01-4B96-95D3-3505E6900DA3\/data\/Containers\/Bundle\/Application\/DEC7FA42-D2CF-47C1-8D8B-7C1645169D05\/LM.app\/LM",
+    "--terminal-descent-cockpit",
+    "--assembly-validation-view=front",
+    "--cockpit-planning-labels"
+  ],
+  "breaker_banks" : true,
+  "captured_at" : "2026-09-08T23:28:31Z",
+  "caution_warning" : true,
+  "commander_fdai" : true,
+  "descent_rate" : true,
+  "engine_buttons" : true,
+  "event_timer_controls" : true,
+  "foundation" : true,
+  "interior_detail_groups" : [
+    "CDRAftCrownInserts",
+    "CDRLinerEdgeTrim",
+    "CDRLowerCableHarness",
+    "CDRUpperLinerDetails",
+    "ForwardHatchFittings",
+    "ForwardHeaderCableRun",
+    "ForwardHeaderTrim",
+    "ForwardOverheadLiner",
+    "LMPAftCrownInserts",
+    "LMPLinerEdgeTrim",
+    "LMPLowerCableHarness",
+    "LMPUpperLinerDetails",
+    "TransferHatchFittings"
+  ],
+  "lunar_contact_instances" : [
+    "CommanderLunarContact",
+    "PilotLunarContact"
+  ],
+  "mission_time_available" : false,
+  "mission_timer_controls_installed" : false,
+  "occupied_slots" : {
+    "Panel1__CrossPointer" : {
+      "components" : [
+        "CrossPointer"
+      ],
+      "coverage" : "partialRegion"
+    },
+    "Panel1__FDAI" : {
+      "components" : [
+        "FDAI_CDR"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel1__Propulsion" : {
+      "components" : [
+        "PropulsionInstruments"
+      ],
+      "coverage" : "partialRegion"
+    },
+    "Panel1__RangeThrust" : {
+      "components" : [
+        "AltitudeRate"
+      ],
+      "coverage" : "partialRegion"
+    },
+    "Panel1__Timers" : {
+      "components" : [
+        "TimerReadouts"
+      ],
+      "coverage" : "partialRegion"
+    },
+    "Panel1__Warning" : {
+      "components" : [
+        "CautionWarning"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel2__Caution" : {
+      "components" : [
+        "CautionWarning"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel2__FDAI" : {
+      "components" : [
+        "Pilot FDAI"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel3__Lighting" : {
+      "components" : [
+        "PilotLunarContact"
+      ],
+      "coverage" : "partialRegion"
+    },
+    "Panel3__Stability" : {
+      "components" : [
+        "AttitudeMode"
+      ],
+      "coverage" : "partialRegion"
+    },
+    "Panel3__TimerHeaters" : {
+      "components" : [
+        "EventTimerControls"
+      ],
+      "coverage" : "partialRegion"
+    },
+    "Panel4__DSKY" : {
+      "components" : [
+        "DSKY"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel5__Engine" : {
+      "components" : [
+        "DescentRate",
+        "EngineButtons"
+      ],
+      "coverage" : "partialRegion"
+    },
+    "Panel11__Region1" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel11__Region2" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel11__Region3" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel11__Region4" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel11__Region5" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel16__Region1" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel16__Region2" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel16__Region3" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel16__Region4" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    }
+  },
+  "pilot_fdai" : true,
+  "propulsion" : true,
+  "timer_readouts" : [
+    "MissionTimer",
+    "EventTimer"
+  ]
+}

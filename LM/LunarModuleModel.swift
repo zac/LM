@@ -8,6 +8,7 @@ import LunarMap
 
 import UIKit
 import RealityKitContent
+import LMKit
 import RealityKit
 import LMCore
 
@@ -204,7 +205,7 @@ final class LunarModuleModel {
     
     private func loadModel() {
         do {
-            let scene = try Entity.load(named: "lm", in: realityKitContentBundle)
+            let scene = try Entity.load(contentsOf: LMKitAssets.legacySceneURL)
             rootEntity.children.removeAll()
             thrusters.removeAll()
             activeJets.removeAll()

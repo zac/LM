@@ -1,0 +1,20 @@
+{
+  "LM": {
+    "commit": "3d34dcfd718ae410f6c5b68d5525c93ef9d01319",
+    "tree": "db23f0e39c912b2e65e3603b546613cbae091e6d",
+    "files": 501,
+    "hydratedManifestSHA256": "5b4cbcd0c186c87edb70a377da08216b0cb0eb176cedf1a9dec7d61b91ae6b48"
+  },
+  "LMKit": {
+    "commit": "b870a9b112797d3ea627c663df2684c97f9cc2a3",
+    "tree": "ff36533a28bd3623af8312d2c3476bc9fe5f2d82",
+    "files": 425,
+    "hydratedManifestSHA256": "a68ed22b29cdd6831eda7f23b27bd65422323b09d8ea8ebdba8a59be7b42dab5"
+  },
+  "AGC": {
+    "commit": "b3f15533db335ee882dc07401790c93010809e8f",
+    "tree": "3ebd2a479ab2bd2b39dd9919ad56405b20a1b245",
+    "files": 88,
+    "hydratedManifestSHA256": "0412398ac7cc046c0f6f99bdbdf17d7d85484ccf00d36b5af2b50174e313551c"
+  }
+}

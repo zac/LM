@@ -1,0 +1,117 @@
+[
+  {
+    "path": "LMKit_LMKit.bundle/Info.plist",
+    "bytes": 623,
+    "sha256": "3007dab64ece4a52a4ff18e5e700a7ba6bbb2a21603076d9b04c1d466a9cfc60"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/_CodeSignature/CodeResources",
+    "bytes": 6026,
+    "sha256": "1bc35033d3dca7e88c44d18df43b465d1737fb225ba40e29bcecad59db0dd019"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/_CodeSignature/CodeDirectory",
+    "bytes": 198,
+    "sha256": "f6c02faf3d7e18c4e5507c42c2cc398f317ea22f3154ecb904d34bfe23529203"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/_CodeSignature/CodeSignature",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/_CodeSignature/CodeRequirements",
+    "bytes": 12,
+    "sha256": "987920904eab650e75788c054aa0b0524e6a80bfc71aa32df8d237a61743f986"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/DSKY/DSKY.usdz",
+    "bytes": 526263,
+    "sha256": "e20a69864d4c7e0ff068172e0e672d9fbcc510c1dc4e97e4db0246fde08fbdfd"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/HandControllers/TTCA.usdz",
+    "bytes": 133464,
+    "sha256": "c8d165c723aa253868483d959ead394d32c07c766c2af08b731317d1aa371eb6"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/HandControllers/ACA.usdz",
+    "bytes": 96068,
+    "sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/HandControllers/interface.json",
+    "bytes": 4647,
+    "sha256": "6a08a37335981e7b76c312a491d38dc07d39ef474fb52e49ae132453fcea5142"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/CommanderPanels/mounting.json",
+    "bytes": 5451,
+    "sha256": "eb1efb3ab4ef0d43fc6036ec676431bf8b861cc69e83d26bc15cf2ed0182dde8"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/CommanderPanels/CommanderPanels.usdz",
+    "bytes": 15669,
+    "sha256": "52e4c13cf302e080edbd163fb3f6d26ce53785c28bc49dcefd3a75c876f9d604"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/Legacy/lm.usda",
+    "bytes": 4596,
+    "sha256": "bce47c60d93e192688b83a77cd54675e3db9db5981998a94f786c0656050cd5c"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/Legacy/lunar_module.usdz",
+    "bytes": 2012449,
+    "sha256": "e2588937370ed21d2c84be88c47c35bd3b588f5c9fb0bc9410b3ec89bcf6bb91"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/Cabin/Cabin.usdz",
+    "bytes": 23467,
+    "sha256": "777ce88968820a6e46995d436e807abf9f4b4a5cb7115d0eb03eafb4c89c995e"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/Cabin/mounts.json",
+    "bytes": 6137,
+    "sha256": "9b16e4f30fdc7f37a0d93f54154b8a8d4523dce5fb09d339a28442df9a25ebf5"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/FDAI/FDAI.usdz",
+    "bytes": 2051277,
+    "sha256": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/ControlLibrary/GuardedSwitch.usdz",
+    "bytes": 20307,
+    "sha256": "38b3f9fa5fc2db6113fafabe4466dbc1ad666d2af0e80268e9e3efc2e5d692ae"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/ControlLibrary/RotarySelector.usdz",
+    "bytes": 8850,
+    "sha256": "facc28e727c765d9cc9379509c2e036b90a9331e5976186bb8f0d2b294ec1f3f"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/ControlLibrary/Talkback.usdz",
+    "bytes": 10404,
+    "sha256": "a9c4cb0d8e0a6fbccc06f5cd2c45bf58154b73b7070f2222dc0c763986bba065"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/ControlLibrary/components.json",
+    "bytes": 4434,
+    "sha256": "becce552cc9a3e31dbf89a1440cdefcc550d09a2e6a7e1fc43ee31ae76e81072"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/ControlLibrary/MomentaryToggle.usdz",
+    "bytes": 11246,
+    "sha256": "615cadfaa1190a2340bd23e518849147a342c0cd927d4101081e6b553ee1f8d9"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/ControlLibrary/CircuitBreaker.usdz",
+    "bytes": 11221,
+    "sha256": "8f6b6125b943a051e18ac193aedcd3509ba6b1bc82525d420985e3ef1a2649dc"
+  },
+  {
+    "path": "LMKit_LMKit.bundle/ControlLibrary/MaintainedToggle.usdz",
+    "bytes": 11237,
+    "sha256": "6071600aa300b4ee00ed12537c5b719497f078012a391c35390ab34135f79b5f"
+  }
+]

@@ -9,16 +9,29 @@ struct TerminalDescentCockpitView: View {
     @Environment(\.openWindow) private var openWindow
     @Environment(\.dismissWindow) private var dismissWindow
     @Environment(\.scenePhase) private var scenePhase
+    @State private var planningLabelsVisible = ProcessInfo.processInfo.arguments.contains("--cockpit-planning-labels")
     @State private var station = LMCommanderStationScene()
     @State private var didStart = false
     @State private var terrainStatus = "Loading Apollo 11 terrain…"
     @State private var recenterGeneration = 0
+    @State private var acaInteractionGeneration: UUID?
+    @State private var cockpitVisible = false
     @State private var acaGestureOrigin: SIMD3<Float>?
+    @State private var timerGestureOrigin: SIMD3<Float>?
+    @State private var timerGestureGeneration: UInt64?
+    @State private var timerGestureID: String?
+    @State private var timerDidLeaveCenter = false
+    @State private var timerLastPosition: Int?
+    @GestureState private var timerGestureActive = false
     @State private var rodGestureOrigin: SIMD3<Float>?
+    @State private var rodInteractionGeneration: UUID?
     @State private var showsFallbackControls = false
     @State private var showsValidationChecklist = false
-    @State private var showsEyeAlignmentGuide = true
-    @State private var trainingOverlayEnabled = true
+    #if DEBUG
+    @State private var presentation = LMCockpitPresentationPolicy.validation(arguments: ProcessInfo.processInfo.arguments)
+    #else
+    @State private var presentation = LMCockpitPresentationPolicy()
+    #endif
     @State private var audioEnabled = true
     @State private var experienceDirector = LMCockpitExperienceDirector()
     @State private var activeCue: LMCockpitCue?
@@ -35,16 +48,11 @@ struct TerminalDescentCockpitView: View {
     )
 
     var body: some View {
-        RealityView { content, attachments in
+        RealityView { content in
+            station.prepareProvisionalLighting(at: appModel.cockpitCoordinate, date: appModel.lunarExplorerSession.sunDate)
             content.add(station.commanderEntryAnchor)
-            if let fdai = attachments.entity(for: "commander-fdai") {
-                station.mountFDAI(fdai)
-            }
-            if let dskyDisplay = attachments.entity(for: "commander-dsky-display") {
-                station.mountDSKYDisplay(dskyDisplay)
-            }
             applySceneState()
-        } update: { content, attachments in
+        } update: { content in
             _ = recenterGeneration
             for retiredAnchor in station.takeRetiredCommanderEntryAnchors() {
                 content.remove(retiredAnchor)
@@ -52,40 +60,26 @@ struct TerminalDescentCockpitView: View {
             if !content.entities.contains(where: { $0 === station.commanderEntryAnchor }) {
                 content.add(station.commanderEntryAnchor)
             }
-            if let fdai = attachments.entity(for: "commander-fdai") {
-                station.mountFDAI(fdai)
-            }
-            if let dskyDisplay = attachments.entity(for: "commander-dsky-display") {
-                station.mountDSKYDisplay(dskyDisplay)
-            }
             applySceneState()
-        } attachments: {
-            Attachment(id: "commander-fdai") {
-                FDAIPanel(session: appModel.session, presentsFlightFace: true)
-                    .frame(width: 205, height: 205)
-            }
-            Attachment(id: "commander-dsky-display") {
-                DSKYPanel(
-                    session: appModel.session,
-                    showsScripts: false,
-                    showsKeypad: false,
-                    presentsFlightFace: true
-                )
-                .frame(width: 420, height: 250)
-                .background(Color.black.opacity(0.94))
-            }
         }
         .gesture(acaGesture)
         .simultaneousGesture(rodGesture)
+        .simultaneousGesture(timerGesture)
         .simultaneousGesture(attitudeModeGesture)
         .simultaneousGesture(cockpitTapGesture)
         .ornament(attachmentAnchor: .scene(.bottom)) {
             VStack(spacing: 8) {
+                if presentation.trainingEnabled {
+                    Text(appModel.session.vehicleState?.landingGear.map {
+                        "Contact lamps: probe " + ($0.isProbeContact ? "contact" : "clear") + "; lamp power, test and stop-reset circuits are not modeled."
+                    } ?? "Contact lamps: probe data unavailable; lamp power, test and stop-reset circuits are not modeled.")
+                        .font(.caption)
+                }
                 HStack(spacing: 10) {
                     Button {
                         restartExperience()
                     } label: {
-                        Label(appModel.cockpitCoordinate == nil ? "Restart P64" : "Restart P63", systemImage: "arrow.counterclockwise")
+                        Label(appModel.cockpitCoordinate == nil ? "Restart \(PoweredDescentSession.StartPoint.cockpitLaunch(arguments: ProcessInfo.processInfo.arguments).programLabel)" : "Restart P63", systemImage: "arrow.counterclockwise")
                     }
                     .disabled(!appModel.session.canStop && !appModel.session.canStart)
 
@@ -99,26 +93,34 @@ struct TerminalDescentCockpitView: View {
                     }
 
                     Button {
-                        trainingOverlayEnabled.toggle()
-                        if !trainingOverlayEnabled {
-                            showsEyeAlignmentGuide = false
-                        }
+                        presentation.toggleTraining()
                     } label: {
                         Label(
-                            trainingOverlayEnabled ? "Training on" : "Training off",
-                            systemImage: trainingOverlayEnabled ? "scope" : "scope"
+                            presentation.trainingEnabled ? "Training aids on" : "Training aids off",
+                            systemImage: "scope"
                         )
                     }
+                    .accessibilityIdentifier("cockpit-training-toggle")
 
                     Button {
-                        showsEyeAlignmentGuide.toggle()
+                        presentation.toggleEyeAlignment()
                     } label: {
                         Label(
-                            showsEyeAlignmentGuide ? "Hide eye guide" : "Eye alignment",
+                            presentation.showsEyeAlignment ? "Hide diagnostic guide" : "Eye diagnostic",
                             systemImage: "viewfinder"
                         )
                     }
-                    .disabled(!trainingOverlayEnabled)
+                    .disabled(!presentation.trainingEnabled)
+                    .accessibilityIdentifier("cockpit-eye-diagnostic")
+
+                    Button {
+                        planningLabelsVisible.toggle()
+                        station.setPlanningLabelsVisible(planningLabelsVisible)
+                    } label: {
+                        Label(planningLabelsVisible ? "Hide planning labels" : "Planning labels",
+                              systemImage: "tag")
+                    }
+                    .accessibilityIdentifier("cockpit-planning-labels")
 
                     Button {
                         showsValidationChecklist.toggle()
@@ -168,6 +170,10 @@ struct TerminalDescentCockpitView: View {
                             .font(.caption2)
                         Text(crewControlHint)
                             .font(.caption2)
+                        if presentation.trainingEnabled && (station.importedAltitudeRate != nil || station.importedCrossPointer != nil) {
+                            Text("Simulated altitude/rate · later fly-to velocity aid")
+                                .font(.caption2)
+                        }
                     }
                     .foregroundStyle(.secondary)
                 }
@@ -181,30 +187,28 @@ struct TerminalDescentCockpitView: View {
             .glassBackgroundEffect()
         }
         .ornament(attachmentAnchor: .scene(.top)) {
-            if let activeCue {
+            if presentation.showsCueOverlay, let activeCue {
                 VStack(spacing: 4) {
-                    Text(activeCue.title)
+                    Text("TRAINING · " + activeCue.title)
                         .font(.title3.weight(.bold).monospaced())
                         .foregroundStyle(cueColor(activeCue))
-                    if trainingOverlayEnabled {
-                        Text(activeCue.detail)
-                            .font(.caption)
-                            .multilineTextAlignment(.center)
-                            .foregroundStyle(.secondary)
-                    }
+                    Text(activeCue.detail)
+                        .font(.caption)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: 420)
                 .padding(.horizontal, 18)
                 .padding(.vertical, 12)
                 .glassBackgroundEffect()
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel(activeCue.title)
-                .accessibilityValue(trainingOverlayEnabled ? activeCue.detail : "")
-            } else if trainingOverlayEnabled && showsEyeAlignmentGuide {
+                .accessibilityLabel("Training · " + activeCue.title)
+                .accessibilityValue(activeCue.detail)
+            } else if presentation.showsEyeAlignment {
                 VStack(spacing: 4) {
-                    Text("COMMANDER DESIGN EYE")
+                    Text("TRAINING · EYE DIAGNOSTIC")
                         .font(.title3.weight(.bold).monospaced())
-                    Text("Settle into position, then fine-adjust until the magenta and green LPD scales overlap.")
+                    Text("Diagnostic pane colors show overlap in the provisional LPD model. This is not verified optical calibration.")
                         .font(.caption)
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.secondary)
@@ -214,9 +218,9 @@ struct TerminalDescentCockpitView: View {
                 .padding(.vertical, 12)
                 .glassBackgroundEffect()
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("Commander design eye alignment")
+                .accessibilityLabel("Training eye alignment diagnostic")
                 .accessibilityValue(
-                    "Fine-adjust until the magenta and green Landing Point Designator scales overlap"
+                    "Diagnostic colored Landing Point Designator scales; provisional geometry"
                 )
             }
         }
@@ -236,12 +240,8 @@ struct TerminalDescentCockpitView: View {
             appModel.session.setSceneActive(scenePhase == .active)
             audioController.isEnabled = audioEnabled
             audioController.start()
-            if appModel.cockpitCoordinate == nil, appModel.session.canStart {
-                let startPoint: PoweredDescentSession.StartPoint = ProcessInfo
-                    .processInfo.arguments.contains("--cockpit-start-p65")
-                    ? .p65TerminalDescent
-                    : .p64Approach
-                appModel.session.start(from: startPoint)
+            if appModel.cockpitCoordinate == nil {
+                appModel.session.terrainReady = { [weak station] in station?.apolloTerrainReady ?? false }
             }
             if ProcessInfo.processInfo.arguments.contains("--cockpit-recenter-after-launch") {
                 try? await Task.sleep(for: .milliseconds(500))
@@ -257,6 +257,9 @@ struct TerminalDescentCockpitView: View {
             do {
                 try station.loadExteriorLunarModule()
                 let artistCabinLoaded = try await station.loadArtistCabinIfAvailable()
+                // A paused session may never emit another snapshot after installation.
+                applySceneState()
+                station.recordLighting(stage: "after-foundation-install")
                 if let coordinate = appModel.cockpitCoordinate {
                     terrainStatus = "Loading selected lunar site…"
                     try await station.loadGlobalTerrain(at: coordinate, session: appModel.session,
@@ -264,10 +267,21 @@ struct TerminalDescentCockpitView: View {
                     terrainStatus = station.globalTerrainDescription
                     appModel.session.start(from: .ignition)
                 } else {
-                    appModel.session.terrainReady = nil
+                    terrainStatus = "Preparing landing terrain…"
                     appModel.session.vehicleDidAdvance = nil
                     try await station.loadApollo11Terrain()
-                    terrainStatus = "LROC/SLDEM terrain · 0.5 m NAC + normalized WAC reflectance"
+                    try Task.checkCancellation()
+                    terrainStatus = "Landing terrain ready"
+                    if appModel.session.canStart {
+                        let startPoint = PoweredDescentSession.StartPoint.cockpitLaunch(
+                            arguments: ProcessInfo.processInfo.arguments)
+                        appModel.session.start(from: startPoint)
+                        #if DEBUG
+                        if ProcessInfo.processInfo.arguments.contains("--cockpit-validation-paused") {
+                            appModel.session.pause()
+                        }
+                        #endif
+                    }
                 }
                 recordValidation { $0.observeTerrainLoaded() }
                 logger.info("Cockpit terrain loaded: \(terrainStatus, privacy: .public); artist cabin: \(artistCabinLoaded)")
@@ -275,6 +289,13 @@ struct TerminalDescentCockpitView: View {
                 terrainStatus = "Terrain unavailable · \(error.localizedDescription)"
                 logger.error("Cockpit terrain failed: \(error.localizedDescription, privacy: .public)")
             }
+        }
+        .task {
+            #if DEBUG
+            // Separate task keeps normal cockpit loading and simulation intact.
+            try? await Task.sleep(for: .seconds(5))
+            await LMInstrumentValidation.run(session: appModel.session)
+            #endif
         }
         .onChange(of: appModel.session.snapshot?.agc.cycle) { _, _ in
             updateExperience()
@@ -291,14 +312,27 @@ struct TerminalDescentCockpitView: View {
         .onChange(of: acaGestureIsActive) { wasActive, isActive in
             if wasActive && !isActive {
                 releaseACAControl()
+                acaGestureOrigin = nil
+                acaInteractionGeneration = nil
             }
         }
         .onChange(of: rodGestureIsActive) { wasActive, isActive in
             if wasActive && !isActive {
-                releaseRODControl()
+                releaseRODControl(endingGesture: true)
             }
         }
+        .onChange(of: timerGestureActive) { wasActive, active in
+            if wasActive && !active { releaseTimerControl(endingGesture: true) }
+        }
+        .onAppear { cockpitVisible = true }
+        .onChange(of: appModel.session.isRunning) { _, running in
+            if !running { releaseSpatialControls() }
+        }
+        .onChange(of: appModel.session.isPaused) { _, paused in
+            if paused { releaseSpatialControls() }
+        }
         .onDisappear {
+            cockpitVisible = false
             LunarExplorerPerformanceProbe.shared.stop()
             releaseSpatialControls()
             appModel.session.setSceneActive(false)
@@ -310,64 +344,112 @@ struct TerminalDescentCockpitView: View {
 
     private var acaGesture: some Gesture {
         DragGesture(minimumDistance: 0)
-            .targetedToEntity(station.acaHandle)
+            .targetedToEntity(where: .has(LMACAInteractionTarget.self))
             .updating($acaGestureIsActive) { _, isActive, _ in
                 isActive = true
             }
             .onChanged { value in
-                let sceneLocation = value.convert(value.location3D, from: .local, to: .scene)
+                guard cockpitVisible, scenePhase == .active, acaGestureIsActive,
+                      station.isACAEntity(value.entity), let cabin = station.acaHandle.parent else { return }
+                // Cabin-relative displacement remains correct after recentering
+                // or observer/root rotations; the moving grip is not the basis.
+                let sceneLocation = value.convert(value.location3D, from: .local, to: cabin)
                 if acaGestureOrigin == nil {
                     acaGestureOrigin = sceneLocation
+                    acaInteractionGeneration = appModel.session.beginACAInteraction()
                 }
-                guard let origin = acaGestureOrigin else { return }
+                guard let origin = acaGestureOrigin, let generation = acaInteractionGeneration else { return }
                 let input = controlMapper.acaInput(for: sceneLocation - origin)
+                guard appModel.session.updateACAInteraction(input, generation: generation) else { return }
                 recordValidation { $0.observeDirectACA(input) }
-                appModel.session.setACA(
-                    pitch: input.pitch,
-                    yaw: input.yaw,
-                    roll: input.roll
-                )
-                station.setACAVisual(input)
+                station.setACAVisual(appModel.session.aca)
             }
             .onEnded { _ in
                 releaseACAControl()
+                acaGestureOrigin = nil
+                acaInteractionGeneration = nil
             }
+    }
+
+    private var timerGesture: some Gesture {
+        DragGesture(minimumDistance: 0).targetedToEntity(where: .has(LMEventTimerControlTarget.self))
+            .updating($timerGestureActive) { _, active, _ in active = true }
+            .onChanged { value in
+                guard cockpitVisible, scenePhase == .active, timerGestureActive,
+                      let timers = station.importedTimers,
+                      let target = value.entity.components[LMEventTimerControlTarget.self],
+                      appModel.session.isRunning, !appModel.session.isPaused, appModel.session.replayFrame == nil else { return }
+                let point = value.convert(value.location3D, from: .local, to: timers.controls)
+                if timerGestureOrigin == nil {
+                    timerGestureOrigin = point
+                    timerGestureGeneration = appModel.session.eventTimerInteractionGeneration
+                    timerGestureID = target.id
+                }
+                guard timerGestureID == target.id, let origin = timerGestureOrigin,
+                      let generation = timerGestureGeneration else { return }
+                let delta = point.y - origin.y
+                let position = delta > 0.005 ? 0 : delta < -0.005 ? 2 : 1
+                guard timerLastPosition != position else { return }
+                if position != 1 { timerDidLeaveCenter = true }
+                let command = LMEventTimerControlRouting.command(id: target.id, position: position)
+                if let command, !appModel.session.sendEventTimer(command, generation: generation) { return }
+                guard generation == appModel.session.eventTimerInteractionGeneration else { return }
+                timerLastPosition = position
+                timers.setControl(target.id, position: position)
+                timers.apply(appModel.session.eventTimer)
+            }
+            .onEnded { _ in
+                if !timerDidLeaveCenter, let id = timerGestureID, let generation = timerGestureGeneration,
+                   cockpitVisible, scenePhase == .active,
+                   let command = LMEventTimerControlRouting.command(id: id, position: 1, explicitCenterSelection: true) {
+                    _ = appModel.session.sendEventTimer(command, generation: generation)
+                }
+                releaseTimerControl(endingGesture: true)
+            }
+    }
+
+    private func releaseTimerControl(endingGesture: Bool = false) {
+        appModel.session.releaseEventTimerControls()
+        station.importedTimers?.releaseControls(direction: appModel.session.eventTimer.selectedDirection)
+        if endingGesture {
+            timerGestureOrigin = nil
+            timerGestureGeneration = nil
+            timerGestureID = nil
+            timerLastPosition = nil
+            timerDidLeaveCenter = false
+        }
     }
 
     private var rodGesture: some Gesture {
         DragGesture(minimumDistance: 0)
-            .targetedToEntity(station.rodSwitch)
-            .updating($rodGestureIsActive) { _, isActive, _ in
-                isActive = true
-            }
+            .targetedToEntity(where: .has(LMDescentRateInteractionTarget.self))
+            .updating($rodGestureIsActive) { _, isActive, _ in isActive = true }
             .onChanged { value in
-                let sceneLocation = value.convert(value.location3D, from: .local, to: .scene)
+                guard cockpitVisible, scenePhase == .active, rodGestureIsActive,
+                      station.isRODEntity(value.entity) else { return }
+                let location = value.convert(value.location3D, from: .local, to: station.rodGestureCoordinateSpace)
                 if rodGestureOrigin == nil {
-                    rodGestureOrigin = sceneLocation
+                    rodGestureOrigin = location
+                    rodInteractionGeneration = appModel.session.beginRODInteraction()
                 }
-                guard let origin = rodGestureOrigin else { return }
-                let position = controlMapper.rodPosition(
-                    for: sceneLocation - origin,
-                    along: LMCommanderStationGeometry.rodActuationAxis
-                )
+                guard let origin = rodGestureOrigin, let generation = rodInteractionGeneration else { return }
+                let position = controlMapper.rodPosition(for: location - origin, along: station.rodGestureActuationAxis)
+                guard appModel.session.updateRODInteraction(position, generation: generation) else { return }
+                station.setRODVisual(appModel.session.rodSwitchPosition)
                 recordValidation { $0.observeDirectROD(position) }
-                applyROD(position)
             }
-            .onEnded { _ in
-                releaseRODControl()
-            }
+            .onEnded { _ in releaseRODControl(endingGesture: true) }
     }
 
     private var attitudeModeGesture: some Gesture {
         TapGesture()
-            .targetedToEntity(station.attitudeModeSwitch)
-            .onEnded { _ in
-                let selectsP66 = appModel.session.attitudeMode != .attitudeHold
-                appModel.session.attitudeMode = selectsP66 ? .attitudeHold : .automatic
-                station.setAttitudeHoldVisual(selectsP66)
-                if selectsP66 {
-                    recordValidation { $0.observeDirectAttitudeHold() }
-                }
+            .targetedToEntity(where: .has(LMAttitudeModeInteractionTarget.self))
+            .onEnded { value in
+                guard cockpitVisible, scenePhase == .active, station.isAttitudeModeEntity(value.entity) else { return }
+                let selectsHold = appModel.session.attitudeMode != .attitudeHold
+                guard appModel.session.selectPhysicalAttitudeMode(selectsHold ? .attitudeHold : .automatic) else { return }
+                station.setAttitudeHoldVisual(selectsHold)
+                if selectsHold { recordValidation { $0.observeDirectAttitudeHold() } }
             }
     }
 
@@ -375,13 +457,18 @@ struct TerminalDescentCockpitView: View {
         SpatialTapGesture()
             .targetedToAnyEntity()
             .onEnded { value in
-                if let key = station.dskyKeyCode(for: value.entity) {
-                    logger.notice("Physical DSKY key: \(key.label, privacy: .public)")
-                    station.animateDSKYKeyPress(key)
-                    appModel.session.sendDSKYKey(key)
-                    recordValidation { $0.observeDirectDSKY(key) }
-                    return
-                }
+                if LMInstrumentInteraction.completedTap(
+                    on: value.entity,
+                    station: station,
+                    sendKey: { appModel.session.sendDSKYKey($0) },
+                    didAccept: { key in
+                        logger.notice("Physical DSKY key: \(key.label, privacy: .public)")
+                        #if DEBUG
+                        LMInstrumentValidation.recordCompletedTap(key, entity: value.entity)
+                        #endif
+                        recordValidation { $0.observeDirectDSKY(key) }
+                    }
+                ) { return }
                 if station.isMissionControlButton(value.entity) {
                     logger.notice("Physical mission control button")
                     presentMissionControlWindow()
@@ -390,14 +477,21 @@ struct TerminalDescentCockpitView: View {
     }
 
     private func applySceneState() {
+        appModel.session.synchronizeEventTimer()
+        station.importedTimers?.apply(appModel.session.eventTimer)
         station.apply(appModel.session.vehicleState)
+        station.applyLandingReadouts(appModel.session.vehicleState, program: appModel.session.programNumber)
         station.applyDSKY(appModel.session.dsky)
         station.setACAVisual(appModel.session.aca)
+        #if DEBUG
+        if let pose = LMACAValidation.pose { station.setACAVisual(pose) }
+        #endif
         station.setRODVisual(appModel.session.rodSwitchPosition)
         station.setAttitudeHoldVisual(appModel.session.attitudeMode == .attitudeHold)
+        station.setLandingPointDiagnosticColors(presentation.usesDiagnosticPaneColors)
         station.setLandingPointCalledAngle(
             appModel.session.landingPointLookAngleDegrees.map(Double.init),
-            trainingOverlayVisible: trainingOverlayEnabled
+            trainingOverlayVisible: presentation.showsCalledAngle
                 && appModel.session.isLandingPointDisplayActive
         )
         station.updateDust(
@@ -406,27 +500,27 @@ struct TerminalDescentCockpitView: View {
         )
     }
 
-    private func applyROD(_ position: PoweredDescentSession.RODSwitchPosition) {
-        appModel.session.setROD(.descendPlus, held: position == .descendPlus)
-        appModel.session.setROD(.descendMinus, held: position == .descendMinus)
-        station.setRODVisual(position)
-    }
-
     private func releaseSpatialControls() {
         releaseACAControl()
         releaseRODControl()
+        releaseTimerControl()
     }
 
     private func releaseACAControl() {
-        acaGestureOrigin = nil
         appModel.session.releaseACA()
         station.setACAVisual(.neutral)
         recordValidation { $0.observeDirectACARelease() }
     }
 
-    private func releaseRODControl() {
-        rodGestureOrigin = nil
-        applyROD(.neutral)
+    private func releaseRODControl(endingGesture: Bool = false) {
+        // Keep a stale gesture's origin/token until its actual end; pause/resume
+        // must not let a still-held hand reacquire a fresh generation.
+        if endingGesture {
+            rodGestureOrigin = nil
+            rodInteractionGeneration = nil
+        }
+        appModel.session.releaseRODInteraction()
+        station.setRODVisual(.neutral)
         recordValidation { $0.observeDirectROD(.neutral) }
     }
 
@@ -443,8 +537,7 @@ struct TerminalDescentCockpitView: View {
             verticalSpeedMetersPerSecond: session.vehicleState?.verticalSpeedMetersPerSecond,
             downrangeSpeedMetersPerSecond: session.vehicleState?.velocityMetersPerSecond.y,
             outcome: session.vehicleState?.flightOutcome,
-            hasSurfaceContact: session.vehicleState?.landingGear?.isProbeContact
-                ?? (session.vehicleState?.surfaceContact != nil),
+            hasSurfaceContact: session.vehicleState?.landingGear?.isProbeContact,
             landingFailure: session.vehicleState?.landingGear?.failure,
             surfaceContact: session.vehicleState?.surfaceContact,
             landingGear: session.vehicleState?.landingGear
@@ -492,7 +585,6 @@ struct TerminalDescentCockpitView: View {
         releaseSpatialControls()
         station.recenterAtCurrentHeadPose()
         recenterGeneration &+= 1
-        showsEyeAlignmentGuide = true
         logger.notice("Recentered cockpit at the current commander head pose")
     }
 
@@ -519,15 +611,11 @@ struct TerminalDescentCockpitView: View {
 
     private var crewControlHint: String {
         if appModel.session.isLandingPointDisplayActive {
-            let angle = appModel.session.landingPointLookAngleDegrees.map { "LPD \($0)°" }
-                ?? "N64 LPD"
-            if appModel.session.landingPointRedesignationTimeRemainingSeconds == 0 {
-                return "\(angle) · redesignation window closed"
-            }
-            if appModel.session.isLandingPointRedesignationEnabled {
-                return "\(angle) · ACA redesignation enabled"
-            }
-            return "\(angle) · press PRO to enable ACA redesignation"
+            return presentation.landingPointHint(
+                angleDegrees: appModel.session.landingPointLookAngleDegrees,
+                windowClosed: appModel.session.landingPointRedesignationTimeRemainingSeconds == 0,
+                redesignationEnabled: appModel.session.isLandingPointRedesignationEnabled
+            )
         }
         return "Grip ACA · drag ROD · tap MODE CONTROL"
     }

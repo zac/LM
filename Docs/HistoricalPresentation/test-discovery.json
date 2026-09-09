@@ -1,0 +1,487 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "DE0FAD53-2A01-4B96-95D3-3505E6900DA3",
+      "deviceName" : "LM Presentation 556e",
+      "modelName" : "Apple Vision Pro",
+      "osBuildNumber" : "23O470",
+      "osVersion" : "26.5",
+      "platform" : "visionOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "0.00016s",
+                  "durationInSeconds" : 0.0001609325408935547,
+                  "name" : "historicalDefaultHidesAllSyntheticOverlays()",
+                  "nodeIdentifier" : "LMCockpitPresentationPolicyTests/historicalDefaultHidesAllSyntheticOverlays()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMCockpitPresentationPolicyTests/historicalDefaultHidesAllSyntheticOverlays()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00008s",
+                  "durationInSeconds" : 7.987022399902344e-05,
+                  "name" : "eyeDiagnosticRequiresSeparateOptInAndTrainingOffClearsIt()",
+                  "nodeIdentifier" : "LMCockpitPresentationPolicyTests/eyeDiagnosticRequiresSeparateOptInAndTrainingOffClearsIt()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMCockpitPresentationPolicyTests/eyeDiagnosticRequiresSeparateOptInAndTrainingOffClearsIt()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.277014970779419,
+                  "name" : "sceneRecenterPreservesHiddenMarkerAndImportedOwnership()",
+                  "nodeIdentifier" : "LMCockpitPresentationPolicyTests/sceneRecenterPreservesHiddenMarkerAndImportedOwnership()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMCockpitPresentationPolicyTests/sceneRecenterPreservesHiddenMarkerAndImportedOwnership()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.000069s",
+                  "durationInSeconds" : 6.914138793945312e-05,
+                  "name" : "validationFlagsNeverImplicitlyEnableTraining()",
+                  "nodeIdentifier" : "LMCockpitPresentationPolicyTests/validationFlagsNeverImplicitlyEnableTraining()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMCockpitPresentationPolicyTests/validationFlagsNeverImplicitlyEnableTraining()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "LMCockpitPresentationPolicyTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMCockpitPresentationPolicyTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "0.4s",
+                  "durationInSeconds" : 0.39736509323120117,
+                  "name" : "reconcilesNestedMountsAndPreservesOpticalBasis()",
+                  "nodeIdentifier" : "LMCommanderStationAssemblyTests/reconcilesNestedMountsAndPreservesOpticalBasis()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMCommanderStationAssemblyTests/reconcilesNestedMountsAndPreservesOpticalBasis()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.7574069499969482,
+                  "name" : "atomicFallbackAndInstallKeepLiveIdentities()",
+                  "nodeIdentifier" : "LMCommanderStationAssemblyTests/atomicFallbackAndInstallKeepLiveIdentities()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMCommanderStationAssemblyTests/atomicFallbackAndInstallKeepLiveIdentities()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.13s",
+                  "durationInSeconds" : 0.13449597358703613,
+                  "name" : "rejectsBadManifestWithoutPublishing()",
+                  "nodeIdentifier" : "LMCommanderStationAssemblyTests/rejectsBadManifestWithoutPublishing()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMCommanderStationAssemblyTests/rejectsBadManifestWithoutPublishing()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.56s",
+                  "durationInSeconds" : 0.5553340911865234,
+                  "name" : "installsPanelSurroundsOnceAndRejectsMismatchedInterfaces()",
+                  "nodeIdentifier" : "LMCommanderStationAssemblyTests/installsPanelSurroundsOnceAndRejectsMismatchedInterfaces()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMCommanderStationAssemblyTests/installsPanelSurroundsOnceAndRejectsMismatchedInterfaces()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00018s",
+                  "durationInSeconds" : 0.00018310546875,
+                  "name" : "instrumentObserverHasPrecedence()",
+                  "nodeIdentifier" : "LMCommanderStationAssemblyTests/instrumentObserverHasPrecedence()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMCommanderStationAssemblyTests/instrumentObserverHasPrecedence()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "LMCommanderStationAssemblyTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMCommanderStationAssemblyTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "0.074s",
+                  "durationInSeconds" : 0.07390999794006348,
+                  "name" : "realResourcePreservesPivotsHousingAndLimits()",
+                  "nodeIdentifier" : "LMImportedACATests/realResourcePreservesPivotsHousingAndLimits()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMImportedACATests/realResourcePreservesPivotsHousingAndLimits()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.682438850402832,
+                  "name" : "installationIsAtomicAndHasOneTargetIncludingChildren()",
+                  "nodeIdentifier" : "LMImportedACATests/installationIsAtomicAndHasOneTargetIncludingChildren()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMImportedACATests/installationIsAtomicAndHasOneTargetIncludingChildren()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.12s",
+                  "durationInSeconds" : 0.12319111824035645,
+                  "name" : "badInterfaceRejectsLoadAndNonfiniteInputNeutralizes()",
+                  "nodeIdentifier" : "LMImportedACATests/badInterfaceRejectsLoadAndNonfiniteInputNeutralizes()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMImportedACATests/badInterfaceRejectsLoadAndNonfiniteInputNeutralizes()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.7106859683990479,
+                  "name" : "releasedStoppedAndDeactivatedGenerationsCannotReapply()",
+                  "nodeIdentifier" : "LMImportedACATests/releasedStoppedAndDeactivatedGenerationsCannotReapply()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMImportedACATests/releasedStoppedAndDeactivatedGenerationsCannotReapply()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "LMImportedACATests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMImportedACATests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "0.00045s",
+                  "durationInSeconds" : 0.0004470348358154297,
+                  "name" : "preservesBlankDigitsSignsAndRuntimeFlash()",
+                  "nodeIdentifier" : "LMInstrumentIntegrationTests/preservesBlankDigitsSignsAndRuntimeFlash()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMInstrumentIntegrationTests/preservesBlankDigitsSignsAndRuntimeFlash()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00032s",
+                  "durationInSeconds" : 0.0003161430358886719,
+                  "name" : "lampsAreIndependentAndSparesStayUnbound()",
+                  "nodeIdentifier" : "LMInstrumentIntegrationTests/lampsAreIndependentAndSparesStayUnbound()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMInstrumentIntegrationTests/lampsAreIndependentAndSparesStayUnbound()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "2s",
+                  "durationInSeconds" : 2.446141004562378,
+                  "name" : "nativeNeutralAssetBindsEveryKeyAndRejectsImpostors()",
+                  "nodeIdentifier" : "LMInstrumentIntegrationTests/nativeNeutralAssetBindsEveryKeyAndRejectsImpostors()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMInstrumentIntegrationTests/nativeNeutralAssetBindsEveryKeyAndRejectsImpostors()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.053s",
+                  "durationInSeconds" : 0.0532839298248291,
+                  "name" : "proCancellationAlwaysReleasesAndRegularKeysDispatchOnce()",
+                  "nodeIdentifier" : "LMInstrumentIntegrationTests/proCancellationAlwaysReleasesAndRegularKeysDispatchOnce()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMInstrumentIntegrationTests/proCancellationAlwaysReleasesAndRegularKeysDispatchOnce()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.37s",
+                  "durationInSeconds" : 0.36889100074768066,
+                  "name" : "sessionQueuePreservesCompletedTapsBehindDelayedPRO()",
+                  "nodeIdentifier" : "LMInstrumentIntegrationTests/sessionQueuePreservesCompletedTapsBehindDelayedPRO()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMInstrumentIntegrationTests/sessionQueuePreservesCompletedTapsBehindDelayedPRO()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00045s",
+                  "durationInSeconds" : 0.0004508495330810547,
+                  "name" : "sessionQueueTeardownDropsPendingButWaitsForPRORelease()",
+                  "nodeIdentifier" : "LMInstrumentIntegrationTests/sessionQueueTeardownDropsPendingButWaitsForPRORelease()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMInstrumentIntegrationTests/sessionQueueTeardownDropsPendingButWaitsForPRORelease()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0006s",
+                  "durationInSeconds" : 0.0006000995635986328,
+                  "name" : "sessionQueueTeardownBeforeDispatchSendsNothing()",
+                  "nodeIdentifier" : "LMInstrumentIntegrationTests/sessionQueueTeardownBeforeDispatchSendsNothing()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMInstrumentIntegrationTests/sessionQueueTeardownBeforeDispatchSendsNothing()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.000073s",
+                  "durationInSeconds" : 7.295608520507812e-05,
+                  "name" : "importedFDAIKnownAxesAndCapApproaches()",
+                  "nodeIdentifier" : "LMInstrumentIntegrationTests/importedFDAIKnownAxesAndCapApproaches()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMInstrumentIntegrationTests/importedFDAIKnownAxesAndCapApproaches()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.000051s",
+                  "durationInSeconds" : 5.078315734863281e-05,
+                  "name" : "importedFDAICompositionAndReference()",
+                  "nodeIdentifier" : "LMInstrumentIntegrationTests/importedFDAICompositionAndReference()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMInstrumentIntegrationTests/importedFDAICompositionAndReference()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.45s",
+                  "durationInSeconds" : 0.4538919925689697,
+                  "name" : "importedFDAINativeHierarchyKeepsFixedStructureStill()",
+                  "nodeIdentifier" : "LMInstrumentIntegrationTests/importedFDAINativeHierarchyKeepsFixedStructureStill()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMInstrumentIntegrationTests/importedFDAINativeHierarchyKeepsFixedStructureStill()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "LMInstrumentIntegrationTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMInstrumentIntegrationTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.6255521774291992,
+                  "name" : "completedEntitySelectionsReachFIFOInOrder()",
+                  "nodeIdentifier" : "LMInstrumentInteractionTests/completedEntitySelectionsReachFIFOInOrder()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMInstrumentInteractionTests/completedEntitySelectionsReachFIFOInOrder()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "3s",
+                  "durationInSeconds" : 3.3366010189056396,
+                  "name" : "completedAdapterSequenceProducesLiveLuminaryResponse()",
+                  "nodeIdentifier" : "LMInstrumentInteractionTests/completedAdapterSequenceProducesLiveLuminaryResponse()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMInstrumentInteractionTests/completedAdapterSequenceProducesLiveLuminaryResponse()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "LMInstrumentInteractionTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMInstrumentInteractionTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "15s",
+                  "durationInSeconds" : 15.34396481513977,
+                  "name" : "ignitionRestartRestoresFreshSiteState()",
+                  "nodeIdentifier" : "LMLunarCockpitRestartTests/ignitionRestartRestoresFreshSiteState()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMLunarCockpitRestartTests/ignitionRestartRestoresFreshSiteState()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.4691920280456543,
+                  "name" : "cancelledTerrainLoadCannotSelectASite()",
+                  "nodeIdentifier" : "LMLunarCockpitRestartTests/cancelledTerrainLoadCannotSelectASite()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMLunarCockpitRestartTests/cancelledTerrainLoadCannotSelectASite()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "Custom cockpit restart",
+              "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMLunarCockpitRestartTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "0.0029s",
+                  "durationInSeconds" : 0.0029489994049072266,
+                  "name" : "grummanDesignEyeMapsIntoTheSceneDatum()",
+                  "nodeIdentifier" : "LandingPointDesignatorTests/grummanDesignEyeMapsIntoTheSceneDatum()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LandingPointDesignatorTests/grummanDesignEyeMapsIntoTheSceneDatum()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00026s",
+                  "durationInSeconds" : 0.0002560615539550781,
+                  "name" : "reconstructedWindowMatchesPhysicalSidesAndDesignEyeEnvelope()",
+                  "nodeIdentifier" : "LandingPointDesignatorTests/reconstructedWindowMatchesPhysicalSidesAndDesignEyeEnvelope()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LandingPointDesignatorTests/reconstructedWindowMatchesPhysicalSidesAndDesignEyeEnvelope()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00011s",
+                  "durationInSeconds" : 0.00011491775512695312,
+                  "name" : "paneIsObliqueAndOuterMarksRemainOnTheSameSightRays()",
+                  "nodeIdentifier" : "LandingPointDesignatorTests/paneIsObliqueAndOuterMarksRemainOnTheSameSightRays()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LandingPointDesignatorTests/paneIsObliqueAndOuterMarksRemainOnTheSameSightRays()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00031s",
+                  "durationInSeconds" : 0.0003070831298828125,
+                  "name" : "everyFlightScaleMarkStaysInsideBothPanes()",
+                  "nodeIdentifier" : "LandingPointDesignatorTests/everyFlightScaleMarkStaysInsideBothPanes()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LandingPointDesignatorTests/everyFlightScaleMarkStaysInsideBothPanes()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.000052s",
+                  "durationInSeconds" : 5.221366882324219e-05,
+                  "name" : "dualPaneMarksCollimateAtTheCommanderEye()",
+                  "nodeIdentifier" : "LandingPointDesignatorTests/dualPaneMarksCollimateAtTheCommanderEye()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LandingPointDesignatorTests/dualPaneMarksCollimateAtTheCommanderEye()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00017s",
+                  "durationInSeconds" : 0.00017404556274414062,
+                  "name" : "completeTickGeometryCollimatesAcrossBothPanes()",
+                  "nodeIdentifier" : "LandingPointDesignatorTests/completeTickGeometryCollimatesAcrossBothPanes()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LandingPointDesignatorTests/completeTickGeometryCollimatesAcrossBothPanes()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.000055s",
+                  "durationInSeconds" : 5.4836273193359375e-05,
+                  "name" : "aDisplacedHeadProducesVisibleParallax()",
+                  "nodeIdentifier" : "LandingPointDesignatorTests/aDisplacedHeadProducesVisibleParallax()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LandingPointDesignatorTests/aDisplacedHeadProducesVisibleParallax()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00004s",
+                  "durationInSeconds" : 4.00543212890625e-05,
+                  "name" : "lookAngleIsMeasuredDownFromTheForwardBodyAxis()",
+                  "nodeIdentifier" : "LandingPointDesignatorTests/lookAngleIsMeasuredDownFromTheForwardBodyAxis()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LandingPointDesignatorTests/lookAngleIsMeasuredDownFromTheForwardBodyAxis()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0003s",
+                  "durationInSeconds" : 0.0002999305725097656,
+                  "name" : "apollo11ScaleAndRedesignationIncrementsStayMissionSpecific()",
+                  "nodeIdentifier" : "LandingPointDesignatorTests/apollo11ScaleAndRedesignationIncrementsStayMissionSpecific()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LandingPointDesignatorTests/apollo11ScaleAndRedesignationIncrementsStayMissionSpecific()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.3718039989471436,
+                  "name" : "trainingCueSelectsTheLiveN64MarkWithoutMovingTheGrid()",
+                  "nodeIdentifier" : "LandingPointDesignatorTests/trainingCueSelectsTheLiveN64MarkWithoutMovingTheGrid()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LandingPointDesignatorTests/trainingCueSelectsTheLiveN64MarkWithoutMovingTheGrid()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.4162790775299072,
+                  "name" : "commanderEntryPlacementStartsAtDesignEyeHeightAndSlightlyAft()",
+                  "nodeIdentifier" : "LandingPointDesignatorTests/commanderEntryPlacementStartsAtDesignEyeHeightAndSlightlyAft()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LandingPointDesignatorTests/commanderEntryPlacementStartsAtDesignEyeHeightAndSlightlyAft()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.4006130695343018,
+                  "name" : "cockpitRecenterReplacesTheOneShotHeadAnchorWithoutRebuildingTheScene()",
+                  "nodeIdentifier" : "LandingPointDesignatorTests/cockpitRecenterReplacesTheOneShotHeadAnchorWithoutRebuildingTheScene()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LandingPointDesignatorTests/cockpitRecenterReplacesTheOneShotHeadAnchorWithoutRebuildingTheScene()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "Landing Point Designator",
+              "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LandingPointDesignatorTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "0.000057s",
+                  "durationInSeconds" : 5.698204040527344e-05,
+                  "name" : "threeDimensionalGripMapsOntoAllACAAxesAndClamps()",
+                  "nodeIdentifier" : "SpatialCockpitControlTests/threeDimensionalGripMapsOntoAllACAAxesAndClamps()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/SpatialCockpitControlTests/threeDimensionalGripMapsOntoAllACAAxesAndClamps()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00005s",
+                  "durationInSeconds" : 5.0067901611328125e-05,
+                  "name" : "rodUsesSpringLoadedDetentsAroundNeutral()",
+                  "nodeIdentifier" : "SpatialCockpitControlTests/rodUsesSpringLoadedDetentsAroundNeutral()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/SpatialCockpitControlTests/rodUsesSpringLoadedDetentsAroundNeutral()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.000094s",
+                  "durationInSeconds" : 9.417533874511719e-05,
+                  "name" : "rodGestureProjectsOntoThePhysicalPanelFiveAxis()",
+                  "nodeIdentifier" : "SpatialCockpitControlTests/rodGestureProjectsOntoThePhysicalPanelFiveAxis()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/SpatialCockpitControlTests/rodGestureProjectsOntoThePhysicalPanelFiveAxis()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.3340930938720703,
+                  "name" : "proceduralControlsPivotAtTheirFlightDatums()",
+                  "nodeIdentifier" : "SpatialCockpitControlTests/proceduralControlsPivotAtTheirFlightDatums()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/SpatialCockpitControlTests/proceduralControlsPivotAtTheirFlightDatums()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "Spatial cockpit controls",
+              "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests/SpatialCockpitControlTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "LMTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/LM/LMTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "LM",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

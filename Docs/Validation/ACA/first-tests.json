@@ -1,0 +1,53 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "6EB2B257-9EFE-4CEB-A64A-5EF0086FFF85",
+        "deviceName" : "LM-ACA-Validation",
+        "modelName" : "Apple Vision Pro",
+        "osBuildNumber" : "23O470",
+        "osVersion" : "26.5",
+        "platform" : "visionOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 29,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "LM · Built with macOS 26.5.1",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1788899354.839,
+  "passedTests" : 29,
+  "result" : "Failed",
+  "skippedTests" : 0,
+  "startTime" : 1788899290.697,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "Expectation failed: (abs(station.acaHandle.orientation.real - 1) → 1.0) < (0.00001 → 1e-05)",
+      "targetName" : "LMTests",
+      "testIdentifier" : 6,
+      "testIdentifierString" : "LMImportedACATests/installationIsAtomicAndHasOneTargetIncludingChildren()",
+      "testIdentifierURL" : "test://com.apple.xcode/LM/LMTests/LMImportedACATests/installationIsAtomicAndHasOneTargetIncludingChildren()",
+      "testName" : "installationIsAtomicAndHasOneTargetIncludingChildren()"
+    }
+  ],
+  "title" : "Test - LM",
+  "topInsights" : [
+    {
+      "category" : "Longest Test Runs",
+      "impact" : "20% of duration",
+      "text" : "1 longest test run with outlier durations exceeding 3.40s (three standard deviations)"
+    }
+  ],
+  "totalTestCount" : 30
+}

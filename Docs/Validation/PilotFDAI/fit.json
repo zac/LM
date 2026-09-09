@@ -1,0 +1,80 @@
+{
+  "method": "actual USD meshes at Panel2__FDAI identity; disabled runtime groups omitted; surface intersection test does not detect complete containment",
+  "resource_sha256": {
+    "FDAI": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d",
+    "Cabin": "9b30f113235bea7832dd0d9f245d3f6ad98bd8a64af2d217943a5489e498c21b",
+    "WindowsLPD": "91c03cc4b6826473cfdccdce195fece5f591b778b8afdb3a71505df8f528cc32",
+    "PanelInventory": "026a908793a01c3f1c6fa6a024500f70fda8edc75287ac4749003719fb7eaf30",
+    "CommanderPanels": "52e4c13cf302e080edbd163fb3f6d26ce53785c28bc49dcefd3a75c876f9d604"
+  },
+  "slot": "/PanelInventory/Panels/Panel2/Panel2__FDAI",
+  "slot_cabin_matrix_rows": [
+    [
+      0.9999999403953552,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.9848076710219544,
+      -0.1736481682271851,
+      0.0
+    ],
+    [
+      0.0,
+      0.1736481682271851,
+      0.9848076710219544,
+      0.0
+    ],
+    [
+      0.3049999776482579,
+      1.4911576440556011,
+      -0.8650163875244914,
+      0.9999999403953552
+    ]
+  ],
+  "local_bounds_m": [
+    [
+      -0.074024997651577,
+      -0.074024997651577,
+      -0.2329999953508377
+    ],
+    [
+      0.074024997651577,
+      0.074024997651577,
+      0.04470000043511391
+    ]
+  ],
+  "cabin_bounds_m": [
+    [
+      0.23097500205039978,
+      1.393892765045166,
+      -1.0918718576431274
+    ],
+    [
+      0.3790249824523926,
+      1.5646361112594604,
+      -0.8123869895935059
+    ]
+  ],
+  "pilot_mesh_count": 213,
+  "foundation_mesh_count": 662,
+  "surface_crossings": [
+    {
+      "pilot": "/FDAI_Mount/FDAI_Fixed/FDAI_CaseSeam_1__0_19/Cube_013",
+      "peer": "/Cabin/Shell/Cutaway_Forward/Forward_Above_Hatch",
+      "surface_pairs": 8
+    },
+    {
+      "pilot": "/FDAI_Mount/FDAI_Fixed/FDAI_CaseSeam__1__0_19/Cube_012",
+      "peer": "/Cabin/Shell/Cutaway_Forward/Forward_Above_Hatch",
+      "surface_pairs": 8
+    },
+    {
+      "pilot": "/FDAI_Mount/FDAI_Fixed/FDAI_RearHousing/Cube",
+      "peer": "/Cabin/Shell/Cutaway_Forward/Forward_Above_Hatch",
+      "surface_pairs": 64
+    }
+  ]
+}
