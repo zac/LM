@@ -1,0 +1,268 @@
+{
+  "arguments" : [
+    "\/Users\/zac\/Library\/Developer\/CoreSimulator\/Devices\/DE0FAD53-2A01-4B96-95D3-3505E6900DA3\/data\/Containers\/Bundle\/Application\/9F5AC078-0318-4D06-B5B5-4857A1108EA8\/LM.app\/LM",
+    "--terminal-descent-cockpit",
+    "--assembly-validation-view=lpd"
+  ],
+  "breaker_banks" : true,
+  "captured_at" : "2026-09-09T00:13:18Z",
+  "caution_warning" : true,
+  "commander_fdai" : true,
+  "console_enclosures" : {
+    "InstrumentConsole" : {
+      "casting_groups" : [
+        "\/InstrumentConsole\/Enclosure"
+      ],
+      "suppressed_paths" : [
+        "\/CommanderPanels\/Panel_1\/Panel_1_Shell",
+        "\/CommanderPanels\/Panel_1\/Panel_1_Trim",
+        "\/CommanderPanels\/Panel_1\/Panel_1_RemovableBacking",
+        "\/PanelInventory\/Panels\/Panel2\/Frame",
+        "\/PanelInventory\/Panels\/Panel3\/Frame",
+        "\/PanelInventory\/Panels\/Panel1\/Panel1__FDAI\/Placeholder",
+        "\/PanelInventory\/Panels\/Panel1\/Panel1__Warning\/Placeholder",
+        "\/PanelInventory\/Panels\/Panel1\/Panel1__Timers\/Placeholder",
+        "\/PanelInventory\/Panels\/Panel1\/Panel1__CrossPointer\/Placeholder",
+        "\/PanelInventory\/Panels\/Panel1\/Panel1__Propulsion\/Placeholder",
+        "\/PanelInventory\/Panels\/Panel1\/Panel1__RangeThrust\/Placeholder",
+        "\/PanelInventory\/Panels\/Panel1\/Panel1__Guidance\/Placeholder",
+        "\/PanelInventory\/Panels\/Panel2\/Panel2__FDAI\/Placeholder",
+        "\/PanelInventory\/Panels\/Panel2\/Panel2__Caution\/Placeholder",
+        "\/PanelInventory\/Panels\/Panel2\/Panel2__RCSECS\/Placeholder",
+        "\/PanelInventory\/Panels\/Panel2\/Panel2__CrossPointer\/Placeholder",
+        "\/PanelInventory\/Panels\/Panel2\/Panel2__Systems\/Placeholder",
+        "\/PanelInventory\/Panels\/Panel2\/Panel2__Lower\/Placeholder",
+        "\/PanelInventory\/Panels\/Panel3\/Panel3__EngineRadar\/Placeholder",
+        "\/PanelInventory\/Panels\/Panel3\/Panel3__Stability\/Placeholder",
+        "\/PanelInventory\/Panels\/Panel3\/Panel3__TimerHeaters\/Placeholder",
+        "\/PanelInventory\/Panels\/Panel3\/Panel3__Lighting\/Placeholder"
+      ]
+    },
+    "LowerConsole" : {
+      "casting_groups" : [
+        "\/LowerConsole\/CenterLowerApron",
+        "\/LowerConsole\/CommanderShoulder",
+        "\/LowerConsole\/ControllerCase",
+        "\/LowerConsole\/DSKYCase"
+      ],
+      "suppressed_paths" : [
+        "\/CommanderPanels\/Panel_4\/Panel_4_Shell",
+        "\/CommanderPanels\/Panel_4\/Panel_4_RemovableBacking",
+        "\/CommanderPanels\/Panel_4\/Panel_4_Trim",
+        "\/CommanderPanels\/Panel_4\/Panel_4_Fasteners"
+      ]
+    },
+    "WindowSurrounds" : {
+      "casting_groups" : [
+        "\/WindowSurrounds\/CDR",
+        "\/WindowSurrounds\/LMP"
+      ],
+      "suppressed_paths" : [
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Inboard_00",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Inboard_01",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Lower_00",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Lower_01",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Lower_02",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Upper_00",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Upper_01",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Upper_02",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Upper_03",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Upper_04",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Upper_05",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Upper_06",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Upper_07",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Upper_08",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Upper_09",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Upper_10",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Upper_11",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Upper_12",
+        "\/Cabin\/Shell\/Cutaway_Forward\/CDR_Front_Upper_13",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Inboard_00",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Inboard_01",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Lower_00",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Lower_01",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Lower_02",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Upper_00",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Upper_01",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Upper_02",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Upper_03",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Upper_04",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Upper_05",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Upper_06",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Upper_07",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Upper_08",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Upper_09",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Upper_10",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Upper_11",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Upper_12",
+        "\/Cabin\/Shell\/Cutaway_Forward\/LMP_Front_Upper_13"
+      ]
+    }
+  },
+  "descent_rate" : true,
+  "engine_buttons" : true,
+  "event_timer_controls" : true,
+  "foundation" : true,
+  "interior_detail_groups" : [
+    "CDRAftCrownInserts",
+    "CDRLinerEdgeTrim",
+    "CDRLowerCableHarness",
+    "CDRUpperLinerDetails",
+    "ForwardHatchFittings",
+    "ForwardHeaderCableRun",
+    "ForwardHeaderTrim",
+    "ForwardOverheadLiner",
+    "LMPAftCrownInserts",
+    "LMPLinerEdgeTrim",
+    "LMPLowerCableHarness",
+    "LMPUpperLinerDetails",
+    "TransferHatchFittings"
+  ],
+  "lunar_contact_instances" : [
+    "CommanderLunarContact",
+    "PilotLunarContact"
+  ],
+  "mission_time_available" : false,
+  "mission_timer_controls_installed" : false,
+  "occupied_slots" : {
+    "Panel1__CrossPointer" : {
+      "components" : [
+        "CrossPointer"
+      ],
+      "coverage" : "partialRegion"
+    },
+    "Panel1__FDAI" : {
+      "components" : [
+        "FDAI_CDR"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel1__Propulsion" : {
+      "components" : [
+        "PropulsionInstruments"
+      ],
+      "coverage" : "partialRegion"
+    },
+    "Panel1__RangeThrust" : {
+      "components" : [
+        "AltitudeRate"
+      ],
+      "coverage" : "partialRegion"
+    },
+    "Panel1__Timers" : {
+      "components" : [
+        "TimerReadouts"
+      ],
+      "coverage" : "partialRegion"
+    },
+    "Panel1__Warning" : {
+      "components" : [
+        "CautionWarning"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel2__Caution" : {
+      "components" : [
+        "CautionWarning"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel2__FDAI" : {
+      "components" : [
+        "Pilot FDAI"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel3__Lighting" : {
+      "components" : [
+        "PilotLunarContact"
+      ],
+      "coverage" : "partialRegion"
+    },
+    "Panel3__Stability" : {
+      "components" : [
+        "AttitudeMode"
+      ],
+      "coverage" : "partialRegion"
+    },
+    "Panel3__TimerHeaters" : {
+      "components" : [
+        "EventTimerControls"
+      ],
+      "coverage" : "partialRegion"
+    },
+    "Panel4__DSKY" : {
+      "components" : [
+        "DSKY"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel5__Engine" : {
+      "components" : [
+        "DescentRate",
+        "EngineButtons"
+      ],
+      "coverage" : "partialRegion"
+    },
+    "Panel11__Region1" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel11__Region2" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel11__Region3" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel11__Region4" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel11__Region5" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel16__Region1" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel16__Region2" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel16__Region3" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    },
+    "Panel16__Region4" : {
+      "components" : [
+        "BreakerBanks"
+      ],
+      "coverage" : "occupiedRegion"
+    }
+  },
+  "pilot_fdai" : true,
+  "propulsion" : true,
+  "timer_readouts" : [
+    "MissionTimer",
+    "EventTimer"
+  ]
+}

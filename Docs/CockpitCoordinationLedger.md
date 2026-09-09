@@ -1,5 +1,13 @@
 # Cockpit coordination ledger
 
+## Solid console enclosure and LPD placement phase
+
+User review identified exposed instrument backs, skeletal framing and inadequate enclosure despite successful individual instrument delivery. This phase replaces structural surfaces around fixed live instruments with solid central/lower consoles and thicker window surrounds. A parallel user-requested LPD audit corrected its sideways-drifting spine to the vehicle-forward reference using unchanged provisional pane/eye datums; crossbar spacing and numeric targeting remain unqualified.
+
+LMKit runtime package `c425dcfc8a753c20159fe2226a181faace96b9dc` contains InstrumentConsole `b6d2712`, LowerConsole `d15b4fb`, WindowSurrounds `38eaad3` and WindowsLPD correction `f5824e4`, preserving worker history. Independent combined geometry clears all three enclosure pairings, windows/breakers, sampled sightlines and125 ACA poses. Hidden rear mounting contacts remain documented. Package tests pass13 functions including two parameterized functions with17 cases each.
+
+LM runtime `53b9f17` installs each enclosure transactionally using exact suppression paths, protected mounts and required live-instrument gates, preserving fallback and input identity. Replacement shell casters participate in fitted lighting. Corrected enclosure runtime0b98768 passes 105 tests in 19 suites. Native views show improved solid embedding; a pilot-contact surround notch remains and its later draft fix is excluded. Short P65 demo967f16b defaults to a headlessly verified 49.23-second soft landing; this final configuration was not app-run at user request. Evidence: Docs/Validation/SolidConsole/README.md. Physical Vision Pro remains untested.
+
 Updated 2026-09-08. This section supersedes the historical records below.
 
 ## Pilot station and systems phase
