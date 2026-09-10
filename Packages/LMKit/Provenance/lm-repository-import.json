@@ -1,0 +1,13 @@
+{
+  "sourceRepository": "https://github.com/zac/LMKit.git",
+  "sourceCommit": "5287dfda4c5b8ba88882dc27f4dd9b9235e161e7",
+  "sourceTree": "a9904f1a8f51da1c914bec2776e3d0b2de823904",
+  "importCommit": "750aa44a3f8412cbe134396fc297fa6b0de43e59",
+  "destination": "Packages/LMKit",
+  "method": "Non-squashed subtree merge; original commit graph preserved",
+  "trackedFilesImported": 876,
+  "runtimeResources": 67,
+  "runtimeResourceBytes": 9817185,
+  "runtimeChanges": "None; dependency path and repository documentation only",
+  "standaloneRepository": "Retained unchanged as historical source; ongoing work belongs in LM"
+}

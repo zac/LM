@@ -658,7 +658,7 @@
 		};
 		681E8E8D74FE78FAB5A68158 /* XCLocalSwiftPackageReference "LMKit" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../LMKit;
+			relativePath = Packages/LMKit;
 		};
 /* End XCLocalSwiftPackageReference section */
 

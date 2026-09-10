@@ -1,5 +1,9 @@
 # LMKit
 
+Integrated into the LM repository from original LMKit main `5287dfd`.
+The original history and evidence are preserved. Run the commands below from
+`Packages/LMKit` unless they explicitly name the LM repository root.
+
 Reusable lunar-module models and independently addressable cockpit components for RealityKit. LMKit owns model authoring and packaged geometry; the LM application owns presentation/input bindings, AGC owns computer behavior, and LMCore owns flight dynamics. This package has no AGC or LMCore dependency.
 
 ## Pilot station and systems hardware
@@ -56,7 +60,7 @@ The import is an explicit baseline from pre-existing work, not a claim that all 
 
 ## Use
 
-Clone LMKit next to LM (and AGC) and install Git LFS, then run `git lfs pull`. LM currently references `../LMKit`. Use `LMKitAssets.legacySceneURL` with `Entity.load(contentsOf:)` to preserve wrapper composition; use `LMKitAssets.lunarModuleURL` for a static exterior preview and `LMKitAssets.dskyURL` for the neutral component. Assets retain subdirectories and relative USD references through SwiftPM `.copy` resources.
+LMKit is now an internal package in the LM repository at `Packages/LMKit`. Install Git LFS and run `git lfs pull` from the LM repository root. LM references this package directly; no sibling LMKit checkout is needed. Use `LMKitAssets.legacySceneURL` with `Entity.load(contentsOf:)` to preserve wrapper composition; use `LMKitAssets.lunarModuleURL` for a static exterior preview and `LMKitAssets.dskyURL` for the neutral component. Assets retain subdirectories and relative USD references through SwiftPM `.copy` resources.
 
 Run `swift test` on macOS. Tests load the actual packaged assets in RealityKit and check the simulation and key hierarchy. After regenerating the DSKY, run `python3 Tools/sync_dsky.py` to refresh its shipping copy, then test. Do not ship static look-development previews as live instrument state.
 
