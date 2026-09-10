@@ -1,0 +1,123 @@
+{
+  "status": "PASS provisional face envelope",
+  "panel": "Panel1",
+  "slot": "Panel1__RangeThrust",
+  "actual_instrument_panel_local_min_m": [
+    0.08399999886751174,
+    -0.11749999791383743,
+    -0.007000000596046448
+  ],
+  "actual_instrument_panel_local_max_m": [
+    0.16600000113248825,
+    0.027499997913837435,
+    0.01940000019222498
+  ],
+  "unchanged_slot_pose": {
+    "space": "parent-local",
+    "translation_m": [
+      0.145,
+      -0.045,
+      0
+    ],
+    "quaternion_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "scale": [
+      1,
+      1,
+      1
+    ]
+  },
+  "approved_slot_local_offset": {
+    "translation_m": [
+      -0.02,
+      0,
+      0.008
+    ],
+    "quaternion_xyzw": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "scale": [
+      1,
+      1,
+      1
+    ]
+  },
+  "adjacent_slots": [
+    {
+      "other_slot": "Panel1__FDAI",
+      "xy_separation_m": [
+        0.06499999886751173,
+        0
+      ],
+      "surface_overlap_in_panel_xy": false
+    },
+    {
+      "other_slot": "Panel1__Warning",
+      "xy_separation_m": [
+        0,
+        0.16300000208616255
+      ],
+      "surface_overlap_in_panel_xy": false
+    },
+    {
+      "other_slot": "Panel1__Timers",
+      "xy_separation_m": [
+        0.028999998867511728,
+        0.11350000208616258
+      ],
+      "surface_overlap_in_panel_xy": false
+    },
+    {
+      "other_slot": "Panel1__CrossPointer",
+      "xy_separation_m": [
+        0.08399999886751174,
+        0.04000000208616257
+      ],
+      "surface_overlap_in_panel_xy": false
+    },
+    {
+      "other_slot": "Panel1__Propulsion",
+      "xy_separation_m": [
+        0,
+        0.007500002086162555
+      ],
+      "surface_overlap_in_panel_xy": false
+    },
+    {
+      "other_slot": "Panel1__Guidance",
+      "xy_separation_m": [
+        0,
+        0.003000002086162565
+      ],
+      "surface_overlap_in_panel_xy": false
+    }
+  ],
+  "retained_blank": {
+    "slot_local_z_bounds_m": [
+      -0.003,
+      0.0
+    ],
+    "instrument_visible_tape_z_m": 0.013,
+    "instrument_pointer_z_m": 0.018,
+    "occlusion": "blank entirely behind active tape/pointer; keep blank for deferred T/W",
+    "rear_intersection": "HousingBack intentionally intersects existing panel/blank slab while seated; hidden registration only, not qualified mechanical mounting"
+  },
+  "limits": [
+    "No surveyed dimensions",
+    "Provisional3mm Guidance and7.5mm Propulsion vertical gaps",
+    "No current full cabin/window ray or controller sweep test",
+    "Front/crew-eye combined Blender previews inspected; FDAI Workbench texture not a runtime appearance test"
+  ],
+  "dependency_hashes": {
+    "PanelInventory": "f315bdcbd8a6e597231b33420652fb6297241bf3af7c585708f472583522ec49",
+    "CommanderPanels": "52e4c13cf302e080edbd163fb3f6d26ce53785c28bc49dcefd3a75c876f9d604",
+    "FDAI": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d"
+  }
+}

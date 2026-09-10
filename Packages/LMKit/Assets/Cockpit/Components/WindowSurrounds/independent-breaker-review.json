@@ -1,0 +1,16 @@
+{
+  "breaker_input": {
+    "path": "/private/tmp/lmkit-window-surrounds/Assets/Cockpit/Components/BreakerBanks/BreakerBanks.usdz",
+    "sha256": "fce4e4248806f4ff963775bc8013e17e6dee370671e656390bb8d05fcddfc217"
+  },
+  "enclosure_inputs": {
+    "InstrumentConsole": "27a29aee1d909d482b0a4edcca5fbdf1ba227bebcb85bcee1c94405ac1475b26",
+    "LowerConsole": "8ee9a28d08735a225c081e96509b611cdaf552f6af8f59d7ed7ca6874d4bc4f0",
+    "WindowSurrounds": "1c5e9057ed75469edc3d63524680cada285b14ca6143acd7cc82f58a761ce9a6"
+  },
+  "crossings": {
+    "InstrumentConsole": [],
+    "LowerConsole": [],
+    "WindowSurrounds": []
+  }
+}

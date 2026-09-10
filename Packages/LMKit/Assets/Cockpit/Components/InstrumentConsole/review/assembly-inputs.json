@@ -1,0 +1,985 @@
+{
+  "inputs": [
+    {
+      "component": "Cabin",
+      "file": "Cabin/Cabin.usdz",
+      "sha256": "9b30f113235bea7832dd0d9f245d3f6ad98bd8a64af2d217943a5489e498c21b",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "WindowsLPD",
+      "file": "WindowsLPD/WindowsLPD.usdz",
+      "sha256": "91c03cc4b6826473cfdccdce195fece5f591b778b8afdb3a71505df8f528cc32",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "CommanderPanels",
+      "file": "CommanderPanels/CommanderPanels.usdz",
+      "sha256": "52e4c13cf302e080edbd163fb3f6d26ce53785c28bc49dcefd3a75c876f9d604",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "PanelInventory",
+      "file": "PanelInventory/PanelInventory.usdz",
+      "sha256": "4b95b051b27831c97a47e9ccfb36b2f62e23469d3be50a09225e57685dc56b24",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "InteriorDetails",
+      "file": "InteriorDetails/InteriorDetails.usdz",
+      "sha256": "069cdfb9923a6953f1ce4ffc5053a948e0c4f76840866553435d778dfd84b201",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "BreakerBanks",
+      "file": "BreakerBanks/BreakerBanks.usdz",
+      "sha256": "fce4e4248806f4ff963775bc8013e17e6dee370671e656390bb8d05fcddfc217",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "CautionWarning",
+      "file": "CautionWarning/CautionWarning.usdz",
+      "sha256": "580b16119a484c1a6138731e81e6960aab12324524dd267c0b227628e23b743b",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "InstrumentConsole",
+      "file": "InstrumentConsole/InstrumentConsole.usdz",
+      "sha256": "27a29aee1d909d482b0a4edcca5fbdf1ba227bebcb85bcee1c94405ac1475b26",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "CDR_FDAI",
+      "file": "FDAI/FDAI.usdz",
+      "sha256": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.30000001192092896
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.5924168825149536
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.8666242957115173
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "LMP_FDAI",
+      "file": "FDAI/FDAI.usdz",
+      "sha256": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.3050000071525574
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.4911577701568604
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.8650164008140564
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "DSKY",
+      "file": "DSKY/DSKY.usdz",
+      "sha256": "e20a69864d4c7e0ff068172e0e672d9fbcc510c1dc4e97e4db0246fde08fbdfd",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.7071067690849304,
+          0.7071068286895752,
+          1.0871126651763916
+        ],
+        [
+          0.0,
+          -0.7071068286895752,
+          0.7071067690849304,
+          -0.6021004915237427
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "AltitudeRate",
+      "file": "AltitudeRate/AltitudeRate.usdz",
+      "sha256": "047bd435c51ecb1920aedc8f8b1cefbc9ea9056ac1139503a81abe29b42254c1",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.12000000476837158
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.5614835023880005
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.8692932724952698
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "CrossPointer",
+      "file": "CrossPointer/CrossPointer.usdz",
+      "sha256": "8095cdf3c12c4b77025e415ad21ea24a5bf51615674fd076f7458b9369ae1eae",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.3149999976158142
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.70289146900177
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.9023507237434387
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "PropulsionInstruments",
+      "file": "PropulsionInstruments/PropulsionInstruments.usdz",
+      "sha256": "9eedc3e28ebc5be2b5da07c5c5ff99176c17df66df974879d0348d8061d8d1e8",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.06800000369548798
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.7092045545578003
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.8953405022621155
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "AttitudeMode",
+      "file": "DescentControls/AttitudeMode.usdz",
+      "sha256": "4e7b811a7ed251bd9065a852a2ed652ca16a5fd06b48beea98702a492dc63f86",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.11999999731779099
+        ],
+        [
+          0.0,
+          0.7071067690849304,
+          0.7071068286895752,
+          1.2781422138214111
+        ],
+        [
+          0.0,
+          -0.7071068286895752,
+          0.7071067690849304,
+          -0.8058578372001648
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "DescentRate",
+      "file": "DescentControls/DescentRate.usdz",
+      "sha256": "ffa295038be35261353a8a0c8fe35316647d4e0b910b7ca108e97f55375cf078",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.6387999653816223
+        ],
+        [
+          0.0,
+          0.258819043636322,
+          0.9659258127212524,
+          0.9164698719978333
+        ],
+        [
+          0.0,
+          -0.9659258127212524,
+          0.258819043636322,
+          -0.3626972436904907
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "MissionTimer",
+      "file": "Timers/MissionTimer.usdz",
+      "sha256": "ef6eb8d8d54de5dc39b31f0f9f38a3151343dc8c73ede7762615c41613570bea",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.33500000834465027
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.7607048749923706
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.9084831476211548
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "EventTimer",
+      "file": "Timers/EventTimer.usdz",
+      "sha256": "d22f9ec7b70c28a12725414f9150f2edb3f641c97c91c67cd0b7409326d8b540",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.2120000123977661
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.7607048749923706
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.9084831476211548
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "EventTimerControls",
+      "file": "Timers/EventTimerControls.usdz",
+      "sha256": "3cf2edba9154f991e386337acda721a3cd163c5cef22c5164f889ec28cce3cbb",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.11999999731779099
+        ],
+        [
+          0.0,
+          0.7071067690849304,
+          0.7071068286895752,
+          1.3064265251159668
+        ],
+        [
+          0.0,
+          -0.7071068286895752,
+          0.7071067690849304,
+          -0.8284852504730225
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "EngineButtons",
+      "file": "EngineControls/EngineButtons.usdz",
+      "sha256": "eedf4dcadf8e075bc3d6084c273ea5a335506d3680966aa528298dcae7bec369",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.6387999653816223
+        ],
+        [
+          0.0,
+          0.258819043636322,
+          0.9659258127212524,
+          0.9164698719978333
+        ],
+        [
+          0.0,
+          -0.9659258127212524,
+          0.258819043636322,
+          -0.3626972436904907
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "CommanderLunarContact",
+      "file": "EngineControls/LunarContact.usdz",
+      "sha256": "6f97cc39c398f9f19555d7ea283e8d1c711deedd9b762cc529b53725d5f31346",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.20399999618530273
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.7019586563110352
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.9018816351890564
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "PilotLunarContact",
+      "file": "EngineControls/LunarContact.usdz",
+      "sha256": "6f97cc39c398f9f19555d7ea283e8d1c711deedd9b762cc529b53725d5f31346",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.43800002336502075
+        ],
+        [
+          0.0,
+          0.7071067690849304,
+          0.7071068286895752,
+          1.3023959398269653
+        ],
+        [
+          0.0,
+          -0.7071068286895752,
+          0.7071067690849304,
+          -0.8296873569488525
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "component": "ACA",
+      "file": "HandControllers/ACA.usdz",
+      "sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5",
+      "Cabin_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.49000000953674316
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.9075000286102295
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.3700000047683716
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  ],
+  "suppressions": [
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Left"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar/Panel_1_Collar_Top"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Top"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Right"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar/Panel_1_Collar_Right"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Right"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Left"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Bottom"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Left"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar/Panel_1_Collar_Left"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Left"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Top"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Bottom"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Top"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Right"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_Trim/Panel_1_ApertureCollar/Panel_1_Collar_Bottom"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_Return_Bottom"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_Shell/Panel_1_RearFlange_Top"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Bottom"
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Right"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Frame/FrameHA"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel11/Panel11__Region5/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Frame/FrameHA"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__RCSECS/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel11/Panel11__Region4/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel16/Panel16__Region4/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel5/Panel5__Engine/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Panel3__Stability/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__Caution/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel16/Panel16__Region3/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel4/Panel4__DSKY/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__Warning/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel11/Panel11__Region3/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Panel3__EngineRadar/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel11/Panel11__Region1/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Panel3__TimerHeaters/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__Timers/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__CrossPointer/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel16/Panel16__Region2/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Frame/FrameHB"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Frame/FrameVB"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel11/Panel11__Region2/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__Guidance/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel16/Panel16__Region1/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__FDAI/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__Propulsion/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__FDAI/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Frame/FrameVB"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__CrossPointer/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Panel3__Lighting/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Frame/FrameHB"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Frame/FrameVA"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__Lower/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__RangeThrust/Placeholder"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Frame/FrameVA"
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__Systems/Placeholder"
+    }
+  ],
+  "views": [
+    {
+      "name": "crew-eye",
+      "eye": [
+        -0.5588,
+        1.78,
+        -0.38
+      ],
+      "target": [
+        -0.05,
+        1.53,
+        -0.875
+      ]
+    },
+    {
+      "name": "pilot-eye",
+      "eye": [
+        0.5588,
+        1.78,
+        -0.38
+      ],
+      "target": [
+        0.05,
+        1.53,
+        -0.875
+      ]
+    },
+    {
+      "name": "central-oblique",
+      "eye": [
+        -0.22,
+        1.84,
+        -0.21
+      ],
+      "target": [
+        0,
+        1.55,
+        -0.88
+      ]
+    }
+  ],
+  "limits": "Workbench mesh/material geometry only; all source assets neutral. FDAI_Glass, FaceGlass and Glazing hidden in render only because Workbench treats transparent surfaces as opaque. No live or headset verification."
+}

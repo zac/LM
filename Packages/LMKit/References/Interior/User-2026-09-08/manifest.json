@@ -1,0 +1,43 @@
+{
+  "received": "2026-09-08",
+  "files": [
+    {
+      "filename": "583935771_852557297354456_2723809586326518278_n.jpg",
+      "source": "user-provided local file",
+      "bytes": 87483,
+      "sha256": "e7ab6ad98d1761fdd6b4e7dc7367825c289c53f5884eb75f58d775731e622905",
+      "provenance": "original photographer/vehicle/date not established from upload; preserve visible credits",
+      "modifications": "none"
+    },
+    {
+      "filename": "511406576_9899452223514721_2569389181361959162_n.jpg",
+      "source": "user-provided local file",
+      "bytes": 254623,
+      "sha256": "54ec4882788d882b110cfb175a91bf5c51c752f48cf31cc9ec5bbdbfb6cc21a0",
+      "provenance": "original photographer/vehicle/date not established from upload; preserve visible credits",
+      "modifications": "none"
+    },
+    {
+      "filename": "images.jpeg",
+      "source": "user-provided local file",
+      "bytes": 46449,
+      "sha256": "6363286a0b8e0cf73a4fd594946f153ea85c58aada58569eeaf1ea5e18591af9",
+      "provenance": "original photographer/vehicle/date not established from upload; preserve visible credits",
+      "modifications": "none"
+    }
+  ],
+  "web_references": [
+    {
+      "url": "https://airandspace.si.edu/multimedia-gallery/panorama/lm-interiorjpg",
+      "title": "Lunar Module Panorama",
+      "vehicle": "LM-2",
+      "retrieval": "Direct web fetch403; official indexed page text inspected; interactive inspection pending",
+      "rights": "Panorama-specific page says contact Smithsonian; do not infer CC0 from object metadata"
+    },
+    {
+      "url": "https://airandspace.si.edu/collection-objects/lunar-module-2-apollo/nasm_A19711598000",
+      "title": "Lunar Module LM-2",
+      "finding": "Official object record states LM-2 never flew and was modified to appear like Apollo 11 Eagle"
+    }
+  ]
+}

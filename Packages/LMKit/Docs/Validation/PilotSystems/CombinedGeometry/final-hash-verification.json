@@ -1,0 +1,94 @@
+{
+  "verified_at_utc": "2026-09-08T22:43:44.497409+00:00",
+  "assets": {
+    "Cabin": {
+      "sha256": "9b30f113235bea7832dd0d9f245d3f6ad98bd8a64af2d217943a5489e498c21b",
+      "matches_review": true
+    },
+    "WindowsLPD": {
+      "sha256": "91c03cc4b6826473cfdccdce195fece5f591b778b8afdb3a71505df8f528cc32",
+      "matches_review": true
+    },
+    "PanelInventory": {
+      "sha256": "4b95b051b27831c97a47e9ccfb36b2f62e23469d3be50a09225e57685dc56b24",
+      "matches_review": true
+    },
+    "CommanderPanels": {
+      "sha256": "52e4c13cf302e080edbd163fb3f6d26ce53785c28bc49dcefd3a75c876f9d604",
+      "matches_review": true
+    },
+    "InteriorDetails": {
+      "sha256": "069cdfb9923a6953f1ce4ffc5053a948e0c4f76840866553435d778dfd84b201",
+      "matches_review": true
+    },
+    "BreakerBanks": {
+      "sha256": "fce4e4248806f4ff963775bc8013e17e6dee370671e656390bb8d05fcddfc217",
+      "matches_review": true
+    },
+    "AltitudeRate": {
+      "sha256": "047bd435c51ecb1920aedc8f8b1cefbc9ea9056ac1139503a81abe29b42254c1",
+      "matches_review": true
+    },
+    "CrossPointer": {
+      "sha256": "8095cdf3c12c4b77025e415ad21ea24a5bf51615674fd076f7458b9369ae1eae",
+      "matches_review": true
+    },
+    "DSKY": {
+      "sha256": "e20a69864d4c7e0ff068172e0e672d9fbcc510c1dc4e97e4db0246fde08fbdfd",
+      "matches_review": true
+    },
+    "FDAI": {
+      "sha256": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d",
+      "matches_review": true
+    },
+    "PilotFDAI": {
+      "sha256": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d",
+      "matches_review": true
+    },
+    "ACA": {
+      "sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5",
+      "matches_review": true
+    },
+    "AttitudeMode": {
+      "sha256": "4e7b811a7ed251bd9065a852a2ed652ca16a5fd06b48beea98702a492dc63f86",
+      "matches_review": true
+    },
+    "DescentRate": {
+      "sha256": "ffa295038be35261353a8a0c8fe35316647d4e0b910b7ca108e97f55375cf078",
+      "matches_review": true
+    },
+    "EngineButtons": {
+      "sha256": "eedf4dcadf8e075bc3d6084c273ea5a335506d3680966aa528298dcae7bec369",
+      "matches_review": true
+    },
+    "CommanderLunarContact": {
+      "sha256": "6f97cc39c398f9f19555d7ea283e8d1c711deedd9b762cc529b53725d5f31346",
+      "matches_review": true
+    },
+    "PilotLunarContact": {
+      "sha256": "6f97cc39c398f9f19555d7ea283e8d1c711deedd9b762cc529b53725d5f31346",
+      "matches_review": true
+    },
+    "PropulsionInstruments": {
+      "sha256": "9eedc3e28ebc5be2b5da07c5c5ff99176c17df66df974879d0348d8061d8d1e8",
+      "matches_review": true
+    },
+    "MissionTimer": {
+      "sha256": "ef6eb8d8d54de5dc39b31f0f9f38a3151343dc8c73ede7762615c41613570bea",
+      "matches_review": true
+    },
+    "EventTimer": {
+      "sha256": "d22f9ec7b70c28a12725414f9150f2edb3f641c97c91c67cd0b7409326d8b540",
+      "matches_review": true
+    },
+    "EventTimerControls": {
+      "sha256": "3cf2edba9154f991e386337acda721a3cd163c5cef22c5164f889ec28cce3cbb",
+      "matches_review": true
+    },
+    "CautionWarning": {
+      "sha256": "580b16119a484c1a6138731e81e6960aab12324524dd267c0b227628e23b743b",
+      "matches_review": true
+    }
+  },
+  "all_match": true
+}

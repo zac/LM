@@ -1,0 +1,97 @@
+{
+  "LM_revision": "5c38d1481e5b57ced3c434401a91c1e8aeb284d7",
+  "LMKit_revision": "3ad1a999ff17aea859eaea5750f1c65e66fad673",
+  "files": [
+    {
+      "snapshot": "assembly/CommanderStationAssemblyHandoff.md",
+      "original_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/CommanderStationAssemblyHandoff.md",
+      "sha256": "f8cefb81f201a8abd513fa10c71a307169f3c9ffa0900fe451c90787be3429a6",
+      "bytes": 12269,
+      "usage": "Accepted installation context; compatibility evidence, not hardware dimensions"
+    },
+    {
+      "snapshot": "assembly/README.md",
+      "original_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Validation/CommanderStationAssembly/README.md",
+      "sha256": "936ddae4631eb823a34788c2f51f86d3b38af133beb2068f30beafec3c2121ab",
+      "bytes": 6394,
+      "usage": "Accepted installation context; compatibility evidence, not hardware dimensions"
+    },
+    {
+      "snapshot": "assembly/observers.json",
+      "original_path": "/Users/zac/.codex/worktrees/591e/LM/Docs/Validation/CommanderStationAssembly/observers.json",
+      "sha256": "5408b8ceea68b5c7311a421b4132eb05e35197548828be44c83286a4368e3813",
+      "bytes": 798,
+      "usage": "Accepted installation context; compatibility evidence, not hardware dimensions"
+    },
+    {
+      "snapshot": "assembly/LMCommanderStationAssembly.swift",
+      "original_path": "/Users/zac/.codex/worktrees/591e/LM/LM/LMCommanderStationAssembly.swift",
+      "sha256": "b2fac93e32323bbd7cd03f0c091a95bc230d0943bb2be19c430305b636caf29b",
+      "bytes": 7532,
+      "usage": "Read-only source for accepted transforms and disabled geometry"
+    },
+    {
+      "snapshot": "AS11-36-5389HR.jpg",
+      "original_path": "/Users/zac/.codex/worktrees/8891/LMKit/Assets/Cockpit/Components/Cabin/evidence/Docs/Research/LunarModuleInterior/references/images/AS11-36-5389HR.jpg",
+      "sha256": "9a87df320e1fcd6c624ebb14ac2980bc72e4d3173a323e6197dd44c4469be5a1",
+      "bytes": 876209,
+      "usage": "Full image, no crop. Apollo 11-led qualitative panel/edge relationships only; no photogrammetric measurements"
+    },
+    {
+      "snapshot": "69-H-134.jpg",
+      "original_path": "/Users/zac/.codex/worktrees/8891/LMKit/Assets/Cockpit/Components/Cabin/evidence/Docs/Research/LunarModuleInterior/references/images/69-H-134.jpg",
+      "sha256": "b851a1d0e20ea309beec4a33454d8b70e9923e2c3553d9da2d9275368665abb9",
+      "bytes": 165479,
+      "usage": "Full image, no crop. Apollo 11-led qualitative panel/edge relationships only; no photogrammetric measurements"
+    },
+    {
+      "snapshot": "DSKY/sources.json",
+      "original_path": "/Users/zac/.codex/worktrees/8891/LMKit/Assets/Cockpit/Components/DSKY/evidence/sources.json",
+      "sha256": "cde3538d9070ec2b1f2d7b5ed1a1b356d4398de873a87e6f05eb344d3cc51cd3",
+      "bytes": 1838,
+      "usage": "Inherited original source provenance; do not promote provisional geometry to flight dimensions"
+    },
+    {
+      "snapshot": "DSKY/mount-fit-research.md",
+      "original_path": "/Users/zac/.codex/worktrees/8891/LMKit/Assets/Cockpit/Components/DSKY/evidence/mount-fit-research.md",
+      "sha256": "db26641236c258d3d3380950ab703cd9d872d4e379e72f2b70dd41584ad6c313",
+      "bytes": 4461,
+      "usage": "Inherited original source provenance; do not promote provisional geometry to flight dimensions"
+    },
+    {
+      "snapshot": "DSKY/2003956-B.png",
+      "original_path": "/Users/zac/.codex/worktrees/8891/LMKit/Assets/Cockpit/Components/DSKY/evidence/2003956-B.png",
+      "sha256": "b42b39b21a0117ce274d9ea5cb5287336744a87af276df5140f636b8b4fbf85d",
+      "bytes": 508941,
+      "usage": "Inherited original source provenance; do not promote provisional geometry to flight dimensions"
+    },
+    {
+      "snapshot": "FDAI/research.md",
+      "original_path": "/Users/zac/.codex/worktrees/8891/LMKit/Assets/Cockpit/Components/FDAI/evidence/research.md",
+      "sha256": "6a2a08ca3d5e739a46a6b7a0d91bedb68cc0bd2d8ba472b7c8359cbe1bfc2fd7",
+      "bytes": 6537,
+      "usage": "Inherited original source provenance; do not promote provisional geometry to flight dimensions"
+    },
+    {
+      "snapshot": "FDAI/sources.json",
+      "original_path": "/Users/zac/.codex/worktrees/8891/LMKit/Assets/Cockpit/Components/FDAI/evidence/sources.json",
+      "sha256": "80f2a5a5cc50883edb30b29c82d7754872d5835ad1f50f8812528606c473c0be",
+      "bytes": 1788,
+      "usage": "Inherited original source provenance; do not promote provisional geometry to flight dimensions"
+    },
+    {
+      "snapshot": "Cabin-image-manifest.json",
+      "original_path": "/Users/zac/.codex/worktrees/8891/LMKit/Assets/Cockpit/Components/Cabin/evidence/Docs/Research/LunarModuleInterior/references/images/manifest.json",
+      "sha256": "0a793e8ab4413d34e63e3b18983f1661543124bc535447af1c80da0527c11ef8",
+      "bytes": 7383,
+      "usage": "Original URL attempts; failed URLs remain recorded"
+    },
+    {
+      "snapshot": "photo-reference-catalog.md",
+      "original_path": "/Users/zac/.codex/worktrees/8891/LMKit/Assets/Cockpit/Components/Cabin/evidence/Docs/Research/LunarModuleInterior/photo-reference-catalog.md",
+      "sha256": "47e7706eec5e0ba6257cd7d841f6590d4e40e7f6eb9ea40ab2d751283ea7e49c",
+      "bytes": 14090,
+      "usage": "Original scan provenance and source URL mapping"
+    }
+  ]
+}

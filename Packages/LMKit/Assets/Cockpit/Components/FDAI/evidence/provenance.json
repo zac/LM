@@ -1,0 +1,55 @@
+{
+  "baseline": "d8e35fa3ec8dc400cbb2762c24953022b07e8ebb",
+  "imports": [
+    {
+      "source_repository": "https://github.com/zac/LM",
+      "source_checkout_head": "cc42b92e45aabc25513b05a6cac42f0d04a8c147",
+      "last_change_commit": "92a2217ba6908161495c807bd7d9dda608349a35",
+      "source_path": "Packages/RealityKitContent/Sources/RealityKitContent/RealityKitContent.rkassets/fdai_8ball_albedo.png",
+      "destination": "textures/fdai_8ball_albedo.png",
+      "sha256": "43e98518b27f3360423dab1a552abefd4af4e2cfcd2c54300760086b753c7bad",
+      "byte_identical": true
+    },
+    {
+      "source_repository": "https://github.com/zac/LM",
+      "source_checkout_head": "cc42b92e45aabc25513b05a6cac42f0d04a8c147",
+      "last_change_commit": "92a2217ba6908161495c807bd7d9dda608349a35",
+      "source_path": "Packages/RealityKitContent/Sources/RealityKitContent/RealityKitContent.rkassets/FDAI.usda",
+      "destination": "evidence/LM-FDAI.usda",
+      "sha256": "e1d0001649bb2dbd3d752359d56015273d1e0370b47d8e5fb219d2922a6b68c9",
+      "byte_identical": true
+    },
+    {
+      "source_repository": "https://github.com/zac/LM",
+      "source_checkout_head": "cc42b92e45aabc25513b05a6cac42f0d04a8c147",
+      "last_change_commit": "92a2217ba6908161495c807bd7d9dda608349a35",
+      "source_path": "Tools/FDAITextureGenerator/main.swift",
+      "destination": "evidence/LM-texture-generator.swift",
+      "sha256": "e484ca5212e3d22b2b1c7b6bb4bf5ba9bbb4ec6e04aacf94261a0934e2247a6c",
+      "byte_identical": true
+    },
+    {
+      "source_repository": "https://github.com/zac/LM",
+      "source_checkout_head": "cc42b92e45aabc25513b05a6cac42f0d04a8c147",
+      "last_change_commit": "e36282ec158ec792b47dd55af1588d81eb1087ff",
+      "source_path": "LM/FDAIPanel.swift",
+      "destination": "evidence/LM-FDAIPanel.swift",
+      "sha256": "7608bec8306dd8c5dfb19a55626deb027ad893f20cd67ca0acfc70c668284a91",
+      "byte_identical": true
+    }
+  ],
+  "user_pdf": {
+    "path": "/Users/zac/Downloads/19730061045.pdf",
+    "sha256": "ae55eac0d3ba501f192dbf863d3af7bb7ffec51c3de741bc0618c23b03318ad5",
+    "pages_rendered_1based": [
+      185,
+      186
+    ]
+  },
+  "prior_task": {
+    "host": "ewsbuild",
+    "path": "/Users/runner/Projects/lm/LM-fdai",
+    "head": "97f877b52bf569656c6798cff5790b7207c42af0",
+    "status": "clean; only .gitkeep in FDAI; no modeling work to reuse"
+  }
+}

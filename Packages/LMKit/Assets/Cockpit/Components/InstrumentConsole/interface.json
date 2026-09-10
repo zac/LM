@@ -1,0 +1,1078 @@
+{
+  "schema": "lmkit.console-enclosure.v1",
+  "component_id": "InstrumentConsole",
+  "root": "/InstrumentConsole",
+  "units": "meters",
+  "parent_space": "Cabin",
+  "root_pose": {
+    "position_m": [
+      0,
+      0,
+      0
+    ],
+    "rotation_quaternion_xyzw": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "scale": [
+      1,
+      1,
+      1
+    ]
+  },
+  "groups": [
+    {
+      "path": "/InstrumentConsole/Faces",
+      "casts_shadows": false
+    },
+    {
+      "path": "/InstrumentConsole/Enclosure",
+      "casts_shadows": true
+    },
+    {
+      "path": "/InstrumentConsole/Seams",
+      "casts_shadows": false
+    }
+  ],
+  "suppressions": [
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_Shell",
+      "pose": {
+        "position_m": [
+          -0.202499971091747,
+          1.6044105466899277,
+          -0.8849859910035998
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715571999011443,
+          0.0,
+          0.0,
+          0.996194647599722
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_Trim",
+      "pose": {
+        "position_m": [
+          -0.24499997526407213,
+          1.6044105466899277,
+          -0.8849859910035998
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715571999011443,
+          0.0,
+          0.0,
+          0.996194647599722
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "CommanderPanels",
+      "path": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking",
+      "pose": {
+        "position_m": [
+          -0.202499971091747,
+          1.6044105466899277,
+          -0.8849859910035998
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715571999011443,
+          0.0,
+          0.0,
+          0.996194647599722
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Frame",
+      "pose": {
+        "position_m": [
+          0.2024999859929082,
+          1.6044105475405015,
+          -0.8849859003673757
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.0871557411185735,
+          0.0,
+          0.0,
+          0.9961946625578029
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Frame",
+      "pose": {
+        "position_m": [
+          0.0,
+          1.2781420954913507,
+          -0.8058577470204469
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.3826834157673011,
+          0.0,
+          0.0,
+          0.9238795017028568
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__FDAI/Placeholder",
+      "pose": {
+        "position_m": [
+          -0.29999993473291653,
+          1.592156248005701,
+          -0.868101424097219
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715573852112996,
+          0.0,
+          0.0,
+          0.996194632868888
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__Warning/Placeholder",
+      "pose": {
+        "position_m": [
+          -0.16499996721744645,
+          1.813913957770289,
+          -0.9234500895054775
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715573852112996,
+          0.0,
+          0.0,
+          0.996194632868888
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__Timers/Placeholder",
+      "pose": {
+        "position_m": [
+          -0.304999929666522,
+          1.7597495771690619,
+          -0.9138995080603026
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715573852112996,
+          0.0,
+          0.0,
+          0.996194632868888
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__CrossPointer/Placeholder",
+      "pose": {
+        "position_m": [
+          -0.31499991953373296,
+          1.7026307735931567,
+          -0.9038278610689398
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715573852112996,
+          0.0,
+          0.0,
+          0.996194632868888
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__Propulsion/Placeholder",
+      "pose": {
+        "position_m": [
+          -0.06799999248981468,
+          1.7075548072523379,
+          -0.9046961010820567
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715573852112996,
+          0.0,
+          0.0,
+          0.996194632868888
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__RangeThrust/Placeholder",
+      "pose": {
+        "position_m": [
+          -0.09999999582767448,
+          1.559833797476912,
+          -0.8786489006885486
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715573852112996,
+          0.0,
+          0.0,
+          0.996194632868888
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__Guidance/Placeholder",
+      "pose": {
+        "position_m": [
+          -0.20999998122453697,
+          1.4288541238808288,
+          -0.8555536647728967
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715573852112996,
+          0.0,
+          0.0,
+          0.996194632868888
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__FDAI/Placeholder",
+      "pose": {
+        "position_m": [
+          0.304999929666522,
+          1.4908970862768156,
+          -0.8664935284535177
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715573852112996,
+          0.0,
+          0.0,
+          0.996194632868888
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__Caution/Placeholder",
+      "pose": {
+        "position_m": [
+          0.2299999758601192,
+          1.7942178127833281,
+          -0.9199771881521212
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715573852112996,
+          0.0,
+          0.0,
+          0.996194632868888
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__RCSECS/Placeholder",
+      "pose": {
+        "position_m": [
+          0.2049999862909315,
+          1.7026307735931567,
+          -0.9038278610689398
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715573852112996,
+          0.0,
+          0.0,
+          0.996194632868888
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__CrossPointer/Placeholder",
+      "pose": {
+        "position_m": [
+          0.32499993920326453,
+          1.6090740166704978,
+          -0.8873312801192432
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715573852112996,
+          0.0,
+          0.0,
+          0.996194632868888
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__Systems/Placeholder",
+      "pose": {
+        "position_m": [
+          0.11499998807907107,
+          1.5302893607253811,
+          -0.8734394192088974
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715573852112996,
+          0.0,
+          0.0,
+          0.996194632868888
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__Lower/Placeholder",
+      "pose": {
+        "position_m": [
+          0.2049999862909315,
+          1.3855226849895637,
+          -0.8479131022385463
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715573852112996,
+          0.0,
+          0.0,
+          0.996194632868888
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Panel3__EngineRadar/Placeholder",
+      "pose": {
+        "position_m": [
+          -0.35999996304512116,
+          1.2770813939467385,
+          -0.8069183243489887
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.3826834043624464,
+          0.0,
+          0.0,
+          0.9238794741691017
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Panel3__Stability/Placeholder",
+      "pose": {
+        "position_m": [
+          -0.11999998271465362,
+          1.2770813939467385,
+          -0.8069183243489887
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.3826834043624464,
+          0.0,
+          0.0,
+          0.9238794741691017
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Panel3__TimerHeaters/Placeholder",
+      "pose": {
+        "position_m": [
+          0.11999998271465362,
+          1.2770813939467385,
+          -0.8069183243489887
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.3826834043624464,
+          0.0,
+          0.0,
+          0.9238794741691017
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Panel3__Lighting/Placeholder",
+      "pose": {
+        "position_m": [
+          0.35999996304512116,
+          1.2770813939467385,
+          -0.8069183243489887
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.3826834043624464,
+          0.0,
+          0.0,
+          0.9238794741691017
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    }
+  ],
+  "protected_mounts": [
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1",
+      "pose": {
+        "position_m": [
+          -0.24500000476837158,
+          1.6044106483459473,
+          -0.8849859237670898
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.0871557437160171,
+          0.0,
+          0.0,
+          0.9961946922467187
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__FDAI",
+      "pose": {
+        "position_m": [
+          -0.2999999824166295,
+          1.592416934393352,
+          -0.8666242746149493
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.0871557411185735,
+          0.0,
+          0.0,
+          0.9961946625578029
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__Warning",
+      "pose": {
+        "position_m": [
+          -0.16499999195337267,
+          1.8141745296272624,
+          -0.9219729813208843
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.0871557411185735,
+          0.0,
+          0.0,
+          0.9961946625578029
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__Timers",
+      "pose": {
+        "position_m": [
+          -0.3049999776482579,
+          1.7600101561478247,
+          -0.9124223406073355
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.0871557411185735,
+          0.0,
+          0.0,
+          0.9961946625578029
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__CrossPointer",
+      "pose": {
+        "position_m": [
+          -0.31499996811151476,
+          1.7028913491673734,
+          -0.9023506930156557
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.0871557411185735,
+          0.0,
+          0.0,
+          0.9961946625578029
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__Propulsion",
+      "pose": {
+        "position_m": [
+          -0.06800000399351092,
+          1.7078153727698115,
+          -0.9032189917796387
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.0871557411185735,
+          0.0,
+          0.0,
+          0.9961946625578029
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__RangeThrust",
+      "pose": {
+        "position_m": [
+          -0.10000000923871966,
+          1.560094241966416,
+          -0.877171739783563
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.0871557411185735,
+          0.0,
+          0.0,
+          0.9961946625578029
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel1/Panel1__Guidance",
+      "pose": {
+        "position_m": [
+          -0.20999999374151201,
+          1.4291147850095571,
+          -0.8540766025913946
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.0871557411185735,
+          0.0,
+          0.0,
+          0.9961946625578029
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2",
+      "pose": {
+        "position_m": [
+          0.24500000476837158,
+          1.6044106483459473,
+          -0.8849859237670898
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.0871557437160171,
+          0.0,
+          0.0,
+          0.9961946922467187
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__FDAI",
+      "pose": {
+        "position_m": [
+          0.3049999776482579,
+          1.4911576440556011,
+          -0.8650163875244914
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.0871557411185735,
+          0.0,
+          0.0,
+          0.9961946625578029
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__Caution",
+      "pose": {
+        "position_m": [
+          0.22999998956918688,
+          1.7944783989916768,
+          -0.9184999917118546
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.0871557411185735,
+          0.0,
+          0.0,
+          0.9961946625578029
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__RCSECS",
+      "pose": {
+        "position_m": [
+          0.2049999985098836,
+          1.7028913491673734,
+          -0.9023506930156557
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.0871557411185735,
+          0.0,
+          0.0,
+          0.9961946625578029
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__CrossPointer",
+      "pose": {
+        "position_m": [
+          0.3249999585747716,
+          1.6093345763180587,
+          -0.8858541697818012
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.0871557411185735,
+          0.0,
+          0.0,
+          0.9961946625578029
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__Systems",
+      "pose": {
+        "position_m": [
+          0.11499999493360491,
+          1.5305499156770104,
+          -0.871962308043436
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.0871557411185735,
+          0.0,
+          0.0,
+          0.9961946625578029
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel2/Panel2__Lower",
+      "pose": {
+        "position_m": [
+          0.2049999985098836,
+          1.385783226137307,
+          -0.846436018901155
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.0871557411185735,
+          0.0,
+          0.0,
+          0.9961946625578029
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3",
+      "pose": {
+        "position_m": [
+          0.0,
+          1.2781422138214111,
+          -0.8058578372001648
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.38268342717215614,
+          0.0,
+          0.0,
+          0.9238795292366128
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Panel3__EngineRadar",
+      "pose": {
+        "position_m": [
+          -0.35999998450279236,
+          1.2781420954913507,
+          -0.8058577470204469
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.3826834157673011,
+          0.0,
+          0.0,
+          0.9238795017028568
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Panel3__Stability",
+      "pose": {
+        "position_m": [
+          -0.11999998986721039,
+          1.2781420954913507,
+          -0.8058577470204469
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.3826834157673011,
+          0.0,
+          0.0,
+          0.9238795017028568
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Panel3__TimerHeaters",
+      "pose": {
+        "position_m": [
+          0.11999998986721039,
+          1.2781420954913507,
+          -0.8058577470204469
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.3826834157673011,
+          0.0,
+          0.0,
+          0.9238795017028568
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "PanelInventory",
+      "path": "/PanelInventory/Panels/Panel3/Panel3__Lighting",
+      "pose": {
+        "position_m": [
+          0.35999998450279236,
+          1.2781420954913507,
+          -0.8058577470204469
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.3826834157673011,
+          0.0,
+          0.0,
+          0.9238795017028568
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Mounts/Mount_Panel_1",
+      "pose": {
+        "position_m": [
+          -0.24500000476837158,
+          1.6044106483459473,
+          -0.8849859237670898
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715572258755741,
+          0.0,
+          0.0,
+          0.9961946772886373
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Mounts/Mount_Panel_1/Mount_FDAI",
+      "pose": {
+        "position_m": [
+          -0.2999999675154683,
+          1.5924167291252695,
+          -0.8666242400133446
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715571999011443,
+          0.0,
+          0.0,
+          0.996194647599722
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Mounts/Mount_Panel_2",
+      "pose": {
+        "position_m": [
+          0.24500000476837158,
+          1.6044106483459473,
+          -0.8849859237670898
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.08715572258755741,
+          0.0,
+          0.0,
+          0.9961946772886373
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Mounts/Mount_Panel_3",
+      "pose": {
+        "position_m": [
+          0.0,
+          1.2781422138214111,
+          -0.8058578372001648
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.38268342717215614,
+          0.0,
+          0.0,
+          0.9238795292366128
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    }
+  ],
+  "dimensions": {
+    "upper_cabin_x_bounds_m": [
+      -0.4,
+      0.4
+    ],
+    "upper_face_panel_local_y_bounds_m": [
+      -0.25,
+      0.25
+    ],
+    "main_face_panel_local_z_m": -0.004,
+    "FDAI_rear_cutout_square_m": 0.13,
+    "CDR_seat_panel_local_z_m": 0.0118,
+    "LMP_seat_panel_local_z_m": -0.004,
+    "panel3_half_width_m": 0.485,
+    "fit_status": "provisional visual seating, no fabrication or pressure-shell claim"
+  },
+  "availability": "structural overlay only; no occupancy or instrument signal claims",
+  "accepted_input_sha256": {
+    "CommanderPanels/CommanderPanels.usdz": "52e4c13cf302e080edbd163fb3f6d26ce53785c28bc49dcefd3a75c876f9d604",
+    "PanelInventory/PanelInventory.usdz": "4b95b051b27831c97a47e9ccfb36b2f62e23469d3be50a09225e57685dc56b24",
+    "Cabin/Cabin.usdz": "9b30f113235bea7832dd0d9f245d3f6ad98bd8a64af2d217943a5489e498c21b"
+  },
+  "source_reference": "evidence/SI-99-15229h.jpg; Smithsonian LM-2 visual reference, no measured dimensions"
+}

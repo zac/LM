@@ -1,0 +1,10 @@
+NEW_COMPONENT_CHECK 15 component pairs 0 crossing mesh pairs
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 01:35:57)
+USD import of '/Users/zac/Projects/personal/lm/LMKit/Assets/Cockpit/Components/InteriorDetails/InteriorDetails.usdz' took 29.12 ms
+USD import of '/Users/zac/Projects/personal/lm/LMKit/Assets/Cockpit/Components/BreakerBanks/BreakerBanks.usdz' took 30.36 ms
+USD import of '/Users/zac/Projects/personal/lm/LMKit/Assets/Cockpit/Components/AltitudeRate/AltitudeRate.usdz' took 50.36 ms
+USD import of '/Users/zac/Projects/personal/lm/LMKit/Assets/Cockpit/Components/CrossPointer/CrossPointer.usdz' took 9.60 ms
+USD import of '/Users/zac/Projects/personal/lm/LMKit/Assets/Cockpit/Components/DescentControls/AttitudeMode.usdz' took 5.04 ms
+USD import of '/Users/zac/Projects/personal/lm/LMKit/Assets/Cockpit/Components/DescentControls/DescentRate.usdz' took 2.14 ms
+
+Blender quit

@@ -1,0 +1,149 @@
+{
+  "status": "visual_only; proposed integration contract",
+  "root": "/FDAI_Mount",
+  "units": "meters",
+  "basis": {
+    "X": "right",
+    "Y": "up",
+    "Z": "toward crew"
+  },
+  "mounting_datum": "provisional panel seating plane; unqualified",
+  "entities": [
+    {
+      "name": "FDAI_Ball_Pivot",
+      "path": "/FDAI_Mount/FDAI_Ball_Pivot",
+      "neutral_origin_m": [
+        0,
+        0,
+        -0.008
+      ],
+      "control": "quaternion",
+      "provisional_sweep_degrees": null,
+      "neutral_rotation_degrees": [
+        0,
+        0,
+        0
+      ],
+      "live_binding": "not implemented"
+    },
+    {
+      "name": "FDAI_RollBug_Pivot",
+      "path": "/FDAI_Mount/FDAI_RollBug_Pivot",
+      "neutral_origin_m": [
+        0,
+        0,
+        0.0448
+      ],
+      "control": "local_Z_rotation",
+      "provisional_sweep_degrees": null,
+      "neutral_rotation_degrees": [
+        0,
+        0,
+        0
+      ],
+      "live_binding": "not implemented"
+    },
+    {
+      "name": "FDAI_Rate_Roll_Pivot",
+      "path": "/FDAI_Mount/FDAI_Rate_Roll_Pivot",
+      "neutral_origin_m": [
+        0,
+        0.1,
+        0.02
+      ],
+      "control": "local_Z_rotation",
+      "provisional_sweep_degrees": 27,
+      "neutral_rotation_degrees": [
+        0,
+        0,
+        0
+      ],
+      "live_binding": "not implemented"
+    },
+    {
+      "name": "FDAI_Rate_Pitch_Pivot",
+      "path": "/FDAI_Mount/FDAI_Rate_Pitch_Pivot",
+      "neutral_origin_m": [
+        0.1,
+        0,
+        0.02
+      ],
+      "control": "local_Z_rotation",
+      "provisional_sweep_degrees": 27,
+      "neutral_rotation_degrees": [
+        0,
+        0,
+        0
+      ],
+      "live_binding": "not implemented"
+    },
+    {
+      "name": "FDAI_Rate_Yaw_Pivot",
+      "path": "/FDAI_Mount/FDAI_Rate_Yaw_Pivot",
+      "neutral_origin_m": [
+        0,
+        -0.1,
+        0.02
+      ],
+      "control": "local_Z_rotation",
+      "provisional_sweep_degrees": 27,
+      "neutral_rotation_degrees": [
+        0,
+        0,
+        0
+      ],
+      "live_binding": "not implemented"
+    },
+    {
+      "name": "FDAI_Error_Roll_Pivot",
+      "path": "/FDAI_Mount/FDAI_Error_Roll_Pivot",
+      "neutral_origin_m": [
+        0,
+        0.046,
+        0.045
+      ],
+      "control": "local_Z_rotation",
+      "provisional_sweep_degrees": 25,
+      "neutral_rotation_degrees": [
+        0,
+        0,
+        0
+      ],
+      "live_binding": "not implemented"
+    },
+    {
+      "name": "FDAI_Error_Pitch_Pivot",
+      "path": "/FDAI_Mount/FDAI_Error_Pitch_Pivot",
+      "neutral_origin_m": [
+        0.046,
+        0,
+        0.0455
+      ],
+      "control": "local_Z_rotation",
+      "provisional_sweep_degrees": 25,
+      "neutral_rotation_degrees": [
+        0,
+        0,
+        0
+      ],
+      "live_binding": "not implemented"
+    },
+    {
+      "name": "FDAI_Error_Yaw_Pivot",
+      "path": "/FDAI_Mount/FDAI_Error_Yaw_Pivot",
+      "neutral_origin_m": [
+        0,
+        -0.046,
+        0.046
+      ],
+      "control": "local_Z_rotation",
+      "provisional_sweep_degrees": 25,
+      "neutral_rotation_degrees": [
+        0,
+        0,
+        0
+      ],
+      "live_binding": "not implemented"
+    }
+  ]
+}

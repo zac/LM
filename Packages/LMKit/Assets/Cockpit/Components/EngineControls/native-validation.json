@@ -1,0 +1,19 @@
+{
+  "components" : [
+    {
+      "id" : "EngineButtons",
+      "independentParts" : "PASS",
+      "nativeLoad" : "PASS",
+      "neutralRestored" : "PASS"
+    },
+    {
+      "id" : "LunarContact",
+      "independentParts" : "PASS",
+      "nativeLoad" : "PASS",
+      "neutralRestored" : "PASS"
+    }
+  ],
+  "platform" : "macOS RealityKit",
+  "simulationBinding" : "NOT TESTED; engine unavailable",
+  "VisionPro" : "NOT TESTED"
+}

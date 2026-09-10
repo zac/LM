@@ -1,0 +1,6 @@
+.build/
+.swiftpm/
+.DS_Store
+**/scratch/
+**/renders/
+*.blend[0-9]*

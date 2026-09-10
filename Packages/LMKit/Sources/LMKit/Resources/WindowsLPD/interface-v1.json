@@ -1,0 +1,171 @@
+{
+  "schema": "lmkit.windows-lpd.interface.v1",
+  "status": "forward and docking accepted by Cabin worker against 8dc1b6c; baseline optical dimensions remain provisional",
+  "baseline": "09364460e8be570338f3d39a07067fe2bee0b044",
+  "units": "meters",
+  "axes": "+X right +Y overhead -Z forward",
+  "root": "/WindowsLPD",
+  "root_transform": "identity",
+  "eyes": {
+    "CDR": [
+      -0.5588,
+      1.78,
+      -0.38
+    ],
+    "LMP": [
+      0.5588,
+      1.78,
+      -0.38
+    ]
+  },
+  "forward": {
+    "CDR_Window_Inner": {
+      "position": [
+        -1.0003294944763184,
+        1.7799999713897705,
+        -0.4983074963092804
+      ],
+      "normal": [
+        0.5412867665290833,
+        0.43935635685920715,
+        0.7169201374053955
+      ],
+      "right": [
+        0.7752050757408142,
+        0.0694858506321907,
+        -0.6278764605522156
+      ],
+      "corners": [
+        [
+          -1.0003294944763184,
+          1.7799999713897705,
+          -0.4983074963092804
+        ],
+        [
+          -0.4490036964416504,
+          1.8294183015823364,
+          -0.9448531866073608
+        ],
+        [
+          -0.5412231087684631,
+          1.3491588830947876,
+          -0.580904483795166
+        ]
+      ]
+    },
+    "LMP_Window_Inner": {
+      "position": [
+        1.0003294944763184,
+        1.7799999713897705,
+        -0.4983074963092804
+      ],
+      "normal": [
+        -0.5412867665290833,
+        0.43935635685920715,
+        0.7169201374053955
+      ],
+      "right": [
+        -0.7752050757408142,
+        0.0694858506321907,
+        -0.6278764605522156
+      ],
+      "corners": [
+        [
+          1.0003294944763184,
+          1.7799999713897705,
+          -0.4983074963092804
+        ],
+        [
+          0.4490036964416504,
+          1.8294183015823364,
+          -0.9448531866073608
+        ],
+        [
+          0.5412231087684631,
+          1.3491588830947876,
+          -0.580904483795166
+        ]
+      ]
+    }
+  },
+  "opening_policy": "Cabin sharp triangle hole. WindowsLPD masks corner wedges with rounded retainer. Baseline triangle is reconstruction, not measured clear aperture.",
+  "frame_reservation": {
+    "outward_band_m": 0.035,
+    "depth_toward_eye_m": [
+      -0.04,
+      0.018
+    ],
+    "corner_tangent_trim_m": 0.02
+  },
+  "pane_separation_m": 0.02,
+  "pane_separation_status": "provisional normal-plane spacing, not measured",
+  "docking": {
+    "center": [
+      -0.5588,
+      2.1261097017375876,
+      -0.2
+    ],
+    "right": [
+      0.8782178207271375,
+      0.4782608695652173,
+      0
+    ],
+    "up": [
+      0,
+      0,
+      1
+    ],
+    "normal_toward_cabin": [
+      0.4782608695652173,
+      -0.8782178207271375,
+      0
+    ],
+    "viewing_size_m": [
+      0.127,
+      0.3302
+    ],
+    "shell_hole_size_m": [
+      0.137,
+      0.3402
+    ],
+    "frame_band_m": 0.025,
+    "inner_curvature_radius_m": 1.1684,
+    "status": "TN D-7439 p9 nominal area/curvature; pose and axis assignment approximate; no docking reticle calibration",
+    "axis_correction": "8dc1b6c had reflection; local up now aft to preserve right-handed basis. Symmetric hole unchanged."
+  },
+  "migration": {
+    "eye_delta_m": [
+      0,
+      0,
+      0
+    ],
+    "forward_datum_delta_m": [
+      0,
+      0,
+      0
+    ],
+    "marking_changes": "thin warm etched visual approximation; add photo-supported 50deg crossbar; remove neon/digital duplicates",
+    "optical_certification": false
+  },
+  "marking_layout": {
+    "id": "forward-axis-spine-visual-crossbars-v2",
+    "angular_targeting_qualified": false,
+    "baseline_angular_targeting_qualified": false,
+    "degree_numbers": "visual historical artwork only",
+    "spine_reference": "intersect frozen inner pane with rays (0,-sin(elevation),-cos(elevation)) from fixed CDR design eye; zero lies along Cabin -Z",
+    "crossbars_degrees": [
+      0,
+      50
+    ],
+    "azimuth_visual_spacing_m_per_label_degree": {
+      "upper": 0.0075,
+      "lower": 0.004,
+      "qualification": "visual width only; horizontal numeric labels are not calibrated azimuth angles"
+    },
+    "outer_copy": "project complete inner artwork including stroke widths and glyph dimensions through fixed comparison eye to parallel outer pane",
+    "baseline_reference": "evidence/BASELINE-LMLandingPointDesignator.swift",
+    "source": "NASA TN D-6846 printed6/PDF11 for zero axis; Eppler slide38 for paired artwork and crossbars",
+    "migration": "v1 arbitrary triangle interpolation corrected to forward-axis spine; panes/eyes/hardware unchanged; preserve non-targeting qualification",
+    "spine_degrees_relative_to_frozen_datums": true
+  }
+}

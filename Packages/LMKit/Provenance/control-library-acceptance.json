@@ -1,0 +1,40 @@
+{
+  "component_commit": "3963737d181ff5728a3ffeb22282bbbd5e8ef8ba",
+  "acceptance": "reusable visual/mechanical specimens; no live bindings or verified LM-5 mounting fits",
+  "open_gates": [
+    "flight-specific guard geometry",
+    "all mounting dimensions provisional",
+    "per-control detents/state mapping and hardware variants",
+    "Vision Pro rendering and interaction"
+  ],
+  "files": [
+    {
+      "path": "Assets/Cockpit/Components/ControlLibrary/GuardedSwitch.usdz",
+      "sha256": "38b3f9fa5fc2db6113fafabe4466dbc1ad666d2af0e80268e9e3efc2e5d692ae"
+    },
+    {
+      "path": "Assets/Cockpit/Components/ControlLibrary/RotarySelector.usdz",
+      "sha256": "facc28e727c765d9cc9379509c2e036b90a9331e5976186bb8f0d2b294ec1f3f"
+    },
+    {
+      "path": "Assets/Cockpit/Components/ControlLibrary/Talkback.usdz",
+      "sha256": "a9c4cb0d8e0a6fbccc06f5cd2c45bf58154b73b7070f2222dc0c763986bba065"
+    },
+    {
+      "path": "Assets/Cockpit/Components/ControlLibrary/MomentaryToggle.usdz",
+      "sha256": "615cadfaa1190a2340bd23e518849147a342c0cd927d4101081e6b553ee1f8d9"
+    },
+    {
+      "path": "Assets/Cockpit/Components/ControlLibrary/CircuitBreaker.usdz",
+      "sha256": "8f6b6125b943a051e18ac193aedcd3509ba6b1bc82525d420985e3ef1a2649dc"
+    },
+    {
+      "path": "Assets/Cockpit/Components/ControlLibrary/MaintainedToggle.usdz",
+      "sha256": "6071600aa300b4ee00ed12537c5b719497f078012a391c35390ab34135f79b5f"
+    },
+    {
+      "path": "Assets/Cockpit/Components/ControlLibrary/components.json",
+      "sha256": "becce552cc9a3e31dbf89a1440cdefcc550d09a2e6a7e1fc43ee31ae76e81072"
+    }
+  ]
+}

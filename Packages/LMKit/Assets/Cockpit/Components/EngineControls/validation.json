@@ -1,0 +1,222 @@
+{
+  "checks": [
+    {
+      "name": "EngineButtons root",
+      "pass": true
+    },
+    {
+      "name": "meters",
+      "pass": true
+    },
+    {
+      "name": "Y up",
+      "pass": true
+    },
+    {
+      "name": "identity root",
+      "pass": true
+    },
+    {
+      "name": "no invisible prims",
+      "pass": true
+    },
+    {
+      "name": "ARKit compliance",
+      "pass": true
+    },
+    {
+      "name": "EngineButtons__StartActuator independent direct root child",
+      "pass": true
+    },
+    {
+      "name": "EngineButtons__StopActuator independent direct root child",
+      "pass": true
+    },
+    {
+      "name": "EngineButtons__StopResetLatch independent direct root child",
+      "pass": true
+    },
+    {
+      "name": "EngineButtons__StartLightFace separate mesh",
+      "pass": true
+    },
+    {
+      "name": "EngineButtons__StopLightFace separate mesh",
+      "pass": true
+    },
+    {
+      "name": "LunarContact root",
+      "pass": true
+    },
+    {
+      "name": "meters",
+      "pass": true
+    },
+    {
+      "name": "Y up",
+      "pass": true
+    },
+    {
+      "name": "identity root",
+      "pass": true
+    },
+    {
+      "name": "no invisible prims",
+      "pass": true
+    },
+    {
+      "name": "ARKit compliance",
+      "pass": true
+    },
+    {
+      "name": "LunarContact__LightFace separate mesh",
+      "pass": true
+    },
+    {
+      "name": "DES RATE 3 poses no surface crossing",
+      "pass": true
+    },
+    {
+      "name": "ACA 27 poses no surface crossing",
+      "pass": true
+    },
+    {
+      "name": "CommanderLunarContact outside Panel1__FDAI reservation",
+      "pass": true
+    },
+    {
+      "name": "CommanderLunarContact outside Panel1__Warning reservation",
+      "pass": true
+    },
+    {
+      "name": "CommanderLunarContact outside Panel1__Timers reservation",
+      "pass": true
+    },
+    {
+      "name": "CommanderLunarContact outside Panel1__CrossPointer reservation",
+      "pass": true
+    },
+    {
+      "name": "CommanderLunarContact outside Panel1__Propulsion reservation",
+      "pass": true
+    },
+    {
+      "name": "CommanderLunarContact outside Panel1__RangeThrust reservation",
+      "pass": true
+    },
+    {
+      "name": "CommanderLunarContact outside Panel1__Guidance reservation",
+      "pass": true
+    },
+    {
+      "name": "PilotLunarContact outside Panel3__EngineRadar reservation",
+      "pass": true
+    },
+    {
+      "name": "PilotLunarContact outside Panel3__Stability reservation",
+      "pass": true
+    },
+    {
+      "name": "PilotLunarContact outside Panel3__TimerHeaters reservation",
+      "pass": true
+    },
+    {
+      "name": "PilotLunarContact fits partial reservation",
+      "pass": true
+    }
+  ],
+  "failed": 0,
+  "assets": [
+    {
+      "id": "EngineButtons",
+      "bounds_m": [
+        [
+          -0.019999999552965164,
+          -0.04600000008940697,
+          0.003999998793005943
+        ],
+        [
+          0.04600000008940697,
+          0.04699999839067459,
+          0.05649999901652336
+        ]
+      ],
+      "moving": [
+        {
+          "name": "EngineButtons__StartActuator",
+          "translation_m": [
+            0.017999999225139618,
+            -0.02500000037252903,
+            0.027000000700354576
+          ]
+        },
+        {
+          "name": "EngineButtons__StopActuator",
+          "translation_m": [
+            0.017999999225139618,
+            0.017999999225139618,
+            0.04699999839067459
+          ]
+        },
+        {
+          "name": "EngineButtons__StopResetLatch",
+          "translation_m": [
+            0.017999999225139618,
+            0.029999999329447746,
+            0.054999999701976776
+          ]
+        }
+      ],
+      "meshes": 32,
+      "triangles": 3884
+    },
+    {
+      "id": "LunarContact",
+      "bounds_m": [
+        [
+          -0.014481251128017902,
+          -0.013000000268220901,
+          -0.0060000005178153515
+        ],
+        [
+          0.014680750668048859,
+          0.022418498992919922,
+          0.003500000573694706
+        ]
+      ],
+      "moving": [],
+      "meshes": 6,
+      "triangles": 3196
+    }
+  ],
+  "DES_RATE_surface_crossings": [],
+  "ACA_surface_crossings": [],
+  "engine_to_Cabin_matrix_rows": [
+    [
+      1.0,
+      0.0,
+      0.0,
+      -0.6387999653816223
+    ],
+    [
+      0.0,
+      0.258819043636322,
+      0.9659258127212524,
+      0.9164698719978333
+    ],
+    [
+      0.0,
+      -0.9659258127212524,
+      0.258819043636322,
+      -0.3626972436904907
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "method": "Actual USD mesh surface crossings. DES RATE +/-17 and ACA 27 sampled +/-11deg. Not containment, hand clearance, or continuous sweep. Plane insertion behind slot backing is intentional.",
+  "VisionPro": "not tested"
+}

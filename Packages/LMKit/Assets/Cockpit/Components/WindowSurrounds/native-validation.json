@@ -1,0 +1,13 @@
+{
+  "checks" : 213,
+  "limits" : [
+    "No native render\/headset acceptance",
+    "No actor input or simulation behavior",
+    "Optical alignment qualification remains unchanged"
+  ],
+  "new_models" : 44,
+  "platform" : "macOS RealityKit",
+  "protected_mounts" : 6,
+  "status" : "PASS",
+  "suppression_leaves" : 38
+}

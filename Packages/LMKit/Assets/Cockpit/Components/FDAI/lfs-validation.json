@@ -1,0 +1,28 @@
+{
+  "assets": [
+    {
+      "file": "FDAI.blend",
+      "sha256": "923e9eae1b3c524ba4e338e8fd575834371f6068abd83767b54658b29bf629e3",
+      "bytes": 769311,
+      "staged_lfs_pointer_matches": true
+    },
+    {
+      "file": "FDAI.usdc",
+      "sha256": "aee0a426a43358bd2f2ead151d161c1497d41307d879e6e2472b72f3e4e1e635",
+      "bytes": 1749846,
+      "staged_lfs_pointer_matches": true
+    },
+    {
+      "file": "FDAI.usdz",
+      "sha256": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d",
+      "bytes": 2051277,
+      "staged_lfs_pointer_matches": true
+    },
+    {
+      "file": "evidence/LM-FDAI.usda",
+      "sha256": "e1d0001649bb2dbd3d752359d56015273d1e0370b47d8e5fb219d2922a6b68c9",
+      "bytes": 2302,
+      "staged_lfs_pointer_matches": true
+    }
+  ]
+}

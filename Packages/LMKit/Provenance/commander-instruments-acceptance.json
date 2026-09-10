@@ -1,0 +1,126 @@
+{
+  "schema": "lmkit.commander-instruments-acceptance.v1",
+  "date": "2026-09-08",
+  "components": {
+    "AltitudeRate": "7670439d0b053b3bcf98d964f6b3c03601c4e573",
+    "DescentControls": "9e598a7477288f9b875402a287764849ba0f4be6",
+    "CrossPointer": "daf7f32983534da17d8fcc21810cc3c05fd0fa11",
+    "InteriorDetails": "9eca80d651189d7790e662c32a96cca76c7087eb",
+    "BreakerBanks": "975f1dbb297e008f31e8d86ee5d4aee206a477da"
+  },
+  "packaging": {
+    "AltitudeRate": {
+      "schema": "lmkit.component-packaging.v1",
+      "component": "AltitudeRate",
+      "derivation": "byte-identical copy of accepted authoring resources",
+      "files": {
+        "AltitudeRate.usdz": {
+          "sha256": "047bd435c51ecb1920aedc8f8b1cefbc9ea9056ac1139503a81abe29b42254c1",
+          "bytes": 177929
+        },
+        "interface.json": {
+          "sha256": "3325743a54604abc6b41d3cd9bd285f3fb68a3f47b1150d8d1e9bc7b89fda7f2",
+          "bytes": 95096
+        }
+      }
+    },
+    "DescentControls": {
+      "schema": "lmkit.component-packaging.v1",
+      "component": "DescentControls",
+      "derivation": "byte-identical copy of accepted authoring resources",
+      "files": {
+        "AttitudeMode.usdz": {
+          "sha256": "4e7b811a7ed251bd9065a852a2ed652ca16a5fd06b48beea98702a492dc63f86",
+          "bytes": 135760
+        },
+        "DescentRate.usdz": {
+          "sha256": "ffa295038be35261353a8a0c8fe35316647d4e0b910b7ca108e97f55375cf078",
+          "bytes": 14994
+        },
+        "interface.json": {
+          "sha256": "ef4c52489594c036d4719c0bf1d3740ca4e1c0de69bb24d118453f1fb88ab5cb",
+          "bytes": 4899
+        }
+      }
+    },
+    "CrossPointer": {
+      "schema": "lmkit.component-packaging.v1",
+      "component": "CrossPointer",
+      "derivation": "byte-identical copy of accepted authoring resources",
+      "files": {
+        "CrossPointer.usdz": {
+          "sha256": "8095cdf3c12c4b77025e415ad21ea24a5bf51615674fd076f7458b9369ae1eae",
+          "bytes": 47494
+        },
+        "interface.json": {
+          "sha256": "571837a3f27954b617417edde0c9d3250c8f82503a7ab01b893306836b62ccf0",
+          "bytes": 5555
+        }
+      }
+    },
+    "InteriorDetails": {
+      "schema": "lmkit.component-packaging.v1",
+      "component": "InteriorDetails",
+      "derivation": "byte-identical copy of accepted authoring resources",
+      "files": {
+        "InteriorDetails.usdz": {
+          "sha256": "1d6fef1c8815d902235bdb0df32d201dbc25ac95fb7bb6ff90852781ed918231",
+          "bytes": 73276
+        },
+        "interface.json": {
+          "sha256": "34b61bd906f9710157bfc5a049c468d7f922494bbd7ba1c15acd8b99bbfe5251",
+          "bytes": 3603
+        }
+      }
+    },
+    "BreakerBanks": {
+      "schema": "lmkit.component-packaging.v1",
+      "component": "BreakerBanks",
+      "derivation": "byte-identical copy of accepted authoring resources",
+      "files": {
+        "BreakerBanks.usdz": {
+          "sha256": "fce4e4248806f4ff963775bc8013e17e6dee370671e656390bb8d05fcddfc217",
+          "bytes": 748925
+        },
+        "interface.json": {
+          "sha256": "f3cbb8d96c45473c2f2dc1ceb8ca91ce2924de74fc151b954af5cdb5ed30ffea",
+          "bytes": 13298
+        }
+      }
+    }
+  },
+  "package_validation": {
+    "command": "swift test --scratch-path /private/tmp/lmkit-landing-package-build",
+    "result": "passed",
+    "test_functions": 13,
+    "parameterized_functions": 2,
+    "cases_per_parameterized_function": 6,
+    "log": "Docs/Validation/CommanderInstruments/package-tests.log"
+  },
+  "limits": [
+    "Dimensions and mechanical seating provisional",
+    "Display simulation source and polarity qualifications remain explicit; no new AGC or LMCore semantics",
+    "Breaker circuits and fittings have no live behavior",
+    "Physical Vision Pro untested; simulator acceptance recorded in consuming LM"
+  ],
+  "tested_package_revision": "1285040",
+  "combined_geometry": {
+    "report": "Docs/Validation/CommanderInstruments/CombinedGeometry/REPORT.md",
+    "new_component_pairs": 15,
+    "mesh_bound_overlaps": 0,
+    "representative_eye_rays": 20,
+    "blocked_by_other_new_components": 0,
+    "scope": "neutral authored new components; no renderer or motion/hand/eye-box qualification"
+  },
+  "consumer_validation": {
+    "repository": "https://github.com/zac/LM",
+    "branch": "cockpit/integration",
+    "source_revision": "5ec10b8404130b1b0cefdbdc28d93aa3d221ec4a",
+    "passed_tests": 64,
+    "failed_tests": 0,
+    "skipped_tests": 0,
+    "platform": "visionOS 26.5 Simulator",
+    "evidence": "Docs/Validation/CommanderInstruments/README.md",
+    "startup_lighting": "Mission lighting consistent before and after terrain load; temporal capture inspected"
+  }
+}

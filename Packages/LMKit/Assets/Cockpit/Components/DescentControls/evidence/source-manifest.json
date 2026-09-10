@@ -1,0 +1,60 @@
+[
+  {
+    "file": "Assets/Cockpit/Components/PanelInventory/evidence/ad013.gif",
+    "source_url": "https://www.nasa.gov/history/diagrams/ad013.gif",
+    "sha256": "1521551fbdbc6ba99c20bcfa9920f4328cdf6a32e4d4849622f59f7cc0eb3762",
+    "pixel_size": [
+      3000,
+      1523
+    ],
+    "applicability": "generic/later LM schematic; not LM5 exact part qualification",
+    "crops": [
+      {
+        "file": "panel3-mode-reference.png",
+        "source_box_px": [
+          1320,
+          850,
+          1510,
+          1070
+        ],
+        "resized_to": [
+          760,
+          880
+        ]
+      },
+      {
+        "file": "panel5-des-rate-reference.png",
+        "source_box_px": [
+          355,
+          1220,
+          500,
+          1340
+        ],
+        "resized_to": [
+          725,
+          600
+        ]
+      }
+    ],
+    "file_path_base": "repository root"
+  },
+  {
+    "file": "mode-and-des-rate-aoh.pdf",
+    "sha256": "02b96b45e9d9d4530b2545186c45d35c20a00c1785f640c28d9fae15ed5ff605",
+    "source_url": "https://www.ibiblio.org/apollo/Documents/LMA790-3-LM10-ApolloOperationsHandbookLunarModuleLM10AndSubsequent-Volume1-SubsystemsData-SearchableText.pdf",
+    "source_sha256": "58f51eb2a1c0fe8debc66013af4ae89d9e7a6ca665c74dfb19b43d49281bed95",
+    "pages": [
+      {
+        "excerpt_page": 1,
+        "original_pdf_page": 661,
+        "printed_page": "3-65"
+      },
+      {
+        "excerpt_page": 2,
+        "original_pdf_page": 675,
+        "printed_page": "3-81"
+      }
+    ],
+    "applicability": "later LM10+ handbook; controls selected as documented later mission substitution"
+  }
+]

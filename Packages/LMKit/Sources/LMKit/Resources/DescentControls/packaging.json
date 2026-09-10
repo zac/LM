@@ -1,0 +1,19 @@
+{
+  "schema": "lmkit.component-packaging.v1",
+  "component": "DescentControls",
+  "derivation": "byte-identical copy of accepted authoring resources",
+  "files": {
+    "AttitudeMode.usdz": {
+      "sha256": "4e7b811a7ed251bd9065a852a2ed652ca16a5fd06b48beea98702a492dc63f86",
+      "bytes": 135760
+    },
+    "DescentRate.usdz": {
+      "sha256": "ffa295038be35261353a8a0c8fe35316647d4e0b910b7ca108e97f55375cf078",
+      "bytes": 14994
+    },
+    "interface.json": {
+      "sha256": "ef4c52489594c036d4719c0bf1d3740ca4e1c0de69bb24d118453f1fb88ab5cb",
+      "bytes": 4899
+    }
+  }
+}

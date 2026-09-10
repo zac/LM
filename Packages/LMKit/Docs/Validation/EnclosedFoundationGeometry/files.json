@@ -1,0 +1,70 @@
+{
+  "aperture-probes.json": {
+    "bytes": 1368,
+    "sha256": "52378f29d4dfb258b3dc9c4c2d1190d18742f476e20d7a9e7a1dc40ed52e4767"
+  },
+  "rear-interior-closed.png": {
+    "bytes": 908274,
+    "sha256": "fb437e8ce36f2065323ad0628f830f52b67169df4408e3ec0f30843c2da9f581"
+  },
+  "cdr-closed.png": {
+    "bytes": 1004232,
+    "sha256": "3e491bbaafd2a0fd2b649fa2bb6ab1a69de88a50cacaf26c4d6197f67af79cc7"
+  },
+  "side-cutaway.png": {
+    "bytes": 751791,
+    "sha256": "604f0a25e6f7a483467d7b2fab2bca5b63e62777944878d56b9f8b7c4d3c04ad"
+  },
+  "overhead-closed.png": {
+    "bytes": 696956,
+    "sha256": "05f4e340b866f76b0f7d3e83d789367ead9db17d03a080d87ed05db4b1913446"
+  },
+  "front-closed.png": {
+    "bytes": 727985,
+    "sha256": "27fa867bbd3d706df0e1632a9b68648794a560ce3dc9cd9bc98c4fc438a90f30"
+  },
+  "review.py": {
+    "bytes": 4362,
+    "sha256": "60194f4b98111781c76752859ff9019c88e4b1c3781e3bcfc86cf9fe562a7523"
+  },
+  "lmp-closed.png": {
+    "bytes": 1000893,
+    "sha256": "2bb30894b43a75bb46dc2ab4e6ebae82f65053909ab1766e0ec99f22d8c09b6f"
+  },
+  "corrected-cdr-closed.png": {
+    "bytes": 1014591,
+    "sha256": "4680ffa6732a0f80448620d3f54c4fa1da010edb976eba8044f7f758e5407cb6"
+  },
+  "corrected.py": {
+    "bytes": 3895,
+    "sha256": "dfa08ec3aef5b47004cbe1127e0281ee53a1f1b8be8332734f48c0ac63a28b5d"
+  },
+  "probe.py": {
+    "bytes": 4401,
+    "sha256": "e26f1aad4153108d4747c0d08ec986a2084b1b5e32794880713e2ed2d5a3d801"
+  },
+  "manifest.json": {
+    "bytes": 19844,
+    "sha256": "f8da9b3a97b9ba742bce75f50ee59ea5028d891fbdcc76e910dfb1b1094aca49"
+  },
+  "overhead-cutaway.png": {
+    "bytes": 790639,
+    "sha256": "d1ac2228d0d305e9ea18976a1546ceef1cb0dffc3ceb55ad8766e9c0bbfd05c5"
+  },
+  "front-interior-cutaway.png": {
+    "bytes": 878246,
+    "sha256": "356c7a1382a95577abb2eb845da2b3e5d9443d97698d29c93516cef32f369842"
+  },
+  "corrected-backing-hidden.json": {
+    "bytes": 214,
+    "sha256": "1f6df1db863fb1b10b86c3478dfaf260ac7a247f7788c9b04f36e096d95aafd3"
+  },
+  "REVIEW.md": {
+    "bytes": 5536,
+    "sha256": "f1be09943033a10ff9720a57d70e3be5edbfcadc0ffc624b82eb8bee60485141"
+  },
+  "corrected-front-interior-cutaway.png": {
+    "bytes": 881148,
+    "sha256": "c9a66fefff29c16bd9dfd9e99c1c392d223e45fb12292d0469469638bf0c0c8e"
+  }
+}

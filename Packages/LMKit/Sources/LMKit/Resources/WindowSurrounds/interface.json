@@ -1,0 +1,1146 @@
+{
+  "schema": "lmkit.console-enclosure.v1",
+  "component_id": "WindowSurrounds",
+  "root": "/WindowSurrounds",
+  "units": "meters",
+  "parent_space": "Cabin",
+  "root_pose": {
+    "position_m": [
+      0,
+      0,
+      0
+    ],
+    "rotation_quaternion_xyzw": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "scale": [
+      1,
+      1,
+      1
+    ]
+  },
+  "groups": [
+    {
+      "path": "/WindowSurrounds/CDR",
+      "casts_shadows": true
+    },
+    {
+      "path": "/WindowSurrounds/LMP",
+      "casts_shadows": true
+    }
+  ],
+  "suppressions": [
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Inboard_00",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Inboard_01",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Lower_00",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Lower_01",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Lower_02",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_00",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_01",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_02",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_03",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_04",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_05",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_06",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_07",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_08",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_09",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_10",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_11",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_12",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/CDR_Front_Upper_13",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Inboard_00",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Inboard_01",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Lower_00",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Lower_01",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Lower_02",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_00",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_01",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_02",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_03",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_04",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_05",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_06",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_07",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_08",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_09",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_10",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_11",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_12",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "Cabin",
+      "path": "/Cabin/Shell/Cutaway_Forward/LMP_Front_Upper_13",
+      "pose": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    }
+  ],
+  "protected_mounts": [
+    {
+      "component": "WindowsLPD",
+      "path": "/WindowsLPD/CDR_FlightWindow/CDR_Window_Inner",
+      "pose": {
+        "position_m": [
+          -1.0003294944763184,
+          1.7799999713897705,
+          -0.4983074963092804
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.20165777446599653,
+          0.31760668493649163,
+          0.10734727344902247,
+          0.9202916400404121
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "WindowsLPD",
+      "path": "/WindowsLPD/CDR_FlightWindow/CDR_Window_Outer",
+      "pose": {
+        "position_m": [
+          -1.0111552476882935,
+          1.7712128162384033,
+          -0.5126459002494812
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.20165777446599653,
+          0.31760668493649163,
+          0.10734727344902247,
+          0.9202916400404121
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "WindowsLPD",
+      "path": "/WindowsLPD/Datums/CDR_Eye",
+      "pose": {
+        "position_m": [
+          -0.5587999820709229,
+          1.7799999713897705,
+          -0.3799999952316284
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "WindowsLPD",
+      "path": "/WindowsLPD/Datums/LMP_Eye",
+      "pose": {
+        "position_m": [
+          0.5587999820709229,
+          1.7799999713897705,
+          -0.3799999952316284
+        ],
+        "rotation_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "WindowsLPD",
+      "path": "/WindowsLPD/LMP_FlightWindow/LMP_Window_Inner",
+      "pose": {
+        "position_m": [
+          1.0003294944763184,
+          1.7799999713897705,
+          -0.4983074963092804
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.31760670112827316,
+          0.20165777446599653,
+          0.9202916400404121,
+          0.1073472349935413
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "component": "WindowsLPD",
+      "path": "/WindowsLPD/LMP_FlightWindow/LMP_Window_Outer",
+      "pose": {
+        "position_m": [
+          1.0111552476882935,
+          1.7712128162384033,
+          -0.5126459002494812
+        ],
+        "rotation_quaternion_xyzw": [
+          -0.31760670112827316,
+          0.20165777446599653,
+          0.9202916400404121,
+          0.1073472349935413
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    }
+  ],
+  "qualification": "Source-guided approximate sheet-metal interior; no surveyed dimensions; preserve all windows and control mounts",
+  "construction": {
+    "CDR": {
+      "inner_triangle_cabin_m": [
+        [
+          -1.0003294944763184,
+          1.7799999713897705,
+          -0.4983074963092804
+        ],
+        [
+          -0.4490036964416504,
+          1.8294183015823364,
+          -0.9448531866073608
+        ],
+        [
+          -0.5412231087684631,
+          1.3491588830947876,
+          -0.580904483795166
+        ]
+      ],
+      "basis_columns_cabin": [
+        [
+          0.7752050757408142,
+          0.0694858506321907,
+          -0.6278764605522156
+        ],
+        [
+          -0.32567736506462097,
+          0.8956214189529419,
+          -0.3029795289039612
+        ],
+        [
+          0.541286826133728,
+          0.43935641646385193,
+          0.7169201970100403
+        ]
+      ],
+      "reveal_start_band_m": 0.034,
+      "outer_edge_widths_m": [
+        0.08,
+        0.045,
+        0.11
+      ],
+      "inner_plane_toward_crew_m": 0.017,
+      "outer_plane_toward_crew_m": 0.052,
+      "metal_thickness_m": 0.014,
+      "cheek_thickness_m": 0.012,
+      "outer_corners_cabin_m": [
+        [
+          -1.1502442359924316,
+          1.8608709573745728,
+          -0.3621477484703064
+        ],
+        [
+          -0.36473435163497925,
+          1.931280493736267,
+          -0.9983705282211304
+        ],
+        [
+          -0.49612534046173096,
+          1.247023344039917,
+          -0.47982901334762573
+        ]
+      ],
+      "original_shell_boundary_preserved": true
+    },
+    "LMP": {
+      "inner_triangle_cabin_m": [
+        [
+          1.0003294944763184,
+          1.7799999713897705,
+          -0.4983074963092804
+        ],
+        [
+          0.4490036964416504,
+          1.8294183015823364,
+          -0.9448531866073608
+        ],
+        [
+          0.5412231087684631,
+          1.3491588830947876,
+          -0.580904483795166
+        ]
+      ],
+      "basis_columns_cabin": [
+        [
+          -0.7752050757408142,
+          0.0694858506321907,
+          -0.6278764605522156
+        ],
+        [
+          -0.32567736506462097,
+          -0.8956214189529419,
+          0.3029795289039612
+        ],
+        [
+          -0.541286826133728,
+          0.43935641646385193,
+          0.7169201970100403
+        ]
+      ],
+      "reveal_start_band_m": 0.034,
+      "outer_edge_widths_m": [
+        0.08,
+        0.045,
+        0.11
+      ],
+      "inner_plane_toward_crew_m": 0.017,
+      "outer_plane_toward_crew_m": 0.052,
+      "metal_thickness_m": 0.014,
+      "cheek_thickness_m": 0.012,
+      "outer_corners_cabin_m": [
+        [
+          1.1502442359924316,
+          1.8608709573745728,
+          -0.3621477484703064
+        ],
+        [
+          0.36473435163497925,
+          1.931280493736267,
+          -0.9983705282211304
+        ],
+        [
+          0.49612534046173096,
+          1.247023344039917,
+          -0.47982901334762573
+        ]
+      ],
+      "original_shell_boundary_preserved": true
+    }
+  },
+  "clearances": {
+    "console_reference": "InstrumentConsole b6d2712; upperX\u00b1.404 and Panel3X\u00b1.488 keep-out with small edge allowance",
+    "pilot_contact": "46mm target-square sight well; current lamp and eye unchanged; provisional hardware relief",
+    "ACA": "Unchanged; raw USD reviewer found no original intersection; no controller clearance cut authored",
+    "existing_windows": "Retainer volume cleared only from overlapping upper cheek",
+    "breaker_banks": "Nine raw row bounds plus3mm relief; two opaque backing sheets8mm outboard of bank extremity with20mm edge overlap keep mounting seams closed"
+  },
+  "ownership": "Only replaces named Cabin forward cheek meshes. No WindowsLPD, handrail, instrument, or planning-blank suppression."
+}

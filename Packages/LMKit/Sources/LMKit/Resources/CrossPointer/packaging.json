@@ -1,0 +1,15 @@
+{
+  "schema": "lmkit.component-packaging.v1",
+  "component": "CrossPointer",
+  "derivation": "byte-identical copy of accepted authoring resources",
+  "files": {
+    "CrossPointer.usdz": {
+      "sha256": "8095cdf3c12c4b77025e415ad21ea24a5bf51615674fd076f7458b9369ae1eae",
+      "bytes": 47494
+    },
+    "interface.json": {
+      "sha256": "571837a3f27954b617417edde0c9d3250c8f82503a7ab01b893306836b62ccf0",
+      "bytes": 5555
+    }
+  }
+}

@@ -1,0 +1,37 @@
+[
+  {
+    "label": 0,
+    "elevation_deg": 2.249607606701315,
+    "heading_deg": -16.766887092735146
+  },
+  {
+    "label": 10,
+    "elevation_deg": 12.609379287719282,
+    "heading_deg": -14.960474808136489
+  },
+  {
+    "label": 20,
+    "elevation_deg": 23.54591604710841,
+    "heading_deg": -12.845113691754554
+  },
+  {
+    "label": 30,
+    "elevation_deg": 34.302158042392946,
+    "heading_deg": -10.341731334343038
+  },
+  {
+    "label": 40,
+    "elevation_deg": 44.19014611228485,
+    "heading_deg": -7.345557617713174
+  },
+  {
+    "label": 50,
+    "elevation_deg": 52.81405786246265,
+    "heading_deg": -3.7175670165751
+  },
+  {
+    "label": 60,
+    "elevation_deg": 60.08822604988967,
+    "heading_deg": 0.7250095686045085
+  }
+]

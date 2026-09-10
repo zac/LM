@@ -1,0 +1,27 @@
+{
+  "schema": "lmkit.component-packaging.v1",
+  "component": "Timers",
+  "derivation": "byte-identical copy of accepted authoring resources",
+  "files": {
+    "MissionTimer.usdz": {
+      "sha256": "ef6eb8d8d54de5dc39b31f0f9f38a3151343dc8c73ede7762615c41613570bea",
+      "bytes": 23787
+    },
+    "EventTimer.usdz": {
+      "sha256": "d22f9ec7b70c28a12725414f9150f2edb3f641c97c91c67cd0b7409326d8b540",
+      "bytes": 16470
+    },
+    "MissionTimerControls.usdz": {
+      "sha256": "f887e0508328d50b8c2e40bcb0bfaa4daa2379ea902a82e6ceb9a03258f121d5",
+      "bytes": 33761
+    },
+    "EventTimerControls.usdz": {
+      "sha256": "3cf2edba9154f991e386337acda721a3cd163c5cef22c5164f889ec28cce3cbb",
+      "bytes": 36628
+    },
+    "interface.json": {
+      "sha256": "6f105803efeee6f1b4240604d871f7eb85f0780c266233d4000aeb8c635fcacd",
+      "bytes": 19353
+    }
+  }
+}

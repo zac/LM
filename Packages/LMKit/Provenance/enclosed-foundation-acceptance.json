@@ -1,0 +1,105 @@
+{
+  "acceptance": "Packaged provisional enclosed foundation, integrated and simulator-validated in LM; historical fit and physical headset acceptance remain unqualified",
+  "date": "2026-09-08",
+  "deliveries": {
+    "Cabin": "bae0c02e84ddc528e2c2a40e1d06df61a31d0d9c",
+    "WindowsLPD": "b794640c32ff1279a54d9776d3c329b0f679fd49",
+    "PanelInventory": "0c58843078c993b085b5b72ea10d697e7a29a4cc"
+  },
+  "history": "Original component histories preserved by coordinator merges",
+  "validation": {
+    "native_package_tests": 11,
+    "failures": 0,
+    "scope": [
+      "actual RealityKit resource loading",
+      "accepted authoring USDZ payloads; PanelInventory differs only by recorded planning-visibility property",
+      "full Cabin mount rotations and optical bases",
+      "all 66 panel/slot poses and full paths",
+      "independent placeholder and planning label layers",
+      "blocked Timer reservation metadata and empty geometry",
+      "all four window pane bases and separate commander marking parents",
+      "removed legacy visible Cabin nodes absent"
+    ],
+    "reported_worker_checks": {
+      "Cabin": 3556,
+      "PanelInventory": 1315
+    },
+    "focused_validator_checks": 19
+  },
+  "integration_requirements": [
+    "WindowsLPD and PanelInventory install at shared Cabin identity once",
+    "Optical metadata has no visible panes; separate WindowsLPD owns all physical marks",
+    "Explicitly disable PlanningLabels during RealityKit installation; authored USD visibility does not set isEnabled",
+    "Check replacement_allowed before loading occupants; blocked Panel5__Timer remains empty",
+    "Suppress procedural panes/frames/grids/projected marker only after successful imported assembly validation",
+    "Preserve independently owned live instrument/control entities",
+    "Hide eight CommanderPanels Panel_1/4_Backing_* meshes when inventory blanks are installed; retain surrounding frames to avoid coplanar striping"
+  ],
+  "limits": [
+    "Unverified historical dimensions and pane spacing",
+    "New and old LPD representations are not angular-targeting qualified",
+    "Smooth cabin lining and simplified terraces/frame profiles remain visual placeholders",
+    "P5 timer layout blocked; future physical support, continuous controller sweep and hand reach unresolved",
+    "Package tests do not establish combined app appearance, flight correctness or physical Vision Pro acceptance",
+    "Simulator lighting is dark at panels and bright overhead; planning labels render but remain low contrast. DSKY/FDAI seating gaps and protrusion remain provisional."
+  ],
+  "packaged_files": {
+    "Sources/LMKit/Resources/Cabin/Cabin.usdz": {
+      "bytes": 86169,
+      "sha256": "9b30f113235bea7832dd0d9f245d3f6ad98bd8a64af2d217943a5489e498c21b"
+    },
+    "Sources/LMKit/Resources/Cabin/interface-v2.json": {
+      "bytes": 7263,
+      "sha256": "8cf5e986f63a46cd03518a526438781a6259e0d8377bb00336633ac1c2a149f9"
+    },
+    "Sources/LMKit/Resources/Cabin/migration.json": {
+      "bytes": 9166,
+      "sha256": "c7bb979f8f58111abfb4769bb0d520792f772e9b8fb5d1af6086959ee8a85dac"
+    },
+    "Sources/LMKit/Resources/Cabin/mounts.json": {
+      "bytes": 7944,
+      "sha256": "faf4a620eef94487bb374458fea7f012dda46089936dd4a9d9b9625cd5ba8b23"
+    },
+    "Sources/LMKit/Resources/WindowsLPD/WindowsLPD.usdz": {
+      "bytes": 104721,
+      "sha256": "91c03cc4b6826473cfdccdce195fece5f591b778b8afdb3a71505df8f528cc32"
+    },
+    "Sources/LMKit/Resources/WindowsLPD/interface-v1.json": {
+      "bytes": 4374,
+      "sha256": "28bb74258353bbc8365b7a54011782332ff69927c0683154a46b80b8ad24f22f"
+    },
+    "Sources/LMKit/Resources/WindowsLPD/manifest.json": {
+      "bytes": 51375,
+      "sha256": "50616739fb2febc210d3724b8008133b90b1c5f3c71a25e91609b249aa614d71"
+    },
+    "Sources/LMKit/Resources/PanelInventory/PanelInventory.usdz": {
+      "bytes": 2216179,
+      "sha256": "026a908793a01c3f1c6fa6a024500f70fda8edc75287ac4749003719fb7eaf30"
+    },
+    "Sources/LMKit/Resources/PanelInventory/inventory.json": {
+      "bytes": 190532,
+      "sha256": "f315bdcbd8a6e597231b33420652fb6297241bf3af7c585708f472583522ec49"
+    },
+    "Sources/LMKit/Resources/PanelInventory/packaging.json": {
+      "bytes": 678,
+      "sha256": "29f827593affd2f14fb01709abf9a3389e3b23945c31631d6c4d085f0b5de869"
+    }
+  },
+  "additional_references": "References/Interior/User-2026-09-08/PANORAMA-OBSERVATIONS.md",
+  "validator_followup": "c98f5e0cb411e84e893fd7bb79c5dea4a14bbd53",
+  "combined_geometry_review": "Docs/Validation/EnclosedFoundationGeometry/REVIEW.md",
+  "runtime_derivations": {
+    "PanelInventory": "Only PlanningLabels.visibility changes invisible to inherited; app sets group disabled initially. Packaged packaging.json records exact hashes. Native tests and actual simulator normal/planning comparison pass."
+  },
+  "combined_runtime": {
+    "LM": "3d34dcfd718ae410f6c5b68d5525c93ef9d01319",
+    "LMKit": "b870a9b112797d3ea627c663df2684c97f9cc2a3",
+    "AGC_LMCore": "b3f15533db335ee882dc07401790c93010809e8f",
+    "tests_passed": 47,
+    "tests_failed": 0,
+    "tests_skipped": 0,
+    "suites": 8,
+    "final_captures": 8,
+    "evidence_in_LM": "Docs/Validation/EnclosedFoundation/Final3d34dcf"
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "repositories": {
+    "LM": {
+      "revision": "7c1b4a751570cd8cdec35acac5c6fe976d53dfdf",
+      "tree": "24961ad4cf8be1232de6a81d776130b8ec75c894",
+      "archive_sha256": "a9d1a99d9d6366ea3c0e9845088edb5f88284b2845cc6925229bed5c71c97a98"
+    },
+    "LMKit": {
+      "revision": "86aa71b4b9ed203f11e8b572e23da2b0285a0ad8",
+      "tree": "312adb68e2f295553c21a5fd805653029eb68673",
+      "archive_sha256": "ad70f9b9fdf44caa059d4b2ff314a3f86ede0b2f3e3caf1565e6db8dc2c8a09d"
+    },
+    "AGC": {
+      "revision": "b3f15533db335ee882dc07401790c93010809e8f",
+      "tree": "3ebd2a479ab2bd2b39dd9919ad56405b20a1b245",
+      "archive_sha256": "6c0ba570954712a817a7e2c4f5af3316a8afa6c922e9c95a6df76c0708bce41e"
+    }
+  },
+  "resources": [
+    {
+      "path": "Sources/LMKit/Resources/DSKY/DSKY.usdz",
+      "bytes": 526263,
+      "sha256": "e20a69864d4c7e0ff068172e0e672d9fbcc510c1dc4e97e4db0246fde08fbdfd"
+    },
+    {
+      "path": "Sources/LMKit/Resources/HandControllers/TTCA.usdz",
+      "bytes": 133464,
+      "sha256": "c8d165c723aa253868483d959ead394d32c07c766c2af08b731317d1aa371eb6"
+    },
+    {
+      "path": "Sources/LMKit/Resources/HandControllers/ACA.usdz",
+      "bytes": 96068,
+      "sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5"
+    },
+    {
+      "path": "Sources/LMKit/Resources/HandControllers/interface.json",
+      "bytes": 4647,
+      "sha256": "6a08a37335981e7b76c312a491d38dc07d39ef474fb52e49ae132453fcea5142"
+    },
+    {
+      "path": "Sources/LMKit/Resources/CommanderPanels/mounting.json",
+      "bytes": 5451,
+      "sha256": "eb1efb3ab4ef0d43fc6036ec676431bf8b861cc69e83d26bc15cf2ed0182dde8"
+    },
+    {
+      "path": "Sources/LMKit/Resources/CommanderPanels/CommanderPanels.usdz",
+      "bytes": 15669,
+      "sha256": "52e4c13cf302e080edbd163fb3f6d26ce53785c28bc49dcefd3a75c876f9d604"
+    },
+    {
+      "path": "Sources/LMKit/Resources/Legacy/lm.usda",
+      "bytes": 4596,
+      "sha256": "bce47c60d93e192688b83a77cd54675e3db9db5981998a94f786c0656050cd5c"
+    },
+    {
+      "path": "Sources/LMKit/Resources/Legacy/lunar_module.usdz",
+      "bytes": 2012449,
+      "sha256": "e2588937370ed21d2c84be88c47c35bd3b588f5c9fb0bc9410b3ec89bcf6bb91"
+    },
+    {
+      "path": "Sources/LMKit/Resources/Cabin/Cabin.usdz",
+      "bytes": 23467,
+      "sha256": "777ce88968820a6e46995d436e807abf9f4b4a5cb7115d0eb03eafb4c89c995e"
+    },
+    {
+      "path": "Sources/LMKit/Resources/Cabin/mounts.json",
+      "bytes": 6137,
+      "sha256": "9b16e4f30fdc7f37a0d93f54154b8a8d4523dce5fb09d339a28442df9a25ebf5"
+    },
+    {
+      "path": "Sources/LMKit/Resources/FDAI/FDAI.usdz",
+      "bytes": 2051277,
+      "sha256": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d"
+    },
+    {
+      "path": "Sources/LMKit/Resources/ControlLibrary/GuardedSwitch.usdz",
+      "bytes": 20307,
+      "sha256": "38b3f9fa5fc2db6113fafabe4466dbc1ad666d2af0e80268e9e3efc2e5d692ae"
+    },
+    {
+      "path": "Sources/LMKit/Resources/ControlLibrary/RotarySelector.usdz",
+      "bytes": 8850,
+      "sha256": "facc28e727c765d9cc9379509c2e036b90a9331e5976186bb8f0d2b294ec1f3f"
+    },
+    {
+      "path": "Sources/LMKit/Resources/ControlLibrary/Talkback.usdz",
+      "bytes": 10404,
+      "sha256": "a9c4cb0d8e0a6fbccc06f5cd2c45bf58154b73b7070f2222dc0c763986bba065"
+    },
+    {
+      "path": "Sources/LMKit/Resources/ControlLibrary/components.json",
+      "bytes": 4434,
+      "sha256": "becce552cc9a3e31dbf89a1440cdefcc550d09a2e6a7e1fc43ee31ae76e81072"
+    },
+    {
+      "path": "Sources/LMKit/Resources/ControlLibrary/MomentaryToggle.usdz",
+      "bytes": 11246,
+      "sha256": "615cadfaa1190a2340bd23e518849147a342c0cd927d4101081e6b553ee1f8d9"
+    },
+    {
+      "path": "Sources/LMKit/Resources/ControlLibrary/CircuitBreaker.usdz",
+      "bytes": 11221,
+      "sha256": "8f6b6125b943a051e18ac193aedcd3509ba6b1bc82525d420985e3ef1a2649dc"
+    },
+    {
+      "path": "Sources/LMKit/Resources/ControlLibrary/MaintainedToggle.usdz",
+      "bytes": 11237,
+      "sha256": "6071600aa300b4ee00ed12537c5b719497f078012a391c35390ab34135f79b5f"
+    }
+  ],
+  "test_source": "7c1b4a751570cd8cdec35acac5c6fe976d53dfdf",
+  "xcresult": "/tmp/lm-aca-panels-verification/combined.xcresult",
+  "test_counts": {
+    "discovered": 31,
+    "passed": 31,
+    "failed": 0,
+    "skipped": 0
+  },
+  "simulator": "6EB2B257-9EFE-4CEB-A64A-5EF0086FFF85",
+  "parallel_testing": false,
+  "source_unchanged_after_tests": true,
+  "captures": {
+    "front": {
+      "sha256": "f165f8f17340a7039cd9f396052a9e9ba7214206e4cd6a31e4db2815d7249cf3",
+      "utc": "2026-09-08T20:39:26Z",
+      "pid": "20404",
+      "bytes": 652559,
+      "visual_only_aca_override": false
+    },
+    "side": {
+      "sha256": "02b2f42f829253b1f44c3d45c3ed8a65d483afaa8099fd729d485e38b16d78f1",
+      "utc": "2026-09-08T20:39:39Z",
+      "pid": "20457",
+      "bytes": 828747,
+      "visual_only_aca_override": false
+    },
+    "crew-eye": {
+      "sha256": "6bb2a91c5fe947591eb532ce95e98573e6920032f47070277a412e7ca170b97e",
+      "utc": "2026-09-08T20:39:52Z",
+      "pid": "20534",
+      "bytes": 1287204,
+      "visual_only_aca_override": false
+    },
+    "aca-neutral": {
+      "sha256": "70d2106b4248871ea206e9a2634134df8e774b1222cccf304cbe856a668eddfa",
+      "utc": "2026-09-08T20:40:04Z",
+      "pid": "20573",
+      "bytes": 762084,
+      "visual_only_aca_override": true
+    },
+    "aca-positive": {
+      "sha256": "b967ecfa4fbacbef519d368357b24f5994e3dc7a8d05d1a39ce3ba44db760000",
+      "utc": "2026-09-08T20:40:17Z",
+      "pid": "20605",
+      "bytes": 765384,
+      "visual_only_aca_override": true
+    },
+    "aca-negative": {
+      "sha256": "421ea0feb23459e3ffe05d0abf31bf3e2996fc8018521a8cf5ea151a07b477c5",
+      "utc": "2026-09-08T20:40:30Z",
+      "pid": "20639",
+      "bytes": 776654,
+      "visual_only_aca_override": true
+    }
+  },
+  "simulator_final_state": "Shutdown",
+  "simulator_slot_released": true
+}

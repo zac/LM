@@ -1,0 +1,320 @@
+{
+  "baseline": "09364460e8be570338f3d39a07067fe2bee0b044",
+  "interface": "interface-v2.json",
+  "removed_visual_nodes": [
+    {
+      "name": "CDR_MiddleTier_Reservation",
+      "old_path": "/Cabin/Mounts/Mount_CDR_MiddleTier/CDR_MiddleTier_Reservation"
+    },
+    {
+      "name": "LMP_MiddleTier_Reservation",
+      "old_path": "/Cabin/Mounts/Mount_LMP_MiddleTier/LMP_MiddleTier_Reservation"
+    },
+    {
+      "name": "FDAI_Reserve_H1",
+      "old_path": "/Cabin/Mounts/Mount_Panel_1/Mount_FDAI/FDAI_Reserve_H1"
+    },
+    {
+      "name": "FDAI_Reserve_HN1",
+      "old_path": "/Cabin/Mounts/Mount_Panel_1/Mount_FDAI/FDAI_Reserve_HN1"
+    },
+    {
+      "name": "FDAI_Reserve_V1",
+      "old_path": "/Cabin/Mounts/Mount_Panel_1/Mount_FDAI/FDAI_Reserve_V1"
+    },
+    {
+      "name": "FDAI_Reserve_VN1",
+      "old_path": "/Cabin/Mounts/Mount_Panel_1/Mount_FDAI/FDAI_Reserve_VN1"
+    },
+    {
+      "name": "Panel_1_Reservation",
+      "old_path": "/Cabin/Mounts/Mount_Panel_1/Panel_1_Reservation"
+    },
+    {
+      "name": "Panel_2_Reservation",
+      "old_path": "/Cabin/Mounts/Mount_Panel_2/Panel_2_Reservation"
+    },
+    {
+      "name": "Panel_3_Reservation",
+      "old_path": "/Cabin/Mounts/Mount_Panel_3/Panel_3_Reservation"
+    },
+    {
+      "name": "DSKY_Reserve_H1",
+      "old_path": "/Cabin/Mounts/Mount_Panel_4/Mount_DSKY/DSKY_Reserve_H1"
+    },
+    {
+      "name": "DSKY_Reserve_HN1",
+      "old_path": "/Cabin/Mounts/Mount_Panel_4/Mount_DSKY/DSKY_Reserve_HN1"
+    },
+    {
+      "name": "DSKY_Reserve_V1",
+      "old_path": "/Cabin/Mounts/Mount_Panel_4/Mount_DSKY/DSKY_Reserve_V1"
+    },
+    {
+      "name": "DSKY_Reserve_VN1",
+      "old_path": "/Cabin/Mounts/Mount_Panel_4/Mount_DSKY/DSKY_Reserve_VN1"
+    },
+    {
+      "name": "Panel_4_Reservation",
+      "old_path": "/Cabin/Mounts/Mount_Panel_4/Panel_4_Reservation"
+    },
+    {
+      "name": "Panel_5_Reservation",
+      "old_path": "/Cabin/Mounts/Mount_Panel_5/Panel_5_Reservation"
+    },
+    {
+      "name": "Panel_6_Reservation",
+      "old_path": "/Cabin/Mounts/Mount_Panel_6/Panel_6_Reservation"
+    },
+    {
+      "name": "CDR_Frame_Inner_0",
+      "old_path": "/Cabin/Optical/CDR_Window_Inner/CDR_Frame_Inner_0"
+    },
+    {
+      "name": "CDR_Frame_Inner_1",
+      "old_path": "/Cabin/Optical/CDR_Window_Inner/CDR_Frame_Inner_1"
+    },
+    {
+      "name": "CDR_Frame_Inner_2",
+      "old_path": "/Cabin/Optical/CDR_Window_Inner/CDR_Frame_Inner_2"
+    },
+    {
+      "name": "CDR_Pane_Inner",
+      "old_path": "/Cabin/Optical/CDR_Window_Inner/CDR_Pane_Inner"
+    },
+    {
+      "name": "CDR_Frame_Outer_0",
+      "old_path": "/Cabin/Optical/CDR_Window_Outer/CDR_Frame_Outer_0"
+    },
+    {
+      "name": "CDR_Frame_Outer_1",
+      "old_path": "/Cabin/Optical/CDR_Window_Outer/CDR_Frame_Outer_1"
+    },
+    {
+      "name": "CDR_Frame_Outer_2",
+      "old_path": "/Cabin/Optical/CDR_Window_Outer/CDR_Frame_Outer_2"
+    },
+    {
+      "name": "CDR_Pane_Outer",
+      "old_path": "/Cabin/Optical/CDR_Window_Outer/CDR_Pane_Outer"
+    },
+    {
+      "name": "LMP_Frame_Inner_0",
+      "old_path": "/Cabin/Optical/LMP_Window_Inner/LMP_Frame_Inner_0"
+    },
+    {
+      "name": "LMP_Frame_Inner_1",
+      "old_path": "/Cabin/Optical/LMP_Window_Inner/LMP_Frame_Inner_1"
+    },
+    {
+      "name": "LMP_Frame_Inner_2",
+      "old_path": "/Cabin/Optical/LMP_Window_Inner/LMP_Frame_Inner_2"
+    },
+    {
+      "name": "LMP_Pane_Inner",
+      "old_path": "/Cabin/Optical/LMP_Window_Inner/LMP_Pane_Inner"
+    },
+    {
+      "name": "LMP_Frame_Outer_0",
+      "old_path": "/Cabin/Optical/LMP_Window_Outer/LMP_Frame_Outer_0"
+    },
+    {
+      "name": "LMP_Frame_Outer_1",
+      "old_path": "/Cabin/Optical/LMP_Window_Outer/LMP_Frame_Outer_1"
+    },
+    {
+      "name": "LMP_Frame_Outer_2",
+      "old_path": "/Cabin/Optical/LMP_Window_Outer/LMP_Frame_Outer_2"
+    },
+    {
+      "name": "LMP_Pane_Outer",
+      "old_path": "/Cabin/Optical/LMP_Window_Outer/LMP_Pane_Outer"
+    },
+    {
+      "name": "CDR_Deck_Strut",
+      "old_path": "/Cabin/Shell/CDR_Deck_Strut"
+    },
+    {
+      "name": "CDR_Forward_Longeron",
+      "old_path": "/Cabin/Shell/CDR_Forward_Longeron"
+    },
+    {
+      "name": "CDR_Glareshield",
+      "old_path": "/Cabin/Shell/CDR_Glareshield"
+    },
+    {
+      "name": "CDR_Window_Lower_Support",
+      "old_path": "/Cabin/Shell/CDR_Window_Lower_Support"
+    },
+    {
+      "name": "CDR_Window_Upper_Support",
+      "old_path": "/Cabin/Shell/CDR_Window_Upper_Support"
+    },
+    {
+      "name": "Forward_Threshold_Bridge",
+      "old_path": "/Cabin/Shell/Forward_Threshold_Bridge"
+    },
+    {
+      "name": "Hatch_Rail_1",
+      "old_path": "/Cabin/Shell/Hatch_Rail_1"
+    },
+    {
+      "name": "Hatch_Rail_N1",
+      "old_path": "/Cabin/Shell/Hatch_Rail_N1"
+    },
+    {
+      "name": "LMP_Deck_Strut",
+      "old_path": "/Cabin/Shell/LMP_Deck_Strut"
+    },
+    {
+      "name": "LMP_Forward_Longeron",
+      "old_path": "/Cabin/Shell/LMP_Forward_Longeron"
+    },
+    {
+      "name": "LMP_Glareshield",
+      "old_path": "/Cabin/Shell/LMP_Glareshield"
+    },
+    {
+      "name": "LMP_Window_Lower_Support",
+      "old_path": "/Cabin/Shell/LMP_Window_Lower_Support"
+    },
+    {
+      "name": "LMP_Window_Upper_Support",
+      "old_path": "/Cabin/Shell/LMP_Window_Upper_Support"
+    },
+    {
+      "name": "Shell_CDR_Lower",
+      "old_path": "/Cabin/Shell/Shell_CDR_Lower"
+    },
+    {
+      "name": "Shell_Crown_00",
+      "old_path": "/Cabin/Shell/Shell_Crown_00"
+    },
+    {
+      "name": "Shell_Crown_01",
+      "old_path": "/Cabin/Shell/Shell_Crown_01"
+    },
+    {
+      "name": "Shell_Crown_02",
+      "old_path": "/Cabin/Shell/Shell_Crown_02"
+    },
+    {
+      "name": "Shell_Crown_03",
+      "old_path": "/Cabin/Shell/Shell_Crown_03"
+    },
+    {
+      "name": "Shell_Crown_04",
+      "old_path": "/Cabin/Shell/Shell_Crown_04"
+    },
+    {
+      "name": "Shell_Crown_05",
+      "old_path": "/Cabin/Shell/Shell_Crown_05"
+    },
+    {
+      "name": "Shell_Crown_06",
+      "old_path": "/Cabin/Shell/Shell_Crown_06"
+    },
+    {
+      "name": "Shell_Crown_07",
+      "old_path": "/Cabin/Shell/Shell_Crown_07"
+    },
+    {
+      "name": "Shell_Crown_08",
+      "old_path": "/Cabin/Shell/Shell_Crown_08"
+    },
+    {
+      "name": "Shell_Crown_09",
+      "old_path": "/Cabin/Shell/Shell_Crown_09"
+    },
+    {
+      "name": "Shell_Crown_10",
+      "old_path": "/Cabin/Shell/Shell_Crown_10"
+    },
+    {
+      "name": "Shell_Crown_11",
+      "old_path": "/Cabin/Shell/Shell_Crown_11"
+    },
+    {
+      "name": "Shell_Crown_12",
+      "old_path": "/Cabin/Shell/Shell_Crown_12"
+    },
+    {
+      "name": "Shell_Crown_13",
+      "old_path": "/Cabin/Shell/Shell_Crown_13"
+    },
+    {
+      "name": "Shell_Crown_14",
+      "old_path": "/Cabin/Shell/Shell_Crown_14"
+    },
+    {
+      "name": "Shell_Crown_15",
+      "old_path": "/Cabin/Shell/Shell_Crown_15"
+    },
+    {
+      "name": "Shell_Crown_16",
+      "old_path": "/Cabin/Shell/Shell_Crown_16"
+    },
+    {
+      "name": "Shell_Crown_17",
+      "old_path": "/Cabin/Shell/Shell_Crown_17"
+    },
+    {
+      "name": "Shell_Crown_18",
+      "old_path": "/Cabin/Shell/Shell_Crown_18"
+    },
+    {
+      "name": "Shell_Crown_19",
+      "old_path": "/Cabin/Shell/Shell_Crown_19"
+    },
+    {
+      "name": "Shell_Crown_20",
+      "old_path": "/Cabin/Shell/Shell_Crown_20"
+    },
+    {
+      "name": "Shell_Crown_21",
+      "old_path": "/Cabin/Shell/Shell_Crown_21"
+    },
+    {
+      "name": "Shell_Crown_22",
+      "old_path": "/Cabin/Shell/Shell_Crown_22"
+    },
+    {
+      "name": "Shell_Crown_23",
+      "old_path": "/Cabin/Shell/Shell_Crown_23"
+    },
+    {
+      "name": "Shell_LMP_Lower",
+      "old_path": "/Cabin/Shell/Shell_LMP_Lower"
+    }
+  ],
+  "retained_metadata": "All original Mounts and Optical node names/paths; Optical are comparison-only, no meshes",
+  "new_cutaways": {
+    "Cutaway_Forward": "/Cabin/Shell/Cutaway_Forward",
+    "Cutaway_CDR": "/Cabin/Shell/Cutaway_CDR",
+    "Cutaway_LMP": "/Cabin/Shell/Cutaway_LMP",
+    "Cutaway_Ceiling": "/Cabin/Shell/Cutaway_Ceiling",
+    "Cutaway_Aft": "/Cabin/Shell/Cutaway_Aft",
+    "Cutaway_Deck": "/Cabin/Shell/Cutaway_Deck"
+  },
+  "installation": "Replace complete Cabin root once. Install WindowsLPD and PanelInventory separately. Do not reinstall old Cabin panes/reservations/glareshields. Existing instruments/CommanderPanels remain independent. No collider/input binding implied.",
+  "retained_visual_names": [
+    {
+      "name": "Cabin_Deck",
+      "old_path": "/Cabin/Shell/Cabin_Deck",
+      "new_path": "/Cabin/Shell/Cutaway_Deck/Cabin_Deck",
+      "note": "Same useful name; hierarchy or construction may change. Replace whole root."
+    },
+    {
+      "name": "Hatch_Jamb_1",
+      "old_path": "/Cabin/Shell/Hatch_Jamb_1",
+      "new_path": "/Cabin/Shell/Cutaway_Forward/Hatch_Jamb_1",
+      "note": "Same useful name; hierarchy or construction may change. Replace whole root."
+    },
+    {
+      "name": "Hatch_Jamb_N1",
+      "old_path": "/Cabin/Shell/Hatch_Jamb_N1",
+      "new_path": "/Cabin/Shell/Cutaway_Forward/Hatch_Jamb_N1",
+      "note": "Same useful name; hierarchy or construction may change. Replace whole root."
+    }
+  ]
+}

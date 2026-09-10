@@ -1,0 +1,19 @@
+{
+  "bounds_max" : [
+    1.1934000253677368,
+    2.2183971405029297,
+    1.1749999523162842
+  ],
+  "bounds_min" : [
+    -1.1934000253677368,
+    0.077500000596046448,
+    -1.0550000667572021
+  ],
+  "eye_and_pane_basis" : "PASS",
+  "mount_count" : 10,
+  "mount_positions" : "PASS",
+  "native_load" : "PASS",
+  "platform" : "macOS RealityKit",
+  "separate_lpd_layers" : "PASS",
+  "Vision_Pro" : "NOT TESTED"
+}

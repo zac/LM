@@ -1,0 +1,15 @@
+{
+  "schema": "lmkit.component-packaging.v1",
+  "component": "InstrumentConsole",
+  "derivation": "byte-identical copy of accepted authoring resources",
+  "files": {
+    "InstrumentConsole.usdz": {
+      "sha256": "27a29aee1d909d482b0a4edcca5fbdf1ba227bebcb85bcee1c94405ac1475b26",
+      "bytes": 124563
+    },
+    "interface.json": {
+      "sha256": "1e8de14c9220d95955aede45760934e8f404f9113ec3b1c636e7e328d7692735",
+      "bytes": 23266
+    }
+  }
+}

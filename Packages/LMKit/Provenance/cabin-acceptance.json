@@ -1,0 +1,14 @@
+{
+  "component_commit": "8956702ee676e155670be2e2110a09196e0b1183",
+  "asset_sha256": "777ce88968820a6e46995d436e807abf9f4b4a5cb7115d0eb03eafb4c89c995e",
+  "acceptance": "optional structural skeleton only",
+  "interface_clarification": "packaged mounts.json explicitly labels Cabin-root-relative transforms; source manifest preserved",
+  "open_gates": [
+    "proposed panel relocations and shields need reconciliation",
+    "instrument mounting, cutouts and clearances unqualified",
+    "20 mm pane separation provisional",
+    "mirrored LMP reconstruction uncalibrated",
+    "open hull and incomplete shell",
+    "Vision Pro optical/interaction acceptance"
+  ]
+}

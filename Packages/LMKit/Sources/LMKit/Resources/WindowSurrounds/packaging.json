@@ -1,0 +1,15 @@
+{
+  "schema": "lmkit.component-packaging.v1",
+  "component": "WindowSurrounds",
+  "derivation": "byte-identical copy of accepted authoring resources",
+  "files": {
+    "WindowSurrounds.usdz": {
+      "sha256": "1c5e9057ed75469edc3d63524680cada285b14ca6143acd7cc82f58a761ce9a6",
+      "bytes": 42090
+    },
+    "interface.json": {
+      "sha256": "835e611453b732b6c894cf2c27326629dc6628b58578048d34db759b379473ee",
+      "bytes": 21850
+    }
+  }
+}

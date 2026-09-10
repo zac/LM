@@ -1,0 +1,11 @@
+{
+  "component_commit": "c4c565f1b8d1c1a21c2b73e609d9c327aa816618",
+  "asset_sha256": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d",
+  "acceptance": "standalone visual component; not historically dimension-qualified or live-bound",
+  "open_gates": [
+    "all physical dimensions provisional",
+    "UV basis requires explicit orientation adapter",
+    "rate/error calibration",
+    "Vision Pro optical appearance and performance"
+  ]
+}

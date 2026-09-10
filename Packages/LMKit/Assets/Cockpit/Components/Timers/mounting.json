@@ -1,0 +1,199 @@
+{
+  "status": "PASS provisional front-envelope fit",
+  "assets": [
+    {
+      "asset": "MissionTimer.usdz",
+      "slot": "Panel1__Timers",
+      "slot_local_bounds_min_m": [
+        -0.09499999761581421,
+        -0.01600000075995922,
+        -0.009499999418854713
+      ],
+      "slot_local_bounds_max_m": [
+        0.03499999761581421,
+        0.01600000075995922,
+        0.00959999980032444
+      ],
+      "xy_minimum_edge_margins_m": [
+        0.020000002384185797,
+        0.0009999992400407803
+      ],
+      "adjacent_slot_separations": [
+        {
+          "slot": "Panel1__FDAI",
+          "xy_separation_m": [
+            0,
+            0.08299999924004078
+          ]
+        },
+        {
+          "slot": "Panel1__Warning",
+          "xy_separation_m": [
+            0,
+            0.01649999924004078
+          ]
+        },
+        {
+          "slot": "Panel1__CrossPointer",
+          "xy_separation_m": [
+            0,
+            0.009499999240040774
+          ]
+        },
+        {
+          "slot": "Panel1__Propulsion",
+          "xy_separation_m": [
+            0.1570000023841858,
+            0
+          ]
+        },
+        {
+          "slot": "Panel1__RangeThrust",
+          "xy_separation_m": [
+            0.09000000238418578,
+            0.14199999924004078
+          ]
+        },
+        {
+          "slot": "Panel1__Guidance",
+          "xy_separation_m": [
+            0,
+            0.26249999924004075
+          ]
+        }
+      ]
+    },
+    {
+      "asset": "EventTimer.usdz",
+      "slot": "Panel1__Timers",
+      "slot_local_bounds_min_m": [
+        0.051000000566244125,
+        -0.01600000075995922,
+        -0.009499999418854713
+      ],
+      "slot_local_bounds_max_m": [
+        0.13499999943375587,
+        0.01600000075995922,
+        0.00959999980032444
+      ],
+      "xy_minimum_edge_margins_m": [
+        -0.01999999943375587,
+        0.0009999992400407803
+      ],
+      "adjacent_slot_separations": [
+        {
+          "slot": "Panel1__FDAI",
+          "xy_separation_m": [
+            0,
+            0.08299999924004078
+          ]
+        },
+        {
+          "slot": "Panel1__Warning",
+          "xy_separation_m": [
+            0,
+            0.01649999924004078
+          ]
+        },
+        {
+          "slot": "Panel1__CrossPointer",
+          "xy_separation_m": [
+            0,
+            0.009499999240040774
+          ]
+        },
+        {
+          "slot": "Panel1__Propulsion",
+          "xy_separation_m": [
+            0.05700000056624413,
+            0
+          ]
+        },
+        {
+          "slot": "Panel1__RangeThrust",
+          "xy_separation_m": [
+            0,
+            0.14199999924004078
+          ]
+        },
+        {
+          "slot": "Panel1__Guidance",
+          "xy_separation_m": [
+            0,
+            0.26249999924004075
+          ]
+        }
+      ]
+    },
+    {
+      "asset": "EventTimerControls.usdz",
+      "slot": "Panel3__TimerHeaters",
+      "slot_local_bounds_min_m": [
+        -0.0949999988079071,
+        0.0030000001788139316,
+        0.002499999986961484
+      ],
+      "slot_local_bounds_max_m": [
+        0.0949999988079071,
+        0.06899999982118607,
+        0.02849999935925007
+      ],
+      "xy_minimum_edge_margins_m": [
+        0.0175000011920929,
+        0.003500000178813925
+      ],
+      "adjacent_slot_separations": [
+        {
+          "slot": "Panel3__EngineRadar",
+          "xy_separation_m": [
+            0.2725000011920929,
+            0
+          ]
+        },
+        {
+          "slot": "Panel3__Stability",
+          "xy_separation_m": [
+            0.032500001192092884,
+            0
+          ]
+        },
+        {
+          "slot": "Panel3__Lighting",
+          "xy_separation_m": [
+            0.0325000011920929,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "readout_pair_horizontal_gap_m": 0.016,
+  "approved_exception": {
+    "approved_by": "integration coordinator",
+    "unchanged_datum": "Panel1__Timers and Panel1 mounting poses unchanged",
+    "readout_pair_shift_x_m": 0.02,
+    "reason": "Original blank extends20mm beyond CommanderPanels left surround; shift faces inboard for structural support",
+    "nominal_slot_right_overrun_m": 0.02,
+    "dimensions_unchanged": true
+  },
+  "blank_z_m": [
+    -0.003,
+    0
+  ],
+  "readout_segment_slot_z_m": 0.0085,
+  "event_control_plate_slot_z_m": [
+    0.0025,
+    0.0055
+  ],
+  "backing_policy": "Retain blank behind both readouts and partial timer/heater control bank. Suppress only timer planning labels. Housing intentionally penetrates rear panel plane; rear mounting unqualified.",
+  "provenance": {
+    "inventory_sha256": "f315bdcbd8a6e597231b33420652fb6297241bf3af7c585708f472583522ec49"
+  },
+  "limits": [
+    "No surveyed dimensions or full hand-controller sweep",
+    "Mission face reaches CommanderPanels surround left edge; exact return clearance reviewed separately by coordinator",
+    "Panel5 remains blocked and mission controls uninstalled",
+    "Readout depth is a shallow visualization housing",
+    "Fit images show only current authored components against panel blanks, not complete runtime assembly"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "direct_keys" : 19,
+  "file" : "DSKY.usdz",
+  "hover_pinch" : "NOT TESTED",
+  "native_load" : "PASS",
+  "platform" : "macOS RealityKit",
+  "positions_and_scale" : "PASS",
+  "RCP_GUI" : "NOT TESTED"
+}

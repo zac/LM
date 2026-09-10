@@ -1,0 +1,26 @@
+{
+  "component_commit": "750caea3dea7feeaf5ffea15eedcf2d031cca0be",
+  "acceptance": "optional standalone visual/mechanism prototypes; not live controls",
+  "open_gates": [
+    "all TTCA dimensions provisional",
+    "ACA maximum envelope is program-level, not LM-5 mount survey",
+    "pivot sequencing, coupling and travel not calibrated",
+    "grip contours and bellows deformation provisional",
+    "cabin mounting and swept clearance",
+    "Vision Pro input and ergonomics"
+  ],
+  "files": [
+    {
+      "path": "Assets/Cockpit/Components/HandControllers/ACA.usdz",
+      "sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5"
+    },
+    {
+      "path": "Assets/Cockpit/Components/HandControllers/TTCA.usdz",
+      "sha256": "c8d165c723aa253868483d959ead394d32c07c766c2af08b731317d1aa371eb6"
+    },
+    {
+      "path": "Assets/Cockpit/Components/HandControllers/interface.json",
+      "sha256": "6a08a37335981e7b76c312a491d38dc07d39ef474fb52e49ae132453fcea5142"
+    }
+  ]
+}

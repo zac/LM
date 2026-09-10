@@ -1,0 +1,285 @@
+              ,                          :;~
+                                         ~@i2~1
+              ~                         ,~                                            '-----.
+
+  ~
+  Ul                                                                                                    Circuit         Power
+                  Location/
+  tn
+                              I          Name and Position                 Function                     Breaker         Source
+                                                                                                                                                Remar-ks
+  0               Ref Des
+  ::s
+
+
+I~                Panel 5
+
+ to
+ Il'
+ gl,
+              I      IS5      I DES RA TE switch               Permits establishing LIIJ rate of
+                                                               descent under PGNS control in fixed
+                                                                                                            N/A          N/A     Hesponse to switch commands is
+                                                                                                                                 monitored on the n.ltitud e rate scale
+ o                                                             increments. Each switch actuation                                 of the Range/Range Rate; Alt/Alt
+ t;l                                                           provides a discrete pulse, changing                               Rate indicator.
+ ...
+ Il'
+ ell
+                                                               the rate of descent by 1 fps •
+
+ ....                                    + 1 FPS                                                                                 Plus sign denotes increase in engine
+ "1                                                                                                                              thrust.
+ ell                                    center
+ cr
+ '1                                      - 1 FPS                                                                                 Minus sign denotes decrease in                  :r>
+ c                                                                                                                               engine thrust.
+ Il'                                                                                                                                                                             "d
+ '1
+-c                                                                                                                                                                               o
+                                                                                                                                                                              ()t"'
+ ....
+ ..,
+ <l>
+ 0
+              I      1S3      I Engine stop pushbutton         Provides discrete stop signals to
+                                                               descent and ascent engines, inde-
+                                                                                                                    I
+                                                                                                      STAB/CaNT: UIP' s
+                                                                                                      ENG ARIIl  28-vdc
+                                                                                                                                 When pressed, pushbutton remains
+                                                                                                                                 pressed and i l lum i nn t ed (red). It is
+                                                                                                                                                                              Ot"'
+                                                                                                                                                                              ZO
+                                                                                                                                                                              >-3 0 t"'
+                                                               pendent of setting of ENG AHIIl        (panel lo) bus             reset by pressing- it again.                 ::d"d'<'
+ o                                                             switch, except when in abort                                                                                   Ot'i;;::
+                                                                                                                                                                              t"'::d..,
+ ::r "d                                                                                                                                                                       C/):r>c
+~ ~
+                                                               sequence.
+
+                                                                                                                                                                              8 0.Zt"'
+                                                                                                                                                                                  . ,w
+                                                                                                                                                                              :r>>-3T
+ ell    t'i I       1S2       I Engine START pushbutton        Permits immediate manual firing of     STAB/CaNT: CDR's           'When pressed, pushbutton remains
+ t;lt"'
+                                                               descent or ascent engine, depending    ENG START 28-vdc           pressed and illuminated (red). Ac-           t;lC/)<"
+ ~
+        (Jl
+
+ ell                                                           upon setting of ENG ARM switch.        OVRD       bus             tuation of either engine stop push-          tr.i::r:""
+                                                                                                      (panel 11)                 button interrupts override function,         "d:r>
+                                                                                                                                 the engine stops, and the STAHT              t"'Z
+                                                                                                                                 pushbutton light goes out.
+                                                                                                                                                                              :r>t;l
+                                                                                                                                                                              ><to
+                                                                                                                                                                              C/)o
+                                                                                                                                                                                 o
+                     1S12         +X TRANSL pushbutton         When held pressed, switch provides      STAB/CONT: CDR's          if switch fails closed, circuit                 ~
+                                  (momentary)                  four-jet translation in +X-direction    ATTDIR     28-vdc         breaker must be opened. The
+                                                               by energizing RCS direct (secondary)    CONT       bus            secondary coils of the RCS engines
+                                                               coils. Upon release of pushbutton,      (panel 11)                will be disabled, resulting in loss
+                                                               signal is removed from coils, ter-                                of hardover and direct modes.
+                                                               minating jet firings.
+"d
+Il'
+IJll
+ ell                              MISSION TIIIIER:                                                     FLIGHT       CDR'S
+                                                                                                       DISPLA YS:   28-vdc
+                     9S19                TIIIlER CONT switch   Provides discrete signals to MIS-       M[SSION      bus
+ W                                                             SION TIIIlER indicator.                 TIMER
+  I
+                                                                                                       (panel 11)
+ ....
+ 00
+
+                    AA                            START        Enables indicator to count upward
+                                                               from number preset with SLEW
+                                                               CONT switches.
+
+
+
+
+                                                                                                      15·
+                                                                                                                    I
+ '0
+ r.o
+crq
+ (l)        Location/                                                                           Circuit      Power
+            Ref Des      Name and Position                     Function                                                            Remarks
+                                                                                                Breaker      Source
+
+w,
+OJ          Panel 5
+'"          (cont)
+                               STOP               Stops and holds indicator count until
+                                                  START or RESET is selected.
+                               RESET              Resets indicator to zero.
+~
+tn
+tn
+(3             9S22      SLEW CONT HOURS switch   Provides slewing function for                FLIGHT       CDR's
+
+
+
+I~
+                                                  HOURS columns of l\lTSSION TIMER             DISPLAYS:    28-vdc
+                                                  indicator.                                   l\lISSION    bus
+                               TENS
+                                                                                               TIMER                                                                   >-
+                                                                                                                                                                       '0
+                                                  Slews tens-column digit of HOURS             (panel 11)             Hundreds-column digit of HOURS
+tJj
+
+'g";.
+                                                  columns at rate of two digits per
+                                                  second as long as switch is held in
+                                                                                                                      columns is also controlled by the
+                                                                                                                      tens position, at rate of one digit
+                                                                                                                                                                       °
+                                                                                                                                                                   ()t"'
+                                                                                                                                                                   Ot"'
+                                                                                                                                                                   ZO
+o                                                 this position.                                                      per 5 seconds.
+e                                                                                                                                                                  ;dOr"
+                               Center             Disables slewing function.                                          All digits change in increasing              O~~
+';";''0                                                                                                               direction.                                   t"' ::0 -J
+
+--~
+                                                                                                                                                                   OO>-e.o
+                               UNITS              Slews units-column digit of HOURS                                                                                >-...,?
+                                                                                                                                                                   Z ..... w
+"1t"'                                             columns at rate of two digits per                                                                                0°,
+                                                                                                                                                                     Zr"
+~'"
+..,                                               second as long as switch is held in                                                                              OOO$::
+c                                                 this position.                                                                                                   til::r:
+e;                                                                                                                                                                 '0>-
+'<
+              9S21       SLEW CONT MIN switch     Provides slewing function for MIN
+                                                                                                                                                                   ~@
+--o
+to
+-J                                                columns of MISSION TIMER indi-
+                                                                                               FLIGHT
+                                                                                               DISPLAYS:
+                                                                                                            CDR's
+                                                                                                            28-vdc
+                                                                                                                      All digits change in increasing
+                                                                                                                      direction.
+                                                                                                                                                                   ><tJj
+                                                                                                                                                                   000
+                                                  calor.                                       MISSION
+                                                                                               TIMER
+                                                                                                            bus                                                        ~
+o                              TENS               Slews tens-column digit of MIN               (panel 11)
+::r                                               columns at rate of two digits per
+~
+crq
+                                                  second as long as switch is held in
+(l)                                               this position.
+o
+,...
+'"
+(l)
+                              Center              Disables slewmg function.
+
+                               UNITS              Slew s units -column digit of MIN
+                                                  columns at rate of two digits per
+                                                  second as long as switch is held in
+                                                  this position.
+
+
+
+
+        ~
+                        \1;                                                                                                     <::>                        ---!
+                                                                              ._.- ..   ~'J.
+         l                      fir,
+                                ~'                                            ~
+
+
+
+
+!=rn                                                                                           Circuit      Power
+rn           Location/                                                                                                           Remarks
+                               Name and Position                   Function                    Breaker      Source
+(3           Ref Des
+
+
+
+I~
+trJ
+             Panel 5
+             (cant)
+ll'
+~.
+(l              9S20           SLEW CONT SEC switch   Selects inputs to i\IISSION TUllER      FLIGHT       CDR's
+o                                                     indicator.                              DISPLAYS:    28-vdc
+,...
+ll'                                                                                           MISSION      bus
+ro                                     TE;,S          Slews tens-column digit of SEC          TIMEH
+....                                                  columns. at rate or two digits per      (panel 11)
+"%j                                                   second as long as switch is held in
+ro                                                    this position.
+cr
+'1
+C
+                                       Center         Disables slewing function.
+                                                                                                                                                             >-
+ll'                                                                                                                                                          '1:1
+'1                                                                                                                                                           o
+                                       UNITS          Slew untts -column digit of SEC                                                                   ()t""
+....                                                  columns at r ate of two digits per
+                                                                                                                                                        Ot""
+                                                                                                                                                        ZO
+'"
+~
+o                                                     second as long as switch is held in                                                               >-3 0 t""
+                                                      this position.                                                                                    ~ '1:1 ~
+o                                                                                                                                                       0t"l ~
+::r '1:1                                                                                                                                                t"'~ ~
+ll' ;J:>                                                                                                                                                OO;J:> '"
+~ Z             1684     OVERHIDE ANUN switch         Provides full voltage bypass of C/W          N/A        N/A                                       ;J:> >-3 7'
+ro t"l                                                array and component caution light
+                                                                                                                                                        Z ...... w
+                                                                                                                                                        00,
+o r-                                                  portion of ANUN/NUM control.                                                                        Z t""
+~      CJ1                                                                                                                                              o    (J)    ~
+ro
+                               ON                     Bypasses ANUN/NUM control and
+                                                                                                                                                        til::r:
+                                                                                                                                                        '1:I;J:>
+                                                      applies 5 volts dc directly to an-                                                                t""Z
+                                                      nunciators of C/W array. to com-                                                                  ;J:>O
+                                                                                                                                                        ~trJ
+                                                      ponent caution li~hts, and to iucan -                                                             00
+                                                                                                                                                             0
+                                                      descent illuminated pushbuttons ,                                                                      o
+                               OFF                    C/W array and component caution
+                                                      lights are controllecl with ANUN/
+                                                                                                                                                             '"
+                                                      NUM control.
+
+
+'1:1            16S5     OVEHHlDE NUlII switch        Provides full voltage override of       AC BUS B:    CDR's
+ll'                                                   brightness control of numeric 1'01'-    NUM LTG:     115-vac
+(Jq
+ro                                                    tion of ANUN/NU!lI contt-ol ,           (panel 11)   bus
+
+                               ON                     Supplies full power (115 volts ac)                             Portion of autotransformer asso-
+                                                      directly to integrally illuminated EL                          ciated with numeric readouts is
+w,                                                    numerics and time-shared displays.                             disconnected from circuit.
+co
+w
+                               OFF                    Disconnects full power; EL numeric
+                                                      readouts are controlled with ANUN/
+                                                      NUM control.
+
+
+
+
+                                                                                              .~
+                                                                                                           I
+

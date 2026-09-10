@@ -1,0 +1,77 @@
+{
+  "usd_compliance": {
+    "errors": [],
+    "failed_checks": [],
+    "warnings": []
+  },
+  "phase1_groups_preserved": {
+    "CDRLinerEdgeTrim": true,
+    "CDRLowerCableHarness": true,
+    "CDRUpperLinerDetails": true,
+    "ForwardHeaderTrim": true,
+    "LMPLinerEdgeTrim": true,
+    "LMPLowerCableHarness": true,
+    "LMPUpperLinerDetails": true
+  },
+  "nonpositive_or_nonmanifold_meshes": [],
+  "new_group_crossings": [],
+  "surface_crossings": [],
+  "aabb_candidate_pairs": 394,
+  "slot_envelope_aabb_candidates": [],
+  "inputs": {
+    "Cabin": {
+      "path": "/private/tmp/lmkit-interior-detail-phase2/Assets/Cockpit/Components/Cabin/Cabin.usdz",
+      "sha256": "9b30f113235bea7832dd0d9f245d3f6ad98bd8a64af2d217943a5489e498c21b"
+    },
+    "WindowsLPD": {
+      "path": "/private/tmp/lmkit-interior-detail-phase2/Assets/Cockpit/Components/WindowsLPD/WindowsLPD.usdz",
+      "sha256": "91c03cc4b6826473cfdccdce195fece5f591b778b8afdb3a71505df8f528cc32"
+    },
+    "PanelInventory": {
+      "path": "/private/tmp/lmkit-interior-detail-phase2/Assets/Cockpit/Components/PanelInventory/PanelInventory.usdz",
+      "sha256": "4b95b051b27831c97a47e9ccfb36b2f62e23469d3be50a09225e57685dc56b24"
+    },
+    "CommanderPanels": {
+      "path": "/private/tmp/lmkit-interior-detail-phase2/Assets/Cockpit/Components/CommanderPanels/CommanderPanels.usdz",
+      "sha256": "52e4c13cf302e080edbd163fb3f6d26ce53785c28bc49dcefd3a75c876f9d604"
+    },
+    "ACA": {
+      "path": "/private/tmp/lmkit-interior-detail-phase2/Assets/Cockpit/Components/HandControllers/ACA.usdz",
+      "sha256": "df2b00baa607543deedc89ba3a2e87fb5862e5243e02dd104981bd34aef254c5"
+    },
+    "BreakerBanks": {
+      "path": "/private/tmp/lmkit-interior-detail-phase2/Assets/Cockpit/Components/BreakerBanks/BreakerBanks.usdz",
+      "sha256": "fce4e4248806f4ff963775bc8013e17e6dee370671e656390bb8d05fcddfc217"
+    },
+    "AltitudeRate": {
+      "path": "/private/tmp/lmkit-interior-detail-phase2/Assets/Cockpit/Components/AltitudeRate/AltitudeRate.usdz",
+      "sha256": "047bd435c51ecb1920aedc8f8b1cefbc9ea9056ac1139503a81abe29b42254c1"
+    },
+    "CrossPointer": {
+      "path": "/private/tmp/lmkit-interior-detail-phase2/Assets/Cockpit/Components/CrossPointer/CrossPointer.usdz",
+      "sha256": "8095cdf3c12c4b77025e415ad21ea24a5bf51615674fd076f7458b9369ae1eae"
+    },
+    "DSKY": {
+      "path": "/private/tmp/lmkit-interior-detail-phase2/Assets/Cockpit/Components/DSKY/DSKY.usdz",
+      "sha256": "e20a69864d4c7e0ff068172e0e672d9fbcc510c1dc4e97e4db0246fde08fbdfd"
+    },
+    "FDAI": {
+      "path": "/private/tmp/lmkit-interior-detail-phase2/Assets/Cockpit/Components/FDAI/FDAI.usdz",
+      "sha256": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d"
+    },
+    "AttitudeMode": {
+      "path": "/private/tmp/lmkit-interior-detail-phase2/Assets/Cockpit/Components/DescentControls/AttitudeMode.usdz",
+      "sha256": "4e7b811a7ed251bd9065a852a2ed652ca16a5fd06b48beea98702a492dc63f86"
+    },
+    "DescentRate": {
+      "path": "/private/tmp/lmkit-interior-detail-phase2/Assets/Cockpit/Components/DescentControls/DescentRate.usdz",
+      "sha256": "ffa295038be35261353a8a0c8fe35316647d4e0b910b7ca108e97f55375cf078"
+    }
+  },
+  "detail_meshes": 557,
+  "triangle_count": 12244,
+  "limitations": "Neutral geometry; triangle surface crossing and conservative slot envelope tests; no swept human/hand clearance, optics, fabrication or application acceptance.",
+  "window_detail_probe_count": 145,
+  "window_detail_probe_hits": [],
+  "pass": true
+}

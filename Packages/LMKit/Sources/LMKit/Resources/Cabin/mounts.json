@@ -1,0 +1,343 @@
+{
+  "units": "meters",
+  "axes": "+X right +Y overhead -Z forward",
+  "root": "/Cabin",
+  "all_mounts": "PROPOSED; not mechanical fit qualified",
+  "mounts": {
+    "Mount_Panel_1": {
+      "position": [
+        -0.24500000476837158,
+        1.6044106483459473,
+        -0.8849859237670898
+      ],
+      "rotation_x_degrees": -10,
+      "envelope": [
+        0.48,
+        0.5,
+        0.0508
+      ],
+      "path": "/Cabin/Mounts/Mount_Panel_1"
+    },
+    "Mount_FDAI": {
+      "position": [
+        -0.30000001192092896,
+        1.5924168825149536,
+        -0.8666242957115173
+      ],
+      "rotation_x_degrees": -10,
+      "path": "/Cabin/Mounts/Mount_Panel_1/Mount_FDAI",
+      "mating_plane": null,
+      "cutout": null,
+      "clearance_qualified": false
+    },
+    "Mount_Panel_2": {
+      "position": [
+        0.24500000476837158,
+        1.6044106483459473,
+        -0.8849859237670898
+      ],
+      "rotation_x_degrees": -10,
+      "envelope": [
+        0.48,
+        0.5,
+        0.0508
+      ],
+      "path": "/Cabin/Mounts/Mount_Panel_2"
+    },
+    "Mount_Panel_3": {
+      "position": [
+        0.0,
+        1.2781422138214111,
+        -0.8058578372001648
+      ],
+      "rotation_x_degrees": -45,
+      "envelope": [
+        0.97,
+        0.18,
+        0.04
+      ],
+      "path": "/Cabin/Mounts/Mount_Panel_3"
+    },
+    "Mount_Panel_4": {
+      "position": [
+        0.0,
+        1.070142149925232,
+        -0.5978578329086304
+      ],
+      "rotation_x_degrees": -45,
+      "envelope": [
+        0.4,
+        0.34,
+        0.04
+      ],
+      "path": "/Cabin/Mounts/Mount_Panel_4"
+    },
+    "Mount_DSKY": {
+      "position": [
+        0.0,
+        1.0871126651763916,
+        -0.6021004915237427
+      ],
+      "rotation_x_degrees": -45,
+      "path": "/Cabin/Mounts/Mount_Panel_4/Mount_DSKY",
+      "mating_plane": null,
+      "cutout": null,
+      "clearance_qualified": false
+    },
+    "Mount_Panel_5": {
+      "position": [
+        -0.5587999820709229,
+        0.8983525633811951,
+        -0.2950824499130249
+      ],
+      "rotation_x_degrees": -75,
+      "envelope": [
+        0.34,
+        0.31,
+        0.038
+      ],
+      "path": "/Cabin/Mounts/Mount_Panel_5"
+    },
+    "Mount_Panel_6": {
+      "position": [
+        0.5587999820709229,
+        0.8983525633811951,
+        -0.2950824499130249
+      ],
+      "rotation_x_degrees": -75,
+      "envelope": [
+        0.34,
+        0.31,
+        0.038
+      ],
+      "path": "/Cabin/Mounts/Mount_Panel_6"
+    },
+    "Mount_CDR_MiddleTier": {
+      "position": [
+        -0.91,
+        1.17,
+        -0.19
+      ],
+      "rotation_x_degrees": -53.5,
+      "path": "/Cabin/Mounts/Mount_CDR_MiddleTier",
+      "panel_number": "unresolved; early tier basis"
+    },
+    "Mount_LMP_MiddleTier": {
+      "position": [
+        0.91,
+        1.17,
+        -0.19
+      ],
+      "rotation_x_degrees": -53.5,
+      "path": "/Cabin/Mounts/Mount_LMP_MiddleTier",
+      "panel_number": "unresolved; early tier basis"
+    }
+  },
+  "optical": {
+    "CDR_Window_Inner": {
+      "position": [
+        -1.0003294944763184,
+        1.7799999713897705,
+        -0.4983074963092804
+      ],
+      "normal": [
+        0.5412867665290833,
+        0.43935635685920715,
+        0.7169201374053955
+      ],
+      "right": [
+        0.7752050757408142,
+        0.0694858506321907,
+        -0.6278764605522156
+      ],
+      "corners": [
+        [
+          -1.0003294944763184,
+          1.7799999713897705,
+          -0.4983074963092804
+        ],
+        [
+          -0.4490036964416504,
+          1.8294183015823364,
+          -0.9448531866073608
+        ],
+        [
+          -0.5412231087684631,
+          1.3491588830947876,
+          -0.580904483795166
+        ]
+      ]
+    },
+    "CDR_Window_Outer": {
+      "position": [
+        -1.0276002883911133,
+        1.7799999713897705,
+        -0.505614697933197
+      ],
+      "normal": [
+        0.5412867665290833,
+        0.43935635685920715,
+        0.7169201374053955
+      ],
+      "right": [
+        0.7752050757408142,
+        0.06948592513799667,
+        -0.6278765201568604
+      ],
+      "corners": [
+        [
+          -1.0276002883911133,
+          1.7799999713897705,
+          -0.505614697933197
+        ],
+        [
+          -0.4422221779823303,
+          1.8324706554412842,
+          -0.9797410368919373
+        ],
+        [
+          -0.5401374697685242,
+          1.322548270225525,
+          -0.5933132171630859
+        ]
+      ]
+    },
+    "LMP_Window_Inner": {
+      "position": [
+        1.0003294944763184,
+        1.7799999713897705,
+        -0.4983074963092804
+      ],
+      "normal": [
+        -0.5412867665290833,
+        0.43935635685920715,
+        0.7169201374053955
+      ],
+      "right": [
+        -0.7752050757408142,
+        0.0694858506321907,
+        -0.6278764605522156
+      ],
+      "corners": [
+        [
+          1.0003294944763184,
+          1.7799999713897705,
+          -0.4983074963092804
+        ],
+        [
+          0.4490036964416504,
+          1.8294183015823364,
+          -0.9448531866073608
+        ],
+        [
+          0.5412231087684631,
+          1.3491588830947876,
+          -0.580904483795166
+        ]
+      ]
+    },
+    "LMP_Window_Outer": {
+      "position": [
+        1.0276002883911133,
+        1.7799999713897705,
+        -0.505614697933197
+      ],
+      "normal": [
+        -0.5412867665290833,
+        0.43935635685920715,
+        0.7169201374053955
+      ],
+      "right": [
+        -0.7752050757408142,
+        0.06948592513799667,
+        -0.6278765201568604
+      ],
+      "corners": [
+        [
+          1.0276002883911133,
+          1.7799999713897705,
+          -0.505614697933197
+        ],
+        [
+          0.4422221779823303,
+          1.8324706554412842,
+          -0.9797410368919373
+        ],
+        [
+          0.5401374697685242,
+          1.322548270225525,
+          -0.5933132171630859
+        ]
+      ]
+    }
+  },
+  "schema": "lmkit.cabin.mounts.v2",
+  "configuration": "descent-ready, closed static hatch surfaces",
+  "geometry_interface": "interface-v2.json",
+  "docking_opening": {
+    "center": [
+      -0.5588,
+      2.1261097017375876,
+      -0.2
+    ],
+    "right": [
+      0.8782178207271375,
+      0.4782608695652173,
+      0
+    ],
+    "up": [
+      0,
+      0,
+      1
+    ],
+    "normal_toward_cabin": [
+      0.4782608695652173,
+      -0.8782178207271375,
+      0
+    ],
+    "viewing_size_m": [
+      0.127,
+      0.3302
+    ],
+    "shell_hole_size_m": [
+      0.137,
+      0.3402
+    ],
+    "frame_band_m": 0.025,
+    "inner_curvature_radius_m": 1.1684,
+    "status": "TN D-7439 p9 nominal area/curvature; pose and axis assignment approximate; no docking reticle calibration",
+    "axis_correction": "8dc1b6c had reflection; local up now aft to preserve right-handed basis. Symmetric hole unchanged."
+  },
+  "hatches": {
+    "Forward_Hatch_Closed": {
+      "position": [
+        0,
+        0.55,
+        -1.02
+      ],
+      "state": "closed static",
+      "qualified_hinge": false
+    },
+    "Transfer_Hatch_Closed": {
+      "position": [
+        0,
+        2.186397054487907,
+        0.65
+      ],
+      "state": "closed static",
+      "diameter": 0.8128,
+      "qualified_hinge": false
+    }
+  },
+  "cutaway_groups": {
+    "Cutaway_Forward": "/Cabin/Shell/Cutaway_Forward",
+    "Cutaway_CDR": "/Cabin/Shell/Cutaway_CDR",
+    "Cutaway_LMP": "/Cabin/Shell/Cutaway_LMP",
+    "Cutaway_Ceiling": "/Cabin/Shell/Cutaway_Ceiling",
+    "Cutaway_Aft": "/Cabin/Shell/Cutaway_Aft",
+    "Cutaway_Deck": "/Cabin/Shell/Cutaway_Deck"
+  },
+  "mount_migration": "Panel and instrument world poses unchanged; optical nodes comparison only; Forward_Hatch_Opening moved -.07 Z",
+  "coordinate_space": "Cabin root; positions and rotations are NOT parent-local, including nested mounts",
+  "acceptance": "enclosed visual foundation; provisional dimensions; instruments/windows/panels assembled separately; no flight or headset qualification"
+}

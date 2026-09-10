@@ -1,0 +1,608 @@
+{
+  "schema": "lmkit.caution-warning.interface.v1",
+  "root": "/CautionWarning",
+  "axes": "+X right +Y up -Z forward",
+  "units": "meters",
+  "root_pose": "identity Cabin-relative; do not reapply panel poses",
+  "base_revision": "035c5b3ad1a522cf6d25fb222d46c2fb4a4a8de8",
+  "inventory_sha256": "f315bdcbd8a6e597231b33420652fb6297241bf3af7c585708f472583522ec49",
+  "slots": [
+    {
+      "id": "Panel1__Warning",
+      "overlay_path": "/CautionWarning/Panel1/Panel1__Warning",
+      "panel_pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          -0.24500000476837158,
+          1.6044106483459473,
+          -0.8849859237670898
+        ],
+        "quaternion_xyzw": [
+          -0.08715573698282242,
+          0.0,
+          0.0,
+          0.9961947202682495
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "slot_pose": {
+        "space": "parent-local",
+        "translation_m": [
+          0.08,
+          0.213,
+          0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.24,
+        0.045,
+        0.003
+      ],
+      "default_placeholder_node": "/PanelInventory/Panels/Panel1/Panel1__Warning/Placeholder",
+      "replacement_allowed": true,
+      "suppression": "After successful overlay+interface validation hide only this exact blank, retaining mount, frame and labels; failed/absent load retains blank.",
+      "module_pair_size_m": [
+        0.117,
+        0.041,
+        0.00905
+      ],
+      "mounting_plate": "Provisional adapter fills current inventory footprint; historical hardware footprint is unresolved."
+    },
+    {
+      "id": "Panel2__Caution",
+      "overlay_path": "/CautionWarning/Panel2/Panel2__Caution",
+      "panel_pose": {
+        "space": "Cabin-relative",
+        "translation_m": [
+          0.24500000476837158,
+          1.6044106483459473,
+          -0.8849859237670898
+        ],
+        "quaternion_xyzw": [
+          -0.08715573698282242,
+          0.0,
+          0.0,
+          0.9961947202682495
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "slot_pose": {
+        "space": "parent-local",
+        "translation_m": [
+          -0.015,
+          0.193,
+          0
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "envelope_m": [
+        0.3,
+        0.06,
+        0.003
+      ],
+      "default_placeholder_node": "/PanelInventory/Panels/Panel2/Panel2__Caution/Placeholder",
+      "replacement_allowed": true,
+      "suppression": "After successful overlay+interface validation hide only this exact blank, retaining mount, frame and labels; failed/absent load retains blank.",
+      "module_pair_size_m": [
+        0.117,
+        0.041,
+        0.00905
+      ],
+      "mounting_plate": "Provisional adapter fills current inventory footprint; historical hardware footprint is unresolved."
+    }
+  ],
+  "lamps": [
+    {
+      "id": "Panel1__Warning__B1R1C1",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R1C1",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R1C1/Lens_Panel1__Warning__B1R1C1",
+      "legend_path": null,
+      "legend": "",
+      "blank": true,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B1R1C2",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R1C2",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R1C2/Lens_Panel1__Warning__B1R1C2",
+      "legend_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R1C2/Legend_Panel1__Warning__B1R1C2",
+      "legend": "CES AC",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B1R2C1",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R2C1",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R2C1/Lens_Panel1__Warning__B1R2C1",
+      "legend_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R2C1/Legend_Panel1__Warning__B1R2C1",
+      "legend": "ASC PRESS",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B1R2C2",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R2C2",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R2C2/Lens_Panel1__Warning__B1R2C2",
+      "legend_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R2C2/Legend_Panel1__Warning__B1R2C2",
+      "legend": "CES DC",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B1R3C1",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R3C1",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R3C1/Lens_Panel1__Warning__B1R3C1",
+      "legend_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R3C1/Legend_Panel1__Warning__B1R3C1",
+      "legend": "DES REG",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B1R3C2",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R3C2",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R3C2/Lens_Panel1__Warning__B1R3C2",
+      "legend_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R3C2/Legend_Panel1__Warning__B1R3C2",
+      "legend": "AGS",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B1R4C1",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R4C1",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R4C1/Lens_Panel1__Warning__B1R4C1",
+      "legend_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R4C1/Legend_Panel1__Warning__B1R4C1",
+      "legend": "DES QTY",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B1R4C2",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R4C2",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R4C2/Lens_Panel1__Warning__B1R4C2",
+      "legend_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R4C2/Legend_Panel1__Warning__B1R4C2",
+      "legend": "LGC",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B1R5C1",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R5C1",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R5C1/Lens_Panel1__Warning__B1R5C1",
+      "legend_path": null,
+      "legend": "",
+      "blank": true,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B1R5C2",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R5C2",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R5C2/Lens_Panel1__Warning__B1R5C2",
+      "legend_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_1_Panel1__Warning/Panel1__Warning__B1R5C2/Legend_Panel1__Warning__B1R5C2",
+      "legend": "ISS",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B2R1C1",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R1C1",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R1C1/Lens_Panel1__Warning__B2R1C1",
+      "legend_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R1C1/Legend_Panel1__Warning__B2R1C1",
+      "legend": "RCS TCA",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B2R1C2",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R1C2",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R1C2/Lens_Panel1__Warning__B2R1C2",
+      "legend_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R1C2/Legend_Panel1__Warning__B2R1C2",
+      "legend": "CABIN",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B2R2C1",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R2C1",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R2C1/Lens_Panel1__Warning__B2R2C1",
+      "legend_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R2C1/Legend_Panel1__Warning__B2R2C1",
+      "legend": "RCS A REG",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B2R2C2",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R2C2",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R2C2/Lens_Panel1__Warning__B2R2C2",
+      "legend_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R2C2/Legend_Panel1__Warning__B2R2C2",
+      "legend": "SUIT/FAN",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B2R3C1",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R3C1",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R3C1/Lens_Panel1__Warning__B2R3C1",
+      "legend_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R3C1/Legend_Panel1__Warning__B2R3C1",
+      "legend": "RCS B REG",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B2R3C2",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R3C2",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R3C2/Lens_Panel1__Warning__B2R3C2",
+      "legend_path": null,
+      "legend": "",
+      "blank": true,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B2R4C1",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R4C1",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R4C1/Lens_Panel1__Warning__B2R4C1",
+      "legend_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R4C1/Legend_Panel1__Warning__B2R4C1",
+      "legend": "DC BUS",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B2R4C2",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R4C2",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R4C2/Lens_Panel1__Warning__B2R4C2",
+      "legend_path": null,
+      "legend": "",
+      "blank": true,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B2R5C1",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R5C1",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R5C1/Lens_Panel1__Warning__B2R5C1",
+      "legend_path": null,
+      "legend": "",
+      "blank": true,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel1__Warning__B2R5C2",
+      "path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R5C2",
+      "lens_path": "/CautionWarning/Panel1/Panel1__Warning/Bank_2_Panel1__Warning/Panel1__Warning__B2R5C2/Lens_Panel1__Warning__B2R5C2",
+      "legend_path": null,
+      "legend": "",
+      "blank": true,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B1R1C1",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R1C1",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R1C1/Lens_Panel2__Caution__B1R1C1",
+      "legend_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R1C1/Legend_Panel2__Caution__B1R1C1",
+      "legend": "ASC He REG",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B1R1C2",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R1C2",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R1C2/Lens_Panel2__Caution__B1R1C2",
+      "legend_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R1C2/Legend_Panel2__Caution__B1R1C2",
+      "legend": "INVERTER",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B1R2C1",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R2C1",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R2C1/Lens_Panel2__Caution__B1R2C1",
+      "legend_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R2C1/Legend_Panel2__Caution__B1R2C1",
+      "legend": "ASC QTY",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B1R2C2",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R2C2",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R2C2/Lens_Panel2__Caution__B1R2C2",
+      "legend_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R2C2/Legend_Panel2__Caution__B1R2C2",
+      "legend": "BATTERY",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B1R3C1",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R3C1",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R3C1/Lens_Panel2__Caution__B1R3C1",
+      "legend_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R3C1/Legend_Panel2__Caution__B1R3C1",
+      "legend": "ENG GMBL",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B1R3C2",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R3C2",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R3C2/Lens_Panel2__Caution__B1R3C2",
+      "legend_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R3C2/Legend_Panel2__Caution__B1R3C2",
+      "legend": "RNDZ RDR",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B1R4C1",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R4C1",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R4C1/Lens_Panel2__Caution__B1R4C1",
+      "legend_path": null,
+      "legend": "",
+      "blank": true,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B1R4C2",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R4C2",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R4C2/Lens_Panel2__Caution__B1R4C2",
+      "legend_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R4C2/Legend_Panel2__Caution__B1R4C2",
+      "legend": "LDG RDR",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B1R5C1",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R5C1",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R5C1/Lens_Panel2__Caution__B1R5C1",
+      "legend_path": null,
+      "legend": "",
+      "blank": true,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B1R5C2",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R5C2",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R5C2/Lens_Panel2__Caution__B1R5C2",
+      "legend_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_1_Panel2__Caution/Panel2__Caution__B1R5C2/Legend_Panel2__Caution__B1R5C2",
+      "legend": "PRE AMPS",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B2R1C1",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R1C1",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R1C1/Lens_Panel2__Caution__B2R1C1",
+      "legend_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R1C1/Legend_Panel2__Caution__B2R1C1",
+      "legend": "ED RELAYS",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B2R1C2",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R1C2",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R1C2/Lens_Panel2__Caution__B2R1C2",
+      "legend_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R1C2/Legend_Panel2__Caution__B2R1C2",
+      "legend": "ECS",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B2R2C1",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R2C1",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R2C1/Lens_Panel2__Caution__B2R2C1",
+      "legend_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R2C1/Legend_Panel2__Caution__B2R2C1",
+      "legend": "RCS",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B2R2C2",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R2C2",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R2C2/Lens_Panel2__Caution__B2R2C2",
+      "legend_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R2C2/Legend_Panel2__Caution__B2R2C2",
+      "legend": "O2 QTY",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B2R3C1",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R3C1",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R3C1/Lens_Panel2__Caution__B2R3C1",
+      "legend_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R3C1/Legend_Panel2__Caution__B2R3C1",
+      "legend": "HEATER",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B2R3C2",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R3C2",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R3C2/Lens_Panel2__Caution__B2R3C2",
+      "legend_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R3C2/Legend_Panel2__Caution__B2R3C2",
+      "legend": "GLYCOL",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B2R4C1",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R4C1",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R4C1/Lens_Panel2__Caution__B2R4C1",
+      "legend_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R4C1/Legend_Panel2__Caution__B2R4C1",
+      "legend": "C/W PWR",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B2R4C2",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R4C2",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R4C2/Lens_Panel2__Caution__B2R4C2",
+      "legend_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R4C2/Legend_Panel2__Caution__B2R4C2",
+      "legend": "WATER QTY",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B2R5C1",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R5C1",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R5C1/Lens_Panel2__Caution__B2R5C1",
+      "legend_path": null,
+      "legend": "",
+      "blank": true,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    },
+    {
+      "id": "Panel2__Caution__B2R5C2",
+      "path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R5C2",
+      "lens_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R5C2/Lens_Panel2__Caution__B2R5C2",
+      "legend_path": "/CautionWarning/Panel2/Panel2__Caution/Bank_2_Panel2__Caution/Panel2__Caution__B2R5C2/Legend_Panel2__Caution__B2R5C2",
+      "legend": "S-BD RCVR",
+      "blank": false,
+      "runtime_signal": null,
+      "state": "unpowered neutral",
+      "source": "user-pdf panel1 or2, unknown mission revision"
+    }
+  ],
+  "default_state": "all unpowered; opaque dark lens and dim physical legends; no emission",
+  "installed_master_alarms": [],
+  "master_alarm_reference": {
+    "file": "MasterAlarmReference.usdz",
+    "root": "/MasterAlarmReference",
+    "placement": "UNASSIGNED; specimen only, never automatically install at Cabin origin",
+    "binding": null,
+    "budget": {
+      "mesh_count": 4,
+      "triangles": 735,
+      "bounds_m": {
+        "min": [
+          -0.012500000186264515,
+          -0.013500000350177288,
+          -0.013000000268220901
+        ],
+        "max": [
+          0.012500000186264515,
+          0.013500000350177288,
+          0.005549999885261059
+        ]
+      }
+    }
+  },
+  "qualification": "All dimensions/fit/colors provisional. Generic source topology retained. No model availability implies a simulation channel.",
+  "budget": {
+    "mesh_count": 85,
+    "triangles": 13189,
+    "bounds_m": {
+      "min": [
+        -0.28299999237060547,
+        1.765953779220581,
+        -0.9255094528198242
+      ],
+      "max": [
+        0.37800002098083496,
+        1.8357994556427002,
+        -0.9068149328231812
+      ]
+    }
+  },
+  "named_lamps": 31,
+  "blank_cells": 9
+}

@@ -1,0 +1,18 @@
+{
+  "units_and_axis": "PASS meters Y-up",
+  "hierarchy": "PASS independent panes/LPD/retainers",
+  "mesh_count": 194,
+  "no_cameras_lights": "PASS",
+  "right_handed_unit_transforms": "PASS",
+  "marking_containment": "PASS",
+  "minimum_marking_edge_clearance_m": 0.007962919771671295,
+  "finite_meshes_materials_indices": "PASS",
+  "calibrated_targeting": false,
+  "native_transparency_reflection": "not certified by Workbench",
+  "asset_hashes": {
+    "WindowsLPD.usdc": "4d7a47144bbf5fb925401a58d4500b6966bc9a8c606508a8548a90b106e3473f",
+    "WindowsLPD.usdz": "a9a8cc1fd43f5c95a3be729d44afbe8704f07ac551cea9e1518479b96e0c9c18",
+    "WindowsLPD.usda": "009f88c0d68d2755ee403fecd8dc2ef1f1a0cab595afe850d0f5aab1bcdf3cad",
+    "WindowsLPD.blend": "1f71642e73eb97c3e524cd1fe4fbb474ddcc0cb2c382519fb487ee751f265c44"
+  }
+}

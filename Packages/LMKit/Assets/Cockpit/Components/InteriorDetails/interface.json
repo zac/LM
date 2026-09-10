@@ -1,0 +1,272 @@
+{
+  "schema": "lmkit.interior-details.v1",
+  "root": "/InteriorDetails",
+  "root_pose": {
+    "translation_m": [
+      0,
+      0,
+      0
+    ],
+    "quaternion_xyzw": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "scale": [
+      1,
+      1,
+      1
+    ]
+  },
+  "axes": "+X right, +Y up, -Z forward",
+  "meters_per_unit": 1,
+  "installation": "identity Cabin-relative; optional additive sibling; never hides slots",
+  "base_commit": "035c5b3",
+  "groups": [
+    {
+      "name": "CDRLowerCableHarness",
+      "path": "/InteriorDetails/CDRLowerCableHarness",
+      "aabb_cabin_m": [
+        [
+          -1.1669999361038208,
+          0.2094999998807907,
+          -0.3100000023841858
+        ],
+        [
+          -1.1384999752044678,
+          0.31450000405311584,
+          0.790880024433136
+        ]
+      ],
+      "triangles": 1400,
+      "removable": true
+    },
+    {
+      "name": "CDRLinerEdgeTrim",
+      "path": "/InteriorDetails/CDRLinerEdgeTrim",
+      "aabb_cabin_m": [
+        [
+          -1.1665000915527344,
+          0.13450001180171967,
+          -0.4399999976158142
+        ],
+        [
+          -1.1375000476837158,
+          1.0099999904632568,
+          1.0499999523162842
+        ]
+      ],
+      "triangles": 816,
+      "removable": true
+    },
+    {
+      "name": "LMPLowerCableHarness",
+      "path": "/InteriorDetails/LMPLowerCableHarness",
+      "aabb_cabin_m": [
+        [
+          1.1384999752044678,
+          0.2094999998807907,
+          -0.3100000023841858
+        ],
+        [
+          1.1669999361038208,
+          0.31450000405311584,
+          0.790880024433136
+        ]
+      ],
+      "triangles": 1400,
+      "removable": true
+    },
+    {
+      "name": "LMPLinerEdgeTrim",
+      "path": "/InteriorDetails/LMPLinerEdgeTrim",
+      "aabb_cabin_m": [
+        [
+          1.1375000476837158,
+          0.13450001180171967,
+          -0.4399999976158142
+        ],
+        [
+          1.1665000915527344,
+          1.0099999904632568,
+          1.0499999523162842
+        ]
+      ],
+      "triangles": 816,
+      "removable": true
+    },
+    {
+      "name": "CDRUpperLinerDetails",
+      "path": "/InteriorDetails/CDRUpperLinerDetails",
+      "aabb_cabin_m": [
+        [
+          -0.8930045366287231,
+          1.8444344997406006,
+          -0.4410000145435333
+        ],
+        [
+          -0.7254859209060669,
+          2.0085458755493164,
+          0.4710000157356262
+        ]
+      ],
+      "triangles": 1080,
+      "removable": true
+    },
+    {
+      "name": "LMPUpperLinerDetails",
+      "path": "/InteriorDetails/LMPUpperLinerDetails",
+      "aabb_cabin_m": [
+        [
+          0.7254859209060669,
+          1.8444344997406006,
+          -0.4410000145435333
+        ],
+        [
+          0.8930045366287231,
+          2.0085458755493164,
+          0.4710000157356262
+        ]
+      ],
+      "triangles": 1080,
+      "removable": true
+    },
+    {
+      "name": "ForwardHeaderTrim",
+      "path": "/InteriorDetails/ForwardHeaderTrim",
+      "aabb_cabin_m": [
+        [
+          -0.4000000059604645,
+          1.8700000047683716,
+          -1.0155000686645508
+        ],
+        [
+          0.4000000059604645,
+          2.1059999465942383,
+          -1.0080000162124634
+        ]
+      ],
+      "triangles": 432,
+      "removable": true
+    },
+    {
+      "name": "ForwardOverheadLiner",
+      "path": "/InteriorDetails/ForwardOverheadLiner",
+      "aabb_cabin_m": [
+        [
+          -0.3774999976158142,
+          2.1755969524383545,
+          -0.9050000309944153
+        ],
+        [
+          0.3774999976158142,
+          2.1817471981048584,
+          -0.5550000071525574
+        ]
+      ],
+      "triangles": 1488,
+      "removable": true
+    },
+    {
+      "name": "CDRAftCrownInserts",
+      "path": "/InteriorDetails/CDRAftCrownInserts",
+      "aabb_cabin_m": [
+        [
+          -0.7193452715873718,
+          2.0121538639068604,
+          0.4300000071525574
+        ],
+        [
+          -0.6403561234474182,
+          2.0699923038482666,
+          0.9100000262260437
+        ]
+      ],
+      "triangles": 720,
+      "removable": true
+    },
+    {
+      "name": "LMPAftCrownInserts",
+      "path": "/InteriorDetails/LMPAftCrownInserts",
+      "aabb_cabin_m": [
+        [
+          0.6403561234474182,
+          2.0121538639068604,
+          0.4300000071525574
+        ],
+        [
+          0.7193452715873718,
+          2.0699923038482666,
+          0.9100000262260437
+        ]
+      ],
+      "triangles": 720,
+      "removable": true
+    },
+    {
+      "name": "ForwardHeaderCableRun",
+      "path": "/InteriorDetails/ForwardHeaderCableRun",
+      "aabb_cabin_m": [
+        [
+          -0.3300492465496063,
+          2.0244998931884766,
+          -1.0130000114440918
+        ],
+        [
+          0.3300492465496063,
+          2.075500011444092,
+          -0.9959999918937683
+        ]
+      ],
+      "triangles": 584,
+      "removable": true
+    },
+    {
+      "name": "ForwardHatchFittings",
+      "path": "/InteriorDetails/ForwardHatchFittings",
+      "aabb_cabin_m": [
+        [
+          -0.34361401200294495,
+          0.19619999825954437,
+          -0.9915000200271606
+        ],
+        [
+          0.34361401200294495,
+          0.9037999510765076,
+          -0.946156919002533
+        ]
+      ],
+      "triangles": 752,
+      "removable": true
+    },
+    {
+      "name": "TransferHatchFittings",
+      "path": "/InteriorDetails/TransferHatchFittings",
+      "aabb_cabin_m": [
+        [
+          -0.3633287250995636,
+          2.1388399600982666,
+          0.2864999771118164
+        ],
+        [
+          0.3633287250995636,
+          2.1823971271514893,
+          1.0134999752044678
+        ]
+      ],
+      "triangles": 956,
+      "removable": true
+    }
+  ],
+  "triangles": 12244,
+  "material_count": 9,
+  "simulation": "none",
+  "input": "none",
+  "collisions": "none",
+  "lights": "none",
+  "dimensions": "all provisional visual reconstruction; not fabrication",
+  "artifact_sha256": "069cdfb9923a6953f1ce4ffc5053a948e0c4f76840866553435d778dfd84b201",
+  "hatch_fittings": "static closed-leaf visual groups; disable or reparent if a future host opens/removes either hatch",
+  "preserved_groups_evidence": "evidence/phase1-group-fingerprints.json"
+}

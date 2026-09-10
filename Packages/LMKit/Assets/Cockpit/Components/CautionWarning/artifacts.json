@@ -1,0 +1,210 @@
+{
+  "schema": "lmkit.caution-warning.artifacts.v1",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 115,
+      "sha256": "2996079c5921c80051c8ecb777eb22c452bdf437c1ff4ed779a006375e77377e"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 14,
+      "sha256": "2c5dd8d8e87382cc3a646d8d4d84f3256b317161bfa0601bc7b36db37ca1b17f"
+    },
+    {
+      "path": "CautionWarning.blend",
+      "bytes": 214735,
+      "sha256": "398372193322bf9e93ee1b4f2b26327cd04dcf3f808b958b04fd9db711532438"
+    },
+    {
+      "path": "CautionWarning.usda",
+      "bytes": 557557,
+      "sha256": "e3c8cf8dc96883e5635d7b2e22347bcc8600e09760b6b1e3e3545767e27cc6a3"
+    },
+    {
+      "path": "CautionWarning.usdc",
+      "bytes": 83685,
+      "sha256": "8a9651bf68d97f8b28c37e9f58c79c50b6ac6ebbc93fb9ba7724ac7c67a3b239"
+    },
+    {
+      "path": "CautionWarning.usdz",
+      "bytes": 83851,
+      "sha256": "580b16119a484c1a6138731e81e6960aab12324524dd267c0b227628e23b743b"
+    },
+    {
+      "path": "HANDOFF.md",
+      "bytes": 6238,
+      "sha256": "32609fd97403d2121043efcd05f94a7c877e869cabf8ec3c6b77e70005ec3256"
+    },
+    {
+      "path": "MasterAlarmReference.usda",
+      "bytes": 30834,
+      "sha256": "2cdafa42730b03913026adbea0d99b03b2f70652292df36e25c345dab03e90ea"
+    },
+    {
+      "path": "MasterAlarmReference.usdc",
+      "bytes": 9380,
+      "sha256": "1697a2abb71b29fb0e9ea6a1acbb161690ceeb87bac5740d3963aff472ca374f"
+    },
+    {
+      "path": "MasterAlarmReference.usdz",
+      "bytes": 9546,
+      "sha256": "112bb821af88ed596cad6e9cecb9c240cb98ba8298c5fbef4914a4241e6855e5"
+    },
+    {
+      "path": "SIGNALS.md",
+      "bytes": 3362,
+      "sha256": "8ceea85c23675fe0203a49639056d3430bdfb7eaa53c2efa99ace31fe051b0d6"
+    },
+    {
+      "path": "build.py",
+      "bytes": 9851,
+      "sha256": "3d0d0850175df1126de91e358a99e026197b9c1cad23f7ad5ca0724073d0c5b5"
+    },
+    {
+      "path": "evidence/aoh-lamp-tone.png",
+      "bytes": 99264,
+      "sha256": "d3b59b4f8be5449bb125153dc230a74e69b18364b67e8e2187fe59d5d883eb6e"
+    },
+    {
+      "path": "evidence/aoh-lgc-warning.png",
+      "bytes": 224911,
+      "sha256": "35d9dd28650fd973651c89bbe8478ecc04badc03c8e32769c0ce7603a9bbd2bb"
+    },
+    {
+      "path": "evidence/commander-mounting.json",
+      "bytes": 5451,
+      "sha256": "eb1efb3ab4ef0d43fc6036ec676431bf8b861cc69e83d26bc15cf2ed0182dde8"
+    },
+    {
+      "path": "evidence/inventory.json",
+      "bytes": 190532,
+      "sha256": "f315bdcbd8a6e597231b33420652fb6297241bf3af7c585708f472583522ec49"
+    },
+    {
+      "path": "evidence/master-alarm-source.png",
+      "bytes": 28740,
+      "sha256": "914260decf5aa538d07a21784ce5233ca36317e62c451defbcc023d5c1c31308"
+    },
+    {
+      "path": "evidence/panel1-source.png",
+      "bytes": 144042,
+      "sha256": "1445b061edecf4e3376f943b98b68b85c01c1ccf8e5fea182615ae9aea3aeb46"
+    },
+    {
+      "path": "evidence/panel2-source.png",
+      "bytes": 157288,
+      "sha256": "aac1109f5b458e06ca0e4018ea864b158e90fa48ee791ea7893e39d3c979c071"
+    },
+    {
+      "path": "evidence/provenance.json",
+      "bytes": 5401,
+      "sha256": "0e4917ae2f80bfe00f7d2c2e9e8bac1e57e9686b428b181bd2e9e7d2b73ff5f0"
+    },
+    {
+      "path": "evidence/runtime/AGC/Sources/AGC/AGC.swift",
+      "bytes": 25042,
+      "sha256": "af9f6a6d55aa6d39e7dc9a179e920eb906f90e9efdeebf70c73e5098a2e26803"
+    },
+    {
+      "path": "evidence/runtime/AGC/Sources/AGC/AGCEngine.swift",
+      "bytes": 7102,
+      "sha256": "b11000e2e9d6a0fb85b837498b3f002d6fe428c222daa5834b2eed5ce1522b20"
+    },
+    {
+      "path": "evidence/runtime/AGC/Sources/AGC/AGCEngineRuntimeIO.swift",
+      "bytes": 4462,
+      "sha256": "a1da879554e1bcdf5cb9abfa9b266ab9436119be09a7117332d1973e8e56d654"
+    },
+    {
+      "path": "evidence/runtime/AGC/Sources/AGC/DSKY.swift",
+      "bytes": 18047,
+      "sha256": "9d48fcf13bf1e6d7b2c2684f4556a09df887dc31166514b8bfca0018d16ef434"
+    },
+    {
+      "path": "evidence/runtime/AGC/Sources/AGC/DSKYSnapshot.swift",
+      "bytes": 5388,
+      "sha256": "fb0fd002fd107beffbe181ae4de0cca78d609bc116c6f9ed34cb3a6e3d9ae2f5"
+    },
+    {
+      "path": "evidence/runtime/AGC/Sources/LMCore/LMLandingGear.swift",
+      "bytes": 30164,
+      "sha256": "0cadb0313aae9b54f69bcfe7901c90103285592ced7b503aa045536823a690ed"
+    },
+    {
+      "path": "evidence/runtime/AGC/Sources/LMCore/LMSimulation.swift",
+      "bytes": 82579,
+      "sha256": "75c27b1e0bc3630372f6f093c1becbed8c1f1b96759dbff5101674990f694ab6"
+    },
+    {
+      "path": "evidence/runtime/LM/LM/LMCockpitExperienceDirector.swift",
+      "bytes": 10554,
+      "sha256": "095bef15b9eb4d5dabce67ac7e350d23b576f879d436b2a96e60e263904c3a67"
+    },
+    {
+      "path": "evidence/runtime/LM/LM/LMPhysicalDSKYPresentation.swift",
+      "bytes": 2664,
+      "sha256": "dbc2baac44ab61b554d87153a2f73de69d75e014fd912178822c6d2a2d06a851"
+    },
+    {
+      "path": "evidence/runtime/LM/LM/PoweredDescentSession.swift",
+      "bytes": 32957,
+      "sha256": "e2446e39c89b59c3365cbb55651777c7b5505529da9f7e88a0feef9ef6ac09e7"
+    },
+    {
+      "path": "evidence/runtime-sources.json",
+      "bytes": 2531,
+      "sha256": "b72efcecd088be9b76d23be7656d32415bec6238b484ac46e74de07042b527a2"
+    },
+    {
+      "path": "interface.json",
+      "bytes": 27753,
+      "sha256": "771e0cd4db889bb245ff2e5b46f5c3ffd0e337e1bfca01d6fb744ac4e3fe0608"
+    },
+    {
+      "path": "labels.json",
+      "bytes": 1663,
+      "sha256": "01f6801a9a1950cf5aca102a4f1a1b26666f16e54d1473be778c73af0bd1b6ff"
+    },
+    {
+      "path": "review/README.md",
+      "bytes": 671,
+      "sha256": "316e5a05a60814fafc1e5bef8c39007d83be4eea3488f2bcd65d13f43beb5586"
+    },
+    {
+      "path": "review/caution.png",
+      "bytes": 698977,
+      "sha256": "9756b7a116d874e3bd365bb39b348ecd5827f534d37f20a4ffc5abf3a0c80e3e"
+    },
+    {
+      "path": "review/master.png",
+      "bytes": 660490,
+      "sha256": "9aaee8469f24029b82f713758b8451e4d54fd947f4d283f1604adea78e89b3a2"
+    },
+    {
+      "path": "review/warning.png",
+      "bytes": 679257,
+      "sha256": "dc4d96a96393a99ba533b7cfe6e0ded890f4332d752fc5034bd94d9417431bb6"
+    },
+    {
+      "path": "validate.py",
+      "bytes": 6706,
+      "sha256": "e7e5cdf43926ea65bad4cc4010aadb42a32bb44d6f5d7381c5921f79c1f8aa55"
+    },
+    {
+      "path": "validate_native.swift",
+      "bytes": 2645,
+      "sha256": "20896fb2b536a091b0bec64bfa3702f86139d93159c90cd738bbe16a365c1ee4"
+    },
+    {
+      "path": "validation-native.json",
+      "bytes": 292,
+      "sha256": "36612509e9a0aa26d019a6b5148f65a149b794254d53567c589f75da58a62d7e"
+    },
+    {
+      "path": "validation.json",
+      "bytes": 117858,
+      "sha256": "b749f743382d0876431f9eab0fdca3f7b357cc58440bc5f44e13271efb43f5cd"
+    }
+  ]
+}

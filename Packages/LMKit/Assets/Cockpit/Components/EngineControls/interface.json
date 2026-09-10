@@ -1,0 +1,132 @@
+{
+  "schema": "lmkit.engine-controls.v1",
+  "units": "meters",
+  "axes": "+X right +Y up +Z toward crew; neutral identity exports",
+  "status": "neutral hardware; native USDZ verified; engine input unavailable",
+  "components": [
+    {
+      "id": "EngineButtons",
+      "asset": "EngineButtons.usdz",
+      "mount": "EngineButtons_Mount",
+      "placement": {
+        "parent": "/PanelInventory/Panels/Panel5/Panel5__Engine",
+        "translation_m": [
+          0,
+          0,
+          0
+        ],
+        "quaternion_xyzw": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "moving": [
+        "EngineButtons__StartActuator",
+        "EngineButtons__StopActuator",
+        "EngineButtons__StopResetLatch"
+      ],
+      "indicators": [
+        "EngineButtons__StartLightFace",
+        "EngineButtons__StopLightFace"
+      ],
+      "binding": "UNAVAILABLE: no typed crew START/STOP API; do not call session.start/stop, PRO, rawCH11",
+      "neutral": "unpressed, reset latch neutral, lamps off",
+      "travel": "Provisional negative local Z plunge .002m; no live movement/reset contract until mechanical/state model qualified",
+      "backing": "none: preserve accepted DescentRate backing/original slot placeholder",
+      "cooccupant": "DescentRate_Mount; never replace or remove this root, actuator, housing or support",
+      "actuator_neutral": {
+        "EngineButtons__StartActuator": {
+          "translation_m": [
+            0.017999999225139618,
+            -0.02500000037252903,
+            0.027000000700354576
+          ],
+          "quaternion_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "EngineButtons__StopActuator": {
+          "translation_m": [
+            0.017999999225139618,
+            0.017999999225139618,
+            0.04699999839067459
+          ],
+          "quaternion_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "EngineButtons__StopResetLatch": {
+          "translation_m": [
+            0.017999999225139618,
+            0.029999999329447746,
+            0.054999999701976776
+          ],
+          "quaternion_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "interaction_proxy_recommendation": "none while unbound; future separate button face proxies must exclude reset latch and DES RATE"
+    },
+    {
+      "id": "LunarContact",
+      "asset": "LunarContact.usdz",
+      "mount": "LunarContact_Mount",
+      "instances": [
+        {
+          "id": "CommanderLunarContact",
+          "parent": "/PanelInventory/Panels/Panel1",
+          "translation_m": [
+            0.041,
+            0.099,
+            0.0003
+          ],
+          "quaternion_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "inventory_slot": null,
+          "placement_reason": "unreserved gap beside cross-pointer, above FDAI; source ad013; metric estimate"
+        },
+        {
+          "id": "PilotLunarContact",
+          "parent": "/PanelInventory/Panels/Panel3/Panel3__Lighting",
+          "translation_m": [
+            0.078,
+            0.034,
+            0.0003
+          ],
+          "quaternion_xyzw": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "inventory_slot": "Panel3__Lighting",
+          "placement_reason": "source ad013 far-right panel3 contact; partial overlay; keep other lighting reservation"
+        }
+      ],
+      "light_face": "LunarContact__LightFace",
+      "lens": "LunarContact__Lens",
+      "neutral": "off dark blue",
+      "supported_observation": "snapshot.vehicleState.landingGear?.isProbeContact only; optional/unavailable must not mean false with certainty",
+      "qualification": "Probe-only indicator excludes actual lamp power, lamp test, stop-reset circuit. Never substitute surfaceContact/flightOutcome/mainEngineOff.",
+      "backing": "none: no slot blanket replacement",
+      "interaction_proxy_recommendation": "none: observation-only lamp"
+    }
+  ],
+  "mounting_matrices": "mounting-matrices.json"
+}

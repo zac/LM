@@ -1,0 +1,432 @@
+{
+  "schema": "lmkit.propulsion-instruments.v1",
+  "units": "meters",
+  "root": "/PropulsionInstruments",
+  "axes": "+X face-right, +Y face-up, +Z crew",
+  "root_transform": "identity in exported asset",
+  "mounting": {
+    "slot": "Panel1__Propulsion",
+    "slot_local_translation_m": [
+      0,
+      0,
+      0.008
+    ],
+    "quaternion_xyzw": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "scale": [
+      1,
+      1,
+      1
+    ],
+    "upper_cluster_size_m": [
+      0.086,
+      0.134,
+      0.018
+    ],
+    "upper_panel_local_xy_bounds_m": [
+      [
+        0.134,
+        0.038
+      ],
+      [
+        0.22,
+        0.172
+      ]
+    ],
+    "thrust_to_weight_child_translation_m": [
+      0.022,
+      -0.15,
+      0
+    ],
+    "thrust_to_weight_size_m": [
+      0.032,
+      0.125,
+      0.018
+    ],
+    "thrust_to_weight_panel_local_xy_bounds_m": [
+      [
+        0.183,
+        -0.1075
+      ],
+      [
+        0.215,
+        0.0175
+      ]
+    ],
+    "altitude_rate_existing_panel_local_xy_bounds_m": [
+      [
+        0.084,
+        -0.1175
+      ],
+      [
+        0.166,
+        0.0275
+      ]
+    ],
+    "altitude_rate_min_x_gap_m": 0.017,
+    "scope_exception": "T/W lies in retained RangeThrust area, to right of installed AltitudeRate; keep altitude identity/pose and RangeThrust blank. Do not use root union AABB to replace peer slots.",
+    "fit_status": "provisional numerical front envelope only; rear housings intersect backing registration, no mechanical qualification"
+  },
+  "availability": {
+    "default": "all moving needles and bright digit segments parked behind opaque face; readings unavailable",
+    "electrical_failure": "no simulated bus/power flag behavior inferred from unavailable host data",
+    "live_supported_channels": [],
+    "optional_host_aids": [
+      "commanded thrust as percentage of sourced rated DPS force, with host source qualification; not original CMD meter circuit",
+      "DPS-only axial force/mass ratio with host qualification, distinct from physical T/W accelerometer; not enabled by this asset"
+    ],
+    "forbidden": [
+      "no invented tank quantities from total propellant mass",
+      "no measured ENG pressure from command force",
+      "no fixed fake helium pressure",
+      "no duplicated ENG and CMD as independently measured",
+      "no missing value converted to zero",
+      "no T/W from net gravity-inclusive acceleration"
+    ]
+  },
+  "instruments": {
+    "Thrust": {
+      "root": "/PropulsionInstruments/Thrust",
+      "translation_m": [
+        -0.028,
+        -0.024,
+        0
+      ],
+      "face_size_m": [
+        0.026,
+        0.08,
+        0.018
+      ],
+      "domain": [
+        0,
+        100
+      ],
+      "units": "percent",
+      "source_status": "unavailable in current public simulation snapshot as this historical instrument signal",
+      "needles": {
+        "Engine": {
+          "node": "/PropulsionInstruments/Thrust/Needles/Engine",
+          "parked_translation_m": [
+            -0.0065,
+            -0.025,
+            -0.003
+          ],
+          "valid_translation_x_m": -0.0065,
+          "valid_translation_z_m": 0.003,
+          "travel_axis": [
+            0,
+            1,
+            0
+          ],
+          "scale_y_m": [
+            -0.025,
+            0.025
+          ],
+          "formula": "y=y_min+(value-domain_min)/(domain_max-domain_min)*(y_max-y_min); reject unavailable/nonfinite/out-of-domain, do not clamp into valid range",
+          "invalid_policy": "park behind opaque dial at declared parked_translation_m"
+        },
+        "Command": {
+          "node": "/PropulsionInstruments/Thrust/Needles/Command",
+          "parked_translation_m": [
+            0.0065,
+            -0.025,
+            -0.003
+          ],
+          "valid_translation_x_m": 0.0065,
+          "valid_translation_z_m": 0.003,
+          "travel_axis": [
+            0,
+            1,
+            0
+          ],
+          "scale_y_m": [
+            -0.025,
+            0.025
+          ],
+          "formula": "y=y_min+(value-domain_min)/(domain_max-domain_min)*(y_max-y_min); reject unavailable/nonfinite/out-of-domain, do not clamp into valid range",
+          "invalid_policy": "park behind opaque dial at declared parked_translation_m"
+        }
+      }
+    },
+    "Temperature": {
+      "root": "/PropulsionInstruments/Temperature",
+      "translation_m": [
+        0,
+        -0.024,
+        0
+      ],
+      "face_size_m": [
+        0.026,
+        0.08,
+        0.018
+      ],
+      "domain": [
+        10,
+        100
+      ],
+      "units": "degrees Fahrenheit",
+      "source_status": "unavailable in current public simulation snapshot as this historical instrument signal",
+      "needles": {
+        "Fuel": {
+          "node": "/PropulsionInstruments/Temperature/Needles/Fuel",
+          "parked_translation_m": [
+            -0.0065,
+            -0.025,
+            -0.003
+          ],
+          "valid_translation_x_m": -0.0065,
+          "valid_translation_z_m": 0.003,
+          "travel_axis": [
+            0,
+            1,
+            0
+          ],
+          "scale_y_m": [
+            -0.025,
+            0.025
+          ],
+          "formula": "y=y_min+(value-domain_min)/(domain_max-domain_min)*(y_max-y_min); reject unavailable/nonfinite/out-of-domain, do not clamp into valid range",
+          "invalid_policy": "park behind opaque dial at declared parked_translation_m"
+        },
+        "Oxidizer": {
+          "node": "/PropulsionInstruments/Temperature/Needles/Oxidizer",
+          "parked_translation_m": [
+            0.0065,
+            -0.025,
+            -0.003
+          ],
+          "valid_translation_x_m": 0.0065,
+          "valid_translation_z_m": 0.003,
+          "travel_axis": [
+            0,
+            1,
+            0
+          ],
+          "scale_y_m": [
+            -0.025,
+            0.025
+          ],
+          "formula": "y=y_min+(value-domain_min)/(domain_max-domain_min)*(y_max-y_min); reject unavailable/nonfinite/out-of-domain, do not clamp into valid range",
+          "invalid_policy": "park behind opaque dial at declared parked_translation_m"
+        }
+      }
+    },
+    "Pressure": {
+      "root": "/PropulsionInstruments/Pressure",
+      "translation_m": [
+        0.028,
+        -0.024,
+        0
+      ],
+      "face_size_m": [
+        0.026,
+        0.08,
+        0.018
+      ],
+      "domain": [
+        0,
+        300
+      ],
+      "units": "psia",
+      "source_status": "unavailable in current public simulation snapshot as this historical instrument signal",
+      "needles": {
+        "Fuel": {
+          "node": "/PropulsionInstruments/Pressure/Needles/Fuel",
+          "parked_translation_m": [
+            -0.0065,
+            -0.025,
+            -0.003
+          ],
+          "valid_translation_x_m": -0.0065,
+          "valid_translation_z_m": 0.003,
+          "travel_axis": [
+            0,
+            1,
+            0
+          ],
+          "scale_y_m": [
+            -0.025,
+            0.025
+          ],
+          "formula": "y=y_min+(value-domain_min)/(domain_max-domain_min)*(y_max-y_min); reject unavailable/nonfinite/out-of-domain, do not clamp into valid range",
+          "invalid_policy": "park behind opaque dial at declared parked_translation_m"
+        },
+        "Oxidizer": {
+          "node": "/PropulsionInstruments/Pressure/Needles/Oxidizer",
+          "parked_translation_m": [
+            0.0065,
+            -0.025,
+            -0.003
+          ],
+          "valid_translation_x_m": 0.0065,
+          "valid_translation_z_m": 0.003,
+          "travel_axis": [
+            0,
+            1,
+            0
+          ],
+          "scale_y_m": [
+            -0.025,
+            0.025
+          ],
+          "formula": "y=y_min+(value-domain_min)/(domain_max-domain_min)*(y_max-y_min); reject unavailable/nonfinite/out-of-domain, do not clamp into valid range",
+          "invalid_policy": "park behind opaque dial at declared parked_translation_m"
+        }
+      }
+    },
+    "ThrustToWeight": {
+      "root": "/PropulsionInstruments/ThrustToWeight",
+      "translation_m": [
+        0.022,
+        -0.15,
+        0
+      ],
+      "face_size_m": [
+        0.032,
+        0.125,
+        0.018
+      ],
+      "domain": [
+        0,
+        6
+      ],
+      "units": "lunar g",
+      "source_status": "unavailable in current public simulation snapshot as this historical instrument signal",
+      "needles": {
+        "Axial": {
+          "node": "/PropulsionInstruments/ThrustToWeight/Needles/Axial",
+          "parked_translation_m": [
+            0,
+            -0.047,
+            -0.003
+          ],
+          "valid_translation_x_m": 0,
+          "valid_translation_z_m": 0.003,
+          "travel_axis": [
+            0,
+            1,
+            0
+          ],
+          "scale_y_m": [
+            -0.047,
+            0.047
+          ],
+          "formula": "y=y_min+(value-domain_min)/(domain_max-domain_min)*(y_max-y_min); reject unavailable/nonfinite/out-of-domain, do not clamp into valid range",
+          "invalid_policy": "park behind opaque dial at declared parked_translation_m"
+        }
+      }
+    },
+    "Quantity": {
+      "root": "/PropulsionInstruments/Quantity",
+      "translation_m": [
+        -0.022,
+        0.04,
+        0
+      ],
+      "face_size_m": [
+        0.038,
+        0.041,
+        0.018
+      ],
+      "domain": [
+        0,
+        95
+      ],
+      "units": "percent selected usable descent-tank quantity",
+      "source_status": "unavailable",
+      "digit_count_per_row": 2,
+      "rows": {
+        "Oxidizer": {
+          "digit_nodes": [
+            "/PropulsionInstruments/Quantity/Digits/Oxidizer/Digit1",
+            "/PropulsionInstruments/Quantity/Digits/Oxidizer/Digit2"
+          ],
+          "segment_children": [
+            "SegmentA",
+            "SegmentB",
+            "SegmentC",
+            "SegmentD",
+            "SegmentE",
+            "SegmentF",
+            "SegmentG"
+          ]
+        },
+        "Fuel": {
+          "digit_nodes": [
+            "/PropulsionInstruments/Quantity/Digits/Fuel/Digit1",
+            "/PropulsionInstruments/Quantity/Digits/Fuel/Digit2"
+          ],
+          "segment_children": [
+            "SegmentA",
+            "SegmentB",
+            "SegmentC",
+            "SegmentD",
+            "SegmentE",
+            "SegmentF",
+            "SegmentG"
+          ]
+        }
+      },
+      "segments_order": "A top, B upper-right, C lower-right, D bottom, E lower-left, F upper-left, G middle",
+      "active_segment_z_m": 0.002,
+      "parked_segment_z_m": -0.003,
+      "invalid_policy": "park every segment; no false zero",
+      "format_constraint": "two decimal digits per fluid; no conversion from aggregate propellant mass",
+      "digit_representation_capacity": [
+        0,
+        99
+      ],
+      "domain_qualification": "LM10+ AOH table 3-1 printed 3-18: 0 to 95 percent; two-digit capacity is not calibrated range"
+    },
+    "Helium": {
+      "root": "/PropulsionInstruments/Helium",
+      "translation_m": [
+        0.02,
+        0.04,
+        0
+      ],
+      "face_size_m": [
+        0.04,
+        0.023,
+        0.018
+      ],
+      "domain": null,
+      "units": "psia, selected helium pressure channel; not a current signal",
+      "source_status": "unavailable",
+      "digit_count_per_row": 4,
+      "rows": {
+        "Pressure": {
+          "digit_nodes": [
+            "/PropulsionInstruments/Helium/Digits/Pressure/Digit1",
+            "/PropulsionInstruments/Helium/Digits/Pressure/Digit2",
+            "/PropulsionInstruments/Helium/Digits/Pressure/Digit3",
+            "/PropulsionInstruments/Helium/Digits/Pressure/Digit4"
+          ],
+          "segment_children": [
+            "SegmentA",
+            "SegmentB",
+            "SegmentC",
+            "SegmentD",
+            "SegmentE",
+            "SegmentF",
+            "SegmentG"
+          ]
+        }
+      },
+      "segments_order": "A top, B upper-right, C lower-right, D bottom, E lower-left, F upper-left, G middle",
+      "active_segment_z_m": 0.002,
+      "parked_segment_z_m": -0.003,
+      "invalid_policy": "park every segment; no false zero",
+      "format_constraint": "last digit zero for pressure; temperature/sign mode unimplemented",
+      "pressure_representation_capacity": [
+        0,
+        9990
+      ],
+      "domain_qualification": "Selected sensor physical range unresolved; four decimal digits with last digit always zero is a display-format constraint, not a calibrated range"
+    }
+  }
+}

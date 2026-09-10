@@ -1,0 +1,35 @@
+{
+  "source_commit": "6c8c271a1027d29edf24b17c6cd86b137e1e0a35",
+  "reference_LMKit": "3ad1a999ff17aea859eaea5750f1c65e66fad673",
+  "reference_LM": "9016960683efabb491dfed16f10ea3ef90196d01",
+  "acceptance": "Provisional visual surrounds; independent resource compatibility, not mechanical fit or runtime acceptance",
+  "installation": "Identity under Cabin exactly once; original Panel 1/4 backing and shields stay disabled",
+  "validation": {
+    "worker_checks": 286,
+    "native_package_tests": 9,
+    "review": "Independent artifact hashes, transforms, hierarchy and selected images inspected"
+  },
+  "limits": [
+    "Panel 1 outboard edge reduced 85 mm to clear reference CDR optics; no optics moved",
+    "Apertures clear full visual instrument envelope by deliberate 3 mm per side",
+    "Instrument seating, attachment hardware, structural joins and cable access unresolved",
+    "Reference Cabin intersection check excludes relocated live Panel 5/6 controls and ACA sweep",
+    "Authoring build reads sibling references: use pinned bytes below before rebuilding; original script does not enforce their hashes",
+    "Physical Vision Pro and app integration not tested by this package acceptance"
+  ],
+  "packaged_files": {
+    "CommanderPanels.usdz": {
+      "bytes": 15669,
+      "sha256": "52e4c13cf302e080edbd163fb3f6d26ce53785c28bc49dcefd3a75c876f9d604"
+    },
+    "mounting.json": {
+      "bytes": 5451,
+      "sha256": "eb1efb3ab4ef0d43fc6036ec676431bf8b861cc69e83d26bc15cf2ed0182dde8"
+    }
+  },
+  "reference_usdz_sha256": {
+    "Cabin": "777ce88968820a6e46995d436e807abf9f4b4a5cb7115d0eb03eafb4c89c995e",
+    "DSKY": "e20a69864d4c7e0ff068172e0e672d9fbcc510c1dc4e97e4db0246fde08fbdfd",
+    "FDAI": "4082ef22b4e8615e78a1e62182ed8d150585dcce1755492e6abb0784076c785d"
+  }
+}

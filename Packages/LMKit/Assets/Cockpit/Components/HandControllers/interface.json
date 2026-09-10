@@ -1,0 +1,185 @@
+{
+  "basis": "+X right, +Y up, +Z toward crew; not NASA vehicle axes",
+  "origin": "bottom center of provisional housing envelope; no flight mounting interface",
+  "state_owner": "LM presentation/input; AGC/LMCore simulation; no bindings implemented",
+  "entities": [
+    {
+      "name": "ACA_Roll",
+      "parent": "ACA_Mount",
+      "neutral_origin_m": [
+        0,
+        0.061,
+        0
+      ],
+      "neutral_rotation_degrees": [
+        0,
+        0,
+        0
+      ],
+      "motion": "rotation",
+      "axis": "Z",
+      "demonstration_offset": -8,
+      "limits": "UNVERIFIED; demonstration is not a mechanical stop"
+    },
+    {
+      "name": "ACA_Yaw",
+      "parent": "ACA_Roll",
+      "neutral_origin_m": [
+        0,
+        0.062,
+        0
+      ],
+      "neutral_rotation_degrees": [
+        0,
+        0,
+        0
+      ],
+      "motion": "rotation",
+      "axis": "Y",
+      "demonstration_offset": 8,
+      "limits": "UNVERIFIED; demonstration is not a mechanical stop"
+    },
+    {
+      "name": "ACA_Pitch",
+      "parent": "ACA_Yaw",
+      "neutral_origin_m": [
+        0,
+        0.077,
+        0
+      ],
+      "neutral_rotation_degrees": [
+        0,
+        0,
+        0
+      ],
+      "motion": "rotation",
+      "axis": "X",
+      "demonstration_offset": 8,
+      "limits": "UNVERIFIED; demonstration is not a mechanical stop"
+    },
+    {
+      "name": "ACA_PTT_Trigger",
+      "parent": "ACA_Pitch",
+      "neutral_origin_m": [
+        0,
+        0.02,
+        -0.028
+      ],
+      "neutral_rotation_degrees": [
+        0,
+        0,
+        0
+      ],
+      "motion": "rotation",
+      "axis": "X",
+      "demonstration_offset": -6,
+      "limits": "UNVERIFIED; demonstration is not a mechanical stop"
+    },
+    {
+      "name": "TTCA_VerticalShared",
+      "parent": "TTCA_Mount",
+      "neutral_origin_m": [
+        0,
+        0.072,
+        0.021
+      ],
+      "neutral_rotation_degrees": [
+        0,
+        0,
+        0
+      ],
+      "motion": "rotation",
+      "axis": "X",
+      "demonstration_offset": -15,
+      "limits": "UNVERIFIED; demonstration is not a mechanical stop"
+    },
+    {
+      "name": "TTCA_Lateral",
+      "parent": "TTCA_VerticalShared",
+      "neutral_origin_m": [
+        0,
+        0,
+        0
+      ],
+      "neutral_rotation_degrees": [
+        0,
+        0,
+        0
+      ],
+      "motion": "rotation",
+      "axis": "Y",
+      "demonstration_offset": 8,
+      "limits": "UNVERIFIED; demonstration is not a mechanical stop"
+    },
+    {
+      "name": "TTCA_Axial",
+      "parent": "TTCA_Lateral",
+      "neutral_origin_m": [
+        0,
+        0,
+        0
+      ],
+      "neutral_rotation_degrees": [
+        0,
+        0,
+        0
+      ],
+      "motion": "translation",
+      "axis": "Z",
+      "demonstration_offset": 0.007,
+      "limits": "UNVERIFIED; demonstration is not a mechanical stop"
+    },
+    {
+      "name": "TTCA_ModeSelector",
+      "parent": "TTCA_Mount",
+      "neutral_origin_m": [
+        0.065,
+        0.056,
+        -0.02
+      ],
+      "neutral_rotation_degrees": [
+        0,
+        0,
+        0
+      ],
+      "motion": "translation",
+      "axis": "Y",
+      "demonstration_offset": 0.018,
+      "limits": "UNVERIFIED; demonstration is not a mechanical stop"
+    },
+    {
+      "name": "TTCA_Friction",
+      "parent": "TTCA_Mount",
+      "neutral_origin_m": [
+        -0.039,
+        0.027,
+        0.025
+      ],
+      "neutral_rotation_degrees": [
+        0,
+        0,
+        0
+      ],
+      "motion": "rotation",
+      "axis": "Z",
+      "demonstration_offset": 30,
+      "limits": "UNVERIFIED; demonstration is not a mechanical stop"
+    }
+  ],
+  "ACA": {
+    "documented_maximum_envelope_m": [
+      0.1016,
+      0.2555,
+      0.1699
+    ],
+    "source": "NASA TN D-7884 table III p8; not a neutral-pose dimensional drawing",
+    "pivot_interpretation": "Separated roll/pitch pivots from figure 7; exact positions and yaw coupling provisional"
+  },
+  "TTCA": {
+    "dimensions": "All dimensions provisional; table V in TN D-7884 is CM THC and is deliberately not used",
+    "relationship": "VerticalShared serves jets X or descent throttle; lateral and axial remain available in both modes",
+    "mode": "neutral selector modeled down/JETS; upward slide selects THROTTLE; travel provisional",
+    "kinematics": "Vertical/lateral arcs and axial slide visual interpretation; internal linkage and cross-axis coupling unresolved",
+    "throttle": "TN D-7884 p10-11 gives 53 degree soft stop plus 10 degrees and center +33; LM10 handbook gives 10-92.5% engine thrust. Different quantities/revisions, not a calibrated mapping."
+  }
+}

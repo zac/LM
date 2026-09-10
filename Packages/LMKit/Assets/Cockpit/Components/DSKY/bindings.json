@@ -1,0 +1,537 @@
+{
+  "baseline": "97f877b52bf569656c6798cff5790b7207c42af0",
+  "units": "meters",
+  "usd_axes": "+X right +Y up +Z crew",
+  "blender_to_usd": "(x,y,z) -> (x,z,-y)",
+  "face_m": [
+    0.2063496,
+    0.2032,
+    0.012
+  ],
+  "depth_budget_m": 0.175514,
+  "display_mount_usd_m": [
+    0,
+    0.029591,
+    0.01
+  ],
+  "keys": [
+    {
+      "name": "DSKY_Key_VERB",
+      "path": "/DSKY_Mount/DSKY_Key_VERB",
+      "legend": "VERB",
+      "neutral_usd_m": [
+        -0.0749808,
+        -0.044449999999999996,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_NOUN",
+      "path": "/DSKY_Mount/DSKY_Key_NOUN",
+      "legend": "NOUN",
+      "neutral_usd_m": [
+        -0.0749808,
+        -0.062229999999999994,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_PLUS",
+      "path": "/DSKY_Mount/DSKY_Key_PLUS",
+      "legend": "+",
+      "neutral_usd_m": [
+        -0.0503428,
+        -0.044449999999999996,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_7",
+      "path": "/DSKY_Mount/DSKY_Key_7",
+      "legend": "7",
+      "neutral_usd_m": [
+        -0.0274828,
+        -0.044449999999999996,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_8",
+      "path": "/DSKY_Mount/DSKY_Key_8",
+      "legend": "8",
+      "neutral_usd_m": [
+        -0.00462280000000001,
+        -0.044449999999999996,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_9",
+      "path": "/DSKY_Mount/DSKY_Key_9",
+      "legend": "9",
+      "neutral_usd_m": [
+        0.01823720000000001,
+        -0.044449999999999996,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_CLR",
+      "path": "/DSKY_Mount/DSKY_Key_CLR",
+      "legend": "CLR",
+      "neutral_usd_m": [
+        0.041097199999999987,
+        -0.044449999999999996,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_MINUS",
+      "path": "/DSKY_Mount/DSKY_Key_MINUS",
+      "legend": "\u2212",
+      "neutral_usd_m": [
+        -0.0503428,
+        -0.062229999999999994,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_4",
+      "path": "/DSKY_Mount/DSKY_Key_4",
+      "legend": "4",
+      "neutral_usd_m": [
+        -0.0274828,
+        -0.062229999999999994,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_5",
+      "path": "/DSKY_Mount/DSKY_Key_5",
+      "legend": "5",
+      "neutral_usd_m": [
+        -0.00462280000000001,
+        -0.062229999999999994,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_6",
+      "path": "/DSKY_Mount/DSKY_Key_6",
+      "legend": "6",
+      "neutral_usd_m": [
+        0.01823720000000001,
+        -0.062229999999999994,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_PRO",
+      "path": "/DSKY_Mount/DSKY_Key_PRO",
+      "legend": "PRO",
+      "neutral_usd_m": [
+        0.041097199999999987,
+        -0.062229999999999994,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_0",
+      "path": "/DSKY_Mount/DSKY_Key_0",
+      "legend": "0",
+      "neutral_usd_m": [
+        -0.0503428,
+        -0.08001,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_1",
+      "path": "/DSKY_Mount/DSKY_Key_1",
+      "legend": "1",
+      "neutral_usd_m": [
+        -0.0274828,
+        -0.08001,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_2",
+      "path": "/DSKY_Mount/DSKY_Key_2",
+      "legend": "2",
+      "neutral_usd_m": [
+        -0.00462280000000001,
+        -0.08001,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_3",
+      "path": "/DSKY_Mount/DSKY_Key_3",
+      "legend": "3",
+      "neutral_usd_m": [
+        0.01823720000000001,
+        -0.08001,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_KEY_REL",
+      "path": "/DSKY_Mount/DSKY_Key_KEY_REL",
+      "legend": "KEY\nREL",
+      "neutral_usd_m": [
+        0.041097199999999987,
+        -0.08001,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_ENTR",
+      "path": "/DSKY_Mount/DSKY_Key_ENTR",
+      "legend": "ENTR",
+      "neutral_usd_m": [
+        0.06624319999999999,
+        -0.044449999999999996,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    },
+    {
+      "name": "DSKY_Key_RSET",
+      "path": "/DSKY_Mount/DSKY_Key_RSET",
+      "legend": "RSET",
+      "neutral_usd_m": [
+        0.06624319999999999,
+        -0.062229999999999994,
+        0.011
+      ],
+      "press_axis_usd": [
+        0,
+        0,
+        -1
+      ],
+      "travel_m": 0.003,
+      "travel_evidence": "provisional app animation",
+      "spring_return": true,
+      "guard": null,
+      "detents": null,
+      "runtime_owner": "AGC",
+      "binding_status": "visual_only"
+    }
+  ],
+  "lamps": [
+    {
+      "name": "DSKY_Lamp_UPLINK_ACTY",
+      "indicator_id": 11,
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Lamp_UPLINK_ACTY"
+    },
+    {
+      "name": "DSKY_Lamp_NO_ATT",
+      "indicator_id": 12,
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Lamp_NO_ATT"
+    },
+    {
+      "name": "DSKY_Lamp_STBY",
+      "indicator_id": 13,
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Lamp_STBY"
+    },
+    {
+      "name": "DSKY_Lamp_KEY_REL",
+      "indicator_id": 14,
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Lamp_KEY_REL"
+    },
+    {
+      "name": "DSKY_Lamp_OPR_ERR",
+      "indicator_id": 15,
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Lamp_OPR_ERR"
+    },
+    {
+      "name": "DSKY_Lamp_TEMP",
+      "indicator_id": 21,
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Lamp_TEMP"
+    },
+    {
+      "name": "DSKY_Lamp_GIMBAL_LOCK",
+      "indicator_id": 22,
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Lamp_GIMBAL_LOCK"
+    },
+    {
+      "name": "DSKY_Lamp_PROG",
+      "indicator_id": 23,
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Lamp_PROG"
+    },
+    {
+      "name": "DSKY_Lamp_RESTART",
+      "indicator_id": 24,
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Lamp_RESTART"
+    },
+    {
+      "name": "DSKY_Lamp_TRACKER",
+      "indicator_id": 25,
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Lamp_TRACKER"
+    },
+    {
+      "name": "DSKY_Lamp_ALT",
+      "indicator_id": 26,
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Lamp_ALT"
+    },
+    {
+      "name": "DSKY_Lamp_VEL",
+      "indicator_id": 27,
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Lamp_VEL"
+    }
+  ],
+  "computer_activity": {
+    "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Lamp_COMP_ACTY",
+    "snapshot": "compActy"
+  },
+  "fields": {
+    "PROG": {
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Readout_PROG",
+      "positions": 2,
+      "sign": false
+    },
+    "VERB": {
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Readout_VERB",
+      "positions": 2,
+      "sign": false
+    },
+    "NOUN": {
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Readout_NOUN",
+      "positions": 2,
+      "sign": false
+    },
+    "R1": {
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Readout_R1",
+      "positions": 5,
+      "sign": true
+    },
+    "R2": {
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Readout_R2",
+      "positions": 5,
+      "sign": true
+    },
+    "R3": {
+      "path": "/DSKY_Mount/DSKY_Display_Mount/DSKY_Readout_R3",
+      "positions": 5,
+      "sign": true
+    }
+  },
+  "display_state": "unpowered, no static flight readout",
+  "textures": []
+}

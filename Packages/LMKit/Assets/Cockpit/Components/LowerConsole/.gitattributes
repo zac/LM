@@ -1,0 +1,2 @@
+# Preserve upstream runtime evidence bytes exactly.
+evidence/runtime/** -whitespace

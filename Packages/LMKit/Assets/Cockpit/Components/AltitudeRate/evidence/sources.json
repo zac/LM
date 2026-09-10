@@ -1,0 +1,47 @@
+{
+  "retrieved": "2026-09-08",
+  "records": [
+    {
+      "file": "lm-tapemeter-simulator.jpg",
+      "bytes": 73008,
+      "sha256": "74798dcb42826ab3e1162dea0e7c56a86f6dded19740219b2e6e111cc9b86ba7",
+      "url": "https://www.apollojournals.org/alsj/lm_tapemeter.jpg",
+      "derivation": null
+    },
+    {
+      "file": "panel1-handbook.png",
+      "bytes": 231340,
+      "sha256": "069531c72bb0e53bdf8f7c2c1216c346584e7be5242b8277992045c8a8df94c0",
+      "url": null,
+      "derivation": "pdftotext/pdftoppm extraction from identified report or existing PanelInventory source; no retouching"
+    },
+    {
+      "file": "tnD6722-p18.png",
+      "bytes": 462937,
+      "sha256": "03618fe7375ffb5ca50a21dacf7c6889e110fa6e701e203515de07e69d0040c6",
+      "url": null,
+      "derivation": "pdftotext/pdftoppm extraction from identified report or existing PanelInventory source; no retouching"
+    },
+    {
+      "file": "tnD6722-p20.png",
+      "bytes": 434458,
+      "sha256": "b165fff63abbe9174551f76267d4bfc7eb0b19ee98c72bf8dee90a448f564a0f",
+      "url": null,
+      "derivation": "pdftotext/pdftoppm extraction from identified report or existing PanelInventory source; no retouching"
+    },
+    {
+      "file": "tnD6722.pdf",
+      "bytes": 666829,
+      "sha256": "9b79e66083a17824b41622c1d7f361c218128a9b9dbbe86b10b1bed4277ef054",
+      "url": "https://apollojournals.org/alsj/tnD6722LMDisplayControl.pdf",
+      "derivation": null
+    },
+    {
+      "file": "tnD6722.txt",
+      "bytes": 98127,
+      "sha256": "2adcee5febe688e6a4d02d1070d2a4f3beff72f9cd7be30caeb77a623816fcc2",
+      "url": null,
+      "derivation": "pdftotext/pdftoppm extraction from identified report or existing PanelInventory source; no retouching"
+    }
+  ]
+}

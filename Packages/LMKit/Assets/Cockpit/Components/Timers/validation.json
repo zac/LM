@@ -1,0 +1,99 @@
+{
+  "status": "PASS",
+  "checks": 4845,
+  "assets": [
+    {
+      "asset": "MissionTimer.usdz",
+      "meshes": 65,
+      "triangles": 759,
+      "bounds_min_m": [
+        -0.06499999761581421,
+        -0.01600000075995922,
+        -0.013499999418854713
+      ],
+      "bounds_max_m": [
+        0.06499999761581421,
+        0.01600000075995922,
+        0.00559999980032444
+      ],
+      "compliance": "PASS",
+      "warnings": []
+    },
+    {
+      "asset": "EventTimer.usdz",
+      "meshes": 39,
+      "triangles": 499,
+      "bounds_min_m": [
+        -0.041999999433755875,
+        -0.01600000075995922,
+        -0.013499999418854713
+      ],
+      "bounds_max_m": [
+        0.041999999433755875,
+        0.01600000075995922,
+        0.00559999980032444
+      ],
+      "compliance": "PASS",
+      "warnings": []
+    },
+    {
+      "asset": "MissionTimerControls.usdz",
+      "meshes": 31,
+      "triangles": 1239,
+      "bounds_min_m": [
+        -0.0949999988079071,
+        -0.032999999821186066,
+        -0.001500000013038516
+      ],
+      "bounds_max_m": [
+        0.0949999988079071,
+        0.032999999821186066,
+        0.02449999935925007
+      ],
+      "compliance": "PASS",
+      "warnings": []
+    },
+    {
+      "asset": "EventTimerControls.usdz",
+      "meshes": 31,
+      "triangles": 1230,
+      "bounds_min_m": [
+        -0.0949999988079071,
+        -0.032999999821186066,
+        -0.001500000013038516
+      ],
+      "bounds_max_m": [
+        0.0949999988079071,
+        0.032999999821186066,
+        0.02449999935925007
+      ],
+      "compliance": "PASS",
+      "warnings": []
+    }
+  ],
+  "hashes": {
+    "MissionTimerControls.usdc": "bfe0378bae5239b848287754b3c5cb52be6fa7dac328d740c921ade4eb579c4c",
+    "build.py": "b2658c5d21a0940028611171b7193a6248607441547f495d27fdf23d7449eaeb",
+    "MissionTimer.blend": "ee08ab84967745cbea8020db1d81a49b5a78044cba59438b4dd49d87c5915cf5",
+    "EventTimer.blend": "dc6757679287a3fa406756eec9675365ff4ebb845552e5a93e2370167aa3d64f",
+    "EventTimerControls.usdz": "3cf2edba9154f991e386337acda721a3cd163c5cef22c5164f889ec28cce3cbb",
+    "EventTimerControls.usda": "3231f06f281716980e5a156974215f1ac39dc26dc8794155759cb90926aa85ee",
+    "MissionTimer.usdz": "ef6eb8d8d54de5dc39b31f0f9f38a3151343dc8c73ede7762615c41613570bea",
+    "EventTimer.usdz": "d22f9ec7b70c28a12725414f9150f2edb3f641c97c91c67cd0b7409326d8b540",
+    "MissionTimer.usda": "9e6654fbd4f20ffef26aa432e0216bf0e171ef98c32f699cde27cda9c02d6db0",
+    "EventTimer.usda": "d42970a12ed1e03a332cee9dbd37e54e27e520110b84b98a9b5aedf4844100fb",
+    "MissionTimerControls.usdz": "f887e0508328d50b8c2e40bcb0bfaa4daa2379ea902a82e6ceb9a03258f121d5",
+    "MissionTimerControls.usda": "3d28acd392ea098740b25279d74c2bfdc352eac042c611dec12f027d0fd3149b",
+    "MissionTimerControls.blend": "83c1f74a7fa0d1d2e23e5326abf0068bbb2d52a48dea0537d2c4ad133377a00e",
+    "EventTimerControls.blend": "38fe2cb29c6c8491d48e5935d82ee4588f683ec4c822816f53b67ee49c9b84e8",
+    "interface.json": "6f105803efeee6f1b4240604d871f7eb85f0780c266233d4000aeb8c635fcacd",
+    "EventTimer.usdc": "be97ba1ecda41543cdea8daf357d4c41ff1e3c3d4e0535a43e515822467a0b86",
+    "MissionTimer.usdc": "1fad56792fbb45cc3505838f96e2f40abe4a5e48dfefbfbe8199ea4fe1dc7c5b",
+    "EventTimerControls.usdc": "73b383beaf7dd283b6153032d0fc3de47ee690abd0f02deb7efe972c1f9ffe20"
+  },
+  "limits": [
+    "No actual time source tested",
+    "No Vision Pro assessment",
+    "No physical-survey claim"
+  ]
+}

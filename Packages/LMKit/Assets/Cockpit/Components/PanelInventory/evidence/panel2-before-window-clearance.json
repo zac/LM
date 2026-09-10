@@ -1,0 +1,57 @@
+{
+  "reference_commit": "5699e64",
+  "interface_commit": "80c9b2d",
+  "method": "triangle surface crossing; labels excluded; containment and service clearances not tested",
+  "surface_intersections": [
+    {
+      "panel_mesh": "/PanelInventory/Panels/Panel2/Frame/FrameHB",
+      "window_mesh": "/WindowsLPD/LMP_FlightWindow/LMP_Hardware/LMP_InnerRetainer",
+      "triangle_pairs": 60
+    },
+    {
+      "panel_mesh": "/PanelInventory/Panels/Panel2/Frame/FrameHB",
+      "window_mesh": "/WindowsLPD/LMP_FlightWindow/LMP_Hardware/LMP_StructuralFrame",
+      "triangle_pairs": 24
+    },
+    {
+      "panel_mesh": "/PanelInventory/Panels/Panel2/Frame/FrameVB",
+      "window_mesh": "/WindowsLPD/LMP_FlightWindow/LMP_Hardware/LMP_OuterRetainer",
+      "triangle_pairs": 14
+    },
+    {
+      "panel_mesh": "/PanelInventory/Panels/Panel2/Frame/FrameVB",
+      "window_mesh": "/WindowsLPD/LMP_FlightWindow/LMP_Hardware/LMP_StructuralFrame",
+      "triangle_pairs": 26
+    },
+    {
+      "panel_mesh": "/PanelInventory/Panels/Panel2/Frame/FrameVB",
+      "window_mesh": "/WindowsLPD/LMP_FlightWindow/LMP_Window_Inner/LMP_Glazing_Inner",
+      "triangle_pairs": 12
+    },
+    {
+      "panel_mesh": "/PanelInventory/Panels/Panel2/Frame/FrameVB",
+      "window_mesh": "/WindowsLPD/LMP_FlightWindow/LMP_Window_Outer/LMP_Glazing_Outer",
+      "triangle_pairs": 24
+    },
+    {
+      "panel_mesh": "/PanelInventory/Panels/Panel2/Panel2__Caution/Placeholder",
+      "window_mesh": "/WindowsLPD/LMP_FlightWindow/LMP_Hardware/LMP_BlackEdge",
+      "triangle_pairs": 18
+    },
+    {
+      "panel_mesh": "/PanelInventory/Panels/Panel2/Panel2__Caution/Placeholder",
+      "window_mesh": "/WindowsLPD/LMP_FlightWindow/LMP_Hardware/LMP_InnerRetainer",
+      "triangle_pairs": 16
+    },
+    {
+      "panel_mesh": "/PanelInventory/Panels/Panel2/Panel2__Caution/Placeholder",
+      "window_mesh": "/WindowsLPD/LMP_FlightWindow/LMP_Hardware/LMP_StructuralFrame",
+      "triangle_pairs": 16
+    },
+    {
+      "panel_mesh": "/PanelInventory/Panels/Panel2/Panel2__Caution/Placeholder",
+      "window_mesh": "/WindowsLPD/LMP_FlightWindow/LMP_Window_Inner/LMP_Glazing_Inner",
+      "triangle_pairs": 10
+    }
+  ]
+}

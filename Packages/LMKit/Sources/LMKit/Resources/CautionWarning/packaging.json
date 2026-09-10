@@ -1,0 +1,15 @@
+{
+  "schema": "lmkit.component-packaging.v1",
+  "component": "CautionWarning",
+  "derivation": "byte-identical copy of accepted authoring resources",
+  "files": {
+    "CautionWarning.usdz": {
+      "sha256": "580b16119a484c1a6138731e81e6960aab12324524dd267c0b227628e23b743b",
+      "bytes": 83851
+    },
+    "interface.json": {
+      "sha256": "771e0cd4db889bb245ff2e5b46f5c3ffd0e337e1bfca01d6fb744ac4e3fe0608",
+      "bytes": 27753
+    }
+  }
+}

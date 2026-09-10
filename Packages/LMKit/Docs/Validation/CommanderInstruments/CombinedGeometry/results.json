@@ -1,0 +1,481 @@
+{
+  "method": "Read-only Blender USDZ import; exact contracted slot transforms; new-new mesh broadphase AABB followed by BVH triangle surface overlap. Neutral authored state. No source save or render.",
+  "inputs": {
+    "InteriorDetails": {
+      "path": "/Users/zac/Projects/personal/lm/LMKit/Assets/Cockpit/Components/InteriorDetails/InteriorDetails.usdz",
+      "sha256": "1d6fef1c8815d902235bdb0df32d201dbc25ac95fb7bb6ff90852781ed918231",
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 278,
+      "aabb_cabin_m": [
+        [
+          -1.1669999361038208,
+          0.13450001180171967,
+          -1.0155000686645508
+        ],
+        [
+          1.1669999361038208,
+          2.1059999465942383,
+          1.0499999523162842
+        ]
+      ]
+    },
+    "BreakerBanks": {
+      "path": "/Users/zac/Projects/personal/lm/LMKit/Assets/Cockpit/Components/BreakerBanks/BreakerBanks.usdz",
+      "sha256": "fce4e4248806f4ff963775bc8013e17e6dee370671e656390bb8d05fcddfc217",
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 383,
+      "aabb_cabin_m": [
+        [
+          -0.9950653314590454,
+          1.3487095832824707,
+          -0.4675000309944153
+        ],
+        [
+          0.9844626188278198,
+          1.6632614135742188,
+          0.2675000727176666
+        ]
+      ]
+    },
+    "AltitudeRate": {
+      "path": "/Users/zac/Projects/personal/lm/LMKit/Assets/Cockpit/Components/AltitudeRate/AltitudeRate.usdz",
+      "sha256": "047bd435c51ecb1920aedc8f8b1cefbc9ea9056ac1139503a81abe29b42254c1",
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.12000000476837158
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.5614835023880005
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.8692932724952698
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 633,
+      "aabb_cabin_m": [
+        [
+          -0.16099999845027924,
+          1.489942193031311,
+          -0.8962207436561584
+        ],
+        [
+          -0.07900001108646393,
+          1.6335766315460205,
+          -0.8495576977729797
+        ]
+      ]
+    },
+    "CrossPointer": {
+      "path": "/Users/zac/Projects/personal/lm/LMKit/Assets/Cockpit/Components/CrossPointer/CrossPointer.usdz",
+      "sha256": "8095cdf3c12c4b77025e415ad21ea24a5bf51615674fd076f7458b9369ae1eae",
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.3149999976158142
+        ],
+        [
+          0.0,
+          0.9848077297210693,
+          0.1736481636762619,
+          1.70289146900177
+        ],
+        [
+          0.0,
+          -0.1736481636762619,
+          0.9848077297210693,
+          -0.9023507237434387
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 127,
+      "aabb_cabin_m": [
+        [
+          -0.34549999237060547,
+          1.672336220741272,
+          -0.9268221855163574
+        ],
+        [
+          -0.28450000286102295,
+          1.7332407236099243,
+          -0.8950643539428711
+        ]
+      ]
+    },
+    "AttitudeMode": {
+      "path": "/Users/zac/Projects/personal/lm/LMKit/Assets/Cockpit/Components/DescentControls/AttitudeMode.usdz",
+      "sha256": "4e7b811a7ed251bd9065a852a2ed652ca16a5fd06b48beea98702a492dc63f86",
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.11999999731779099
+        ],
+        [
+          0.0,
+          0.7071067690849304,
+          0.7071068286895752,
+          1.2781422138214111
+        ],
+        [
+          0.0,
+          -0.7071068286895752,
+          0.7071067690849304,
+          -0.8058578372001648
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 12,
+      "aabb_cabin_m": [
+        [
+          -0.23249998688697815,
+          1.2247556447982788,
+          -0.8592444062232971
+        ],
+        [
+          -0.007500000298023224,
+          1.3294074535369873,
+          -0.7545925974845886
+        ]
+      ]
+    },
+    "DescentRate": {
+      "path": "/Users/zac/Projects/personal/lm/LMKit/Assets/Cockpit/Components/DescentControls/DescentRate.usdz",
+      "sha256": "ffa295038be35261353a8a0c8fe35316647d4e0b910b7ca108e97f55375cf078",
+      "matrix_cabin_row_major": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.6387999653816223
+        ],
+        [
+          0.0,
+          0.258819043636322,
+          0.9659258127212524,
+          0.9164698719978333
+        ],
+        [
+          0.0,
+          -0.9659258127212524,
+          0.258819043636322,
+          -0.3626972436904907
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "meshes": 9,
+      "aabb_cabin_m": [
+        [
+          -0.7012999653816223,
+          0.8993370532989502,
+          -0.4165996313095093
+        ],
+        [
+          -0.5762999653816223,
+          0.9749895334243774,
+          -0.3095713257789612
+        ]
+      ]
+    }
+  },
+  "inventory_sha256": "f315bdcbd8a6e597231b33420652fb6297241bf3af7c585708f472583522ec49",
+  "results": [
+    {
+      "a": "InteriorDetails",
+      "b": "BreakerBanks",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "InteriorDetails",
+      "b": "AltitudeRate",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "InteriorDetails",
+      "b": "CrossPointer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "InteriorDetails",
+      "b": "AttitudeMode",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "InteriorDetails",
+      "b": "DescentRate",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "BreakerBanks",
+      "b": "AltitudeRate",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "BreakerBanks",
+      "b": "CrossPointer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "BreakerBanks",
+      "b": "AttitudeMode",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "BreakerBanks",
+      "b": "DescentRate",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "AltitudeRate",
+      "b": "CrossPointer",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "AltitudeRate",
+      "b": "AttitudeMode",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "AltitudeRate",
+      "b": "DescentRate",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "CrossPointer",
+      "b": "AttitudeMode",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "CrossPointer",
+      "b": "DescentRate",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    },
+    {
+      "a": "AttitudeMode",
+      "b": "DescentRate",
+      "broadphase_candidates": 0,
+      "candidates": [],
+      "surface_crossings": []
+    }
+  ],
+  "limits": [
+    "No self-intersection test within a single component",
+    "No containment or continuous motion/hand sweep proof",
+    "No original-foundation revalidation; previous fixture backing penetration remains outside scope",
+    "No material transparency/legibility/RealityKit/simulator acceptance"
+  ],
+  "representative_face_rays": [
+    {
+      "target_component": "AltitudeRate",
+      "sample": 0,
+      "hits": []
+    },
+    {
+      "target_component": "AltitudeRate",
+      "sample": 1,
+      "hits": []
+    },
+    {
+      "target_component": "AltitudeRate",
+      "sample": 2,
+      "hits": []
+    },
+    {
+      "target_component": "AltitudeRate",
+      "sample": 3,
+      "hits": []
+    },
+    {
+      "target_component": "AltitudeRate",
+      "sample": 4,
+      "hits": []
+    },
+    {
+      "target_component": "CrossPointer",
+      "sample": 0,
+      "hits": []
+    },
+    {
+      "target_component": "CrossPointer",
+      "sample": 1,
+      "hits": []
+    },
+    {
+      "target_component": "CrossPointer",
+      "sample": 2,
+      "hits": []
+    },
+    {
+      "target_component": "CrossPointer",
+      "sample": 3,
+      "hits": []
+    },
+    {
+      "target_component": "CrossPointer",
+      "sample": 4,
+      "hits": []
+    },
+    {
+      "target_component": "AttitudeMode",
+      "sample": 0,
+      "hits": []
+    },
+    {
+      "target_component": "AttitudeMode",
+      "sample": 1,
+      "hits": []
+    },
+    {
+      "target_component": "AttitudeMode",
+      "sample": 2,
+      "hits": []
+    },
+    {
+      "target_component": "AttitudeMode",
+      "sample": 3,
+      "hits": []
+    },
+    {
+      "target_component": "AttitudeMode",
+      "sample": 4,
+      "hits": []
+    },
+    {
+      "target_component": "DescentRate",
+      "sample": 0,
+      "hits": []
+    },
+    {
+      "target_component": "DescentRate",
+      "sample": 1,
+      "hits": []
+    },
+    {
+      "target_component": "DescentRate",
+      "sample": 2,
+      "hits": []
+    },
+    {
+      "target_component": "DescentRate",
+      "sample": 3,
+      "hits": []
+    },
+    {
+      "target_component": "DescentRate",
+      "sample": 4,
+      "hits": []
+    }
+  ],
+  "representative_face_occlusions": [],
+  "surface_crossing_pairs": 0
+}

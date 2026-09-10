@@ -1,0 +1,56 @@
+{
+  "FDAI": {
+    "actual_reference_bounds_local_m": [
+      [
+        -0.074024997651577,
+        -0.074024997651577,
+        -0.2329999953508377
+      ],
+      [
+        0.074024997651577,
+        0.074024997651577,
+        0.04650000110268593
+      ]
+    ],
+    "aperture_edge_gaps_left_right_bottom_top_m": [
+      0.0030000023484230004,
+      0.0030000023484230004,
+      0.0030000023484230004,
+      0.0030000023484230004
+    ],
+    "min_conservative_support_distance_m": 0.0029998421669006348,
+    "nearest_support": "/CommanderPanels/Panel_1/Panel_1_RemovableBacking/Panel_1_Backing_Top",
+    "rear_housing_clearance": "open rear; no closed compartment or connector service envelope qualified"
+  },
+  "DSKY": {
+    "actual_reference_bounds_local_m": [
+      [
+        -0.10317479819059372,
+        -0.10159999877214432,
+        -0.16021400690078735
+      ],
+      [
+        0.10317479819059372,
+        0.10159999877214432,
+        0.015200000256299973
+      ]
+    ],
+    "aperture_edge_gaps_left_right_bottom_top_m": [
+      0.0030000018094062803,
+      0.0030000018094062803,
+      0.003000001227855681,
+      0.003000001227855681
+    ],
+    "min_conservative_support_distance_m": 0.0029999837279319763,
+    "nearest_support": "/CommanderPanels/Panel_4/Panel_4_RemovableBacking/Panel_4_Backing_Top",
+    "rear_housing_clearance": "open rear; no closed compartment or connector service envelope qualified"
+  },
+  "Cabin_surface_intersections": [],
+  "Cabin_test_limit": "Triangle surface intersections only; containment, cabling, omitted hull, live controls, ACA sweep and egress not qualified.",
+  "DSKY_thread_conflict": {
+    "drawing_thread_half_pitch_m": 0.09779,
+    "current_visual_housing_half_width_m": 0.09779,
+    "radial_room_at_thread_center_m": 0,
+    "consequence": "No credible inserted fastener along drawing thread axes through current box. Instrument attachment hardware withheld; coordinator must qualify housing and mounting surface first."
+  }
+}
