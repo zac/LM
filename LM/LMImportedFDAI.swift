@@ -58,7 +58,7 @@ final class LMImportedFDAI {
             }
         }
         visit(fixed)
-        readabilitySurfaceCount += LMCockpitMaterialPolicy.apply(.printedFace, in: ball) { $0 == "FDAI_Ball" }
+        readabilitySurfaceCount += LMCockpitMaterialPolicy.apply(.attitudeBall, in: ball) { $0 == "FDAI_Ball" }
         readabilitySurfaceCount += LMCockpitMaterialPolicy.apply(.fixedMarking, in: fixed) { name in
             name.hasPrefix("FDAI_RollTick_") || name.hasPrefix("FDAI_RollLegend_") ||
             (name.hasPrefix("FDAI_Reticle_") && !name.hasSuffix("_Outline")) ||

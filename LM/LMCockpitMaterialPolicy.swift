@@ -6,6 +6,7 @@ import RealityKit
 enum LMCockpitMaterialPolicy {
     enum Treatment: Equatable {
         case paintedStructure
+        case attitudeBall
         case printedFace
         case fixedMarking
     }
@@ -20,6 +21,13 @@ enum LMCockpitMaterialPolicy {
                 case .paintedStructure:
                     pbr.roughness.scale = max(pbr.roughness.scale, 0.9)
                     pbr.specular.scale = min(pbr.specular.scale, 0.08)
+                case .attitudeBall:
+                    // Preserve the dark hemisphere and fine printed lines.
+                    // Emissive fill washes them gray in the native renderer.
+                    pbr.roughness.scale = max(pbr.roughness.scale, 0.8)
+                    pbr.specular.scale = min(pbr.specular.scale, 0.08)
+                    pbr.emissiveColor = .init(color: .black)
+                    pbr.emissiveIntensity = 0
                 case .printedFace, .fixedMarking:
                     pbr.roughness.scale = max(pbr.roughness.scale, 0.8)
                     pbr.specular.scale = min(pbr.specular.scale, 0.08)

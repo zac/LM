@@ -199,8 +199,10 @@ struct LMInstrumentIntegrationTests {
         })
         let material = try #require(face.components[ModelComponent.self]?.materials.first as? PhysicallyBasedMaterial)
         #expect(material.baseColor.texture != nil)
-        #expect(material.emissiveColor.texture != nil)
-        #expect(material.emissiveIntensity == 0.20)
+        #expect(material.emissiveColor.texture == nil)
+        #expect(material.emissiveIntensity == 0)
+        #expect(material.roughness.scale >= 0.8)
+        #expect(material.specular.scale <= 0.08)
         let fixed = binding.fixed.transform
         let ballPosition = binding.ball.position
         binding.apply(.fromAxisAngle(axis: LMVector3D(x: 1), radians: 0.5))

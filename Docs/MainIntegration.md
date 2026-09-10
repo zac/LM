@@ -257,3 +257,12 @@ that the earlier non-validating test run missed. See
 [TerrainMetalCompatibility.md](TerrainMetalCompatibility.md) for the exact
 baseline reproduction, uniform dispatch/sRGB-write repair, validating GPU
 tests, completed highland dive and the remaining failed settled pacing check.
+
+
+### Follow-up: remaining FDAI gray fill
+
+A native material-isolation comparison showed that LM's printed-face emissive
+treatment reintroduced gray fill after the earlier glass suppression. The
+FDAI-specific non-emissive matte repair and cockpit capture are documented in
+[FDAIContrastRepair.md](FDAIContrastRepair.md). LMKit assets and attitude math
+are unchanged; full physical legibility is still open.
