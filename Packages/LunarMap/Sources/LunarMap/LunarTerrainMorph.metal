@@ -28,6 +28,12 @@ kernel void lunarMorphVertices(device const float4 *a [[buffer(0)]],
 
 // Affine maps take common tile UVs to each endpoint's existing texture UVs.
 // Color sources are sRGB textures, so interpolation occurs in linear light.
+// Compute writes through a UNorm view of the sRGB output. Encode explicitly;
+// the underlying sRGB texture retains correct sampling and mip generation.
+static float3 lunarEncodeSRGB(float3 linear) {
+    return select(1.055f * pow(linear, float3(1.0f / 2.4f)) - 0.055f,
+                  12.92f * linear, linear <= 0.0031308f);
+}
 kernel void lunarMorphAppearance(texture2d<float> aColor [[texture(0)]],
                                  texture2d<float> bColor [[texture(1)]],
                                  texture2d<float> aNormal [[texture(2)]],
@@ -52,6 +58,7 @@ kernel void lunarMorphAppearance(texture2d<float> aColor [[texture(0)]],
     // TextureResource.copy preserves the endpoint row order. RealityKit
     // applies the same mesh-UV convention to both texture resource kinds.
     uint2 destination = p;
-    color.write(weight <= 0 ? ca : (weight >= 1 ? cb : mix(ca, cb, weight)), destination);
+    float4 blended = weight <= 0 ? ca : (weight >= 1 ? cb : mix(ca, cb, weight));
+    color.write(float4(lunarEncodeSRGB(blended.rgb), blended.a), destination);
     normal.write(float4(n, 1), destination);
 }

@@ -101,19 +101,20 @@ struct LMLunarTerrainArrivalTests {
         #expect(!parent.changesGeometry)
     }
 
-    @Test @MainActor func gpuVerticesMatchContactAndAppearanceBlendsInLinearLight() async throws {
+    @Test(arguments: [8, 9]) @MainActor func gpuVerticesMatchContactAndAppearanceBlendsInLinearLight(resolution: Int) async throws {
+        // Nine texels exercises the final padded group on both texture axes.
         let a = tile(level: 0, spacing: 2, fine: false), b = tile(level: 1, spacing: 0.5, fine: true)
         let morph = try LMLunarTerrainMorph(from: .init(tiles: [a]), to: .init(tiles: [b]))
         func build(_ tile: LMLunarTerrainMeshTile, base: UInt8) async throws -> Apollo11TerrainResource.ProgressiveTileEntityBuild {
             var color = [UInt8](), normal = [UInt8]()
-            for row in 0..<8 {
-                for _ in 0..<8 {
+            for row in 0..<resolution {
+                for _ in 0..<resolution {
                     let c = base + UInt8(row * 8)
                     color += [c, c, c, 255]
                     normal += [128, 128, 255, 255]
                 }
             }
-            let detail = LMTerrainTileDetailTextures(resolution: 8, albedo: color, normal: normal)
+            let detail = LMTerrainTileDetailTextures(resolution: resolution, albedo: color, normal: normal)
             let material = try await LMTerrainWorld.detailTerrainMaterial(detail, plan: tile.plan)
             return .init(entity: ModelEntity(mesh: .generatePlane(width: 1, depth: 1), materials: [material]), mesh: tile.mesh,
                 metrics: .init(meshMilliseconds: 0, detailMilliseconds: 0, realizationMilliseconds: 0,
@@ -151,16 +152,16 @@ struct LMLunarTerrainArrivalTests {
             let queue = try #require(device.makeCommandQueue())
             let copy = try #require(queue.makeCommandBuffer())
             let blit = try #require(copy.makeBlitCommandEncoder())
-            let buffer = try #require(device.makeBuffer(length: 256 * 8, options: .storageModeShared))
+            let buffer = try #require(device.makeBuffer(length: 256 * resolution, options: .storageModeShared))
             blit.copy(from: texture, sourceSlice: 0, sourceLevel: 0, sourceOrigin: .init(x: 0, y: 0, z: 0),
-                      sourceSize: .init(width: 8, height: 8, depth: 1), to: buffer, destinationOffset: 0,
-                      destinationBytesPerRow: 256, destinationBytesPerImage: 256 * 8)
+                      sourceSize: .init(width: resolution, height: resolution, depth: 1), to: buffer, destinationOffset: 0,
+                      destinationBytesPerRow: 256, destinationBytesPerImage: 256 * resolution)
             blit.endEncoding()
             copy.commit()
             copy.waitUntilCompleted()
             #expect(copy.status == .completed)
             #expect(texture.pixelFormat == .rgba8Unorm_srgb)
-            let values = buffer.contents().bindMemory(to: UInt8.self, capacity: 256 * 8)
+            let values = buffer.contents().bindMemory(to: UInt8.self, capacity: 256 * resolution)
             func linear(_ byte: Float) -> Float {
                 let v = byte / 255
                 return v <= 0.04045 ? v / 12.92 : pow((v + 0.055) / 1.055, 2.4)
@@ -176,14 +177,18 @@ struct LMLunarTerrainArrivalTests {
             // Compare actual uploaded endpoints, including color management.
             // Both resource paths must preserve the same northern row.
             let an = uploaded(appearance.a.color, row: 0), bn = uploaded(appearance.b.color, row: 0)
-            let asouth = uploaded(appearance.a.color, row: 7), bs = uploaded(appearance.b.color, row: 7)
+            let asouth = uploaded(appearance.a.color, row: resolution - 1), bs = uploaded(appearance.b.color, row: resolution - 1)
             let expectedNorth = an + (bn - an) * weight
             let expectedSouth = asouth + (bs - asouth) * weight
             func encoded(_ value: Float) -> Float {
                 (value <= 0.0031308 ? value * 12.92 : 1.055 * pow(value, 1 / 2.4) - 0.055) * 255
             }
-            #expect(abs(Float(values[0]) - encoded(expectedNorth)) <= 0.6)
-            #expect(abs(Float(values[7 * 256]) - encoded(expectedSouth)) <= 0.6)
+            // Check both edge columns as well as rows, including the partial
+            // final threadgroup for a nine-texel output.
+            for column in [0, resolution - 1] {
+                #expect(abs(Float(values[column * 4]) - encoded(expectedNorth)) <= 0.6)
+                #expect(abs(Float(values[(resolution - 1) * 256 + column * 4]) - encoded(expectedSouth)) <= 0.6)
+            }
         }
     }
 

@@ -224,7 +224,7 @@ final class LMLunarTerrainMorphRenderer {
                     descriptor.depth = 1
                     descriptor.arrayLength = 1
                     descriptor.mipmapLevelCount = Int(floor(log2(Double(resolution)))) + 1
-                    descriptor.textureUsage = [.shaderRead, .shaderWrite]
+                    descriptor.textureUsage = [.shaderRead, .shaderWrite, .pixelFormatView]
                     return try LowLevelTexture(descriptor: descriptor)
                 }
                 // Match the native endpoint format. The shader still mixes in
@@ -326,8 +326,10 @@ final class LMLunarTerrainMorphRenderer {
             encoder.setBuffer(entry.mesh.replace(bufferIndex: 0, using: command), offset: 0, index: 2)
             encoder.setBytes(&weight, length: 4, index: 3)
             encoder.setBytes(&count, length: 4, index: 4)
-            encoder.dispatchThreads(.init(width: Int(count), height: 1, depth: 1),
-                                    threadsPerThreadgroup: .init(width: 64, height: 1, depth: 1))
+            // Uniform groups also work on Simulator GPUs without nonuniform
+            // dispatch support. The kernel bounds-checks the final group.
+            encoder.dispatchThreadgroups(.init(width: (Int(count) + 63) / 64, height: 1, depth: 1),
+                                         threadsPerThreadgroup: .init(width: 64, height: 1, depth: 1))
         }
         let texturesPhase = LMLunarTerrainTiming.begin("morph-texture-encode")
         defer { LMLunarTerrainTiming.end(texturesPhase) }
@@ -336,14 +338,20 @@ final class LMLunarTerrainMorphRenderer {
         for entry in textures {
             var aMap = entry.aMap, bMap = entry.bMap
             let color = entry.color.replace(using: command), normal = entry.normal.replace(using: command)
-            for (index, texture) in [entry.a.color, entry.b.color, entry.a.normal, entry.b.normal, color, normal].enumerated() {
+            // Compute writes to sRGB formats are not portable. Write encoded
+            // bytes through a UNorm view; RealityKit and mip generation retain
+            // the sRGB texture so sampling still decodes into linear light.
+            guard let colorOutput = color.makeTextureView(pixelFormat: .rgba8Unorm) else { throw GPUError.unavailable }
+            for (index, texture) in [entry.a.color, entry.b.color, entry.a.normal, entry.b.normal, colorOutput, normal].enumerated() {
                 encoder.setTexture(texture, index: index)
             }
             encoder.setBytes(&aMap, length: MemoryLayout<SIMD4<Float>>.stride, index: 0)
             encoder.setBytes(&bMap, length: MemoryLayout<SIMD4<Float>>.stride, index: 1)
             encoder.setBytes(&weight, length: 4, index: 2)
-            encoder.dispatchThreads(.init(width: color.width, height: color.height, depth: 1),
-                                    threadsPerThreadgroup: .init(width: 8, height: 8, depth: 1))
+            // The appearance kernel discards padded threads at either edge.
+            encoder.dispatchThreadgroups(.init(width: (color.width + 7) / 8,
+                                               height: (color.height + 7) / 8, depth: 1),
+                                         threadsPerThreadgroup: .init(width: 8, height: 8, depth: 1))
             mipmaps += [color, normal]
         }
         encoder.endEncoding()

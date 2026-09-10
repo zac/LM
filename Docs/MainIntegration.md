@@ -248,3 +248,12 @@ D's concurrency experiment and F's unimplemented sliding region; physical
 Vision Pro stereo, input, readability, comfort, memory/thermal and long-session
 acceptance. The completed Simulator automatic landing does not close those
 physical gates.
+
+
+### Follow-up: Metal validation crash during global zoom
+
+The owner's subsequent zoom report exposed two GPU API compatibility errors
+that the earlier non-validating test run missed. See
+[TerrainMetalCompatibility.md](TerrainMetalCompatibility.md) for the exact
+baseline reproduction, uniform dispatch/sRGB-write repair, validating GPU
+tests, completed highland dive and the remaining failed settled pacing check.
